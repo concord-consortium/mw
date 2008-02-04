@@ -1,0 +1,44 @@
+11
+Propane
+C  2.709   1.156  -8.689  0  0  0  0
+C  4.198   1.177  -8.295  0  0  0  0
+C  4.770  -0.251  -8.369  0  0  0  0
+H  2.171   0.522  -8.017  0  0  0  0
+H  2.312   2.149  -8.637  0  0  0  0              
+H  2.609   0.785  -9.687  0  0  0  0
+H  4.736   1.812  -8.967  0  0  0  0              
+H  4.298   1.549  -7.296  0  0  0  0
+H  5.804  -0.236  -8.095  0  0  0  0
+H  4.232  -0.886  -7.697  0  0  0  0
+H  4.671  -0.623  -9.368  0  0  0  0
+bond  0  1
+bond  1  2
+bond  0  3
+bond  0  4
+bond  0  5
+bond  1  6
+bond  1  7
+bond  2  8
+bond  2  9
+bond  2 10
+angle  0  1  2
+angle  3  0  4
+angle  4  0  5
+angle  5  0  3
+angle  1  0  3
+angle  1  0  4
+angle  1  0  5
+angle  0  1  6
+angle  0  1  7
+angle  2  1  6
+angle  2  1  7
+angle  1  2  8
+angle  1  2  9
+angle  1  2 10
+angle  8  2  9
+angle  9  2 10
+angle 10  2  8
+torsion  8  2  1  0 0.1
+torsion  4  0  1  2 0.1
+torsion  0  1  2  8 0.02
+torsion  2  1  0  3 0.02

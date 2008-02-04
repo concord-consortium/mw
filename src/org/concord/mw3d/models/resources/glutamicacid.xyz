@@ -1,0 +1,71 @@
+18
+Glutamic acid
+N     0.796   0.780   1.740  0  0  0  0
+C     1.112  -0.428   0.956  0  0  0  0
+C     2.608  -0.440   0.636  0  0  0  0
+O     3.336   0.472   1.020  0  0  0  0
+C     0.276  -0.504  -0.316  0  0  0  0
+C    -1.220  -0.544   0.012  0  0  0  0
+C    -2.056  -0.624  -1.268  0  0  0  0
+O    -1.500  -0.644  -2.376  0  0  0  0
+O    -3.332  -0.660  -1.080  0  0  0  0
+O     3.056  -1.476  -0.072  0  0  0  0
+H     0.040   0.580   2.372  0  0  0  0
+H     0.880  -1.304   1.572  0  0  0  0
+H     1.616   1.032   2.264  0  0  0  0
+H     0.548  -1.412  -0.872  0  0  0  0
+H     0.484   0.380  -0.940  0  0  0  0
+H    -1.492   0.368   0.564  0  0  0  0
+H    -1.428  -1.424   0.632  0  0  0  0
+H     0.620   1.476   1.032  0  0  0  0
+bond  0  1
+bond  0 10
+bond  0 12
+bond  0 17
+bond  1  2
+bond  1  4
+bond  1 11
+bond  2  3
+bond  2  9
+bond  4  5
+bond  4 13
+bond  4 14
+bond  5  6
+bond  5 15
+bond  5 16
+bond  6  7
+bond  6  8
+angle  0  1  2
+angle  0  1  4
+angle  0  1 11
+angle  1  0 10
+angle  1  0 12
+angle  1  0 17
+angle  1  2  3
+angle  1  2  9
+angle  1  4  5
+angle  1  4 13
+angle  1  4 14
+angle  2  1  4
+angle  2  1 11
+angle  4  5  6
+angle  4  5 15
+angle  4  5 16
+angle  5  6  7
+angle  5  6  8
+torsion  0  1  2  3
+torsion  0  1  2  9
+torsion  0  1  4  5
+torsion  0  1  4 13
+torsion  0  1  4 14
+torsion  1  4  5  6
+torsion  1  4  5 15
+torsion  1  4  5 16
+torsion  2  1  0 10
+torsion  2  1  0 12
+torsion  2  1  0 17
+torsion  2  1  4 13
+torsion  2  1  4 14
+torsion  4  5  6  7
+torsion  4  5  6  8
+torsion  5  4  1 11

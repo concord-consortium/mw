@@ -1,0 +1,66 @@
+17
+Threonine
+N     0.236   0.640   1.396  0  0  0  0
+C     0.704  -0.056   0.188  0  0  0  0
+C     2.000   0.588  -0.300  0  0  0  0
+O     2.484   1.544   0.300  0  0  0  0
+C    -0.416  -0.040  -0.848  0  0  0  0
+O    -0.652   1.344  -1.080  0  0  0  0
+C    -1.744  -0.552  -0.288  0  0  0  0
+O     2.552   0.068  -1.396  0  0  0  0
+H    -0.512   1.264   1.152  0  0  0  0
+H     0.920  -1.104   0.444  0  0  0  0
+H     0.972   1.160   1.848  0  0  0  0
+H    -0.128  -0.584  -1.760  0  0  0  0
+H    -2.548   0.152  -0.544  0  0  0  0
+H    -1.668  -0.640   0.804  0  0  0  0
+H    -1.968  -1.540  -0.720  0  0  0  0
+H    -0.516   1.540  -2.000  0  0  0  0
+H    -0.064  -0.104   1.996  0  0  0  0
+bond  0  1
+bond  0  8
+bond  0 10
+bond  0 16
+bond  1  2
+bond  1  4
+bond  1  9
+bond  2  3
+bond  2  7
+bond  4  5
+bond  4  6
+bond  4 11
+bond  5 15
+bond  6 12
+bond  6 13
+bond  6 14
+angle  0  1  2
+angle  0  1  4
+angle  0  1  9
+angle  1  0  8
+angle  1  0 10
+angle  1  0 16
+angle  1  2  3
+angle  1  2  7
+angle  1  4  5
+angle  1  4  6
+angle  1  4 11
+angle  2  1  4
+angle  2  1  9
+angle  4  5 15
+angle  4  6 12
+angle  4  6 13
+angle  4  6 14
+torsion  0  1  2  3
+torsion  0  1  2  7
+torsion  1  4  5 15
+torsion  1  4  6 12
+torsion  1  4  6 13
+torsion  1  4  6 14
+torsion  3  2  1  9
+torsion  2  1  0  8
+torsion  2  1  0 10
+torsion  2  1  0 16
+torsion  2  1  4  5
+torsion  2  1  4  6
+torsion  2  1  4 11
+torsion 11  4  5 15

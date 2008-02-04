@@ -1,0 +1,44 @@
+12
+Benzene
+C  1.400   0.000  0  0  0  0  0
+C  0.700   1.212  0  0  0  0  0
+C -0.700   1.212  0  0  0  0  0
+C -1.400   0.000  0  0  0  0  0
+C -0.700  -1.212  0  0  0  0  0
+C  0.700  -1.212  0  0  0  0  0
+H  2.480   0.000  0  0  0  0  0
+H  1.240   2.148  0  0  0  0  0              
+H -1.240   2.148  0  0  0  0  0
+H -2.480   0.000  0  0  0  0  0              
+H -1.240  -2.148  0  0  0  0  0
+H  1.240  -2.148  0  0  0  0  0
+bond  0  1
+bond  1  2
+bond  2  3
+bond  3  4
+bond  4  5
+bond  5  0
+bond  0  6
+bond  1  7
+bond  2  8
+bond  3  9
+bond  4 10
+bond  5 11
+angle  0  1  2
+angle  1  2  3
+angle  2  3  4
+angle  3  4  5
+angle  4  5  0
+angle  5  0  1
+angle  0  1  7
+angle  1  2  8
+angle  2  3  9
+angle  3  4 10
+angle  4  5 11
+angle  5  0  6
+torsion  0  1  2  8 1.0
+torsion  1  2  3  9 1.0
+torsion  2  3  4 10 1.0
+torsion  3  4  5 11 1.0
+torsion  4  5  0  6 1.0
+torsion  5  0  1  7 1.0

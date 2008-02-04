@@ -1,0 +1,58 @@
+15
+Aspartic acid
+N      0.140   0.572   1.228  0  0  0  0
+C      0.400  -0.420   0.176  0  0  0  0
+C      1.876  -0.368  -0.212  0  0  0  0
+O      2.640   0.424   0.344  0  0  0  0
+C     -0.428  -0.124  -1.076  0  0  0  0
+C     -1.940  -0.132  -0.868  0  0  0  0
+O     -2.432  -0.368   0.248  0  0  0  0
+O     -2.640   0.120  -1.924  0  0  0  0
+O      2.276  -1.208  -1.164  0  0  0  0
+H     -0.764   0.396   1.636  0  0  0  0
+H      0.148  -1.420   0.552  0  0  0  0
+H      0.852   0.420   1.920  0  0  0  0
+H     -0.180  -0.876  -1.836  0  0  0  0
+H     -0.140   0.872  -1.448  0  0  0  0
+H      0.328   1.420   0.724  0  0  0  0
+bond  0  1
+bond  0  9
+bond  0 11
+bond  0 14
+bond  1  2
+bond  1  4
+bond  1 10
+bond  2  3
+bond  2  8
+bond  4  5
+bond  4 12
+bond  4 13
+bond  5  6
+bond  5  7
+angle  0  1 10
+angle  0  1  2
+angle  0  1  4
+angle  1  0  9
+angle  1  0 11
+angle  1  0 14
+angle  1  2  3
+angle  1  2  8
+angle  1  4 12
+angle  1  4 13
+angle  2  1 10
+angle  4  1 10
+angle  4  5  6
+angle  4  5  7
+angle  5  4 12
+angle  5  4 13
+torsion  0  1  2  3
+torsion  0  1  2  8
+torsion  1  4  5  6
+torsion  1  4  5  7
+torsion  2  1  0  9
+torsion  2  1  0 11
+torsion  2  1  0 14
+torsion  2  1  4  5
+torsion  2  1  4 12
+torsion  2  1  4 13
+torsion 10  1  2  3

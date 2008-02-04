@@ -1,0 +1,74 @@
+18
+Cyclohexane
+C    0.205   1.322   6.473  0  0  0  0
+C    1.305   0.654   7.317  0  0  0  0
+C    1.179  -0.878   7.207  0  0  0  0
+C   -0.204  -1.321   7.725  0  0  0  0
+C   -1.305  -0.654   6.880  0  0  0  0
+C   -1.180   0.878   6.990  0  0  0  0
+H    0.293   2.386   6.549  0  0  0  0
+H    0.312   1.029   5.449  0  0  0  0
+H    2.266   0.960   6.958  0  0  0  0
+H    1.198   0.946   8.341  0  0  0  0
+H    1.943  -1.343   7.794  0  0  0  0
+H    1.286  -1.172   6.184  0  0  0  0
+H   -0.292  -2.385   7.649  0  0  0  0
+H   -0.312  -1.028   8.748  0  0  0  0
+H   -2.266  -0.962   7.240  0  0  0  0
+H   -1.198  -0.947   5.857  0  0  0  0
+H   -1.945   1.341   6.403  0  0  0  0
+H   -1.288   1.172   8.013  0  0  0  0
+bond  0  1
+bond  1  2
+bond  2  3
+bond  3  4
+bond  4  5
+bond  5  0
+bond  0  6
+bond  0  7
+bond  1  8
+bond  1  9
+bond  2 10
+bond  2 11
+bond  3 12
+bond  3 13
+bond  4 14
+bond  4 15
+bond  5 16
+bond  5 17
+angle  0  1  2
+angle  1  2  3
+angle  2  3  4
+angle  3  4  5
+angle  4  5  0
+angle  5  0  1
+angle  6  0  7
+angle  8  1  9
+angle 10  2 11
+angle 12  3 13
+angle 14  4 15
+angle 16  5 17
+angle  5  0  6
+angle  5  0  7
+angle  1  0  6
+angle  1  0  7
+angle  0  1  8
+angle  0  1  9
+angle  2  1  8
+angle  2  1  9
+angle  1  2 10
+angle  1  2 11
+angle  3  2 10
+angle  3  2 11
+angle  2  3 12
+angle  2  3 13
+angle  4  3 12
+angle  4  3 13
+angle  3  4 14
+angle  3  4 15
+angle  5  4 14
+angle  5  4 15
+angle  4  5 16
+angle  4  5 17
+angle  0  5 16
+angle  0  5 17

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <!-- Inherit main project xml file -->
+    <extend>../Builds/project.xml</extend>
+    <!-- Project specific parameters -->
+    <artifactId>molecularworkbench</artifactId>
+    <name>MW</name>
+    <groupId>${pom.artifactId}</groupId>
+    <currentVersion>1.0</currentVersion>
+    <licenses>
+    <license>
+      <name>GPL</name>
+      <url>http://www.gnu.org/copyleft/gpl.html</url>
+    </license>
+    </licenses>
+  <build>
+    <sourceModifications>
+      <sourceModification>
+        <className>fakeClass</className>
+        <excludes>
+          <exclude>com/apple/mrj/**</exclude>
+        </excludes>
+      </sourceModification>
+    </sourceModifications>
+  </build>
+    
+</project>
+

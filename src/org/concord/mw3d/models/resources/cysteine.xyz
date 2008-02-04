@@ -1,0 +1,56 @@
+14
+Cysteine
+N        0.312   0.504   1.268  0  0  0  0
+C        0.520  -0.344   0.092  0  0  0  0
+C        1.980  -0.244  -0.352  0  0  0  0
+O        2.768   0.472   0.264  0  0  0  0
+C       -0.444   0.032  -1.036  0  0  0  0
+S       -2.204  -0.132  -0.616  0  0  0  0
+O        2.332  -0.956  -1.420  0  0  0  0
+H       -0.572   0.272   1.696  0  0  0  0
+H        0.516   1.388   0.832  0  0  0  0
+H        0.320  -1.384   0.372  0  0  0  0
+H        1.060   0.256   1.896  0  0  0  0
+H       -0.236  -0.620  -1.896  0  0  0  0
+H       -0.252   1.080  -1.316  0  0  0  0
+H       -2.768   0.136  -1.408  0  0  0  0
+bond  0  1
+bond  0  7
+bond  0  8
+bond  0 10
+bond  1  2
+bond  1  4
+bond  1  9
+bond  2  3
+bond  2  6
+bond  4  5
+bond  4 11
+bond  4 12
+bond  5 13
+angle  0  1  2
+angle  0  1  4
+angle  0  1  9
+angle  1  0  7
+angle  1  0  8
+angle  1  0 10
+angle  1  2  3
+angle  1  2  6
+angle  1  4  5
+angle  1  4 11
+angle  1  4 12
+angle  2  1  4
+angle  2  1  9
+angle  4  5 13
+angle  5  4 11
+angle  5  4 12
+torsion  0  1  4  5
+torsion  0  1  4 11
+torsion  0  1  4 12
+torsion  1  4  5 13
+torsion  2  1  0  7
+torsion  2  1  0  8
+torsion  2  1  0 10
+torsion  2  1  4  5
+torsion  4  1  2  3
+torsion  4  1  2  6
+torsion  9  1  4  5

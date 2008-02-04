@@ -1,0 +1,121 @@
+30
+Uracil
+P  -1.141  -3.479   6.571  0  0  0  0
+O  -0.366  -4.691   6.938  0  0  0  0
+O  -2.285  -3.158   7.461  0  0  0  0
+O  -0.171  -2.214   6.479  0  0  0  0
+O   3.175  -1.044   7.679  0  0  0  0
+C   1.171   1.289   5.708  0  0  0  0
+C   2.210   1.047   6.808  0  0  0  0
+C   2.037  -0.442   7.078  0  0  0  0
+C   1.773  -0.991   5.686  0  0  0  0
+C   0.984  -2.300   5.625  0  0  0  0
+O   0.983   0.044   5.035  0  0  0  0
+O   3.483   1.308   6.236  0  0  0  0
+O  -3.659   3.123   7.607  0  0  0  0
+C  -2.605   2.655   7.182  0  0  0  0
+N  -1.469   3.447   7.093  0  0  0  0
+C  -0.234   3.055   6.629  0  0  0  0
+O   0.706   3.835   6.601  0  0  0  0
+N  -0.140   1.749   6.218  0  0  0  0
+C  -1.218   0.894   6.261  0  0  0  0
+C  -2.411   1.301   6.725  0  0  0  0
+H   1.526   2.001   4.963  0  0  0  0
+H   2.014   1.639   7.702  0  0  0  0
+H   1.203  -0.646   7.750  0  0  0  0
+H   2.743  -1.161   5.219  0  0  0  0
+H   0.671  -2.481   4.597  0  0  0  0
+H   1.626  -3.118   5.952  0  0  0  0
+H   3.651   0.653   5.459  0  0  0  0
+H  -1.559   4.424   7.406  0  0  0  0
+H  -1.101  -0.132   5.912  0  0  0  0
+H  -3.244   0.598   6.756  0  0  0  0
+bond  0  1
+bond  0  2
+bond  0  3
+bond  3  9
+bond  4  7
+bond  5  6
+bond  5 10
+bond  5 17
+bond  5 20
+bond  6  7
+bond  6 11
+bond  6 21
+bond  7  8
+bond  7 22
+bond  8  9
+bond  8 10
+bond  8 23
+bond  9 24
+bond  9 25
+bond 11 26
+bond 12 13
+bond 13 14
+bond 13 19
+bond 14 15
+bond 14 27
+bond 15 17
+bond 15 16
+bond 17 18
+bond 18 19
+bond 18 28
+bond 19 29
+angle  1  0  3
+angle  2  0  3
+angle  0  3  9
+angle  3  9 24
+angle  3  9 25
+angle  9  8  7
+angle  9  8 23
+angle  8  7  4
+angle  8  7 22
+angle  7  6  5
+angle  7  6 11
+angle  7  6 21
+angle  6 11 26
+angle  6  5 10
+angle  6  5 17
+angle  6  5 20
+angle  5 10  8
+angle  5 17 15
+angle  5 17 18
+angle 17 15 16
+angle 17 15 14
+angle 17 18 19
+angle 17 18 28
+angle 15 14 13
+angle 15 14 27
+angle 18 19 29
+angle 18 19 13
+angle 14 13 12
+angle 19 13 12
+torsion  1  0  3  9
+torsion  2  0  3  9
+torsion  0  3  9 24
+torsion  0  3  9 25
+torsion  3  9  8  7
+torsion  3  9  8 10
+torsion  3  9  8 23
+torsion  9  8  7  4
+torsion  9  8  7  6
+torsion  9  8  7 22
+torsion  9  8 10  5
+torsion  8  7  6  5
+torsion  8  7  6 11
+torsion  8  7  6 21
+torsion  7  6 11 26
+torsion  7  6  5 20
+torsion  7  6  5 17
+torsion  6  5 17 15
+torsion  6  5 17 18
+torsion  5 17 15 14
+torsion  5 17 15 16
+torsion  5 17 18 19
+torsion  5 17 18 28
+torsion 17 15 14 13
+torsion 17 15 14 27
+torsion 17 18 19 13
+torsion 17 18 19 29
+torsion 15 14 13 12
+torsion 18 19 13 12

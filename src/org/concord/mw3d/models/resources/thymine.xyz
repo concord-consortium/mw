@@ -1,0 +1,133 @@
+32
+Thymine
+P     -0.808   8.873   2.080  0  0  0  0
+O     -0.196  10.198   1.860  0  0  0  0
+O     -2.029   8.583   1.290  0  0  0  0
+O      0.270   7.725   1.830  0  0  0  0
+O      4.189   7.682   0.250  0  0  0  0
+C      2.252   5.410   0.470  0  0  0  0
+H      3.108   4.880   0.052  0  0  0  0
+C      2.035   6.740  -0.240  0  0  0  0
+H      2.420   6.732  -1.260  0  0  0  0
+H      0.982   7.015  -0.289  0  0  0  0
+C      2.818   7.701   0.640  0  0  0  0
+H      2.437   8.720   0.571  0  0  0  0
+C      2.608   7.128   2.040  0  0  0  0
+H      3.470   7.426   2.637  0  0  0  0
+C      1.364   7.578   2.770  0  0  0  0
+H      1.104   6.836   3.525  0  0  0  0
+H      1.561   8.532   3.258  0  0  0  0
+O      2.530   5.682   1.830  0  0  0  0
+O     -2.039   1.948   0.270  0  0  0  0
+C     -1.112   2.765   0.320  0  0  0  0
+N      0.197   2.352   0.230  0  0  0  0
+H      0.356   1.340   0.122  0  0  0  0
+C      1.320   3.155   0.270  0  0  0  0
+O      2.445   2.697   0.180  0  0  0  0
+N      1.073   4.504   0.420  0  0  0  0
+C     -0.201   5.006   0.520  0  0  0  0
+H     -0.347   6.079   0.642  0  0  0  0
+C     -1.273   4.191   0.470  0  0  0  0
+C     -2.684   4.686   0.580  0  0  0  0
+H     -2.687   5.776   0.594  0  0  0  0
+H     -3.261   4.332  -0.274  0  0  0  0
+H     -3.131   4.310   1.500  0  0  0  0
+bond  0  1
+bond  0  2
+bond  0  3
+bond  3 14
+bond  4 10
+bond  5  6
+bond  5  7
+bond  5 17
+bond  5 24
+bond  7  8
+bond  7  9
+bond  7 10
+bond 10 11
+bond 10 12
+bond 12 13
+bond 12 14
+bond 12 17
+bond 14 15
+bond 14 16
+bond 18 19
+bond 19 20
+bond 19 27
+bond 20 21
+bond 20 22
+bond 22 23
+bond 22 24
+bond 24 25
+bond 25 26
+bond 25 27
+bond 27 28
+bond 28 29
+bond 28 30
+bond 28 31
+angle  1  0  3
+angle  2  0  3
+angle  0  3 14
+angle  3 14 12
+angle  3 14 15
+angle  3 14 16
+angle 14 12 10
+angle 14 12 13
+angle 14 12 17
+angle 12 17  5
+angle 17  5  7
+angle 12 10  4
+angle 12 10  7
+angle 12 10 11
+angle 10  7  5
+angle 10  7  8
+angle 10  7  9
+angle  7  5  6
+angle  7  5 24
+angle  5 24 22
+angle  5 24 25
+angle 24 22 20
+angle 24 22 23
+angle 24 25 27
+angle 24 25 26
+angle 22 20 19
+angle 22 20 21
+angle 20 19 18
+angle 20 19 27
+angle 25 27 28
+angle 25 27 19
+angle 19 27 28
+angle 27 28 29
+angle 27 28 30
+angle 27 28 31
+torsion  1  0  3 14
+torsion  2  0  3 14
+torsion  0  3 14 12
+torsion  0  3 14 15
+torsion  0  3 14 16
+torsion  3 14 12 10
+torsion  3 14 12 13
+torsion  3 14 12 17
+torsion 14 12 10  4
+torsion 14 12 10  7
+torsion 14 12 10 11
+torsion 14 12 17  5
+torsion 12 10  7  5
+torsion 12 10  7  8
+torsion 12 10  7  9
+torsion 10  7  5  6
+torsion 10  7  5 24
+torsion  7  5 24 22
+torsion  7  5 24 25
+torsion  5 24 25 26
+torsion  5 24 25 27
+torsion  5 24 22 20
+torsion  5 24 22 23
+torsion 24 22 20 21
+torsion 24 22 20 19
+torsion 22 20 19 18
+torsion 24 25 27 19
+torsion 24 25 27 28
+torsion 25 27 28 30
+torsion 19 27 28 29
+torsion 19 27 28 31

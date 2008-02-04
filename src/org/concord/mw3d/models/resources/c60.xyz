@@ -1,0 +1,370 @@
+60
+C60
+C  3.451   0.685   0.000  0  0  0  0
+C  3.451  -0.685   0.000  0  0  0  0
+C -3.451   0.685   0.000  0  0  0  0
+C -3.451  -0.685   0.000  0  0  0  0
+C  0.685   0.000   3.451  0  0  0  0
+C -0.685   0.000   3.451  0  0  0  0
+C  0.685   0.000  -3.451  0  0  0  0
+C -0.685   0.000  -3.451  0  0  0  0
+C  0.000   3.451   0.685  0  0  0  0
+C  0.000   3.451  -0.685  0  0  0  0
+C  0.000  -3.451   0.685  0  0  0  0
+C  0.000  -3.451  -0.685  0  0  0  0
+C  3.004   1.409   1.172  0  0  0  0
+C  3.004   1.409  -1.172  0  0  0  0
+C  3.004  -1.409   1.172  0  0  0  0
+C  3.004  -1.409  -1.172  0  0  0  0
+C -3.004   1.409   1.172  0  0  0  0
+C -3.004   1.409  -1.172  0  0  0  0
+C -3.004  -1.409   1.172  0  0  0  0
+C -3.004  -1.409  -1.172  0  0  0  0
+C  1.409   1.172   3.004  0  0  0  0
+C  1.409  -1.172   3.004  0  0  0  0
+C -1.409   1.172   3.004  0  0  0  0
+C -1.409  -1.172   3.004  0  0  0  0
+C  1.409   1.172  -3.004  0  0  0  0
+C  1.409  -1.172  -3.004  0  0  0  0
+C -1.409   1.172  -3.004  0  0  0  0
+C -1.409  -1.172  -3.004  0  0  0  0
+C  1.172   3.004   1.409  0  0  0  0
+C -1.172   3.004   1.409  0  0  0  0
+C  1.172   3.004  -1.409  0  0  0  0
+C -1.172   3.004  -1.409  0  0  0  0
+C  1.172  -3.004   1.409  0  0  0  0
+C -1.172  -3.004   1.409  0  0  0  0
+C  1.172  -3.004  -1.409  0  0  0  0
+C -1.172  -3.004  -1.409  0  0  0  0
+C  2.581   0.724   2.280  0  0  0  0
+C  2.581   0.724  -2.280  0  0  0  0
+C  2.581  -0.724   2.280  0  0  0  0
+C  2.581  -0.724  -2.280  0  0  0  0
+C -2.581   0.724   2.280  0  0  0  0
+C -2.581   0.724  -2.280  0  0  0  0
+C -2.581  -0.724   2.280  0  0  0  0
+C -2.581  -0.724  -2.280  0  0  0  0
+C  0.724   2.280   2.581  0  0  0  0
+C  0.724  -2.280   2.581  0  0  0  0
+C -0.724   2.280   2.581  0  0  0  0
+C -0.724  -2.280   2.581  0  0  0  0
+C  0.724   2.280  -2.581  0  0  0  0
+C  0.724  -2.280  -2.581  0  0  0  0
+C -0.724   2.280  -2.581  0  0  0  0
+C -0.724  -2.280  -2.581  0  0  0  0
+C  2.280   2.581   0.724  0  0  0  0
+C -2.280   2.581   0.724  0  0  0  0
+C  2.280   2.581  -0.724  0  0  0  0
+C -2.280   2.581  -0.724  0  0  0  0
+C  2.280  -2.581   0.724  0  0  0  0
+C -2.280  -2.581   0.724  0  0  0  0
+C  2.280  -2.581  -0.724  0  0  0  0
+C -2.280  -2.581  -0.724  0  0  0  0
+bond  0  1
+bond  0 12
+bond  0 13
+bond  1 14
+bond  1 15
+bond  2  3
+bond  2 16
+bond  2 17
+bond  3 18
+bond  3 19
+bond  4  5
+bond  4 20
+bond  4 21
+bond  5 22
+bond  5 23
+bond  6  7
+bond  6 24
+bond  6 25
+bond  7 26
+bond  7 27
+bond  8  9
+bond  8 28
+bond  8 29
+bond  9 30
+bond  9 31
+bond 10 11
+bond 10 32
+bond 10 33
+bond 11 34
+bond 11 35
+bond 12 36
+bond 12 52
+bond 13 37
+bond 13 54
+bond 14 38
+bond 14 56
+bond 15 39
+bond 15 58
+bond 16 40
+bond 16 53
+bond 17 41
+bond 17 55
+bond 18 42
+bond 18 57
+bond 19 43
+bond 19 59
+bond 20 36
+bond 20 44
+bond 21 38
+bond 21 45
+bond 22 40
+bond 22 46
+bond 23 42
+bond 23 47
+bond 24 37
+bond 24 48
+bond 25 39
+bond 25 49
+bond 26 41
+bond 26 50
+bond 27 43
+bond 27 51
+bond 28 44
+bond 28 52
+bond 29 46
+bond 29 53
+bond 30 48
+bond 30 54
+bond 31 50
+bond 31 55
+bond 32 45
+bond 32 56
+bond 33 47
+bond 33 57
+bond 34 49
+bond 34 58
+bond 35 51
+bond 35 59
+bond 36 38
+bond 37 39
+bond 40 42
+bond 41 43
+bond 44 46
+bond 45 47
+bond 48 50
+bond 49 51
+bond 52 54
+bond 53 55
+bond 56 58
+bond 57 59
+// hexagon face:  1
+angle  0  1 14
+angle  1 14 38
+angle 14 38 36
+angle 38 36 12
+angle 36 12  0
+angle 12  0  1
+// hexagon face:  2
+angle  0  1 15
+angle  1 15 39
+angle 15 39 37
+angle 39 37 13
+angle 37 13  0
+angle 13  0  1
+// hexagon face:  3 
+angle 13 37 24
+angle 37 24 48
+angle 24 48 30
+angle 48 30 54
+angle 30 54 13
+angle 54 13 37
+// hexagon face:  4
+angle  6  7 26
+angle  7 26 50
+angle 26 50 48
+angle 50 48 24
+angle 48 24  6
+angle 24  6  7
+// hexagon face:  5
+angle  6  7 27
+angle  7 27 51
+angle 27 51 49
+angle 51 49 25
+angle 49 25  6
+angle 25  6  7
+// hexagon face:  6
+angle 15 58 34
+angle 58 34 49
+angle 34 49 25
+angle 49 25 39
+angle 25 39 15
+angle 39 15 58
+// hexagon face:  7
+angle 10 11 34
+angle 11 34 58
+angle 34 58 56
+angle 58 56 32
+angle 56 32 10
+angle 32 10 11
+// hexagon face:  8
+angle 10 11 35
+angle 11 35 59
+angle 35 59 57
+angle 59 57 33
+angle 57 33 10
+angle 33 10 11
+// hexagon face:  9
+angle 18 42 23
+angle 42 23 47
+angle 23 47 33
+angle 47 33 57
+angle 33 57 18
+angle 57 18 42
+// hexagon face: 10
+angle  2  3 18
+angle  3 18 42
+angle 18 42 40
+angle 42 40 16
+angle 40 16  2
+angle 16  2  3
+// hexagon face: 11
+angle  4  5 23
+angle  5 23 47
+angle 23 47 45
+angle 47 45 21
+angle 45 21  4
+angle 21  4  5
+// hexagon face: 12
+angle 12 36 20
+angle 36 20 44
+angle 20 44 28
+angle 44 28 52
+angle 28 52 12
+angle 52 12 36
+// hexagon face: 13
+angle 14 56 32
+angle 56 32 45
+angle 32 45 21
+angle 45 21 38
+angle 21 38 14
+angle 38 14 56
+// hexagon face: 14
+angle  8  9 30
+angle  9 30 54
+angle 30 54 52
+angle 54 52 28
+angle 52 28  8
+angle 28  8  9
+// hexagon face: 15
+angle  8  9 31
+angle  9 31 55
+angle 31 55 53
+angle 55 53 29
+angle 53 29  8
+angle 29  8  9
+// hexagon face: 16
+angle 16 53 29
+angle 53 29 46
+angle 29 46 22
+angle 46 22 40
+angle 22 40 16
+angle 40 16 53
+// hexagon face: 17
+angle 17 55 31
+angle 55 31 50
+angle 31 50 26
+angle 50 26 41
+angle 26 41 17
+angle 41 17 55
+// hexagon face: 18
+angle  2  3 19
+angle  3 19 43
+angle 19 43 41
+angle 43 41 17
+angle 41 17  2
+angle 17  2  3
+// hexagon face: 19
+angle 19 43 27
+angle 43 27 51
+angle 27 51 35
+angle 51 35 59
+angle 35 59 19
+angle 59 19 43 
+// hexagon face: 20
+angle  4  5 22
+angle  5 22 46
+angle 22 46 44
+angle 46 44 20
+angle 44 20  4
+angle 20  4  5
+// edge: 0 - 1
+torsion  0  1 14 56
+torsion  0  1 15 58
+torsion  1  0 12 52
+torsion  1  0 13 54
+// edge: 2 - 3
+torsion  2  3 18 57
+torsion  2  3 19 59
+torsion  3  2 16 53
+torsion  3  2 17 55
+// edge: 4 - 5
+torsion  4  5 22 40
+torsion  4  5 23 42
+torsion  5  4 20 36
+torsion  5  4 21 38
+// edge: 6 - 7
+torsion  6  7 26 41
+torsion  6  7 27 43
+torsion  7  6 24 37
+torsion  7  6 25 39
+// edge: 8 - 9
+torsion  8  9 30 48
+torsion  8  9 31 50
+torsion  9  8 28 44
+torsion  9  8 29 46
+// edge: 10 - 11
+torsion 10 11 34 49
+torsion 10 11 35 51
+torsion 11 10 32 45
+torsion 11 10 33 47
+// edge: 44 - 46
+torsion 44 46 22 40
+torsion 44 46 29 53
+torsion 46 44 20 36
+torsion 46 44 28 52
+// edge: 45 - 47
+torsion 45 47 23 42
+torsion 45 47 33 57
+torsion 47 45 21 38
+torsion 47 45 32 56
+// edge: 48 - 50
+torsion 48 50 26 41
+torsion 48 50 31 55
+torsion 50 48 24 37
+torsion 50 48 30 54
+// edge: 49 - 51
+torsion 49 51 27 43
+torsion 49 51 35 59
+torsion 51 49 25 39
+torsion 51 49 34 58
+// edge: 36 - 38
+torsion 14 38 36 12
+// edge: 37 - 39
+torsion 13 37 39 15
+// edge: 40 - 42
+torsion 16 40 42 18
+// edge: 41 - 43
+torsion 17 41 43 19
+// edge: 52 - 54
+torsion 52 54 13 37
+torsion 52 54 30 48
+torsion 54 52 12 36
+torsion 54 52 28 44
+// edge: 53 - 55
+torsion 53 55 31 50
+torsion 53 55 17 41
+torsion 55 53 29 46 
+torsion 55 53 16 40
+// edge: 56 - 58
+torsion 56 58 34 49
+torsion 56 58 15 39
+torsion 58 56 32 45
+torsion 58 56 14 38
+// edge: 57 - 59
+torsion 57 59 19 43
+torsion 57 59 35 51
+torsion 59 57 18 42
+torsion 59 57 33 47

@@ -1,0 +1,68 @@
+17
+Asparagine
+N      0.536   0.140   1.356  0  0  0  0
+C      0.676  -0.532   0.060  0  0  0  0
+C      2.088  -0.296  -0.480  0  0  0  0
+O      2.896   0.368   0.164  0  0  0  0
+C     -0.316   0.028  -0.960  0  0  0  0
+C     -1.760  -0.168  -0.484  0  0  0  0
+O     -2.220  -1.272  -0.264  0  0  0  0
+N     -2.440   0.964  -0.340  0  0  0  0
+O      2.372  -0.844  -1.660  0  0  0  0
+H     -0.352  -0.100   1.764  0  0  0  0
+H      0.504  -1.608   0.188  0  0  0  0
+H      1.276  -0.244   1.920  0  0  0  0
+H     -0.180  -0.492  -1.920  0  0  0  0
+H     -0.128   1.104  -1.096  0  0  0  0
+H     -2.896   1.168   0.524  0  0  0  0
+H     -2.500   1.612  -1.100  0  0  0  0
+H      0.816   1.036   0.992  0  0  0  0
+bond  0  1
+bond  0  9
+bond  0 11
+bond  0 16
+bond  1  2
+bond  1  4
+bond  1 10
+bond  2  3
+bond  2  8
+bond  4  5
+bond  4 12
+bond  4 13
+bond  5  6
+bond  5  7
+bond  7 14
+bond  7 15
+angle  0  1  2
+angle  0  1  4
+angle  0  1 10
+angle  1  0  9
+angle  1  0 11
+angle  1  0 16
+angle  1  2  3
+angle  1  2  8
+angle  1  4  5
+angle  1  4 12
+angle  1  4 13
+angle  2  1  4
+angle  2  1 10
+angle  4  5  7
+angle  4  5  8
+angle  5  4 12
+angle  5  4 13
+angle  5  7 14
+angle  5  7 15
+angle  8  5  7
+torsion  0  1  4  5
+torsion  1  4  5  7
+torsion  2  1  4  5
+torsion  4  1  0  9
+torsion  4  1  0 11
+torsion  4  1  0 16
+torsion  4  5  7 14
+torsion  4  5  7 15
+torsion  6  5  4 12
+torsion  6  5  4 13
+torsion 10  1  4 12
+torsion 10  1  2  3
+torsion 10  1  2  8

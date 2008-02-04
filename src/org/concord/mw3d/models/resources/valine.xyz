@@ -1,0 +1,73 @@
+19
+Valine
+N    0.488   0.624   1.872  0  0  0  0
+C    0.772   0.020   0.564  0  0  0  0
+C    1.976   0.720  -0.064  0  0  0  0
+O    2.544   1.636   0.532  0  0  0  0
+C   -0.476   0.076  -0.316  0  0  0  0
+C   -0.204  -0.548  -1.688  0  0  0  0
+C   -1.664  -0.604   0.368  0  0  0  0
+O    2.364   0.284  -1.264  0  0  0  0
+H   -0.276   1.276   1.784  0  0  0  0
+H    1.032  -1.036   0.716  0  0  0  0
+H    1.300   1.104   2.224  0  0  0  0
+H   -0.736   1.132  -0.472  0  0  0  0
+H   -2.544   0.052   0.312  0  0  0  0
+H   -1.416  -0.796   1.424  0  0  0  0
+H   -1.884  -1.552  -0.136  0  0  0  0
+H   -0.304  -1.636  -1.620  0  0  0  0
+H    0.812  -0.288  -2.016  0  0  0  0
+H   -0.932  -0.160  -2.416  0  0  0  0
+H    0.336  -0.212   2.412  0  0  0  0
+bond  0  1
+bond  0  8
+bond  0 10
+bond  0 18
+bond  1  2
+bond  1  4
+bond  1  9
+bond  2  3
+bond  2  7
+bond  4  5
+bond  4  6
+bond  4 11
+bond  5 15
+bond  5 16
+bond  5 17
+bond  6 12
+bond  6 13
+bond  6 14
+angle  3  2  1
+angle  7  2  1
+angle  2  1  0
+angle  2  1  4
+angle  2  1  9
+angle  0  1  4
+angle  1  0  8
+angle  1  0 10
+angle  1  0 18
+angle  1  4  5
+angle  1  4  6
+angle  1  4 11
+angle  4  6 12
+angle  4  6 13
+angle  4  6 14
+angle  4  5 15
+angle  4  5 16
+angle  4  5 17
+torsion  3  2  1  4
+torsion  3  2  1  9
+torsion  7  2  1  0
+torsion  2  1  0  8
+torsion  2  1  0 10
+torsion  2  1  0 18
+torsion  2  1  4  5
+torsion  2  1  4  6
+torsion  2  1  4 11
+torsion  0  1  4  5
+torsion  1  4  5 15
+torsion  1  4  5 16
+torsion  1  4  5 17
+torsion  1  4  6 12
+torsion  1  4  6 13
+torsion  1  4  6 14
