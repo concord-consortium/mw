@@ -1,0 +1,78 @@
+20   
+Glutamine
+N         0.548   1.156   2.032  0  0  0  0
+C         0.964  -0.188   1.600  0  0  0  0
+C         2.488  -0.220   1.444  0  0  0  0
+O         3.156   0.788   1.672  0  0  0  0
+C         0.272  -0.600   0.308  0  0  0  0
+C        -1.248  -0.620   0.480  0  0  0  0
+C        -1.940  -1.032  -0.820  0  0  0  0
+O        -3.156  -1.116  -0.908  0  0  0  0
+N        -1.104  -1.288  -1.824  0  0  0  0
+O         3.024  -1.372   1.060  0  0  0  0
+H        -0.224   1.080   2.672  0  0  0  0
+H         0.680  -0.904   2.384  0  0  0  0
+H         1.328   1.600   2.496  0  0  0  0
+H         0.612  -1.604   0.020  0  0  0  0
+H         0.532   0.116  -0.488  0  0  0  0
+H        -1.588   0.384   0.764  0  0  0  0
+H        -1.508  -1.336   1.268  0  0  0  0
+H        -0.128  -1.096  -1.720  0  0  0  0
+H        -1.452  -1.672  -2.676  0  0  0  0
+H         0.320   1.672   1.196  0  0  0  0
+bond  0  1
+bond  0 10
+bond  0 12
+bond  0 19
+bond  1  2
+bond  1  4
+bond  1 11
+bond  2  3
+bond  2  9
+bond  4  5
+bond  4 13
+bond  4 14
+bond  5  6
+bond  5 15
+bond  5 16
+bond  6  7
+bond  6  8
+bond  8 17
+bond  8 18
+angle  0  1  2
+angle  0  1  4
+angle  0  1 11
+angle  1  0 10
+angle  1  0 12
+angle  1  0 19
+angle  1  2  3
+angle  1  2  9
+angle  2  1  4
+angle  2  1 11
+angle  1  4  5
+angle  1  4 13
+angle  1  4 14
+angle  4  5  6
+angle  4  5 15
+angle  4  5 16
+angle  5  6  7
+angle  5  6  8
+angle  6  8 17
+angle  6  8 18
+angle  7  6  8
+torsion  0  1  2  3
+torsion  0  1  2  9
+torsion  0  1  4  5
+torsion  1  4  5  6
+torsion  1  4  5 15
+torsion  1  4  5 16
+torsion  2  1  0 10
+torsion  2  1  0 12
+torsion  2  1  0 19
+torsion  2  1  4 13
+torsion  2  1  4 14
+torsion  4  5  6  7
+torsion  4  5  6  8
+torsion  5  6  8 17
+torsion  5  6  8 18
+torsion 11  1  4  5

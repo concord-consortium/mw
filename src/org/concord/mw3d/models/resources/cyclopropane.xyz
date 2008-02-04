@@ -1,0 +1,44 @@
+9
+Cyclopropane
+C     -0.776  -0.483   0.641  0  0  0  0
+C      0.748  -0.414   0.598  0  0  0  0
+C     -0.080   0.342  -0.437  0  0  0  0
+H     -1.250   0.088   1.439  0  0  0  0
+H     -1.214  -1.423   0.306  0  0  0  0
+H      1.250  -1.311   0.235  0  0  0  0
+H      1.214   0.201   1.368  0  0  0  0
+H     -0.089  -0.088  -1.439  0  0  0  0
+H     -0.126   1.423  -0.306  0  0  0  0
+bond 0 1
+bond 1 2
+bond 2 0
+bond 0 3
+bond 0 4
+bond 1 5
+bond 1 6
+bond 2 7
+bond 2 8
+angle 0 1 2
+angle 1 2 0
+angle 2 0 1
+angle 3 0 4
+angle 5 1 6
+angle 7 2 8
+angle 1 0 3
+angle 1 0 4
+angle 2 0 3
+angle 2 0 4
+angle 0 1 5
+angle 0 1 6
+angle 2 1 5
+angle 2 1 6
+angle 1 2 7
+angle 1 2 8
+angle 0 2 7
+angle 0 2 8
+//torsion 3 0 1 5
+//torsion 4 0 1 6
+//torsion 5 1 2 8
+//torsion 6 1 2 7
+//torsion 3 0 2 7
+//torsion 4 0 2 8

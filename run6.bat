@@ -1,0 +1,1 @@
+"C:\Program Files\Java\jre1.6.0\bin\java" -jar dist\workbench.jar local

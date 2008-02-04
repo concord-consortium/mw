@@ -1,0 +1,73 @@
+17
+Proline
+N      -0.656   0.628   1.192  0  0  0  0
+C       0.120  -0.572   0.956  0  0  0  0
+C       1.564  -0.244   0.732  0  0  0  0
+O       2.456  -1.036   0.492  0  0  0  0
+C      -0.460  -1.176  -0.308  0  0  0  0
+C      -1.228  -0.056  -0.992  0  0  0  0
+C      -1.396   1.072   0.016  0  0  0  0
+H      -0.056   1.356   1.548  0  0  0  0
+O       1.840   1.056   0.824  0  0  0  0
+H      -0.020  -1.272   1.792  0  0  0  0
+H      -1.140  -2.000  -0.044  0  0  0  0
+H       0.336  -1.552  -0.964  0  0  0  0
+H      -0.664   0.308  -1.860  0  0  0  0
+H      -2.216  -0.416  -1.316  0  0  0  0
+H      -0.952   2.004  -0.368  0  0  0  0
+H      -2.456   1.240   0.252  0  0  0  0
+H      -1.400   0.460   1.856  0  0  0  0
+bond  0  1
+bond  0  6
+bond  0  7
+bond  0 16
+bond  1  2
+bond  1  4
+bond  1  9
+bond  2  3
+bond  2  8
+bond  4  5
+bond  4 10
+bond  4 11
+bond  5  6
+bond  5 12
+bond  5 13
+bond  6 14
+bond  6 15
+angle  0  1  2
+angle  0  1  4
+angle  0  1  9
+angle  1  2  3
+angle  1  2  8
+angle  1  4  5
+angle  1  4 10
+angle  1  4 11
+angle  2  1  4
+angle  2  1  9
+angle  4  5  6
+angle  4  5 12
+angle  4  5 13
+angle  5  6  0
+angle  5  6 14
+angle  5  6 15
+angle  6  0  1
+angle  6  0  7
+angle  6  0 16
+torsion  0  1  4  5
+torsion  0  1  4 10
+torsion  0  1  4 11
+torsion  1  4  5  6
+torsion  1  4  5 12
+torsion  1  4  5 13
+torsion  3  2  1  0
+torsion  3  2  1  9
+torsion  4  5  6  0
+torsion  4  5  6 14
+torsion  4  5  6 15
+torsion  5  6  0  1
+torsion  5  6  0  7
+torsion  5  6  0 16
+torsion  7  0  1  9
+torsion 16  0  1  4
+torsion  8  2  1  4
+torsion  8  2  1  9

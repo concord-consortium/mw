@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.concord</groupId>
+    <artifactId>maven2-parent</artifactId>
+    <version>6</version>
+    <relativePath>../Builds/maven2-parent</relativePath>
+  </parent>
+  
+  <groupId>org.concord.modeler</groupId>
+  <artifactId>workbench</artifactId>
+  <version>1.3.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>MW</name>
+  <description>
+     Molecular Workbench
+  </description>
+
+  <licenses>
+    <license>
+      <name>GPL</name>
+      <url>http://www.gnu.org/copyleft/gpl.html</url>
+    </license>
+  </licenses>
+  
+  <build>
+  	<plugins>
+  		<plugin>
+  			<groupId>org.apache.maven.plugins</groupId>
+  			<artifactId>maven-compiler-plugin</artifactId>
+  			<configuration>
+  				<source>1.5</source>
+  				<target>1.5</target>
+  				<excludes>
+  					<exclude>com/apple/mrj/**</exclude>
+  				</excludes>
+  			</configuration>
+  		</plugin>
+  	</plugins>
+  </build>
+
+  <properties>
+    <concordDir>${project.name}</concordDir>
+  </properties>
+
+  <!--MVN_AUTO 
+    This comment and the elements below it are automatically 
+    generated any changes you make to these elements will be replaced if the pom is
+    regenerated. Do not edit this comment or the elements below it.-->
+
+  <!--this is required to find out parent pom you should-->
+  <repositories>
+    <repository>
+      <id>cc-repo-internal</id>
+      <name>Concord Consortium Internal</name>
+      <url>http://source.concord.org/maven2/internal</url>
+      <snapshots><enabled>false</enabled></snapshots>
+    </repository>
+  </repositories>
+
+  <!--This has to be defined in each pom because maven changes these urls
+     automatically when they are inherited.  It adds the "this" artifactId 
+     to the url specified in the parent.  If the parent defined a modules
+     element then it is supposed to use the path in that modules element.-->
+  <scm>
+    <connection>
+      scm:cvs:pserver:anonymous:@source.concord.org:/cvs/repo/CodeBank:Projects/${concordDir}
+    </connection>
+    <developerConnection>
+      scm:cvs:ext:username@cvs.concord.org:/home/buildspace/CodeBank:Projects/${concordDir}
+    </developerConnection>
+    <url>
+      http://source.concord.org/cgi-bin/viewcvs.cgi/Projects/${concordDir}/?cvsroot=CodeBank
+    </url>
+  </scm>
+</project>

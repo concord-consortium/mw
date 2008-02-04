@@ -1,0 +1,95 @@
+23
+Phenylalanine
+N        1.504   1.692   1.344  0  0  0  0
+C        1.900   1.136   0.048  0  0  0  0
+C        3.040   1.976  -0.532  0  0  0  0
+O        3.480   2.944   0.084  0  0  0  0
+C        0.684   1.140  -0.900  0  0  0  0
+C       -0.492   0.304  -0.416  0  0  0  0
+C       -1.580   0.920   0.240  0  0  0  0
+C       -0.500  -1.092  -0.620  0  0  0  0
+C       -2.672   0.140   0.688  0  0  0  0
+C       -1.588  -1.868  -0.172  0  0  0  0
+C       -2.672  -1.252   0.480  0  0  0  0
+O        3.516   1.596  -1.720  0  0  0  0
+H        0.820   2.420   1.208  0  0  0  0
+H        2.248   0.104   0.184  0  0  0  0
+H        2.284   2.064   1.868  0  0  0  0
+H        1.008   0.748  -1.872  0  0  0  0
+H        0.344   2.180  -1.016  0  0  0  0
+H       -1.580   1.992   0.404  0  0  0  0
+H        0.336  -1.568  -1.124  0  0  0  0
+H       -3.504   0.616   1.192  0  0  0  0
+H       -1.588  -2.940  -0.332  0  0  0  0
+H       -3.512  -1.848   0.824  0  0  0  0
+H        1.156   0.864   1.800  0  0  0  0
+bond  0  1
+bond  0 12
+bond  0 14
+bond  0 22
+bond  1  2
+bond  1  4
+bond  1 13
+bond  2  3
+bond  2 11
+bond  4  5
+bond  4 15
+bond  4 16
+bond  5  6
+bond  5  7
+bond  6  8
+bond  6 17
+bond  7  9
+bond  7 18
+bond  8 10
+bond  8 19
+bond  9 10
+bond  9 20
+bond 10 21
+angle  0  1  2
+angle  0  1  4
+angle  0  1 13
+angle  1  0 12
+angle  1  0 14
+angle  1  0 22
+angle  1  2  3
+angle  1  2 11
+angle  1  4 15
+angle  1  4 16
+angle  2  1  4
+angle  2  1 13
+angle  4  5  6
+angle  4  5  7
+angle  5  6  8
+angle  5  6 17
+angle  5  7  9
+angle  5  7 18
+angle  6  8 10
+angle  6  8 19
+angle  7  9 10
+angle  7  9 20
+angle  8 10  9
+angle  8 10 21
+angle  9 10 21
+torsion  0  1  2  3
+torsion  0  1  2 11
+torsion  0  1  4  5
+torsion  1  4  5  6
+torsion  1  4  5  7
+torsion  2  1  0 12
+torsion  2  1  0 14
+torsion  2  1  0 22
+torsion  2  1  4  5
+torsion  2  1  4 15
+torsion  2  1  4 16
+torsion  3  2  1 13
+torsion  4  5  6  8
+torsion  4  5  6 17
+torsion  4  5  7  9
+torsion  4  5  7 18
+torsion  5  6  8 10
+torsion  5  6  8 19
+torsion  5  7  9 10
+torsion  5  7  9 20
+torsion  6  8 10 21
+torsion  7  9 10 21

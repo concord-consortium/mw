@@ -1,0 +1,58 @@
+12
+Cyclobutane
+C    -0.750   0.452  -0.417  0  0  0  0
+C    -0.696  -0.588   0.609  0  0  0  0
+C     0.820  -0.678   0.537  0  0  0  0
+C     0.892   0.417  -0.428  0  0  0  0
+H    -1.285   1.273   0.066  0  0  0  0
+H    -1.328   0.080  -1.263  0  0  0  0
+H    -1.225  -1.507   0.366  0  0  0  0
+H    -1.029  -0.162   1.555  0  0  0  0
+H     1.158  -1.594   0.054  0  0  0  0
+H     1.310  -0.477   1.488  0  0  0  0
+H     1.432   0.009  -1.290  0  0  0  0
+H     1.506   1.236  -0.056  0  0  0  0
+bond  0  1
+bond  1  2
+bond  2  3
+bond  3  0
+bond  0  4
+bond  0  5
+bond  1  6
+bond  1  7
+bond  2  8
+bond  2  9
+bond  3 10
+bond  3 11
+angle  0  1  2
+angle  1  2  3
+angle  2  3  0
+angle  3  0  1
+angle  4  0  5
+angle  6  1  7
+angle  8  2  9
+angle  9  3 11
+angle  1  0  4
+angle  1  0  5
+angle  3  0  4
+angle  3  0  5
+angle  0  1  6
+angle  0  1  7
+angle  2  1  6
+angle  2  1  7
+angle  1  2  8
+angle  1  2  9
+angle  3  2  8
+angle  3  2  9
+angle  2  3 10
+angle  2  3 11
+angle  0  3 10
+angle  0  3 11
+//torsion  4  0  1  6
+//torsion  5  0  1  7
+//torsion  6  1  2  9
+//torsion  7  1  2  8
+//torsion  8  2  3 11
+//torsion  9  2  3 10
+//torsion 10  3  0  4
+//torsion 11  3  0  5

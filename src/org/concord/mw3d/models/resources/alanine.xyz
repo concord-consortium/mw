@@ -1,0 +1,51 @@
+13
+Alanine
+C    -0.208  -0.536   0.032  0  0  0  0
+C    -0.532   0.768   0.700  0  0  0  0
+O    -1.204   1.604   0.120  0  0  0  0
+C     1.316  -0.680  -0.104  0  0  0  0
+N    -0.824  -0.568  -1.304  0  0  0  0
+O    -0.084   1.012   1.928  0  0  0  0
+H    -0.532  -1.404  -1.784  0  0  0  0
+H    -0.584  -1.372   0.636  0  0  0  0
+H    -0.768   0.220  -1.928  0  0  0  0
+H     1.720   0.184  -0.648  0  0  0  0
+H     1.548  -1.604  -0.656  0  0  0  0
+H     1.768  -0.728   0.900  0  0  0  0
+H    -1.768  -0.664  -0.964  0  0  0  0
+bond  0  1
+bond  0  3
+bond  0  4
+bond  0  7
+bond  1  2
+bond  1  5
+bond  3  9
+bond  3 10
+bond  3 11
+bond  4  6
+bond  4  8
+bond  4 12
+angle  0  1  2
+angle  0  1  5
+angle  0  3  9
+angle  0  3 10
+angle  0  3 11
+angle  0  4  6
+angle  0  4  8
+angle  0  4 12
+angle  1  0  3
+angle  1  0  4
+angle  1  0  7
+angle  3  0  4
+angle  3  0  7
+angle  4  0  7
+torsion  1  0  3  9
+torsion  1  0  3 10
+torsion  1  0  3 11
+torsion  3  0  1  2
+torsion  3  0  1  5
+torsion  3  0  4  6
+torsion  3  0  4  8
+torsion  3  0  4 12
+torsion  7  0  1  2
+torsion  7  0  1  5

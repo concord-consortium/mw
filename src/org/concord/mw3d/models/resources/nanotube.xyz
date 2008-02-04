@@ -1,0 +1,826 @@
+140
+(10,0) CNT, 3 unit cells, hydrogen terminated
+H      3.788    1.231    -6.824   0  0  0  0
+H      2.341    3.222    -6.824   0  0  0  0
+H     -0.000    3.983    -6.824   0  0  0  0
+H     -2.341    3.222    -6.824   0  0  0  0
+H     -3.788    1.231    -6.824   0  0  0  0
+H     -3.788   -1.231    -6.824   0  0  0  0
+H     -2.341   -3.222    -6.824   0  0  0  0
+H      0.000   -3.983    -6.824   0  0  0  0
+H      2.341   -3.222    -6.824   0  0  0  0
+H      3.788   -1.231    -6.824   0  0  0  0
+C      3.807    1.237    -5.728   0  0  0  0
+C      2.353    3.239    -5.728   0  0  0  0
+C     -0.000    4.003    -5.728   0  0  0  0
+C     -2.353    3.239    -5.728   0  0  0  0
+C     -3.807    1.237    -5.728   0  0  0  0
+C     -3.807   -1.237    -5.728   0  0  0  0
+C     -2.353   -3.239    -5.728   0  0  0  0
+C      0.000   -4.003    -5.728   0  0  0  0
+C      2.353   -3.239    -5.728   0  0  0  0
+C      3.807   -1.237    -5.728   0  0  0  0
+C      3.986    0.000    -5.037   0  0  0  0
+C      3.225    2.343    -5.037   0  0  0  0
+C      1.231    3.791    -5.037   0  0  0  0
+C     -1.231    3.791    -5.037   0  0  0  0
+C     -3.225    2.343    -5.037   0  0  0  0
+C     -3.986   -0.000    -5.037   0  0  0  0
+C     -3.225   -2.343    -5.037   0  0  0  0
+C     -1.231   -3.791    -5.037   0  0  0  0
+C      1.231   -3.791    -5.037   0  0  0  0
+C      3.225   -2.343    -5.037   0  0  0  0
+C      3.984    0.000    -3.589   0  0  0  0
+C      3.223    2.342    -3.589   0  0  0  0
+C      1.231    3.789    -3.589   0  0  0  0
+C     -1.231    3.789    -3.589   0  0  0  0
+C     -3.223    2.342    -3.589   0  0  0  0
+C     -3.984   -0.000    -3.589   0  0  0  0
+C     -3.223   -2.342    -3.589   0  0  0  0
+C     -1.231   -3.789    -3.589   0  0  0  0
+C      1.231   -3.789    -3.589   0  0  0  0
+C      3.223   -2.342    -3.589   0  0  0  0
+C      3.788    1.231    -2.873   0  0  0  0
+C      2.341    3.222    -2.873   0  0  0  0
+C     -0.000    3.983    -2.873   0  0  0  0
+C     -2.341    3.222    -2.873   0  0  0  0
+C     -3.788    1.231    -2.873   0  0  0  0
+C     -3.788   -1.231    -2.873   0  0  0  0
+C     -2.341   -3.222    -2.873   0  0  0  0
+C      0.000   -3.983    -2.873   0  0  0  0
+C      2.341   -3.222    -2.873   0  0  0  0
+C      3.788   -1.231    -2.873   0  0  0  0
+C      3.791    1.231    -1.435   0  0  0  0
+C      2.343    3.225    -1.435   0  0  0  0
+C     -0.000    3.986    -1.435   0  0  0  0
+C     -2.343    3.225    -1.435   0  0  0  0
+C     -3.791    1.231    -1.435   0  0  0  0
+C     -3.791   -1.231    -1.435   0  0  0  0
+C     -2.343   -3.225    -1.435   0  0  0  0
+C      0.000   -3.986    -1.435   0  0  0  0
+C      2.343   -3.225    -1.435   0  0  0  0
+C      3.791   -1.231    -1.435   0  0  0  0
+C      3.987    0.000    -0.718   0  0  0  0
+C      3.225    2.343    -0.718   0  0  0  0
+C      1.232    3.792    -0.718   0  0  0  0
+C     -1.232    3.792    -0.718   0  0  0  0
+C     -3.225    2.343    -0.718   0  0  0  0
+C     -3.987   -0.000    -0.718   0  0  0  0
+C     -3.225   -2.343    -0.718   0  0  0  0
+C     -1.232   -3.792    -0.718   0  0  0  0
+C      1.232   -3.792    -0.718   0  0  0  0
+C      3.225   -2.343    -0.718   0  0  0  0
+C      3.987    0.000     0.718   0  0  0  0
+C      3.225    2.343     0.718   0  0  0  0
+C      1.232    3.792     0.718   0  0  0  0
+C     -1.232    3.792     0.718   0  0  0  0
+C     -3.225    2.343     0.718   0  0  0  0
+C     -3.987   -0.000     0.718   0  0  0  0
+C     -3.225   -2.343     0.718   0  0  0  0
+C     -1.232   -3.792     0.718   0  0  0  0
+C      1.232   -3.792     0.718   0  0  0  0
+C      3.225   -2.343     0.718   0  0  0  0
+C      3.791    1.231     1.435   0  0  0  0
+C      2.343    3.225     1.435   0  0  0  0
+C     -0.000    3.986     1.435   0  0  0  0
+C     -2.343    3.225     1.435   0  0  0  0
+C     -3.791    1.231     1.435   0  0  0  0
+C     -3.791   -1.231     1.435   0  0  0  0
+C     -2.343   -3.225     1.435   0  0  0  0
+C      0.000   -3.986     1.435   0  0  0  0
+C      2.343   -3.225     1.435   0  0  0  0
+C      3.791   -1.231     1.435   0  0  0  0
+C      3.788    1.231     2.873   0  0  0  0
+C      2.341    3.222     2.873   0  0  0  0
+C     -0.000    3.983     2.873   0  0  0  0
+C     -2.341    3.222     2.873   0  0  0  0
+C     -3.788    1.231     2.873   0  0  0  0
+C     -3.788   -1.231     2.873   0  0  0  0
+C     -2.341   -3.222     2.873   0  0  0  0
+C      0.000   -3.983     2.873   0  0  0  0
+C      2.341   -3.222     2.873   0  0  0  0
+C      3.788   -1.231     2.873   0  0  0  0
+C      3.984    0.000     3.589   0  0  0  0
+C      3.223    2.342     3.589   0  0  0  0
+C      1.231    3.789     3.589   0  0  0  0
+C     -1.231    3.789     3.589   0  0  0  0
+C     -3.223    2.342     3.589   0  0  0  0
+C     -3.984   -0.000     3.589   0  0  0  0
+C     -3.223   -2.342     3.589   0  0  0  0
+C     -1.231   -3.789     3.589   0  0  0  0
+C      1.231   -3.789     3.589   0  0  0  0
+C      3.223   -2.342     3.589   0  0  0  0
+C      3.986    0.000     5.037   0  0  0  0
+C      3.225    2.343     5.037   0  0  0  0
+C      1.231    3.791     5.037   0  0  0  0
+C     -1.231    3.791     5.037   0  0  0  0
+C     -3.225    2.343     5.037   0  0  0  0
+C     -3.986   -0.000     5.037   0  0  0  0
+C     -3.225   -2.343     5.037   0  0  0  0
+C     -1.231   -3.791     5.037   0  0  0  0
+C      1.231   -3.791     5.037   0  0  0  0
+C      3.225   -2.343     5.037   0  0  0  0
+C      3.807    1.237     5.728   0  0  0  0
+C      2.353    3.239     5.728   0  0  0  0
+C     -0.000    4.003     5.728   0  0  0  0
+C     -2.353    3.239     5.728   0  0  0  0
+C     -3.807    1.237     5.728   0  0  0  0
+C     -3.807   -1.237     5.728   0  0  0  0
+C     -2.353   -3.239     5.728   0  0  0  0
+C      0.000   -4.003     5.728   0  0  0  0
+C      2.353   -3.239     5.728   0  0  0  0
+C      3.807   -1.237     5.728   0  0  0  0
+H      3.788    1.231     6.824   0  0  0  0
+H      2.341    3.222     6.824   0  0  0  0
+H     -0.000    3.983     6.824   0  0  0  0
+H     -2.341    3.222     6.824   0  0  0  0
+H     -3.788    1.231     6.824   0  0  0  0
+H     -3.788   -1.231     6.824   0  0  0  0
+H     -2.341   -3.222     6.824   0  0  0  0
+H      0.000   -3.983     6.824   0  0  0  0
+H      2.341   -3.222     6.824   0  0  0  0
+H      3.788   -1.231     6.824   0  0  0  0
+bond   0  10
+bond   1  11
+bond   2  12
+bond   3  13
+bond   4  14
+bond   5  15
+bond   6  16
+bond   7  17
+bond   8  18
+bond   9  19
+// unit cell 1
+bond  10  20
+bond  10  21
+bond  11  21
+bond  11  22
+bond  12  22
+bond  12  23
+bond  13  23
+bond  13  24
+bond  14  24
+bond  14  25
+bond  15  25
+bond  15  26
+bond  16  26
+bond  16  27
+bond  17  27
+bond  17  28
+bond  18  28
+bond  18  29
+bond  19  29
+bond  19  20
+bond  20  30
+bond  21  31
+bond  22  32
+bond  23  33
+bond  24  34
+bond  25  35
+bond  26  36
+bond  27  37
+bond  28  38
+bond  29  39
+bond  30  40
+bond  30  49
+bond  31  40
+bond  31  41
+bond  32  41
+bond  32  42
+bond  33  42
+bond  33  43
+bond  34  43
+bond  34  44
+bond  35  44
+bond  35  45
+bond  36  45
+bond  36  46
+bond  37  46
+bond  37  47
+bond  38  47
+bond  38  48
+bond  39  48
+bond  39  49
+bond  40  50
+bond  41  51
+bond  42  52
+bond  43  53
+bond  44  54
+bond  45  55
+bond  46  56
+bond  47  57
+bond  48  58
+bond  49  59
+// unit cell 2
+bond  50  60
+bond  50  61
+bond  51  61
+bond  51  62
+bond  52  62
+bond  52  63
+bond  53  63
+bond  53  64
+bond  54  64
+bond  54  65
+bond  55  65
+bond  55  66
+bond  56  66
+bond  56  67
+bond  57  67
+bond  57  68
+bond  58  68
+bond  58  69
+bond  59  69
+bond  59  60
+bond  60  70
+bond  61  71
+bond  62  72
+bond  63  73
+bond  64  74
+bond  65  75
+bond  66  76
+bond  67  77
+bond  68  78
+bond  69  79
+bond  70  80
+bond  70  89
+bond  71  80
+bond  71  81
+bond  72  81
+bond  72  82
+bond  73  82
+bond  73  83
+bond  74  83
+bond  74  84
+bond  75  84
+bond  75  85
+bond  76  85
+bond  76  86
+bond  77  86
+bond  77  87
+bond  78  87
+bond  78  88
+bond  79  88
+bond  79  89
+bond  80  90
+bond  81  91
+bond  82  92
+bond  83  93
+bond  84  94
+bond  85  95
+bond  86  96
+bond  87  97
+bond  88  98
+bond  89  99
+// unit cell 3
+bond  90 100
+bond  90 101
+bond  91 101
+bond  91 102
+bond  92 102
+bond  92 103
+bond  93 103
+bond  93 104
+bond  94 104
+bond  94 105
+bond  95 105
+bond  95 106
+bond  96 106
+bond  96 107
+bond  97 107
+bond  97 108
+bond  98 108
+bond  98 109
+bond  99 109
+bond  99 100
+bond 100 110
+bond 101 111
+bond 102 112
+bond 103 113
+bond 104 114
+bond 105 115
+bond 106 116
+bond 107 117
+bond 108 118
+bond 109 119
+bond 110 120
+bond 110 129
+bond 111 120
+bond 111 121
+bond 112 121
+bond 112 122
+bond 113 122
+bond 113 123
+bond 114 123
+bond 114 124
+bond 115 124
+bond 115 125
+bond 116 125
+bond 116 126
+bond 117 126
+bond 117 127
+bond 118 127
+bond 118 128
+bond 119 128
+bond 119 129
+// hydrogen
+bond 120 130
+bond 121 131
+bond 122 132
+bond 123 133
+bond 124 134
+bond 125 135
+bond 126 136
+bond 127 137
+bond 128 138
+bond 129 139
+// hydrogen
+angle   0  10  20
+angle   0  10  21
+angle   1  11  21
+angle   1  11  22
+angle   2  12  22
+angle   2  12  23
+angle   3  13  23
+angle   3  13  24
+angle   4  14  24
+angle   4  14  25
+angle   5  15  25
+angle   5  15  26
+angle   6  16  26
+angle   6  16  27
+angle   7  17  27
+angle   7  17  28
+angle   8  18  28
+angle   8  18  29
+angle   9  19  29
+angle   9  19  20
+// row 1
+angle  10  21  31
+angle  21  31  40
+angle  31  40  30
+angle  40  30  20
+angle  30  20  10
+angle  20  10  21
+angle  11  22  32
+angle  22  32  41
+angle  32  41  31
+angle  41  31  21
+angle  31  21  11
+angle  21  11  22
+angle  12  23  33
+angle  23  33  42
+angle  33  42  32
+angle  42  32  22
+angle  32  22  12
+angle  22  12  23
+angle  13  24  34
+angle  24  34  43
+angle  34  43  33
+angle  43  33  23
+angle  33  23  13
+angle  23  13  24
+angle  14  25  35
+angle  25  35  44
+angle  35  44  34
+angle  44  34  24
+angle  34  24  14
+angle  24  14  25
+angle  15  26  36
+angle  26  36  45
+angle  36  45  35
+angle  45  35  25
+angle  35  25  15
+angle  25  15  26
+angle  16  27  37
+angle  27  37  46
+angle  37  46  36
+angle  46  36  26
+angle  36  26  16
+angle  26  16  27
+angle  17  28  38
+angle  28  38  47
+angle  38  47  37
+angle  47  37  27
+angle  37  27  17
+angle  27  17  28
+angle  18  29  39
+angle  29  39  48
+angle  39  48  38
+angle  48  38  28
+angle  38  28  18
+angle  28  18  29
+angle  19  20  30
+angle  20  30  49
+angle  30  49  39
+angle  49  39  29
+angle  39  29  19
+angle  29  19  20
+// row 2
+angle  30  40  50
+angle  40  50  60
+angle  50  60  59
+angle  60  59  49
+angle  59  49  30
+angle  49  30  40
+angle  31  41  51
+angle  41  51  61
+angle  51  61  50
+angle  61  50  40
+angle  50  40  31
+angle  40  31  41
+angle  32  42  52
+angle  42  52  62
+angle  52  62  51
+angle  62  51  41
+angle  51  41  32
+angle  41  32  42
+angle  33  43  53
+angle  43  53  63
+angle  53  63  52
+angle  63  52  42
+angle  52  42  33
+angle  42  33  43
+angle  34  44  54
+angle  44  54  64
+angle  54  64  53
+angle  64  53  43
+angle  53  43  34
+angle  43  34  44
+angle  35  45  55
+angle  45  55  65
+angle  55  65  54
+angle  65  54  44
+angle  54  44  35
+angle  44  35  45
+angle  36  46  56
+angle  46  56  66
+angle  56  66  55
+angle  66  55  45
+angle  55  45  36
+angle  45  36  46
+angle  37  47  57
+angle  47  57  67
+angle  57  67  56
+angle  67  56  46
+angle  56  46  37
+angle  46  37  47
+angle  38  48  58
+angle  48  58  68
+angle  58  68  57
+angle  68  57  47
+angle  57  47  38
+angle  47  38  48
+angle  39  49  59
+angle  49  59  69
+angle  59  69  58
+angle  69  58  48
+angle  58  48  39
+angle  48  39  49
+// row 3
+angle  40  61  71
+angle  61  71  80
+angle  71  80  70
+angle  80  70  60
+angle  70  60  50
+angle  60  50  61
+angle  51  62  72
+angle  62  72  81
+angle  72  81  71
+angle  81  71  61
+angle  71  61  51
+angle  61  51  62
+angle  52  63  73
+angle  63  73  82
+angle  73  82  72
+angle  82  72  62
+angle  72  62  52
+angle  62  52  63
+angle  53  64  74
+angle  64  74  83
+angle  74  83  73
+angle  83  73  63
+angle  73  63  53
+angle  63  53  64
+angle  54  65  75
+angle  65  75  84
+angle  75  84  74
+angle  84  74  64
+angle  74  64  54
+angle  64  54  65
+angle  55  66  76
+angle  66  76  85
+angle  76  85  75
+angle  85  75  65
+angle  75  65  55
+angle  65  55  66
+angle  56  67  77
+angle  67  77  86
+angle  77  86  76
+angle  86  76  66
+angle  76  66  56
+angle  66  56  67
+angle  57  68  78
+angle  68  78  87
+angle  78  87  77
+angle  87  77  67
+angle  77  67  57
+angle  67  57  68
+angle  58  69  79
+angle  69  79  88
+angle  79  88  78
+angle  88  78  68
+angle  78  68  58
+angle  68  58  69
+angle  59  60  70
+angle  60  70  89
+angle  70  89  79
+angle  89  79  69
+angle  79  69  59
+angle  69  59  60
+// row 4
+angle  70  80  90
+angle  80  90 100
+angle  90 100  99
+angle 100  99  89
+angle  99  89  70
+angle  89  70  80
+angle  71  81  91
+angle  81  91 101
+angle  91 101  90
+angle 101  90  80
+angle  90  80  71
+angle  80  71  81
+angle  72  82  92
+angle  82  92 102
+angle  92 102  91
+angle 102  91  81
+angle  91  81  72
+angle  81  72  82
+angle  73  83  93
+angle  83  93 103
+angle  93 103  92
+angle 103  92  82
+angle  92  82  73
+angle  82  73  83
+angle  74  84  94
+angle  84  94 104
+angle  94 104  93
+angle 104  93  83
+angle  93  83  74
+angle  83  74  84
+angle  75  85  95
+angle  85  95 105
+angle  95 105  94
+angle 105  94  84
+angle  94  84  75
+angle  84  75  85
+angle  76  86  96
+angle  86  96 106
+angle  96 106  95
+angle 106  95  85
+angle  95  85  76
+angle  85  76  86
+angle  77  87  97
+angle  87  97 107
+angle  97 107  96
+angle 107  96  86
+angle  96  86  77
+angle  86  77  87
+angle  78  88  98
+angle  88  98 108
+angle  98 108  97
+angle 108  97  87
+angle  97  87  78
+angle  87  78  88
+angle  79  89  99
+angle  89  99 109
+angle  99 109  98
+angle 109  98  88
+angle  98  88  79
+angle  88  79  89
+// row 5
+angle  80 101 111
+angle 101 111 120
+angle 111 120 110
+angle 120 110 100
+angle 110 100  90
+angle 100  90 101
+angle  91 102 112
+angle 102 112 121
+angle 112 121 111
+angle 121 111 101
+angle 111 101  91
+angle 101  91 102
+angle  92 103 113
+angle 103 113 122
+angle 113 122 112
+angle 122 112 102
+angle 112 102  92
+angle 102  92 103
+angle  93 104 114
+angle 104 114 123
+angle 114 123 113
+angle 123 113 103
+angle 113 103  93
+angle 103  93 104
+angle  94 105 115
+angle 105 115 124
+angle 115 124 114
+angle 124 114 104
+angle 114 104  94
+angle 104  94 105
+angle 115 106 116
+angle 106 116 125
+angle 116 125 115
+angle 125 115 105
+angle 115 105  95
+angle 105  95 106
+angle  96 107 117
+angle 107 117 126
+angle 117 126 116
+angle 126 116 106
+angle 116 106  96
+angle 106  96 107
+angle  97 108 118
+angle 108 118 127
+angle 118 127 117
+angle 127 117 107
+angle 117 107  97
+angle 107  97 108
+angle  98 109 119
+angle 109 119 128
+angle 119 128 118
+angle 128 118 108
+angle 118 108  98
+angle 108  98 109
+angle  99 100 110
+angle 100 110 129
+angle 110 129 119
+angle 129 119 109
+angle 119 109  99
+angle 109  99 100
+// hydrogen
+angle 130 120 110
+angle 130 120 111
+angle 131 121 111
+angle 131 121 112
+angle 132 122 112
+angle 132 122 113
+angle 133 123 113
+angle 133 123 114
+angle 134 124 114
+angle 134 124 115
+angle 135 125 115
+angle 135 125 116
+angle 136 126 116
+angle 136 126 117
+angle 137 127 117
+angle 137 127 118
+angle 138 128 118
+angle 138 128 119
+angle 139 129 119
+angle 139 129 110
+// hydrogen column
+torsion   0  10  20  30
+torsion   1  11  21  31
+torsion   2  12  22  32
+torsion   3  13  23  33
+torsion   4  14  24  34
+torsion   5  15  25  35
+torsion   6  16  26  36
+torsion   7  17  27  37
+torsion   8  18  28  38
+torsion   9  19  29  39
+// column 1
+torsion  20  30  40  50
+torsion  21  31  41  51
+torsion  22  32  42  52
+torsion  23  33  43  53
+torsion  24  34  44  54
+torsion  25  35  45  55
+torsion  26  36  46  56
+torsion  27  37  47  57
+torsion  28  38  48  58
+torsion  29  39  49  59
+// column 2
+torsion  30  40  50  60
+torsion  31  41  51  61
+torsion  32  42  52  62
+torsion  33  43  53  63
+torsion  34  44  54  64
+torsion  35  45  55  65
+torsion  36  46  56  66
+torsion  37  47  57  67
+torsion  38  48  58  68
+torsion  39  49  59  69
+// column 3
+torsion  40  50  60  70
+torsion  41  51  61  71
+torsion  42  52  62  72
+torsion  43  53  63  73
+torsion  44  54  64  74
+torsion  45  55  65  75
+torsion  46  56  66  76
+torsion  47  57  67  77
+torsion  48  58  68  78
+torsion  49  59  69  79
+// column 4
+torsion  50  60  70  80
+torsion  51  61  71  81
+torsion  52  62  72  82
+torsion  53  63  73  83
+torsion  54  64  74  84
+torsion  55  65  75  85
+torsion  56  66  76  86
+torsion  57  67  77  87
+torsion  58  68  78  88
+torsion  59  69  79  89
+// column 5
+torsion  60  70  80  90
+torsion  61  71  81  91
+torsion  62  72  82  92
+torsion  63  73  83  93
+torsion  64  74  84  94
+torsion  65  75  85  95
+torsion  66  76  86  96
+torsion  67  77  87  97
+torsion  68  78  88  98
+torsion  69  79  89  99
+// column 6
+torsion  70  80  90 100
+torsion  71  81  91 101
+torsion  72  82  92 102
+torsion  73  83  93 103
+torsion  74  84  94 104
+torsion  75  85  95 105
+torsion  76  86  96 106
+torsion  77  87  97 107
+torsion  78  88  98 108
+torsion  79  89  99 109
+// column 7
+torsion  80  90 100 110
+torsion  81  91 101 111
+torsion  82  92 102 112
+torsion  83  93 103 113
+torsion  84  94 104 114
+torsion  85  95 105 115
+torsion  86  96 106 116
+torsion  87  97 107 117
+torsion  88  98 108 118
+torsion  89  99 109 119
+// column 8
+torsion  90 100 110 120
+torsion  91 101 111 121
+torsion  92 102 112 122
+torsion  93 103 113 123
+torsion  94 104 114 124
+torsion  95 105 115 125
+torsion  96 106 116 126
+torsion  97 107 117 127
+torsion  98 108 118 128
+torsion  99 109 119 129
+// hydrogen column 
+torsion 130 120 110 100
+torsion 131 121 111 101
+torsion 132 122 112 102
+torsion 133 123 113 103
+torsion 134 124 114 104
+torsion 135 125 115 105
+torsion 136 126 116 106
+torsion 137 127 117 107
+torsion 138 128 118 108
+torsion 139 129 119 109
+// row 1
+torsion  10  21  11  22
+torsion  11  22  12  23
+torsion  12  23  13  24
+torsion  13  24  14  25
+torsion  14  25  15  26
+torsion  15  26  16  27
+torsion  16  27  17  28
+torsion  17  28  18  29
+torsion  18  29  19  20
+torsion  19  20  10  21
+// row 2
+torsion  50  61  51  62
+torsion  51  62  52  63
+torsion  52  63  53  64
+torsion  53  64  54  65
+torsion  54  65  55  66
+torsion  55  66  56  67
+torsion  56  67  57  68
+torsion  57  68  58  69
+torsion  58  69  59  60
+torsion  59  60  50  61
+// row 3
+torsion  90 101  91 102
+torsion  91 102  92 103
+torsion  92 103  93 104
+torsion  93 104  94 105
+torsion  94 105  95 106
+torsion  95 106  96 107
+torsion  96 107  97 108
+torsion  97 108  98 109
+torsion  98 109  99 100
+torsion  99 100  90 101
