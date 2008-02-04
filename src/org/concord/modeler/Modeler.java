@@ -132,7 +132,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 	static Preferences preference;
 	static List<Modeler> windowList = new ArrayList<Modeler>();
 	static boolean showToolBarText = true;
-	static boolean launchedByJWS, trueMW;
+	static boolean launchedByJWS, directMW;
 	static boolean restart;
 	static boolean hostIsLocal, runOnCD;
 	static String startingURL;
@@ -3149,7 +3149,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 
 		}
 
-		trueMW = true;
+		directMW = true;
 
 		// signify the web launcher who is monitoring this process
 		if ("yes".equals(System.getProperty("mw.launcher")))

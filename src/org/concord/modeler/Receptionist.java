@@ -49,7 +49,7 @@ final class Receptionist {
 		sb.append("&javaversion=" + System.getProperty("java.version"));
 		sb.append("&mwversion=" + Modeler.VERSION);
 		boolean launcher = "yes".equals(System.getProperty("mw.launcher"));
-		String jws = Modeler.launchedByJWS ? "yes" : (Modeler.trueMW ? (launcher ? "via" : "no") : "emb");
+		String jws = Modeler.launchedByJWS ? "yes" : (Modeler.directMW ? (launcher ? "via" : "no") : "emb");
 		sb.append("&jws=" + jws);
 
 		URL url = null;
