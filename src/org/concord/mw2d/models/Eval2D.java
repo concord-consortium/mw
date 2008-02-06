@@ -3214,16 +3214,14 @@ class Eval2D extends AbstractEval {
 				out(ScriptEvent.FAILED, "Cannot split into 4 arguments: " + str);
 				return null;
 			}
-			else {
-				double z = 0;
-				for (int i = 0; i < 4; i++) {
-					z = parseMathExpression(s[i]);
-					if (Double.isNaN(z)) {
-						out(ScriptEvent.FAILED, "Cannot parse : " + s[i]);
-						return null;
-					}
-					x[i] = (float) z;
+			double z = 0;
+			for (int i = 0; i < 4; i++) {
+				z = parseMathExpression(s[i]);
+				if (Double.isNaN(z)) {
+					out(ScriptEvent.FAILED, "Cannot parse : " + s[i]);
+					return null;
 				}
+				x[i] = (float) z;
 			}
 		}
 		return x;
@@ -3582,7 +3580,6 @@ class Eval2D extends AbstractEval {
 					}
 					catch (IOException ioe) {
 						ioe.printStackTrace();
-						is = null;
 					}
 				}
 				else {
@@ -3591,7 +3588,6 @@ class Eval2D extends AbstractEval {
 					}
 					catch (IOException ioe) {
 						ioe.printStackTrace();
-						is = null;
 					}
 				}
 			}
@@ -3602,7 +3598,6 @@ class Eval2D extends AbstractEval {
 			}
 			catch (IOException ioe) {
 				ioe.printStackTrace();
-				is = null;
 			}
 		}
 		if (is != null) {
@@ -4658,7 +4653,7 @@ class Eval2D extends AbstractEval {
 				t[i].setShadowType((byte) parseInt(str3));
 			}
 			catch (Exception e) {
-				t[i].setShadowType((byte) n);
+				t[i].setShadowType(n);
 			}
 		}
 		else {
@@ -5539,7 +5534,7 @@ class Eval2D extends AbstractEval {
 						s = s.substring(3).trim();
 					}
 					if (withinMap != null && withinMap.containsKey(s)) {
-						s = (String) withinMap.get(s);
+						s = withinMap.get(s);
 					}
 					if (startsWithNot)
 						s = "not " + s;
