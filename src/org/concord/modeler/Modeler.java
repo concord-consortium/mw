@@ -2755,8 +2755,6 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 	}
 
 	private void readFromSocket() throws Exception {
-		if (serverSocket == null)
-			return;
 		clientSocket = serverSocket.accept();
 		socketInputStream = clientSocket.getInputStream();
 		BufferedReader socketReader = new BufferedReader(new InputStreamReader(socketInputStream));
@@ -2822,21 +2820,23 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 
 	private void listenToSocket() {
 		listeningToSocket = true;
-		Thread t = new Thread("Socket Listener") {
-			public void run() {
-				while (!stopListening) {
-					try {
-						readFromSocket();
+		if (serverSocket != null) {
+			Thread t = new Thread("Socket Listener") {
+				public void run() {
+					while (!stopListening) {
+						try {
+							readFromSocket();
+						}
+						catch (Exception e) {
+							e.printStackTrace();
+							break;
+						}
 					}
-					catch (Exception e) {
-						e.printStackTrace();
-						break;
-					}
-				}
+				};
 			};
-		};
-		t.setPriority(Thread.MIN_PRIORITY);
-		t.start();
+			t.setPriority(Thread.MIN_PRIORITY);
+			t.start();
+		}
 	}
 
 	/*
