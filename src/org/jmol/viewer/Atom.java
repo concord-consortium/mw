@@ -559,7 +559,7 @@ final public class Atom extends Point3fi implements Tuple {
 			char charWild = strPattern.charAt(ich);
 			if (charWild == '?')
 				continue;
-			if (ich >= cchAtomName || charWild != Character.toUpperCase(atomName.charAt(ich)))
+			if (ich >= cchAtomName || (atomName != null && charWild != Character.toUpperCase(atomName.charAt(ich))))
 				return false;
 		}
 		return ich >= cchAtomName;

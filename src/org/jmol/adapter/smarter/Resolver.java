@@ -211,13 +211,13 @@ class Resolver {
   static boolean checkCube(String[] lines) {
     try {
       StringTokenizer tokens2 = new StringTokenizer(lines[2]);
-      if (tokens2 == null || tokens2.countTokens() != 4)
+      if (tokens2.countTokens() != 4)
         return false;
       Integer.parseInt(tokens2.nextToken());
       for (int i = 3; --i >= 0; )
         new Float(tokens2.nextToken());
       StringTokenizer tokens3 = new StringTokenizer(lines[3]);
-      if (tokens3 == null || tokens3.countTokens() != 4)
+      if (tokens3.countTokens() != 4)
         return false;
       Integer.parseInt(tokens3.nextToken());
       for (int i = 3; --i >= 0; )
