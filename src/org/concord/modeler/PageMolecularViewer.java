@@ -739,7 +739,6 @@ public class PageMolecularViewer extends JmolContainer implements BasicModel, Em
 								}
 								catch (MalformedURLException mue) {
 									mue.printStackTrace();
-									url = null;
 								}
 								addImage(url, x, y);
 							}

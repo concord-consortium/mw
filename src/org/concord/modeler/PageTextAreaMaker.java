@@ -86,7 +86,7 @@ class PageTextAreaMaker extends ComponentMaker {
 
 		String address = pageTextArea.page.getAddress() + "#"
 				+ ModelerUtilities.getSortableString(pageTextArea.index, 3) + "%" + PageTextArea.class.getName();
-		QuestionAndAnswer q = (QuestionAndAnswer) UserData.sharedInstance().getData(address);
+		QuestionAndAnswer q = UserData.sharedInstance().getData(address);
 		if (q != null) {
 			q.setQuestion(pageTextArea.getTitle());
 			q.setReferenceAnswer(pageTextArea.referenceAnswer);

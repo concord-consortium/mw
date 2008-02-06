@@ -237,7 +237,7 @@ public class PageDNAScroller extends DNAScroller implements Embeddable, ModelCom
 			setDNA(null);
 			return;
 		}
-		Molecule mol = (Molecule) c.get(proteinID);
+		Molecule mol = c.get(proteinID);
 		if (mol instanceof Polypeptide) {
 			String s = ((Polypeptide) mol).getDNACode();
 			if (s == null) {
@@ -525,7 +525,7 @@ public class PageDNAScroller extends DNAScroller implements Embeddable, ModelCom
 						}
 					}
 					if (proteinID != -1) {
-						mol = (Molecule) c.get(proteinID);
+						mol = c.get(proteinID);
 						proteinComboBox.setSelectedItem(mol);
 					}
 					else {
@@ -577,7 +577,7 @@ public class PageDNAScroller extends DNAScroller implements Embeddable, ModelCom
 			MolecularModel model = (MolecularModel) page.getComponentPool().get(modelID).getContainer().getModel();
 			if (model.getMolecules().isEmpty())
 				return;
-			Molecule m = (Molecule) model.getMolecules().get(proteinID);
+			Molecule m = model.getMolecules().get(proteinID);
 			if (m != null)
 				m.getAtom(getCurrentBase() / 3).blink();
 		}
@@ -587,7 +587,7 @@ public class PageDNAScroller extends DNAScroller implements Embeddable, ModelCom
 		MolecularModel model = (MolecularModel) page.getComponentPool().get(modelID).getContainer().getModel();
 		if (model.getMolecules().isEmpty())
 			return;
-		Molecule m = (Molecule) model.getMolecules().get(proteinID);
+		Molecule m = model.getMolecules().get(proteinID);
 		if (m == null)
 			return;
 		model.notifyPageComponentListeners(new PageComponentEvent(model, PageComponentEvent.COMPONENT_CHANGED));
@@ -726,7 +726,7 @@ public class PageDNAScroller extends DNAScroller implements Embeddable, ModelCom
 			MolecularModel model = (MolecularModel) page.getComponentPool().get(modelID).getContainer().getModel();
 			if (proteinID >= model.getMolecules().size())
 				return;
-			Molecule m = (Molecule) model.getMolecules().get(proteinID);
+			Molecule m = model.getMolecules().get(proteinID);
 			if (!m.contains(src))
 				return;
 			if (e.getDescription().equals("Selected index")) {

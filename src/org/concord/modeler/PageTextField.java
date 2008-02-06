@@ -137,7 +137,7 @@ public class PageTextField extends JPanel implements Embeddable, HtmlService, Se
 			return;
 		String key = page.getAddress() + "#" + ModelerUtilities.getSortableString(index, 3) + "%"
 				+ PageTextField.class.getName();
-		QuestionAndAnswer q = (QuestionAndAnswer) UserData.sharedInstance().getData(key);
+		QuestionAndAnswer q = UserData.sharedInstance().getData(key);
 		if (q != null) {
 			if (textField.getText() == null || textField.getText().trim().equals("")) {
 				q.setAnswer(QuestionAndAnswer.NO_ANSWER);

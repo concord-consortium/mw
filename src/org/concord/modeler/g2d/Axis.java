@@ -375,13 +375,13 @@ public class Axis {
 
 		if (orientation == HORIZONTAL) {
 			for (i = 0; i < dataset.size(); i++) {
-				d = (DataSet) (dataset.elementAt(i));
+				d = dataset.elementAt(i);
 				d.xaxis = null;
 			}
 		}
 		else {
 			for (i = 0; i < dataset.size(); i++) {
-				d = (DataSet) (dataset.elementAt(i));
+				d = dataset.elementAt(i);
 				d.yaxis = null;
 			}
 		}
@@ -405,7 +405,7 @@ public class Axis {
 		if (dataset.isEmpty())
 			return 0.0;
 
-		d = (DataSet) (dataset.firstElement());
+		d = dataset.firstElement();
 		if (d == null)
 			return 0.0;
 
@@ -444,7 +444,7 @@ public class Axis {
 		if (dataset.isEmpty())
 			return 0.0;
 
-		d = (DataSet) (dataset.firstElement());
+		d = dataset.firstElement();
 
 		if (d == null)
 			return 0.0;

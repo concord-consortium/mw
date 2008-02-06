@@ -469,7 +469,7 @@ public class ModelCanvas extends JComponent implements Embeddable, Scriptable, E
 		StringBuffer palette = new StringBuffer();
 		JPanel tb = container.getToolBar();
 		int n = tb != null ? tb.getComponentCount() : 0;
-		if (n > 0) {
+		if (tb != null && n > 0) {
 			Action action = null;
 			for (int i = 0; i < n; i++) {
 				try {
@@ -484,7 +484,7 @@ public class ModelCanvas extends JComponent implements Embeddable, Scriptable, E
 		}
 		JPopupMenu pm = container.getExpandMenu();
 		n = pm != null ? pm.getComponentCount() : 0;
-		if (n > 0) {
+		if (pm != null && n > 0) {
 			Action action = null;
 			for (int i = 0; i < n; i++) {
 				try {

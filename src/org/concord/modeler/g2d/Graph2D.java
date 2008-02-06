@@ -419,7 +419,7 @@ public class Graph2D extends JComponent implements Pageable, Printable {
 			return max;
 		DataSet d;
 		for (int i = 0; i < dataset.size(); i++) {
-			d = ((DataSet) dataset.elementAt(i));
+			d = dataset.elementAt(i);
 			if (i == 0)
 				max = d.getXmax();
 			else max = Math.max(max, d.getXmax());
@@ -438,7 +438,7 @@ public class Graph2D extends JComponent implements Pageable, Printable {
 			return max;
 		DataSet d;
 		for (int i = 0; i < dataset.size(); i++) {
-			d = ((DataSet) dataset.elementAt(i));
+			d = dataset.elementAt(i);
 			if (i == 0)
 				max = d.getYmax();
 			else max = Math.max(max, d.getYmax());
@@ -457,7 +457,7 @@ public class Graph2D extends JComponent implements Pageable, Printable {
 			return min;
 		DataSet d;
 		for (int i = 0; i < dataset.size(); i++) {
-			d = ((DataSet) dataset.elementAt(i));
+			d = dataset.elementAt(i);
 			if (i == 0)
 				min = d.getXmin();
 			else min = Math.min(min, d.getXmin());
@@ -476,7 +476,7 @@ public class Graph2D extends JComponent implements Pageable, Printable {
 			return min;
 		DataSet d;
 		for (int i = 0; i < dataset.size(); i++) {
-			d = ((DataSet) dataset.elementAt(i));
+			d = dataset.elementAt(i);
 			if (i == 0)
 				min = d.getYmin();
 			else min = Math.min(min, d.getYmin());
@@ -580,7 +580,7 @@ public class Graph2D extends JComponent implements Pageable, Printable {
 	public Point getLegendLocation() {
 		if (dataset.isEmpty())
 			return null;
-		return ((DataSet) dataset.elementAt(0)).getLegendLocation();
+		return dataset.elementAt(0).getLegendLocation();
 	}
 
 	public void setAxisFont(Font font) {
@@ -910,7 +910,7 @@ public class Graph2D extends JComponent implements Pageable, Printable {
 	}
 
 	public DataSet getSet(int i) {
-		return (DataSet) dataset.elementAt(i);
+		return dataset.elementAt(i);
 	}
 
 	public Vector getDataSets() {
@@ -942,7 +942,7 @@ public class Graph2D extends JComponent implements Pageable, Printable {
 			}
 		}
 		if (distsq >= 0 && distsq < min && j >= 0)
-			return (DataSet) dataset.elementAt(j);
+			return dataset.elementAt(j);
 		return null;
 	}
 

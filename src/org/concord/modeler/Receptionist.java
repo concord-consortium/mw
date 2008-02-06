@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
-import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
@@ -33,7 +32,7 @@ final class Receptionist {
 
 	private int responseCode;
 
-	void checkin() throws SocketTimeoutException {
+	void checkin() {
 
 		StringBuffer sb = new StringBuffer();
 		String os = System.getProperty("os.name") + " " + System.getProperty("os.version");

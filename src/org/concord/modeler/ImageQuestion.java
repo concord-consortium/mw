@@ -204,7 +204,7 @@ public class ImageQuestion extends JPanel implements Embeddable, TransferListene
 	void storeAnswer() {
 		String key = page.getAddress() + "#" + ModelerUtilities.getSortableString(index, 3) + "%"
 				+ ImageQuestion.class.getName();
-		QuestionAndAnswer q = (QuestionAndAnswer) UserData.sharedInstance().getData(key);
+		QuestionAndAnswer q = UserData.sharedInstance().getData(key);
 		if (imageContainer.getImage() == null) {
 			if (q != null)
 				q.setAnswer(null);

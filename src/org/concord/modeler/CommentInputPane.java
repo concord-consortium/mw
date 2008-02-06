@@ -363,17 +363,19 @@ class CommentInputPane extends JPanel {
 			msg = "Error: " + e;
 		}
 		finally {
-			try {
-				out.close();
-			}
-			catch (IOException e) {
+			if (out != null) {
+				try {
+					out.close();
+				}
+				catch (IOException e) {
+				}
 			}
 		}
 		if (msg != null)
 			return msg;
 
 		try {
-			statusCode = ((HttpURLConnection) connect).getResponseCode();
+			statusCode = connect.getResponseCode();
 		}
 		catch (IOException e) {
 			e.printStackTrace();

@@ -219,7 +219,6 @@ class PageScripter extends ComponentScripter {
 					}
 					catch (IOException ioe) {
 						ioe.printStackTrace();
-						is = null;
 					}
 				}
 				else {
@@ -228,7 +227,6 @@ class PageScripter extends ComponentScripter {
 					}
 					catch (IOException ioe) {
 						ioe.printStackTrace();
-						is = null;
 					}
 				}
 			}
@@ -239,7 +237,6 @@ class PageScripter extends ComponentScripter {
 			}
 			catch (IOException ioe) {
 				ioe.printStackTrace();
-				is = null;
 			}
 		}
 		if (is == null) {

@@ -65,7 +65,7 @@ public abstract class BulletIcon implements Icon {
 
 	public BulletIcon getScaledInstance(float scale) {
 		try {
-			BulletIcon icon = (BulletIcon) getClass().newInstance();
+			BulletIcon icon = getClass().newInstance();
 			icon.setIconWidth((int) (scale * icon.getIconWidth()));
 			icon.setIconHeight((int) (scale * icon.getIconHeight()));
 			return icon;

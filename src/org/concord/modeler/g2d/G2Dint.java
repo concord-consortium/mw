@@ -538,7 +538,7 @@ public class G2Dint extends Graph2D implements KeyListener, ActionListener, Mous
 		double y = yaxis.getDouble(iy);
 
 		for (i = 0; i < dataset.size(); i++) {
-			ds = (DataSet) (dataset.elementAt(i));
+			ds = dataset.elementAt(i);
 
 			a = ds.getClosestPoint(x, y);
 

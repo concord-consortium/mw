@@ -126,7 +126,7 @@ public class PageMultipleChoice extends MultipleChoice implements Embeddable, Mu
 			return;
 		String key = page.getAddress() + "#" + ModelerUtilities.getSortableString(index, 3) + "%"
 				+ PageMultipleChoice.class.getName();
-		QuestionAndAnswer q = (QuestionAndAnswer) UserData.sharedInstance().getData(key);
+		QuestionAndAnswer q = UserData.sharedInstance().getData(key);
 		if (q == null) {
 			q = new QuestionAndAnswer(questionBody.getText() + '\n' + formatChoices() + "\nMy answer is ",
 					getUserSelection(), answerToString());
@@ -306,7 +306,7 @@ public class PageMultipleChoice extends MultipleChoice implements Embeddable, Mu
 	protected void addCheckAnswerHistory(String s) {
 		String key = page.getAddress() + "#" + ModelerUtilities.getSortableString(index, 3) + "%"
 				+ PageMultipleChoice.class.getName();
-		QuestionAndAnswer q = (QuestionAndAnswer) UserData.sharedInstance().getData(key);
+		QuestionAndAnswer q = UserData.sharedInstance().getData(key);
 		if (q == null)
 			return;
 		q.addGuess(s);

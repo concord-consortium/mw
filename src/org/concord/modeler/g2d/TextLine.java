@@ -582,7 +582,7 @@ public class TextLine {
 			case '}':
 				w = current.x + current.getWidth(g);
 				state.pop();
-				current = ((TextState) state.peek()).copyState();
+				current = state.peek().copyState();
 				list.addElement(current);
 				current.x = w;
 				break;
@@ -700,7 +700,7 @@ public class TextLine {
 			lg.setColor(color);
 
 		for (int i = 0; i < list.size(); i++) {
-			ts = ((TextState) (list.elementAt(i)));
+			ts = list.elementAt(i);
 			if (ts.f != null)
 				lg.setFont(ts.f);
 			if (ts.s != null)

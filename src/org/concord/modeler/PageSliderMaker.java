@@ -135,7 +135,7 @@ class PageSliderMaker extends ComponentMaker {
 			if (s != null)
 				pageSlider.setTitle(s);
 			if (pageSlider.actionLabelMap != null) {
-				pageSlider.setupLabels((String) pageSlider.actionLabelMap.get(name));
+				pageSlider.setupLabels(pageSlider.actionLabelMap.get(name));
 			}
 			else {
 				pageSlider.setupLabels(null);

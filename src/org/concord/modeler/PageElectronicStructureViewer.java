@@ -395,7 +395,7 @@ public class PageElectronicStructureViewer extends ElectronicStructureViewer imp
 		int id = e.getID();
 		if (id == ModelEvent.MODEL_INPUT) {
 			setElement(((MolecularModel) src).getElement(elementID));
-			viewUpdated(new UpdateEvent(((MolecularModel) src)));
+			viewUpdated(new UpdateEvent(src));
 		}
 	}
 

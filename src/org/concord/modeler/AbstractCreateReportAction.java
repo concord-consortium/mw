@@ -126,14 +126,12 @@ abstract class AbstractCreateReportAction extends AbstractAction {
 			}
 			return i == JOptionPane.OK_OPTION || i == JOptionPane.CLOSED_OPTION;
 		}
-		else {
-			UserInfoProvider provider = new UserInfoProvider(modeler);
-			provider.setLocationRelativeTo(modeler);
-			provider.setVisible(true);
-			if (provider.isOK)
-				justPrint = true;
-			return provider.isOK;
-		}
+		UserInfoProvider provider = new UserInfoProvider(modeler);
+		provider.setLocationRelativeTo(modeler);
+		provider.setVisible(true);
+		if (provider.isOK)
+			justPrint = true;
+		return provider.isOK;
 	}
 
 }

@@ -100,7 +100,7 @@ class Mw3dConnector {
 					PageSlider slider = (PageSlider) listener;
 					name = slider.getName();
 					if (name != null) {
-						ChangeListener cl = (ChangeListener) model.getChanges().get(name);
+						ChangeListener cl = model.getChanges().get(name);
 						if (cl instanceof AbstractChange) {
 							String tooltip = slider.getToolTipText();
 							AbstractChange ac = (AbstractChange) cl;
@@ -126,7 +126,7 @@ class Mw3dConnector {
 					PageSpinner spinner = (PageSpinner) listener;
 					name = spinner.getName();
 					if (name != null) {
-						ChangeListener cl = (ChangeListener) model.getChanges().get(name);
+						ChangeListener cl = model.getChanges().get(name);
 						if (cl instanceof AbstractChange) {
 							String tooltip = spinner.getToolTipText();
 							spinner.setValue(((AbstractChange) cl).getValue());
@@ -149,7 +149,7 @@ class Mw3dConnector {
 					PageButton button = (PageButton) listener;
 					name = button.getName();
 					if (name != null) {
-						Action a = (Action) model.getActions().get(name);
+						Action a = model.getActions().get(name);
 						if (a != null) {
 							String text = button.getText();
 							String tooltip = button.getToolTipText();
@@ -166,7 +166,7 @@ class Mw3dConnector {
 					PageCheckBox checkBox = (PageCheckBox) listener;
 					name = checkBox.getName();
 					if (name != null) {
-						Action a = (Action) model.getSwitches().get(name);
+						Action a = model.getSwitches().get(name);
 						if (a != null) {
 							String text = checkBox.getText();
 							String tooltip = checkBox.getToolTipText();
@@ -183,7 +183,7 @@ class Mw3dConnector {
 					PageComboBox comboBox = (PageComboBox) listener;
 					name = comboBox.getName();
 					if (name != null) {
-						Action a = (Action) model.getChoices().get(name);
+						Action a = model.getChoices().get(name);
 						if (a != null) {
 							String tooltip = comboBox.getToolTipText();
 							a.setEnabled(false);
@@ -215,7 +215,7 @@ class Mw3dConnector {
 					PageRadioButton radioButton = (PageRadioButton) listener;
 					name = radioButton.getName();
 					if (name != null) {
-						Action a = (Action) model.getMultiSwitches().get(name);
+						Action a = model.getMultiSwitches().get(name);
 						if (a != null) {
 							String text = radioButton.getText();
 							String tooltip = radioButton.getToolTipText();
@@ -229,7 +229,7 @@ class Mw3dConnector {
 				}
 
 				else if (listener instanceof PageScriptConsole) {
-					model.addModelListener((PageScriptConsole) listener);
+					model.addModelListener(listener);
 					model.getMolecularModel().addScriptListener((PageScriptConsole) listener);
 				}
 

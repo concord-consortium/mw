@@ -272,10 +272,12 @@ class CommentManager {
 			e.printStackTrace();
 		}
 		finally {
-			try {
-				reader.close();
-			}
-			catch (IOException e) {
+			if (reader != null) {
+				try {
+					reader.close();
+				}
+				catch (IOException e) {
+				}
 			}
 		}
 		String s = new String(sb);

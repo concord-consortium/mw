@@ -163,7 +163,7 @@ public class Curve implements Serializable {
 					tmp = 0;
 					for (int p = i - k; p < i; p++)
 						tmp += yQ.getData(p);
-					tmp /= (float) k;
+					tmp /= k;
 				}
 				break;
 			case EXPONENTIAL_RUNNING_AVERAGE:

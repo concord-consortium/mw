@@ -90,7 +90,7 @@ class PageTextFieldMaker extends ComponentMaker {
 
 		String address = pageTextField.page.getAddress() + "#"
 				+ ModelerUtilities.getSortableString(pageTextField.index, 3) + "%" + PageTextField.class.getName();
-		QuestionAndAnswer q = (QuestionAndAnswer) UserData.sharedInstance().getData(address);
+		QuestionAndAnswer q = UserData.sharedInstance().getData(address);
 		if (q != null) {
 			q.setQuestion(pageTextField.getTitle());
 			q.setReferenceAnswer(pageTextField.referenceAnswer);
