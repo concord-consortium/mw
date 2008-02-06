@@ -25,16 +25,12 @@ package javax.vecmath;
  * 
  * to run this test.
  * 
- * If you find any bugs, please add a test method to reproduce the bug, and
- * insert the method call to this main driver.
+ * If you find any bugs, please add a test method to reproduce the bug, and insert the method call to this main driver.
  */
 public class VecmathTest {
 	/*
-	 * $Log: not supported by cvs2svn $
-	 * Revision 1.6  2006/07/19 19:26:01  qxie
-	 * *** empty log message ***
-	 * Revision 1.3 2006/06/20 14:00:04 qxie ***
-	 * empty log message ***
+	 * $Log: not supported by cvs2svn $ Revision 1.6 2006/07/19 19:26:01 qxie *** empty log message *** Revision 1.3
+	 * 2006/06/20 14:00:04 qxie *** empty log message ***
 	 * 
 	 * Revision 1.1 2006/03/22 02:28:49 qxie *** empty log message ***
 	 * 
@@ -46,8 +42,7 @@ public class VecmathTest {
 	 * 
 	 * Revision 1.8 1999/03/11 00:17:50 hiranabe removed some println's
 	 * 
-	 * Revision 1.7 1999/03/04 09:16:33 hiranabe small bug fix and copyright
-	 * change
+	 * Revision 1.7 1999/03/04 09:16:33 hiranabe small bug fix and copyright change
 	 * 
 	 * Revision 1.6 1998/10/14 00:49:10 hiranabe API1.1 Beta02
 	 * 
@@ -75,7 +70,7 @@ public class VecmathTest {
 	}
 
 	static public boolean equals(Matrix4d m1, Matrix4d m2) {
-		return m1.epsilonEquals(m2, epsilon);
+		return m1.epsilonEquals(m2, (double) epsilon);
 	}
 
 	static public boolean equals(Tuple4d m1, Tuple4d m2) {
@@ -95,7 +90,7 @@ public class VecmathTest {
 	}
 
 	static public boolean equals(GMatrix m1, GMatrix m2) {
-		return m1.epsilonEquals(m2, epsilon);
+		return m1.epsilonEquals(m2, (double) epsilon);
 	}
 
 	static public boolean equals(GVector v1, GVector v2) {
