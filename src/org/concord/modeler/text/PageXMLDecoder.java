@@ -1251,19 +1251,19 @@ final class PageXMLDecoder {
 						height = 0;
 					}
 					if (leftMargin > 0) {
-						lineIcon.setLeftMargin((int) leftMargin);
+						lineIcon.setLeftMargin(leftMargin);
 						leftMargin = 0;
 					}
 					if (rightMargin > 0) {
-						lineIcon.setRightMargin((int) rightMargin);
+						lineIcon.setRightMargin(rightMargin);
 						rightMargin = 0;
 					}
 					if (topMargin != 0) {
-						lineIcon.setTopMargin((int) topMargin);
+						lineIcon.setTopMargin(topMargin);
 						topMargin = 0;
 					}
 					if (bottomMargin != 0) {
-						lineIcon.setBottomMargin((int) bottomMargin);
+						lineIcon.setBottomMargin(bottomMargin);
 						bottomMargin = 0;
 					}
 					if (cornerArc != 0) {
@@ -2275,7 +2275,7 @@ final class PageXMLDecoder {
 			t.setChangable(page.isEditable());
 			String key = page.getAddress() + "#" + ModelerUtilities.getSortableString(indexOfComponent, 3) + "%"
 					+ t.getClass().getName();
-			QuestionAndAnswer qa = (QuestionAndAnswer) UserData.sharedInstance().getData(key);
+			QuestionAndAnswer qa = UserData.sharedInstance().getData(key);
 			if (qa != null) {
 				t.setCategory(qa.getQuestion());
 				t.setText(qa.getAnswer());
@@ -2881,7 +2881,7 @@ final class PageXMLDecoder {
 			m.clearSelection();
 			String key = page.getAddress() + "#" + ModelerUtilities.getSortableString(indexOfComponent, 3) + "%"
 					+ m.getClass().getName();
-			QuestionAndAnswer qa = (QuestionAndAnswer) UserData.sharedInstance().getData(key);
+			QuestionAndAnswer qa = UserData.sharedInstance().getData(key);
 			if (qa != null) {
 				answer = qa.getAnswer();
 				if (answer != null && !answer.equals("-1")) {
@@ -2893,9 +2893,9 @@ final class PageXMLDecoder {
 						if (ig != null)
 							val[k++] = ig.intValue();
 					}
-					if (val != null && val.length > 0) {
-						for (int i = 0; i < val.length; i++)
-							m.setSelected(val[i], true);
+					if (val.length > 0) {
+						for (int i : val)
+							m.setSelected(i, true);
 					}
 					answer = null;
 				}
@@ -2928,7 +2928,7 @@ final class PageXMLDecoder {
 			iq.setChangable(page.isEditable());
 			String key = page.getAddress() + "#" + ModelerUtilities.getSortableString(indexOfComponent, 3) + "%"
 					+ iq.getClass().getName();
-			QuestionAndAnswer qa = (QuestionAndAnswer) UserData.sharedInstance().getData(key);
+			QuestionAndAnswer qa = UserData.sharedInstance().getData(key);
 			if (qa != null) {
 				if (!QuestionAndAnswer.NO_ANSWER.equals(qa.getAnswer()))
 					iq.setImage(qa.getAnswer());
@@ -2985,7 +2985,7 @@ final class PageXMLDecoder {
 			t.setChangable(page.isEditable());
 			String key = page.getAddress() + "#" + ModelerUtilities.getSortableString(indexOfComponent, 3) + "%"
 					+ t.getClass().getName();
-			QuestionAndAnswer qa = (QuestionAndAnswer) UserData.sharedInstance().getData(key);
+			QuestionAndAnswer qa = UserData.sharedInstance().getData(key);
 			if (qa != null) {
 				if (!QuestionAndAnswer.NO_ANSWER.equals(qa.getAnswer()))
 					t.setText(qa.getAnswer());
@@ -3056,7 +3056,7 @@ final class PageXMLDecoder {
 			t.setChangable(page.isEditable());
 			String key = page.getAddress() + "#" + ModelerUtilities.getSortableString(indexOfComponent, 3) + "%"
 					+ t.getClass().getName();
-			QuestionAndAnswer qa = (QuestionAndAnswer) UserData.sharedInstance().getData(key);
+			QuestionAndAnswer qa = UserData.sharedInstance().getData(key);
 			if (qa != null) {
 				if (!QuestionAndAnswer.NO_ANSWER.equals(qa.getAnswer()))
 					t.setText(qa.getAnswer());
