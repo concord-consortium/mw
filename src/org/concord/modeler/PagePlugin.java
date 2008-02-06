@@ -174,10 +174,12 @@ abstract class PagePlugin extends JPanel implements Embeddable, Scriptable {
 				e.printStackTrace();
 			}
 			finally {
-				try {
-					is.close();
-				}
-				catch (IOException e) {
+				if (is != null) {
+					try {
+						is.close();
+					}
+					catch (IOException e) {
+					}
 				}
 			}
 		}

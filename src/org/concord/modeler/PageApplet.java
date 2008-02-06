@@ -337,10 +337,12 @@ public class PageApplet extends PagePlugin {
 			e.printStackTrace();
 		}
 		finally {
-			try {
-				os.close();
-			}
-			catch (IOException iox) {
+			if (os != null) {
+				try {
+					os.close();
+				}
+				catch (IOException iox) {
+				}
 			}
 		}
 	}
@@ -440,7 +442,7 @@ public class PageApplet extends PagePlugin {
 				return;
 			}
 			if (c instanceof Component && ((Component) c).isShowing()) {
-				SnapshotGallery.sharedInstance().takeSnapshot(page.getAddress(), (Component) c);
+				SnapshotGallery.sharedInstance().takeSnapshot(page.getAddress(), c);
 				b = true;
 			}
 		}

@@ -145,12 +145,11 @@ class ItineraryManager {
 		s = JmolContainer.getInternationalText("TransitionTime");
 		panel.add(new JLabel(s != null ? s : "Transition time (s)"));
 		transitionTimeSpinner.setToolTipText("Time in seconds to fly to this scene");
-		transitionTimeSpinner.setValue(new Integer(((Scene) jmolContainer.scenes.get(selectedIndex))
-				.getTransitionTime()));
+		transitionTimeSpinner.setValue(new Integer((jmolContainer.scenes.get(selectedIndex)).getTransitionTime()));
 		transitionTimeSpinner.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				short i = ((Integer) transitionTimeSpinner.getValue()).shortValue();
-				((Scene) jmolContainer.scenes.get(selectedIndex)).setTransitionTime(i);
+				jmolContainer.scenes.get(selectedIndex).setTransitionTime(i);
 			}
 		});
 		panel.add(transitionTimeSpinner);
@@ -158,11 +157,11 @@ class ItineraryManager {
 		s = JmolContainer.getInternationalText("StopTime");
 		panel.add(new JLabel(s != null ? s : "Stop time (s)"));
 		stopTimeSpinner.setToolTipText("Time in seconds to stop at this scene");
-		stopTimeSpinner.setValue(new Integer(((Scene) jmolContainer.scenes.get(selectedIndex)).getStopTime()));
+		stopTimeSpinner.setValue(new Integer((jmolContainer.scenes.get(selectedIndex)).getStopTime()));
 		stopTimeSpinner.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				short i = ((Integer) stopTimeSpinner.getValue()).shortValue();
-				((Scene) jmolContainer.scenes.get(selectedIndex)).setStopTime(i);
+				jmolContainer.scenes.get(selectedIndex).setStopTime(i);
 			}
 		});
 		panel.add(stopTimeSpinner);
@@ -296,7 +295,7 @@ class ItineraryManager {
 	}
 
 	private void setDepartInfo() {
-		Scene scene = (Scene) jmolContainer.scenes.get(selectedIndex);
+		Scene scene = jmolContainer.scenes.get(selectedIndex);
 		String s = departInfoArea.getText();
 		if (s == null || s.trim().equals("")) {
 			scene.setDepartInformation(null);
@@ -307,7 +306,7 @@ class ItineraryManager {
 	}
 
 	private void setArriveInfo() {
-		Scene scene = (Scene) jmolContainer.scenes.get(selectedIndex);
+		Scene scene = jmolContainer.scenes.get(selectedIndex);
 		String s = arriveInfoArea.getText();
 		if (s == null || s.trim().equals("")) {
 			scene.setArriveInformation(null);
@@ -318,7 +317,7 @@ class ItineraryManager {
 	}
 
 	private void setDepartScript() {
-		Scene scene = (Scene) jmolContainer.scenes.get(selectedIndex);
+		Scene scene = jmolContainer.scenes.get(selectedIndex);
 		String s = departScriptArea.getText();
 		if (s == null || s.trim().equals("")) {
 			scene.setDepartScript(null);
@@ -329,7 +328,7 @@ class ItineraryManager {
 	}
 
 	private void setArriveScript() {
-		Scene scene = (Scene) jmolContainer.scenes.get(selectedIndex);
+		Scene scene = jmolContainer.scenes.get(selectedIndex);
 		String s = arriveScriptArea.getText();
 		if (s == null || s.trim().equals("")) {
 			scene.setArriveScript(null);
@@ -340,7 +339,7 @@ class ItineraryManager {
 	}
 
 	private void populate() {
-		Scene scene = (Scene) jmolContainer.scenes.get(selectedIndex);
+		Scene scene = jmolContainer.scenes.get(selectedIndex);
 		ModelerUtilities.setWithoutNotifyingListeners(deleteCheckBox, deletion.get(selectedIndex));
 		transitionTimeSpinner.setValue(new Integer(scene.getTransitionTime()));
 		stopTimeSpinner.setValue(new Integer(scene.getStopTime()));

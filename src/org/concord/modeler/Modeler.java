@@ -2499,7 +2499,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 			bookmarkMenu.remove(4);
 		JMenuItem menuItem = null;
 		for (String key : BookmarkManager.sharedInstance().getBookmarks().keySet()) {
-			final String url = (String) BookmarkManager.sharedInstance().getBookmarks().get(key);
+			final String url = BookmarkManager.sharedInstance().getBookmarks().get(key);
 			menuItem = new JMenuItem(key);
 			menuItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -2789,11 +2789,14 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 			e2.printStackTrace();
 		}
 		finally {
-			out.close();
-			try {
-				socket.close();
-			}
-			catch (IOException ex) {
+			if (out != null)
+				out.close();
+			if (socket != null) {
+				try {
+					socket.close();
+				}
+				catch (IOException ex) {
+				}
 			}
 		}
 	}
@@ -2952,11 +2955,14 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 					e2.printStackTrace();
 				}
 				finally {
-					out.close();
-					try {
-						socket.close();
-					}
-					catch (IOException ex) {
+					if (out != null)
+						out.close();
+					if (socket != null) {
+						try {
+							socket.close();
+						}
+						catch (IOException ex) {
+						}
 					}
 				}
 			}

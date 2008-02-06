@@ -137,7 +137,7 @@ class ViewDataAction extends AbstractAction {
 		}
 		else {
 
-			DataSource ds = (DataSource) graph.data.get(0);
+			DataSource ds = graph.data.get(0);
 			ds.populateTable();
 			table.setModel(ds.getTableModel());
 			final ListSelectionModel selectionModel = new DefaultListSelectionModel();
@@ -148,7 +148,7 @@ class ViewDataAction extends AbstractAction {
 					if (selectionModel.isSelectionEmpty())
 						return;
 					int row = table.getSelectedRow();
-					DataSource ds1 = (DataSource) graph.data.get(0);
+					DataSource ds1 = graph.data.get(0);
 					ds1.setShowSelectedPoint(true);
 					try {
 						ds1.setSelectedX(Float.parseFloat((String) table.getModel().getValueAt(row, 1)));

@@ -187,8 +187,8 @@ public class PageJContainer extends PagePlugin {
 				}
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					String cachedCodeBase = (file != null && file.length > 0 && file[0] != null) ? FileUtilities
-							.getCodeBase(file[0].toString()) : page.getPathBase();
+					String cachedCodeBase = (file.length > 0 && file[0] != null) ? FileUtilities.getCodeBase(file[0]
+							.toString()) : page.getPathBase();
 					initPlugin(cachedCodeBase);
 				}
 			});
@@ -327,10 +327,12 @@ public class PageJContainer extends PagePlugin {
 			e.printStackTrace();
 		}
 		finally {
-			try {
-				os.close();
-			}
-			catch (IOException iox) {
+			if (os != null) {
+				try {
+					os.close();
+				}
+				catch (IOException iox) {
+				}
 			}
 		}
 	}
@@ -444,7 +446,7 @@ public class PageJContainer extends PagePlugin {
 			return;
 		}
 		if (c instanceof Component && ((Component) c).isShowing()) {
-			SnapshotGallery.sharedInstance().takeSnapshot(page.getAddress(), (Component) c);
+			SnapshotGallery.sharedInstance().takeSnapshot(page.getAddress(), c);
 		}
 	}
 

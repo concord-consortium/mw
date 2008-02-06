@@ -227,11 +227,13 @@ public class MultipageZipper {
 					ioe.printStackTrace();
 				}
 				finally {
-					try {
-						br.close();
-					}
-					catch (IOException ioe) {
-						ioe.printStackTrace();
+					if (br != null) {
+						try {
+							br.close();
+						}
+						catch (IOException ioe) {
+							ioe.printStackTrace();
+						}
 					}
 				}
 			}
