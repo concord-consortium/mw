@@ -150,7 +150,7 @@ class Mw2dConnector {
 					PageSlider slider = (PageSlider) listener;
 					name = slider.getName();
 					if (name != null) {
-						ChangeListener cl = (ChangeListener) model.getChanges().get(name);
+						ChangeListener cl = model.getChanges().get(name);
 						if (cl != null) {
 							String tooltip = slider.getToolTipText(); // store the tool tip
 							slider.addChangeListener(cl);
@@ -172,7 +172,7 @@ class Mw2dConnector {
 					PageSpinner spinner = (PageSpinner) listener;
 					name = spinner.getName();
 					if (name != null) {
-						ChangeListener cl = (ChangeListener) model.getChanges().get(name);
+						ChangeListener cl = model.getChanges().get(name);
 						if (cl != null) {
 							String tooltip = spinner.getToolTipText();
 							spinner.addChangeListener(cl);
@@ -194,7 +194,7 @@ class Mw2dConnector {
 					PageButton button = (PageButton) listener;
 					name = button.getName();
 					if (name != null) {
-						Action act = (Action) model.getActions().get(name);
+						Action act = model.getActions().get(name);
 						if (act != null) {
 							/* restore the original text because setAction() may change the text */
 							String text = button.getText();
@@ -216,7 +216,7 @@ class Mw2dConnector {
 					PageCheckBox checkBox = (PageCheckBox) listener;
 					name = checkBox.getName();
 					if (name != null) {
-						Action a = (Action) model.getSwitches().get(name);
+						Action a = model.getSwitches().get(name);
 						if (a != null) {
 							String text = checkBox.getText();
 							String tooltip = checkBox.getToolTipText();
@@ -234,7 +234,7 @@ class Mw2dConnector {
 					PageRadioButton radioButton = (PageRadioButton) listener;
 					name = radioButton.getName();
 					if (name != null) {
-						Action act = (Action) model.getMultiSwitches().get(name);
+						Action act = model.getMultiSwitches().get(name);
 						if (act != null) {
 							String text = radioButton.getText();
 							String tooltip = radioButton.getToolTipText();
@@ -252,7 +252,7 @@ class Mw2dConnector {
 					PageComboBox comboBox = (PageComboBox) listener;
 					name = comboBox.getName();
 					if (name != null) {
-						Action a = (Action) model.getChoices().get(name);
+						Action a = model.getChoices().get(name);
 						if (a != null) {
 							a.setEnabled(false);
 							String tooltip = comboBox.getToolTipText();
@@ -312,7 +312,7 @@ class Mw2dConnector {
 				}
 
 				else if (listener instanceof PagePotentialWell) {
-					model.addModelListener((PagePotentialWell) listener);
+					model.addModelListener(listener);
 					model.notifyModelListeners(new ModelEvent(model, ModelEvent.MODEL_INPUT));
 				}
 
@@ -353,7 +353,7 @@ class Mw2dConnector {
 				}
 
 				else if (listener instanceof PageScriptConsole) {
-					model.addModelListener((PageScriptConsole) listener);
+					model.addModelListener(listener);
 					((MDModel) model).addScriptListener((PageScriptConsole) listener);
 				}
 

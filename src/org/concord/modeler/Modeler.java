@@ -51,7 +51,6 @@ import java.net.CookieHandler;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -2848,12 +2847,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 			return;
 		new SwingWorker("Check-in", Thread.MIN_PRIORITY) {
 			public Object construct() {
-				try {
-					new Receptionist().checkin();
-				}
-				catch (SocketTimeoutException e) {
-					e.printStackTrace();
-				}
+				new Receptionist().checkin();
 				return null;
 			}
 

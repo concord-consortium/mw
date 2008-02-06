@@ -972,7 +972,7 @@ public class ParseFunction extends ScanString {
 				reOrderNodes(left);
 			}
 			else {
-				if (node.type == Node.OP && right.type == Node.OP) {
+				if (node.type == Node.OP && (right != null && right.type == Node.OP)) {
 					if (node.precedence >= right.precedence) {
 
 						Node newnode = new Node(node);

@@ -42,7 +42,7 @@ final class CurvePool {
 
 		synchronized (pool) {
 			for (Curve c : pool.keySet()) {
-				Boolean b = (Boolean) pool.get(c);
+				Boolean b = pool.get(c);
 				if (b == Boolean.FALSE) {
 					pool.put(c, Boolean.TRUE);
 					return c;

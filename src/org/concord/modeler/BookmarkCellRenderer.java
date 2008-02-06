@@ -40,7 +40,7 @@ class BookmarkCellRenderer extends JLabel implements ListCellRenderer {
 		if (PAGE_ICON == null)
 			PAGE_ICON = new ImageIcon(BookmarkCellRenderer.class.getResource("images/page.gif"));
 		setIcon(PAGE_ICON);
-		setToolTipText((String) BookmarkManager.sharedInstance().getBookmarks().get(value));
+		setToolTipText(BookmarkManager.sharedInstance().getBookmarks().get(value));
 		if (isSelected) {
 			setBackground(list.getSelectionBackground());
 			setForeground(list.getSelectionForeground());

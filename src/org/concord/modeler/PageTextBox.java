@@ -201,7 +201,6 @@ public class PageTextBox extends BasicPageTextBox {
 										+ " cannot be opened.</font></h2><p>&nbsp;Caused by " + ioe + "</body></html>");
 							}
 						});
-						is = null;
 					}
 				}
 				else {
@@ -210,7 +209,6 @@ public class PageTextBox extends BasicPageTextBox {
 					}
 					catch (IOException ioe) {
 						ioe.printStackTrace();
-						is = null;
 					}
 				}
 			}
@@ -221,7 +219,6 @@ public class PageTextBox extends BasicPageTextBox {
 			}
 			catch (IOException ioe) {
 				ioe.printStackTrace();
-				is = null;
 			}
 		}
 		if (is != null) {
@@ -307,10 +304,12 @@ public class PageTextBox extends BasicPageTextBox {
 			e.printStackTrace();
 		}
 		finally {
-			try {
-				out.close();
-			}
-			catch (IOException e) {
+			if (out != null) {
+				try {
+					out.close();
+				}
+				catch (IOException e) {
+				}
 			}
 		}
 		return true;
@@ -335,7 +334,7 @@ public class PageTextBox extends BasicPageTextBox {
 				final int n = list.indexOf(o);
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
-						QuestionAndAnswer qa = (QuestionAndAnswer) UserData.sharedInstance().getData(base + n);
+						QuestionAndAnswer qa = UserData.sharedInstance().getData(base + n);
 						if (qa != null && !QuestionAndAnswer.NO_ANSWER.equals(qa.getAnswer())) {
 							t.setText(qa.getAnswer());
 						}
@@ -366,7 +365,7 @@ public class PageTextBox extends BasicPageTextBox {
 			return;
 		String key = page.getAddress() + "#" + ModelerUtilities.getSortableString(index, 3) + "%"
 				+ PageTextBox.class.getName() + ":" + n;
-		QuestionAndAnswer q = (QuestionAndAnswer) UserData.sharedInstance().getData(key);
+		QuestionAndAnswer q = UserData.sharedInstance().getData(key);
 		if (q != null) {
 			if (t.getText() == null || t.getText().trim().equals("")) {
 				q.setAnswer(QuestionAndAnswer.NO_ANSWER);

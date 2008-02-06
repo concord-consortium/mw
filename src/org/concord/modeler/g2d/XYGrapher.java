@@ -275,7 +275,7 @@ public class XYGrapher extends JPanel {
 			cf = c.getFlavor();
 			color = cf.getColor();
 			color = new Color(color.getRed(), color.getGreen(), color.getBlue(), 64);
-			list = (List) storedData.get(c.getLegend().getText());
+			list = storedData.get(c.getLegend().getText());
 			if (list != null) {
 				c = new Curve(list);
 				c.setFlavor(new CurveFlavor(color));
@@ -924,6 +924,8 @@ public class XYGrapher extends JPanel {
 		catch (FileNotFoundException e) {
 			e.printStackTrace(System.err);
 		}
+		if (in == null)
+			return;
 		CurveGroup cg = null;
 		try {
 			ObjectInputStream s = new ObjectInputStream(in);
@@ -953,6 +955,8 @@ public class XYGrapher extends JPanel {
 		catch (FileNotFoundException e) {
 			e.printStackTrace(System.err);
 		}
+		if (out == null)
+			return;
 		try {
 			ObjectOutputStream s = new ObjectOutputStream(out);
 			s.writeObject(curveGroup);

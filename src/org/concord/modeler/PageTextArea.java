@@ -134,7 +134,7 @@ public class PageTextArea extends JPanel implements Embeddable, HtmlService, Sea
 			return;
 		String key = page.getAddress() + "#" + ModelerUtilities.getSortableString(index, 3) + "%"
 				+ PageTextArea.class.getName();
-		QuestionAndAnswer q = (QuestionAndAnswer) UserData.sharedInstance().getData(key);
+		QuestionAndAnswer q = UserData.sharedInstance().getData(key);
 		if (q != null) {
 			if (textArea.getText() == null || textArea.getText().trim().equals("")) {
 				q.setAnswer(QuestionAndAnswer.NO_ANSWER);

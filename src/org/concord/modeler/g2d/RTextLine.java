@@ -599,7 +599,7 @@ public class RTextLine extends TextLine {
 
 		// Write to the offscreen image
 		for (int i = 0; i < list.size(); i++) {
-			ts = ((TextState) (list.elementAt(i)));
+			ts = list.elementAt(i);
 			if (ts.f != null)
 				offsG.setFont(ts.f);
 			if (ts.s != null)

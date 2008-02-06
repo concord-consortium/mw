@@ -95,7 +95,7 @@ public final class HistoryManager {
 		long t1 = System.currentTimeMillis();
 		long t0;
 		for (Iterator it = map.keySet().iterator(); it.hasNext();) {
-			t0 = ((Long) map.get(it.next())).longValue();
+			t0 = map.get(it.next());
 			if (t1 - t0 > nday * DAY)
 				it.remove();
 		}

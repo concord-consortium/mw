@@ -85,13 +85,13 @@ class ImageContainer extends JPanel implements SnapshotListener {
 		int w0 = icon.getIconWidth();
 		int h0 = icon.getIconHeight();
 		if (w0 >= h0) {
-			int h2 = (int) ((float) w / (float) w0 * (float) h0);
+			int h2 = (int) ((float) w / (float) w0 * h0);
 			image = icon.getImage().getScaledInstance(w, h2, Image.SCALE_SMOOTH);
 			imageX = 0;
 			imageY = (h - h2) / 2;
 		}
 		else {
-			int w2 = (int) ((float) h / (float) h0 * (float) w0);
+			int w2 = (int) ((float) h / (float) h0 * w0);
 			image = icon.getImage().getScaledInstance(w2, h, Image.SCALE_SMOOTH);
 			imageY = 0;
 			imageX = (w - w2) / 2;

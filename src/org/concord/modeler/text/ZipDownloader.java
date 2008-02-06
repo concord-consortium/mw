@@ -179,7 +179,7 @@ class ZipDownloader {
 		});
 		boolean cmlFound = cml != null && cml.length > 0;
 		if (cmlFound) {
-			if (cml.length > 1) {
+			if (cml != null && cml.length > 1) {
 				File entry = new File(dir, "entry.txt");
 				String entryPage = null;
 				if (entry.exists()) {

@@ -241,10 +241,8 @@ abstract class PagePluginMaker extends ComponentMaker {
 				}
 				jarClassMap.put(file, list);
 			}
-			if (list != null) {
-				for (String s : list) {
-					classComboBox.addItem(s);
-				}
+			for (String s : list) {
+				classComboBox.addItem(s);
 			}
 		}
 	}

@@ -95,7 +95,7 @@ public final class XMLCharacterEncoder {
 			StringBuffer sb = new StringBuffer(text);
 			int cumu = 0, del = 0;
 			for (Integer index : store.keySet()) {
-				Character character = (Character) store.get(index);
+				Character character = store.get(index);
 				switch (character.charValue()) {
 				case LESS_THAN:
 					del = index.intValue() + cumu;

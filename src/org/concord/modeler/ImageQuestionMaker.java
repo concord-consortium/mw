@@ -87,7 +87,7 @@ class ImageQuestionMaker extends ComponentMaker {
 
 		String address = imageQuestion.page.getAddress() + "#"
 				+ ModelerUtilities.getSortableString(imageQuestion.index, 3) + "%" + ImageQuestion.class.getName();
-		QuestionAndAnswer q = (QuestionAndAnswer) UserData.sharedInstance().getData(address);
+		QuestionAndAnswer q = UserData.sharedInstance().getData(address);
 		if (q != null) {
 			// if the question text has been changed
 			if (!q.getQuestion().equals(imageQuestion.getQuestion())) {

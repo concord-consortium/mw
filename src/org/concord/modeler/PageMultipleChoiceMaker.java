@@ -163,7 +163,7 @@ class PageMultipleChoiceMaker extends ComponentMaker {
 		String address = pageMultipleChoice.page.getAddress() + "#"
 				+ ModelerUtilities.getSortableString(pageMultipleChoice.index, 3) + "%"
 				+ PageMultipleChoice.class.getName();
-		QuestionAndAnswer q = (QuestionAndAnswer) UserData.sharedInstance().getData(address);
+		QuestionAndAnswer q = UserData.sharedInstance().getData(address);
 		if (q != null) {
 			q.setQuestion(pageMultipleChoice.getQuestion() + '\n' + pageMultipleChoice.formatChoices()
 					+ "\nMy answer is ");
@@ -609,7 +609,7 @@ class PageMultipleChoiceMaker extends ComponentMaker {
 			try {
 				String s = Modeler.getInternationalText("Choice");
 				for (int i = choiceButton.length; i < n; i++) {
-					ab[i] = (AbstractButton) choiceButton[0].getClass().newInstance();
+					ab[i] = choiceButton[0].getClass().newInstance();
 					ab[i].setText((s != null ? s : "Choice ") + c);
 					ab[i].setToolTipText("Click if this choice is the right answer");
 					tf[i] = new PastableTextField();

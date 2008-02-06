@@ -146,7 +146,7 @@ public class PageCheckBox extends JCheckBox implements Embeddable, ModelCommunic
 				}
 			}
 			else {
-				ModelCanvas mc = (ModelCanvas) page.getComponentPool().get(modelID);
+				ModelCanvas mc = page.getComponentPool().get(modelID);
 				if (mc != null)
 					mc.getContainer().getModel().removeModelListener(this);
 			}
