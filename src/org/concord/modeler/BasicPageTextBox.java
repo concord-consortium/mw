@@ -253,7 +253,8 @@ public abstract class BasicPageTextBox extends TextBox implements AutoResizable,
 			while (en.hasMoreElements()) {
 				name = en.nextElement();
 				if (name == HTML.Tag.A) {
-					as = (AttributeSet) as.getAttribute(name);
+					if (as != null)
+						as = (AttributeSet) as.getAttribute(name);
 					if (as == null)
 						continue;
 					str = (String) as.getAttribute(HTML.Attribute.HREF);

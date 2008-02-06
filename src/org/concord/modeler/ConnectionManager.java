@@ -188,7 +188,6 @@ public class ConnectionManager {
 		}
 		catch (MalformedURLException e) {
 			e.printStackTrace();
-			u = null;
 		}
 		return u;
 	}
@@ -219,7 +218,7 @@ public class ConnectionManager {
 	/**
 	 * return null if cache should update or caching is not permitted. Return the file otherwise.
 	 */
-	public File shouldUpdate(String s) throws IOException {
+	public File shouldUpdate(String s) {
 		if (!allowCaching)
 			return null;
 		if (isDynamicalContent(s))
@@ -240,7 +239,7 @@ public class ConnectionManager {
 	/**
 	 * return null if cache should update or caching is not permitted. Return the file otherwise.
 	 */
-	public File shouldUpdate(URL url) throws IOException {
+	public File shouldUpdate(URL url) {
 		if (!allowCaching)
 			return null;
 		if (isDynamicalContent(url))
@@ -299,10 +298,10 @@ public class ConnectionManager {
 	private boolean isCached(URL url) {
 		if (!allowCaching)
 			return false;
-		if (url.toString().toLowerCase().startsWith("jar:"))
-			return false;
 		if (url == null)
 			throw new IllegalArgumentException("Null URL");
+		if (url.toString().toLowerCase().startsWith("jar:"))
+			return false;
 		return new File(getCacheDirectory(), convertURLToFileName(url)).exists();
 	}
 
@@ -334,11 +333,10 @@ public class ConnectionManager {
 
 		if (!allowCaching)
 			return null;
-		if (url.toString().toLowerCase().startsWith("jar:"))
-			return null;
-
 		if (url == null)
 			throw new IllegalArgumentException("Null URL");
+		if (url.toString().toLowerCase().startsWith("jar:"))
+			return null;
 
 		String host = url.getHost();
 		if (!ServerChecker.sharedInstance().shouldCheck(host)) {
@@ -395,12 +393,10 @@ public class ConnectionManager {
 				catch (IOException e) {
 				}
 			}
-			if (fos != null) {
-				try {
-					fos.close();
-				}
-				catch (IOException e) {
-				}
+			try {
+				fos.close();
+			}
+			catch (IOException e) {
 			}
 		}
 		if (error)
@@ -415,7 +411,7 @@ public class ConnectionManager {
 	 * get the last-modified time of this Web resource. The result is the number of milliseconds since January 1, 1970
 	 * GMT. This is used to check update for a resource.
 	 */
-	private static long getLastModified(URL url) throws IOException {
+	private static long getLastModified(URL url) {
 		// System.out.println(Thread.currentThread()+":"+url);
 		if (url == null)
 			throw new IllegalArgumentException("Null URL");

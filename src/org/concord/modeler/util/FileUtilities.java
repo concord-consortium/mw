@@ -252,7 +252,7 @@ public class FileUtilities {
 
 	/** @return the extension of a file name in lower case */
 	public static String getExtensionInLowerCase(File file) {
-		if (file.isDirectory() || file == null)
+		if (file == null || file.isDirectory())
 			return null;
 		String extension = getSuffix(file.getName());
 		if (extension != null)
@@ -262,7 +262,7 @@ public class FileUtilities {
 
 	/** @return the extension of a file name in upper case */
 	public static String getExtensionInUpperCase(File file) {
-		if (file.isDirectory() || file == null)
+		if (file == null || file.isDirectory())
 			return null;
 		String extension = getSuffix(file.getName());
 		if (extension != null)

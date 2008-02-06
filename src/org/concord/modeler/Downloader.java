@@ -162,15 +162,13 @@ class Downloader {
 		}
 
 		InputStream is = null;
-		if (connect != null) {
-			try {
-				is = connect.getInputStream();
-			}
-			catch (IOException e) {
-				e.printStackTrace();
-				EventQueue.invokeLater(showError);
-				return;
-			}
+		try {
+			is = connect.getInputStream();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+			EventQueue.invokeLater(showError);
+			return;
 		}
 
 		FileOutputStream fos = null;
@@ -203,24 +201,15 @@ class Downloader {
 		}
 		catch (IOException ioe) {
 			ioe.printStackTrace();
-			try {
-				is.close();
-			}
-			catch (Exception e) {
-			}
-			try {
-				fos.close();
-			}
-			catch (Exception e) {
-			}
 			EventQueue.invokeLater(showError);
-			return;
 		}
 		finally {
-			try {
-				is.close();
-			}
-			catch (Exception e) {
+			if (is != null) {
+				try {
+					is.close();
+				}
+				catch (Exception e) {
+				}
 			}
 			try {
 				fos.close();
