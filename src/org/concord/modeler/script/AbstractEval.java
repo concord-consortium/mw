@@ -393,7 +393,7 @@ public abstract class AbstractEval {
 		}
 	}
 
-	private boolean testWhile(String command) throws InterruptedException {
+	private boolean testWhile(String command) {
 		int lp = command.indexOf("(");
 		int rp = command.lastIndexOf(")");
 		String whileExpression = command.substring(lp + 1, rp);
@@ -431,36 +431,34 @@ public abstract class AbstractEval {
 					out(ScriptEvent.FAILED, "No matching while is found.");
 					return false;
 				}
-				else {
-					if (ifLevel > 0 && skipIf()) {
-						iWhile = -1;
-						firstWhileFalse = false;
-						ifLevelBeforeWhile = 0;
-						continue;
-					}
-					whileLoopCommands = new String[i - iWhile - 1];
-					for (int j = 0; j < whileLoopCommands.length; j++)
-						whileLoopCommands[j] = command[iWhile + 1 + j];
-					while (testWhile(command[iWhile])) {
-						if (stopWhile) {
-							// System.out.println("interrupting the while loop: "+command[iWhile]);
-							break;
-						}
-						if (!evalCommandSet2(whileLoopCommands))
-							break;
-						if (!getAsTask()) {
-							// for action scripts, we had better sleep briefly for it to be interruptible
-							try {
-								Thread.sleep(1);
-							}
-							catch (InterruptedException e) {
-							}
-						}
-					}
+				if (ifLevel > 0 && skipIf()) {
 					iWhile = -1;
 					firstWhileFalse = false;
 					ifLevelBeforeWhile = 0;
+					continue;
 				}
+				whileLoopCommands = new String[i - iWhile - 1];
+				for (int j = 0; j < whileLoopCommands.length; j++)
+					whileLoopCommands[j] = command[iWhile + 1 + j];
+				while (testWhile(command[iWhile])) {
+					if (stopWhile) {
+						// System.out.println("interrupting the while loop: "+command[iWhile]);
+						break;
+					}
+					if (!evalCommandSet2(whileLoopCommands))
+						break;
+					if (!getAsTask()) {
+						// for action scripts, we had better sleep briefly for it to be interruptible
+						try {
+							Thread.sleep(1);
+						}
+						catch (InterruptedException e) {
+						}
+					}
+				}
+				iWhile = -1;
+				firstWhileFalse = false;
+				ifLevelBeforeWhile = 0;
 				continue;
 			}
 
@@ -545,7 +543,7 @@ public abstract class AbstractEval {
 		return false;
 	}
 
-	protected boolean evaluateLogicalExpression(String str) throws InterruptedException {
+	protected boolean evaluateLogicalExpression(String str) {
 		if (str == null)
 			return false;
 		if (AND_NOT.matcher(str).find() || OR_NOT.matcher(str).find()) {
@@ -794,7 +792,7 @@ public abstract class AbstractEval {
 	}
 
 	/** evaluate definitions first before evaluating anything else. */
-	protected void evalDefinitions(String[] command) throws InterruptedException {
+	protected void evalDefinitions(String[] command) {
 		Matcher matcher;
 		boolean isStatic = false;
 		for (String ci : command) {
@@ -851,14 +849,7 @@ public abstract class AbstractEval {
 		value = useDefinitions(value); // make use of the previous definitions
 		Matcher matcher = LOGICAL_OPERATOR.matcher(value);
 		if (matcher.find()) {
-			boolean b = false;
-			try {
-				b = evaluateLogicalExpression(value);
-			}
-			catch (InterruptedException e) {
-				e.printStackTrace();
-				return;
-			}
+			boolean b = evaluateLogicalExpression(value);
 			if (isStatic) {
 				storeSharedDefinition(variable, b ? "1" : "0");
 			}
@@ -1233,7 +1224,6 @@ public abstract class AbstractEval {
 					}
 					catch (IOException ioe) {
 						ioe.printStackTrace();
-						is = null;
 					}
 				}
 				else {
@@ -1242,7 +1232,6 @@ public abstract class AbstractEval {
 					}
 					catch (IOException ioe) {
 						ioe.printStackTrace();
-						is = null;
 					}
 				}
 			}
@@ -1253,7 +1242,6 @@ public abstract class AbstractEval {
 			}
 			catch (IOException ioe) {
 				ioe.printStackTrace();
-				is = null;
 			}
 		}
 		if (is == null) {

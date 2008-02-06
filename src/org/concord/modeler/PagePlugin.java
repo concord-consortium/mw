@@ -166,8 +166,6 @@ abstract class PagePlugin extends JPanel implements Embeddable, Scriptable {
 				e.printStackTrace();
 				return;
 			}
-			if (url == null)
-				return;
 			try {
 				is = url.openStream();
 				loadState(is);

@@ -1714,12 +1714,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 						mue.printStackTrace();
 						return null;
 					}
-					try {
-						file = ConnectionManager.sharedInstance().shouldUpdate(u);
-					}
-					catch (IOException e) {
-						e.printStackTrace();
-					}
+					file = ConnectionManager.sharedInstance().shouldUpdate(u);
 					if (file == null) {
 						try {
 							file = ConnectionManager.sharedInstance().cache(u);
@@ -2530,13 +2525,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		}
 
 		void read(URL u) {
-			file = null;
-			try {
-				file = ConnectionManager.sharedInstance().shouldUpdate(u);
-			}
-			catch (IOException e) {
-				e.printStackTrace();
-			}
+			file = ConnectionManager.sharedInstance().shouldUpdate(u);
 			url = file == null ? u : null;
 			readXML();
 			isLoading.set(false);

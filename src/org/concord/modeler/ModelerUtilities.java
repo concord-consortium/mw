@@ -529,13 +529,7 @@ public final class ModelerUtilities {
 			throw new IllegalArgumentException("Resource location error");
 		String s2 = path;
 		if (FileUtilities.isRemote(path)) {
-			File f2 = null;
-			try {
-				f2 = ConnectionManager.sharedInstance().shouldUpdate(path);
-			}
-			catch (IOException e) {
-				e.printStackTrace();
-			}
+			File f2 = ConnectionManager.sharedInstance().shouldUpdate(path);
 			if (f2 != null)
 				s2 = f2.getAbsolutePath();
 		}
@@ -548,13 +542,7 @@ public final class ModelerUtilities {
 			throw new IllegalArgumentException("Resource location error");
 		String s2 = path;
 		if (FileUtilities.isRemote(path)) {
-			File f2 = null;
-			try {
-				f2 = ConnectionManager.sharedInstance().shouldUpdate(path);
-			}
-			catch (IOException e) {
-				e.printStackTrace();
-			}
+			File f2 = ConnectionManager.sharedInstance().shouldUpdate(path);
 			if (f2 != null)
 				s2 = f2.toString();
 		}

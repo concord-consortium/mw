@@ -300,18 +300,18 @@ class PagePropertiesDialog extends JDialog {
 
 		ActionListener[] al = okButton.getActionListeners();
 		if (al != null) {
-			for (int i = 0; i < al.length; i++)
-				okButton.removeActionListener(al[i]);
+			for (ActionListener i : al)
+				okButton.removeActionListener(i);
 		}
 		al = cancelButton.getActionListeners();
 		if (al != null) {
-			for (int i = 0; i < al.length; i++)
-				cancelButton.removeActionListener(al[i]);
+			for (ActionListener i : al)
+				cancelButton.removeActionListener(i);
 		}
 		WindowListener[] wl = getWindowListeners();
 		if (wl != null) {
-			for (int i = 0; i < al.length; i++)
-				removeWindowListener(wl[i]);
+			for (WindowListener i : wl)
+				removeWindowListener(i);
 		}
 
 		getContentPane().removeAll();

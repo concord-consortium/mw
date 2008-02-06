@@ -1037,8 +1037,10 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 						mfe.printStackTrace();
 					}
 				}
-				icon.setDescription(str);
-				setBackgroundImage(icon);
+				if (icon != null) {
+					icon.setDescription(str);
+					setBackgroundImage(icon);
+				}
 			}
 		}
 	}
@@ -1428,7 +1430,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 
 	public Action[] getActions() {
 		Action[] a = new Action[actions.size()];
-		return (Action[]) actions.values().toArray(a);
+		return actions.values().toArray(a);
 	}
 
 	public Action getAction(String s) {
@@ -2649,7 +2651,6 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 					}
 					catch (MalformedURLException mue) {
 						mue.printStackTrace();
-						u = null;
 					}
 					if (u != null)
 						model.input(u);
@@ -2754,16 +2755,14 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				ex.printStackTrace();
 				return false;
 			}
-			if (u != null) {
-				URLConnection conn = ConnectionManager.getConnection(u);
-				if (conn == null)
-					return false;
-				try {
-					reader = new InputStreamReader(conn.getInputStream());
-				}
-				catch (IOException e) {
-					throw new IOException(e.getMessage());
-				}
+			URLConnection conn = ConnectionManager.getConnection(u);
+			if (conn == null)
+				return false;
+			try {
+				reader = new InputStreamReader(conn.getInputStream());
+			}
+			catch (IOException e) {
+				throw new IOException(e.getMessage());
 			}
 		}
 		else {
@@ -2774,8 +2773,6 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				throw new IOException(e.getMessage());
 			}
 		}
-		if (reader == null)
-			return false;
 		final boolean b = isEditable();
 		if (!b)
 			setEditable(true);
@@ -4264,61 +4261,60 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			s2 = FileUtilities.httpEncode(s2);
 			return pageURI.resolve(s2).toString();
 		}
-		else { // resolving local paths
-			if (OS.startsWith("Windows")) {
-				if (s.charAt(1) == ':')
-					return s;
-			}
-			else {
-				if (s.charAt(0) == '/')
-					return s;
-			}
-			int fromIndex = 0, count = 0;
-			while (fromIndex > -1) {
-				fromIndex = s.indexOf("..", fromIndex);
-				if (fromIndex >= 0) {
-					fromIndex += 2;
-					count++;
-				}
-			}
-			String s2 = s.replace('\\', '/');
-			String[] s3 = s2.split("/");
-			ArrayList<String> list = new ArrayList<String>();
-			for (int k = 0; k < s3.length; k++) {
-				if (!s3[k].trim().equals("") && !s3[k].equals("."))
-					list.add(s3[k]);
-			}
-			String[] s1 = new String[list.size()];
-			for (int k = 0; k < s1.length; k++) {
-				s1[k] = list.get(k);
-			}
-			String b = getPathBase(pageAddress);
-			if (b == null || b.equals("")) {
+		// resolving local paths
+		if (OS.startsWith("Windows")) {
+			if (s.charAt(1) == ':')
 				return s;
+		}
+		else {
+			if (s.charAt(0) == '/')
+				return s;
+		}
+		int fromIndex = 0, count = 0;
+		while (fromIndex > -1) {
+			fromIndex = s.indexOf("..", fromIndex);
+			if (fromIndex >= 0) {
+				fromIndex += 2;
+				count++;
 			}
-			if (FileUtilities.isRemote(b)) {
-				String[] b1 = b.substring(7).split("/");
-				String path = "http://";
-				int i;
-				for (i = 0; i < b1.length - count; i++)
-					path += b1[i] + "/";
-				for (i = count; i < s1.length - 1; i++)
-					path += s1[i] + "/";
-				path += s1[s1.length - 1];
-				return path;
-			}
-			String b2 = b.replace('\\', '/');
-			String[] b1 = b2.split("/");
-			String path = "";
+		}
+		String s2 = s.replace('\\', '/');
+		String[] s3 = s2.split("/");
+		ArrayList<String> list = new ArrayList<String>();
+		for (int k = 0; k < s3.length; k++) {
+			if (!s3[k].trim().equals("") && !s3[k].equals("."))
+				list.add(s3[k]);
+		}
+		String[] s1 = new String[list.size()];
+		for (int k = 0; k < s1.length; k++) {
+			s1[k] = list.get(k);
+		}
+		String b = getPathBase(pageAddress);
+		if (b == null || b.equals("")) {
+			return s;
+		}
+		if (FileUtilities.isRemote(b)) {
+			String[] b1 = b.substring(7).split("/");
+			String path = "http://";
 			int i;
-			String fs = System.getProperty("file.separator");
 			for (i = 0; i < b1.length - count; i++)
-				path += b1[i] + fs;
+				path += b1[i] + "/";
 			for (i = count; i < s1.length - 1; i++)
-				path += s1[i] + fs;
+				path += s1[i] + "/";
 			path += s1[s1.length - 1];
 			return path;
 		}
+		String b2 = b.replace('\\', '/');
+		String[] b1 = b2.split("/");
+		String path = "";
+		int i;
+		String fs = System.getProperty("file.separator");
+		for (i = 0; i < b1.length - count; i++)
+			path += b1[i] + fs;
+		for (i = count; i < s1.length - 1; i++)
+			path += s1[i] + fs;
+		path += s1[s1.length - 1];
+		return path;
 	}
 
 	private String getElementName(int location) {

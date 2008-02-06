@@ -531,33 +531,33 @@ public class PageComboBox extends JComboBox implements Embeddable, ModelCommunic
 	}
 
 	public String toString() {
-		boolean stateless = false;
-		Action a = getAction();
-		if (a != null) {
-			Object o = a.getValue("stateless");
-			if (o instanceof Boolean)
-				stateless = ((Boolean) o).booleanValue();
-		}
-		StringBuffer script = new StringBuffer();
-		String d = (String) a.getValue(Action.SHORT_DESCRIPTION);
-		if ("Execute MW script".equals(d) || "Execute Jmol script".equals(d)) {
-			int n = getItemCount();
-			for (int i = 0; i < n; i++) {
-				script.append("{option=\"" + getItemAt(i) + "\", script=\"" + getClientProperty("script" + i) + "\"}");
-			}
-		}
 		StringBuffer sb = new StringBuffer("<class>" + getClass().getName() + "</class>\n");
 		if (modelClass != null)
 			sb.append("<modelclass>" + modelClass + "</modelclass>\n");
 		sb.append("<model>" + modelID + "</model>\n");
 		if (optionGroup != null && !optionGroup.trim().equals(""))
 			sb.append("<group>" + XMLCharacterEncoder.encode(optionGroup) + "</group>\n");
+		boolean stateless = false;
+		Action a = getAction();
+		if (a != null) {
+			sb.append("<action>" + a.getValue(Action.SHORT_DESCRIPTION) + "</action>\n");
+			StringBuffer script = new StringBuffer();
+			String d = (String) a.getValue(Action.SHORT_DESCRIPTION);
+			if ("Execute MW script".equals(d) || "Execute Jmol script".equals(d)) {
+				int n = getItemCount();
+				for (int i = 0; i < n; i++) {
+					script.append("{option=\"" + getItemAt(i) + "\", script=\"" + getClientProperty("script" + i)
+							+ "\"}");
+				}
+			}
+			if (script.length() > 0)
+				sb.append("<script>" + XMLCharacterEncoder.encode(script.toString()) + "</script>\n");
+			Object o = a.getValue("stateless");
+			if (o instanceof Boolean)
+				stateless = (Boolean) o;
+		}
 		if (!stateless && getSelectedIndex() != 0)
 			sb.append("<selectedIndex>" + getSelectedIndex() + "</selectedIndex>\n");
-		if (script.length() > 0)
-			sb.append("<script>" + XMLCharacterEncoder.encode(script.toString()) + "</script>\n");
-		if (a != null)
-			sb.append("<action>" + a.getValue(Action.SHORT_DESCRIPTION) + "</action>\n");
 		if (disabledAtRun)
 			sb.append("<disabled_at_run>true</disabled_at_run>\n");
 		if (disabledAtScript)
