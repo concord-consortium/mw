@@ -507,7 +507,7 @@ public class Navigator {
 	private String peek() {
 		if (left.empty())
 			return null;
-		return (String) left.peek();
+		return left.peek();
 	}
 
 	/* go forward to next visited page */
