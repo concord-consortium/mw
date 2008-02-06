@@ -449,8 +449,8 @@ public class GVector implements Serializable {
      * @param   tuple the source for the new GVector's new values 
      */
     public final void set(Tuple2f tuple)  {
-        elementData[0] = (double)tuple.x;
-        elementData[1] = (double)tuple.y;
+        elementData[0] = tuple.x;
+        elementData[1] = tuple.y;
     }
 
     /**
@@ -458,9 +458,9 @@ public class GVector implements Serializable {
      * @param   tuple the source for the new GVector's new values 
      */
     public final void set(Tuple3f tuple) {
-        elementData[0] = (double)tuple.x;
-        elementData[1] = (double)tuple.y;
-        elementData[2] = (double)tuple.z;
+        elementData[0] = tuple.x;
+        elementData[1] = tuple.y;
+        elementData[2] = tuple.z;
     }
 
     /**
@@ -478,10 +478,10 @@ public class GVector implements Serializable {
      * @param   tuple the source for the new GVector's new values 
      */
     public final void set(Tuple4f tuple) {
-        elementData[0] = (double)tuple.x;
-        elementData[1] = (double)tuple.y;
-        elementData[2] = (double)tuple.z;
-        elementData[3] = (double)tuple.w;
+        elementData[0] = tuple.x;
+        elementData[1] = tuple.y;
+        elementData[2] = tuple.z;
+        elementData[3] = tuple.w;
     }
 
     /**

@@ -1437,12 +1437,12 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		return actions.get(s);
 	}
 
-	/** FIXME: ComponentPool should really be improved. */
+	/** TODO: ComponentPool should really be redone. */
 	public void setComponentPool(ComponentPool a) {
 		componentPool = a;
 	}
 
-	/** FIXME: ComponentPool should really be improved. */
+	/** TODO: ComponentPool should really be redone. */
 	public ComponentPool getComponentPool() {
 		return componentPool;
 	}

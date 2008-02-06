@@ -160,8 +160,10 @@ class CommentView extends JComponent {
 		comments = "";
 		String inputLine;
 		try {
-			while ((inputLine = in.readLine()) != null)
-				comments += inputLine;
+			if (in != null) {
+				while ((inputLine = in.readLine()) != null)
+					comments += inputLine;
+			}
 			msg = comments;
 		}
 		catch (IOException e) {
@@ -169,11 +171,13 @@ class CommentView extends JComponent {
 			msg = "Error :" + e;
 		}
 		finally {
-			try {
-				in.close();
-			}
-			catch (IOException e) {
-				e.printStackTrace();
+			if (in != null) {
+				try {
+					in.close();
+				}
+				catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		String s1 = "There is currently no discussion about this page.";

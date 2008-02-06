@@ -293,12 +293,10 @@ public class Zipper {
 				catch (IOException e) {
 				}
 			}
-			if (zis != null) {
-				try {
-					zis.close();
-				}
-				catch (IOException e) {
-				}
+			try {
+				zis.close();
+			}
+			catch (IOException e) {
 			}
 			if (monitor != null) {
 				EventQueue.invokeLater(new Runnable() {
@@ -378,11 +376,13 @@ public class Zipper {
 			byteCount = -1L;
 		}
 		finally {
-			try {
-				zis.close();
-			}
-			catch (IOException e) {
-				e.printStackTrace();
+			if (zis != null) {
+				try {
+					zis.close();
+				}
+				catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 

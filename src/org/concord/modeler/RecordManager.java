@@ -84,19 +84,19 @@ public class RecordManager {
 		if (copy == null || copy.isEmpty()) {
 			return true;
 		}
-		QuestionAndAnswer oldValue = (QuestionAndAnswer) copy.get(key);
-		QuestionAndAnswer newValue = (QuestionAndAnswer) UserData.sharedInstance().getData(key);
+		QuestionAndAnswer oldValue = copy.get(key);
+		QuestionAndAnswer newValue = UserData.sharedInstance().getData(key);
 		if (oldValue == null && newValue == null)
 			return false;
 		if (oldValue == null && newValue != null)
 			return true;
 		if (oldValue != null && newValue == null)
 			return true;
-		String oldAnswer = oldValue.getAnswer();
-		String newAnswer = newValue.getAnswer();
+		String oldAnswer = oldValue == null ? null : oldValue.getAnswer();
+		String newAnswer = newValue == null ? null : newValue.getAnswer();
 		if (newAnswer == null)
 			return true; // if newAnswer is null, always return true?
-		if (oldAnswer == null && newAnswer != null)
+		if (oldAnswer == null)
 			return true;
 		return !oldAnswer.equals(newAnswer);
 	}

@@ -320,10 +320,12 @@ class CommentManager {
 			msg = "Error :" + e;
 		}
 		finally {
-			try {
-				in.close();
-			}
-			catch (IOException iox) {
+			if (in != null) {
+				try {
+					in.close();
+				}
+				catch (IOException iox) {
+				}
 			}
 		}
 		if (msg != null)

@@ -284,7 +284,7 @@ public final class DataSource {
 		synchronized (parameters) {
 			if (parameters != null && !parameters.isEmpty()) {
 				for (String name : parameters.keySet()) {
-					evaluator.setVariableValue(name, ((Float) parameters.get(name)).floatValue());
+					evaluator.setVariableValue(name, parameters.get(name));
 				}
 			}
 		}

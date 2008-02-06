@@ -67,23 +67,23 @@ public class VecmathTest {
 	static public float epsilon = 1.0e-5f;
 
 	static public boolean equals(double m1, double m2) {
-		return Math.abs(m1 - m2) < (double) epsilon;
+		return Math.abs(m1 - m2) < epsilon;
 	}
 
 	static public boolean equals(Matrix3d m1, Matrix3d m2) {
-		return m1.epsilonEquals(m2, (double) epsilon);
+		return m1.epsilonEquals(m2, epsilon);
 	}
 
 	static public boolean equals(Matrix4d m1, Matrix4d m2) {
-		return m1.epsilonEquals(m2, (double) epsilon);
+		return m1.epsilonEquals(m2, epsilon);
 	}
 
 	static public boolean equals(Tuple4d m1, Tuple4d m2) {
-		return m1.epsilonEquals(m2, (double) epsilon);
+		return m1.epsilonEquals(m2, epsilon);
 	}
 
 	static public boolean equals(Tuple3d m1, Tuple3d m2) {
-		return m1.epsilonEquals(m2, (double) epsilon);
+		return m1.epsilonEquals(m2, epsilon);
 	}
 
 	static public boolean equals(Matrix3f m1, Matrix3f m2) {
@@ -95,11 +95,11 @@ public class VecmathTest {
 	}
 
 	static public boolean equals(GMatrix m1, GMatrix m2) {
-		return m1.epsilonEquals(m2, (double) epsilon);
+		return m1.epsilonEquals(m2, epsilon);
 	}
 
 	static public boolean equals(GVector v1, GVector v2) {
-		return v1.epsilonEquals(v2, (double) epsilon);
+		return v1.epsilonEquals(v2, epsilon);
 	}
 
 	static public boolean equals(Tuple4f m1, Tuple4f m2) {

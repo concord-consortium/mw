@@ -280,7 +280,7 @@ public class ComponentPool {
 				map.put(REACTION_MODEL_2, value);
 			}
 			if (value != null)
-				((ModelCanvas) value).setPage(editor.getPage());
+				value.setPage(editor.getPage());
 		}
 		return value;
 	}
