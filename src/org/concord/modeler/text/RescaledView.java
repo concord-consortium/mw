@@ -52,10 +52,10 @@ class RescaledView extends JComponent {
 		rescaledWidth = w;
 		rescaledHeight = h;
 		Component c = pp.getComponent(0);
-		x0 = (int) c.getBounds().x;
-		y0 = (int) c.getBounds().y;
-		w0 = (int) c.getBounds().width;
-		h0 = (int) c.getBounds().height;
+		x0 = c.getBounds().x;
+		y0 = c.getBounds().y;
+		w0 = c.getBounds().width;
+		h0 = c.getBounds().height;
 		w1 = (int) PrintPreview.pageFormat.getWidth();
 		h1 = (int) PrintPreview.pageFormat.getHeight();
 		s1 = (float) w / (float) w1;
@@ -68,7 +68,7 @@ class RescaledView extends JComponent {
 		c.print(g);
 		g.dispose();
 		sourceImage = Toolkit.getDefaultToolkit().createImage(bi.getSource());
-		
+
 		rescaledImage = sourceImage.getScaledInstance((int) (rescaledWidth * t1), (int) (rescaledHeight * t2),
 				Image.SCALE_SMOOTH);
 		rescaledImage.flush();
