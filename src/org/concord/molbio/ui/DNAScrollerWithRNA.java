@@ -980,7 +980,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 			drawCodonFrame(g, false, currChar, r, currentBaseBoolean, forceColor);
 			drawBackbone(g, r, false, false, ((startIndex + i) % 3 == 0));
 			Color needColor = Color.black;
-			if (!model.isStrand35Available() || codon == null)
+			if (!model.isStrand35Available())
 				needColor = disableColor;
 			Font oldFont = g.getFont();
 			if (currentBaseBoolean) {
@@ -993,7 +993,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 				g.setFont(oldFont);
 				r.translate(0, -DEFAULT_CURRENT_BASE_OFFSETY);
 			}
-			if (codon == null || /* codon.isCodonStop() || */!model.isStrand35Available())
+			if (!model.isStrand35Available())
 				g.setColor(currColor);
 		}
 	}
@@ -1032,7 +1032,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 			drawBackbone(g, r, true, false, ((startIndex + i) % 3 == 0));
 
 			Color needColor = Color.black;
-			if (!model.isStrand53Available() || codon == null)
+			if (!model.isStrand53Available())
 				needColor = disableColor;
 			Font oldFont = g.getFont();
 			if (currentBaseBoolean) {
@@ -1045,7 +1045,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 				g.setFont(oldFont);
 				r.translate(0, DEFAULT_CURRENT_BASE_OFFSETY);
 			}
-			if (codon == null || /* codon.isCodonStop() || */!model.isStrand53Available())
+			if (!model.isStrand53Available())
 				g.setColor(currColor);
 
 		}
@@ -1139,19 +1139,19 @@ public class DNAScrollerWithRNA extends DNAScroller {
 		JButton resetButton = new JButton(new ResetDNAScrollerWithRNAAction(scroller));
 		resetButton.setSize(resetButton.getPreferredSize());
 		int yButton = f.getSize().height - 140 - resetButton.getSize().height;
-		int xButton = (prevButton == null) ? 5 : prevButton.getLocation().x + prevButton.getSize().width + 5;
+		int xButton = 5;
 		resetButton.setLocation(xButton, yButton);
 		f.getContentPane().add(resetButton);
 
 		prevButton = resetButton;
-		xButton = (prevButton == null) ? 5 : prevButton.getLocation().x + prevButton.getSize().width + 5;
+		xButton = prevButton.getLocation().x + prevButton.getSize().width + 5;
 		JButton startTranscriptionButton = new JButton(new StartTranscriptionDNAScrollerWithRNAAction(scroller));
 		startTranscriptionButton.setSize(startTranscriptionButton.getPreferredSize());
 		startTranscriptionButton.setLocation(xButton, yButton);
 		f.getContentPane().add(startTranscriptionButton);
 
 		prevButton = startTranscriptionButton;
-		xButton = (prevButton == null) ? 5 : prevButton.getLocation().x + prevButton.getSize().width + 5;
+		xButton = prevButton.getLocation().x + prevButton.getSize().width + 5;
 		JButton startTranslationButton = new JButton(new StartTranslationDNAScrollerWithRNAAction(scroller));
 		startTranslationButton.setSize(startTranslationButton.getPreferredSize());
 		startTranslationButton.setLocation(xButton, yButton);
@@ -1159,14 +1159,14 @@ public class DNAScrollerWithRNA extends DNAScroller {
 
 		prevButton = null;
 		yButton += 26;
-		xButton = (prevButton == null) ? 5 : prevButton.getLocation().x + prevButton.getSize().width + 5;
+		xButton = 5;
 		JButton startTranscription = new JButton(new BeginTranscriptionDNAScrollerWithRNAAction(scroller));
 		startTranscription.setSize(startTranscription.getPreferredSize());
 		startTranscription.setLocation(xButton, yButton);
 		f.getContentPane().add(startTranscription);
 
 		prevButton = startTranscription;
-		xButton = (prevButton == null) ? 5 : prevButton.getLocation().x + prevButton.getSize().width + 5;
+		xButton = prevButton.getLocation().x + prevButton.getSize().width + 5;
 		JButton effect1Transcription = new JButton("Transcription Eff. 1");
 		effect1Transcription.setSize(effect1Transcription.getPreferredSize());
 		effect1Transcription.setLocation(xButton, yButton);
@@ -1178,14 +1178,14 @@ public class DNAScrollerWithRNA extends DNAScroller {
 		});
 
 		prevButton = effect1Transcription;
-		xButton = (prevButton == null) ? 5 : prevButton.getLocation().x + prevButton.getSize().width + 5;
+		xButton = prevButton.getLocation().x + prevButton.getSize().width + 5;
 		JButton transcriptionButton = new JButton(new TranscriptionDNAScrollerWithRNAAction(scroller));
 		transcriptionButton.setSize(transcriptionButton.getPreferredSize());
 		transcriptionButton.setLocation(xButton, yButton);
 		f.getContentPane().add(transcriptionButton);
 
 		prevButton = transcriptionButton;
-		xButton = (prevButton == null) ? 5 : prevButton.getLocation().x + prevButton.getSize().width + 5;
+		xButton = prevButton.getLocation().x + prevButton.getSize().width + 5;
 		JButton effect2Transcription = new JButton("Transcription Eff. 2");
 		effect2Transcription.setSize(effect2Transcription.getPreferredSize());
 		effect2Transcription.setLocation(xButton, yButton);
@@ -1198,21 +1198,21 @@ public class DNAScrollerWithRNA extends DNAScroller {
 
 		yButton += 26;
 		prevButton = null;
-		xButton = (prevButton == null) ? 5 : prevButton.getLocation().x + prevButton.getSize().width + 5;
+		xButton = 5;
 		JButton startTranslation = new JButton("Begin Translation");
 		startTranslation.setSize(startTranslation.getPreferredSize());
 		startTranslation.setLocation(xButton, yButton);
 		f.getContentPane().add(startTranslation);
 
 		prevButton = startTranslation;
-		xButton = (prevButton == null) ? 5 : prevButton.getLocation().x + prevButton.getSize().width + 5;
+		xButton = prevButton.getLocation().x + prevButton.getSize().width + 5;
 		JButton transclationButton = new JButton(new TransclationDNAScrollerWithRNAAction(scroller));
 		transclationButton.setSize(transclationButton.getPreferredSize());
 		transclationButton.setLocation(xButton, yButton);
 		f.getContentPane().add(transclationButton);
 
 		prevButton = transclationButton;
-		xButton = (prevButton == null) ? 5 : prevButton.getLocation().x + prevButton.getSize().width + 5;
+		xButton = prevButton.getLocation().x + prevButton.getSize().width + 5;
 		JButton comparatorFromFrameButton = new JButton("Comparator In frame");
 		comparatorFromFrameButton.setSize(comparatorFromFrameButton.getPreferredSize());
 		comparatorFromFrameButton.setLocation(xButton, yButton);
@@ -1225,7 +1225,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 
 		prevButton = null;
 		yButton += 26;
-		xButton = (prevButton == null) ? 5 : prevButton.getLocation().x + prevButton.getSize().width + 5;
+		xButton = 5;
 		JButton suspendButton = new JButton("Suspend");
 		suspendButton.setSize(suspendButton.getPreferredSize());
 		suspendButton.setLocation(xButton, yButton);
@@ -1237,7 +1237,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 		});
 
 		prevButton = suspendButton;
-		xButton = (prevButton == null) ? 5 : prevButton.getLocation().x + prevButton.getSize().width + 5;
+		xButton = prevButton.getLocation().x + prevButton.getSize().width + 5;
 		JButton resumeButton = new JButton("Resume");
 		resumeButton.setSize(resumeButton.getPreferredSize());
 		resumeButton.setLocation(xButton, yButton);
@@ -1249,7 +1249,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 		});
 
 		prevButton = resumeButton;
-		xButton = (prevButton == null) ? 5 : prevButton.getLocation().x + prevButton.getSize().width + 5;
+		xButton = prevButton.getLocation().x + prevButton.getSize().width + 5;
 		JButton doOneStepButton = new JButton("One Step");
 		doOneStepButton.setSize(doOneStepButton.getPreferredSize());
 		doOneStepButton.setLocation(xButton, yButton);
@@ -1261,7 +1261,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 		});
 
 		prevButton = doOneStepButton;
-		xButton = (prevButton == null) ? 5 : prevButton.getLocation().x + prevButton.getSize().width + 5;
+		xButton = prevButton.getLocation().x + prevButton.getSize().width + 5;
 		JButton clearHistoryButton = new JButton("Clear History");
 		clearHistoryButton.setSize(clearHistoryButton.getPreferredSize());
 		clearHistoryButton.setLocation(xButton, yButton);
@@ -1273,7 +1273,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 		});
 
 		prevButton = clearHistoryButton;
-		xButton = (prevButton == null) ? 5 : prevButton.getLocation().x + prevButton.getSize().width + 5;
+		xButton = prevButton.getLocation().x + prevButton.getSize().width + 5;
 		JButton mutationSubstitutionButton = new JButton("Substitute");
 		mutationSubstitutionButton.setSize(mutationSubstitutionButton.getPreferredSize());
 		mutationSubstitutionButton.setLocation(xButton, yButton);
@@ -1285,7 +1285,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 		});
 
 		prevButton = mutationSubstitutionButton;
-		xButton = (prevButton == null) ? 5 : prevButton.getLocation().x + prevButton.getSize().width + 5;
+		xButton = prevButton.getLocation().x + prevButton.getSize().width + 5;
 		JButton mutationDeletionInsertionButton = new JButton("Del/Insert");
 		mutationDeletionInsertionButton.setSize(mutationDeletionInsertionButton.getPreferredSize());
 		mutationDeletionInsertionButton.setLocation(xButton, yButton);
