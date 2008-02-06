@@ -102,8 +102,8 @@ public class HTMLPane extends MyEditorPane {
 				try {
 					u = new URL(link);
 				}
-				catch (MalformedURLException exception) {
-					u = null;
+				catch (MalformedURLException ex) {
+					ex.printStackTrace();
 				}
 				fireLinkUpdate(new HyperlinkEvent(HTMLPane.this, HyperlinkEvent.EventType.ENTERED, u, link,
 						getSourceElement(p)));
@@ -161,8 +161,8 @@ public class HTMLPane extends MyEditorPane {
 				try {
 					u = new URL(link);
 				}
-				catch (MalformedURLException exception) {
-					u = null;
+				catch (MalformedURLException ex) {
+					ex.printStackTrace();
 				}
 				fireLinkUpdate(new HyperlinkEvent(HTMLPane.this, HyperlinkEvent.EventType.ACTIVATED, u, link,
 						getSourceElement(p)));
@@ -382,7 +382,7 @@ public class HTMLPane extends MyEditorPane {
 	 * @return all of the <code>HotlinkListener</code>s added or an empty array if no listeners have been added
 	 */
 	public HotlinkListener[] getHotlinkListeners() {
-		return (HotlinkListener[]) listenerList.getListeners(HotlinkListener.class);
+		return listenerList.getListeners(HotlinkListener.class);
 	}
 
 	/**

@@ -97,7 +97,6 @@ public class ImagePreview extends JComponent implements PropertyChangeListener {
 			}
 			catch (MalformedURLException e) {
 				e.printStackTrace(System.err);
-				u = null;
 			}
 			if (u == null)
 				return;

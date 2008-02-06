@@ -155,7 +155,7 @@ class GradeAction extends AbstractAction {
 	private void post(String s) {
 		if (url == null)
 			return;
-		connection = (HttpURLConnection) ConnectionManager.getConnection(url);
+		connection = ConnectionManager.getConnection(url);
 		if (connection == null)
 			return;
 		connection.setDoInput(true);
@@ -215,7 +215,7 @@ class GradeAction extends AbstractAction {
 					continue;
 				int i2 = key.indexOf("#");
 				if (i2 >= 0 && key.substring(0, i2).endsWith(pageNameGroup.getPageName(i))) {
-					val = (QuestionAndAnswer) UserData.sharedInstance().getData(key);
+					val = UserData.sharedInstance().getData(key);
 					if (key.endsWith("MultipleChoice")) {
 						sb.append(encodeMultipleChoice(key, val));
 						sb.append('\n');

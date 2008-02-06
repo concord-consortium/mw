@@ -68,7 +68,7 @@ public class PageNameGroup {
 	public String getPageName(int index) {
 		if (index < 0 || index >= size())
 			return null;
-		return (String) list.get(index);
+		return list.get(index);
 	}
 
 	public int size() {

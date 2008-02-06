@@ -65,7 +65,7 @@ public class TextComponentPopupMenu extends JPopupMenu {
 		for (Action act : text.getActions())
 			actions.put(act.getValue(Action.NAME), act);
 
-		miCopy = new JMenuItem((Action) actions.get(DefaultEditorKit.copyAction));
+		miCopy = new JMenuItem(actions.get(DefaultEditorKit.copyAction));
 		String s = getInternationalText("Copy");
 		miCopy.setText(s == null ? "Copy" : s);
 		miCopy.setIcon(IconPool.getIcon("copy"));
@@ -73,7 +73,7 @@ public class TextComponentPopupMenu extends JPopupMenu {
 				KeyEvent.ALT_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_MASK));
 		add(miCopy);
 
-		miCut = new JMenuItem((Action) actions.get(DefaultEditorKit.cutAction));
+		miCut = new JMenuItem(actions.get(DefaultEditorKit.cutAction));
 		s = getInternationalText("Cut");
 		miCut.setText(s == null ? "Cut" : s);
 		miCut.setIcon(IconPool.getIcon("cut"));
@@ -81,7 +81,7 @@ public class TextComponentPopupMenu extends JPopupMenu {
 				KeyEvent.ALT_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.CTRL_MASK));
 		add(miCut);
 
-		miPaste = new JMenuItem((Action) actions.get(DefaultEditorKit.pasteAction));
+		miPaste = new JMenuItem(actions.get(DefaultEditorKit.pasteAction));
 		s = getInternationalText("Paste");
 		miPaste.setText(s == null ? "Paste" : s);
 		miPaste.setIcon(IconPool.getIcon("paste"));
@@ -89,7 +89,7 @@ public class TextComponentPopupMenu extends JPopupMenu {
 				KeyEvent.ALT_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_MASK));
 		add(miPaste);
 
-		miSelectAll = new JMenuItem((Action) actions.get(DefaultEditorKit.selectAllAction));
+		miSelectAll = new JMenuItem(actions.get(DefaultEditorKit.selectAllAction));
 		s = getInternationalText("SelectAll");
 		miSelectAll.setText(s == null ? "Select All" : s);
 		miSelectAll.setIcon(IconPool.getIcon("selectall"));
