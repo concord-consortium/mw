@@ -1912,6 +1912,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 
 	/** return the total energy per atom */
 	public double getTot() {
+		tot = pot + kin;
 		return tot;
 	}
 
