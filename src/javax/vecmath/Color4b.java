@@ -20,12 +20,15 @@ import java.io.Serializable;
 
 /**
   * A four byte colors  (mostly used for colors with alpha).
-  * @version specification 1.2, implementation $Revision: 1.9 $, $Date: 2006-07-28 17:01:32 $
+  * @version specification 1.2, implementation $Revision: 1.9 $, $Date: 2006/07/28 17:01:32 $
   * @author Kenji hiranabe
   */
 public class Color4b extends Tuple4b implements Serializable {
 /*
- * $Log: not supported by cvs2svn $
+ * $Log: Color4b.java,v $
+ * Revision 1.9  2006/07/28 17:01:32  qxie
+ * *** empty log message ***
+ *
  * Revision 1.6  2006/07/19 19:26:01  qxie
  * *** empty log message ***
  *

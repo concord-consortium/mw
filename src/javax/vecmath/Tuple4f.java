@@ -21,12 +21,15 @@ import java.io.Serializable;
 /**
   * A generic 4 element tuple that is represented by
   * single precision floating point x,y,z and w coordinates.
-  * @version specification 1.1, implementation $Revision: 1.9 $, $Date: 2006-07-28 17:01:32 $
+  * @version specification 1.1, implementation $Revision: 1.9 $, $Date: 2006/07/28 17:01:32 $
   * @author Kenji hiranabe
   */
 public abstract class Tuple4f implements Serializable {
 /*
- * $Log: not supported by cvs2svn $
+ * $Log: Tuple4f.java,v $
+ * Revision 1.9  2006/07/28 17:01:32  qxie
+ * *** empty log message ***
+ *
  * Revision 1.6  2006/07/19 19:26:01  qxie
  * *** empty log message ***
  *

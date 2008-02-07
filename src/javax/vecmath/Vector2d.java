@@ -21,12 +21,15 @@ import java.io.Serializable;
 /**
   * A 2 element vector that is represented by single precision
   * floating point x,y coordinates.
-  * @version specification 1.1, implementation $Revision: 1.9 $, $Date: 2006-07-28 17:01:33 $
+  * @version specification 1.1, implementation $Revision: 1.9 $, $Date: 2006/07/28 17:01:33 $
   * @author Kenji hiranabe
   */
 public class Vector2d extends Tuple2d implements Serializable {
 /*
- * $Log: not supported by cvs2svn $
+ * $Log: Vector2d.java,v $
+ * Revision 1.9  2006/07/28 17:01:33  qxie
+ * *** empty log message ***
+ *
  * Revision 1.6  2006/07/19 19:26:01  qxie
  * *** empty log message ***
  *

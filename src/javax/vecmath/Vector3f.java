@@ -22,7 +22,7 @@ import java.io.Serializable;
  * A 3 element vector that is represented by single precision floating point x,y,z coordinates. If this value represents
  * a normal, then it should be normalized.
  * 
- * @version specification 1.1, implementation $Revision: 1.10 $, $Date: 2006-10-03 19:52:30 $
+ * @version specification 1.1, implementation $Revision: 1.10 $, $Date: 2006/10/03 19:52:30 $
  * @author Kenji hiranabe
  */
 public class Vector3f extends Tuple3f implements Serializable {

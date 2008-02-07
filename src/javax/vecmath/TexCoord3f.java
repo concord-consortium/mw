@@ -21,12 +21,15 @@ import java.io.Serializable;
 /**
   * A 3 element texture coordinate that is represented by single precision
   * floating point x,y,z coordinates.
-  * @version specification 1.1, implementation $Revision: 1.9 $, $Date: 2006-07-28 17:01:32 $
+  * @version specification 1.1, implementation $Revision: 1.9 $, $Date: 2006/07/28 17:01:32 $
   * @author Kenji hiranabe
   */
 public class TexCoord3f extends Tuple3f implements Serializable {
 /*
- * $Log: not supported by cvs2svn $
+ * $Log: TexCoord3f.java,v $
+ * Revision 1.9  2006/07/28 17:01:32  qxie
+ * *** empty log message ***
+ *
  * Revision 1.6  2006/07/19 19:26:01  qxie
  * *** empty log message ***
  *

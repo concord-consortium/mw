@@ -22,12 +22,15 @@ import java.io.Serializable;
   * A 3 element vector that is represented by double precision floating point
   * x,y,z coordinates. If this value represents a normal, then it should be
   * normalized.
-  * @version specification 1.1, implementation $Revision: 1.9 $, $Date: 2006-07-28 17:01:32 $
+  * @version specification 1.1, implementation $Revision: 1.9 $, $Date: 2006/07/28 17:01:32 $
   * @author Kenji hiranabe
   */
 public class Vector3d extends Tuple3d implements Serializable {
 /*
- * $Log: not supported by cvs2svn $
+ * $Log: Vector3d.java,v $
+ * Revision 1.9  2006/07/28 17:01:32  qxie
+ * *** empty log message ***
+ *
  * Revision 1.6  2006/07/19 19:26:01  qxie
  * *** empty log message ***
  *

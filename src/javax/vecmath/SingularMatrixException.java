@@ -19,7 +19,7 @@ package javax.vecmath;
 /**
  * Indicates that inverse of a matrix cannot be computed.
  *
- * @version specification 1.1, implementation $Revision: 1.9 $, $Date: 2006-07-28 17:01:32 $
+ * @version specification 1.1, implementation $Revision: 1.9 $, $Date: 2006/07/28 17:01:32 $
  * @author Kenji hiranabe
  */
 public class SingularMatrixException extends RuntimeException {

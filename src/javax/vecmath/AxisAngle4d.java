@@ -31,7 +31,10 @@ import java.io.Serializable;
 public class AxisAngle4d implements Serializable {
 
 	/*
-	 * $Log: not supported by cvs2svn $
+	 * $Log: AxisAngle4d.java,v $
+	 * Revision 1.9  2006/07/28 17:01:32  qxie
+	 * *** empty log message ***
+	 *
 	 * Revision 1.6  2006/07/19 19:26:01  qxie
 	 * *** empty log message ***
 	 * Revision 1.3 2006/06/20 14:00:03 qxie ***

@@ -21,12 +21,15 @@ import java.io.Serializable;
 /**
  * A double precision floating point 3 by 3 matrix.
  * Primarily to support rotations
- * @version specification 1.1, implementation $Revision: 1.9 $, $Date: 2006-07-28 17:01:32 $
+ * @version specification 1.1, implementation $Revision: 1.9 $, $Date: 2006/07/28 17:01:32 $
  * @author Kenji hiranabe
  */
 public class Matrix3d implements Serializable {
 /*
- * $Log: not supported by cvs2svn $
+ * $Log: Matrix3d.java,v $
+ * Revision 1.9  2006/07/28 17:01:32  qxie
+ * *** empty log message ***
+ *
  * Revision 1.6  2006/07/19 19:26:01  qxie
  * *** empty log message ***
  *

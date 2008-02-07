@@ -21,12 +21,15 @@ import java.io.Serializable;
 /**
   * A 4 element color represented by single precision floating point x,y,z,w
   * coordinates. Color and alpha components should be in the range of zero to one.
-  * @version specification 1.2, implementation 1.0 $Revision: 1.9 $, $Date: 2006-07-28 17:01:33 $
+  * @version specification 1.2, implementation 1.0 $Revision: 1.9 $, $Date: 2006/07/28 17:01:33 $
   * @author Kenji hiranabe
   */
 public class Color4f extends Tuple4f implements Serializable {
 /*
- * $Log: not supported by cvs2svn $
+ * $Log: Color4f.java,v $
+ * Revision 1.9  2006/07/28 17:01:33  qxie
+ * *** empty log message ***
+ *
  * Revision 1.6  2006/07/19 19:26:01  qxie
  * *** empty log message ***
  *

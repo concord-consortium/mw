@@ -22,12 +22,15 @@ import java.io.Serializable;
   * A 4-element tuple represented by signed integer x,y,z,w coordinates. 
   *
   * @since Java 3D 1.2
-  * @version specification 1.2, implementation $Revision: 1.9 $, $Date: 2006-07-28 17:01:33 $
+  * @version specification 1.2, implementation $Revision: 1.9 $, $Date: 2006/07/28 17:01:33 $
   * @author Kenji hiranabe
   */
 public abstract class Tuple4i implements Serializable {
 /*
- * $Log: not supported by cvs2svn $
+ * $Log: Tuple4i.java,v $
+ * Revision 1.9  2006/07/28 17:01:33  qxie
+ * *** empty log message ***
+ *
  * Revision 1.6  2006/07/19 19:26:02  qxie
  * *** empty log message ***
  *
