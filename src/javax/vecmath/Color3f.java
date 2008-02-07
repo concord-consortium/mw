@@ -21,12 +21,15 @@ import java.io.Serializable;
 /**
   * A 3 element color represented by single precision floating point x,y,z
   * coordinates. Color components should be in the range of zero to one.
-  * @version specification 1.2, implementation $Revision: 1.9 $, $Date: 2006-07-28 17:01:33 $
+  * @version specification 1.2, implementation $Revision: 1.9 $, $Date: 2006/07/28 17:01:33 $
   * @author Kenji hiranabe
   */
 public class Color3f extends Tuple3f implements Serializable {
 /*
- * $Log: not supported by cvs2svn $
+ * $Log: Color3f.java,v $
+ * Revision 1.9  2006/07/28 17:01:33  qxie
+ * *** empty log message ***
+ *
  * Revision 1.6  2006/07/19 19:26:01  qxie
  * *** empty log message ***
  *

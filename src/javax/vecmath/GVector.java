@@ -21,12 +21,15 @@ import java.io.Serializable;
 /**
  * A double precision, general, and dynamically resizeable one 
  * dimensional vector class. Index numbering begins with zero.
- * @version specification 1.1, implementation $Revision: 1.9 $, $Date: 2006-07-28 17:01:32 $
+ * @version specification 1.1, implementation $Revision: 1.9 $, $Date: 2006/07/28 17:01:32 $
  * @author Kenji hiranabe
  */
 public class GVector implements Serializable {
 /*
- * $Log: not supported by cvs2svn $
+ * $Log: GVector.java,v $
+ * Revision 1.9  2006/07/28 17:01:32  qxie
+ * *** empty log message ***
+ *
  * Revision 1.6  2006/07/19 19:26:02  qxie
  * *** empty log message ***
  *
@@ -449,8 +452,8 @@ public class GVector implements Serializable {
      * @param   tuple the source for the new GVector's new values 
      */
     public final void set(Tuple2f tuple)  {
-        elementData[0] = tuple.x;
-        elementData[1] = tuple.y;
+        elementData[0] = (double)tuple.x;
+        elementData[1] = (double)tuple.y;
     }
 
     /**
@@ -458,9 +461,9 @@ public class GVector implements Serializable {
      * @param   tuple the source for the new GVector's new values 
      */
     public final void set(Tuple3f tuple) {
-        elementData[0] = tuple.x;
-        elementData[1] = tuple.y;
-        elementData[2] = tuple.z;
+        elementData[0] = (double)tuple.x;
+        elementData[1] = (double)tuple.y;
+        elementData[2] = (double)tuple.z;
     }
 
     /**
@@ -478,10 +481,10 @@ public class GVector implements Serializable {
      * @param   tuple the source for the new GVector's new values 
      */
     public final void set(Tuple4f tuple) {
-        elementData[0] = tuple.x;
-        elementData[1] = tuple.y;
-        elementData[2] = tuple.z;
-        elementData[3] = tuple.w;
+        elementData[0] = (double)tuple.x;
+        elementData[1] = (double)tuple.y;
+        elementData[2] = (double)tuple.z;
+        elementData[3] = (double)tuple.w;
     }
 
     /**

@@ -21,12 +21,15 @@ import java.io.Serializable;
 /**
   * A generic 2 element tuple that is represented by
   * double precision floating point x,y coordinates.
-  * @version specification 1.1, implementation $Revision: 1.9 $, $Date: 2006-07-28 17:01:31 $
+  * @version specification 1.1, implementation $Revision: 1.9 $, $Date: 2006/07/28 17:01:31 $
   * @author Kenji hiranabe
   */
 public abstract class Tuple2d implements Serializable {
 /*
- * $Log: not supported by cvs2svn $
+ * $Log: Tuple2d.java,v $
+ * Revision 1.9  2006/07/28 17:01:31  qxie
+ * *** empty log message ***
+ *
  * Revision 1.6  2006/07/19 19:26:02  qxie
  * *** empty log message ***
  *

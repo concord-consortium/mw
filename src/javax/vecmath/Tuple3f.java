@@ -21,7 +21,7 @@ import java.io.Serializable;
 /**
   * A generic 3 element tuple that is represented by
   * single precision floating point x,y and z coordinates.
-  * @version specification 1.1, implementation $Revision: 1.10 $, $Date: 2006-09-08 20:20:20 $
+  * @version specification 1.1, implementation $Revision: 1.10 $, $Date: 2006/09/08 20:20:20 $
   * @author Kenji hiranabe
   */
 public abstract class Tuple3f implements Serializable {
