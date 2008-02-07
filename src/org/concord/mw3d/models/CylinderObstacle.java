@@ -113,12 +113,15 @@ public class CylinderObstacle extends Obstacle {
 		case 'x':
 			if (getMinX() < -0.5f * model.getLength() || getMaxX() > 0.5f * model.getLength())
 				return false;
+			break;
 		case 'y':
 			if (getMinY() < -0.5f * model.getWidth() || getMaxY() > 0.5f * model.getWidth())
 				return false;
+			break;
 		case 'z':
 			if (getMinZ() < -0.5f * model.getHeight() || getMaxZ() > 0.5f * model.getHeight())
 				return false;
+			break;
 		}
 		return true;
 	}

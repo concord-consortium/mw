@@ -693,7 +693,6 @@ public class GVector implements Serializable {
 		int m = U.getNumRow(); // this.elementCount
 		int n = V.getNumRow(); // b.elementCount
 		double[] tmp = new double[n];
-		;
 
 		for (int j = 0; j < n; j++) {
 			double s = 0.0;

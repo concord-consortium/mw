@@ -508,7 +508,7 @@ public class DNA implements Cloneable {
 					endStrand = (i + n > endIndex);
 					if (endStrand)
 						break;
-					nc[n] = (Nucleotide) strand.bases.elementAt(i + n);
+					nc[n] = strand.bases.elementAt(i + n);
 				}
 				if (endStrand)
 					break;
@@ -526,7 +526,7 @@ public class DNA implements Cloneable {
 					endStrand = (i + n > endIndex);
 					if (endStrand)
 						break;
-					nc[n] = (Nucleotide) strand.bases.elementAt(i + n);
+					nc[n] = strand.bases.elementAt(i + n);
 				}
 				if (endStrand)
 					break;

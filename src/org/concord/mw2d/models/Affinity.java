@@ -212,7 +212,7 @@ public class Affinity implements Serializable {
 		Pair p = getPair(e1, e2);
 		if (p == null)
 			return true;
-		boolean oldValue = ((Boolean) lbMixing.get(p)).booleanValue();
+		boolean oldValue = lbMixing.get(p);
 		if (b != oldValue) {
 			lbMixing.put(p, b ? Boolean.TRUE : Boolean.FALSE);
 		}
@@ -233,7 +233,7 @@ public class Affinity implements Serializable {
 		Pair p = getPair(e1, e2);
 		if (p == null)
 			return;
-		if (((Boolean) lbMixing.get(p)).booleanValue()) {
+		if (lbMixing.get(p)) {
 			fireParameterChange();
 		}
 		else {
@@ -258,7 +258,7 @@ public class Affinity implements Serializable {
 		Pair p = getPair(e1, e2);
 		if (p == null)
 			return;
-		if (((Boolean) lbMixing.get(p)).booleanValue()) {
+		if (lbMixing.get(p)) {
 			fireParameterChange();
 		}
 		else {

@@ -71,7 +71,7 @@ class EllipticalCylinder3D {
 
 		dxB = xBf - xAf;
 		dyB = yBf - yAf;
-		if (dxB * dxB + dyB * dyB > 400.0 * (double) g3d.width * (double) g3d.width)
+		if (dxB * dxB + dyB * dyB > 400.0 * g3d.width * g3d.width)
 			return;
 		dzB = zBf - zAf;
 

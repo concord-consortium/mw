@@ -227,13 +227,13 @@ class ViewProperties extends JDialog {
 			clockCheckBox.setText(s);
 		p2.add(clockCheckBox);
 
-		indexCheckBox = new JCheckBox((Action) view.getSwitches().get("Show Particle Index"));
+		indexCheckBox = new JCheckBox(view.getSwitches().get("Show Particle Index"));
 		s = MDView.getInternationalText("ShowIndex");
 		if (s != null)
 			indexCheckBox.setText(s);
 		p2.add(indexCheckBox);
 
-		chargeCheckBox = new JCheckBox((Action) view.getSwitches().get("Show Charge"));
+		chargeCheckBox = new JCheckBox(view.getSwitches().get("Show Charge"));
 		s = MDView.getInternationalText("ShowCharge");
 		if (s != null)
 			chargeCheckBox.setText(s);
@@ -282,7 +282,7 @@ class ViewProperties extends JDialog {
 		});
 		p2.add(vdwCirclesStyleComboBox);
 
-		vdwLinesCheckBox = new JCheckBox((Action) view.getSwitches().get("Show van der Waals interactions"));
+		vdwLinesCheckBox = new JCheckBox(view.getSwitches().get("Show van der Waals interactions"));
 		vdwLinesCheckBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				vdwLinesRatioComboBox.setEnabled(e.getStateChange() == ItemEvent.SELECTED);
@@ -331,7 +331,7 @@ class ViewProperties extends JDialog {
 		s = MDView.getInternationalText("DisplayStyle");
 		displayStyleLabel = new JLabel("  " + (s != null ? s : "Display Style"), SwingConstants.LEFT);
 		p2.add(displayStyleLabel);
-		Action a = (Action) view.getChoices().get("Display Style");
+		Action a = view.getChoices().get("Display Style");
 		styleComboBox = new JComboBox((String[]) a.getValue("options"));
 		styleComboBox.setAction(a);
 		p2.add(styleComboBox);
@@ -417,7 +417,7 @@ class ViewProperties extends JDialog {
 		group.add(noShadingRadioButton);
 		p.add(noShadingRadioButton);
 
-		keshadingRadioButton = new JRadioButton((Action) view.getSwitches().get("K. E. Shading"));
+		keshadingRadioButton = new JRadioButton(view.getSwitches().get("K. E. Shading"));
 		s = MDView.getInternationalText("KineticEnergyShading");
 		if (s != null)
 			keshadingRadioButton.setText(s);
@@ -446,7 +446,7 @@ class ViewProperties extends JDialog {
 		JPanel p1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		p.add(p1);
 
-		velocityCheckBox = new JCheckBox((Action) view.getSwitches().get("Velocity Vector"));
+		velocityCheckBox = new JCheckBox(view.getSwitches().get("Velocity Vector"));
 		velocityCheckBox.setText(null);
 		p1.add(velocityCheckBox);
 		s = MDView.getInternationalText("VelocityVector");
@@ -468,7 +468,7 @@ class ViewProperties extends JDialog {
 		p1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		p.add(p1);
 
-		momentumCheckBox = new JCheckBox((Action) view.getSwitches().get("Momentum Vector"));
+		momentumCheckBox = new JCheckBox(view.getSwitches().get("Momentum Vector"));
 		momentumCheckBox.setText(null);
 		p1.add(momentumCheckBox);
 		s = MDView.getInternationalText("MomentumVector");
@@ -490,7 +490,7 @@ class ViewProperties extends JDialog {
 		p1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		p.add(p1);
 
-		accelerationCheckBox = new JCheckBox((Action) view.getSwitches().get("Acceleration Vector"));
+		accelerationCheckBox = new JCheckBox(view.getSwitches().get("Acceleration Vector"));
 		accelerationCheckBox.setText(null);
 		p1.add(accelerationCheckBox);
 		s = MDView.getInternationalText("AccelerationVector");
@@ -512,7 +512,7 @@ class ViewProperties extends JDialog {
 		p1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		p.add(p1);
 
-		forceCheckBox = new JCheckBox((Action) view.getSwitches().get("Force Vector"));
+		forceCheckBox = new JCheckBox(view.getSwitches().get("Force Vector"));
 		forceCheckBox.setText(null);
 		p1.add(forceCheckBox);
 		s = MDView.getInternationalText("ForceVector");
@@ -610,13 +610,13 @@ class ViewProperties extends JDialog {
 		p.setBorder(BorderFactory.createTitledBorder(s != null ? s : "Particle Options"));
 		panel.add(p, BorderLayout.CENTER);
 
-		indexCheckBox = new JCheckBox((Action) view.getSwitches().get("Show Particle Index"));
+		indexCheckBox = new JCheckBox(view.getSwitches().get("Show Particle Index"));
 		s = MDView.getInternationalText("ShowIndex");
 		if (s != null)
 			indexCheckBox.setText(s);
 		p.add(indexCheckBox);
 
-		chargeCheckBox = new JCheckBox((Action) view.getSwitches().get("Show Charge"));
+		chargeCheckBox = new JCheckBox(view.getSwitches().get("Show Charge"));
 		s = MDView.getInternationalText("ShowCharge");
 		if (s != null)
 			chargeCheckBox.setText(s);

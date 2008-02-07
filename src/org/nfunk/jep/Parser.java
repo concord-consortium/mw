@@ -169,7 +169,6 @@ public class Parser implements ParserTreeConstants, ParserConstants {
 		label_1: while (true) {
 			switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {
 			case OR:
-				;
 				break;
 			default:
 				jj_la1[1] = jj_gen;
@@ -223,7 +222,6 @@ public class Parser implements ParserTreeConstants, ParserConstants {
 		label_2: while (true) {
 			switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {
 			case AND:
-				;
 				break;
 			default:
 				jj_la1[2] = jj_gen;
@@ -278,7 +276,6 @@ public class Parser implements ParserTreeConstants, ParserConstants {
 			switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {
 			case EQ:
 			case NE:
-				;
 				break;
 			default:
 				jj_la1[3] = jj_gen;
@@ -385,7 +382,6 @@ public class Parser implements ParserTreeConstants, ParserConstants {
 			case LT:
 			case LE:
 			case GE:
-				;
 				break;
 			default:
 				jj_la1[5] = jj_gen;
@@ -574,7 +570,6 @@ public class Parser implements ParserTreeConstants, ParserConstants {
 			switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {
 			case PLUS:
 			case MINUS:
-				;
 				break;
 			default:
 				jj_la1[7] = jj_gen;
@@ -676,10 +671,7 @@ public class Parser implements ParserTreeConstants, ParserConstants {
 	final public void MultiplicativeExpression() throws ParseException {
 		UnaryExpression();
 		label_6: while (true) {
-			if (jj_2_2(1)) {
-				;
-			}
-			else {
+			if (!jj_2_2(1)) {
 				break label_6;
 			}
 			if (jj_2_3(1)) {
@@ -1014,7 +1006,6 @@ public class Parser implements ParserTreeConstants, ParserConstants {
 			break;
 		default:
 			jj_la1[11] = jj_gen;
-			;
 		}
 	}
 
@@ -1175,7 +1166,6 @@ public class Parser implements ParserTreeConstants, ParserConstants {
 			label_7: while (true) {
 				switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {
 				case 30:
-					;
 					break;
 				default:
 					jj_la1[15] = jj_gen;
@@ -1185,9 +1175,6 @@ public class Parser implements ParserTreeConstants, ParserConstants {
 				Expression();
 				count++;
 			}
-		}
-		else {
-			;
 		}
 		if (reqArguments != count && reqArguments != -1) {
 			errorStr = "Function \"" + functionName + "\" requires " + reqArguments + " parameter";
@@ -1289,7 +1276,6 @@ public class Parser implements ParserTreeConstants, ParserConstants {
 		label_8: while (true) {
 			switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {
 			case 30:
-				;
 				break;
 			default:
 				jj_la1[17] = jj_gen;
@@ -1922,7 +1908,7 @@ public class Parser implements ParserTreeConstants, ParserConstants {
 	final private int jj_ntk() {
 		if ((jj_nt = token.next) == null)
 			return (jj_ntk = (token.next = token_source.getNextToken()).kind);
-		else return (jj_ntk = jj_nt.kind);
+		return (jj_ntk = jj_nt.kind);
 	}
 
 	private java.util.Vector jj_expentries = new java.util.Vector();

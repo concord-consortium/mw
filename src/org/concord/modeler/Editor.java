@@ -1482,7 +1482,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 
 		ButtonGroup bg = new ButtonGroup();
 
-		leftAlignmentCheckBox = new JCheckBox(page.getAction(Page.LEFT_ALIGNMENT));
+		leftAlignmentCheckBox = new JCheckBox(page.getAction(Page.LEFT_ALIGN));
 		leftAlignmentCheckBox.setHorizontalAlignment(SwingConstants.CENTER);
 		leftAlignmentCheckBox.setIcon(new ImageIcon(getClass().getResource("text/images/AlignLeft.gif")));
 		leftAlignmentCheckBox.setText(null);
@@ -1498,7 +1498,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		tb.add(leftAlignmentCheckBox);
 		bg.add(leftAlignmentCheckBox);
 
-		centerAlignmentCheckBox = new JCheckBox(page.getAction(Page.CENTER_ALIGNMENT));
+		centerAlignmentCheckBox = new JCheckBox(page.getAction(Page.CENTER_ALIGN));
 		centerAlignmentCheckBox.setHorizontalAlignment(SwingConstants.CENTER);
 		centerAlignmentCheckBox.setIcon(new ImageIcon(getClass().getResource("text/images/AlignCenter.gif")));
 		centerAlignmentCheckBox.setText(null);
@@ -1514,7 +1514,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		tb.add(centerAlignmentCheckBox);
 		bg.add(centerAlignmentCheckBox);
 
-		rightAlignmentCheckBox = new JCheckBox(page.getAction(Page.RIGHT_ALIGNMENT));
+		rightAlignmentCheckBox = new JCheckBox(page.getAction(Page.RIGHT_ALIGN));
 		rightAlignmentCheckBox.setHorizontalAlignment(SwingConstants.CENTER);
 		rightAlignmentCheckBox.setIcon(new ImageIcon(getClass().getResource("text/images/AlignRight.gif")));
 		rightAlignmentCheckBox.setText(null);

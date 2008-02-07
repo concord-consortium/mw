@@ -82,7 +82,7 @@ public class RectangleComponent extends AbstractRectangle implements ModelCompon
 				}
 			}
 			else if (s.endsWith("Obstacle")) {
-				setHost((RectangularObstacle) ((MDModel) model).getObstacles().get(index));
+				setHost(model.getObstacles().get(index));
 			}
 		}
 		setVectorField(d.vectorField);

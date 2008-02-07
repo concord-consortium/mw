@@ -61,8 +61,8 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 		setOval((float) d.x, (float) d.y, d.w, d.h);
 		setAngle(d.angle);
 		setAlpha(d.alpha);
-		setAlphaAtCenter((short) d.getAlphaAtCenter());
-		setAlphaAtEdge((short) d.getAlphaAtEdge());
+		setAlphaAtCenter(d.getAlphaAtCenter());
+		setAlphaAtEdge(d.getAlphaAtEdge());
 		setFillMode(d.getFillMode());
 		setLineColor(d.getLineColor());
 		setLineStyle((byte) d.getLineStyle());
@@ -82,7 +82,7 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 				}
 			}
 			else if (s.endsWith("Obstacle")) {
-				setHost((RectangularObstacle) ((MDModel) model).getObstacles().get(index));
+				setHost(model.getObstacles().get(index));
 			}
 		}
 		setVectorField(d.vectorField);

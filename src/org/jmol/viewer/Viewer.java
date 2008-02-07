@@ -3413,10 +3413,7 @@ public class Viewer extends JmolViewer {
 	synchronized public Object compileInfo(String strScript) {
 		if (strScript == null)
 			return null;
-		Object obj = eval.checkScript(strScript);
-		if (obj instanceof String)
-			return (String) obj;
-		return obj;
+		return eval.checkScript(strScript);
 	}
 
 	public boolean isScriptExecuting() {
@@ -4050,7 +4047,7 @@ public class Viewer extends JmolViewer {
 				break;
 			}
 			if (value != 0 || value != 1 || !setBooleanProperty(key, false, false))
-				setFloatProperty(key, (float) value);
+				setFloatProperty(key, value);
 			return;
 		}
 		if (defineNew)

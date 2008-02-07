@@ -23,91 +23,80 @@
  */
 package org.jmol.util;
 
-
 import java.io.DataInputStream;
-//import java.io.RandomAccessFile;
 
-/* a basic binary file reader (extended by CompountDocument). 
+// import java.io.RandomAccessFile;
+
+/*
+ * a basic binary file reader (extended by CompountDocument).
  * 
- * random access file info: 
- * http://java.sun.com/docs/books/tutorial/essential/io/rafs.html
+ * random access file info: http://java.sun.com/docs/books/tutorial/essential/io/rafs.html
  * 
  * SHOOT! random access is only for applications, not applets!
  * 
- * Note that YOU are responsible for determining whether a file
- * is bigEndian or littleEndian; the default is bigEndian.
+ * Note that YOU are responsible for determining whether a file is bigEndian or littleEndian; the default is bigEndian.
  * 
  */
 
 class BinaryDocument {
 
-  BinaryDocument() {  
-  }
-  
-//  RandomAccessFile file;
-  
-  DataInputStream stream;
-  boolean isRandom = false;
-  boolean isBigEndian = true;
+	BinaryDocument() {
+	}
 
-  byte readByte() throws Exception {
-    return stream.readByte();
-  }
+	// RandomAccessFile file;
 
-  void readByteArray(byte[] b) throws Exception {
-    stream.read(b);
-  }
+	DataInputStream stream;
+	boolean isRandom = false;
+	boolean isBigEndian = true;
 
-  void readByteArray(byte[] b, int off, int len) throws Exception {
-    stream.read(b, off, len);
-  }
+	byte readByte() throws Exception {
+		return stream.readByte();
+	}
 
-  short readShort() throws Exception {
-    if (isBigEndian)
-      return stream.readShort();
-    return (short) ((((int) stream.readByte()) & 0xff) | (((int) stream
-        .readByte()) & 0xff) << 8);
-  }
+	void readByteArray(byte[] b) throws Exception {
+		stream.read(b);
+	}
 
-  int readInt() throws Exception {
-    if (isBigEndian)
-      return stream.readInt();
-    return ((((int) stream.readByte()) & 0xff)
-        | (((int) stream.readByte()) & 0xff) << 8
-        | (((int) stream.readByte()) & 0xff) << 16 | (((int) stream.readByte()) & 0xff) << 24);
-  }
+	void readByteArray(byte[] b, int off, int len) throws Exception {
+		stream.read(b, off, len);
+	}
 
-  long readLong() throws Exception {
-    if (isBigEndian)
-      return stream.readLong();
-    return ((((long) stream.readByte()) & 0xff)
-        | (((long) stream.readByte()) & 0xff) << 8
-        | (((long) stream.readByte()) & 0xff) << 16
-        | (((long) stream.readByte()) & 0xff) << 24
-        | (((long) stream.readByte()) & 0xff) << 32
-        | (((long) stream.readByte()) & 0xff) << 40
-        | (((long) stream.readByte()) & 0xff) << 48 | (((long) stream
-        .readByte()) & 0xff) << 54);
-  }
+	short readShort() throws Exception {
+		if (isBigEndian)
+			return stream.readShort();
+		return (short) (((stream.readByte()) & 0xff) | ((stream.readByte()) & 0xff) << 8);
+	}
 
-  void seek(long offset) {
-    // slower, but all that is available using the applet
-    try {
-      stream.reset();
-      stream.skipBytes((int)offset);
-    } catch (Exception e) {
-      Logger.error(null, e);
-    }
-  }
+	int readInt() throws Exception {
+		if (isBigEndian)
+			return stream.readInt();
+		return (((stream.readByte()) & 0xff) | ((stream.readByte()) & 0xff) << 8 | ((stream.readByte()) & 0xff) << 16 | ((stream
+				.readByte()) & 0xff) << 24);
+	}
 
-/*  random access -- application only:
- * 
-    void seekFile(long offset) {
-    try {
-      file.seek(offset);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
-*/
+	long readLong() throws Exception {
+		if (isBigEndian)
+			return stream.readLong();
+		return ((((long) stream.readByte()) & 0xff) | (((long) stream.readByte()) & 0xff) << 8
+				| (((long) stream.readByte()) & 0xff) << 16 | (((long) stream.readByte()) & 0xff) << 24
+				| (((long) stream.readByte()) & 0xff) << 32 | (((long) stream.readByte()) & 0xff) << 40
+				| (((long) stream.readByte()) & 0xff) << 48 | (((long) stream.readByte()) & 0xff) << 54);
+	}
+
+	void seek(long offset) {
+		// slower, but all that is available using the applet
+		try {
+			stream.reset();
+			stream.skipBytes((int) offset);
+		}
+		catch (Exception e) {
+			Logger.error(null, e);
+		}
+	}
+
+	/*
+	 * random access -- application only:
+	 * 
+	 * void seekFile(long offset) { try { file.seek(offset); } catch (Exception e) { e.printStackTrace(); } }
+	 */
 }

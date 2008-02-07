@@ -157,9 +157,9 @@ public class RNA extends Strand {
 		codons = new Codon[nCodons];
 		for (int i = 0; i < nCodons; i++) {
 			int index = 3 * i;
-			Nucleotide b1 = (Nucleotide) bases.elementAt(index);
-			Nucleotide b2 = (Nucleotide) bases.elementAt(index + 1);
-			Nucleotide b3 = (Nucleotide) bases.elementAt(index + 2);
+			Nucleotide b1 = bases.elementAt(index);
+			Nucleotide b2 = bases.elementAt(index + 1);
+			Nucleotide b3 = bases.elementAt(index + 2);
 			codons[i] = new Codon(b1, b2, b3);
 		}
 	}

@@ -171,7 +171,7 @@ public class Aminoacid {
 		Vector<String> v = new Vector<String>();
 		for (Enumeration e = aminoCreation.keys(); e.hasMoreElements();) {
 			Object key = e.nextElement();
-			if (this == ((AminoCodonHolder) aminoCreation.get(key)).amino) {
+			if (this == (aminoCreation.get(key)).amino) {
 				String s = (String) key;
 				if (s.length() != 3)
 					continue;
@@ -429,7 +429,7 @@ public class Aminoacid {
 	}
 
 	public float getUsageForCodon(String codon) throws IllegalArgumentException {
-		AminoCodonHolder holder = (AminoCodonHolder) aminoCreation.get(codon);
+		AminoCodonHolder holder = aminoCreation.get(codon);
 		if (this != holder.amino) {
 			throw new IllegalArgumentException("Codon " + codon + " doesn't produce " + standardAbbreviation);
 		}

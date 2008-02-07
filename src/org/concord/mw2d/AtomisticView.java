@@ -2282,7 +2282,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				}
 			}
 		}
-		if (rbd.isSmart()) {
+		if (rbd != null && rbd.isSmart()) {
 			MolecularObject ss = rbd.isSolid() ? new CurvedSurface(mol) : new CurvedRibbon(mol);
 			ss.setModel(model);
 			molecules.add(ss);
@@ -3191,7 +3191,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 						}
 						model.notifyChange();
 						if (!doNotFireUndoEvent) {
-							((Molecule) molecules.get(molecules.size() - 1)).setSelected(true);
+							molecules.get(molecules.size() - 1).setSelected(true);
 							model.getUndoManager().undoableEditHappened(
 									new UndoableEditEvent(model, new UndoableInsertion(actionID, new Object[] {
 											new Boolean(closed), tempPoly })));
@@ -4397,7 +4397,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 					repaint();
 					model.notifyChange();
 					if (!doNotFireUndoEvent) {
-						((Molecule) molecules.get(idna)).setSelected(true);
+						molecules.get(idna).setSelected(true);
 						model.getUndoManager().undoableEditHappened(
 								new UndoableEditEvent(model, new UndoableDeletion(SNTD_ID)));
 						updateUndoUIComponents();
@@ -5857,7 +5857,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				if (buffer instanceof Object[]) {
 					Object[] o = (Object[]) buffer;
 					molecules.add(new CurvedSurface((Polygon) o[1], model));
-					((Molecule) molecules.get(molecules.size() - 1)).setSelected(true);
+					molecules.get(molecules.size() - 1).setSelected(true);
 				}
 				break;
 			case RREC_ID:
@@ -5865,14 +5865,14 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				if (buffer instanceof Object[]) {
 					Object[] o = (Object[]) buffer;
 					molecules.add(new CurvedRibbon((Polygon) o[1], model, true));
-					((Molecule) molecules.get(molecules.size() - 1)).setSelected(true);
+					molecules.get(molecules.size() - 1).setSelected(true);
 				}
 				break;
 			case RCUR_ID:
 				if (buffer instanceof Object[]) {
 					Object[] o = (Object[]) buffer;
 					molecules.add(new CurvedRibbon((Polygon) o[1], model, ((Boolean) o[0]).booleanValue()));
-					((Molecule) molecules.get(molecules.size() - 1)).setSelected(true);
+					molecules.get(molecules.size() - 1).setSelected(true);
 				}
 				break;
 			case SFRE_ID:
@@ -5881,7 +5881,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 					boolean closed = ((Boolean) o[0]).booleanValue();
 					molecules.add(closed ? new CurvedSurface((Polygon) o[1], model) : new CurvedRibbon((Polygon) o[1],
 							model, false));
-					((Molecule) molecules.get(molecules.size() - 1)).setSelected(true);
+					molecules.get(molecules.size() - 1).setSelected(true);
 				}
 				break;
 			}

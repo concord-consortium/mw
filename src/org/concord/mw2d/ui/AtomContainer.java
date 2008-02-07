@@ -752,7 +752,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 		if (i == ItemEvent.SELECTED) {
 			if (model.getMolecules().isEmpty())
 				return;
-			Molecule m = (Molecule) model.getMolecules().get(0);
+			Molecule m = model.getMolecules().get(0);
 			if (m != null) {
 				int startOffset = dnaScroller.getModel().getDNA().getOffsetToTheCodingRegion();
 				int iat = (dnaScroller.getCurrentBase() - startOffset) / 3;
@@ -818,7 +818,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 	public void mutationOccurred(MutationEvent e) {
 		if (model.getMolecules().isEmpty())
 			return;
-		Molecule m = (Molecule) model.getMolecules().get(0);
+		Molecule m = model.getMolecules().get(0);
 		if (m == null)
 			return;
 		if (dnaScroller == null)
@@ -923,7 +923,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			dnaScroller.setDNA(null);
 			return;
 		}
-		Molecule mol = (Molecule) c.get(0);
+		Molecule mol = c.get(0);
 		if (mol instanceof Polypeptide) {
 			String s = ((Polypeptide) mol).getDNACode();
 			if (s == null) {
@@ -1157,13 +1157,13 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			menu.add(subMenu);
 			enabledComponentsWhenEditable.add(subMenu);
 
-			JMenuItem menuItem = new JMenuItem((Action) model.getActions().get("Edit the light source"));
+			JMenuItem menuItem = new JMenuItem(model.getActions().get("Edit the light source"));
 			s = getInternationalText("LightSource");
 			menuItem.setText((s != null ? s : "Light Source") + "...");
 			menuItem.setIcon(null);
 			subMenu.add(menuItem);
 
-			menuItem = new JMenuItem((Action) model.getActions().get("Edit rules of electronic dynamics"));
+			menuItem = new JMenuItem(model.getActions().get("Edit rules of electronic dynamics"));
 			s = getInternationalText("ElectronicDynamicsRules");
 			menuItem.setText((s != null ? s : "Rules of Electronic Dynamics") + "...");
 			menuItem.setIcon(null);
@@ -1362,22 +1362,22 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			subMenu = new JMenu(s != null ? s : "Speed Distribution Functions");
 			menu.add(subMenu);
 
-			menuItem = new JMenuItem((Action) model.getActions().get("Show Maxwell speed distribution function: Nt"));
+			menuItem = new JMenuItem(model.getActions().get("Show Maxwell speed distribution function: Nt"));
 			s = getInternationalText("NtSpeedDistribution");
 			menuItem.setText((s != null ? s : menuItem.getText()) + "...");
 			subMenu.add(menuItem);
 
-			menuItem = new JMenuItem((Action) model.getActions().get("Show Maxwell speed distribution function: Pl"));
+			menuItem = new JMenuItem(model.getActions().get("Show Maxwell speed distribution function: Pl"));
 			s = getInternationalText("PlSpeedDistribution");
 			menuItem.setText((s != null ? s : menuItem.getText()) + "...");
 			subMenu.add(menuItem);
 
-			menuItem = new JMenuItem((Action) model.getActions().get("Show Maxwell speed distribution function: Ws"));
+			menuItem = new JMenuItem(model.getActions().get("Show Maxwell speed distribution function: Ws"));
 			s = getInternationalText("WsSpeedDistribution");
 			menuItem.setText((s != null ? s : menuItem.getText()) + "...");
 			subMenu.add(menuItem);
 
-			menuItem = new JMenuItem((Action) model.getActions().get("Show Maxwell speed distribution function: Ck"));
+			menuItem = new JMenuItem(model.getActions().get("Show Maxwell speed distribution function: Ck"));
 			s = getInternationalText("CkSpeedDistribution");
 			menuItem.setText((s != null ? s : menuItem.getText()) + "...");
 			subMenu.add(menuItem);
@@ -1386,22 +1386,22 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			subMenu = new JMenu(s != null ? s : "Velocity Distribution Functions");
 			menu.add(subMenu);
 
-			menuItem = new JMenuItem((Action) model.getActions().get("Show Maxwell velocity distribution function: Nt"));
+			menuItem = new JMenuItem(model.getActions().get("Show Maxwell velocity distribution function: Nt"));
 			s = getInternationalText("NtVelocityDistribution");
 			menuItem.setText((s != null ? s : menuItem.getText()) + "...");
 			subMenu.add(menuItem);
 
-			menuItem = new JMenuItem((Action) model.getActions().get("Show Maxwell velocity distribution function: Pl"));
+			menuItem = new JMenuItem(model.getActions().get("Show Maxwell velocity distribution function: Pl"));
 			s = getInternationalText("PlVelocityDistribution");
 			menuItem.setText((s != null ? s : menuItem.getText()) + "...");
 			subMenu.add(menuItem);
 
-			menuItem = new JMenuItem((Action) model.getActions().get("Show Maxwell velocity distribution function: Ws"));
+			menuItem = new JMenuItem(model.getActions().get("Show Maxwell velocity distribution function: Ws"));
 			s = getInternationalText("WsVelocityDistribution");
 			menuItem.setText((s != null ? s : menuItem.getText()) + "...");
 			subMenu.add(menuItem);
 
-			menuItem = new JMenuItem((Action) model.getActions().get("Show Maxwell velocity distribution function: Ck"));
+			menuItem = new JMenuItem(model.getActions().get("Show Maxwell velocity distribution function: Ck"));
 			s = getInternationalText("CkVelocityDistribution");
 			menuItem.setText((s != null ? s : menuItem.getText()) + "...");
 			subMenu.add(menuItem);
@@ -1689,7 +1689,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			});
 			subMenu.add(menuItem);
 
-			energyTSItem = new JMenuItem((Action) model.getActions().get("Show kinetic, potential and total energies"));
+			energyTSItem = new JMenuItem(model.getActions().get("Show kinetic, potential and total energies"));
 			energyTSItem.setMnemonic(KeyEvent.VK_V);
 			s = getInternationalText("EnergyTimeSeries");
 			energyTSItem.setText((s != null ? s : "View Time Series of Energies") + "...");

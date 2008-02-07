@@ -65,7 +65,7 @@ class ViewDataAction extends AbstractAction {
 		return (String) getValue(NAME);
 	}
 
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent event) {
 
 		if (graph.data.isEmpty()) {
 			JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(graph), "No data to view.", "No Data",

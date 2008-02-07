@@ -70,7 +70,7 @@ public class VecmathTest {
 	static public float epsilon = 1.0e-5f;
 
 	static public boolean equals(double m1, double m2) {
-		return Math.abs(m1 - m2) < (double) epsilon;
+		return Math.abs(m1 - m2) < epsilon;
 	}
 
 	static public boolean equals(Matrix3d m1, Matrix3d m2) {

@@ -282,7 +282,6 @@ public class Ibeta extends PostfixMathCommand {
 		k5 = 1.0;
 		k6 = a + b;
 		k7 = a + 1.0;
-		;
 		k8 = a + 2.0;
 
 		pkm2 = 0.0;

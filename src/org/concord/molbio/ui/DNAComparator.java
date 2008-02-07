@@ -508,7 +508,7 @@ class DNALetterLayer extends JPanel {
 			x0 = r.x + r.width - 1;
 		}
 
-		if (g == null && g1 != null)
+		if (g == null)
 			g1.dispose();
 	}
 

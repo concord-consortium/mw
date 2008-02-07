@@ -1049,7 +1049,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 				if (!dir.isDirectory())
 					return;
 				String[] fn = dir.list(new FilenameFilter() {
-					public boolean accept(File dir, String name) {
+					public boolean accept(File directory, String name) {
 						return name.toLowerCase().endsWith(".cml");
 					}
 				});
@@ -2354,8 +2354,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		menuItem = new JMenuItem(s != null ? s : "Supported Math Functions");
 		menuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String s = navigator.getHomeDirectory() + "tutorial/functions.cml";
-				navigator.visitLocation(s);
+				navigator.visitLocation(navigator.getHomeDirectory() + "tutorial/functions.cml");
 			}
 		});
 		menu.add(menuItem);
@@ -2831,7 +2830,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 							break;
 						}
 					}
-				};
+				}
 			};
 			t.setPriority(Thread.MIN_PRIORITY);
 			t.start();

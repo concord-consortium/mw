@@ -183,8 +183,8 @@ public class MesoView extends MDView {
 			}
 		}
 
-		boolean particleRemoved = (list != null && !list.isEmpty());
-		boolean layerRemoved = (lay != null && !lay.isEmpty());
+		boolean particleRemoved = list != null && !list.isEmpty();
+		boolean layerRemoved = lay != null && !lay.isEmpty();
 
 		if (particleRemoved)
 			removeMarkedParticles(list);

@@ -726,13 +726,11 @@ public abstract class AtomicModel extends MDModel {
 			view.repaint();
 			return true;
 		}
-		else {
-			for (int i = 0; i <= n; i++) {
-				if (atom[i].isSelected())
-					atom[i].restoreState();
-			}
-			return false;
+		for (int i = 0; i <= n; i++) {
+			if (atom[i].isSelected())
+				atom[i].restoreState();
 		}
+		return false;
 	}
 
 	/** translate all components of the model by the specified distance */
@@ -1401,7 +1399,7 @@ public abstract class AtomicModel extends MDModel {
 				return false;
 		}
 		if (obstacles != null && !obstacles.isEmpty()) {
-			RectangularObstacle o = (RectangularObstacle) obstacles.get(0);
+			RectangularObstacle o = obstacles.get(0);
 			if (o.rxryQ == null || o.rxryQ.isEmpty())
 				return false;
 		}

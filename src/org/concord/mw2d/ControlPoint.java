@@ -26,8 +26,6 @@ import java.awt.Point;
 
 class ControlPoint extends Point {
 
-	public int x;
-	public int y;
 	public static final int PT_SIZE = 3;
 
 	private boolean selected;

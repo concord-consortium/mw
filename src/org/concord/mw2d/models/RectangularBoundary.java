@@ -578,7 +578,7 @@ public class RectangularBoundary extends Rectangle2D.Double implements Boundary 
 			RectangularObstacle rect = null;
 			synchronized (model.getObstacles().getSynchronizationLock()) {
 				for (int iobs = 0, nobs = model.getObstacles().size(); iobs < nobs; iobs++) {
-					rect = (RectangularObstacle) model.getObstacles().get(iobs);
+					rect = model.getObstacles().get(iobs);
 					if (rect.x < xmin) {
 						rect.x = xmin;
 						rect.vx = rect.isBounced() ? Math.abs(rect.vx) : 0;
@@ -804,7 +804,7 @@ public class RectangularBoundary extends Rectangle2D.Double implements Boundary 
 			RectangularObstacle rect = null;
 			synchronized (model.getObstacles().getSynchronizationLock()) {
 				for (int iobs = 0, nobs = model.getObstacles().size(); iobs < nobs; iobs++) {
-					rect = (RectangularObstacle) model.getObstacles().get(iobs);
+					rect = model.getObstacles().get(iobs);
 					if (rect.x < xmin) {
 						rect.x = xmin;
 						rect.vx = rect.isBounced() ? Math.abs(rect.vx) : 0;
@@ -905,7 +905,7 @@ public class RectangularBoundary extends Rectangle2D.Double implements Boundary 
 			RectangularObstacle rect = null;
 			synchronized (model.getObstacles().getSynchronizationLock()) {
 				for (int iobs = 0, nobs = model.getObstacles().size(); iobs < nobs; iobs++) {
-					rect = (RectangularObstacle) model.getObstacles().get(iobs);
+					rect = model.getObstacles().get(iobs);
 					if (rect.y < ymin) {
 						rect.y = ymin;
 						rect.vy = rect.isBounced() ? Math.abs(rect.vy) : 0;

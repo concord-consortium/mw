@@ -1851,7 +1851,7 @@ interface DNASCrollerEffect {
 	boolean isInEffect();
 
 	boolean isEffectDone();
-};
+}
 
 class BeginTranscriptionEffect implements DNASCrollerEffect {
 	Thread effectThread;

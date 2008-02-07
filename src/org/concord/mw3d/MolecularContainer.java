@@ -517,7 +517,6 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 					file = ConnectionManager.sharedInstance().cache(resourceAddress);
 				}
 				catch (FileNotFoundException fnfe) {
-					file = null;
 				}
 			}
 			if (file != null) {

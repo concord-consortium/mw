@@ -89,7 +89,7 @@ public class HtmlSelect {
 			DefaultComboBoxModel cbm = (DefaultComboBoxModel) model;
 			for (int i = 0; i < count; i++) {
 				if (cbm.getSelectedItem() == cbm.getElementAt(i)) {
-					o = (HtmlOption) options.get(i);
+					o = options.get(i);
 					try {
 						s += URLEncoder.encode(o.getValue(), "UTF-8") + ",";
 					}

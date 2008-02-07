@@ -358,11 +358,11 @@ public class ChemContainer extends MDContainer {
 
 			JMenuItem menuItem;
 
-			String[] t = (String[]) ((Action) model.getChoices().get("Reaction Direction")).getValue("options");
+			String[] t = (String[]) (model.getChoices().get("Reaction Direction")).getValue("options");
 			ButtonGroup bg = new ButtonGroup();
 			for (int i = 0; i < t.length; i++) {
 				menuItem = new JRadioButtonMenuItem();
-				menuItem.setAction((Action) model.getChoices().get("Reaction Direction"));
+				menuItem.setAction(model.getChoices().get("Reaction Direction"));
 				menuItem.setText(t[i]);
 				if (i == 0)
 					menuItem.setSelected(true);
@@ -494,7 +494,7 @@ public class ChemContainer extends MDContainer {
 			menuItem.setText((s != null ? s : menuItem.getText()) + "...");
 			subMenu.add(menuItem);
 
-			energyTSItem = new JMenuItem((Action) model.getActions().get("Show kinetic, potential and total energies"));
+			energyTSItem = new JMenuItem(model.getActions().get("Show kinetic, potential and total energies"));
 			s = getInternationalText("EnergyTimeSeries");
 			energyTSItem.setText((s != null ? s : "View Time Series of Energies") + "...");
 			energyTSItem.setMnemonic(KeyEvent.VK_E);

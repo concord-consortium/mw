@@ -84,7 +84,7 @@ public class TextLine {
 	/**
 	 * Font to use for text
 	 */
-	protected Font font = new Font("Arial", Font.PLAIN, 9);;
+	protected Font font = new Font("Arial", Font.PLAIN, 9);
 	/**
 	 * Text color
 	 */

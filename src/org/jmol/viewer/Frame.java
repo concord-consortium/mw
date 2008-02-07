@@ -746,7 +746,7 @@ public final class Frame {
 		if (pt < 0) {
 			group3Lists[modelIndex] += ",[" + g3code + "]";
 			pt = group3Lists[modelIndex].indexOf(g3code);
-			group3Counts[modelIndex] = (int[]) ArrayUtil.setLength(group3Counts[modelIndex],
+			group3Counts[modelIndex] = ArrayUtil.setLength(group3Counts[modelIndex],
 					group3Counts[modelIndex].length + 10);
 		}
 		group3Counts[modelIndex][pt / 6]++;
@@ -1112,7 +1112,7 @@ public final class Frame {
 	 * @return if hydrogen bond, default to 1; otherwise 0 (general default)
 	 */
 	short getDefaultMadFromOrder(short order) {
-		return (short) ((order & JmolConstants.BOND_HYDROGEN_MASK) > 0 ? 1 : defaultCovalentMad);
+		return ((order & JmolConstants.BOND_HYDROGEN_MASK) > 0 ? 1 : defaultCovalentMad);
 	}
 
 	private Bond bondMutually(Atom atom, Atom atomOther, short order, short mad) {
@@ -1969,7 +1969,7 @@ public final class Frame {
 					continue;
 				cellInfos[modelIndex].toCartesian(atoms[i]);
 				if (Logger.isActiveLevel(Logger.LEVEL_DEBUG))
-					Logger.debug("atom " + i + ": " + (Point3f) atoms[i]);
+					Logger.debug("atom " + i + ": " + atoms[i]);
 			}
 		}
 	}

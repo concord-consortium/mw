@@ -1993,12 +1993,10 @@ public abstract class MDView extends PrintableComponent {
 				e.printStackTrace();
 				break;
 			}
-			if (ic != null) {
-				map.put(s, ic);
-				ic.setModel(getModel());
-				ic.set(i);
-				layerBasket.add(ic);
-			}
+			map.put(s, ic);
+			ic.setModel(getModel());
+			ic.set(i);
+			layerBasket.add(ic);
 		}
 	}
 
@@ -3549,7 +3547,7 @@ public abstract class MDView extends PrintableComponent {
 				}
 				n = getModel().getObstacles().size();
 				for (int i = 0; i < n; i++) {
-					((RectangularObstacle) getModel().getObstacles().get(i)).restoreState();
+					getModel().getObstacles().get(i).restoreState();
 				}
 				if (!layerBasket.isEmpty()) {
 					synchronized (layerBasket) {

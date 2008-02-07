@@ -105,7 +105,7 @@ public class ImageComponent implements ModelComponent, Layered {
 				}
 			}
 			else if (s.endsWith("Obstacle")) {
-				setHost((RectangularObstacle) ((MDModel) model).getObstacles().get(index));
+				setHost(model.getObstacles().get(index));
 			}
 		}
 	}

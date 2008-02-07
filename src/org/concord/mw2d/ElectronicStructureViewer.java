@@ -570,7 +570,7 @@ public abstract class ElectronicStructureViewer extends JPanel implements Update
 			int r = ElectronView.getRadius();
 			g.drawOval(selectedElectronView.getX(), mouseY - r, r * 2, r * 2);
 			if (rolloverLevelView != null) {
-				int d = (int) ((float) (size.height - V_MARGIN * 2) / (2.0f * ntick));
+				int d = (int) ((size.height - V_MARGIN * 2) / (2.0f * ntick));
 				g.drawRect(rolloverLevelView.getX(), rolloverLevelView.getY() + rolloverLevelView.getHeight() / 2 - d,
 						rolloverLevelView.getWidth(), d * 2);
 			}
@@ -626,7 +626,7 @@ public abstract class ElectronicStructureViewer extends JPanel implements Update
 		}
 		if (showElectronMoving && selectedElectronView != null) {
 			EnergyLevelView lv = null;
-			int d = (int) ((float) (getHeight() - V_MARGIN * 2) / (2.0f * ntick));
+			int d = (int) ((getHeight() - V_MARGIN * 2) / (2.0f * ntick));
 			synchronized (levelViewList) {
 				for (EnergyLevelView levelView : levelViewList) {
 					if (levelView.contains(e.getX(), e.getY(), 0, d)) {
@@ -663,7 +663,7 @@ public abstract class ElectronicStructureViewer extends JPanel implements Update
 		if (selectedElectronView != null) {
 			showElectronMoving = true;
 			rolloverLevelView = null;
-			int d = (int) ((float) (getHeight() - V_MARGIN * 2) / (2.0f * ntick));
+			int d = (int) ((getHeight() - V_MARGIN * 2) / (2.0f * ntick));
 			synchronized (levelViewList) {
 				for (EnergyLevelView levelView : levelViewList) {
 					if (levelView.contains(e.getX(), mouseY, 0, d)) {

@@ -86,7 +86,7 @@ class ElectronicDynamicsRuleEditor extends JPanel {
 									"<html><p><b>Radiationless transition</b></p><p>is a transition between two quantum states without emitting or obsorbing photons.<br>If an electron is de-excited through a process of radiationless transition, the<br>excess energy will be converted into the form of kinetic energy, resulting in<br>the increasing of temperature of the system.</p></html>");
 							break;
 						}
-					};
+					}
 				});
 			}
 		});

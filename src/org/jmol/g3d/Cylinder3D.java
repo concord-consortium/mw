@@ -80,7 +80,7 @@ class Cylinder3D {
 		// XIE: begin: deal with long sticks to prevent huge raster arrays from being produced
 		dxB = xB - xA;
 		dyB = yB - yA;
-		if (dxB * dxB + dyB * dyB > 4.0 * (double)g3d.width * (double)g3d.width)
+		if (dxB * dxB + dyB * dyB > 4.0 * g3d.width * g3d.width)
 			return;
 		// XIE: end
 		dzB = zB - zA;
@@ -147,8 +147,8 @@ class Cylinder3D {
 		dzBf = zB - zA;
 		if (diameter == 0 || diameter == 1) {
 			line3d.plotLineDelta(g3d.getColixArgb(colixA), Graphics3D.isColixTranslucent(colixA), g3d
-					.getColixArgb(colixB), Graphics3D.isColixTranslucent(colixB), (int) xA, (int) yA, (int) zA,
-					(int) dxB, (int) dyB, (int) dzB, notClipped);
+					.getColixArgb(colixB), Graphics3D.isColixTranslucent(colixB), (int) xA, (int) yA, (int) zA, dxB,
+					dyB, dzB, notClipped);
 			return;
 		}
 		if (diameter > 0) {
