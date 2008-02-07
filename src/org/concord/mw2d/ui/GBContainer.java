@@ -339,7 +339,7 @@ public class GBContainer extends MDContainer {
 			menuItem.setText((s != null ? s : menuItem.getText()) + "...");
 			subMenu.add(menuItem);
 
-			energyTSItem = new JMenuItem((Action) model.getActions().get("Show kinetic, potential and total energies"));
+			energyTSItem = new JMenuItem(model.getActions().get("Show kinetic, potential and total energies"));
 			s = getInternationalText("EnergyTimeSeries");
 			energyTSItem.setText((s != null ? s : "View Time Series of Energies") + "...");
 			energyTSItem.setMnemonic(KeyEvent.VK_E);

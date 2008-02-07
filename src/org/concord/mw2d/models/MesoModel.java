@@ -48,7 +48,6 @@ public class MesoModel extends MDModel {
 	MesoView view;
 	GayBerneParticle[] gb;
 	volatile int numberOfParticles;
-	RectangularBoundary boundary;
 
 	private String name = "Default";
 	private GayBerneForce gbForce;
@@ -267,12 +266,10 @@ public class MesoModel extends MDModel {
 			view.repaint();
 			return true;
 		}
-		else {
-			for (int i = 0; i <= n; i++)
-				if (gb[i].isSelected())
-					gb[i].restoreState();
-			return false;
-		}
+		for (int i = 0; i <= n; i++)
+			if (gb[i].isSelected())
+				gb[i].restoreState();
+		return false;
 	}
 
 	public boolean translateWholeModel(double dx, double dy) {
@@ -305,7 +302,7 @@ public class MesoModel extends MDModel {
 			int size = obstacles.size();
 			RectangularObstacle obs = null;
 			for (int i = 0; i < size; i++) {
-				obs = (RectangularObstacle) obstacles.get(i);
+				obs = obstacles.get(i);
 				obs.storeCurrentState();
 				obs.translateBy(dx, dy);
 				if (!boundary.contains(obs)) {
@@ -319,7 +316,7 @@ public class MesoModel extends MDModel {
 			for (int i = 0; i < numberOfParticles; i++)
 				gb[i].translateBy(-dx, -dy);
 			for (int i = 0; i <= n; i++)
-				((RectangularObstacle) obstacles.get(i)).translateBy(-dx, -dy);
+				obstacles.get(i).translateBy(-dx, -dy);
 			return false;
 		}
 		view.repaint();
@@ -987,7 +984,7 @@ public class MesoModel extends MDModel {
 
 			VectorField f;
 			for (int i = 0, nf = fields.size(); i < nf; i++) {
-				f = (VectorField) fields.elementAt(i);
+				f = fields.elementAt(i);
 				if (f instanceof GravitationalField) {
 					GravitationalField gf = (GravitationalField) f;
 					gf.dyn(gb[0]);
@@ -1111,7 +1108,7 @@ public class MesoModel extends MDModel {
 
 		VectorField f;
 		for (int n = 0; n < fields.size(); n++) {
-			f = (VectorField) fields.elementAt(n);
+			f = fields.elementAt(n);
 			if (f instanceof GravitationalField) {
 				GravitationalField gf = (GravitationalField) f;
 				for (int i = 0; i < numberOfParticles; i++) {

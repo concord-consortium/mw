@@ -153,12 +153,12 @@ public class Codon {
 		if (isCodonStop())
 			return null;
 		if (!inMitochondria) {
-			return ((Aminoacid.AminoCodonHolder) Aminoacid.aminoCreation.get(nameStr)).amino;
+			return (Aminoacid.aminoCreation.get(nameStr)).amino;
 		}
-		Aminoacid amino = ((Aminoacid.AminoCodonHolder) Aminoacid.aminoCreation.get(nameStr + MITOCHONDRIA_SUFFIX)).amino;
+		Aminoacid amino = (Aminoacid.aminoCreation.get(nameStr + MITOCHONDRIA_SUFFIX)).amino;
 		if (amino != null)
 			return amino;
-		return ((Aminoacid.AminoCodonHolder) Aminoacid.aminoCreation.get(nameStr)).amino;
+		return (Aminoacid.aminoCreation.get(nameStr)).amino;
 	}
 
 }

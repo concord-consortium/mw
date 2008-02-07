@@ -140,7 +140,6 @@ public class TextBoxPanel extends PropertiesPanel {
 				textBox.getComponent().repaint();
 			}
 		});
-		;
 		p2.add(fontSizeComboBox);
 
 		s = getInternationalText("FontColor");

@@ -102,17 +102,10 @@ public class FileChooser extends JFileChooser {
 	/* Why did we reset the text field to "Untitled.", appended by the current extension before? */
 	public void resetTextField() {
 		/*
-		File dir = getCurrentDirectory();
-		if (dir != null) {
-			String fn = "Untitled";
-			if (getFileFilter() != null)
-				fn += "." + getFileFilter().getDescription().toLowerCase();
-			setSelectedFile(new File(dir, fn));
-		}
-		else {
-			clearTextField();
-		}
-		*/
+		 * File dir = getCurrentDirectory(); if (dir != null) { String fn = "Untitled"; if (getFileFilter() != null) fn +=
+		 * "." + getFileFilter().getDescription().toLowerCase(); setSelectedFile(new File(dir, fn)); } else {
+		 * clearTextField(); }
+		 */
 		clearTextField();
 	}
 
@@ -157,7 +150,7 @@ public class FileChooser extends JFileChooser {
 			return;
 		JMenuItem mi;
 		for (int i = 0; i < n; i++) {
-			mi = (JMenuItem) recentFilesMenu.getItem(i);
+			mi = recentFilesMenu.getItem(i);
 			mi.setText(recentFiles.get(n - 1 - i));
 		}
 	}

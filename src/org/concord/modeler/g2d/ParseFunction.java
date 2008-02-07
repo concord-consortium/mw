@@ -862,6 +862,7 @@ public class ParseFunction extends ScanString {
 			break;
 		case LOG10:
 			value = Math.log(evaluate(node.left)) / Math.E;
+			break;
 		case EXP:
 			value = Math.exp(evaluate(node.left));
 			break;

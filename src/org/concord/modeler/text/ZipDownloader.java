@@ -215,7 +215,8 @@ class ZipDownloader {
 				}
 			}
 			else {
-				page.getNavigator().visitLocation(cml[0].toString());
+				if (cml != null && cml[0] != null)
+					page.getNavigator().visitLocation(cml[0].toString());
 			}
 		}
 		Zipper.sharedInstance().setProcessMonitor(null);

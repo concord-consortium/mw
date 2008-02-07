@@ -874,7 +874,8 @@ public class DataSet {
 			return;
 
 		// Is the first point inside the drawing region ?
-		if ((inside0 = inside(data[0], data[1]))) {
+		inside0 = inside(data[0], data[1]);
+		if (inside0) {
 
 			x0 = (int) (w.x + ((data[0] - xmin) / xrange) * w.width);
 			y0 = (int) (w.y + (1.0 - (data[1] - ymin) / yrange) * w.height);

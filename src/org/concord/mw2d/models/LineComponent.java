@@ -96,7 +96,7 @@ public class LineComponent extends AbstractLine implements ModelComponent, Layer
 				}
 			}
 			else if (s.endsWith("Obstacle")) {
-				setHost((RectangularObstacle) ((MDModel) model).getObstacles().get(index));
+				setHost(model.getObstacles().get(index));
 			}
 		}
 	}

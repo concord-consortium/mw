@@ -44,7 +44,7 @@ import javax.swing.text.html.StyleSheet;
 class HTMLConverter {
 
 	private final static String LINE_BREAK = "" + '\n';
-	//private final static String PARAGRAPH_BREAK = LINE_BREAK + '\n';
+	// private final static String PARAGRAPH_BREAK = LINE_BREAK + '\n';
 
 	private static HTMLConverter converter = new HTMLConverter();
 
@@ -84,17 +84,9 @@ class HTMLConverter {
 	}
 
 	/*
-	private int insertParagraphBreak(Document doc, int pos) {
-		try {
-			doc.insertString(pos, PARAGRAPH_BREAK, null);
-			pos += PARAGRAPH_BREAK.length();
-		}
-		catch (BadLocationException ble) {
-			ble.printStackTrace(System.err);
-		}
-		return pos;
-	}
-	*/
+	 * private int insertParagraphBreak(Document doc, int pos) { try { doc.insertString(pos, PARAGRAPH_BREAK, null); pos +=
+	 * PARAGRAPH_BREAK.length(); } catch (BadLocationException ble) { ble.printStackTrace(System.err); } return pos; }
+	 */
 
 	private void insert(final StyledDocument doc, final File file) {
 
@@ -204,10 +196,10 @@ class HTMLConverter {
 						ble.printStackTrace(System.err);
 					}
 
-					if (endOffset - startOffset == 1 && text.charAt(0) == '\n') {
+					if (endOffset - startOffset == 1 && text != null && text.charAt(0) == '\n') {
 						/*
-						 * this is a line break spontaneously added to the end of a H tag, or before a P tag. There
-						 * is usually no need to apply a style on it.
+						 * this is a line break spontaneously added to the end of a H tag, or before a P tag. There is
+						 * usually no need to apply a style on it.
 						 */
 					}
 					else {

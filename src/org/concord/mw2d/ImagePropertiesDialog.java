@@ -322,8 +322,8 @@ class ImagePropertiesDialog extends JDialog {
 						long[] t = ConnectionManager.getLastModifiedAndContentLength(u);
 						sizeLabel.setText(t[1] + " bytes");
 						timeLabel.setText(new Date(t[0]).toString());
+						urlLabel.setText(u.toString());
 					}
-					urlLabel.setText(u.toString());
 				}
 				else {
 					File f = new File(FileUtilities.getCodeBase(baseURL) + FileUtilities.getFileName(s));

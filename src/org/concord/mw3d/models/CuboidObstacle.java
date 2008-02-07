@@ -58,12 +58,15 @@ public class CuboidObstacle extends Obstacle {
 		case 'x':
 			if (center.x - corner.x < -0.5f * model.getLength() || center.x + corner.x > 0.5f * model.getLength())
 				return false;
+			break;
 		case 'y':
 			if (center.y - corner.y < -0.5f * model.getWidth() || center.y + corner.y > 0.5f * model.getWidth())
 				return false;
+			break;
 		case 'z':
 			if (center.z - corner.z < -0.5f * model.getHeight() || center.z + corner.z > 0.5f * model.getHeight())
 				return false;
+			break;
 		}
 		return true;
 	}

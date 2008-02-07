@@ -53,7 +53,7 @@ class RemoveFunctionAction extends AbstractAction {
 		return (String) getValue(NAME);
 	}
 
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent event) {
 		if (graph.data.isEmpty()) {
 			JOptionPane.showMessageDialog(graph, "No data has been found in this graph.", "No Data",
 					JOptionPane.INFORMATION_MESSAGE);

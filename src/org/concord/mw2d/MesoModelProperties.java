@@ -191,7 +191,7 @@ public class MesoModelProperties extends ModelProperties {
 		String url = (String) model.getProperty("url");
 		s = MDView.getInternationalText("FileLabel");
 		if (s != null)
-			info += "<b>" + (s != null ? s : "File") + ":</b> " + url + "<br>";
+			info += "<b>File:</b> " + url + "<br>";
 		Date date = (Date) model.getProperty("date");
 		s = MDView.getInternationalText("LastModifiedLabel");
 		info += (date != null ? "<b>" + (s != null ? s : "Last modified") + ":</b> " + date

@@ -815,8 +815,8 @@ final public class Graphics3D {
 
 	public void fillCylinderBits(short colix, byte endcaps, int diameter, Point3i screenA, Point3i screenB) {
 		// dipole cross, cartoonRockets
-		cylinder3d.renderBits(colix, colix, endcaps, diameter, (float) screenA.x, (float) screenA.y, (float) screenA.z,
-				(float) screenB.x, (float) screenB.y, (float) screenB.z);
+		cylinder3d.renderBits(colix, colix, endcaps, diameter, screenA.x, screenA.y, screenA.z, screenB.x, screenB.y,
+				screenB.z);
 	}
 
 	public void fillCylinderBits(short colix, byte endcaps, int diameter, Point3f screenA, Point3f screenB) {

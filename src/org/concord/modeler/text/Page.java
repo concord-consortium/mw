@@ -219,9 +219,9 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	public final static String DECREASE_INDENT = "decrease-indent";
 	public final static String INCREASE_FONT_SIZE = "Increase Font Size";
 	public final static String DECREASE_FONT_SIZE = "Decrease Font Size";
-	public final static String LEFT_ALIGNMENT = "left-justify";
-	public final static String RIGHT_ALIGNMENT = "right-justify";
-	public final static String CENTER_ALIGNMENT = "center-justify";
+	public final static String LEFT_ALIGN = "left-justify";
+	public final static String RIGHT_ALIGN = "right-justify";
+	public final static String CENTER_ALIGN = "center-justify";
 	public final static String BOLD = "font-bold";
 	public final static String ITALIC = "font-italic";
 	public final static String UNDERLINE = "font-underline";

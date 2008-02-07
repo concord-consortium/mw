@@ -758,7 +758,7 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 			return null;
 		StringBuffer sb = null;
 		Codon codon = null;
-		if (dnamodel.isStrand53Available() && sb == null && charRectangles53 != null) {
+		if (dnamodel.isStrand53Available() && charRectangles53 != null) {
 			for (int i = 0; i < charRectangles53.length; i++) {
 				if (charRectangles53[i].contains(evt.getPoint())) {
 					String tooltip53 = dnamodel.get53ToolTipString(i, true);

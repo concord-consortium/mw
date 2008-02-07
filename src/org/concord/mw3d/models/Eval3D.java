@@ -200,7 +200,7 @@ class Eval3D extends AbstractEval {
 				break;
 			}
 			v = escapeMetaCharacters(v);
-			mol = (Molecule) model.molecules.get(i);
+			mol = model.molecules.get(i);
 			int nmol = mol.getAtomCount();
 			if (frame < 0) {
 				Point3f com = mol.getCenterOfMass();
@@ -407,29 +407,25 @@ class Eval3D extends AbstractEval {
 				return true;
 		}
 
-		if (model instanceof MolecularModel) {
+		// minimize
+		matcher = MINIMIZE.matcher(ci);
+		if (matcher.find()) {
+			if (evaluateMinimizeClause(ci.substring(matcher.end()).trim()))
+				return true;
+		}
 
-			// minimize
-			matcher = MINIMIZE.matcher(ci);
-			if (matcher.find()) {
-				if (evaluateMinimizeClause(ci.substring(matcher.end()).trim()))
-					return true;
-			}
+		// build radial bond
+		matcher = BUILD_BOND.matcher(ci);
+		if (matcher.find()) {
+			if (evaluateBuildRBondClause(ci.substring(ci.startsWith("rbond") ? 5 : 4).trim()))
+				return true;
+		}
 
-			// build radial bond
-			matcher = BUILD_BOND.matcher(ci);
-			if (matcher.find()) {
-				if (evaluateBuildRBondClause(ci.substring(ci.startsWith("rbond") ? 5 : 4).trim()))
-					return true;
-			}
-
-			// build angular bond
-			matcher = BUILD_BEND.matcher(ci);
-			if (matcher.find()) {
-				if (evaluateBuildABondClause(ci.substring(ci.startsWith("abond") ? 5 : 4).trim()))
-					return true;
-			}
-
+		// build angular bond
+		matcher = BUILD_BEND.matcher(ci);
+		if (matcher.find()) {
+			if (evaluateBuildABondClause(ci.substring(ci.startsWith("abond") ? 5 : 4).trim()))
+				return true;
 		}
 
 		out(ScriptEvent.FAILED, "Unrecognized command: " + ci);
@@ -802,7 +798,7 @@ class Eval3D extends AbstractEval {
 		if (str.toLowerCase().startsWith("modeltime")) {
 			str = str.substring(9).trim();
 			if (str.matches(REGEX_NONNEGATIVE_DECIMAL) || str.matches(REGEX_NONNEGATIVE_INTEGER)) {
-				int i = Math.round(Float.valueOf(str).floatValue() / (float) model.getTimeStep());
+				int i = Math.round(Float.valueOf(str).floatValue() / model.getTimeStep());
 				int step0 = model.job != null ? model.job.getIndexOfStep() : 0;
 				AbstractLoadable l = new AbstractLoadable(i) {
 					public void execute() {
@@ -1411,7 +1407,7 @@ class Eval3D extends AbstractEval {
 						s = s.substring(3).trim();
 					}
 					if (withinMap != null && withinMap.containsKey(s)) {
-						s = (String) withinMap.get(s);
+						s = withinMap.get(s);
 					}
 					if (startsWithNot)
 						s = "not " + s;

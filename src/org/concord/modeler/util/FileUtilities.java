@@ -362,7 +362,6 @@ public class FileUtilities {
 			throw new IllegalArgumentException("URL cannot be null.");
 		if (d == null)
 			throw new IllegalArgumentException("File cannot be null.");
-		InputStream is = null;
 		URLConnection connect = null;
 		try {
 			connect = s.openConnection();
@@ -371,14 +370,13 @@ public class FileUtilities {
 			e.printStackTrace();
 			return SOURCE_NOT_FOUND;
 		}
-		if (connect != null) {
-			try {
-				is = connect.getInputStream();
-			}
-			catch (IOException e) {
-				e.printStackTrace();
-				return SOURCE_NOT_FOUND;
-			}
+		InputStream is = null;
+		try {
+			is = connect.getInputStream();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+			return SOURCE_NOT_FOUND;
 		}
 		FileOutputStream fos = null;
 		try {

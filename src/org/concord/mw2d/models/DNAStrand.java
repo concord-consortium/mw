@@ -231,6 +231,8 @@ public class DNAStrand extends Molecule {
 					}
 				}
 			}
+			if (sp == null)
+				return false;
 			double x1 = sp.getRx();
 			double y1 = sp.getRy();
 			double x2 = endToAttach.getRx();
@@ -241,6 +243,8 @@ public class DNAStrand extends Molecule {
 			x1 = x2 + d1 * costheta;
 			y1 = y2 + d1 * sintheta;
 			if (model.view.insertAnAtom(x1, y1, id1, false)) {
+				if (nc == null)
+					return false;
 				x2 = nc.getRx();
 				y2 = nc.getRy();
 				x1 = x2 + d1 * costheta;

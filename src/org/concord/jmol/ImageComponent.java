@@ -36,256 +36,290 @@ import org.concord.modeler.util.GifDecoder;
 
 class ImageComponent {
 
-    public final static int FRONT=1;
-    public final static int BACK=2;
+	public final static int FRONT = 1;
+	public final static int BACK = 2;
 
-    private GifDecoder gifDecoder;
-    private boolean selected;
-    private int layer=FRONT;
-    private Image[] images;
-    private double x, y;
-    private int frameCounter;
-    private long previousFrameTime, currentTime;
-    private URL url;
-    private String filename;
+	private GifDecoder gifDecoder;
+	private boolean selected;
+	private int layer = FRONT;
+	private Image[] images;
+	private double x, y;
+	private int frameCounter;
+	private long previousFrameTime, currentTime;
+	private URL url;
+	private String filename;
 
-    public ImageComponent(URL url) throws IOException {
-	if(url==null) throw new IllegalArgumentException("You must pass in a valid URI");
-	if(url.getFile().toLowerCase().endsWith(".gif")){
-	    gifDecoder=new GifDecoder();
-	    gifDecoder.read(url);
-	    images=gifDecoder.getImages();
-	} else {
-	    images=new Image[1];
-	    images[0]=Toolkit.getDefaultToolkit().createImage(url);
-	}
-	this.url=url;
-    }
-
-    public ImageComponent(String filename) throws IOException {
-	if(filename==null) throw new IllegalArgumentException("You must pass in a valid file name");
-	if(ConnectionManager.sharedInstance().isCachingAllowed()){
-	    if(FileUtilities.isRemote(filename)){
-		File file=ConnectionManager.sharedInstance().shouldUpdate(filename);
-		if(file==null) file=ConnectionManager.sharedInstance().cache(filename);
-		if(file!=null) filename=file.toString();
-	    }
-	}
-	if(filename.toLowerCase().endsWith(".gif")){
-	    gifDecoder=new GifDecoder();
-	    gifDecoder.read(filename);
-	    images=gifDecoder.getImages();
-	} else {
-	    images=new Image[1];
-	    if(FileUtilities.isRemote(filename)){
-		try {
-		    images[0]=Toolkit.getDefaultToolkit().createImage(new URL(filename));
-		} catch(MalformedURLException mue){
-		    mue.printStackTrace(System.err);
+	public ImageComponent(URL url) throws IOException {
+		if (url == null)
+			throw new IllegalArgumentException("You must pass in a valid URI");
+		if (url.getFile().toLowerCase().endsWith(".gif")) {
+			gifDecoder = new GifDecoder();
+			gifDecoder.read(url);
+			images = gifDecoder.getImages();
 		}
-	    } else {
-		images[0]=Toolkit.getDefaultToolkit().createImage(filename);
-	    }
+		else {
+			images = new Image[1];
+			images[0] = Toolkit.getDefaultToolkit().createImage(url);
+		}
+		this.url = url;
 	}
-	try {
-	    url=new URL(filename);
-	} catch(Exception e){
-	    url=null;
-	    this.filename=filename;
-	}
-    }
 
-    /** return the index of the current frame. */
-    public int getCurrentFrame(){
-	return frameCounter;
-    }
-
-    public void setCurrentFrame(int i){
-	frameCounter=i;
-    }
-
-    /** return the number of frames. */
-    public int getFrames(){
-	if(images==null) return 0;
-	return images.length;
-    }
-
-    /** show the next frame of this animated image. */
-    public void nextFrame(){
-
-	int n=images.length;
-	if(n<=1) return;
-	if(gifDecoder==null) return;
-
-	currentTime=System.currentTimeMillis();
-	if(previousFrameTime!=0L){
-	    if(currentTime-previousFrameTime>=gifDecoder.getDelay(frameCounter)){
-		frameCounter++;
-		/*
-		if(frameCounter==n) {
-		    if(loopCount==0){
-			frameCounter=0;
-		    } else {
-			if(loopCounter<loopCount-1){
-			    frameCounter=0;
-			    loopCounter++;
-			} else {
-			    frameCounter=n-1;
+	public ImageComponent(String filename) throws IOException {
+		if (filename == null)
+			throw new IllegalArgumentException("You must pass in a valid file name");
+		if (ConnectionManager.sharedInstance().isCachingAllowed()) {
+			if (FileUtilities.isRemote(filename)) {
+				File file = ConnectionManager.sharedInstance().shouldUpdate(filename);
+				if (file == null)
+					file = ConnectionManager.sharedInstance().cache(filename);
+				if (file != null)
+					filename = file.toString();
 			}
-		    }
 		}
-		*/
-		previousFrameTime=currentTime;
-	    }
-	} else {
-	    previousFrameTime=currentTime;
+		if (filename.toLowerCase().endsWith(".gif")) {
+			gifDecoder = new GifDecoder();
+			gifDecoder.read(filename);
+			images = gifDecoder.getImages();
+		}
+		else {
+			images = new Image[1];
+			if (FileUtilities.isRemote(filename)) {
+				try {
+					images[0] = Toolkit.getDefaultToolkit().createImage(new URL(filename));
+				}
+				catch (MalformedURLException mue) {
+					mue.printStackTrace(System.err);
+				}
+			}
+			else {
+				images[0] = Toolkit.getDefaultToolkit().createImage(filename);
+			}
+		}
+		try {
+			url = new URL(filename);
+		}
+		catch (Exception e) {
+			url = null;
+			this.filename = filename;
+		}
 	}
 
-    }
-
-    /** render this image or image sets onto a graphics context, with the specified component 
-     ** <code>c</code> as the <code>ImageObserver</code>. **/
-    public void paint(Component c, Graphics g){
-	if(images==null) return;
-	int n=images.length;
-	if(n<=0) return;
-	if(n==1){
-	    if(images[0]!=null) g.drawImage(images[0], (int)x, (int)y, c);
-	} else {
-	    g.drawImage(images[frameCounter], (int)getXFrame(), (int)getYFrame(), c);
+	/** return the index of the current frame. */
+	public int getCurrentFrame() {
+		return frameCounter;
 	}
-    }
 
-    /** restart painting from the first frame, and restore the loop count */
-    public void reset(){
-	frameCounter=0;
-    }
+	public void setCurrentFrame(int i) {
+		frameCounter = i;
+	}
 
-    /** return the current x coordinate of this image */
-    public double getRx(){
-	return x;
-    }
+	/** return the number of frames. */
+	public int getFrames() {
+		if (images == null)
+			return 0;
+		return images.length;
+	}
 
-    /** return the current y coordinate of this image */
-    public double getRy(){
-	return y;
-    }
+	/** show the next frame of this animated image. */
+	public void nextFrame() {
 
-    /** set the x coordinate of this image */
-    public void setRx(double x){
-	this.x=x;
-    }
+		int n = images.length;
+		if (n <= 1)
+			return;
+		if (gifDecoder == null)
+			return;
 
-    /** set the y coordinate of this image */
-    public void setRy(double y){
-	this.y=y;
-    }
+		currentTime = System.currentTimeMillis();
+		if (previousFrameTime != 0L) {
+			if (currentTime - previousFrameTime >= gifDecoder.getDelay(frameCounter)) {
+				frameCounter++;
+				/*
+				 * if(frameCounter==n) { if(loopCount==0){ frameCounter=0; } else { if(loopCounter<loopCount-1){
+				 * frameCounter=0; loopCounter++; } else { frameCounter=n-1; } } }
+				 */
+				previousFrameTime = currentTime;
+			}
+		}
+		else {
+			previousFrameTime = currentTime;
+		}
 
-    /** set the location of this image */
-    public void setLocation(double x, double y){
-	setRx(x);
-	setRy(y);
-    }
+	}
 
-    /** same as <code>setLocation(double, double)</code> */
-    public void translateTo(double x, double y){
-	setLocation(x, y);
-    }
+	/**
+	 * render this image or image sets onto a graphics context, with the specified component <code>c</code> as the
+	 * <code>ImageObserver</code>.
+	 */
+	public void paint(Component c, Graphics g) {
+		if (images == null)
+			return;
+		int n = images.length;
+		if (n <= 0)
+			return;
+		if (n == 1) {
+			if (images[0] != null)
+				g.drawImage(images[0], (int) x, (int) y, c);
+		}
+		else {
+			g.drawImage(images[frameCounter], (int) getXFrame(), (int) getYFrame(), c);
+		}
+	}
 
-    public void translateBy(double dx, double dy){
-	x+=dx;
-	y+=dy;
-    }
+	/** restart painting from the first frame, and restore the loop count */
+	public void reset() {
+		frameCounter = 0;
+	}
 
-    /** return the location of this image */
-    public Point getLocation(){
-	return new Point((int)x, (int)y);
-    }
+	/** return the current x coordinate of this image */
+	public double getRx() {
+		return x;
+	}
 
-    /** return the width of the current frame. */
-    public int getWidth(){
-	if(images==null) return 0;
-	if(images.length==0) return 0;
-	if(images[0]==null) return 0;
-	if(images.length==1) return images[0].getWidth(null);
-	return images[frameCounter].getWidth(null);
-    }
+	/** return the current y coordinate of this image */
+	public double getRy() {
+		return y;
+	}
 
-    /** return the height of the current frame. */
-    public int getHeight(){
-	if(images==null) return 0;
-	if(images.length==0) return 0;
-	if(images[0]==null) return 0;
-	if(images.length==1) return images[0].getHeight(null);
-	return images[frameCounter].getHeight(null);
-    }
+	/** set the x coordinate of this image */
+	public void setRx(double x) {
+		this.x = x;
+	}
 
-    /** @return the width of the whole image. */
-    public int getGlobalWidth(){
-	if(images==null) return 0;
-	if(images.length==0) return 0;
-	if(images[0]==null) return 0;
-	if(images.length==1) return images[0].getWidth(null);
-	if(gifDecoder==null) return 0;
-	return gifDecoder.getLogicalScreenWidth();
-    }
+	/** set the y coordinate of this image */
+	public void setRy(double y) {
+		this.y = y;
+	}
 
-    /** @return the height of the whole image. */
-    public int getGlobalHeight(){
-	if(images==null) return 0;
-	if(images.length==0) return 0;
-	if(images[0]==null) return 0;
-	if(images.length==1) return images[0].getHeight(null);
-	if(gifDecoder==null) return 0;
-	return gifDecoder.getLogicalScreenHeight();
-    }
+	/** set the location of this image */
+	public void setLocation(double x, double y) {
+		setRx(x);
+		setRy(y);
+	}
 
-    public void setSelected(boolean b){
-	selected=b;
-    }
+	/** same as <code>setLocation(double, double)</code> */
+	public void translateTo(double rx, double ry) {
+		setLocation(rx, ry);
+	}
 
-    public boolean isSelected(){
-	return selected;
-    }
+	public void translateBy(double dx, double dy) {
+		x += dx;
+		y += dy;
+	}
 
-    /** @return the x coordinate of the upper-left corner of the current frame. */
-    public double getXFrame(){
-	if(images.length==1) return x;
-	if(gifDecoder==null) return x;
-	return x+gifDecoder.getXOffset(frameCounter);
-    }
+	/** return the location of this image */
+	public Point getLocation() {
+		return new Point((int) x, (int) y);
+	}
 
-    /** @return the y coordinate of the upper-left corner of the current frame. */
-    public double getYFrame(){
-	if(images.length==1) return y;
-	if(gifDecoder==null) return y;
-	return y+gifDecoder.getYOffset(frameCounter);
-    }
+	/** return the width of the current frame. */
+	public int getWidth() {
+		if (images == null)
+			return 0;
+		if (images.length == 0)
+			return 0;
+		if (images[0] == null)
+			return 0;
+		if (images.length == 1)
+			return images[0].getWidth(null);
+		return images[frameCounter].getWidth(null);
+	}
 
-    public boolean contains(double rx, double ry){
-	if(images==null) return false;
-	if(images.length==0) return false;
-	if(images[0]==null) return false;
-	return 
-	    rx>=getXFrame() && rx<=getXFrame()+images[0].getWidth(null) && 
-	    ry>=getYFrame() && ry<=getYFrame()+images[0].getHeight(null);
-    }
+	/** return the height of the current frame. */
+	public int getHeight() {
+		if (images == null)
+			return 0;
+		if (images.length == 0)
+			return 0;
+		if (images[0] == null)
+			return 0;
+		if (images.length == 1)
+			return images[0].getHeight(null);
+		return images[frameCounter].getHeight(null);
+	}
 
-    public void setLayer(int i){
-	layer=i;
-    }
+	/** @return the width of the whole image. */
+	public int getGlobalWidth() {
+		if (images == null)
+			return 0;
+		if (images.length == 0)
+			return 0;
+		if (images[0] == null)
+			return 0;
+		if (images.length == 1)
+			return images[0].getWidth(null);
+		if (gifDecoder == null)
+			return 0;
+		return gifDecoder.getLogicalScreenWidth();
+	}
 
-    public int getLayer(){
-	return layer;
-    }
+	/** @return the height of the whole image. */
+	public int getGlobalHeight() {
+		if (images == null)
+			return 0;
+		if (images.length == 0)
+			return 0;
+		if (images[0] == null)
+			return 0;
+		if (images.length == 1)
+			return images[0].getHeight(null);
+		if (gifDecoder == null)
+			return 0;
+		return gifDecoder.getLogicalScreenHeight();
+	}
 
-    public URL getURL(){
-	return url;
-    }
+	public void setSelected(boolean b) {
+		selected = b;
+	}
 
-    public String toString(){
-	if(url!=null) return url.toString();
-	return filename;
-    }
+	public boolean isSelected() {
+		return selected;
+	}
+
+	/** @return the x coordinate of the upper-left corner of the current frame. */
+	public double getXFrame() {
+		if (images.length == 1)
+			return x;
+		if (gifDecoder == null)
+			return x;
+		return x + gifDecoder.getXOffset(frameCounter);
+	}
+
+	/** @return the y coordinate of the upper-left corner of the current frame. */
+	public double getYFrame() {
+		if (images.length == 1)
+			return y;
+		if (gifDecoder == null)
+			return y;
+		return y + gifDecoder.getYOffset(frameCounter);
+	}
+
+	public boolean contains(double rx, double ry) {
+		if (images == null)
+			return false;
+		if (images.length == 0)
+			return false;
+		if (images[0] == null)
+			return false;
+		return rx >= getXFrame() && rx <= getXFrame() + images[0].getWidth(null) && ry >= getYFrame()
+				&& ry <= getYFrame() + images[0].getHeight(null);
+	}
+
+	public void setLayer(int i) {
+		layer = i;
+	}
+
+	public int getLayer() {
+		return layer;
+	}
+
+	public URL getURL() {
+		return url;
+	}
+
+	public String toString() {
+		if (url != null)
+			return url.toString();
+		return filename;
+	}
 
 }

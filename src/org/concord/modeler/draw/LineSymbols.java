@@ -36,7 +36,7 @@ public class LineSymbols extends JComponent {
 	public final static String DOWN = "down";
 	public final static String LEFT = "left";
 	public final static String RIGHT = "right";
-	public final static String ERROR = "error";
+	public final static String ERROR_BAR = "error";
 
 	private final static Ellipse2D CIRCLE = new Ellipse2D.Float();
 	private final static Rectangle RECTANGLE = new Rectangle();
@@ -44,7 +44,7 @@ public class LineSymbols extends JComponent {
 	private final static NamedGeneralPath TRIANGLE_DOWN = new NamedGeneralPath(GeneralPath.WIND_EVEN_ODD, DOWN);
 	private final static NamedGeneralPath TRIANGLE_LEFT = new NamedGeneralPath(GeneralPath.WIND_EVEN_ODD, LEFT);
 	private final static NamedGeneralPath TRIANGLE_RIGHT = new NamedGeneralPath(GeneralPath.WIND_EVEN_ODD, RIGHT);
-	private final static NamedGeneralPath ERROR_SYMBOL = new NamedGeneralPath(GeneralPath.WIND_EVEN_ODD, ERROR);
+	private final static NamedGeneralPath ERROR_SYMBOL = new NamedGeneralPath(GeneralPath.WIND_EVEN_ODD, ERROR_BAR);
 
 	public final static byte SYMBOL_NUMBER_0 = 0;
 	public final static byte SYMBOL_NUMBER_1 = 1;

@@ -690,7 +690,7 @@ public class MolecularModel extends AtomicModel {
 						.getExpectedTemperature() : getTemperature());
 				synchronized (molecules.getSynchronizationLock()) {
 					for (int im1 = 0, nm1 = molecules.size(); im1 < nm1; im1++) {
-						mol = (Molecule) molecules.get(im1);
+						mol = molecules.get(im1);
 						com = mol.getCenterOfMass2D();
 						synchronized (mol.getSynchronizedLock()) {
 							for (int im2 = 0, nm2 = mol.size(); im2 < nm2; im2++) {
@@ -901,7 +901,7 @@ public class MolecularModel extends AtomicModel {
 					if (i >= 0 && i < molecules.size()) {
 						Object o = properties.get(s);
 						if (o instanceof Float) {
-							Molecule mol = (Molecule) molecules.get(i);
+							Molecule mol = molecules.get(i);
 							MolecularTorque mt = mol.getTorque();
 							if (mt == null) {
 								mt = new MolecularTorque();
@@ -922,7 +922,7 @@ public class MolecularModel extends AtomicModel {
 					if (i >= 0 && i < molecules.size()) {
 						Object o = properties.get(s);
 						if (o instanceof Float) {
-							Molecule mol = (Molecule) molecules.get(i);
+							Molecule mol = molecules.get(i);
 							MolecularTorque mt = mol.getTorque();
 							if (mt == null) {
 								mt = new MolecularTorque();

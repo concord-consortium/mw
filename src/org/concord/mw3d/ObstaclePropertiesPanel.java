@@ -246,7 +246,7 @@ class ObstaclePropertiesPanel extends PropertiesPanel {
 
 		ColorListener(Obstacle obs) {
 			this.obs = obs;
-			view = (MolecularView) obs.getModel().getView();
+			view = obs.getModel().getView();
 		}
 
 		public void actionPerformed(ActionEvent e) {

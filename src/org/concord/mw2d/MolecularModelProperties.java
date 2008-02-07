@@ -193,7 +193,7 @@ public class MolecularModelProperties extends ModelProperties {
 
 		s = MDView.getInternationalText("NumberOfAtomsLabel");
 		p.add(new JLabel(s != null ? s : "# Atoms", SwingConstants.LEFT));
-		JLabel label = new JLabel(Integer.toString(((MolecularModel) model).getNumberOfAtoms()));
+		JLabel label = new JLabel(Integer.toString(model.getNumberOfAtoms()));
 		label.setBorder(BUTTON_BORDER);
 		p.add(label);
 		p.add(new JPanel());

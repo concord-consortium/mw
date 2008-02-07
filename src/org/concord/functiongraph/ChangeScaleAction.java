@@ -56,7 +56,7 @@ class ChangeScaleAction extends AbstractAction {
 		return (String) getValue(NAME);
 	}
 
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent event) {
 
 		final JTextField xminField = new JTextField(2);
 		final JTextField xmaxField = new JTextField(2);
