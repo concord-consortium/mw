@@ -383,8 +383,14 @@ public class MolecularModel extends AtomicModel {
 	}
 
 	private void resetBondTable() {
-		for (int i = 0; i < bondTable.length; i++)
-			Arrays.fill(bondTable[i], false);
+		int n = bondTable.length;
+		for (int i = 0; i < n; i++) {
+			for (int j = i + 1; j < n; j++) {
+				bondTable[i][j] = false;
+				bondTable[j][i] = false;
+			}
+			bondTable[i][i] = false;
+		}
 	}
 
 	private void updateBondTable() {
@@ -439,11 +445,11 @@ public class MolecularModel extends AtomicModel {
 	}
 
 	public void run() {
+		if (!(this instanceof ReactionModel)) {
+			if (!ljBetweenBondPairs)
+				updateBondTable();
+		}
 		super.run();
-		if (this instanceof ReactionModel)
-			return;
-		if (!ljBetweenBondPairs)
-			updateBondTable();
 	}
 
 	public RadialBondCollection getBonds() {
@@ -883,55 +889,6 @@ public class MolecularModel extends AtomicModel {
 			synchronized (molecules.getSynchronizationLock()) {
 				for (Iterator it = molecules.iterator(); it.hasNext();)
 					((Molecule) it.next()).setTorque(mts[i++]);
-			}
-		}
-		else {
-			// back-compatible code to be removed in September, 2006 (six months of courtesy time)
-			String s;
-			for (Iterator it = properties.keySet().iterator(); it.hasNext();) {
-				s = (String) it.next();
-				if (s.startsWith("torque_mol")) {
-					i = -1;
-					try {
-						i = Integer.parseInt(s.substring(10));
-					}
-					catch (NumberFormatException e) {
-						e.printStackTrace();
-					}
-					if (i >= 0 && i < molecules.size()) {
-						Object o = properties.get(s);
-						if (o instanceof Float) {
-							Molecule mol = molecules.get(i);
-							MolecularTorque mt = mol.getTorque();
-							if (mt == null) {
-								mt = new MolecularTorque();
-								mol.setTorque(mt);
-							}
-							mt.setForce(((Float) o).floatValue());
-						}
-					}
-				}
-				else if (s.startsWith("rotor_mol")) {
-					i = -1;
-					try {
-						i = Integer.parseInt(s.substring(9));
-					}
-					catch (NumberFormatException e) {
-						e.printStackTrace();
-					}
-					if (i >= 0 && i < molecules.size()) {
-						Object o = properties.get(s);
-						if (o instanceof Float) {
-							Molecule mol = molecules.get(i);
-							MolecularTorque mt = mol.getTorque();
-							if (mt == null) {
-								mt = new MolecularTorque();
-								mol.setTorque(mt);
-							}
-							mt.setRadius(((Float) o).floatValue());
-						}
-					}
-				}
 			}
 		}
 

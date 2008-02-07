@@ -1124,6 +1124,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		}
 		else if (selectedComponent instanceof RadialBond) {
 			bonds.remove((RadialBond) selectedComponent);
+			bondChanged(null);
 			List ab = removeAssociatedBends((RadialBond) selectedComponent);
 			MoleculeCollection.sort(model);
 			if (!doNotFireUndoEvent) {
