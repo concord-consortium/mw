@@ -562,7 +562,7 @@ public abstract class MultipleChoice extends JPanel implements HtmlService, Sear
 			}
 			try {
 				for (int i = choices.length; i < n; i++) {
-					ab[i] = (AbstractButton) choices[0].getClass().newInstance();
+					ab[i] = choices[0].getClass().newInstance();
 					ab[i].setOpaque(isOpaque());
 					if (isOpaque())
 						ab[i].setBackground(getBackground());
