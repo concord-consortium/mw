@@ -103,7 +103,7 @@ public class HTMLPane extends MyEditorPane {
 					u = new URL(link);
 				}
 				catch (MalformedURLException ex) {
-					ex.printStackTrace();
+					// ex.printStackTrace();
 				}
 				fireLinkUpdate(new HyperlinkEvent(HTMLPane.this, HyperlinkEvent.EventType.ENTERED, u, link,
 						getSourceElement(p)));
@@ -162,7 +162,7 @@ public class HTMLPane extends MyEditorPane {
 					u = new URL(link);
 				}
 				catch (MalformedURLException ex) {
-					ex.printStackTrace();
+					// ex.printStackTrace();
 				}
 				fireLinkUpdate(new HyperlinkEvent(HTMLPane.this, HyperlinkEvent.EventType.ACTIVATED, u, link,
 						getSourceElement(p)));
