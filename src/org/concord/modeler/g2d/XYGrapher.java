@@ -403,12 +403,11 @@ public class XYGrapher extends JPanel {
 		}
 		catch (MismatchException e) {
 			final String s = e.getMessage();
-			EventQueue.invokeLater(new Runnable() {
-				public void run() {
-					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(XYGrapher.this), s, "Error",
-							JOptionPane.ERROR_MESSAGE);
-				}
-			});
+			/*
+			 * EventQueue.invokeLater(new Runnable() { public void run() {
+			 * JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(XYGrapher.this), s, "Error",
+			 * JOptionPane.ERROR_MESSAGE); } });
+			 */
 			throw new RuntimeException(s);
 		}
 		c.getLegend().setText(name);

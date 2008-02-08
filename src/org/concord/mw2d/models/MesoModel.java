@@ -26,6 +26,7 @@ import java.awt.EventQueue;
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -83,6 +84,16 @@ public class MesoModel extends MDModel {
 
 		movie.setCapacity(defaultTapeLength);
 		modelTimeQueue = new FloatQueue("Time (fs)", movie.getCapacity());
+
+		for (int i = 0; i < channelTs.length; i++) {
+			channelTs[i] = new FloatQueue("Channel " + i, movie.getCapacity());
+			channelTs[i].setReferenceUpperBound(1);
+			channelTs[i].setReferenceLowerBound(0);
+			channelTs[i].setCoordinateQueue(modelTimeQueue);
+			channelTs[i].setInterval(movieUpdater.getInterval());
+			channelTs[i].setPointer(0);
+			movieQueueGroup.add(channelTs[i]);
+		}
 
 		kine = new FloatQueue("Kinetic Energy/Particle", movie.getCapacity());
 		kine.setReferenceUpperBound(5);
@@ -360,6 +371,8 @@ public class MesoModel extends MDModel {
 		kine.setPointer(0);
 		pote.setPointer(0);
 		tote.setPointer(0);
+		for (FloatQueue q : channelTs)
+			q.setPointer(0);
 		modelTimeQueue.setPointer(0);
 		if (heatBathActivated()) {
 			heatBath.setExpectedTemperature(stateHolder.getHeatBathTemperature());
@@ -395,6 +408,8 @@ public class MesoModel extends MDModel {
 		kine.setPointer(n);
 		pote.setPointer(n);
 		tote.setPointer(n);
+		for (FloatQueue q : channelTs)
+			q.setPointer(n);
 	}
 
 	private void setQueueLength(int n) {
@@ -411,6 +426,8 @@ public class MesoModel extends MDModel {
 			p.initializeOmegaQ(n);
 			p.initializeAlphaQ(n);
 		}
+		for (FloatQueue q : channelTs)
+			q.setLength(n);
 	}
 
 	public void activateEmbeddedMovie(boolean b) {
@@ -422,6 +439,8 @@ public class MesoModel extends MDModel {
 			kine.setInterval(m);
 			pote.setInterval(m);
 			tote.setInterval(m);
+			for (FloatQueue q : channelTs)
+				q.setInterval(m);
 			setQueueLength(movie.getCapacity());
 		}
 		else {
@@ -1182,6 +1201,9 @@ public class MesoModel extends MDModel {
 		kine.clear();
 		pote.clear();
 		tote.clear();
+		for (FloatQueue q : channelTs)
+			q.clear();
+		Arrays.fill(channels, 0);
 		movieUpdater.setInterval(state.getFrameInterval());
 		if (heatBath != null)
 			heatBath.destroy();
