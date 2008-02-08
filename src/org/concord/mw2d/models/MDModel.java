@@ -564,8 +564,10 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		switchMap.clear();
 		choiceMap.clear();
 		multiSwitchMap.clear();
-		if (job != null)
+		if (job != null) {
 			job.clear();
+			job = null;
+		}
 
 		if (timeSeriesRepository != null) {
 			timeSeriesRepository.clear();
@@ -587,21 +589,29 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		((MDView) getView()).destroy();
 		if (boundary.getQueue() != null)
 			boundary.getQueue().setLength(-1);
-		if (modelProp != null)
+		if (modelProp != null) {
 			modelProp.destroy();
-		if (stateHolder != null)
+			modelProp = null;
+		}
+		if (stateHolder != null) {
 			stateHolder.destroy();
-		if (evalAction != null)
+			stateHolder = null;
+		}
+		haltScriptExecution();
+		if (evalAction != null) {
 			evalAction.removeAllScriptListeners();
-		if (evalTask != null)
+			if (evalThread != null)
+				evalThread.interrupt();
+			evalAction = null;
+		}
+		if (evalTask != null) {
 			evalTask.removeAllScriptListeners();
-		evalAction = null;
-		evalTask = null;
+			evalTask = null;
+		}
 		actionReminder = null;
 		movieUpdater = null;
 		watchdog = null;
 		paintView = null;
-		job = null;
 		play = null;
 		stop = null;
 		heat = null;
@@ -625,7 +635,6 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		toggleEField = null;
 		eFieldDirection = null;
 		bFieldDirection = null;
-		stateHolder = null;
 
 	}
 
