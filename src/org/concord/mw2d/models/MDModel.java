@@ -38,6 +38,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Collections;
 import java.util.Date;
@@ -208,14 +209,26 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	/* channels for outputing computed results */
 	double[] channels = new double[10];
 
+	/* time series for the channels */
+	FloatQueue[] channelTs = new FloatQueue[10];
+
 	/* current value of the potential energy */
 	double pot;
+
+	/* time series of potential energy */
+	FloatQueue pote;
 
 	/* current value of the kinetic energy */
 	double kin;
 
+	/* time series of kinetic energy */
+	FloatQueue kine;
+
 	/* current value of the total energy */
 	double tot;
+
+	/* time series of total energy */
+	FloatQueue tote;
 
 	/* Movie queue group for this model */
 	HomoQueueGroup movieQueueGroup;
@@ -238,15 +251,6 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	private boolean reminderEnabled;
 	private boolean exclusiveSelection = true;
 	private InputJob inputJob;
-
-	/* time series of potential energy */
-	FloatQueue pote;
-
-	/* time series of kinetic energy */
-	FloatQueue kine;
-
-	/* time series of total energy */
-	FloatQueue tote;
 
 	/* the dynamic task pool installed in this model */
 	Job job;
@@ -332,6 +336,10 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 
 		public int getLifetime() {
 			return ETERNAL;
+		}
+
+		public int getPriority() {
+			return Thread.NORM_PRIORITY - 1;
 		}
 
 		public String getDescription() {
@@ -557,6 +565,8 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 
 		multiSwitchMap = Collections.synchronizedMap(new TreeMap<String, Action>());
 		multiSwitchMap.put((String) scriptAction.getValue(Action.SHORT_DESCRIPTION), scriptAction);
+
+		Arrays.fill(channels, 0);
 
 	}
 
@@ -1184,6 +1194,9 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		kine.update((float) kin);
 		pote.update((float) pot);
 		tote.update((float) tot);
+		for (int i = 0; i < channels.length; i++) {
+			channelTs[i].update((float) channels[i]);
+		}
 	}
 
 	abstract double computeForce(int step);
@@ -1963,6 +1976,8 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		movieQueueGroup.add(kine);
 		movieQueueGroup.add(pote);
 		movieQueueGroup.add(tote);
+		for (FloatQueue q : channelTs)
+			movieQueueGroup.add(q);
 		if (timeSeriesRepository == null)
 			return;
 		timeSeriesRepository.clear();

@@ -138,7 +138,7 @@ public class Curve implements Serializable {
 
 	private void setCurve(FloatQueue xQ, FloatQueue yQ) {
 		if (DataQueueUtilities.mismatch(xQ, yQ))
-			throw new MismatchException("Input queues mismatch: " + xQ + ":" + yQ + xQ.getLength() + ":"
+			throw new MismatchException("Input queues mismatch: " + xQ + ":" + yQ + "," + xQ.getLength() + ":"
 					+ yQ.getLength() + "," + xQ.getPointer() + ":" + yQ.getPointer() + "," + xQ.getInterval() + ":"
 					+ yQ.getInterval());
 		int length = xQ.getPointer();

@@ -286,6 +286,16 @@ public abstract class AtomicModel extends MDModel {
 		movie.setCapacity(defaultTapeLength);
 		modelTimeQueue = new FloatQueue("Time (fs)", movie.getCapacity());
 
+		for (int i = 0; i < channelTs.length; i++) {
+			channelTs[i] = new FloatQueue("Channel " + i, movie.getCapacity());
+			channelTs[i].setReferenceUpperBound(1);
+			channelTs[i].setReferenceLowerBound(0);
+			channelTs[i].setCoordinateQueue(modelTimeQueue);
+			channelTs[i].setInterval(movieUpdater.getInterval());
+			channelTs[i].setPointer(0);
+			movieQueueGroup.add(channelTs[i]);
+		}
+
 		kine = new FloatQueue("Kinetic Energy/Particle", movie.getCapacity());
 		kine.setReferenceUpperBound(5);
 		kine.setReferenceLowerBound(-5);
@@ -1248,6 +1258,8 @@ public abstract class AtomicModel extends MDModel {
 		kine.setPointer(0);
 		pote.setPointer(0);
 		tote.setPointer(0);
+		for (FloatQueue q : channelTs)
+			q.setPointer(0);
 		for (int i = 0; i < 4; i++) {
 			kep[i].setPointer(0);
 			msd[i].setPointer(0);
@@ -1328,6 +1340,8 @@ public abstract class AtomicModel extends MDModel {
 		kine.setPointer(n);
 		pote.setPointer(n);
 		tote.setPointer(n);
+		for (FloatQueue q : channelTs)
+			q.setPointer(n);
 		for (int i = 0; i < 4; i++) {
 			kep[i].setPointer(n);
 			msd[i].setPointer(n);
@@ -1339,6 +1353,8 @@ public abstract class AtomicModel extends MDModel {
 		kine.setLength(n);
 		pote.setLength(n);
 		tote.setLength(n);
+		for (FloatQueue q : channelTs)
+			q.setLength(n);
 		for (int i = 0; i < 4; i++) {
 			kep[i].setLength(n);
 			msd[i].setLength(n);
@@ -1354,6 +1370,8 @@ public abstract class AtomicModel extends MDModel {
 			kine.setInterval(m);
 			pote.setInterval(m);
 			tote.setInterval(m);
+			for (FloatQueue q : channelTs)
+				q.setInterval(m);
 			for (int i = 0; i < 4; i++) {
 				kep[i].setInterval(m);
 				msd[i].setInterval(m);
@@ -3760,10 +3778,13 @@ public abstract class AtomicModel extends MDModel {
 		kine.clear();
 		pote.clear();
 		tote.clear();
+		for (FloatQueue q : channelTs)
+			q.clear();
 		for (int i = 0; i < 4; i++) {
 			kep[i].clear();
 			msd[i].clear();
 		}
+		Arrays.fill(channels, 0);
 		movieUpdater.setInterval(state.getFrameInterval());
 		if (heatBath != null)
 			heatBath.destroy();
