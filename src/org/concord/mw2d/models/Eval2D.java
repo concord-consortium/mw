@@ -2376,9 +2376,12 @@ class Eval2D extends AbstractEval {
 		if (matcher.find()) {
 			int end = matcher.end();
 			s = str.substring(end).trim().split(REGEX_WHITESPACE + "+");
-			if (s.length != 2) {
+			if (s.length < 2) {
 				out(ScriptEvent.FAILED, "Argument error: " + str);
 				return false;
+			}
+			else if (s.length == 5) {
+				s[1] += s[2] + s[3] + s[4];
 			}
 			setLineField(str.substring(0, end - 1), s[0], s[1]);
 			return true;
@@ -2389,9 +2392,12 @@ class Eval2D extends AbstractEval {
 		if (matcher.find()) {
 			int end = matcher.end();
 			s = str.substring(end).trim().split(REGEX_WHITESPACE + "+");
-			if (s.length != 2) {
+			if (s.length < 2) {
 				out(ScriptEvent.FAILED, "Argument error: " + str);
 				return false;
+			}
+			else if (s.length == 5) {
+				s[1] += s[2] + s[3] + s[4];
 			}
 			setRectangleField(str.substring(0, end - 1), s[0], s[1]);
 			return true;
@@ -2402,9 +2408,12 @@ class Eval2D extends AbstractEval {
 		if (matcher.find()) {
 			int end = matcher.end();
 			s = str.substring(end).trim().split(REGEX_WHITESPACE + "+");
-			if (s.length != 2) {
+			if (s.length < 2) {
 				out(ScriptEvent.FAILED, "Argument error: " + str);
 				return false;
+			}
+			else if (s.length == 5) {
+				s[1] += s[2] + s[3] + s[4];
 			}
 			setEllipseField(str.substring(0, end - 1), s[0], s[1]);
 			return true;
@@ -3149,82 +3158,6 @@ class Eval2D extends AbstractEval {
 		out(ScriptEvent.FAILED, "Unrecognized type of object to add: " + str);
 		return false;
 
-	}
-
-	private float[] parseCoordinates(String str) {
-		float[] x = new float[2];
-		if (str.matches(REGEX_NUMBER_PAIR)) {
-			int lp = str.indexOf("(");
-			int rp = str.indexOf(")");
-			str = str.substring(lp + 1, rp).trim();
-			String[] s = str.split(REGEX_SEPARATOR + "+");
-			x[0] = Float.valueOf(s[0].trim()) * IR_CONVERTER;
-			x[1] = Float.valueOf(s[1].trim()) * IR_CONVERTER;
-		}
-		else {
-			int i = str.indexOf(",");
-			if (i < 0) {
-				out(ScriptEvent.FAILED, "Cannot parse: " + str);
-				return null;
-			}
-			String s = str.substring(0, i).trim();
-			boolean b = false;
-			if (s.startsWith("(")) {
-				s = s.substring(1);
-				b = true;
-			}
-			double z = parseMathExpression(s);
-			if (Double.isNaN(z))
-				return null;
-			x[0] = (float) (z * IR_CONVERTER);
-			s = str.substring(i + 1).trim();
-			if (s.endsWith(")") && b) {
-				s = s.substring(0, s.length() - 1);
-			}
-			z = parseMathExpression(s);
-			if (Double.isNaN(z))
-				return null;
-			x[1] = (float) (z * IR_CONVERTER);
-		}
-		return x;
-	}
-
-	private float[] parseQuadruple(String str) {
-		float[] x = new float[4];
-		if (str.matches(QUADRUPLE)) {
-			int lp = str.indexOf("(");
-			int rp = str.indexOf(")");
-			str = str.substring(lp + 1, rp).trim();
-			String[] s = str.split(REGEX_SEPARATOR + "+");
-			if (s.length != 4) {
-				out(ScriptEvent.FAILED, "Cannot split into 4 arguments: " + str);
-				return null;
-			}
-			for (int i = 0; i < 4; i++)
-				x[i] = Float.valueOf(s[i].trim());
-		}
-		else {
-			str = str.trim();
-			if (str.startsWith("("))
-				str = str.substring(1);
-			if (str.endsWith(")"))
-				str = str.substring(0, str.length() - 1);
-			String[] s = str.split(",");
-			if (s.length != 4) {
-				out(ScriptEvent.FAILED, "Cannot split into 4 arguments: " + str);
-				return null;
-			}
-			double z = 0;
-			for (int i = 0; i < 4; i++) {
-				z = parseMathExpression(s[i]);
-				if (Double.isNaN(z)) {
-					out(ScriptEvent.FAILED, "Cannot parse : " + s[i]);
-					return null;
-				}
-				x[i] = (float) z;
-			}
-		}
-		return x;
 	}
 
 	private boolean evaluateAttachClause(String str) {
@@ -4337,6 +4270,13 @@ class Eval2D extends AbstractEval {
 			if (!Double.isNaN(x))
 				c[i].setEndPoint2(c[i].getX2(), (float) (x * IR_CONVERTER));
 		}
+		else if (s == "coordinates") {
+			float[] x = parseQuadruple(str3);
+			if (x != null && x.length == 4) {
+				c[i].setEndPoint1(x[0] * IR_CONVERTER, x[1] * IR_CONVERTER);
+				c[i].setEndPoint2(x[2] * IR_CONVERTER, x[3] * IR_CONVERTER);
+			}
+		}
 		else if (s == "stroke") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
@@ -4396,6 +4336,11 @@ class Eval2D extends AbstractEval {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
 				c[i].setHeight((float) (x * IR_CONVERTER));
+		}
+		else if (s == "size") {
+			float[] x = parseQuadruple(str3);
+			if (x != null && x.length == 4)
+				c[i].setRect(x[0] * IR_CONVERTER, x[1] * IR_CONVERTER, x[2] * IR_CONVERTER, x[3] * IR_CONVERTER);
 		}
 		else if (s == "efield") {
 			double x = parseMathExpression(str3);
@@ -4488,6 +4433,11 @@ class Eval2D extends AbstractEval {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
 				c[i].setHeight((float) (x * IR_CONVERTER));
+		}
+		else if (s == "size") {
+			float[] x = parseQuadruple(str3);
+			if (x != null && x.length == 4)
+				c[i].setOval(x[0] * IR_CONVERTER, x[1] * IR_CONVERTER, x[2] * IR_CONVERTER, x[3] * IR_CONVERTER);
 		}
 		else if (s == "efield") {
 			double x = parseMathExpression(str3);
@@ -5732,6 +5682,14 @@ class Eval2D extends AbstractEval {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private float[] parseCoordinates(String str) {
+		float[] x = parsePair(str);
+		if (x != null)
+			for (int i = 0; i < x.length; i++)
+				x[i] *= IR_CONVERTER;
+		return x;
 	}
 
 }
