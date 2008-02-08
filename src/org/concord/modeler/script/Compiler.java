@@ -162,6 +162,7 @@ public class Compiler {
 	public final static Pattern MINIMIZE = compile("(^(?i)minimize\\b){1}");
 	public final static Pattern ATTACH = compile("(^(?i)attach\\b){1}");
 	public final static Pattern SOUND = compile("(^(?i)sound\\b){1}");
+	public final static Pattern STORE = compile("(^(?i)store\\b){1}");
 
 	public final static Pattern ELEMENT_FIELD = compile("^%?((?i)element){1}(\\[){1}" + REGEX_WHITESPACE + "*("
 			+ REGEX_NONNEGATIVE_INTEGER + "|" + REGEX_NONNEGATIVE_DECIMAL + ")" + REGEX_WHITESPACE + "*(\\]){1}\\.");
