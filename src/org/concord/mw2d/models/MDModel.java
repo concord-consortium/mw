@@ -205,6 +205,9 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	ImageStreamGenerator imageStreamGenerator;
 	StateHolder stateHolder;
 
+	/* channels for outputing computed results */
+	double[] channels = new double[10];
+
 	/* current value of the potential energy */
 	double pot;
 
@@ -760,6 +763,20 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	abstract void encode(XMLEncoder out) throws Exception;
 
 	void decode(XMLDecoder in) throws Exception {
+	}
+
+	/** stores the result in the i-th channel */
+	public void setChannel(int i, double result) {
+		if (i < 0 || i >= channels.length)
+			throw new IllegalArgumentException("Channel " + i + " does not exist.");
+		channels[i] = result;
+	}
+
+	/** returns the result stored in the i-th channel */
+	public double getChannel(int i) {
+		if (i < 0 || i >= channels.length)
+			throw new IllegalArgumentException("Channel " + i + " does not exist.");
+		return channels[i];
 	}
 
 	/** notify the environment this model is embedded that its state has changed. */
