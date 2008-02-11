@@ -56,6 +56,7 @@ import org.nfunk.jep.function.Power;
 import org.nfunk.jep.function.Real;
 import org.nfunk.jep.function.Round;
 import org.nfunk.jep.function.Sec;
+import org.nfunk.jep.function.Sign;
 import org.nfunk.jep.function.Sine;
 import org.nfunk.jep.function.SineH;
 import org.nfunk.jep.function.SquareRoot;
@@ -244,6 +245,7 @@ public class JEP {
 		funTab.put("sqrt", new SquareRoot());
 		funTab.put("angle", new Angle());
 		funTab.put("abs", new Abs());
+		funTab.put("sign", new Sign());
 		funTab.put("mod", new Modulus());
 		funTab.put("sum", new Sum());
 		funTab.put("int", new Int());
