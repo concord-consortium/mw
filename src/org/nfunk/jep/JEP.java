@@ -245,7 +245,7 @@ public class JEP {
 		funTab.put("sqrt", new SquareRoot());
 		funTab.put("angle", new Angle());
 		funTab.put("abs", new Abs());
-		funTab.put("sign", new Sign());
+		funTab.put("sgn", new Sign());
 		funTab.put("mod", new Modulus());
 		funTab.put("sum", new Sum());
 		funTab.put("int", new Int());
