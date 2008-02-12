@@ -199,6 +199,7 @@ import org.concord.modeler.util.FileUtilities;
 import org.concord.modeler.util.ImageReader;
 import org.concord.modeler.util.SwingWorker;
 import org.concord.mw2d.MDView;
+import org.concord.mw2d.StyleConstant;
 import org.concord.mw2d.ui.AtomContainer;
 import org.concord.mw2d.ui.ChemContainer;
 import org.concord.mw2d.ui.GBContainer;
@@ -1152,6 +1153,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 					model.getView().setBackground(Solvent.WATER_COLOR);
 					((MDView) model.getView()).setColorCoding("Hydrophobicity");
 					((MDView) model.getView()).setShowClock(false);
+					((MDView) model.getView()).setRestraintStyle(StyleConstant.RESTRAINT_GHOST_STYLE);
 					insertComponent(mc);
 				}
 			});
