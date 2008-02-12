@@ -54,7 +54,7 @@ public class SineH extends PostfixMathCommand {
 	public Object sinh(Object param) throws ParseException {
 		if (param instanceof Number) {
 			double value = ((Number) param).doubleValue();
-			return new Double((Math.exp(value) - Math.exp(-value)) / 2);
+			return Math.sinh(value);
 		}
 		else if (param instanceof Complex) {
 			return ((Complex) param).sinh();

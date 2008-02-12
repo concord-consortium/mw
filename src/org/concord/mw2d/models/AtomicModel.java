@@ -23,6 +23,7 @@ package org.concord.mw2d.models;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.EventQueue;
+import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Rectangle2D;
@@ -2007,6 +2008,50 @@ public abstract class AtomicModel extends MDModel {
 		return getKin() * UNIT_EV_OVER_KB;
 	}
 
+	public double getTemperature(byte type, Shape shape) {
+		double result = 0.0;
+		int n = 0;
+		for (int i = 0; i < numberOfAtoms; i++) {
+			if (type == -1) {
+				if (atom[i].isCenterOfMassContained(shape)) {
+					n++;
+					result += (atom[i].vx * atom[i].vx + atom[i].vy * atom[i].vy) * atom[i].mass;
+				}
+			}
+			else {
+				if (atom[i].id == type) {
+					if (atom[i].isCenterOfMassContained(shape)) {
+						n++;
+						result += (atom[i].vx * atom[i].vx + atom[i].vy * atom[i].vy) * atom[i].mass;
+					}
+				}
+			}
+		}
+		if (n == 0)
+			return 0;
+		// the prefactor 0.5 doesn't show up here because it has been included in the conversion factors.
+		return result * EV_CONVERTER * UNIT_EV_OVER_KB / n;
+	}
+
+	public int getParticleCount(byte type, Shape shape) {
+		int n = 0;
+		for (int i = 0; i < numberOfAtoms; i++) {
+			if (type == -1) {
+				if (atom[i].isCenterOfMassContained(shape)) {
+					n++;
+				}
+			}
+			else {
+				if (atom[i].id == type) {
+					if (atom[i].isCenterOfMassContained(shape)) {
+						n++;
+					}
+				}
+			}
+		}
+		return n;
+	}
+
 	public void transferHeat(double amount) {
 		if (getNumberOfAtoms() <= 0)
 			return;
@@ -3037,7 +3082,7 @@ public abstract class AtomicModel extends MDModel {
 			}
 		}
 		eKT *= EV_CONVERTER;
-		// the prefactor 0.5 doesn't show up here because of mass unit conversion.
+		// the prefactor 0.5 doesn't show up here because it has been included in the mass unit conversion factor.
 		kin = numberOfAtoms > 0 ? eKT / numberOfAtoms : eKT;
 		return kin;
 	}

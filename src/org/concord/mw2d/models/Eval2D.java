@@ -24,7 +24,9 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.Shape;
 import java.awt.Toolkit;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
@@ -1936,6 +1938,82 @@ class Eval2D extends AbstractEval {
 		return true;
 	}
 
+	private String evaluateCountFunction(final String clause) {
+		if (clause == null || clause.equals(""))
+			return null;
+		int i = clause.indexOf("(");
+		int j = clause.lastIndexOf(")");
+		if (i == -1 || j == -1) {
+			out(ScriptEvent.FAILED, "function must be enclosed within parenthesis: " + clause);
+			return null;
+		}
+		String s = clause.substring(i + 1, j);
+		String[] t = s.split(",");
+		int n = t.length;
+		switch (n) {
+		case 5:
+			float[] x = parseArray(5, t);
+			if (x != null) {
+				for (int k = 1; k < 5; k++)
+					x[k] *= IR_CONVERTER;
+				Shape shape = new Rectangle2D.Float(x[1], x[2], x[3], x[4]);
+				return "" + model.getParticleCount((byte) x[0], shape);
+			}
+			break;
+		case 4:
+			x = parseArray(4, t);
+			if (x != null) {
+				for (int k = 1; k < 4; k++)
+					x[k] *= IR_CONVERTER;
+				Shape shape = new Ellipse2D.Float(x[1] - x[3], x[2] - x[3], x[3] * 2, x[3] * 2);
+				return "" + model.getParticleCount((byte) x[0], shape);
+			}
+			break;
+		default:
+			out(ScriptEvent.FAILED, "argument error: " + clause);
+			return null;
+		}
+		return null;
+	}
+
+	private String evaluateTemperatureFunction(final String clause) {
+		if (clause == null || clause.equals(""))
+			return null;
+		int i = clause.indexOf("(");
+		int j = clause.lastIndexOf(")");
+		if (i == -1 || j == -1) {
+			out(ScriptEvent.FAILED, "function must be enclosed within parenthesis: " + clause);
+			return null;
+		}
+		String s = clause.substring(i + 1, j);
+		String[] t = s.split(",");
+		int n = t.length;
+		switch (n) {
+		case 5:
+			float[] x = parseArray(5, t);
+			if (x != null) {
+				for (int k = 1; k < 5; k++)
+					x[k] *= IR_CONVERTER;
+				Shape shape = new Rectangle2D.Float(x[1], x[2], x[3], x[4]);
+				return "" + model.getTemperature((byte) x[0], shape);
+			}
+			break;
+		case 4:
+			x = parseArray(4, t);
+			if (x != null) {
+				for (int k = 1; k < 4; k++)
+					x[k] *= IR_CONVERTER;
+				Shape shape = new Ellipse2D.Float(x[1] - x[3], x[2] - x[3], x[3] * 2, x[3] * 2);
+				return "" + model.getTemperature((byte) x[0], shape);
+			}
+			break;
+		default:
+			out(ScriptEvent.FAILED, "argument error: " + clause);
+			return null;
+		}
+		return null;
+	}
+
 	private Rectangle2D getWithinArea(String within) {
 		int lp = within.indexOf("(");
 		if (lp == -1)
@@ -2439,8 +2517,8 @@ class Eval2D extends AbstractEval {
 
 		if (str.trim().startsWith("%")) { // change the value of a defined variable
 			int whitespace = str.indexOf(" ");
-			String var = str.substring(0, whitespace).trim();
-			String exp = str.substring(whitespace).trim();
+			String var = str.substring(0, whitespace).trim().toLowerCase();
+			String exp = str.substring(whitespace).trim().toLowerCase();
 			boolean isStatic = false;
 			if (!sharedDefinition.isEmpty()) {
 				Map<String, String> map = sharedDefinition.get(model.getClass());
@@ -2450,7 +2528,19 @@ class Eval2D extends AbstractEval {
 					}
 				}
 			}
-			evaluateDefineMathexClause(isStatic, var, exp);
+			if (exp.startsWith("temperature(")) {
+				exp = evaluateTemperatureFunction(exp);
+				if (exp != null)
+					storeDefinition(isStatic, var, exp);
+			}
+			else if (exp.startsWith("count(")) {
+				exp = evaluateCountFunction(exp);
+				if (exp != null)
+					storeDefinition(isStatic, var, exp);
+			}
+			else {
+				evaluateDefineMathexClause(isStatic, var, exp);
+			}
 			return true;
 		}
 
@@ -2986,7 +3076,7 @@ class Eval2D extends AbstractEval {
 			matcher = OBSTACLE.matcher(str);
 			if (matcher.find()) {
 				str = str.substring(matcher.end()).trim();
-				float[] x = parseQuadruple(str);
+				float[] x = parseArray(4, str);
 				if (x != null) {
 					for (int i = 0; i < 4; i++)
 						x[i] *= IR_CONVERTER;
@@ -3122,7 +3212,7 @@ class Eval2D extends AbstractEval {
 		matcher = LINE.matcher(str);
 		if (matcher.find()) {
 			str = str.substring(matcher.end()).trim();
-			float[] x = parseQuadruple(str);
+			float[] x = parseArray(4, str);
 			if (x != null) {
 				for (int i = 0; i < 4; i++)
 					x[i] *= IR_CONVERTER;
@@ -3137,7 +3227,7 @@ class Eval2D extends AbstractEval {
 		matcher = RECTANGLE.matcher(str);
 		if (matcher.find()) {
 			str = str.substring(matcher.end()).trim();
-			float[] x = parseQuadruple(str);
+			float[] x = parseArray(4, str);
 			if (x != null) {
 				for (int i = 0; i < 4; i++)
 					x[i] *= IR_CONVERTER;
@@ -3151,7 +3241,7 @@ class Eval2D extends AbstractEval {
 		matcher = ELLIPSE.matcher(str);
 		if (matcher.find()) {
 			str = str.substring(matcher.end()).trim();
-			float[] x = parseQuadruple(str);
+			float[] x = parseArray(4, str);
 			if (x != null) {
 				for (int i = 0; i < 4; i++)
 					x[i] *= IR_CONVERTER;
@@ -4300,7 +4390,7 @@ class Eval2D extends AbstractEval {
 				c[i].setEndPoint2(c[i].getX2(), (float) (x * IR_CONVERTER));
 		}
 		else if (s == "coordinates") {
-			float[] x = parseQuadruple(str3);
+			float[] x = parseArray(4, str3);
 			if (x != null && x.length == 4) {
 				c[i].setEndPoint1(x[0] * IR_CONVERTER, x[1] * IR_CONVERTER);
 				c[i].setEndPoint2(x[2] * IR_CONVERTER, x[3] * IR_CONVERTER);
@@ -4367,7 +4457,7 @@ class Eval2D extends AbstractEval {
 				c[i].setHeight((float) (x * IR_CONVERTER));
 		}
 		else if (s == "size") {
-			float[] x = parseQuadruple(str3);
+			float[] x = parseArray(4, str3);
 			if (x != null && x.length == 4)
 				c[i].setRect(x[0] * IR_CONVERTER, x[1] * IR_CONVERTER, x[2] * IR_CONVERTER, x[3] * IR_CONVERTER);
 		}
@@ -4464,7 +4554,7 @@ class Eval2D extends AbstractEval {
 				c[i].setHeight((float) (x * IR_CONVERTER));
 		}
 		else if (s == "size") {
-			float[] x = parseQuadruple(str3);
+			float[] x = parseArray(4, str3);
 			if (x != null && x.length == 4)
 				c[i].setOval(x[0] * IR_CONVERTER, x[1] * IR_CONVERTER, x[2] * IR_CONVERTER, x[3] * IR_CONVERTER);
 		}
@@ -5714,7 +5804,7 @@ class Eval2D extends AbstractEval {
 	}
 
 	private float[] parseCoordinates(String str) {
-		float[] x = parsePair(str);
+		float[] x = parseArray(2, str);
 		if (x != null)
 			for (int i = 0; i < x.length; i++)
 				x[i] *= IR_CONVERTER;

@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2006  The Concord Consortium, Inc.,
+ *   Copyright (C) 2008  The Concord Consortium, Inc.,
  *   25 Love Lane, Concord, MA 01742
  *
  *   This program is free software; you can redistribute it and/or modify
@@ -18,46 +18,42 @@
  *
  * END LICENSE */
 
-/*****************************************************************************
-
- JEP - Java Math Expression Parser 2.24
- December 30 2002
- (c) Copyright 2002, Nathan Funk
- See LICENSE.txt for license information.
-
- *****************************************************************************/
 package org.nfunk.jep.function;
 
 import java.util.Stack;
 
 import org.nfunk.jep.ParseException;
-import org.nfunk.jep.type.Complex;
 
-public class TanH extends PostfixMathCommand {
+public class CubeRoot extends PostfixMathCommand {
 
-	public TanH() {
+	public CubeRoot() {
 		numberOfParameters = 1;
 	}
 
 	public String toString() {
-		return "The hyperbolic tangent function";
+		return "The cube root function";
 	}
 
+	/**
+	 * Applies the function to the parameters on the stack.
+	 */
 	@SuppressWarnings("unchecked")
 	public void run(Stack inStack) throws ParseException {
 		checkStack(inStack);// check the stack
 		Object param = inStack.pop();
-		inStack.push(tanh(param));// push the result on the inStack
+		inStack.push(cbrt(param));// push the result on the inStack
 		return;
 	}
 
-	public Object tanh(Object param) throws ParseException {
+	/**
+	 * Calculates the cube root of the parameter. The parameter must be of type Double.
+	 * 
+	 * @return The cube root of the parameter.
+	 */
+	public Object cbrt(Object param) throws ParseException {
 		if (param instanceof Number) {
 			double value = ((Number) param).doubleValue();
-			return Math.tanh(value);
-		}
-		else if (param instanceof Complex) {
-			return ((Complex) param).tanh();
+			return Math.cbrt(value);
 		}
 		throw new ParseException("Invalid parameter type");
 	}

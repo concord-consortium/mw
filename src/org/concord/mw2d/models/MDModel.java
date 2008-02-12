@@ -23,6 +23,7 @@ package org.concord.mw2d.models;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.EventQueue;
+import java.awt.Shape;
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.BufferedInputStream;
@@ -1109,10 +1110,17 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	/** set the temperature of this model */
 	public abstract void setTemperature(double temperature);
 
+	/** @return the temperature of the entire model */
 	public abstract double getTemperature();
+
+	/** @return the temperature of the specified type of atoms inside the specified shape */
+	public abstract double getTemperature(byte type, Shape shape);
 
 	/** return the number of particles contained in this model */
 	public abstract int getNumberOfParticles();
+
+	/** @return the number of particles of the specified type inside the specified shape */
+	public abstract int getParticleCount(byte type, Shape shape);
 
 	/** return the particle at the <i>i</i>-th position of the particle array */
 	public abstract Particle getParticle(int i);
