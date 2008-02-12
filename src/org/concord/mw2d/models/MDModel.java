@@ -208,10 +208,10 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	StateHolder stateHolder;
 
 	/* channels for outputing computed results */
-	double[] channels = new double[10];
+	double[] channels = new double[4];
 
 	/* time series for the channels */
-	FloatQueue[] channelTs = new FloatQueue[10];
+	FloatQueue[] channelTs = new FloatQueue[4];
 
 	/* current value of the potential energy */
 	double pot;

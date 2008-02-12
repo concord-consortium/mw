@@ -928,9 +928,11 @@ public class Atom extends Particle {
 		int n = mc.size();
 		if (n <= 0)
 			return false;
+		Molecule m = null;
 		synchronized (mc.getSynchronizationLock()) {
 			for (int i = 0; i < n; i++) {
-				if (mc.get(i).contains(this))
+				m = mc.get(i);
+				if (m != null && m.contains(this))
 					return true;
 			}
 		}
