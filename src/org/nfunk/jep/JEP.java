@@ -35,6 +35,7 @@ import org.nfunk.jep.function.Cosine;
 import org.nfunk.jep.function.CosineH;
 import org.nfunk.jep.function.Cot;
 import org.nfunk.jep.function.Csc;
+import org.nfunk.jep.function.CubeRoot;
 import org.nfunk.jep.function.ErrorFunction;
 import org.nfunk.jep.function.Exp;
 import org.nfunk.jep.function.Gamma;
@@ -243,6 +244,7 @@ public class JEP {
 		funTab.put("loga", new Log());
 
 		funTab.put("sqrt", new SquareRoot());
+		funTab.put("cbrt", new CubeRoot());
 		funTab.put("angle", new Angle());
 		funTab.put("abs", new Abs());
 		funTab.put("sgn", new Sign());

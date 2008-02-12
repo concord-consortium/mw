@@ -310,78 +310,30 @@ public abstract class AbstractEval {
 		return null;
 	}
 
-	protected float[] parsePair(String str) {
-		float[] x = new float[2];
-		if (str.matches(REGEX_NUMBER_PAIR)) {
-			int lp = str.indexOf("(");
-			int rp = str.indexOf(")");
-			str = str.substring(lp + 1, rp).trim();
-			String[] s = str.split(REGEX_SEPARATOR + "+");
-			x[0] = Float.valueOf(s[0].trim());
-			x[1] = Float.valueOf(s[1].trim());
+	protected float[] parseArray(final int n, String str) {
+		str = str.trim();
+		if (str.startsWith("("))
+			str = str.substring(1);
+		if (str.endsWith(")"))
+			str = str.substring(0, str.length() - 1);
+		String[] s = str.split(",");
+		if (s.length != n) {
+			out(ScriptEvent.FAILED, "Cannot split into " + n + " arguments: " + str);
+			return null;
 		}
-		else {
-			int i = str.indexOf(",");
-			if (i < 0) {
-				out(ScriptEvent.FAILED, "Cannot parse: " + str);
-				return null;
-			}
-			String s = str.substring(0, i).trim();
-			boolean b = false;
-			if (s.startsWith("(")) {
-				s = s.substring(1);
-				b = true;
-			}
-			double z = parseMathExpression(s);
-			if (Double.isNaN(z))
-				return null;
-			x[0] = (float) z;
-			s = str.substring(i + 1).trim();
-			if (s.endsWith(")") && b) {
-				s = s.substring(0, s.length() - 1);
-			}
-			z = parseMathExpression(s);
-			if (Double.isNaN(z))
-				return null;
-			x[1] = (float) z;
-		}
-		return x;
+		return parseArray(n, s);
 	}
 
-	protected float[] parseQuadruple(String str) {
-		float[] x = new float[4];
-		if (str.matches(QUADRUPLE)) {
-			int lp = str.indexOf("(");
-			int rp = str.indexOf(")");
-			str = str.substring(lp + 1, rp).trim();
-			String[] s = str.split(REGEX_SEPARATOR + "+");
-			if (s.length != 4) {
-				out(ScriptEvent.FAILED, "Cannot split into 4 arguments: " + str);
+	protected float[] parseArray(int n, String[] s) {
+		float[] x = new float[n];
+		double z = 0;
+		for (int i = 0; i < n; i++) {
+			z = parseMathExpression(s[i]);
+			if (Double.isNaN(z)) {
+				out(ScriptEvent.FAILED, "Cannot parse : " + s[i]);
 				return null;
 			}
-			for (int i = 0; i < 4; i++)
-				x[i] = Float.valueOf(s[i].trim());
-		}
-		else {
-			str = str.trim();
-			if (str.startsWith("("))
-				str = str.substring(1);
-			if (str.endsWith(")"))
-				str = str.substring(0, str.length() - 1);
-			String[] s = str.split(",");
-			if (s.length != 4) {
-				out(ScriptEvent.FAILED, "Cannot split into 4 arguments: " + str);
-				return null;
-			}
-			double z = 0;
-			for (int i = 0; i < 4; i++) {
-				z = parseMathExpression(s[i]);
-				if (Double.isNaN(z)) {
-					out(ScriptEvent.FAILED, "Cannot parse : " + s[i]);
-					return null;
-				}
-				x[i] = (float) z;
-			}
+			x[i] = (float) z;
 		}
 		return x;
 	}
@@ -909,6 +861,15 @@ public abstract class AbstractEval {
 		}
 	}
 
+	public void storeDefinition(boolean isStatic, String variable, String value) {
+		if (isStatic) {
+			storeSharedDefinition(variable, value);
+		}
+		else {
+			definition.put(variable, value);
+		}
+	}
+
 	private void storeSharedDefinition(String variable, String value) {
 		Class klass = getModel().getClass();
 		Map<String, String> map = sharedDefinition.get(klass);
@@ -926,23 +887,13 @@ public abstract class AbstractEval {
 		Matcher matcher = LOGICAL_OPERATOR.matcher(value);
 		if (matcher.find()) {
 			boolean b = evaluateLogicalExpression(value);
-			if (isStatic) {
-				storeSharedDefinition(variable, b ? "1" : "0");
-			}
-			else {
-				definition.put(variable, b ? "1" : "0");
-			}
+			storeDefinition(isStatic, variable, b ? "1" : "0");
 			return;
 		}
 		else if (value.indexOf("==") != -1 || value.indexOf("!=") != -1 || value.indexOf("<=") != -1
 				|| value.indexOf(">=") != -1 || value.indexOf("<") != -1 || value.indexOf(">") != -1) {
 			boolean b = evaluateEquality(value);
-			if (isStatic) {
-				storeSharedDefinition(variable, b ? "1" : "0");
-			}
-			else {
-				definition.put(variable, b ? "1" : "0");
-			}
+			storeDefinition(isStatic, variable, b ? "1" : "0");
 			return;
 		}
 		String expression = null;
@@ -965,12 +916,7 @@ public abstract class AbstractEval {
 				return;
 			boolean isInteger = expression.startsWith("int(") || expression.startsWith("round(");
 			String result = isInteger ? String.format("%d", (int) x) : (x + "");
-			if (isStatic) {
-				storeSharedDefinition(variable, result);
-			}
-			else {
-				definition.put(variable, result);
-			}
+			storeDefinition(isStatic, variable, result);
 		}
 	}
 

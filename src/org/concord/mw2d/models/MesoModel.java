@@ -23,6 +23,7 @@ package org.concord.mw2d.models;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.EventQueue;
+import java.awt.Shape;
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.util.ArrayList;
@@ -705,6 +706,32 @@ public class MesoModel extends MDModel {
 		return getKin() * UNIT_EV_OVER_KB;
 	}
 
+	public double getTemperature(byte type, Shape shape) {
+		double result = 0.0;
+		int n = 0;
+		for (int i = 0; i < numberOfParticles; i++) {
+			if (gb[i].isCenterOfMassContained(shape)) {
+				n++;
+				result += (gb[i].vx * gb[i].vx + gb[i].vy * gb[i].vy) * gb[i].mass + gb[i].inertia * gb[i].omega
+						* gb[i].omega;
+			}
+		}
+		if (n == 0)
+			return 0;
+		// the prefactor 0.5 doesn't show up here because it has been included in the mass conversion factor.
+		return result * EV_CONVERTER * UNIT_EV_OVER_KB / n;
+	}
+
+	public int getParticleCount(byte type, Shape shape) {
+		int n = 0;
+		for (int i = 0; i < numberOfParticles; i++) {
+			if (gb[i].isCenterOfMassContained(shape)) {
+				n++;
+			}
+		}
+		return n;
+	}
+
 	/** change the temperature by percentage */
 	public void changeTemperature(double percent) {
 		if (percent < -1.0)
@@ -840,7 +867,7 @@ public class MesoModel extends MDModel {
 			kineticEnergy += p.inertia * p.omega * p.omega;
 		}
 		kin = kineticEnergy * EV_CONVERTER / numberOfParticles;
-		// the prefactor 0.5 doesn't show up here because of mass unit conversion.
+		// the prefactor 0.5 doesn't show up here because it has been included in the mass unit conversion factor.
 		return kin;
 	}
 
