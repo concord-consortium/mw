@@ -23,9 +23,7 @@ package org.concord.molbio.ui;
 import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Composite;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FontMetrics;
@@ -50,10 +48,7 @@ import java.net.URL;
 import java.util.Vector;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JButton;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.SwingUtilities;
 
 import org.concord.molbio.engine.Protein;
@@ -62,7 +57,10 @@ import org.concord.molbio.engine.RNA;
 import org.concord.molbio.engine.Codon;
 import org.concord.molbio.engine.Aminoacid;
 import org.concord.molbio.engine.DNAScrollerModel;
-import org.concord.molbio.event.*;
+import org.concord.molbio.event.RNATranscriptionEvent;
+import org.concord.molbio.event.RNATranscriptionListener;
+import org.concord.molbio.event.RNATranslationEvent;
+import org.concord.molbio.event.RNATranslationListener;
 
 /* http://www.csu.edu.au/faculty/health/biomed/subjects/molbol/images/7_9.jpg 5->3 demonstration */
 
@@ -79,9 +77,9 @@ public class DNAScrollerWithRNA extends DNAScroller {
 	int DOWN_OFFSET = 5;
 	int LEFT_OFFSET = 20;
 
-	DNASCrollerEffect currentEffect;
-	DNASCrollerEffect transcriptionBeginEffect;
-	DNASCrollerEffect transcriptionEndEffect;
+	DNAScrollerEffect currentEffect;
+	DNAScrollerEffect transcriptionBeginEffect;
+	DNAScrollerEffect transcriptionEndEffect;
 
 	int currentCodon = -1;
 
@@ -134,6 +132,19 @@ public class DNAScrollerWithRNA extends DNAScroller {
 				}
 			}
 		});
+	}
+
+	public void destroy() {
+		if (transcriptionThread != null)
+			transcriptionThread.interrupt();
+		if (translationThread != null)
+			translationThread.interrupt();
+		if (currentEffect != null)
+			currentEffect.destroy();
+		if (transcriptionBeginEffect != null)
+			transcriptionBeginEffect.destroy();
+		if (transcriptionEndEffect != null)
+			transcriptionEndEffect.destroy();
 	}
 
 	public void setRibosomeImage(BufferedImage bim) {
@@ -386,7 +397,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 	}
 
 	public synchronized boolean isInEffect() {
-		return (currentEffect != null && currentEffect.isInEffect());
+		return currentEffect != null && currentEffect.isInEffect();
 	}
 
 	public void clearEffect() {
@@ -396,7 +407,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 		currentEffect = null;
 	}
 
-	public void effectJustEnded(DNASCrollerEffect effect) {
+	public void effectJustEnded(DNAScrollerEffect effect) {
 		if (effect == transcriptionEndEffect && isStartTranslationWithEffect()) {
 			resetToStartTranslation();
 			setStartTranslationWithEffect(false);
@@ -832,12 +843,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 				Color codonColor = codonColors[((startIndex + i) / 3) % 2];
 				if (isInEffect()) {
 					oldComp = ((Graphics2D) g).getComposite();
-					float alpha = 1;// 0.5f;
-					/*
-					 * if(effectStep < MAX_EFFECT_STEPS / 2){ alpha = 1f -
-					 * 1.5f*(float)effectStep/(float)MAX_EFFECT_STEPS; }else{ alpha = 0.25f + 1.5f*(float)(effectStep -
-					 * MAX_EFFECT_STEPS / 2)/(float)MAX_EFFECT_STEPS; } if(alpha > 1) alpha = 1;
-					 */
+					float alpha = 1;
 					((Graphics2D) g).setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
 				}
 				if (c53 != null && c53.isCodonStop())
@@ -1516,6 +1522,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 				}
 			});
 			setRunning(withRunning);
+			transcriptionThread.setName("Transcription thread");
 			transcriptionThread.setPriority(Thread.MIN_PRIORITY);
 			transcriptionThread.start();
 			EventQueue.invokeLater(new Runnable() {
@@ -1666,6 +1673,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 				}
 			});
 			setRunning(withRunning);
+			translationThread.setName("Translation thread");
 			translationThread.setPriority(Thread.MIN_PRIORITY);
 			translationThread.start();
 			EventQueue.invokeLater(new Runnable() {
@@ -1721,8 +1729,6 @@ public class DNAScrollerWithRNA extends DNAScroller {
 			stopTranslation();
 			translationEnded = true;
 			repaint();
-
-			// System.out.println("expressFromStrand "+express());
 		}
 		if (translationDT > 0 && translationThread != null) {
 			synchronized (translationThread) {
@@ -1822,837 +1828,6 @@ public class DNAScrollerWithRNA extends DNAScroller {
 
 	public void setMutationAfterTranslationDoneAllowed(boolean mutationAfterTranslationDoneAllowed) {
 		this.mutationAfterTranslationDoneAllowed = mutationAfterTranslationDoneAllowed;
-	}
-
-}
-
-interface DNASCrollerEffect {
-	static final int DEFAULT_EFFECT_MAX_STEP = 25;
-	static final int DEFAULT_EFFECT_TIME_DELAY = 100;
-
-	void startEffect();
-
-	void endEffect();
-
-	void step();
-
-	void forceEndEffect();
-
-	int getCurrentStep();
-
-	int getMaximumStep();
-
-	int getEffectDelay();
-
-	void setMaximumSteps(int val);
-
-	void setEffectDelay(int val);
-
-	boolean isInEffect();
-
-	boolean isEffectDone();
-}
-
-class BeginTranscriptionEffect implements DNASCrollerEffect {
-	Thread effectThread;
-	DNAScrollerWithRNA owner;
-	int effectDelay = DEFAULT_EFFECT_TIME_DELAY;
-	int maximumStep = DEFAULT_EFFECT_MAX_STEP;
-	boolean effectDone = false;
-	int initialState;
-	int finalState;
-	int currentStep;
-	boolean effectForcedToEnd = false;
-
-	BeginTranscriptionEffect(DNAScrollerWithRNA owner, int initialState, int finalState) {
-		this.owner = owner;
-		this.initialState = initialState;
-		this.finalState = finalState;
-	}
-
-	public void startEffect() {
-		currentStep = 0;
-		effectDone = false;
-		owner.setScrollerState(initialState);
-		effectForcedToEnd = false;
-		if (maximumStep > 0) {
-			effectThread = new Thread(new Runnable() {
-				public void run() {
-					try {
-						while (true) {
-							step();
-							Thread.sleep(effectDelay);
-						}
-					}
-					catch (Throwable t) {
-					}
-					endEffect();
-				}
-			});
-			effectThread.setPriority(Thread.MIN_PRIORITY);
-			effectThread.start();
-		}
-		else {
-			endEffect();
-		}
-	}
-
-	public void forceEndEffect() {
-		effectForcedToEnd = true;
-		if (isInEffect()) {
-			effectThread.interrupt();
-		}
-	}
-
-	public int getCurrentStep() {
-		return currentStep;
-	}
-
-	public void endEffect() {
-		effectDone = true;
-		effectThread = null;
-		owner.setScrollerState(finalState);
-		owner.clearEffect();
-		if (!effectForcedToEnd)
-			owner.effectJustEnded(this);
-	}
-
-	public void step() {
-		currentStep++;
-		if (currentStep > maximumStep) {
-			effectThread.interrupt();
-		}
-		else {
-			owner.resetDNA();
-			owner.repaint();
-		}
-	}
-
-	public void setMaximumSteps(int maximumStep) {
-		this.maximumStep = maximumStep;
-	}
-
-	public int getMaximumStep() {
-		return maximumStep;
-	}
-
-	public void setEffectDelay(int effectDelay) {
-		this.effectDelay = effectDelay;
-		if (this.effectDelay < 0)
-			this.effectDelay = 0;
-	}
-
-	public int getEffectDelay() {
-		return effectDelay;
-	}
-
-	public boolean isInEffect() {
-		return (effectThread != null && effectThread.isAlive());
-	}
-
-	public boolean isEffectDone() {
-		return effectDone;
-	}
-}
-
-class EndTranscriptionEffect implements DNASCrollerEffect {
-	Thread effectThread;
-	DNAScrollerWithRNA owner;
-	int effectDelay = DEFAULT_EFFECT_TIME_DELAY;
-	int maximumStep = DEFAULT_EFFECT_MAX_STEP;
-	boolean effectDone = false;
-	int initialState;
-	int finalState;
-	int currentStep;
-	boolean effectForcedToEnd = false;
-
-	EndTranscriptionEffect(DNAScrollerWithRNA owner, int initialState, int finalState) {
-		this.owner = owner;
-		this.initialState = initialState;
-		this.finalState = finalState;
-	}
-
-	public void startEffect() {
-		currentStep = 0;
-		effectDone = false;
-		owner.setScrollerState(initialState);
-		effectForcedToEnd = false;
-		if (maximumStep > 0) {
-			effectThread = new Thread(new Runnable() {
-				public void run() {
-					try {
-						while (true) {
-							step();
-							Thread.sleep(effectDelay);
-						}
-					}
-					catch (Throwable t) {
-					}
-					endEffect();
-				}
-			});
-			effectThread.setPriority(Thread.MIN_PRIORITY);
-			effectThread.start();
-		}
-		else {
-			endEffect();
-		}
-	}
-
-	public void forceEndEffect() {
-		effectForcedToEnd = true;
-		if (isInEffect()) {
-			effectThread.interrupt();
-		}
-	}
-
-	public int getCurrentStep() {
-		return currentStep;
-	}
-
-	public void endEffect() {
-		effectDone = true;
-		effectThread = null;
-		owner.setScrollerState(finalState);
-		owner.clearEffect();
-		if (!effectForcedToEnd)
-			owner.effectJustEnded(this);
-	}
-
-	public void step() {
-		currentStep++;
-		if (currentStep > maximumStep) {
-			effectThread.interrupt();
-		}
-		else {
-			owner.resetDNA();
-			owner.repaint();
-		}
-	}
-
-	public void setMaximumSteps(int maximumStep) {
-		this.maximumStep = maximumStep;
-	}
-
-	public int getMaximumStep() {
-		return maximumStep;
-	}
-
-	public void setEffectDelay(int effectDelay) {
-		this.effectDelay = effectDelay;
-		if (this.effectDelay < 0)
-			this.effectDelay = 0;
-	}
-
-	public int getEffectDelay() {
-		return effectDelay;
-	}
-
-	public boolean isInEffect() {
-		return (effectThread != null && effectThread.isAlive());
-	}
-
-	public boolean isEffectDone() {
-		return effectDone;
-	}
-}
-
-abstract class DNAScrollerWithRNAAction extends AbstractAction {
-	DNAScrollerWithRNA owner;
-
-	public DNAScrollerWithRNAAction() {
-		initProperties();
-	}
-
-	public DNAScrollerWithRNAAction(DNAScrollerWithRNA owner) {
-		this();
-		this.owner = owner;
-	}
-
-	public abstract void initProperties();
-}
-
-class ResetDNAScrollerWithRNAAction extends DNAScrollerWithRNAAction {
-
-	ResetDNAScrollerWithRNAAction() {
-		super();
-	}
-
-	public ResetDNAScrollerWithRNAAction(DNAScrollerWithRNA owner) {
-		super(owner);
-	}
-
-	public void actionPerformed(ActionEvent evt) {
-		if (owner == null)
-			return;
-		owner.reset();
-	}
-
-	public void initProperties() {
-		putValue(Action.NAME, "Reset");
-		putValue(Action.SHORT_DESCRIPTION, "Reset Scroller");
-		putValue(Action.ACTION_COMMAND_KEY, "Reset Scroller");
-	}
-
-}
-
-class BeginTranscriptionDNAScrollerWithRNAAction extends DNAScrollerWithRNAAction {
-
-	BeginTranscriptionDNAScrollerWithRNAAction() {
-		super();
-	}
-
-	public BeginTranscriptionDNAScrollerWithRNAAction(DNAScrollerWithRNA owner) {
-		super(owner);
-	}
-
-	public void actionPerformed(ActionEvent evt) {
-		if (owner == null)
-			return;
-		owner.reset();
-	}
-
-	public void initProperties() {
-		putValue(Action.NAME, "Begin Transcription");
-		putValue(Action.SHORT_DESCRIPTION, "Begin Transcription Scroller");
-		putValue(Action.ACTION_COMMAND_KEY, "Begin Transcription Scroller");
-	}
-}
-
-class TranscriptionDNAScrollerWithRNAAction extends DNAScrollerWithRNAAction {
-
-	TranscriptionDNAScrollerWithRNAAction() {
-		super();
-	}
-
-	public TranscriptionDNAScrollerWithRNAAction(DNAScrollerWithRNA owner) {
-		super(owner);
-	}
-
-	public void actionPerformed(ActionEvent evt) {
-		if (owner == null)
-			return;
-		owner.resetToStartTranscription();
-	}
-
-	public void initProperties() {
-		putValue(Action.NAME, "Transcription");
-		putValue(Action.SHORT_DESCRIPTION, "Transcription Scroller");
-		putValue(Action.ACTION_COMMAND_KEY, "Transcription Scroller");
-	}
-}
-
-class StartTranscriptionDNAScrollerWithRNAAction extends DNAScrollerWithRNAAction {
-
-	StartTranscriptionDNAScrollerWithRNAAction() {
-		super();
-	}
-
-	public StartTranscriptionDNAScrollerWithRNAAction(DNAScrollerWithRNA owner) {
-		super(owner);
-	}
-
-	public void actionPerformed(ActionEvent evt) {
-		if (owner == null)
-			return;
-		owner.resetToStartTranscription();
-		owner.startTranscription();
-	}
-
-	public void initProperties() {
-		putValue(Action.NAME, "Start Transcription");
-		putValue(Action.SHORT_DESCRIPTION, "Start Transcription Scroller");
-		putValue(Action.ACTION_COMMAND_KEY, "Start Transcription Scroller");
-	}
-}
-
-class StartTranslationDNAScrollerWithRNAAction extends DNAScrollerWithRNAAction {
-
-	StartTranslationDNAScrollerWithRNAAction() {
-		super();
-	}
-
-	public StartTranslationDNAScrollerWithRNAAction(DNAScrollerWithRNA owner) {
-		super(owner);
-	}
-
-	public void actionPerformed(ActionEvent evt) {
-		if (owner == null)
-			return;
-		owner.resetToStartTranslation();
-		owner.startTranslation();
-	}
-
-	public void initProperties() {
-		putValue(Action.NAME, "Start Translation");
-		putValue(Action.SHORT_DESCRIPTION, "Start Translation Scroller");
-		putValue(Action.ACTION_COMMAND_KEY, "Start Translation Scroller");
-	}
-}
-
-class TransclationDNAScrollerWithRNAAction extends DNAScrollerWithRNAAction {
-
-	TransclationDNAScrollerWithRNAAction() {
-		super();
-	}
-
-	public TransclationDNAScrollerWithRNAAction(DNAScrollerWithRNA owner) {
-		super(owner);
-	}
-
-	public void actionPerformed(ActionEvent evt) {
-		if (owner == null)
-			return;
-		owner.resetToStartTranslation();
-	}
-
-	public void initProperties() {
-		putValue(Action.NAME, "Translation");
-		putValue(Action.SHORT_DESCRIPTION, "Translation Scroller");
-		putValue(Action.ACTION_COMMAND_KEY, "Translation Scroller");
-	}
-}
-
-class TestComponent extends JPanel implements RNATranslationListener, RNATranscriptionListener {
-	Thread paintThread = null;
-	int ox, oy;
-
-	int vx = 10;
-	int vy = 5;
-
-	int ovalSize = 20;
-
-	DNAScrollerWithRNA owner;
-
-	Rectangle ribosomeRect;
-
-	protected void paintComponent(Graphics g) {
-		if (paintThread == null) {
-			// createThread();
-		}
-		Dimension d = getSize();
-		if (isOpaque()) {
-			g.setColor(getBackground());
-			g.fillRect(0, 0, d.width, d.height);
-		}
-
-		g.setColor(Color.red);
-		g.fillOval(ox, oy, ovalSize, ovalSize);
-		g.setColor(Color.black);
-		g.drawRect(0, 0, d.width - 1, d.height - 1);
-		if (ribosomeRect != null) {
-			g.drawRect(ribosomeRect.x, ribosomeRect.y, ribosomeRect.width, ribosomeRect.height);
-		}
-	}
-
-	public Dimension getPreferredSize() {
-		return new Dimension(550, 200);
-	}
-
-	public Dimension getMinimumSize() {
-		return getPreferredSize();
-	}
-
-	void createThread() {
-		paintThread = new Thread(new Runnable() {
-			public void run() {
-				while (true) {
-					ox += vx;
-					oy += vy;
-					if (ox > getSize().width - ovalSize) {
-						ox = getSize().width - ovalSize;
-						vx = -vx;
-					}
-					if (oy > getSize().height - ovalSize) {
-						oy = getSize().height - ovalSize;
-						vy = -vy;
-					}
-					if (ox < 0) {
-						ox = 0;
-						vx = -vx;
-					}
-					if (oy < 0) {
-						oy = 0;
-						vy = -vy;
-					}
-					try {
-						getParent().repaint();
-						Thread.sleep(100);
-					}
-					catch (Throwable t) {
-					}
-				}
-			}
-		});
-		paintThread.setPriority(Thread.MIN_PRIORITY);
-		paintThread.start();
-
-	}
-
-	public void aminoacidAdded(RNATranslationEvent evt) {
-		evt.setConsumed(true);
-		switch (evt.getMode()) {
-		case MODE_TRANSLATION_START:
-			ox = Integer.MIN_VALUE;
-			oy = Integer.MIN_VALUE;
-			getParent().repaint();
-			System.out.println("START TRANSLATION");
-			evt.setConsumed(true);
-			break;
-		case MODE_TRANSLATION_NEW_AMINO:
-			if (evt.getSource() instanceof DNAScrollerWithRNA) {
-				System.out.println("" + evt.getAminoacid() + " " + evt.getCodon());
-				owner = (DNAScrollerWithRNA) evt.getSource();
-				Point pt = SwingUtilities.convertPoint(owner.getParent(), evt.getWhere().x, evt.getWhere().y, this);
-				ox = (int) pt.getX() - ovalSize / 2;
-				oy = (int) pt.getY() - ovalSize;
-				ribosomeRect = evt.getRibosomeRect();
-				ribosomeRect = SwingUtilities.convertRectangle(owner.getParent(), ribosomeRect, this);
-				getParent().repaint();
-				evt.setConsumed(false);
-				Thread t = new Thread(new Runnable() {
-					public void run() {
-						try {
-							Thread.sleep(owner.translationDT);
-							owner.notifyTranslation();
-						}
-						catch (Throwable tt) {
-						}
-					}
-				});
-				t.setPriority(Thread.MIN_PRIORITY);
-				t.start();
-			}
-			break;
-		case MODE_TRANSLATION_STOP:
-			System.out.println("STOP TRANSLATION");
-			evt.setConsumed(true);
-			break;
-		case MODE_TRANSLATION_END:
-			System.out.println("END TRANSLATION");
-			evt.setConsumed(true);
-			break;
-		}
-	}
-
-	public void baseTranscripted(RNATranscriptionEvent evt) {
-		evt.setConsumed(true);
-		switch (evt.getMode()) {
-		case MODE_TRANSCRIPTION_START:
-			System.out.println("START TRANSCRIPTION");
-			evt.setConsumed(true);
-			break;
-		case MODE_TRANSCRIPTION_STOP:
-			System.out.println("STOP TRANSCRIPTION");
-			evt.setConsumed(true);
-			break;
-		case MODE_TRANSCRIPTION_END:
-			System.out.println("END TRANSCRIPTION");
-			evt.setConsumed(true);
-			break;
-		case MODE_TRANSCRIPTION_BASE:
-			// System.out.println("BASE TRANSCRIPTED "+evt.getBaseIndex());
-			break;
-		}
-	}
-
-}
-
-class CustomBorderLayout extends BorderLayout {
-
-	private Component northComponent;
-	private Component southComponent;
-	private Component westComponent;
-	private Component eastComponent;
-	private Component centerComponent;
-	private String overlapSide;
-
-	public CustomBorderLayout(int hgap, int vgap) {
-		super(hgap, vgap);
-	}
-
-	public void setNorthComponent(Component c) {
-		northComponent = c;
-	}
-
-	public void setSouthComponent(Component c) {
-		southComponent = c;
-	}
-
-	public void setWestComponent(Component c) {
-		westComponent = c;
-	}
-
-	public void setEastComponent(Component c) {
-		eastComponent = c;
-	}
-
-	public void setCenterComponent(Component c) {
-		centerComponent = c;
-	}
-
-	public void setOverlapableSide(String side) {
-		overlapSide = side;
-	}
-
-	public void layoutContainer(Container target) {
-
-		synchronized (target.getTreeLock()) {
-
-			Insets insets = target.getInsets();
-			int top = insets.top;
-			int bottom = target.getHeight() - insets.bottom;
-			int left = insets.left;
-			int right = target.getWidth() - insets.right;
-
-			if (northComponent != null) {
-				northComponent.setSize(right - left, northComponent.getHeight());
-				Dimension d = northComponent.getPreferredSize();
-				northComponent.setBounds(left, top, right - left, d.height);
-				if (overlapSide != NORTH) {
-					top += d.height + (getVgap() < 0 ? 0 : getVgap());
-				}
-				else {
-					top += d.height + getVgap();
-				}
-			}
-
-			if (southComponent != null) {
-				southComponent.setSize(right - left, southComponent.getHeight());
-				Dimension d = southComponent.getPreferredSize();
-				southComponent.setBounds(left, bottom - d.height, right - left, d.height);
-				if (overlapSide != SOUTH) {
-					bottom -= d.height + (getVgap() < 0 ? 0 : getVgap());
-				}
-				else {
-					bottom -= d.height + getVgap();
-				}
-			}
-
-			if (eastComponent != null) {
-				eastComponent.setSize(eastComponent.getWidth(), bottom - top);
-				Dimension d = eastComponent.getPreferredSize();
-				eastComponent.setBounds(right - d.width, top, d.width, bottom - top);
-				if (overlapSide != EAST) {
-					right -= d.width + (getHgap() < 0 ? 0 : getHgap());
-				}
-				else {
-					right -= d.width + getHgap();
-				}
-			}
-
-			if (westComponent != null) {
-				westComponent.setSize(westComponent.getWidth(), bottom - top);
-				Dimension d = westComponent.getPreferredSize();
-				westComponent.setBounds(left, top, d.width, bottom - top);
-				if (overlapSide != WEST) {
-					left += d.width + (getHgap() < 0 ? 0 : getHgap());
-				}
-				else {
-					left += d.width + getHgap();
-				}
-			}
-
-			if (centerComponent != null) {
-				centerComponent.setBounds(left, top, right - left, bottom - top);
-			}
-		}
-
-	}
-
-	public Dimension preferredLayoutSize(Container target) {
-
-		synchronized (target.getTreeLock()) {
-
-			Dimension dim = new Dimension(0, 0);
-
-			if (eastComponent != null) {
-				Dimension d = eastComponent.getPreferredSize();
-				dim.width += d.width + getHgap();
-				dim.height = Math.max(d.height, dim.height);
-			}
-			if (westComponent != null) {
-				Dimension d = westComponent.getPreferredSize();
-				dim.width += d.width + getHgap();
-				dim.height = Math.max(d.height, dim.height);
-			}
-			if (centerComponent != null) {
-				Dimension d = centerComponent.getPreferredSize();
-				dim.width += d.width;
-				dim.height = Math.max(d.height, dim.height);
-			}
-			if (northComponent != null) {
-				Dimension d = northComponent.getPreferredSize();
-				dim.width = Math.max(d.width, dim.width);
-				if (overlapSide != NORTH) {
-					dim.height += d.height + (getVgap() < 0 ? 0 : getVgap());
-				}
-				else {
-					dim.height += d.height + getVgap();
-				}
-			}
-			if (southComponent != null) {
-				Dimension d = southComponent.getPreferredSize();
-				dim.width = Math.max(d.width, dim.width);
-				if (overlapSide != SOUTH) {
-					dim.height += d.height + (getVgap() < 0 ? 0 : getVgap());
-				}
-				else {
-					dim.height += d.height + getVgap();
-				}
-			}
-
-			Insets insets = target.getInsets();
-			dim.width += insets.left + insets.right;
-			dim.height += insets.top + insets.bottom;
-
-			return dim;
-		}
-
-	}
-
-	public Dimension minimumLayoutSize(Container target) {
-
-		synchronized (target.getTreeLock()) {
-
-			Dimension dim = new Dimension(0, 0);
-
-			if (eastComponent != null) {
-				Dimension d = eastComponent.getMinimumSize();
-				dim.width += d.width + getHgap();
-				dim.height = Math.max(d.height, dim.height);
-			}
-			if (westComponent != null) {
-				Dimension d = westComponent.getMinimumSize();
-				dim.width += d.width + getHgap();
-				dim.height = Math.max(d.height, dim.height);
-			}
-			if (centerComponent != null) {
-				Dimension d = centerComponent.getMinimumSize();
-				dim.width += d.width;
-				dim.height = Math.max(d.height, dim.height);
-			}
-			if (northComponent != null) {
-				Dimension d = northComponent.getMinimumSize();
-				dim.width = Math.max(d.width, dim.width);
-				if (overlapSide != NORTH) {
-					dim.height += d.height + (getVgap() < 0 ? 0 : getVgap());
-				}
-				else {
-					dim.height += d.height + getVgap();
-				}
-			}
-			if (southComponent != null) {
-				Dimension d = southComponent.getMinimumSize();
-				dim.width = Math.max(d.width, dim.width);
-				if (overlapSide != SOUTH) {
-					dim.height += d.height + (getVgap() < 0 ? 0 : getVgap());
-				}
-				else {
-					dim.height += d.height + getVgap();
-				}
-			}
-
-			Insets insets = target.getInsets();
-			dim.width += insets.left + insets.right;
-			dim.height += insets.top + insets.bottom;
-
-			return dim;
-
-		}
-
-	}
-
-}
-
-class CustomBevelBorder extends javax.swing.border.BevelBorder {
-
-	private String hidenSide;
-
-	public CustomBevelBorder(int bevelType) {
-		super(bevelType);
-	}
-
-	/*******************************************************************************************************************
-	 * set the side to be hiden. Must be BorderLayout.WEST, BorderLayout.EAST, BorderLayout.NORTH, or
-	 * BorderLayout.SOUTH. *
-	 ******************************************************************************************************************/
-	public void hideSide(String side) {
-		hidenSide = side;
-	}
-
-	protected void paintRaisedBevel(Component c, Graphics g, int x, int y, int width, int height) {
-
-		Color oldColor = g.getColor();
-		int h = height;
-		int w = width;
-
-		g.translate(x, y);
-
-		g.setColor(getHighlightOuterColor(c));
-		if (hidenSide != BorderLayout.WEST)
-			g.drawLine(0, 0, 0, h - 2);
-		if (hidenSide != BorderLayout.NORTH)
-			g.drawLine(1, 0, w - 2, 0);
-
-		g.setColor(getHighlightInnerColor(c));
-		if (hidenSide != BorderLayout.WEST)
-			g.drawLine(1, 1, 1, h - 3);
-		if (hidenSide != BorderLayout.NORTH)
-			g.drawLine(2, 1, w - 3, 1);
-
-		g.setColor(getShadowOuterColor(c));
-		if (hidenSide != BorderLayout.SOUTH)
-			g.drawLine(0, h - 1, w - 1, h - 1);
-		if (hidenSide != BorderLayout.EAST)
-			g.drawLine(w - 1, 0, w - 1, h - 2);
-
-		g.setColor(getShadowInnerColor(c));
-		if (hidenSide != BorderLayout.SOUTH)
-			g.drawLine(1, h - 2, w - 2, h - 2);
-		if (hidenSide != BorderLayout.EAST)
-			g.drawLine(w - 2, 1, w - 2, h - 3);
-
-		g.translate(-x, -y);
-		g.setColor(oldColor);
-
-	}
-
-	protected void paintLoweredBevel(Component c, Graphics g, int x, int y, int width, int height) {
-
-		Color oldColor = g.getColor();
-		int h = height;
-		int w = width;
-
-		g.translate(x, y);
-
-		g.setColor(getShadowInnerColor(c));
-		if (hidenSide != BorderLayout.WEST)
-			g.drawLine(0, 0, 0, h - 1);
-		if (hidenSide != BorderLayout.NORTH)
-			g.drawLine(1, 0, w - 1, 0);
-
-		g.setColor(getShadowOuterColor(c));
-		if (hidenSide != BorderLayout.WEST)
-			g.drawLine(1, 1, 1, h - 2);
-		if (hidenSide != BorderLayout.NORTH)
-			g.drawLine(2, 1, w - 2, 1);
-
-		g.setColor(getHighlightOuterColor(c));
-		if (hidenSide != BorderLayout.SOUTH)
-			g.drawLine(1, h - 1, w - 1, h - 1);
-		if (hidenSide != BorderLayout.EAST)
-			g.drawLine(w - 1, 1, w - 1, h - 2);
-
-		g.setColor(getHighlightInnerColor(c));
-		if (hidenSide != BorderLayout.SOUTH)
-			g.drawLine(2, h - 2, w - 2, h - 2);
-		if (hidenSide != BorderLayout.EAST)
-			g.drawLine(w - 2, 2, w - 2, h - 3);
-
-		g.translate(-x, -y);
-		g.setColor(oldColor);
-
 	}
 
 }
