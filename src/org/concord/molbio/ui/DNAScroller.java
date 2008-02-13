@@ -86,6 +86,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollBar;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.border.Border;
@@ -123,94 +124,89 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 	static final int DEFAULT_CODON_DISTANCE = 2;
 	static final int DEFAULT_CURRENT_BASE_OFFSETY = 5;
 
-	JPopupMenu mutationMenu;
-	JMenu insertionMenu;
-	JMenu substitutionMenu;
-	DNAScrollerMenuItem deletionMenuItem;
-	DNAScrollerMenuItem randomMenuItem;
 	DNAScrollerModel model;
 
+	private JPopupMenu mutationMenu;
+	private JMenu insertionMenu;
+	private JMenu substitutionMenu;
+	private DNAScrollerMenuItem deletionMenuItem;
+	private DNAScrollerMenuItem randomMenuItem;
+
 	JPanel scroller;
+	JScrollBar scrollBar;
+
 	int charw = 14;
 	int charh = 19;
-	int scrollOffset = 20;
+	private int scrollOffset = 20;
 	Rectangle[] charRectangles53;
 	Rectangle[] charRectangles35;
 	BufferedImage bim;
-	BufferedImage bim2;
+	private BufferedImage bim2;
 	MagnifyGlassOp op;
-	JScrollBar scrollBar;
-	Box box;
-	Point startPoint;
-	float initOpX;
+	private Box box;
+	private Point startPoint;
+	private float initOpX;
 
-	int minWidth = -1;
-
-	GradientPaint gplr;
-	GradientPaint gprl;
-
-	boolean wasMutation;
-
-	private boolean needDragging = false;
+	private int minWidth = -1;
+	private GradientPaint gplr;
+	private GradientPaint gprl;
+	private boolean needDragging;
 
 	Color disableColor = Color.lightGray;
 	Color stopCodonColor = Color.red;
 	Color[] codonColors = new Color[] { Color.black, Color.darkGray };
 
-	boolean codonOpMode = true;
-
-	DNA needSetDNA;
-	boolean wasFirstPainting;
+	private DNA needSetDNA;
+	private boolean wasFirstPainting;
 
 	boolean mutationEnabled = true;
 
-	DNAScrollerDrawer drawer;
+	private DNAScrollerDrawer drawer;
 
-	boolean needRecalculateAfterResizing;
-
-	boolean randomMutationSupport;
+	private boolean needRecalculateAfterResizing;
+	private boolean randomMutationSupport;
 
 	private static Border emptyBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
 
-	ArrayList<MutationListenerHolder> mutationListeners;
-	Vector<ItemListener> itemListeners = new Vector<ItemListener>();
+	private ArrayList<MutationListenerHolder> mutationListeners;
+	private Vector<ItemListener> itemListeners;
 
-	public static boolean doDebugPrinting;
+	private static boolean doDebugPrinting;
 
-	static Polygon pAUpper;
-	static Polygon pTULower;
-	static Polygon pGUpper;
-	static Polygon pCLower;
-	static Polygon pALower;
-	static Polygon pTUUpper;
-	static Polygon pCUpper;
-	static Polygon pGLower;
+	private static Polygon pAUpper;
+	private static Polygon pTULower;
+	private static Polygon pGUpper;
+	private static Polygon pCLower;
+	private static Polygon pALower;
+	private static Polygon pTUUpper;
+	private static Polygon pCUpper;
+	private static Polygon pGLower;
 
-	static Font codonFont = new Font("Dialog", Font.BOLD, 12);
+	private static Font codonFont = new Font("Dialog", Font.BOLD, 12);
 
-	static DNAScroller globalDNAScroller;
+	private static DNAScroller globalDNAScroller;
 
-	boolean flashState;
-	int numberFlashes = 3;
-	int flashIntervalMillisec = 300;
-	boolean codonFlashingAfterClickEnable;
-	FlashThread flashThread;
-	boolean mutationMenuWasRequired;
+	private boolean flashState;
+	private int numberFlashes = 3;
+	private int flashIntervalMillisec = 300;
+	private boolean codonFlashingAfterClickEnable;
+	private FlashThread flashThread;
+	private boolean mutationMenuWasRequired;
 
 	int currentBase = -1;
 	int currentStrand = -1;
 
-	Color highlightColor;
-	Color highlightColorFlash = Color.green;
+	private Color highlightColor;
+	private Color highlightColorFlash = Color.green;
 
 	boolean colorSchemeByUsage;
 
-	protected Color backboneColor;
-	protected Color RNAbackboneColor;
-	javax.swing.Timer usageModeTimer;
-	Rectangle backboneTipRectUp;
-	Rectangle backboneTipRectDown;
-	Rectangle rBackBone;
+	private Color backboneColor;
+	private Color RNAbackboneColor;
+	private Timer usageModeTimer;
+	private Rectangle backboneTipRectUp;
+	private Rectangle backboneTipRectDown;
+	private Rectangle rBackBone;
 
 	private static ResourceBundle bundle;
 	private static boolean isUSLocale = Locale.getDefault().equals(Locale.US);
@@ -341,6 +337,15 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 		});
 		addAllComponents();
 		setBorder(getDefaultBorder());
+	}
+
+	public void destroy() {
+		if (flashThread != null)
+			flashThread.interrupt();
+		if (itemListeners != null)
+			itemListeners.clear();
+		if (mutationListeners != null)
+			mutationListeners.clear();
 	}
 
 	static String getInternationalText(String name) {
@@ -1668,6 +1673,8 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 	public void addItemListener(ItemListener l) {
 		if (l == null)
 			return;
+		if (itemListeners == null)
+			itemListeners = new Vector<ItemListener>();
 		if (!itemListeners.contains(l))
 			itemListeners.addElement(l);
 	}
@@ -1675,12 +1682,13 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 	public void removeItemListener(ItemListener l) {
 		if (l == null)
 			return;
-		if (itemListeners.contains(l))
-			itemListeners.removeElement(l);
+		if (itemListeners == null)
+			return;
+		itemListeners.removeElement(l);
 	}
 
 	public void notifyItemListener(ItemEvent ie) {
-		if (itemListeners == null || itemListeners.size() < 1)
+		if (itemListeners == null || itemListeners.isEmpty())
 			return;
 		for (ItemListener l : itemListeners)
 			l.itemStateChanged(ie);
@@ -1710,14 +1718,14 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 	}
 
 	public void removeMutationListener(int strandType, MutationListener l) throws IllegalArgumentException {
-		if (mutationListeners != null && mutationListeners.contains(l))
+		if (mutationListeners != null)
 			mutationListeners.remove(l);
 		if (model != null)
 			model.removeMutationListener(strandType, l);
 	}
 
 	public void removeMutationListener(MutationListener l) throws IllegalArgumentException {
-		if (mutationListeners != null && mutationListeners.contains(l))
+		if (mutationListeners != null)
 			mutationListeners.remove(l);
 		if (model != null)
 			model.removeMutationListener(l);

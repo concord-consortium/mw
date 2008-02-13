@@ -30,26 +30,19 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Font;
-import java.awt.Image;
 import java.awt.Insets;
-import java.awt.MediaTracker;
 import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
-import java.net.URL;
 import java.util.Vector;
 
 import javax.swing.JFrame;
-import javax.swing.JButton;
 import javax.swing.SwingUtilities;
+import javax.swing.border.Border;
 
 import org.concord.molbio.engine.Protein;
 import org.concord.molbio.engine.DNA;
@@ -70,47 +63,43 @@ public class DNAScrollerWithRNA extends DNAScroller {
 	public static final int SCROLLER_TRANSCRIPTION_READY_STATE = 1;
 	public static final int SCROLLER_TRANSLATION_READY_STATE = 2;
 
-	Rectangle[] rRNA;
-	int scrollerState = SCROLLER_TRANSCRIPTION_READY_STATE;
+	private final static int UPP_OFFSET = 35;
+	private final static int DOWN_OFFSET = 5;
+	private final static int LEFT_OFFSET = 20;
 
-	int UPP_OFFSET = 35;
-	int DOWN_OFFSET = 5;
-	int LEFT_OFFSET = 20;
+	private Rectangle[] rRNA;
+	private int scrollerState = SCROLLER_TRANSCRIPTION_READY_STATE;
 
-	DNAScrollerEffect currentEffect;
-	DNAScrollerEffect transcriptionBeginEffect;
-	DNAScrollerEffect transcriptionEndEffect;
+	private DNAScrollerEffect currentEffect;
+	private DNAScrollerEffect transcriptionBeginEffect;
+	private DNAScrollerEffect transcriptionEndEffect;
 
-	int currentCodon = -1;
+	private int currentCodon = -1;
 
-	Thread transcriptionThread;
-	int transcriptionDT = 50;
+	private Thread transcriptionThread;
+	private int transcriptionDT = 50;
 	boolean transcriptionEndedInternal = true;
 	boolean transcriptionEnded;
 
-	Thread translationThread;
-	int translationDT = 200;
-	boolean translationEndedInternal = true;
-	boolean translationEnded;
+	private Thread translationThread;
+	private int translationDT = 200;
+	private boolean translationEndedInternal = true;
+	private boolean translationEnded;
+	private boolean drawLastRNABase = true;
 
-	boolean drawLastRNABase = true;
+	private Protein protein;
+	private Aminoacid[] aminoacids;
+	private Vector<RNATranslationListener> rNATranslationListeners;
+	private Vector<RNATranscriptionListener> rNATranscriptionListeners;
+	private boolean running;
 
-	Protein protein;
-	Aminoacid[] aminoacids;
-	Vector<RNATranslationListener> RNATranslationListeners;
-	Vector<RNATranscriptionListener> RNATranscriptionListeners;
-	boolean running;
+	private boolean startTranscriptionWithEffect;
+	private boolean startTranslationWithEffect;
+	private boolean gotoTranslationAfterTranscription;
+	private boolean mutationAfterTranslationDoneAllowed;
+	private boolean oneStepMode;
 
-	boolean startTranscriptionWithEffect;
-	boolean startTranslationWithEffect;
-	boolean gotoTranslationAfterTranscription;
-	boolean mutationAfterTranslationDoneAllowed;
-
-	BufferedImage ribosomeImage;
-
-	boolean oneStepMode;
-
-	protected DNAComparator dnaComparator;
+	private DNAComparator dnaComparator;
 
 	public DNAScrollerWithRNA() {
 		this(true);
@@ -135,6 +124,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 	}
 
 	public void destroy() {
+		super.destroy();
 		if (transcriptionThread != null)
 			transcriptionThread.interrupt();
 		if (translationThread != null)
@@ -145,12 +135,10 @@ public class DNAScrollerWithRNA extends DNAScroller {
 			transcriptionBeginEffect.destroy();
 		if (transcriptionEndEffect != null)
 			transcriptionEndEffect.destroy();
-	}
-
-	public void setRibosomeImage(BufferedImage bim) {
-		ribosomeImage = bim;
-		if (op != null)
-			op.setImage(ribosomeImage);
+		if (rNATranslationListeners != null)
+			rNATranslationListeners.clear();
+		if (rNATranscriptionListeners != null)
+			rNATranscriptionListeners.clear();
 	}
 
 	public synchronized boolean isRunning() {
@@ -210,16 +198,14 @@ public class DNAScrollerWithRNA extends DNAScroller {
 	}
 
 	public int getStartTranscriptionEffectDt() {
-		if (transcriptionBeginEffect != null) {
+		if (transcriptionBeginEffect != null)
 			return transcriptionBeginEffect.getEffectDelay();
-		}
 		return 0;
 	}
 
 	public int getStartTranslationEffectDt() {
-		if (transcriptionEndEffect != null) {
+		if (transcriptionEndEffect != null)
 			return transcriptionEndEffect.getEffectDelay();
-		}
 		return 0;
 	}
 
@@ -231,9 +217,8 @@ public class DNAScrollerWithRNA extends DNAScroller {
 	}
 
 	public int getStartTranslationMaximumSteps() {
-		if (transcriptionEndEffect != null) {
+		if (transcriptionEndEffect != null)
 			return transcriptionEndEffect.getMaximumStep();
-		}
 		return 0;
 	}
 
@@ -361,39 +346,41 @@ public class DNAScrollerWithRNA extends DNAScroller {
 	}
 
 	public void addRNATranslationListener(RNATranslationListener l) {
-		if (RNATranslationListeners == null)
-			RNATranslationListeners = new Vector<RNATranslationListener>();
 		if (l == null)
 			return;
-		if (RNATranslationListeners.contains(l))
-			return;
-		RNATranslationListeners.add(l);
+		if (rNATranslationListeners == null) {
+			rNATranslationListeners = new Vector<RNATranslationListener>();
+		}
+		else {
+			if (rNATranslationListeners.contains(l))
+				return;
+		}
+		rNATranslationListeners.add(l);
 	}
 
 	public void removeRNATranslationListener(RNATranslationListener l) {
 		if (l == null)
 			return;
-		if (!RNATranslationListeners.contains(l))
-			return;
-		RNATranslationListeners.remove(l);
+		rNATranslationListeners.remove(l);
 	}
 
 	public void addRNATranscriptionListener(RNATranscriptionListener l) {
-		if (RNATranscriptionListeners == null)
-			RNATranscriptionListeners = new Vector<RNATranscriptionListener>();
 		if (l == null)
 			return;
-		if (RNATranscriptionListeners.contains(l))
-			return;
-		RNATranscriptionListeners.add(l);
+		if (rNATranscriptionListeners == null) {
+			rNATranscriptionListeners = new Vector<RNATranscriptionListener>();
+		}
+		else {
+			if (rNATranscriptionListeners.contains(l))
+				return;
+		}
+		rNATranscriptionListeners.add(l);
 	}
 
 	public void removeRNATranscriptionListener(RNATranscriptionListener l) {
 		if (l == null)
 			return;
-		if (!RNATranscriptionListeners.contains(l))
-			return;
-		RNATranscriptionListeners.remove(l);
+		rNATranscriptionListeners.remove(l);
 	}
 
 	public synchronized boolean isInEffect() {
@@ -427,7 +414,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 		resetDNA();
 		repaint();
 		translationEnded = false;
-		transcriptionEnded = (scrollerState == SCROLLER_TRANSLATION_READY_STATE);
+		transcriptionEnded = scrollerState == SCROLLER_TRANSLATION_READY_STATE;
 		if (op == null)
 			return;
 		switch (scrollerState) {
@@ -557,7 +544,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 		return r;
 	}
 
-	protected javax.swing.border.Border getDefaultBorder() {
+	protected Border getDefaultBorder() {
 		return null;
 	}
 
@@ -746,8 +733,6 @@ public class DNAScrollerWithRNA extends DNAScroller {
 			op.my = yop;
 			op.rh = rh;
 		}
-		if (op != null)
-			op.setImage(ribosomeImage);
 	}
 
 	void setOpOffset() {
@@ -1123,185 +1108,6 @@ public class DNAScrollerWithRNA extends DNAScroller {
 			dnaComparator = new DNAComparator(getModel());
 		}
 		return dnaComparator;
-	}
-
-	public void setDefaultRibosomeImage() {
-		try {
-			URL imageURL = DNAScrollerWithRNA.class.getResource("/org/concord/molbio/ui/images/ribosome.jpg");
-			Image img = Toolkit.getDefaultToolkit().createImage(imageURL);
-			MediaTracker mt = new MediaTracker(this);
-			mt.addImage(img, 0);
-			mt.waitForAll();
-			BufferedImage bim = createImageFromImage(img);
-			setRibosomeImage(bim);
-		}
-		catch (Throwable t) {
-			System.out.println("grabbingImage Throwable " + t);
-		}
-	}
-
-	static void createButtons(JFrame f, final DNAScrollerWithRNA scroller) {
-		JButton prevButton = null;
-		JButton resetButton = new JButton(new ResetDNAScrollerWithRNAAction(scroller));
-		resetButton.setSize(resetButton.getPreferredSize());
-		int yButton = f.getSize().height - 140 - resetButton.getSize().height;
-		int xButton = 5;
-		resetButton.setLocation(xButton, yButton);
-		f.getContentPane().add(resetButton);
-
-		prevButton = resetButton;
-		xButton = prevButton.getLocation().x + prevButton.getSize().width + 5;
-		JButton startTranscriptionButton = new JButton(new StartTranscriptionDNAScrollerWithRNAAction(scroller));
-		startTranscriptionButton.setSize(startTranscriptionButton.getPreferredSize());
-		startTranscriptionButton.setLocation(xButton, yButton);
-		f.getContentPane().add(startTranscriptionButton);
-
-		prevButton = startTranscriptionButton;
-		xButton = prevButton.getLocation().x + prevButton.getSize().width + 5;
-		JButton startTranslationButton = new JButton(new StartTranslationDNAScrollerWithRNAAction(scroller));
-		startTranslationButton.setSize(startTranslationButton.getPreferredSize());
-		startTranslationButton.setLocation(xButton, yButton);
-		f.getContentPane().add(startTranslationButton);
-
-		prevButton = null;
-		yButton += 26;
-		xButton = 5;
-		JButton startTranscription = new JButton(new BeginTranscriptionDNAScrollerWithRNAAction(scroller));
-		startTranscription.setSize(startTranscription.getPreferredSize());
-		startTranscription.setLocation(xButton, yButton);
-		f.getContentPane().add(startTranscription);
-
-		prevButton = startTranscription;
-		xButton = prevButton.getLocation().x + prevButton.getSize().width + 5;
-		JButton effect1Transcription = new JButton("Transcription Eff. 1");
-		effect1Transcription.setSize(effect1Transcription.getPreferredSize());
-		effect1Transcription.setLocation(xButton, yButton);
-		f.getContentPane().add(effect1Transcription);
-		effect1Transcription.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				scroller.startTranscriptionEffectBegin();
-			}
-		});
-
-		prevButton = effect1Transcription;
-		xButton = prevButton.getLocation().x + prevButton.getSize().width + 5;
-		JButton transcriptionButton = new JButton(new TranscriptionDNAScrollerWithRNAAction(scroller));
-		transcriptionButton.setSize(transcriptionButton.getPreferredSize());
-		transcriptionButton.setLocation(xButton, yButton);
-		f.getContentPane().add(transcriptionButton);
-
-		prevButton = transcriptionButton;
-		xButton = prevButton.getLocation().x + prevButton.getSize().width + 5;
-		JButton effect2Transcription = new JButton("Transcription Eff. 2");
-		effect2Transcription.setSize(effect2Transcription.getPreferredSize());
-		effect2Transcription.setLocation(xButton, yButton);
-		f.getContentPane().add(effect2Transcription);
-		effect2Transcription.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				scroller.startTranscriptionEffectEnd();
-			}
-		});
-
-		yButton += 26;
-		prevButton = null;
-		xButton = 5;
-		JButton startTranslation = new JButton("Begin Translation");
-		startTranslation.setSize(startTranslation.getPreferredSize());
-		startTranslation.setLocation(xButton, yButton);
-		f.getContentPane().add(startTranslation);
-
-		prevButton = startTranslation;
-		xButton = prevButton.getLocation().x + prevButton.getSize().width + 5;
-		JButton transclationButton = new JButton(new TransclationDNAScrollerWithRNAAction(scroller));
-		transclationButton.setSize(transclationButton.getPreferredSize());
-		transclationButton.setLocation(xButton, yButton);
-		f.getContentPane().add(transclationButton);
-
-		prevButton = transclationButton;
-		xButton = prevButton.getLocation().x + prevButton.getSize().width + 5;
-		JButton comparatorFromFrameButton = new JButton("Comparator In frame");
-		comparatorFromFrameButton.setSize(comparatorFromFrameButton.getPreferredSize());
-		comparatorFromFrameButton.setLocation(xButton, yButton);
-		f.getContentPane().add(comparatorFromFrameButton);
-		comparatorFromFrameButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				scroller.showFrameComparator();
-			}
-		});
-
-		prevButton = null;
-		yButton += 26;
-		xButton = 5;
-		JButton suspendButton = new JButton("Suspend");
-		suspendButton.setSize(suspendButton.getPreferredSize());
-		suspendButton.setLocation(xButton, yButton);
-		f.getContentPane().add(suspendButton);
-		suspendButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				scroller.suspendSimulation();
-			}
-		});
-
-		prevButton = suspendButton;
-		xButton = prevButton.getLocation().x + prevButton.getSize().width + 5;
-		JButton resumeButton = new JButton("Resume");
-		resumeButton.setSize(resumeButton.getPreferredSize());
-		resumeButton.setLocation(xButton, yButton);
-		f.getContentPane().add(resumeButton);
-		resumeButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				scroller.resumeSimulation();
-			}
-		});
-
-		prevButton = resumeButton;
-		xButton = prevButton.getLocation().x + prevButton.getSize().width + 5;
-		JButton doOneStepButton = new JButton("One Step");
-		doOneStepButton.setSize(doOneStepButton.getPreferredSize());
-		doOneStepButton.setLocation(xButton, yButton);
-		f.getContentPane().add(doOneStepButton);
-		doOneStepButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				scroller.doOneStep();
-			}
-		});
-
-		prevButton = doOneStepButton;
-		xButton = prevButton.getLocation().x + prevButton.getSize().width + 5;
-		JButton clearHistoryButton = new JButton("Clear History");
-		clearHistoryButton.setSize(clearHistoryButton.getPreferredSize());
-		clearHistoryButton.setLocation(xButton, yButton);
-		f.getContentPane().add(clearHistoryButton);
-		clearHistoryButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				scroller.restoreToOriginalDNA();
-			}
-		});
-
-		prevButton = clearHistoryButton;
-		xButton = prevButton.getLocation().x + prevButton.getSize().width + 5;
-		JButton mutationSubstitutionButton = new JButton("Substitute");
-		mutationSubstitutionButton.setSize(mutationSubstitutionButton.getPreferredSize());
-		mutationSubstitutionButton.setLocation(xButton, yButton);
-		f.getContentPane().add(mutationSubstitutionButton);
-		mutationSubstitutionButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				scroller.mutateWithSubstitution(0.3f);
-			}
-		});
-
-		prevButton = mutationSubstitutionButton;
-		xButton = prevButton.getLocation().x + prevButton.getSize().width + 5;
-		JButton mutationDeletionInsertionButton = new JButton("Del/Insert");
-		mutationDeletionInsertionButton.setSize(mutationDeletionInsertionButton.getPreferredSize());
-		mutationDeletionInsertionButton.setLocation(xButton, yButton);
-		f.getContentPane().add(mutationDeletionInsertionButton);
-		mutationDeletionInsertionButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				scroller.mutateWithDeletionInsertion(1);
-			}
-		});
-
 	}
 
 	public void resetGUIScroller() {
@@ -1777,11 +1583,11 @@ public class DNAScrollerWithRNA extends DNAScroller {
 	}
 
 	void notifyTranscriptionListeners(int baseIndex, int mode) {
-		if (RNATranscriptionListeners == null || RNATranscriptionListeners.size() < 1)
+		if (rNATranscriptionListeners == null || rNATranscriptionListeners.isEmpty())
 			return;
 		RNATranscriptionEvent evt = new RNATranscriptionEvent(this, baseIndex, mode);
 		boolean totalConsumed = true;
-		for (RNATranscriptionListener l : RNATranscriptionListeners) {
+		for (RNATranscriptionListener l : rNATranscriptionListeners) {
 			evt.setConsumed(false);
 			l.baseTranscripted(evt);
 			totalConsumed = totalConsumed && evt.isConsumed();
@@ -1796,11 +1602,11 @@ public class DNAScrollerWithRNA extends DNAScroller {
 
 	private void notifyTranslationListeners(Aminoacid aminoacid, Codon codon, Point where, Rectangle ribosomeRect,
 			int mode) {
-		if (RNATranslationListeners == null || RNATranslationListeners.size() < 1)
+		if (rNATranslationListeners == null || rNATranslationListeners.isEmpty())
 			return;
 		RNATranslationEvent evt = new RNATranslationEvent(this, aminoacid, codon, where, ribosomeRect, mode);
 		boolean totalConsumed = true;
-		for (RNATranslationListener l : RNATranslationListeners) {
+		for (RNATranslationListener l : rNATranslationListeners) {
 			evt.setConsumed(false);
 			l.aminoacidAdded(evt);
 			totalConsumed = totalConsumed && evt.isConsumed();
