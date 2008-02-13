@@ -789,7 +789,6 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 		case RNATranslationListener.MODE_TRANSLATION_NEW_AMINO:
 			Rectangle ribosomeArea = SwingUtilities
 					.convertRectangle(dnaScroller.getParent(), e.getRibosomeRect(), view);
-			System.out.println(e.getRibosomeRect());
 			if (ribosomeArea.x < 0)
 				ribosomeArea.x = 50;
 			boolean success = view.growPolypeptide(ribosomeArea.x + ribosomeArea.width / 3, ribosomeArea.y
