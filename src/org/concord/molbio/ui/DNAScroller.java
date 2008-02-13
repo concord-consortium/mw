@@ -21,7 +21,6 @@
 package org.concord.molbio.ui;
 
 import java.awt.AlphaComposite;
-import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Composite;
@@ -41,7 +40,6 @@ import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Polygon;
-import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -56,16 +54,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseMotionListener;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
 import java.awt.image.ColorModel;
-import java.awt.image.IndexColorModel;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
-import java.awt.print.PrinterJob;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -78,9 +72,7 @@ import javax.swing.BorderFactory;
 import javax.swing.BoundedRangeModel;
 import javax.swing.Box;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
 import javax.swing.JMenu;
-import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -99,6 +91,18 @@ import org.concord.molbio.engine.Mutator;
 import org.concord.molbio.engine.Nucleotide;
 import org.concord.molbio.engine.Protein;
 import org.concord.molbio.event.MutationListener;
+
+/**
+ * Colors:
+ * 
+ * <pre>
+ * A 204,204,255
+ * T 204,255,204 (I think U should be the same)
+ * G 255,204,204 
+ * C 204,255,255
+ * </pre>
+ * 
+ */
 
 public class DNAScroller extends JPanel implements ItemSelectable, PropertyChangeListener, Printable, DNAScrollerDrawer {
 
@@ -183,8 +187,6 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 	private static Polygon pGLower;
 
 	private static Font codonFont = new Font("Dialog", Font.BOLD, 12);
-
-	private static DNAScroller globalDNAScroller;
 
 	private boolean flashState;
 	private int numberFlashes = 3;
@@ -442,7 +444,7 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 
 			public void mousePressed(MouseEvent evt) {
 				if (usageModeTimer == null) {
-					usageModeTimer = new javax.swing.Timer(2000, new ActionListener() {
+					usageModeTimer = new Timer(2000, new ActionListener() {
 						public void actionPerformed(ActionEvent te) {
 							setColorSchemeByUsage(true);
 						}
@@ -595,7 +597,7 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 		}
 	}
 
-	synchronized void populateMutationMenus(DNAScrollerItem dnaScrollerItem) {
+	void populateMutationMenus(DNAScrollerItem dnaScrollerItem) {
 		if (model == null)
 			return;
 		char baseChar = 0;
@@ -616,32 +618,32 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 				switch (i) {
 				case 0:
 					if (baseChar != Nucleotide.ADENINE_NAME) {
-						substitutionMenu.add(new DNAScrollerMenuItem(baseChar + " -> A", this, M_SUBSTITUTION_A,
-								dnaScrollerItem));
+						substitutionMenu.add(new DNAScrollerMenuItem("<html>" + baseChar + " &#10140; A</html>", this,
+								M_SUBSTITUTION_A, dnaScrollerItem));
 					}
 					insertionMenu.add(new DNAScrollerMenuItem(insertionString + " A", this, M_INSERTION_A,
 							dnaScrollerItem));
 					break;
 				case 1:
 					if (baseChar != Nucleotide.CYTOSINE_NAME) {
-						substitutionMenu.add(new DNAScrollerMenuItem(baseChar + " -> C", this, M_SUBSTITUTION_C,
-								dnaScrollerItem));
+						substitutionMenu.add(new DNAScrollerMenuItem("<html>" + baseChar + " &#10140; C</html>", this,
+								M_SUBSTITUTION_C, dnaScrollerItem));
 					}
 					insertionMenu.add(new DNAScrollerMenuItem(insertionString + " C", this, M_INSERTION_C,
 							dnaScrollerItem));
 					break;
 				case 2:
 					if (baseChar != Nucleotide.GUANINE_NAME) {
-						substitutionMenu.add(new DNAScrollerMenuItem(baseChar + " -> G", this, M_SUBSTITUTION_G,
-								dnaScrollerItem));
+						substitutionMenu.add(new DNAScrollerMenuItem("<html>" + baseChar + " &#10140; G</html>", this,
+								M_SUBSTITUTION_G, dnaScrollerItem));
 					}
 					insertionMenu.add(new DNAScrollerMenuItem(insertionString + " G", this, M_INSERTION_G,
 							dnaScrollerItem));
 					break;
 				case 3:
 					if (baseChar != Nucleotide.THYMINE_NAME) {
-						substitutionMenu.add(new DNAScrollerMenuItem(baseChar + " -> T", this, M_SUBSTITUTION_T,
-								dnaScrollerItem));
+						substitutionMenu.add(new DNAScrollerMenuItem("<html>" + baseChar + " &#10140; T</html>", this,
+								M_SUBSTITUTION_T, dnaScrollerItem));
 					}
 					insertionMenu.add(new DNAScrollerMenuItem(insertionString + " T", this, M_INSERTION_T,
 							dnaScrollerItem));
@@ -649,10 +651,10 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 				}
 			}
 			if (randomMutationSupport) {
-				insertionMenu.add(new DNAScrollerMenuItem(baseChar + " -> " + "Random base", this, M_INSERTION_RANDOM,
-						dnaScrollerItem));
-				substitutionMenu.add(new DNAScrollerMenuItem(baseChar + " -> " + "Random base", this,
-						M_SUBSTITUTION_RANDOM, dnaScrollerItem));
+				insertionMenu.add(new DNAScrollerMenuItem("<html>" + baseChar + " &#10140; " + "Random base</html>",
+						this, M_INSERTION_RANDOM, dnaScrollerItem));
+				substitutionMenu.add(new DNAScrollerMenuItem("<html>" + baseChar + " &#10140; " + "Random base</html>",
+						this, M_SUBSTITUTION_RANDOM, dnaScrollerItem));
 			}
 			deletionMenuItem.setDNAScrollerMenuItem(dnaScrollerItem);
 			if (randomMutationSupport)
@@ -1807,10 +1809,11 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 		repaint();
 	}
 
-	public static class DNAScrollerMenuItem extends JMenuItem {
-		DNAScrollerItem dnaScrollerItem;
-		DNAScroller owner;
-		int mutationKind;
+	static class DNAScrollerMenuItem extends JMenuItem {
+
+		private DNAScrollerItem dnaScrollerItem;
+		private DNAScroller owner;
+		private int mutationKind;
 
 		public DNAScrollerMenuItem(String name, DNAScroller owner, int mutationKind) {
 			this(name, owner, mutationKind, null);
@@ -1834,11 +1837,12 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 		}
 	}
 
-	public static class DNAScrollerItem {
-		int baseIndex;
-		Codon codon;
-		int strandType = DNA.DNA_STRAND_53;
-		Rectangle rect;
+	static class DNAScrollerItem {
+
+		private int baseIndex;
+		private Codon codon;
+		private int strandType = DNA.DNA_STRAND_53;
+		private Rectangle rect;
 
 		public int getBaseIndex() {
 			return baseIndex;
@@ -1858,19 +1862,14 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 
 	}
 
-	static boolean wasRightClick(MouseEvent e) {
-		return (((e.getModifiers() & InputEvent.CTRL_MASK) != 0) || SwingUtilities.isRightMouseButton(e));
-	}
-
-	static boolean needPopupMenu(MouseEvent e) {
-		return (((e.getModifiers() & InputEvent.CTRL_MASK) != 0) || e.isPopupTrigger() || SwingUtilities
-				.isRightMouseButton(e));
+	private static boolean needPopupMenu(MouseEvent e) {
+		return ((e.getModifiers() & InputEvent.CTRL_MASK) != 0) || e.isPopupTrigger()
+				|| SwingUtilities.isRightMouseButton(e);
 	}
 
 	public int print(Graphics g, PageFormat pf, int pi) throws PrinterException {
-		if (pi >= 1) {
+		if (pi >= 1)
 			return Printable.NO_SUCH_PAGE;
-		}
 		Graphics2D g2 = (Graphics2D) g;
 		g2.translate(pf.getImageableX(), pf.getImageableY());
 		g2.setColor(Color.black);
@@ -1891,140 +1890,6 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 		if (model != null)
 			return model.expressFromStrand(strandType);
 		return null;
-	}
-
-	static void createMenubar(JFrame f, DNAScroller dnaScroller) {
-		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
-		JMenuBar menubar = new JMenuBar();
-		f.setJMenuBar(menubar);
-		JMenu actionmenu = new JMenu("Actions");
-		menubar.add(actionmenu);
-		ActionListener actionListener = new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				if (globalDNAScroller == null)
-					return;
-				DNAScrollerModel model = globalDNAScroller.getModel();
-				if (model == null)
-					return;
-				String actionString = evt.getActionCommand();
-				int strandMode = DNAScrollerModel.DNA_STRAND_AVAILABLE_NONE - 1;
-				if (actionString.equals("Enable all strands")) {
-					strandMode = DNAScrollerModel.DNA_STRAND_AVAILABLE_BOTH;
-				}
-				else if (actionString.equals("Enable 53 strand")) {
-					if (model.isStrand35Available()) {
-						strandMode = DNAScrollerModel.DNA_STRAND_AVAILABLE_BOTH;
-					}
-					else {
-						strandMode = DNAScrollerModel.DNA_STRAND_AVAILABLE_53;
-					}
-				}
-				else if (actionString.equals("Disable 53 strand")) {
-					if (model.isStrand35Available()) {
-						strandMode = DNAScrollerModel.DNA_STRAND_AVAILABLE_35;
-					}
-					else {
-						strandMode = DNAScrollerModel.DNA_STRAND_AVAILABLE_NONE;
-					}
-				}
-				else if (actionString.equals("Enable 35 strand")) {
-					if (model.isStrand53Available()) {
-						strandMode = DNAScrollerModel.DNA_STRAND_AVAILABLE_BOTH;
-					}
-					else {
-						strandMode = DNAScrollerModel.DNA_STRAND_AVAILABLE_35;
-					}
-				}
-				else if (actionString.equals("Disable 35 strand")) {
-					if (model.isStrand53Available()) {
-						strandMode = DNAScrollerModel.DNA_STRAND_AVAILABLE_53;
-					}
-					else {
-						strandMode = DNAScrollerModel.DNA_STRAND_AVAILABLE_NONE;
-					}
-				}
-				if (strandMode != DNAScrollerModel.DNA_STRAND_AVAILABLE_NONE - 1)
-					globalDNAScroller.setStrandAvailability(strandMode);
-			}
-		};
-
-		JMenuItem mi = new JMenuItem("Enable all strands");
-		mi.addActionListener(actionListener);
-		actionmenu.add(mi);
-		mi = new JMenuItem("Enable 53 strand");
-		mi.addActionListener(actionListener);
-		actionmenu.add(mi);
-		mi = new JMenuItem("Disable 53 strand");
-		mi.addActionListener(actionListener);
-		actionmenu.add(mi);
-		mi = new JMenuItem("Enable 35 strand");
-		mi.addActionListener(actionListener);
-		actionmenu.add(mi);
-		mi = new JMenuItem("Disable 35 strand");
-		mi.addActionListener(actionListener);
-		actionmenu.add(mi);
-		JMenu mmi = new JMenu("Mutations");
-		actionmenu.add(mmi);
-
-		ActionListener mutationEnablingListener = new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				String actionString = evt.getActionCommand();
-				if (actionString.equals("Enable")) {
-					globalDNAScroller.setMutationEnabled(true);
-				}
-				else if (actionString.equals("Disable")) {
-					globalDNAScroller.setMutationEnabled(false);
-				}
-			}
-		};
-		mi = new JMenuItem("Enable");
-		mi.addActionListener(mutationEnablingListener);
-		mmi.add(mi);
-		mi = new JMenuItem("Disable");
-		mi.addActionListener(mutationEnablingListener);
-		mmi.add(mi);
-
-		mi = new JMenuItem("ResizeTest");
-		mi.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				Dimension d = globalDNAScroller.getSize();
-				d.width /= 2;
-				d.height *= 2;
-				globalDNAScroller.setSize(d);
-			}
-		});
-		mmi.add(mi);
-
-		mi = new JMenuItem("SetNucleotide Test");
-		mi.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				globalDNAScroller.setNucleotide(0, 13, Nucleotide.getCytosine());
-			}
-		});
-		mmi.add(mi);
-
-		JMenu pmenu = new JMenu("PrinterTest");
-		menubar.add(pmenu);
-		mi = new JMenuItem("Print");
-		pmenu.add(mi);
-
-		final Printable scrollerForPrint = dnaScroller;
-
-		mi.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				if (doDebugPrinting)
-					System.out.println("print");
-				PrinterJob printJob = PrinterJob.getPrinterJob();
-				printJob.setPrintable(scrollerForPrint);
-				if (printJob.printDialog()) {
-					try {
-						printJob.print();
-					}
-					catch (Exception PrintException) {
-					}
-				}
-			}
-		});
 	}
 
 	public void setDisableColor(Color c) {
@@ -2307,181 +2172,6 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 
 }
 
-class MagnifyGlassOp implements BufferedImageOp {
-
-	BasicStroke stroke = new BasicStroke(4);
-
-	public final static int GLASS_AS_CIRCLE = 0;
-	public final static int GLASS_AS_RECTANGLE = 1;
-
-	int drawMode = GLASS_AS_CIRCLE;
-
-	float power = 1;
-	float mx;
-	float my;
-	float rw = 0.5f;
-	float rh = 0.5f;
-
-	float red = 0;
-	float green = 1;
-	float blue = 0;
-	float red2 = 0;
-	float green2 = 0.7f;
-	float blue2 = 0;
-
-	Shape needClip = null;
-
-	BufferedImage internalImage;
-	boolean drawImage = false;
-
-	MagnifyGlassOp(float power, float mx, float my, float rw, float rh, int drawMode) {
-		this.power = (power < 0) ? 0 : power;
-		this.mx = mx;
-		this.my = my;
-		this.rw = rw;
-		this.rh = rh;
-		this.drawMode = (drawMode < GLASS_AS_CIRCLE || GLASS_AS_CIRCLE > GLASS_AS_RECTANGLE) ? GLASS_AS_RECTANGLE
-				: drawMode;
-		setColorComponents(red, green, blue);
-
-	}
-
-	public synchronized BufferedImage filter(BufferedImage src, BufferedImage dest) {
-		if (dest == null)
-			dest = createCompatibleDestImage(src, null);
-		float xc = mx;
-		float yc = my;
-		float r0 = rw - 2;
-		float rrh = rh;
-		Graphics2D g2d = dest.createGraphics();
-		g2d.drawImage(src, null, 0, 0);
-		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g2d.setStroke(stroke);
-		g2d.setPaint(new Color(red, green, blue, 0.2f));
-		Shape oldClip = g2d.getClip();
-		g2d.setClip(needClip);
-		if (drawImage && internalImage != null && (drawMode == GLASS_AS_RECTANGLE)) {
-			Composite oldComp = g2d.getComposite();
-			Color oldColor = g2d.getColor();
-			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.85f));
-			g2d.drawImage(internalImage, null, Math.round(xc - r0), Math.round(yc - rrh - 1));
-			g2d.setComposite(oldComp);
-			g2d.setColor(oldColor);
-		}
-		else {
-			if (drawMode == GLASS_AS_RECTANGLE) {
-				g2d.fillRoundRect(Math.round(xc - r0), Math.round(yc - rrh - 1), Math.round(2 * r0), Math
-						.round(2 * rrh), 2, 2);
-			}
-			else {
-				g2d.fillOval(Math.round(xc - r0), Math.round(yc - r0), 2 * Math.round(r0), 2 * Math.round(r0));
-			}
-			g2d.setPaint(new Color(red2, green2, blue2, 0.5f));
-			if (drawMode == GLASS_AS_RECTANGLE) {
-				g2d.drawRoundRect(Math.round(xc - r0), Math.round(yc - rrh - 1), Math.round(2 * r0), Math
-						.round(2 * rrh), 2, 2);
-			}
-			else {
-				g2d.drawOval(Math.round(xc - r0), Math.round(yc - r0), 2 * Math.round(r0), 2 * Math.round(r0));
-			}
-		}
-		g2d.setClip(oldClip);
-		g2d.drawImage(dest, 0, 0, null);
-		g2d.dispose();
-		return dest;
-	}
-
-	public void setColorComponents() {
-		green = blue = 0;
-		red = 0.5f;
-		green2 = blue2 = 0;
-		red2 = 0.35f;
-	}
-
-	public void setColorComponents(float red, float green, float blue) {
-		this.red = red;
-		this.green = green;
-		this.blue = blue;
-		red2 = red * 0.7f;
-		green2 = green * 0.7f;
-		blue2 = blue * 0.7f;
-	}
-
-	public Rectangle2D getBounds2D(BufferedImage src) {
-		return src.getRaster().getBounds();
-	}
-
-	public BufferedImage createCompatibleDestImage(BufferedImage src, ColorModel destCM) {
-		if (destCM == null) {
-			destCM = src.getColorModel();
-			if (destCM instanceof IndexColorModel) {
-				destCM = ColorModel.getRGBdefault();
-			}
-		}
-		int w = src.getWidth();
-		int h = src.getHeight();
-		return new BufferedImage(destCM, destCM.createCompatibleWritableRaster(w, h), destCM.isAlphaPremultiplied(),
-				null);
-	}
-
-	public Point2D getPoint2D(Point2D srcPt, Point2D dstPt) {
-		if (dstPt == null)
-			dstPt = new Point2D.Float();
-		dstPt.setLocation(srcPt);
-		return dstPt;
-	}
-
-	public RenderingHints getRenderingHints() {
-		return null;
-	}
-
-	static float d2(float x1, float y1, float x2, float y2) {
-		return (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
-	}
-
-	public void setX(float x) {
-		mx = x;
-	}
-
-	public void setY(float y) {
-		my = y;
-	}
-
-	public void setR(float r) {
-		rw = r;
-	}
-
-	public float getX() {
-		return mx;
-	}
-
-	public float getR() {
-		return rw;
-	}
-
-	public float getH() {
-		return rh;
-	}
-
-	public void setImage(BufferedImage img) {
-		if (img == null) {
-			internalImage = null;
-			return;
-		}
-		BufferedImageOp bop = new MyAlphaOp();
-		internalImage = DNAScroller.createImageFromImage(img, bop);
-	}
-
-	public void setDrawImage(boolean drawImage) {
-		this.drawImage = drawImage;
-	}
-
-	public void setNeedClip(Shape needClip) {
-		this.needClip = needClip;
-	}
-
-}
-
 class MutationListenerHolder {
 	MutationListener l;
 	int strandIndex = -1;
@@ -2547,64 +2237,3 @@ class FlashThread extends Thread {
 	}
 
 }
-
-class MyAlphaOp implements BufferedImageOp {
-
-	MyAlphaOp() {
-	}
-
-	public synchronized BufferedImage filter(BufferedImage src, BufferedImage dest) {
-		if (dest == null)
-			dest = createCompatibleDestImage(src, null);
-		int w = src.getWidth();
-		int h = src.getHeight();
-		for (int x = 0; x < w; x++) {
-			for (int y = 0; y < h; y++) {
-				int px = src.getRGB(x, y);
-				int dpx = px & 0xFFFFFF;
-				int r = (px & 0xFF0000) >> 16;
-				int g = (px & 0xFF00) >> 8;
-				int b = (px & 0xFF);
-				if (r > 0xF0 && g > 0xF0 && b > 0xF0) {
-					px = dpx;
-				}
-				dest.setRGB(x, y, px);
-			}
-		}
-		return dest;
-	}
-
-	public Rectangle2D getBounds2D(BufferedImage src) {
-		return src.getRaster().getBounds();
-	}
-
-	public BufferedImage createCompatibleDestImage(BufferedImage src, ColorModel destCM) {
-		if (destCM == null) {
-			destCM = src.getColorModel();
-			if (destCM instanceof IndexColorModel) {
-				destCM = ColorModel.getRGBdefault();
-			}
-		}
-		int w = src.getWidth();
-		int h = src.getHeight();
-		return new BufferedImage(destCM, destCM.createCompatibleWritableRaster(w, h), destCM.isAlphaPremultiplied(),
-				null);
-	}
-
-	public Point2D getPoint2D(Point2D srcPt, Point2D dstPt) {
-		if (dstPt == null)
-			dstPt = new Point2D.Float();
-		dstPt.setLocation(srcPt);
-		return dstPt;
-	}
-
-	public RenderingHints getRenderingHints() {
-		return null;
-	}
-
-}
-
-// A 204,204,255
-// T 204,255,204 I think U should be the same the same
-// G 255,204,204
-// C 204,255,255
