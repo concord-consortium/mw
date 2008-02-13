@@ -433,7 +433,7 @@ public class Aminoacid {
 		if (this != holder.amino) {
 			throw new IllegalArgumentException("Codon " + codon + " doesn't produce " + standardAbbreviation);
 		}
-		return holder.codonUsage / 1000f;
+		return holder.codonUsage2 / 1000f;
 	}
 
 	/**
@@ -607,16 +607,6 @@ public class Aminoacid {
 
 	}
 
-	static class AminoCodonHolder {
-		public float codonUsage = 0;
-		public Aminoacid amino;
-
-		AminoCodonHolder(Aminoacid amino, float codonUsage) {
-			this.codonUsage = codonUsage;
-			this.amino = amino;
-		}
-	}
-
 	public void putProperty(Object key, Object value) {
 		if (properties == null)
 			properties = new HashMap<Object, Object>();
@@ -657,46 +647,17 @@ public class Aminoacid {
 		}
 		return allAminoacids;
 	}
-}
 
-/*
- * http://www.tcd.ie/Genetics/staff/Miguel_DeArce_Bioinf_01/bioinformatics_01/htm/air.htm Frequency Expressed in
- * aminoacids per thousand. Calculated to be an average for all proteins, ignoring codon preference, and assuming an
- * averaga aminoacid composition in Frame 1. FR1, FR2 and FR3 are the three reading frames. Source, Staden R. (1990)
- * Finding Protein Coding regions in Genomic sequences. Methods in Enzymology, vol 183. Formula The projection molecules
- * were obtained from http://www.ccdc.cam.ac.uk/support/csd_doc/volume3/z309.html, where further references could be
- * found. The alpha carbon is shown in the top row with the side chain projecting downwards. Codons This is the Standard
- * Genetic Code. In DNA sequence, U is replaced by T. A Codon Usage Database can be seen here, where other species are
- * also listed. Also included in that reference is a codon usage program, where sequences can be pasted and transformed
- * into usage tables. The codon usage reported in the table above is given in 'per thousand residues', and refers to the
- * entire human genome, as per GeneBank release 117.0 (15th April 2000). For other genetic codes see for instance
- * http://www.ebi.ac.uk/cgi-bin/mutations/trtables.cgi MW Molecular weight. Surface In squared angstroms. This and the
- * following columns are taken from http://www.imb-jena.de/IMAGE_AA.html, which inspired this table in the first place.
- * Volume In cubic angstroms. pKa and pI these refer to the side chain, and were measured at 25C in aqueous solution.
- * The pKa for the alpha-carbon-COOH is near 2, and for the alpha-caron-NH2, about 10 for all aminoacids. Like the pH,
- * they are a quantitative measure of acidity/alkalinity in solution. Solubility (in water) is in g/100g, at 25C.
- * Hydrophobicity Three scales are shown. RS is residue non-polar surface area, measured in squared ansgtroms. RB is the
- * estimated hdrophobic effect for residue burial, measured in kcal/mol. SB is the estimated hydrophobic effect for side
- * chain burial, measured as before The values are obtained from the previous column by subtractiing the value for Gly
- * (1.18 kcal/mol). Scale this is the hydrophobicity scale of J. Kyte and RF Doolittle J. Mol. Biol. (1982) 157,
- * 105-132.
- */
-/*
- * http://babbage.infobiogen.fr/doc/GCGdoc/Data_Files/protein_analysis_tables.html#aminoacid.dat%20and%20extinctcoef.dat
- * AmAcid MolWt Charge Aroma Acid Base Sulfur Phil phob retn2.1 retn7.4 Ala 89.09 0 0 0 0 0 0 1 -0.1 0.5 Arg 174.20 1 0
- * 0 1 0 1 0 -4.5 0.8 Asn 132.12 0 0 0 0 0 1 0 -1.6 -0.8 Asp 133.10 -1 0 1 0 0 1 0 -2.8 -8.2 Cys 121.15 0 0 0 0 1 0 1
- * -2.2 -6.8 Gln 146.15 0 0 0 0 0 1 0 -2.5 -4.8 Glu 147.13 -1 0 1 0 0 1 0 -7.5 -16.9 Gly 75.07 0 0 0 0 0 0 1 -0.5 0.0
- * His 155.16 0 0 0 0 0 1 0 0.8 -3.5 Ile 131.17 0 0 0 0 0 0 1 11.8 13.9 Leu 131.17 0 0 0 0 0 0 1 10.0 8.8 Lys 146.19 1 0
- * 0 1 0 1 0 -3.2 0.1 Met 149.21 0 0 0 0 1 0 1 7.1 4.8 Phe 165.19 0 1 0 0 0 0 1 13.9 13.2 Pro 115.13 0 0 0 0 0 1 0 8.0
- * 6.1 Ser 105.09 0 0 0 0 0 1 0 -3.7 1.2 Thr 119.12 0 0 0 0 0 1 0 1.5 2.7 Trp 204.23 0 1 0 0 0 0 1 18.1 14.9 Tyr 181.19
- * 0 1 0 0 0 0 1 8.2 6.1 Val 117.15 0 0 0 0 0 0 1 3.3 2.7
- * 
- * 
- * Asx 132.61 -.5 0 1 0 0 1 0 -2.2 -4.5 Glx 146.64 -.5 0 1 0 0 1 0 -5.0 -10.8 NH2 0 0 0 0 0 0 0 0 -0.4 2.4 Ave 128.16 0
- * 0 0 0 0 0 0 0.0 0.0 COO 0 0 0 0 0 0 0 0 6.9 -3.0 End 0 0 0 0 0 0 0 0 0.0 0.0
- * 
- * pK C 8.3 D 3.91 E 4.25 H 6.50 K 10.79 R 12.50 Y 10.95
- * 
- * NH2 8.56 COOH 3.56
- * 
- */
+	static class AminoCodonHolder {
+
+		float codonUsage2 = 0;
+		Aminoacid amino;
+
+		AminoCodonHolder(Aminoacid amino, float codonUsage) {
+			this.codonUsage2 = codonUsage;
+			this.amino = amino;
+		}
+
+	}
+
+}
