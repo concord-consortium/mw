@@ -722,6 +722,18 @@ public class MesoModel extends MDModel {
 		return result * EV_CONVERTER * UNIT_EV_OVER_KB / n;
 	}
 
+	public double getHeat(byte type, Shape shape) {
+		double result = 0.0;
+		for (int i = 0; i < numberOfParticles; i++) {
+			if (gb[i].isCenterOfMassContained(shape)) {
+				result += (gb[i].vx * gb[i].vx + gb[i].vy * gb[i].vy) * gb[i].mass + gb[i].inertia * gb[i].omega
+						* gb[i].omega;
+			}
+		}
+		// the prefactor 0.5 doesn't show up here because it has been included in the mass conversion factor.
+		return result * EV_CONVERTER;
+	}
+
 	public int getParticleCount(byte type, Shape shape) {
 		int n = 0;
 		for (int i = 0; i < numberOfParticles; i++) {
