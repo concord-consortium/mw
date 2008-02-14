@@ -2711,21 +2711,10 @@ final class PageXMLDecoder {
 				majorTicks = 0;
 			}
 			if (description != null) {
-				if (description.endsWith("(eV)")) {
-					int iev = description.lastIndexOf(" (eV)");
-					if (iev != -1)
-						description = description.substring(0, iev);
-				}
 				b.setDescription(description);
 				description = null;
 			}
 			if (timeSeries != null) {
-				if (timeSeries.equals("Concentration A2(%)"))
-					timeSeries = "Mole Fraction A2(%)";
-				else if (timeSeries.equals("Concentration B2(%)"))
-					timeSeries = "Mole Fraction B2(%)";
-				else if (timeSeries.equals("Concentration AB(%)"))
-					timeSeries = "Mole Fraction AB(%)";
 				b.setTimeSeriesName(timeSeries);
 				timeSeries = null;
 			}
