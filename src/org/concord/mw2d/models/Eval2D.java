@@ -1976,6 +1976,44 @@ class Eval2D extends AbstractEval {
 		return null;
 	}
 
+	private String evaluateHeatFunction(final String clause) {
+		if (clause == null || clause.equals(""))
+			return null;
+		int i = clause.indexOf("(");
+		int j = clause.lastIndexOf(")");
+		if (i == -1 || j == -1) {
+			out(ScriptEvent.FAILED, "function must be enclosed within parenthesis: " + clause);
+			return null;
+		}
+		String s = clause.substring(i + 1, j);
+		String[] t = s.split(",");
+		int n = t.length;
+		switch (n) {
+		case 5:
+			float[] x = parseArray(5, t);
+			if (x != null) {
+				for (int k = 1; k < 5; k++)
+					x[k] *= IR_CONVERTER;
+				Shape shape = new Rectangle2D.Float(x[1], x[2], x[3], x[4]);
+				return "" + model.getHeat((byte) x[0], shape);
+			}
+			break;
+		case 4:
+			x = parseArray(4, t);
+			if (x != null) {
+				for (int k = 1; k < 4; k++)
+					x[k] *= IR_CONVERTER;
+				Shape shape = new Ellipse2D.Float(x[1] - x[3], x[2] - x[3], x[3] * 2, x[3] * 2);
+				return "" + model.getHeat((byte) x[0], shape);
+			}
+			break;
+		default:
+			out(ScriptEvent.FAILED, "argument error: " + clause);
+			return null;
+		}
+		return null;
+	}
+
 	private String evaluateTemperatureFunction(final String clause) {
 		if (clause == null || clause.equals(""))
 			return null;
@@ -2530,6 +2568,11 @@ class Eval2D extends AbstractEval {
 			}
 			if (exp.startsWith("temperature(")) {
 				exp = evaluateTemperatureFunction(exp);
+				if (exp != null)
+					storeDefinition(isStatic, var, exp);
+			}
+			else if (exp.startsWith("heat(")) {
+				exp = evaluateHeatFunction(exp);
 				if (exp != null)
 					storeDefinition(isStatic, var, exp);
 			}

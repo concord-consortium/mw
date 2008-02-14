@@ -2008,29 +2008,39 @@ public abstract class AtomicModel extends MDModel {
 		return getKin() * UNIT_EV_OVER_KB;
 	}
 
-	public double getTemperature(byte type, Shape shape) {
-		double result = 0.0;
-		int n = 0;
+	private double[] getTotalKineticEnergy(byte type, Shape shape) {
+		double[] result = new double[2];
+		result[0] = result[1] = 0;
 		for (int i = 0; i < numberOfAtoms; i++) {
 			if (type == -1) {
 				if (atom[i].isCenterOfMassContained(shape)) {
-					n++;
-					result += (atom[i].vx * atom[i].vx + atom[i].vy * atom[i].vy) * atom[i].mass;
+					result[0]++;
+					result[1] += (atom[i].vx * atom[i].vx + atom[i].vy * atom[i].vy) * atom[i].mass;
 				}
 			}
 			else {
 				if (atom[i].id == type) {
 					if (atom[i].isCenterOfMassContained(shape)) {
-						n++;
-						result += (atom[i].vx * atom[i].vx + atom[i].vy * atom[i].vy) * atom[i].mass;
+						result[0]++;
+						result[1] += (atom[i].vx * atom[i].vx + atom[i].vy * atom[i].vy) * atom[i].mass;
 					}
 				}
 			}
 		}
-		if (n == 0)
-			return 0;
 		// the prefactor 0.5 doesn't show up here because it has been included in the conversion factors.
-		return result * EV_CONVERTER * UNIT_EV_OVER_KB / n;
+		result[1] *= EV_CONVERTER;
+		return result;
+	}
+
+	public double getHeat(byte type, Shape shape) {
+		return getTotalKineticEnergy(type, shape)[1];
+	}
+
+	public double getTemperature(byte type, Shape shape) {
+		double[] result = getTotalKineticEnergy(type, shape);
+		if (result[0] < 0.99)
+			return 0;
+		return result[1] * UNIT_EV_OVER_KB / result[0];
 	}
 
 	public int getParticleCount(byte type, Shape shape) {
