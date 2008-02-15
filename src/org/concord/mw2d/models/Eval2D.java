@@ -1951,6 +1951,15 @@ class Eval2D extends AbstractEval {
 		String[] t = s.split(",");
 		int n = t.length;
 		switch (n) {
+		case 1:
+			try {
+				i = Integer.parseInt(t[0]);
+			}
+			catch (NumberFormatException e) {
+				out(ScriptEvent.FAILED, t[0] + " cannot be parsed as an integer.");
+				return null;
+			}
+			return "" + model.getParticleCount((byte) i, null);
 		case 5:
 			float[] x = parseArray(5, t);
 			if (x != null) {

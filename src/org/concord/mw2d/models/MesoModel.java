@@ -735,6 +735,8 @@ public class MesoModel extends MDModel {
 	}
 
 	public int getParticleCount(byte type, Shape shape) {
+		if (shape == null)
+			return 0;
 		int n = 0;
 		for (int i = 0; i < numberOfParticles; i++) {
 			if (gb[i].isCenterOfMassContained(shape)) {
