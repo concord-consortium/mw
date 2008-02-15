@@ -2046,16 +2046,23 @@ public abstract class AtomicModel extends MDModel {
 	public int getParticleCount(byte type, Shape shape) {
 		int n = 0;
 		for (int i = 0; i < numberOfAtoms; i++) {
-			if (type == -1) {
-				if (atom[i].isCenterOfMassContained(shape)) {
-					n++;
+			if (shape != null) {
+				if (type == -1) {
+					if (atom[i].isCenterOfMassContained(shape)) {
+						n++;
+					}
+				}
+				else {
+					if (atom[i].id == type) {
+						if (atom[i].isCenterOfMassContained(shape)) {
+							n++;
+						}
+					}
 				}
 			}
 			else {
 				if (atom[i].id == type) {
-					if (atom[i].isCenterOfMassContained(shape)) {
-						n++;
-					}
+					n++;
 				}
 			}
 		}
