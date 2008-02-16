@@ -2012,18 +2012,26 @@ public abstract class AtomicModel extends MDModel {
 		double[] result = new double[2];
 		result[0] = result[1] = 0;
 		for (int i = 0; i < numberOfAtoms; i++) {
-			if (type == -1) {
-				if (atom[i].isCenterOfMassContained(shape)) {
-					result[0]++;
-					result[1] += (atom[i].vx * atom[i].vx + atom[i].vy * atom[i].vy) * atom[i].mass;
-				}
-			}
-			else {
-				if (atom[i].id == type) {
+			if (shape != null) {
+				if (type == -1) {
 					if (atom[i].isCenterOfMassContained(shape)) {
 						result[0]++;
 						result[1] += (atom[i].vx * atom[i].vx + atom[i].vy * atom[i].vy) * atom[i].mass;
 					}
+				}
+				else {
+					if (atom[i].id == type) {
+						if (atom[i].isCenterOfMassContained(shape)) {
+							result[0]++;
+							result[1] += (atom[i].vx * atom[i].vx + atom[i].vy * atom[i].vy) * atom[i].mass;
+						}
+					}
+				}
+			}
+			else {
+				if (atom[i].id == type) {
+					result[0]++;
+					result[1] += (atom[i].vx * atom[i].vx + atom[i].vy * atom[i].vy) * atom[i].mass;
 				}
 			}
 		}

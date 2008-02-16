@@ -709,8 +709,17 @@ public class MesoModel extends MDModel {
 	public double getTemperature(byte type, Shape shape) {
 		double result = 0.0;
 		int n = 0;
-		for (int i = 0; i < numberOfParticles; i++) {
-			if (gb[i].isCenterOfMassContained(shape)) {
+		if (shape != null) {
+			for (int i = 0; i < numberOfParticles; i++) {
+				if (gb[i].isCenterOfMassContained(shape)) {
+					n++;
+					result += (gb[i].vx * gb[i].vx + gb[i].vy * gb[i].vy) * gb[i].mass + gb[i].inertia * gb[i].omega
+							* gb[i].omega;
+				}
+			}
+		}
+		else {
+			for (int i = 0; i < numberOfParticles; i++) {
 				n++;
 				result += (gb[i].vx * gb[i].vx + gb[i].vy * gb[i].vy) * gb[i].mass + gb[i].inertia * gb[i].omega
 						* gb[i].omega;
@@ -724,8 +733,16 @@ public class MesoModel extends MDModel {
 
 	public double getHeat(byte type, Shape shape) {
 		double result = 0.0;
-		for (int i = 0; i < numberOfParticles; i++) {
-			if (gb[i].isCenterOfMassContained(shape)) {
+		if (shape != null) {
+			for (int i = 0; i < numberOfParticles; i++) {
+				if (gb[i].isCenterOfMassContained(shape)) {
+					result += (gb[i].vx * gb[i].vx + gb[i].vy * gb[i].vy) * gb[i].mass + gb[i].inertia * gb[i].omega
+							* gb[i].omega;
+				}
+			}
+		}
+		else {
+			for (int i = 0; i < numberOfParticles; i++) {
 				result += (gb[i].vx * gb[i].vx + gb[i].vy * gb[i].vy) * gb[i].mass + gb[i].inertia * gb[i].omega
 						* gb[i].omega;
 			}
@@ -736,7 +753,7 @@ public class MesoModel extends MDModel {
 
 	public int getParticleCount(byte type, Shape shape) {
 		if (shape == null)
-			return 0;
+			return -1;
 		int n = 0;
 		for (int i = 0; i < numberOfParticles; i++) {
 			if (gb[i].isCenterOfMassContained(shape)) {
