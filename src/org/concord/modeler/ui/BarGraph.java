@@ -55,7 +55,8 @@ public class BarGraph extends JComponent implements SwingConstants {
 
 	private Font font;
 	private int orientation = VERTICAL;
-	private double value, min = -1.0, max = 1.0, average;
+	protected double value;
+	private double min = -1.0, max = 1.0, average;
 	private String description;
 	private boolean paintTicks = true, paintLabels = true, paintTitle = true;
 	private int majorTicks = 5, minorTicks = 10;
