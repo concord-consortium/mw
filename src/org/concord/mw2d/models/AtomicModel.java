@@ -2011,27 +2011,29 @@ public abstract class AtomicModel extends MDModel {
 	private double[] getTotalKineticEnergy(byte type, Shape shape) {
 		double[] result = new double[2];
 		result[0] = result[1] = 0;
+		Atom a = null;
 		for (int i = 0; i < numberOfAtoms; i++) {
+			a = atom[i];
 			if (shape != null) {
 				if (type == -1) {
-					if (atom[i].isCenterOfMassContained(shape)) {
+					if (a.isCenterOfMassContained(shape)) {
 						result[0]++;
-						result[1] += (atom[i].vx * atom[i].vx + atom[i].vy * atom[i].vy) * atom[i].mass;
+						result[1] += (a.vx * a.vx + a.vy * a.vy) * a.mass;
 					}
 				}
 				else {
-					if (atom[i].id == type) {
+					if (a.id == type) {
 						if (atom[i].isCenterOfMassContained(shape)) {
 							result[0]++;
-							result[1] += (atom[i].vx * atom[i].vx + atom[i].vy * atom[i].vy) * atom[i].mass;
+							result[1] += (a.vx * a.vx + a.vy * a.vy) * a.mass;
 						}
 					}
 				}
 			}
 			else {
-				if (atom[i].id == type) {
+				if (a.id == type) {
 					result[0]++;
-					result[1] += (atom[i].vx * atom[i].vx + atom[i].vy * atom[i].vy) * atom[i].mass;
+					result[1] += (a.vx * a.vx + a.vy * a.vy) * a.mass;
 				}
 			}
 		}
