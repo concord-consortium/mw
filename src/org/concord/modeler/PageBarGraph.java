@@ -211,10 +211,6 @@ public class PageBarGraph extends BarGraph implements Embeddable, ModelCommunica
 		initialValue = x;
 	}
 
-	public double getInitialValue() {
-		return initialValue;
-	}
-
 	public void setAverageType(byte i) {
 		averageType = i;
 	}
@@ -324,7 +320,7 @@ public class PageBarGraph extends BarGraph implements Embeddable, ModelCommunica
 				repaint();
 			}
 			else if (id == ModelEvent.MODEL_RESET) {
-				setValue(initialValue);
+				value = initialValue;
 				setAverage(0);
 				repaint();
 			}
