@@ -709,20 +709,21 @@ public class MesoModel extends MDModel {
 	public double getTemperature(byte type, Shape shape) {
 		double result = 0.0;
 		int n = 0;
+		GayBerneParticle p = null;
 		if (shape != null) {
 			for (int i = 0; i < numberOfParticles; i++) {
-				if (gb[i].isCenterOfMassContained(shape)) {
+				p = gb[i];
+				if (p.isCenterOfMassContained(shape)) {
 					n++;
-					result += (gb[i].vx * gb[i].vx + gb[i].vy * gb[i].vy) * gb[i].mass + gb[i].inertia * gb[i].omega
-							* gb[i].omega;
+					result += (p.vx * p.vx + p.vy * p.vy) * p.mass + p.inertia * p.omega * p.omega;
 				}
 			}
 		}
 		else {
 			for (int i = 0; i < numberOfParticles; i++) {
+				p = gb[i];
 				n++;
-				result += (gb[i].vx * gb[i].vx + gb[i].vy * gb[i].vy) * gb[i].mass + gb[i].inertia * gb[i].omega
-						* gb[i].omega;
+				result += (p.vx * p.vx + p.vy * p.vy) * p.mass + p.inertia * p.omega * p.omega;
 			}
 		}
 		if (n == 0)
@@ -733,18 +734,19 @@ public class MesoModel extends MDModel {
 
 	public double getThermalEnergy(byte type, Shape shape) {
 		double result = 0.0;
+		GayBerneParticle p = null;
 		if (shape != null) {
 			for (int i = 0; i < numberOfParticles; i++) {
-				if (gb[i].isCenterOfMassContained(shape)) {
-					result += (gb[i].vx * gb[i].vx + gb[i].vy * gb[i].vy) * gb[i].mass + gb[i].inertia * gb[i].omega
-							* gb[i].omega;
+				p = gb[i];
+				if (p.isCenterOfMassContained(shape)) {
+					result += (p.vx * p.vx + p.vy * p.vy) * p.mass + p.inertia * p.omega * p.omega;
 				}
 			}
 		}
 		else {
 			for (int i = 0; i < numberOfParticles; i++) {
-				result += (gb[i].vx * gb[i].vx + gb[i].vy * gb[i].vy) * gb[i].mass + gb[i].inertia * gb[i].omega
-						* gb[i].omega;
+				p = gb[i];
+				result += (p.vx * p.vx + p.vy * p.vy) * p.mass + p.inertia * p.omega * p.omega;
 			}
 		}
 		// the prefactor 0.5 doesn't show up here because it has been included in the mass conversion factor.
