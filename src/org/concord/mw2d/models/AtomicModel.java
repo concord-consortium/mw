@@ -2040,7 +2040,7 @@ public abstract class AtomicModel extends MDModel {
 		return result;
 	}
 
-	public double getHeat(byte type, Shape shape) {
+	public double getThermalEnergy(byte type, Shape shape) {
 		return getTotalKineticEnergy(type, shape)[1];
 	}
 
