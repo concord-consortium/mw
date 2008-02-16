@@ -1117,7 +1117,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	public abstract double getTemperature(byte type, Shape shape);
 
 	/** @return the heat energy (total kinetic energy) of the specified type of atoms inside the specified shape */
-	public abstract double getHeat(byte type, Shape shape);
+	public abstract double getThermalEnergy(byte type, Shape shape);
 
 	/** return the number of particles contained in this model */
 	public abstract int getNumberOfParticles();
