@@ -2079,6 +2079,47 @@ public abstract class AtomicModel extends MDModel {
 		return n;
 	}
 
+	public double getAverageSpeed(String direction, byte type, Shape shape) {
+		double v = 0;
+		boolean isVx = "x".equalsIgnoreCase(direction);
+		boolean isVy = "y".equalsIgnoreCase(direction);
+		int n = 0;
+		for (int i = 0; i < numberOfAtoms; i++) {
+			if (shape != null) {
+				if (type == -1) {
+					if (atom[i].isCenterOfMassContained(shape)) {
+						if (isVx)
+							v += atom[i].vx;
+						else if (isVy)
+							v += atom[i].vy;
+						n++;
+					}
+				}
+				else {
+					if (atom[i].id == type) {
+						if (atom[i].isCenterOfMassContained(shape)) {
+							if (isVx)
+								v += atom[i].vx;
+							else if (isVy)
+								v += atom[i].vy;
+							n++;
+						}
+					}
+				}
+			}
+			else {
+				if (atom[i].id == type) {
+					if (isVx)
+						v += atom[i].vx;
+					else if (isVy)
+						v += atom[i].vy;
+					n++;
+				}
+			}
+		}
+		return n == 0 ? 0 : v / n;
+	}
+
 	public void transferHeat(double amount) {
 		if (getNumberOfAtoms() <= 0)
 			return;

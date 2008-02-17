@@ -755,7 +755,7 @@ public class MesoModel extends MDModel {
 
 	public int getParticleCount(byte type, Shape shape) {
 		if (shape == null)
-			return -1;
+			return numberOfParticles;
 		int n = 0;
 		for (int i = 0; i < numberOfParticles; i++) {
 			if (gb[i].isCenterOfMassContained(shape)) {
@@ -763,6 +763,32 @@ public class MesoModel extends MDModel {
 			}
 		}
 		return n;
+	}
+
+	public double getAverageSpeed(String direction, byte type, Shape shape) {
+		double v = 0;
+		boolean isVx = "x".equalsIgnoreCase(direction);
+		boolean isVy = "y".equalsIgnoreCase(direction);
+		int n = 0;
+		for (int i = 0; i < numberOfParticles; i++) {
+			if (shape != null) {
+				if (gb[i].isCenterOfMassContained(shape)) {
+					if (isVx)
+						v += gb[i].vx;
+					else if (isVy)
+						v += gb[i].vy;
+					n++;
+				}
+			}
+			else {
+				if (isVx)
+					v += gb[i].vx;
+				else if (isVy)
+					v += gb[i].vy;
+				n++;
+			}
+		}
+		return n == 0 ? 0 : v / n;
 	}
 
 	/** change the temperature by percentage */

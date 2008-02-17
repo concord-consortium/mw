@@ -1125,6 +1125,12 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	/** @return the number of particles of the specified type inside the specified shape */
 	public abstract int getParticleCount(byte type, Shape shape);
 
+	/**
+	 * @return the average speed of the particles of the specified type inside the specified shape in the specified
+	 *         direction.
+	 */
+	public abstract double getAverageSpeed(String direction, byte type, Shape shape);
+
 	/** return the particle at the <i>i</i>-th position of the particle array */
 	public abstract Particle getParticle(int i);
 
