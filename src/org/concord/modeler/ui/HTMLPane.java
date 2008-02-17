@@ -234,10 +234,18 @@ public class HTMLPane extends MyEditorPane {
 							AttributeSet a = elem.getAttributes();
 							// FIXME!!!: If an image is hyperlinked, the href attribute will be truncated at the
 							// position where the first whitespace appears, if the code base is remote.
+							// Enumeration e = a.getAttributeNames();
+							// while(e.hasMoreElements()){
+							// Object o =e.nextElement();
+							// System.out.println(o+"="+a.getAttribute(o));
+							// }
 							if (a != null) {
 								AttributeSet b = (AttributeSet) a.getAttribute(HTML.Tag.A);
 								if (b != null) {
-									return (String) b.getAttribute(HTML.Attribute.HREF);
+									String s = (String) b.getAttribute(HTML.Attribute.HREF);
+									if (s == null)
+										return s;
+									return FileUtilities.httpDecode(s);
 								}
 							}
 						}
