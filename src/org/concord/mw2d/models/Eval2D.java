@@ -1985,6 +1985,59 @@ class Eval2D extends AbstractEval {
 		return null;
 	}
 
+	private String evaluateSpeedFunction(final String clause) {
+		if (clause == null || clause.equals(""))
+			return null;
+		int i = clause.indexOf("(");
+		int j = clause.lastIndexOf(")");
+		if (i == -1 || j == -1) {
+			out(ScriptEvent.FAILED, "function must be enclosed within parenthesis: " + clause);
+			return null;
+		}
+		String s = clause.substring(i + 1, j);
+		String[] t = s.split(",");
+		int n = t.length;
+		switch (n) {
+		case 2:
+			try {
+				i = Integer.parseInt(t[1].trim());
+			}
+			catch (NumberFormatException e) {
+				out(ScriptEvent.FAILED, t[1] + " cannot be parsed as an integer.");
+				return null;
+			}
+			return "" + model.getAverageSpeed(t[0], (byte) i, null) * V_CONVERTER;
+		case 6:
+			String[] t2 = new String[5];
+			for (i = 0; i < 5; i++)
+				t2[i] = t[i + 1];
+			float[] x = parseArray(5, t2);
+			if (x != null) {
+				for (int k = 1; k < 5; k++)
+					x[k] *= IR_CONVERTER;
+				Shape shape = new Rectangle2D.Float(x[1], x[2], x[3], x[4]);
+				return "" + model.getAverageSpeed(t[0], (byte) x[0], shape) * V_CONVERTER;
+			}
+			break;
+		case 5:
+			t2 = new String[4];
+			for (i = 0; i < 4; i++)
+				t2[i] = t[i + 1];
+			x = parseArray(4, t);
+			if (x != null) {
+				for (int k = 1; k < 4; k++)
+					x[k] *= IR_CONVERTER;
+				Shape shape = new Ellipse2D.Float(x[1] - x[3], x[2] - x[3], x[3] * 2, x[3] * 2);
+				return "" + model.getAverageSpeed(t[0], (byte) x[0], shape) * V_CONVERTER;
+			}
+			break;
+		default:
+			out(ScriptEvent.FAILED, "argument error: " + clause);
+			return null;
+		}
+		return null;
+	}
+
 	private String evaluateThermalEnergyFunction(final String clause) {
 		if (clause == null || clause.equals(""))
 			return null;
@@ -2596,6 +2649,11 @@ class Eval2D extends AbstractEval {
 			}
 			else if (exp.startsWith("count(")) {
 				exp = evaluateCountFunction(exp);
+				if (exp != null)
+					storeDefinition(isStatic, var, exp);
+			}
+			else if (exp.startsWith("speed(")) {
+				exp = evaluateSpeedFunction(exp);
 				if (exp != null)
 					storeDefinition(isStatic, var, exp);
 			}
