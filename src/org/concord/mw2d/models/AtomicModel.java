@@ -2014,26 +2014,18 @@ public abstract class AtomicModel extends MDModel {
 		Atom a = null;
 		for (int i = 0; i < numberOfAtoms; i++) {
 			a = atom[i];
-			if (shape != null) {
-				if (type == -1) {
-					if (a.isCenterOfMassContained(shape)) {
-						result[0]++;
-						result[1] += (a.vx * a.vx + a.vy * a.vy) * a.mass;
-					}
-				}
-				else {
-					if (a.id == type) {
-						if (atom[i].isCenterOfMassContained(shape)) {
-							result[0]++;
-							result[1] += (a.vx * a.vx + a.vy * a.vy) * a.mass;
-						}
-					}
+			if (type == -1) {
+				if (shape == null || a.isCenterOfMassContained(shape)) {
+					result[0]++;
+					result[1] += (a.vx * a.vx + a.vy * a.vy) * a.mass;
 				}
 			}
 			else {
 				if (a.id == type) {
-					result[0]++;
-					result[1] += (a.vx * a.vx + a.vy * a.vy) * a.mass;
+					if (shape == null || a.isCenterOfMassContained(shape)) {
+						result[0]++;
+						result[1] += (a.vx * a.vx + a.vy * a.vy) * a.mass;
+					}
 				}
 			}
 		}
@@ -2056,23 +2048,16 @@ public abstract class AtomicModel extends MDModel {
 	public int getParticleCount(byte type, Shape shape) {
 		int n = 0;
 		for (int i = 0; i < numberOfAtoms; i++) {
-			if (shape != null) {
-				if (type == -1) {
-					if (atom[i].isCenterOfMassContained(shape)) {
-						n++;
-					}
-				}
-				else {
-					if (atom[i].id == type) {
-						if (atom[i].isCenterOfMassContained(shape)) {
-							n++;
-						}
-					}
+			if (type == -1) {
+				if (shape == null || atom[i].isCenterOfMassContained(shape)) {
+					n++;
 				}
 			}
 			else {
 				if (atom[i].id == type) {
-					n++;
+					if (shape == null || atom[i].isCenterOfMassContained(shape)) {
+						n++;
+					}
 				}
 			}
 		}
@@ -2085,30 +2070,17 @@ public abstract class AtomicModel extends MDModel {
 		boolean isVy = "y".equalsIgnoreCase(direction);
 		int n = 0;
 		for (int i = 0; i < numberOfAtoms; i++) {
-			if (shape != null) {
-				if (type == -1) {
-					if (atom[i].isCenterOfMassContained(shape)) {
-						if (isVx)
-							v += atom[i].vx;
-						else if (isVy)
-							v += atom[i].vy;
-						n++;
-					}
-				}
-				else {
-					if (atom[i].id == type) {
-						if (atom[i].isCenterOfMassContained(shape)) {
-							if (isVx)
-								v += atom[i].vx;
-							else if (isVy)
-								v += atom[i].vy;
-							n++;
-						}
-					}
+			if (type == -1) {
+				if (shape == null || atom[i].isCenterOfMassContained(shape)) {
+					if (isVx)
+						v += atom[i].vx;
+					else if (isVy)
+						v += atom[i].vy;
+					n++;
 				}
 			}
-			else {
-				if (atom[i].id == type) {
+			else if (atom[i].id == type) {
+				if (shape == null || atom[i].isCenterOfMassContained(shape)) {
 					if (isVx)
 						v += atom[i].vx;
 					else if (isVy)
