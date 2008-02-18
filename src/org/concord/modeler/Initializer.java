@@ -85,7 +85,12 @@ public class Initializer {
 	}
 
 	public static void init() {
-		sharedInstance.read();
+		try {
+			sharedInstance.read();
+		}
+		catch (Throwable e) {
+			e.printStackTrace();
+		}
 		if (Modeler.isMac())
 			System.setProperty("com.apple.mrj.application.apple.menu.about.name", Modeler.NAME);
 		if (IS_JAVA5)

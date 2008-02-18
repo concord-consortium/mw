@@ -548,7 +548,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		else if (s.equals("he"))
 			page.setCharacterEncoding("ISO-8859-8");
 		else if (s.equals("ru"))
-			page.setCharacterEncoding("ISO-8859-5");
+			page.setCharacterEncoding("UTF-8");
 		else if (s.equals("ar"))
 			page.setCharacterEncoding("ISO-8859-6");
 		else if (s.equals("th"))

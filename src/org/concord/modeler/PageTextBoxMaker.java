@@ -137,8 +137,7 @@ class PageTextBoxMaker extends ComponentMaker {
 				}
 
 				public void windowActivated(WindowEvent e) {
-					widthField.selectAll();
-					widthField.requestFocusInWindow();
+					textArea.requestFocusInWindow();
 				}
 			});
 		}
@@ -221,7 +220,7 @@ class PageTextBoxMaker extends ComponentMaker {
 		JLabel label = new JLabel((s != null ? s : "Width") + " *", SwingConstants.LEFT);
 		label.setToolTipText("A value in (0, 1] will be considered relative to the width of the page");
 		p.add(label);
-		widthField = new FloatNumberTextField(200, 0.01f, 1200);
+		widthField = new FloatNumberTextField(200, 0.01f, 2000);
 		widthField.setToolTipText("A value in (0, 1] will be considered relative to the width of the page");
 		widthField.setMaximumFractionDigits(4);
 		widthField.setAction(okAction);
@@ -230,7 +229,7 @@ class PageTextBoxMaker extends ComponentMaker {
 		s = Modeler.getInternationalText("HeightLabel");
 		label = new JLabel(s != null ? s : "Height", SwingConstants.LEFT);
 		p.add(label);
-		heightField = new FloatNumberTextField(100, 0.01f, 800);
+		heightField = new FloatNumberTextField(100, 0.01f, 1000);
 		heightField.setMaximumFractionDigits(4);
 		heightField.setAction(okAction);
 		p.add(heightField);

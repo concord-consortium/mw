@@ -283,8 +283,7 @@ class ColorBarDialog extends JDialog {
 			}
 
 			public void windowActivated(WindowEvent e) {
-				widthField.selectAll();
-				widthField.requestFocusInWindow();
+				textArea.requestFocusInWindow();
 			}
 		});
 
