@@ -710,18 +710,9 @@ public class MesoModel extends MDModel {
 		double result = 0.0;
 		int n = 0;
 		GayBerneParticle p = null;
-		if (shape != null) {
-			for (int i = 0; i < numberOfParticles; i++) {
-				p = gb[i];
-				if (p.isCenterOfMassContained(shape)) {
-					n++;
-					result += (p.vx * p.vx + p.vy * p.vy) * p.mass + p.inertia * p.omega * p.omega;
-				}
-			}
-		}
-		else {
-			for (int i = 0; i < numberOfParticles; i++) {
-				p = gb[i];
+		for (int i = 0; i < numberOfParticles; i++) {
+			p = gb[i];
+			if (shape == null || p.isCenterOfMassContained(shape)) {
 				n++;
 				result += (p.vx * p.vx + p.vy * p.vy) * p.mass + p.inertia * p.omega * p.omega;
 			}
@@ -735,17 +726,9 @@ public class MesoModel extends MDModel {
 	public double getThermalEnergy(byte type, Shape shape) {
 		double result = 0.0;
 		GayBerneParticle p = null;
-		if (shape != null) {
-			for (int i = 0; i < numberOfParticles; i++) {
-				p = gb[i];
-				if (p.isCenterOfMassContained(shape)) {
-					result += (p.vx * p.vx + p.vy * p.vy) * p.mass + p.inertia * p.omega * p.omega;
-				}
-			}
-		}
-		else {
-			for (int i = 0; i < numberOfParticles; i++) {
-				p = gb[i];
+		for (int i = 0; i < numberOfParticles; i++) {
+			p = gb[i];
+			if (shape == null || p.isCenterOfMassContained(shape)) {
 				result += (p.vx * p.vx + p.vy * p.vy) * p.mass + p.inertia * p.omega * p.omega;
 			}
 		}
@@ -758,7 +741,7 @@ public class MesoModel extends MDModel {
 			return numberOfParticles;
 		int n = 0;
 		for (int i = 0; i < numberOfParticles; i++) {
-			if (gb[i].isCenterOfMassContained(shape)) {
+			if (shape == null || gb[i].isCenterOfMassContained(shape)) {
 				n++;
 			}
 		}
@@ -771,16 +754,7 @@ public class MesoModel extends MDModel {
 		boolean isVy = "y".equalsIgnoreCase(direction);
 		int n = 0;
 		for (int i = 0; i < numberOfParticles; i++) {
-			if (shape != null) {
-				if (gb[i].isCenterOfMassContained(shape)) {
-					if (isVx)
-						v += gb[i].vx;
-					else if (isVy)
-						v += gb[i].vy;
-					n++;
-				}
-			}
-			else {
+			if (shape == null || gb[i].isCenterOfMassContained(shape)) {
 				if (isVx)
 					v += gb[i].vx;
 				else if (isVy)
