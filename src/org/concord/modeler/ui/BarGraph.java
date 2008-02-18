@@ -61,6 +61,7 @@ public class BarGraph extends JComponent implements SwingConstants {
 	private boolean paintTicks = true, paintLabels = true, paintTitle = true;
 	private int majorTicks = 5, minorTicks = 10;
 	private int[] a, b;
+	private boolean averageOnly;
 
 	public BarGraph() {
 		setForeground(Color.black);
@@ -72,6 +73,14 @@ public class BarGraph extends JComponent implements SwingConstants {
 	public BarGraph(int orientation) {
 		this();
 		setOrientation(orientation);
+	}
+
+	public void setAverageOnly(boolean b) {
+		averageOnly = b;
+	}
+
+	public boolean getAverageOnly() {
+		return averageOnly;
 	}
 
 	public void setAddend(float addend) {
@@ -282,55 +291,73 @@ public class BarGraph extends JComponent implements SwingConstants {
 			int tube = 0;
 			int aver = 0;
 			if (max * min >= 0.0) {
-				tube = (int) ((value - min) * tubeUnit);
-				g2.fillRect(0, dim.height - tube, tubeWidth, tube);
-				if (average != 0.0) {
-					aver = (int) ((average - min) * tubeUnit);
-					g2.setColor(getContrastColor());
-					int delta = tubeWidth / 2 > 5 ? 5 : tubeWidth / 2;
-					int tubeh = dim.height - aver;
-					if (a == null)
-						a = new int[3];
-					if (b == null)
-						b = new int[3];
-					a[0] = tubeWidth;
-					a[1] = tubeWidth;
-					a[2] = tubeWidth - delta;
-					b[0] = tubeh - delta;
-					b[1] = tubeh + delta;
-					b[2] = tubeh;
-					g2.fillPolygon(a, b, 3);
-					g2.setColor(Color.black);
-					g2.drawPolygon(a, b, 3);
+				if (averageOnly) {
+					tube = (int) ((average - min) * tubeUnit);
+					g2.fillRect(0, dim.height - tube, tubeWidth, tube);
+				}
+				else {
+					tube = (int) ((value - min) * tubeUnit);
+					g2.fillRect(0, dim.height - tube, tubeWidth, tube);
+					if (average != 0.0) {
+						aver = (int) ((average - min) * tubeUnit);
+						g2.setColor(getContrastColor());
+						int delta = tubeWidth / 2 > 5 ? 5 : tubeWidth / 2;
+						int tubeh = dim.height - aver;
+						if (a == null)
+							a = new int[3];
+						if (b == null)
+							b = new int[3];
+						a[0] = tubeWidth;
+						a[1] = tubeWidth;
+						a[2] = tubeWidth - delta;
+						b[0] = tubeh - delta;
+						b[1] = tubeh + delta;
+						b[2] = tubeh;
+						g2.fillPolygon(a, b, 3);
+						g2.setColor(Color.black);
+						g2.drawPolygon(a, b, 3);
+					}
 				}
 			}
 			else {
-				tube = (int) (value * tubeUnit);
-				int zero = (int) (max * tubeUnit);
-				if (tube >= 0) {
-					g2.fillRect(0, zero - tube, tubeWidth, tube);
+				if (averageOnly) {
+					tube = (int) (average * tubeUnit);
+					int zero = (int) (max * tubeUnit);
+					if (tube >= 0) {
+						g2.fillRect(0, zero - tube, tubeWidth, tube);
+					}
+					else {
+						g2.fillRect(0, zero, tubeWidth, -tube);
+					}
 				}
 				else {
-					g2.fillRect(0, zero, tubeWidth, -tube);
-				}
-				if (average != 0.0) {
-					aver = (int) (average * tubeUnit);
-					g2.setColor(getContrastColor());
-					int delta = tubeWidth / 2 > 5 ? 5 : tubeWidth / 2;
-					int tubeh = zero - aver;
-					if (a == null)
-						a = new int[3];
-					if (b == null)
-						b = new int[3];
-					a[0] = tubeWidth;
-					a[1] = tubeWidth;
-					a[2] = tubeWidth - delta;
-					b[0] = tubeh - delta;
-					b[1] = tubeh + delta;
-					b[2] = tubeh;
-					g2.fillPolygon(a, b, 3);
-					g2.setColor(Color.black);
-					g2.drawPolygon(a, b, 3);
+					tube = (int) (value * tubeUnit);
+					int zero = (int) (max * tubeUnit);
+					if (tube >= 0) {
+						g2.fillRect(0, zero - tube, tubeWidth, tube);
+					}
+					else {
+						g2.fillRect(0, zero, tubeWidth, -tube);
+					}
+					if (average != 0.0) {
+						aver = (int) (average * tubeUnit);
+						g2.setColor(getContrastColor());
+						int delta = tubeWidth / 2 > 5 ? 5 : tubeWidth / 2;
+						int tubeh = zero - aver;
+						if (a == null)
+							a = new int[3];
+						if (b == null)
+							b = new int[3];
+						a[0] = tubeWidth;
+						a[1] = tubeWidth;
+						a[2] = tubeWidth - delta;
+						b[0] = tubeh - delta;
+						b[1] = tubeh + delta;
+						b[2] = tubeh;
+						g2.fillPolygon(a, b, 3);
+						g2.setColor(Color.black);
+						g2.drawPolygon(a, b, 3);
+					}
 				}
 			}
 			g2.setColor(Color.black);
@@ -386,54 +413,72 @@ public class BarGraph extends JComponent implements SwingConstants {
 			g2.fillRect(0, 0, dim.width - 1, tubeHeight);
 			g2.setColor(getForeground());
 			if (min * max >= 0) {
-				tube = (int) ((value - min) * tubeUnit);
-				g2.fillRect(0, 0, tube, tubeHeight);
-				if (average != 0.0) {
-					aver = (int) ((average - min) * tubeUnit);
-					g2.setColor(getContrastColor());
-					int delta = tubeHeight / 2 > 5 ? 5 : tubeHeight / 2;
-					if (a == null)
-						a = new int[3];
-					if (b == null)
-						b = new int[3];
-					a[0] = aver - delta;
-					a[1] = aver + delta;
-					a[2] = aver;
-					b[0] = tubeHeight;
-					b[1] = tubeHeight;
-					b[2] = tubeHeight - delta;
-					g2.fillPolygon(a, b, 3);
-					g2.setColor(Color.black);
-					g2.drawPolygon(a, b, 3);
+				if (averageOnly) {
+					tube = (int) ((average - min) * tubeUnit);
+					g2.fillRect(0, 0, tube, tubeHeight);
+				}
+				else {
+					tube = (int) ((value - min) * tubeUnit);
+					g2.fillRect(0, 0, tube, tubeHeight);
+					if (average != 0.0) {
+						aver = (int) ((average - min) * tubeUnit);
+						g2.setColor(getContrastColor());
+						int delta = tubeHeight / 2 > 5 ? 5 : tubeHeight / 2;
+						if (a == null)
+							a = new int[3];
+						if (b == null)
+							b = new int[3];
+						a[0] = aver - delta;
+						a[1] = aver + delta;
+						a[2] = aver;
+						b[0] = tubeHeight;
+						b[1] = tubeHeight;
+						b[2] = tubeHeight - delta;
+						g2.fillPolygon(a, b, 3);
+						g2.setColor(Color.black);
+						g2.drawPolygon(a, b, 3);
+					}
 				}
 			}
 			else {
-				tube = (int) (value * tubeUnit);
-				int zero = -(int) (min * tubeUnit);
-				if (tube >= 0) {
-					g2.fillRect(zero, 0, tube, tubeHeight);
+				if (averageOnly) {
+					tube = (int) (average * tubeUnit);
+					int zero = -(int) (min * tubeUnit);
+					if (tube >= 0) {
+						g2.fillRect(zero, 0, tube, tubeHeight);
+					}
+					else {
+						g2.fillRect(zero + tube, 0, -tube, tubeHeight);
+					}
 				}
 				else {
-					g2.fillRect(zero + tube, 0, -tube, tubeHeight);
-				}
-				if (average != 0.0) {
-					aver = (int) (average * tubeUnit);
-					g2.setColor(getContrastColor());
-					int delta = tubeHeight / 2 > 5 ? 5 : tubeHeight / 2;
-					int tubeh = zero + aver;
-					if (a == null)
-						a = new int[3];
-					if (b == null)
-						b = new int[3];
-					a[0] = tubeh - delta;
-					a[1] = tubeh + delta;
-					a[2] = tubeh;
-					b[0] = tubeHeight;
-					b[1] = tubeHeight;
-					b[2] = tubeHeight - delta;
-					g2.fillPolygon(a, b, 3);
-					g2.setColor(Color.black);
-					g2.drawPolygon(a, b, 3);
+					tube = (int) (value * tubeUnit);
+					int zero = -(int) (min * tubeUnit);
+					if (tube >= 0) {
+						g2.fillRect(zero, 0, tube, tubeHeight);
+					}
+					else {
+						g2.fillRect(zero + tube, 0, -tube, tubeHeight);
+					}
+					if (average != 0.0) {
+						aver = (int) (average * tubeUnit);
+						g2.setColor(getContrastColor());
+						int delta = tubeHeight / 2 > 5 ? 5 : tubeHeight / 2;
+						int tubeh = zero + aver;
+						if (a == null)
+							a = new int[3];
+						if (b == null)
+							b = new int[3];
+						a[0] = tubeh - delta;
+						a[1] = tubeh + delta;
+						a[2] = tubeh;
+						b[0] = tubeHeight;
+						b[1] = tubeHeight;
+						b[2] = tubeHeight - delta;
+						g2.fillPolygon(a, b, 3);
+						g2.setColor(Color.black);
+						g2.drawPolygon(a, b, 3);
+					}
 				}
 			}
 			g2.setColor(Color.black);

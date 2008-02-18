@@ -570,7 +570,8 @@ final class PageXMLDecoder {
 		short dataPoint;
 		float weight = -1;
 		int style = -1;
-		boolean lockEnergyLevel = false;
+		boolean lockEnergyLevel;
+		boolean average;
 		List<DataSource> dataSourceList;
 
 		private Runnable reportProgress = new Runnable() {
@@ -1680,6 +1681,10 @@ final class PageXMLDecoder {
 					dataType = ig.intValue();
 			}
 
+			else if (qName == "average") {
+				average = Boolean.valueOf(str).booleanValue();
+			}
+
 			else if (qName == "max_fraction_digits") {
 				Integer ig = Parser.parseInt(str);
 				if (ig != null)
@@ -2663,6 +2668,10 @@ final class PageXMLDecoder {
 			if (dataType != 0) {
 				b.setAverageType((byte) dataType);
 				dataType = 0;
+			}
+			if (average) {
+				b.setAverageOnly(average);
+				average = false;
 			}
 			if (orientation == PageBarGraph.VERTICAL || orientation == PageBarGraph.HORIZONTAL) {
 				b.setOrientation(orientation);
