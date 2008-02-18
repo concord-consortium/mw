@@ -68,7 +68,7 @@ class PageBarGraphMaker extends ComponentMaker {
 	private JTextField descriptionField;
 	private FloatNumberTextField multiplierField;
 	private FloatNumberTextField addendField;
-	private JComboBox modelComboBox, timeSeriesComboBox, filterComboBox, orieComboBox;
+	private JComboBox modelComboBox, timeSeriesComboBox, filterComboBox, orieComboBox, averageOnlyComboBox;
 	private JComboBox tickComboBox, labelComboBox, titleComboBox;
 	private JComboBox averageTypeComboBox;
 	private JComboBox formatComboBox;
@@ -143,6 +143,7 @@ class PageBarGraphMaker extends ComponentMaker {
 			pageBarGraph.setAverageType(PageBarGraph.EXPONENTIAL_RUNNING_AVERAGE);
 			break;
 		}
+		pageBarGraph.setAverageOnly(averageOnlyComboBox.getSelectedIndex() == 1);
 		pageBarGraph.setFormat((String) formatComboBox.getSelectedItem());
 		pageBarGraph.setMultiplier(multiplierField.getValue());
 		pageBarGraph.setAddend(addendField.getValue());
@@ -225,6 +226,7 @@ class PageBarGraphMaker extends ComponentMaker {
 			averageTypeComboBox.setSelectedIndex(2);
 			break;
 		}
+		averageOnlyComboBox.setSelectedIndex(pageBarGraph.getAverageOnly() ? 1 : 0);
 
 		orieComboBox.setSelectedIndex(pageBarGraph.getOrientation() == PageBarGraph.HORIZONTAL ? 0 : 1);
 		titleComboBox.setSelectedIndex(pageBarGraph.getPaintTitle() ? 0 : 1);
@@ -439,6 +441,13 @@ class PageBarGraphMaker extends ComponentMaker {
 		p.add(averageTypeComboBox);
 
 		// row 5
+		s = Modeler.getInternationalText("AverageOnly");
+		p.add(new JLabel(s != null ? s : "Average only", SwingConstants.LEFT));
+		averageOnlyComboBox = new JComboBox(new String[] { "No", "Yes" });
+		averageOnlyComboBox.setToolTipText("Select to show average only or not.");
+		p.add(averageOnlyComboBox);
+
+		// row 6
 		s = Modeler.getInternationalText("TextLabel");
 		p.add(new JLabel(s != null ? s : "Description", SwingConstants.LEFT));
 		descriptionField = new JTextField();
@@ -446,21 +455,21 @@ class PageBarGraphMaker extends ComponentMaker {
 		descriptionField.setToolTipText("Type in the text to be displayed in the bar graph.");
 		p.add(descriptionField);
 
-		// row 6
+		// row 7
 		p.add(new JLabel("Multiplier", SwingConstants.LEFT));
 		multiplierField = new FloatNumberTextField(1, -Float.MAX_VALUE, Float.MAX_VALUE);
 		multiplierField.addActionListener(okListener);
 		multiplierField.setToolTipText("Type in a value to multiply the output.");
 		p.add(multiplierField);
 
-		// row 7
+		// row 8
 		p.add(new JLabel("Addend", SwingConstants.LEFT));
 		addendField = new FloatNumberTextField(0, -Float.MAX_VALUE, Float.MAX_VALUE);
 		addendField.addActionListener(okListener);
 		addendField.setToolTipText("Type in a value to be added to the output.");
 		p.add(addendField);
 
-		// row 8
+		// row 9
 		s = Modeler.getInternationalText("UpperBoundLabel");
 		p.add(new JLabel(s != null ? s : "Set upper bound", SwingConstants.LEFT));
 		maxField = new FloatNumberTextField(1.0f, -Float.MAX_VALUE, Float.MAX_VALUE);
@@ -468,7 +477,7 @@ class PageBarGraphMaker extends ComponentMaker {
 		maxField.setToolTipText("Type in the upper bound this bar graph displays.");
 		p.add(maxField);
 
-		// row 9
+		// row 10
 		s = Modeler.getInternationalText("LowerBoundLabel");
 		p.add(new JLabel(s != null ? s : "Set lower bound", SwingConstants.LEFT));
 		minField = new FloatNumberTextField(-1.0f, -Float.MAX_VALUE, Float.MAX_VALUE);
@@ -476,7 +485,7 @@ class PageBarGraphMaker extends ComponentMaker {
 		minField.setToolTipText("Type in the lower bound this bar graph displays.");
 		p.add(minField);
 
-		// row 10
+		// row 11
 		s = Modeler.getInternationalText("CurrentValueLabel");
 		p.add(new JLabel(s != null ? s : "Current value", SwingConstants.LEFT));
 		valueField = new FloatNumberTextField(0.0f, -Float.MAX_VALUE, Float.MAX_VALUE);
@@ -484,7 +493,7 @@ class PageBarGraphMaker extends ComponentMaker {
 		valueField.setToolTipText("The current value of the output.");
 		p.add(valueField);
 
-		// row 11
+		// row 12
 		s = Modeler.getInternationalText("WidthLabel");
 		p.add(new JLabel(s != null ? s : "Width", SwingConstants.LEFT));
 		widthField = new IntegerTextField(100, 10, 400);
@@ -492,7 +501,7 @@ class PageBarGraphMaker extends ComponentMaker {
 		widthField.addActionListener(okListener);
 		p.add(widthField);
 
-		// row 12
+		// row 13
 		s = Modeler.getInternationalText("HeightLabel");
 		p.add(new JLabel(s != null ? s : "Height", SwingConstants.LEFT));
 		heightField = new IntegerTextField(200, 10, 400);
@@ -500,7 +509,7 @@ class PageBarGraphMaker extends ComponentMaker {
 		heightField.addActionListener(okListener);
 		p.add(heightField);
 
-		ModelerUtilities.makeCompactGrid(p, 12, 2, 5, 5, 10, 2);
+		ModelerUtilities.makeCompactGrid(p, 13, 2, 5, 5, 10, 2);
 
 		/* right panel */
 

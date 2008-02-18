@@ -355,6 +355,8 @@ public class PageBarGraph extends BarGraph implements Embeddable, ModelCommunica
 			sb.append("<orientation>" + getOrientation() + "</orientation>\n");
 		if (averageType != GROWING_POINT_RUNNING_AVERAGE)
 			sb.append("<datatype>" + averageType + "</datatype>\n");
+		if (getAverageOnly())
+			sb.append("<average>" + getAverageOnly() + "</average>\n");
 		if (multiplier != 1.0f)
 			sb.append("<multiplier>" + multiplier + "</multiplier>\n");
 		if (addend != 0.0f)
