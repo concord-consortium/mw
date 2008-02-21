@@ -192,7 +192,7 @@ public class GradientFactory {
 				g.fill(rectangle);
 				break;
 			case VARIANT3:
-				float dist = 1.0f / (float) Math.sqrt(w * w + h * h);
+				float dist = 1.0f / (float) Math.hypot(w, h);
 				float cost = w * dist;
 				float sint = h * dist;
 				triangle.reset();
@@ -213,7 +213,7 @@ public class GradientFactory {
 				g.fill(triangle);
 				break;
 			case VARIANT4:
-				dist = 1.0f / (float) Math.sqrt(w * w + h * h);
+				dist = 1.0f / (float) Math.hypot(w, h);
 				cost = w * dist;
 				sint = h * dist;
 				triangle.reset();
@@ -250,7 +250,7 @@ public class GradientFactory {
 				g.fill(rectangle);
 				break;
 			case VARIANT3:
-				float dist = 1.0f / (float) Math.sqrt(w * w + h * h);
+				float dist = 1.0f / (float) Math.hypot(w, h);
 				float cost = w * dist;
 				float sint = h * dist;
 				float dx = h * cost * sint;
@@ -273,7 +273,7 @@ public class GradientFactory {
 				g.fill(triangle);
 				break;
 			case VARIANT4:
-				dist = 1.0f / (float) Math.sqrt(w * w + h * h);
+				dist = 1.0f / (float) Math.hypot(w, h);
 				cost = w * dist;
 				sint = h * dist;
 				dx = h * cost * sint;
