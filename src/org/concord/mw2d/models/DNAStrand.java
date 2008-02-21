@@ -195,7 +195,7 @@ public class DNAStrand extends Molecule {
 			double y1 = getAtom(n - 2).getRy();
 			double x2 = getAtom(n - 1).getRx();
 			double y2 = getAtom(n - 1).getRy();
-			double rd = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+			double rd = Math.hypot(x1 - x2, y1 - y2);
 			double costheta = (x2 - x1) / rd;
 			double sintheta = (y2 - y1) / rd;
 			double x = x1 - d1 * sintheta;
@@ -237,7 +237,7 @@ public class DNAStrand extends Molecule {
 			double y1 = sp.getRy();
 			double x2 = endToAttach.getRx();
 			double y2 = endToAttach.getRy();
-			double r2 = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+			double r2 = Math.hypot(x1 - x2, y1 - y2);
 			double costheta = (x2 - x1) / r2;
 			double sintheta = (y2 - y1) / r2;
 			x1 = x2 + d1 * costheta;

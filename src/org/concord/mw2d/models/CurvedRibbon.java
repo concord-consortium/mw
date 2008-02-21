@@ -131,7 +131,7 @@ public class CurvedRibbon extends MolecularObject {
 		for (int i = n; i < n + m - 1; i++) {
 			xij = model.getAtom(i).rx - model.getAtom(i + 1).rx;
 			yij = model.getAtom(i).ry - model.getAtom(i + 1).ry;
-			dij = Math.sqrt(xij * xij + yij * yij);
+			dij = Math.hypot(xij, yij);
 			rb = new RadialBond(model.getAtom(i), model.getAtom(i + 1), dij, bondStrength);
 			rb.setSmart(true);
 			rb.setClosed(closed);
@@ -143,7 +143,7 @@ public class CurvedRibbon extends MolecularObject {
 			// finish the loop
 			xij = model.getAtom(n).rx - model.getAtom(n + m - 1).rx;
 			yij = model.getAtom(n).ry - model.getAtom(n + m - 1).ry;
-			dij = Math.sqrt(xij * xij + yij * yij);
+			dij = Math.hypot(xij, yij);
 			rb = new RadialBond(model.getAtom(n), model.getAtom(n + m - 1), dij, bondStrength);
 			rb.setSmart(true);
 			rb.setClosed(closed);
@@ -159,10 +159,10 @@ public class CurvedRibbon extends MolecularObject {
 		for (int i = n; i < n + m - 2; i++) {
 			xij = model.getAtom(i).rx - model.getAtom(i + 1).rx;
 			yij = model.getAtom(i).ry - model.getAtom(i + 1).ry;
-			dij = Math.sqrt(xij * xij + yij * yij);
+			dij = Math.hypot(xij, yij);
 			xjk = model.getAtom(i + 1).rx - model.getAtom(i + 2).rx;
 			yjk = model.getAtom(i + 1).ry - model.getAtom(i + 2).ry;
-			djk = Math.sqrt(xjk * xjk + yjk * yjk);
+			djk = Math.hypot(xjk, yjk);
 			theta = computeTheta(-xij * xjk / (dij * djk) - yij * yjk / (dij * djk));
 			ab = new AngularBond(model.getAtom(i), model.getAtom(i + 2), model.getAtom(i + 1), theta, bendStrength);
 			model.getBends().add(ab);
@@ -171,20 +171,20 @@ public class CurvedRibbon extends MolecularObject {
 			// build extra angular bonds
 			xij = model.getAtom(n + m - 2).rx - model.getAtom(n + m - 1).rx;
 			yij = model.getAtom(n + m - 2).ry - model.getAtom(n + m - 1).ry;
-			dij = Math.sqrt(xij * xij + yij * yij);
+			dij = Math.hypot(xij, yij);
 			xjk = model.getAtom(n + m - 1).rx - model.getAtom(n).rx;
 			yjk = model.getAtom(n + m - 1).ry - model.getAtom(n).ry;
-			djk = Math.sqrt(xjk * xjk + yjk * yjk);
+			djk = Math.hypot(xjk, yjk);
 			theta = computeTheta(-xij * xjk / (dij * djk) - yij * yjk / (dij * djk));
 			ab = new AngularBond(model.getAtom(n + m - 2), model.getAtom(n), model.getAtom(n + m - 1), theta,
 					bendStrength);
 			model.getBends().add(ab);
 			xij = model.getAtom(n + m - 1).rx - model.getAtom(n).rx;
 			yij = model.getAtom(n + m - 1).ry - model.getAtom(n).ry;
-			dij = Math.sqrt(xij * xij + yij * yij);
+			dij = Math.hypot(xij, yij);
 			xjk = model.getAtom(n).rx - model.getAtom(n + 1).rx;
 			yjk = model.getAtom(n).ry - model.getAtom(n + 1).ry;
-			djk = Math.sqrt(xjk * xjk + yjk * yjk);
+			djk = Math.hypot(xjk, yjk);
 			theta = computeTheta(-xij * xjk / (dij * djk) - yij * yjk / (dij * djk));
 			ab = new AngularBond(model.getAtom(n + m - 1), model.getAtom(n + 1), model.getAtom(n), theta, bendStrength);
 			model.getBends().add(ab);

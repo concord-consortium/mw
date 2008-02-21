@@ -1003,7 +1003,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 		group.clear();
 		if (fillMode != null)
 			return;
-		double d = Math.sqrt(width * width + height * height);
+		double d = Math.hypot(width, height);
 		double theta = Math.acos(width / d);
 		float a = spacing * (float) Math.sqrt(0.5);
 		int n = (int) (d * Math.cos(Math.PI * 0.25 - theta) / a) - 1;

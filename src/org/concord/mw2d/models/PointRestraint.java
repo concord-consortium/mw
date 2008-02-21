@@ -208,7 +208,7 @@ public class PointRestraint implements Serializable {
 	private static void drawSpring(Graphics2D g, Particle p, int n, int m) {
 		double x = p.restraint.x0 - p.rx;
 		double y = p.restraint.y0 - p.ry;
-		double length = Math.sqrt(x * x + y * y);
+		double length = Math.hypot(x, y);
 		if (length < 5)
 			return;
 		double costheta = x / length;

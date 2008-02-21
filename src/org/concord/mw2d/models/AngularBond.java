@@ -404,10 +404,8 @@ public class AngularBond implements ModelComponent {
 	}
 
 	private void setArc() {
-		double r13 = Math.sqrt((atom3.rx - atom1.rx) * (atom3.rx - atom1.rx) + (atom3.ry - atom1.ry)
-				* (atom3.ry - atom1.ry));
-		double r23 = Math.sqrt((atom2.rx - atom3.rx) * (atom2.rx - atom3.rx) + (atom2.ry - atom3.ry)
-				* (atom2.ry - atom3.ry));
+		double r13 = Math.hypot(atom3.rx - atom1.rx, atom3.ry - atom1.ry);
+		double r23 = Math.hypot(atom2.rx - atom3.rx, atom2.ry - atom3.ry);
 		double t = ((atom3.rx - atom1.rx) * (atom2.rx - atom3.rx) + (atom3.ry - atom1.ry) * (atom2.ry - atom3.ry))
 				/ (r13 * r23);
 		angle.setAngleExtent((atom1.rx - atom3.rx) * (atom2.ry - atom3.ry) - (atom1.ry - atom3.ry)
@@ -420,16 +418,16 @@ public class AngularBond implements ModelComponent {
 	}
 
 	static double getAngle(Atom a1, Atom a3, Atom a2) {
-		double r13 = Math.sqrt((a3.rx - a1.rx) * (a3.rx - a1.rx) + (a3.ry - a1.ry) * (a3.ry - a1.ry));
-		double r23 = Math.sqrt((a2.rx - a3.rx) * (a2.rx - a3.rx) + (a2.ry - a3.ry) * (a2.ry - a3.ry));
+		double r13 = Math.hypot(a3.rx - a1.rx, a3.ry - a1.ry);
+		double r23 = Math.hypot(a2.rx - a3.rx, a2.ry - a3.ry);
 		double t = ((a3.rx - a1.rx) * (a2.rx - a3.rx) + (a3.ry - a1.ry) * (a2.ry - a3.ry)) / (r13 * r23);
 		return (a1.rx - a3.rx) * (a2.ry - a3.ry) - (a1.ry - a3.ry) * (a2.rx - a3.rx) < 0 ? Math.PI - Math.acos(t)
 				: Math.acos(t) - Math.PI;
 	}
 
 	static double getAngle(double x1, double y1, double x3, double y3, double x2, double y2) {
-		double r13 = Math.sqrt((x3 - x1) * (x3 - x1) + (y3 - y1) * (y3 - y1));
-		double r23 = Math.sqrt((x2 - x3) * (x2 - x3) + (y2 - y3) * (y2 - y3));
+		double r13 = Math.hypot(x3 - x1, y3 - y1);
+		double r23 = Math.hypot(x2 - x3, y2 - y3);
 		double t = ((x3 - x1) * (x2 - x3) + (y3 - y1) * (y2 - y3)) / (r13 * r23);
 		return (x1 - x3) * (y2 - y3) - (y1 - y3) * (x2 - x3) < 0 ? Math.PI - Math.acos(t) : Math.acos(t) - Math.PI;
 	}

@@ -124,7 +124,7 @@ class Mvd {
 						case XY_BOTH:
 							vx = model.atom[i].getVxVyQueue().getQueue1().getData(k);
 							vy = model.atom[i].getVxVyQueue().getQueue2().getData(k);
-							vx = 10000 * (float) Math.sqrt(vx * vx + vy * vy);
+							vx = 10000 * (float) Math.hypot(vx, vy);
 							if (vx < p.bound) {
 								int a = Math.round(vx * invDelta);
 								if (a >= 0 && a < mvd.length)

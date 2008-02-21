@@ -181,7 +181,7 @@ class Pcf {
 								}
 								break;
 							}
-							ir = (int) (Math.sqrt(dxij * dxij + dyij * dyij) * inverseSlice);
+							ir = (int) (Math.hypot(dxij, dyij) * inverseSlice);
 							if (ir < nslice)
 								rdf[ir]++;
 						}
@@ -237,7 +237,7 @@ class Pcf {
 									}
 									break;
 								}
-								ir = (int) (Math.sqrt(dxij * dxij + dyij * dyij) * inverseSlice);
+								ir = (int) (Math.hypot(dxij, dyij) * inverseSlice);
 								if (ir < nslice)
 									rdf[ir]++;
 							}

@@ -495,7 +495,7 @@ public abstract class UnitedAtom extends Particle {
 			g.setColor(getContrastColor(background));
 			double ex = oHotSpot.getX() - rx;
 			double ey = oHotSpot.getY() - ry;
-			double angle = Math.acos(ex / Math.sqrt(ex * ex + ey * ey));
+			double angle = Math.acos(ex / Math.hypot(ex, ey));
 			if (omega < 0.0) {
 				if (ey > 0.0) {
 					angle = 2.0 * Math.PI - angle;

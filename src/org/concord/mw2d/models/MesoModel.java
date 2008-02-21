@@ -1125,7 +1125,7 @@ public class MesoModel extends MDModel {
 						y_ij += boundary.height;
 					}
 				}
-				r_ij = Math.sqrt(x_ij * x_ij + y_ij * y_ij);
+				r_ij = Math.hypot(x_ij, y_ij);
 				if (r_ij <= rCutOff) {
 					gbForce.checkin(gb[i], gb[j], x_ij, y_ij, r_ij);
 					etemp = gbForce.energy();

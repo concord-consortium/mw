@@ -1849,7 +1849,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		}
 		double xij = at.getRx() - at0.getRx();
 		double yij = at.getRy() - at0.getRy();
-		bonds.add(new RadialBond(at0, at, Math.sqrt(xij * xij + yij * yij)));
+		bonds.add(new RadialBond(at0, at, Math.hypot(xij, yij)));
 		MoleculeCollection.sort(model);
 		model.notifyChange();
 		if (!doNotFireUndoEvent) {
@@ -1938,8 +1938,8 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		double yij = atom[middle].getRy() - atom[origin].getRy();
 		double xjk = atom[destin].getRx() - atom[middle].getRx();
 		double yjk = atom[destin].getRy() - atom[middle].getRy();
-		double rij = Math.sqrt(xij * xij + yij * yij);
-		double rjk = Math.sqrt(xjk * xjk + yjk * yjk);
+		double rij = Math.hypot(xij, yij);
+		double rjk = Math.hypot(xjk, yjk);
 		double angleOfBend = xij * xjk / (rij * rjk) + yij * yjk / (rij * rjk);
 		angleOfBend = Math.PI - Math.acos(angleOfBend);
 		AngularBond aBond = new AngularBond(atom[origin], atom[destin], atom[middle], angleOfBend);
@@ -2487,7 +2487,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				x2 = l2d.x2;
 				y1 = l2d.y1;
 				y2 = l2d.y2;
-				len = (float) Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+				len = (float) Math.hypot(x1 - x2, y1 - y2);
 				cos = (x2 - x1) / len;
 				sin = (y2 - y1) / len;
 				g2.drawLine((int) (x2 - sin * 2), (int) (y2 + cos * 2), (int) (x1 - sin * 2), (int) (y1 + cos * 2));
