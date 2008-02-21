@@ -96,6 +96,10 @@ public class GayBerneParticle extends UnitedAtom {
 		set(gbp);
 	}
 
+	boolean outOfView() {
+		return false;
+	}
+
 	public int getResizeHandle(int x, int y) {
 		if (rect[0].contains(x, y))
 			return 0;
@@ -518,7 +522,7 @@ public class GayBerneParticle extends UnitedAtom {
 	 *            the index of one of the four handles
 	 */
 	public synchronized void rotateTo(int x, int y, int handle) {
-		double distance = Math.sqrt((rx - x) * (rx - x) + (ry - y) * (ry - y));
+		double distance = Math.hypot(rx - x, ry - y);
 		double theta = (x - rx) / distance;
 		theta = y > ry ? Math.acos(theta) : 2.0 * Math.PI - Math.acos(theta);
 		double theta0;
@@ -541,7 +545,7 @@ public class GayBerneParticle extends UnitedAtom {
 			yold = -0.5 * breadth;
 			break;
 		}
-		distance = Math.sqrt(xold * xold + yold * yold);
+		distance = Math.hypot(xold, yold);
 		theta0 = xold / distance;
 		theta0 = yold > 0.0 ? Math.acos(theta0) : 2.0 * Math.PI - Math.acos(theta0);
 		setTheta(theta - theta0);

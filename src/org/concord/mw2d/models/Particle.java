@@ -235,6 +235,8 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 		userField = null;
 	}
 
+	abstract boolean outOfView();
+
 	/**
 	 * get a shallow copy of this particle except its restraint properties. This method differs from the following copy
 	 * methods in that a new instance is created to hold the particle, whereas the other methods do not involve any
@@ -368,26 +370,6 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	}
 
 	public abstract double getMass();
-
-	/** @deprecated same as getRx() */
-	public double getX() {
-		return rx;
-	}
-
-	/** @deprecated same as setRx() */
-	public void setX(double d) {
-		rx = d;
-	}
-
-	/** @deprecated same as getRy() */
-	public double getY() {
-		return ry;
-	}
-
-	/** @deprecated same as setRy() */
-	public void setY(double d) {
-		ry = d;
-	}
 
 	public double getRx() {
 		return rx;
@@ -1112,6 +1094,8 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 			return;
 		if (rxryQ == null || rxryQ.isEmpty())
 			return;
+		if (outOfView())
+			return;
 		int x = (int) rxryQ.getQueue1().getAverage();
 		int y = (int) rxryQ.getQueue2().getAverage();
 		if (x <= 0 && y <= 0)
@@ -1143,6 +1127,8 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 		if (!showFMean)
 			return;
 		if (axayQ == null || axayQ.isEmpty())
+			return;
+		if (outOfView())
 			return;
 		float x = axayQ.getQueue1().getAverage();
 		float y = axayQ.getQueue2().getAverage();
@@ -1181,7 +1167,9 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	}
 
 	private void drawVector(Graphics2D g, double x, double y, VectorFlavor flavor) {
-		double r = Math.sqrt(x * x + y * y);
+		if (outOfView())
+			return;
+		double r = Math.hypot(x, y);
 		if (r < ZERO)
 			return;
 		arrowx = x / r;
@@ -1246,16 +1234,13 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 
 	/** blink this particle */
 	public void blink() {
-
 		final Timer timer = new Timer(250, null);
 		timer.setRepeats(true);
 		timer.setInitialDelay(0);
 		timer.start();
 		if (getView() != null)
 			setBlinking(true);
-
 		timer.addActionListener(new ActionListener() {
-
 			private int blinkIndex;
 
 			public void actionPerformed(ActionEvent e) {
@@ -1277,9 +1262,7 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 				if (getView() != null)
 					getView().paintImmediately(getBounds(20));
 			}
-
 		});
-
 	}
 
 	/* @return a contrasting color for the input one */

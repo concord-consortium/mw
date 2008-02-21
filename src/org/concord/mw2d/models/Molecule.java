@@ -480,7 +480,7 @@ public class Molecule implements ModelComponent {
 
 		double dx = x - savedCOM.getX();
 		double dy = y - savedCOM.getY();
-		double distance = Math.sqrt(dx * dx + dy * dy);
+		double distance = Math.hypot(dx, dy);
 		if (distance < 1.0)
 			return 0.0;
 
@@ -510,7 +510,7 @@ public class Molecule implements ModelComponent {
 				}
 				dx = oldX - savedCOM.getX();
 				dy = oldY - savedCOM.getY();
-				distance = Math.sqrt(dx * dx + dy * dy);
+				distance = Math.hypot(dx, dy);
 				if (distance > 0.1) {
 					costheta0 = dx / distance;
 					sintheta0 = dy / distance;
@@ -553,7 +553,7 @@ public class Molecule implements ModelComponent {
 				}
 				dx = oldX - savedCOM.getX();
 				dy = oldY - savedCOM.getY();
-				distance = Math.sqrt(dx * dx + dy * dy);
+				distance = Math.hypot(dx, dy);
 				if (distance > 0.1) {
 					costheta0 = dx / distance;
 					sintheta0 = dy / distance;

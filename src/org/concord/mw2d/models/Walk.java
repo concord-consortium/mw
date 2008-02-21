@@ -61,9 +61,9 @@ import java.util.Arrays;
 
 class Walk {
 
-	public final static byte FORWARD = 0;
-	public final static byte LEFT = 1;
-	public final static byte RIGHT = 2;
+	final static byte FORWARD = 0;
+	final static byte LEFT = 1;
+	final static byte RIGHT = 2;
 
 	private final static byte NORTH = 11;
 	private final static byte SOUTH = 12;

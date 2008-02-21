@@ -133,6 +133,8 @@ public class MolecularModel extends AtomicModel {
 			double rxi, ryi, rxij, ryij, rijsq, sig, eps;
 			int jbeg, jend, jnab, j;
 			for (int i = 0; i < numberOfAtoms - 1; i++) {
+				if (atom[i].outOfView())
+					continue;
 				rxi = atom[i].rx;
 				ryi = atom[i].ry;
 				jbeg = pointer[i];
@@ -140,6 +142,8 @@ public class MolecularModel extends AtomicModel {
 				if (jbeg < jend) {
 					for (jnab = jbeg; jnab < jend; jnab++) {
 						j = neighborList[jnab];
+						if (atom[j].outOfView())
+							continue;
 						if (atom[i].charge * atom[j].charge <= 0) {
 							if (!affinity.isRepulsive(getElement(atom[i].getID()), getElement(atom[j].getID()))) {
 								if (bonds.getBond(atom[i], atom[j]) == null) {
@@ -164,9 +168,13 @@ public class MolecularModel extends AtomicModel {
 			double rxi, ryi, rxij, ryij, rijsq, sig, eps;
 			int i, j;
 			for (i = 0; i < numberOfAtoms - 1; i++) {
+				if (atom[i].outOfView())
+					continue;
 				rxi = atom[i].rx;
 				ryi = atom[i].ry;
 				for (j = i + 1; j < numberOfAtoms; j++) {
+					if (atom[j].outOfView())
+						continue;
 					if (atom[i].charge * atom[j].charge <= 0) {
 						if (!affinity.isRepulsive(getElement(atom[i].getID()), getElement(atom[j].getID()))) {
 							if (bonds.getBond(atom[i], atom[j]) == null) {
@@ -201,6 +209,8 @@ public class MolecularModel extends AtomicModel {
 			double rxi, ryi, rxij, ryij, rijsq, sig;
 			int jbeg, jend, jnab, j;
 			for (int i = 0; i < numberOfAtoms - 1; i++) {
+				if (atom[i].outOfView())
+					continue;
 				rxi = atom[i].rx;
 				ryi = atom[i].ry;
 				jbeg = pointer[i];
@@ -208,6 +218,8 @@ public class MolecularModel extends AtomicModel {
 				if (jbeg < jend) {
 					for (jnab = jbeg; jnab < jend; jnab++) {
 						j = neighborList[jnab];
+						if (atom[j].outOfView())
+							continue;
 						if (atom[i].charge * atom[j].charge < -0.001) {
 							if (bonds.getBond(atom[i], atom[j]) == null) {
 								rxij = rxi - atom[j].rx;
@@ -229,9 +241,13 @@ public class MolecularModel extends AtomicModel {
 			double rxi, ryi, rxij, ryij, rijsq, sig;
 			int i, j;
 			for (i = 0; i < numberOfAtoms - 1; i++) {
+				if (atom[i].outOfView())
+					continue;
 				rxi = atom[i].rx;
 				ryi = atom[i].ry;
 				for (j = i + 1; j < numberOfAtoms; j++) {
+					if (atom[j].outOfView())
+						continue;
 					if (atom[i].charge * atom[j].charge < -0.001) {
 						if (bonds.getBond(atom[i], atom[j]) == null) {
 							rxij = rxi - atom[j].rx;
@@ -263,6 +279,8 @@ public class MolecularModel extends AtomicModel {
 			double rxi, ryi, rxij, ryij, rijsq, sig;
 			int jbeg, jend, jnab, j;
 			for (int i = 0; i < numberOfAtoms - 1; i++) {
+				if (atom[i].outOfView())
+					continue;
 				rxi = atom[i].rx;
 				ryi = atom[i].ry;
 				jbeg = pointer[i];
@@ -270,6 +288,8 @@ public class MolecularModel extends AtomicModel {
 				if (jbeg < jend) {
 					for (jnab = jbeg; jnab < jend; jnab++) {
 						j = neighborList[jnab];
+						if (atom[j].outOfView())
+							continue;
 						if ((atom[i].getID() == ID_CYS || atom[i].getID() == ID_MET)
 								&& (atom[j].getID() == ID_CYS || atom[j].getID() == ID_MET)) {
 							if (bonds.getBond(atom[i], atom[j]) == null) {
@@ -292,9 +312,13 @@ public class MolecularModel extends AtomicModel {
 			double rxi, ryi, rxij, ryij, rijsq, sig;
 			int i, j;
 			for (i = 0; i < numberOfAtoms - 1; i++) {
+				if (atom[i].outOfView())
+					continue;
 				rxi = atom[i].rx;
 				ryi = atom[i].ry;
 				for (j = i + 1; j < numberOfAtoms; j++) {
+					if (atom[j].outOfView())
+						continue;
 					if ((atom[i].getID() == ID_CYS || atom[i].getID() == ID_MET)
 							&& (atom[j].getID() == ID_CYS || atom[j].getID() == ID_MET)) {
 						if (bonds.getBond(atom[i], atom[j]) == null) {
@@ -327,6 +351,8 @@ public class MolecularModel extends AtomicModel {
 			double rxi, ryi, rxij, ryij, rijsq, sig;
 			int jbeg, jend, jnab, j;
 			for (int i = 0; i < numberOfAtoms - 1; i++) {
+				if (atom[i].outOfView())
+					continue;
 				rxi = atom[i].rx;
 				ryi = atom[i].ry;
 				jbeg = pointer[i];
@@ -334,6 +360,8 @@ public class MolecularModel extends AtomicModel {
 				if (jbeg < jend) {
 					for (jnab = jbeg; jnab < jend; jnab++) {
 						j = neighborList[jnab];
+						if (atom[j].outOfView())
+							continue;
 						if (isPairComplementary(i, j)) {
 							rxij = rxi - atom[j].rx;
 							ryij = ryi - atom[j].ry;
@@ -353,9 +381,13 @@ public class MolecularModel extends AtomicModel {
 			double rxi, ryi, rxij, ryij, rijsq, sig;
 			int i, j;
 			for (i = 0; i < numberOfAtoms - 1; i++) {
+				if (atom[i].outOfView())
+					continue;
 				rxi = atom[i].rx;
 				ryi = atom[i].ry;
 				for (j = i + 1; j < numberOfAtoms; j++) {
+					if (atom[j].outOfView())
+						continue;
 					if (isPairComplementary(i, j)) {
 						rxij = rxi - atom[j].rx;
 						ryij = ryi - atom[j].ry;
@@ -584,7 +616,7 @@ public class MolecularModel extends AtomicModel {
 					bondStrength = rBond.bondStrength;
 					distanceInX = atom2.rx - atom1.rx;
 					distanceInY = atom2.ry - atom1.ry;
-					distance = Math.sqrt(distanceInX * distanceInX + distanceInY * distanceInY);
+					distance = Math.hypot(distanceInX, distanceInY);
 					etemp = bondStrength * GF_CONVERSION_CONSTANT * (distance - bondLength) / distance;
 					atom1.fx += etemp * distanceInX / atom1.mass;
 					atom1.fy += etemp * distanceInY / atom1.mass;
@@ -702,7 +734,7 @@ public class MolecularModel extends AtomicModel {
 								a = mol.getAtom(im2);
 								rxij = a.rx - com.getX();
 								ryij = a.ry - com.getY();
-								rij = Math.sqrt(rxij * rxij + ryij * ryij);
+								rij = Math.hypot(rxij, ryij);
 								if (a.hydrophobic != 0) {
 									temp = factor * a.hydrophobic * solvent.getType();
 									vsum += temp * rij;

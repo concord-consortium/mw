@@ -564,7 +564,7 @@ public class RadialBond implements ModelComponent {
 		setAxis();
 		double cost = axis.x2 - axis.x1;
 		double sint = axis.y2 - axis.y1;
-		double inv = DISTANCE_AWAY_FROM_AXIS / Math.sqrt(cost * cost + sint * sint);
+		double inv = DISTANCE_AWAY_FROM_AXIS / Math.hypot(cost, sint);
 		cost *= inv;
 		sint *= inv;
 		if (rects == null) {
@@ -603,7 +603,7 @@ public class RadialBond implements ModelComponent {
 			return Math.sqrt(atom1.distanceSquare(atom2));
 		double dx = atom1.rxryQ.getQueue1().getData(frame) - atom2.rxryQ.getQueue1().getData(frame);
 		double dy = atom1.rxryQ.getQueue2().getData(frame) - atom2.rxryQ.getQueue2().getData(frame);
-		return Math.sqrt(dx * dx + dy * dy);
+		return Math.hypot(dx, dy);
 	}
 
 	public double getBondLength() {
@@ -643,7 +643,7 @@ public class RadialBond implements ModelComponent {
 		g.setColor(bondColor == null ? model.view.contrastBackground() : bondColor);
 		double x = atom2.rx - atom1.rx;
 		double y = atom2.ry - atom1.ry;
-		double length = Math.sqrt(x * x + y * y);
+		double length = Math.hypot(x, y);
 		double costheta = x / length;
 		double sintheta = y / length;
 		double delta = length / n;
@@ -674,7 +674,7 @@ public class RadialBond implements ModelComponent {
 		if (!model.view.getUseJmol()) {
 			double cos = axis.x2 - axis.x1;
 			double sin = axis.y2 - axis.y1;
-			double d = Math.sqrt(cos * cos + sin * sin);
+			double d = Math.hypot(cos, sin);
 			cos /= d;
 			sin /= d;
 			g.setStroke(STICK);
@@ -705,7 +705,7 @@ public class RadialBond implements ModelComponent {
 		if (selected && model.view.getShowSelectionHalo()) {
 			double cos = axis.x2 - axis.x1;
 			double sin = axis.y2 - axis.y1;
-			double d = 2 * stickWidth / Math.sqrt(cos * cos + sin * sin);
+			double d = 2 * stickWidth / Math.hypot(cos, sin);
 			cos *= d;
 			sin *= d;
 			g.setColor(model.view.contrastBackground());
@@ -729,7 +729,7 @@ public class RadialBond implements ModelComponent {
 			g.setColor(model.view.contrastBackground());
 			double cos = axis.x2 - axis.x1;
 			double sin = axis.y2 - axis.y1;
-			double d = 2 * stickWidth / Math.sqrt(cos * cos + sin * sin);
+			double d = 2 * stickWidth / Math.hypot(cos, sin);
 			cos *= d;
 			sin *= d;
 			g.setStroke(ViewAttribute.THIN_DASHED);
@@ -802,7 +802,7 @@ public class RadialBond implements ModelComponent {
 			case TORQUE_AROUND_ATOM1:
 				double cost = axis.x2 - axis.x1;
 				double sint = axis.y2 - axis.y1;
-				double inv = 1.0 / Math.sqrt(cost * cost + sint * sint);
+				double inv = 1.0 / Math.hypot(cost, sint);
 				cost *= inv;
 				sint *= inv;
 				double length = 0.5 * atom2.sigma + 10;
@@ -819,7 +819,7 @@ public class RadialBond implements ModelComponent {
 			case TORQUE_AROUND_ATOM2:
 				cost = axis.x1 - axis.x2;
 				sint = axis.y1 - axis.y2;
-				inv = 1.0 / Math.sqrt(cost * cost + sint * sint);
+				inv = 1.0 / Math.hypot(cost, sint);
 				cost *= inv;
 				sint *= inv;
 				length = 0.5 * atom1.sigma + 10;
@@ -836,7 +836,7 @@ public class RadialBond implements ModelComponent {
 			case TORQUE_AROUND_CENTER:
 				cost = axis.x1 - axis.x2;
 				sint = axis.y1 - axis.y2;
-				inv = 1.0f / Math.sqrt(cost * cost + sint * sint);
+				inv = 1.0f / Math.hypot(cost, sint);
 				cost *= inv;
 				sint *= inv;
 				length = 0.5 * atom1.sigma + 10;
@@ -875,7 +875,7 @@ public class RadialBond implements ModelComponent {
 		case TORQUE_AROUND_ATOM1:
 			double cost = atom2.rx - atom1.rx;
 			double sint = atom2.ry - atom1.ry;
-			double inv = torque / (atom2.mass * Math.sqrt(cost * cost + sint * sint));
+			double inv = torque / (atom2.mass * Math.hypot(cost, sint));
 			cost *= inv;
 			sint *= inv;
 			atom2.fx -= sint;
@@ -884,7 +884,7 @@ public class RadialBond implements ModelComponent {
 		case TORQUE_AROUND_ATOM2:
 			cost = atom1.rx - atom2.rx;
 			sint = atom1.ry - atom2.ry;
-			inv = torque / (atom1.mass * Math.sqrt(cost * cost + sint * sint));
+			inv = torque / (atom1.mass * Math.hypot(cost, sint));
 			cost *= inv;
 			sint *= inv;
 			atom1.fx -= sint;
@@ -893,7 +893,7 @@ public class RadialBond implements ModelComponent {
 		case TORQUE_AROUND_CENTER:
 			cost = atom2.rx - atom1.rx;
 			sint = atom2.ry - atom1.ry;
-			double r = Math.sqrt(cost * cost + sint * sint);
+			double r = Math.hypot(cost, sint);
 			inv = torque / (atom2.mass * r);
 			cost *= inv;
 			sint *= inv;

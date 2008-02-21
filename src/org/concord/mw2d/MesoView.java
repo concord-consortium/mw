@@ -1759,8 +1759,7 @@ public class MesoView extends MDView {
 				GayBerneParticle p = (GayBerneParticle) selectedComponent;
 				p.storeCurrentState();
 				if (readyToAdjustOmegaVector) {
-					double angle = Math.acos((x - p.getRx())
-							/ Math.sqrt((x - p.getRx()) * (x - p.getRx()) + (y - p.getRy()) * (y - p.getRy())));
+					double angle = Math.acos((x - p.getRx()) / Math.hypot(x - p.getRx(), y - p.getRy()));
 					if (p.getOmega() < 0.0) {
 						if (y > p.getRy()) {
 							angle = 2.0 * Math.PI - angle;

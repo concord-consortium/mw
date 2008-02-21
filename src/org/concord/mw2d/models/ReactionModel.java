@@ -777,7 +777,7 @@ public class ReactionModel extends MolecularModel {
 		double bondEnergy = type.getParameter(Reaction.O2_2H2__2H2O.VHO).doubleValue();
 		double xOH = atomO.rx - atomH.rx;
 		double yOH = atomO.ry - atomH.ry;
-		double rOH = Math.sqrt(xOH * xOH + yOH * yOH);
+		double rOH = Math.hypot(xOH, yOH);
 		RadialBond rBond = new RadialBond(atomO, atomH, bondLength, bondStrength, bondEnergy);
 		AngularBond aBond = new AngularBond(atomH, atomH2, atomO, H2O_ANGLE);
 		double pot = bondEnergy - 0.5 * bondStrength * (rOH - bondLength) * (rOH - bondLength) - 0.5
@@ -812,12 +812,12 @@ public class ReactionModel extends MolecularModel {
 		AngularBond aBond = new AngularBond(atomH, atomH1, atomO, H2O_ANGLE);
 		double x12 = atomH1.rx - atomH2.rx;
 		double y12 = atomH1.ry - atomH2.ry;
-		double r12 = Math.sqrt(x12 * x12 + y12 * y12);
+		double r12 = Math.hypot(x12, y12);
 		double pot = bondEnergy - rBond.getChemicalEnergy() + 0.5 * rBond.getBondStrength()
 				* (r12 - rBond.getBondLength()) * (r12 - rBond.getBondLength());
 		x12 = atomH1.rx - atomO.rx;
 		y12 = atomH1.ry - atomO.ry;
-		r12 = Math.sqrt(x12 * x12 + y12 * y12);
+		r12 = Math.hypot(x12, y12);
 		pot += -0.5 * bondStrength * (r12 - bondLength) * (r12 - bondLength) - 0.5 * aBond.getBondStrength()
 				* (angle - H2O_ANGLE) * (angle - H2O_ANGLE);
 		atomO.storeCurrentVelocity();

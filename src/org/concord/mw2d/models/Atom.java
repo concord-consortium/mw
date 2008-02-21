@@ -939,9 +939,14 @@ public class Atom extends Particle {
 		return false;
 	}
 
+	boolean outOfView() {
+		return rx + 0.5 * sigma < 0 || ry + 0.5 * sigma < 0 || rx - 0.5 * sigma > view.getWidth()
+				|| ry - 0.5 * sigma > view.getHeight();
+	}
+
 	public void render(Graphics2D g) {
 
-		if (view == null)
+		if (view == null || outOfView())
 			return;
 
 		if (!view.getShowSites() && id == Element.getMolecularObjectElement())

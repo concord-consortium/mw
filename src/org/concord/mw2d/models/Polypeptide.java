@@ -141,7 +141,7 @@ public class Polypeptide extends Molecule {
 			return false;
 		double x = terminus.rx - a[0].rx;
 		double y = terminus.ry - a[0].ry;
-		double d = Math.sqrt(x * x + y * y);
+		double d = Math.hypot(x, y);
 		double costheta = x / d;
 		double sintheta = y / d;
 		int id = Math.round(Element.ID_ALA + (float) Math.random() * 19);

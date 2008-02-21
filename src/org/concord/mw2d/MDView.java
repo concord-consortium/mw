@@ -2872,7 +2872,7 @@ public abstract class MDView extends PrintableComponent {
 		for (int i = 0; i < n; i++) {
 			uf = getModel().getParticle(i).getUserField();
 			if (uf != null) {
-				double r = 1.0f / Math.sqrt(dx * dx + dy * dy);
+				double r = 1.0 / Math.hypot(dx, dy);
 				uf.setAngle(dx * r, dy * r);
 				uf.setIntensity(UserField.INCREMENT * uf.getGear());
 			}
@@ -3043,11 +3043,11 @@ public abstract class MDView extends PrintableComponent {
 		for (int i = 0; i < n1; i++) {
 			dx = p.xpoints[i] - p.xpoints[i + 1];
 			dy = p.ypoints[i] - p.ypoints[i + 1];
-			perimeter += Math.sqrt(dx * dx + dy * dy);
+			perimeter += Math.hypot(dx, dy);
 		}
 		dx = p.xpoints[n1] - p.xpoints[0];
 		dy = p.ypoints[n1] - p.ypoints[0];
-		perimeter += Math.sqrt(dx * dx + dy * dy);
+		perimeter += Math.hypot(dx, dy);
 		return (float) perimeter;
 	}
 
@@ -3061,7 +3061,7 @@ public abstract class MDView extends PrintableComponent {
 	 * @param r0 the equilibrium length of the spring @param d the maximum displacement
 	 */
 	static Vector2D moveSpring(int x, int y, int xc, int yc, int r0, int d) {
-		double r = Math.sqrt((x - xc) * (x - xc) + (y - yc) * (y - yc));
+		double r = Math.hypot(x - xc, y - yc);
 		if (r > r0 + d) {
 			double x1 = (r0 + d) * (x - xc) / r + xc;
 			double y1 = (r0 + d) * (y - yc) / r + yc;

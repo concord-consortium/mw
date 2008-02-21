@@ -199,7 +199,7 @@ public class CurvedSurface extends CurvedRibbon {
 				if (a.getCharge() > Particle.ZERO) {
 					xij = x - a.rx;
 					yij = y - a.ry;
-					rij = Math.sqrt(xij * xij + yij * yij);
+					rij = Math.hypot(xij, yij);
 					if (rij < 9)
 						return new Color(255, 192, 192);
 					intensity += a.getCharge() / rij;
@@ -207,7 +207,7 @@ public class CurvedSurface extends CurvedRibbon {
 				else if (a.getCharge() < -Particle.ZERO) {
 					xij = x - a.rx;
 					yij = y - a.ry;
-					rij = Math.sqrt(xij * xij + yij * yij);
+					rij = Math.hypot(xij, yij);
 					if (rij < 9)
 						return new Color(192, 192, 255);
 					intensity += a.getCharge() / rij;

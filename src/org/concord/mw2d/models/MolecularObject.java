@@ -217,7 +217,7 @@ public abstract class MolecularObject extends Molecule {
 
 	void drawVelocityVectorOfCenterOfMass(Graphics2D g) {
 		Vector2D v = Statistics.getVelocityOfCenterOfMass(atoms);
-		double arrowLength = Math.sqrt(v.getX() * v.getX() + v.getY() * v.getY());
+		double arrowLength = Math.hypot(v.getX(), v.getY());
 		double arrowx = arrowLength < Particle.ZERO ? 0.0 : v.getX() / arrowLength;
 		double arrowy = arrowLength < Particle.ZERO ? 0.0 : v.getY() / arrowLength;
 		g.setColor(model.view.getVelocityFlavor().getColor());
@@ -240,7 +240,7 @@ public abstract class MolecularObject extends Molecule {
 
 	void drawMomentumVectorOfCenterOfMass(Graphics2D g) {
 		Vector2D v = Statistics.getMomentumOfCenterOfMass(atoms);
-		double arrowLength = Math.sqrt(v.getX() * v.getX() + v.getY() * v.getY());
+		double arrowLength = Math.hypot(v.getX(), v.getY());
 		double arrowx = arrowLength < Particle.ZERO ? 0.0 : v.getX() / arrowLength;
 		double arrowy = arrowLength < Particle.ZERO ? 0.0 : v.getY() / arrowLength;
 		g.setColor(model.view.getMomentumFlavor().getColor());
