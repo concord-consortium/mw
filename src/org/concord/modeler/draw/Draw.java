@@ -1023,7 +1023,7 @@ public abstract class Draw extends PrintableComponent {
 				g.drawLine(dragPoint.x, dragPoint.y - 4, dragPoint.x, dragPoint.y + 4);
 				int dx = clickPoint.x - dragPoint.x;
 				int dy = clickPoint.y - dragPoint.y;
-				int d = (int) Math.sqrt(dx * dx + dy * dy);
+				int d = (int) Math.hypot(dx, dy);
 				dx = dragPoint.x + (dx >> 1);
 				dy = dragPoint.y + (dy >> 1);
 				g.setColor(Color.white);

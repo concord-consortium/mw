@@ -293,9 +293,8 @@ public abstract class AbstractLine implements DrawingElement {
 
 	/** @return the length of this line */
 	public double getLength() {
-		float dx = line.x1 - line.x2;
-		float dy = line.y1 - line.y2;
-		return Math.sqrt(dx * dx + dy * dy);
+		// can you believe Line2D doesn't have a getLength() method?
+		return Math.hypot(line.x1 - line.x2, line.y1 - line.y2);
 	}
 
 	public Point getCenter() {
@@ -382,7 +381,7 @@ public abstract class AbstractLine implements DrawingElement {
 			if (option == OUTLINED) {
 				float dx = line.x2 - line.x1;
 				float dy = line.y2 - line.y1;
-				float d = 0.5f * lineWeight / (float) Math.sqrt(dx * dx + dy * dy);
+				float d = 0.5f * lineWeight / (float) Math.hypot(dx, dy);
 				float cos = dx * d;
 				float sin = dy * d;
 				g2.setStroke(THIN);
@@ -433,7 +432,7 @@ public abstract class AbstractLine implements DrawingElement {
 			else polygon.reset();
 			arrowx = x1 - x2;
 			arrowy = y1 - y2;
-			float a = 1.0f / (float) Math.sqrt(arrowx * arrowx + arrowy * arrowy);
+			float a = 1.0f / (float) Math.hypot(arrowx, arrowy);
 			arrowx *= a;
 			arrowy *= a;
 			polygon.addPoint((int) (x1 + arrowx * lineWeight), (int) (y1 + arrowy * lineWeight));
@@ -449,7 +448,7 @@ public abstract class AbstractLine implements DrawingElement {
 		case ArrowRectangle.STYLE2:
 			arrowx = x1 - x2;
 			arrowy = y1 - y2;
-			a = 1.0f / (float) Math.sqrt(arrowx * arrowx + arrowy * arrowy);
+			a = 1.0f / (float) Math.hypot(arrowx, arrowy);
 			arrowx *= a;
 			arrowy *= a;
 			wingx = arrowWeight * (arrowx * COS45 + arrowy * SIN45);
@@ -469,7 +468,7 @@ public abstract class AbstractLine implements DrawingElement {
 			polygon.addPoint((int) x1, (int) y1);
 			arrowx = x1 - x2;
 			arrowy = y1 - y2;
-			a = 1.0f / (float) Math.sqrt(arrowx * arrowx + arrowy * arrowy);
+			a = 1.0f / (float) Math.hypot(arrowx, arrowy);
 			arrowx *= a;
 			arrowy *= a;
 			wingx = arrowWeight * (arrowx * COS45 + arrowy * SIN45);
@@ -488,7 +487,7 @@ public abstract class AbstractLine implements DrawingElement {
 			else polygon.reset();
 			arrowx = x1 - x2;
 			arrowy = y1 - y2;
-			a = 1.0f / (float) Math.sqrt(arrowx * arrowx + arrowy * arrowy);
+			a = 1.0f / (float) Math.hypot(arrowx, arrowy);
 			arrowx *= a;
 			arrowy *= a;
 			x1 += arrowx * lineWeight;
