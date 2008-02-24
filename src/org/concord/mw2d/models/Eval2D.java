@@ -2038,7 +2038,7 @@ class Eval2D extends AbstractEval {
 		return null;
 	}
 
-	private String evaluateThermalEnergyFunction(final String clause) {
+	private String evaluateKineticEnergyFunction(final String clause) {
 		if (clause == null || clause.equals(""))
 			return null;
 		int i = clause.indexOf("(");
@@ -2059,14 +2059,14 @@ class Eval2D extends AbstractEval {
 				out(ScriptEvent.FAILED, t[0] + " cannot be parsed as an integer.");
 				return null;
 			}
-			return "" + model.getThermalEnergy((byte) i, null);
+			return "" + model.getKineticEnergy((byte) i, null);
 		case 5:
 			float[] x = parseArray(5, t);
 			if (x != null) {
 				for (int k = 1; k < 5; k++)
 					x[k] *= IR_CONVERTER;
 				Shape shape = new Rectangle2D.Float(x[1], x[2], x[3], x[4]);
-				return "" + model.getThermalEnergy((byte) x[0], shape);
+				return "" + model.getKineticEnergy((byte) x[0], shape);
 			}
 			break;
 		case 4:
@@ -2075,7 +2075,7 @@ class Eval2D extends AbstractEval {
 				for (int k = 1; k < 4; k++)
 					x[k] *= IR_CONVERTER;
 				Shape shape = new Ellipse2D.Float(x[1] - x[3], x[2] - x[3], x[3] * 2, x[3] * 2);
-				return "" + model.getThermalEnergy((byte) x[0], shape);
+				return "" + model.getKineticEnergy((byte) x[0], shape);
 			}
 			break;
 		default:
@@ -2642,8 +2642,8 @@ class Eval2D extends AbstractEval {
 				if (exp != null)
 					storeDefinition(isStatic, var, exp);
 			}
-			else if (exp.startsWith("thermalenergy(")) {
-				exp = evaluateThermalEnergyFunction(exp);
+			else if (exp.startsWith("kineticenergy(")) {
+				exp = evaluateKineticEnergyFunction(exp);
 				if (exp != null)
 					storeDefinition(isStatic, var, exp);
 			}

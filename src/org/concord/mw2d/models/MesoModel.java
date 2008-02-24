@@ -723,7 +723,7 @@ public class MesoModel extends MDModel {
 		return result * EV_CONVERTER * UNIT_EV_OVER_KB / n;
 	}
 
-	public double getThermalEnergy(byte type, Shape shape) {
+	public double getKineticEnergy(byte type, Shape shape) {
 		double result = 0.0;
 		GayBerneParticle p = null;
 		for (int i = 0; i < numberOfParticles; i++) {
