@@ -63,7 +63,7 @@ class ShowEnergyAction extends AbstractAction {
 		return (String) getValue(SHORT_DESCRIPTION);
 	}
 
-	void update() {
+	private void update() {
 		vizEnergy.setTime(model.getModelTime());
 		vizEnergy.setText(0, model.getKinTS().getCurrentValue());
 		vizEnergy.setText(1, model.getPotTS().getCurrentValue());
@@ -105,6 +105,7 @@ class ShowEnergyAction extends AbstractAction {
 				drawPKTCurves.setCompleted(false);
 				if (!model.getJob().contains(drawPKTCurves))
 					model.getJob().add(drawPKTCurves);
+				update();
 				vizEnergy.refresh();
 			}
 		});
