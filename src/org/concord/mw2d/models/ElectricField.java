@@ -37,7 +37,7 @@ public class ElectricField implements VectorField, Serializable {
 
 	private double dc = 1.0;
 	private Shape bounds;
-	private int o = SOUTH;
+	private int o = EAST;
 	private double amp, frq;
 	private boolean local;
 
