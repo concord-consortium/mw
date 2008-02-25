@@ -44,17 +44,17 @@ import org.concord.mw2d.models.MDModel;
 
 public class PageBarGraph extends BarGraph implements Embeddable, ModelCommunicator, MovieListener {
 
-	final static byte GROWING_POINT_RUNNING_AVERAGE = 0;
-	final static byte SIMPLE_RUNNING_AVERAGE = 1;
-	final static byte EXPONENTIAL_RUNNING_AVERAGE = 2;
-	final static float DEFAULT_SMOOTHING_FACTOR = 0.05f;
-	final static int DEFAULT_POINTS = 10;
+	public final static byte GROWING_POINT_RUNNING_AVERAGE = 0;
+	public final static byte SIMPLE_RUNNING_AVERAGE = 1;
+	public final static byte EXPONENTIAL_RUNNING_AVERAGE = 2;
 
 	Page page;
 	String timeSeriesName;
 	String modelClass;
 	int modelID = -1;
 	byte averageType = GROWING_POINT_RUNNING_AVERAGE;
+	float smoothingFactor = 0.05f;
+	int samplingPoints = 10;
 	private double initialValue;
 	private int index;
 	private boolean marked;
@@ -219,6 +219,14 @@ public class PageBarGraph extends BarGraph implements Embeddable, ModelCommunica
 		return averageType;
 	}
 
+	public void setSamplingPoints(int n) {
+		samplingPoints = n;
+	}
+
+	public void setSmoothingFactor(float x) {
+		smoothingFactor = x;
+	}
+
 	public void setModelClass(String s) {
 		modelClass = s;
 	}
@@ -309,10 +317,10 @@ public class PageBarGraph extends BarGraph implements Embeddable, ModelCommunica
 							setAverage(((FloatQueue) q).getAverage());
 							break;
 						case EXPONENTIAL_RUNNING_AVERAGE:
-							setAverage(((FloatQueue) q).getExponentialRunningAverage(DEFAULT_SMOOTHING_FACTOR));
+							setAverage(((FloatQueue) q).getExponentialRunningAverage(smoothingFactor));
 							break;
 						case SIMPLE_RUNNING_AVERAGE:
-							setAverage(((FloatQueue) q).getSimpleRunningAverage(DEFAULT_POINTS));
+							setAverage(((FloatQueue) q).getSimpleRunningAverage(samplingPoints));
 							break;
 						}
 					}
@@ -337,10 +345,10 @@ public class PageBarGraph extends BarGraph implements Embeddable, ModelCommunica
 			setValue(((FloatQueue) q).getData(frame));
 			switch (averageType) {
 			case EXPONENTIAL_RUNNING_AVERAGE:
-				setAverage(((FloatQueue) q).getExponentialRunningAverage(DEFAULT_SMOOTHING_FACTOR, frame));
+				setAverage(((FloatQueue) q).getExponentialRunningAverage(smoothingFactor, frame));
 				break;
 			case SIMPLE_RUNNING_AVERAGE:
-				setAverage(((FloatQueue) q).getSimpleRunningAverage(DEFAULT_POINTS, frame));
+				setAverage(((FloatQueue) q).getSimpleRunningAverage(samplingPoints, frame));
 			}
 		}
 		repaint();
@@ -353,8 +361,16 @@ public class PageBarGraph extends BarGraph implements Embeddable, ModelCommunica
 			sb.append("<description>" + XMLCharacterEncoder.encode(getDescription()) + "</description>\n");
 		if (getOrientation() != VERTICAL)
 			sb.append("<orientation>" + getOrientation() + "</orientation>\n");
-		if (averageType != GROWING_POINT_RUNNING_AVERAGE)
+		switch (averageType) {
+		case SIMPLE_RUNNING_AVERAGE:
 			sb.append("<datatype>" + averageType + "</datatype>\n");
+			sb.append("<samplingpoints>" + samplingPoints + "</samplingpoints>\n");
+			break;
+		case EXPONENTIAL_RUNNING_AVERAGE:
+			sb.append("<datatype>" + averageType + "</datatype>\n");
+			sb.append("<smoothingfactor>" + smoothingFactor + "</smoothingfactor>\n");
+			break;
+		}
 		if (getAverageOnly())
 			sb.append("<average>" + getAverageOnly() + "</average>\n");
 		if (multiplier != 1.0f)
