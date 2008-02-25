@@ -2773,6 +2773,21 @@ class Eval2D extends AbstractEval {
 				}
 				return true;
 			}
+			else if (s0 == "efielddirection") {
+				ElectricField eField = (ElectricField) model.getNonLocalField(ElectricField.class.getName());
+				if (eField != null) {
+					try {
+						Field fie = VectorField.class.getField(s[1]);
+						eField.setOrientation(fie.getShort(null));
+					}
+					catch (Exception e) {
+						e.printStackTrace();
+						return false;
+					}
+					notifyChange();
+				}
+				return true;
+			}
 			double x = parseMathExpression(s[1]);
 			if (Double.isNaN(x))
 				return false;
