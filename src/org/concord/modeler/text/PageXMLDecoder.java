@@ -572,6 +572,8 @@ final class PageXMLDecoder {
 		int style = -1;
 		boolean lockEnergyLevel;
 		boolean average;
+		int samplingPoints = -1;
+		float smoothingFactor = -1;
 		List<DataSource> dataSourceList;
 
 		private Runnable reportProgress = new Runnable() {
@@ -1592,19 +1594,19 @@ final class PageXMLDecoder {
 			else if (qName == "major_tick") {
 				Integer ig = Parser.parseInt(str);
 				if (ig != null)
-					majorTicks = ig.intValue();
+					majorTicks = ig;
 			}
 
 			else if (qName == "value") {
 				Double d = Parser.parseDouble(str);
 				if (d != null)
-					value = d.doubleValue();
+					value = d;
 			}
 
 			else if (qName == "step") {
 				Double d = Parser.parseDouble(str);
 				if (d != null)
-					stepsize = d.doubleValue();
+					stepsize = d;
 			}
 
 			else if (qName == "title") {
@@ -1630,7 +1632,7 @@ final class PageXMLDecoder {
 			else if (qName == "orientation") {
 				Integer ig = Parser.parseInt(str);
 				if (ig != null)
-					orientation = ig.intValue();
+					orientation = ig;
 			}
 
 			else if (qName == "description") {
@@ -1640,7 +1642,7 @@ final class PageXMLDecoder {
 			else if (qName == "cellalign") {
 				Integer ig = Parser.parseInt(str);
 				if (ig != null)
-					cellAlignment = ig.intValue();
+					cellAlignment = ig;
 			}
 
 			else if (qName == "rowname") {
@@ -1666,35 +1668,47 @@ final class PageXMLDecoder {
 			else if (qName == "multiplier") {
 				Float fl = Parser.parseFloat(str);
 				if (fl != null)
-					multiplier = fl.floatValue();
+					multiplier = fl;
 			}
 
 			else if (qName == "addend") {
 				Float fl = Parser.parseFloat(str);
 				if (fl != null)
-					addend = fl.floatValue();
+					addend = fl;
 			}
 
 			else if (qName == "datatype") {
 				Integer ig = Parser.parseInt(str);
 				if (ig != null)
-					dataType = ig.intValue();
+					dataType = ig;
 			}
 
 			else if (qName == "average") {
-				average = Boolean.valueOf(str).booleanValue();
+				average = Boolean.valueOf(str);
+			}
+
+			else if (qName == "samplingpoints") {
+				Integer ig = Parser.parseInt(str);
+				if (ig != null)
+					samplingPoints = ig;
+			}
+
+			else if (qName == "smoothingfactor") {
+				Float fl = Parser.parseFloat(str);
+				if (fl != null)
+					smoothingFactor = fl;
 			}
 
 			else if (qName == "max_fraction_digits") {
 				Integer ig = Parser.parseInt(str);
 				if (ig != null)
-					maxFractionDigit = ig.intValue();
+					maxFractionDigit = ig;
 			}
 
 			else if (qName == "max_integer_digits") {
 				Integer ig = Parser.parseInt(str);
 				if (ig != null)
-					maxIntegerDigit = ig.intValue();
+					maxIntegerDigit = ig;
 			}
 
 			else if (qName == "fontname") {
@@ -1704,7 +1718,7 @@ final class PageXMLDecoder {
 			else if (qName == "fontsize") {
 				Integer ig = Parser.parseInt(str);
 				if (ig != null)
-					fontSize = ig.intValue();
+					fontSize = ig;
 			}
 
 			else if (qName == "choice") {
@@ -2668,6 +2682,20 @@ final class PageXMLDecoder {
 			if (dataType != 0) {
 				b.setAverageType((byte) dataType);
 				dataType = 0;
+				switch (b.getAverageType()) {
+				case PageBarGraph.EXPONENTIAL_RUNNING_AVERAGE:
+					if (smoothingFactor > 0) {
+						b.setSmoothingFactor(smoothingFactor);
+						smoothingFactor = -1;
+					}
+					break;
+				case PageBarGraph.SIMPLE_RUNNING_AVERAGE:
+					if (samplingPoints > 0) {
+						b.setSamplingPoints(samplingPoints);
+						samplingPoints = -1;
+					}
+					break;
+				}
 			}
 			if (average) {
 				b.setAverageOnly(average);

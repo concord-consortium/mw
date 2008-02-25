@@ -82,6 +82,8 @@ class PageBarGraphMaker extends ComponentMaker {
 	private static Font smallFont;
 	private JPanel contentPane;
 	private JTextComponent focusTextComponent;
+	private JLabel parameterLabel;
+	private FloatNumberTextField parameterField;
 
 	private ItemListener modelSelectionListener = new ItemListener() {
 		public void itemStateChanged(ItemEvent e) {
@@ -138,9 +140,23 @@ class PageBarGraphMaker extends ComponentMaker {
 			break;
 		case 1:
 			pageBarGraph.setAverageType(PageBarGraph.SIMPLE_RUNNING_AVERAGE);
+			int n = (int) parameterField.getValue();
+			if (n < 10 || n > Modeler.tapeLength) {
+				JOptionPane.showMessageDialog(dialog, "The number of sampling points you set " + n + " is illegal.",
+						"Sampling points error", JOptionPane.ERROR_MESSAGE);
+				return false;
+			}
+			pageBarGraph.setSamplingPoints(n);
 			break;
 		case 2:
 			pageBarGraph.setAverageType(PageBarGraph.EXPONENTIAL_RUNNING_AVERAGE);
+			float sf = parameterField.getValue();
+			if (sf < 0 || sf > 1) {
+				JOptionPane.showMessageDialog(dialog, "The smoothing factor you set " + sf + " is illegal.",
+						"Smoothing factor error", JOptionPane.ERROR_MESSAGE);
+				return false;
+			}
+			pageBarGraph.setSmoothingFactor(sf);
 			break;
 		}
 		pageBarGraph.setAverageOnly(averageOnlyComboBox.getSelectedIndex() == 1);
@@ -218,12 +234,30 @@ class PageBarGraphMaker extends ComponentMaker {
 		switch (pageBarGraph.averageType) {
 		case PageBarGraph.GROWING_POINT_RUNNING_AVERAGE:
 			averageTypeComboBox.setSelectedIndex(0);
+			parameterLabel.setEnabled(false);
+			parameterLabel.setText("Parameter");
+			parameterField.setText(null);
+			parameterField.setEditable(false);
 			break;
 		case PageBarGraph.SIMPLE_RUNNING_AVERAGE:
 			averageTypeComboBox.setSelectedIndex(1);
+			parameterLabel.setEnabled(true);
+			String s = Modeler.getInternationalText("SamplingPoints");
+			parameterLabel.setText(s != null ? s : "Sampling points");
+			parameterField.setValue(pageBarGraph.samplingPoints);
+			parameterField.setMinValue(10);
+			parameterField.setMaxValue(Modeler.tapeLength);
+			parameterField.setEditable(true);
 			break;
 		case PageBarGraph.EXPONENTIAL_RUNNING_AVERAGE:
 			averageTypeComboBox.setSelectedIndex(2);
+			parameterLabel.setEnabled(true);
+			s = Modeler.getInternationalText("SmoothingFactor");
+			parameterLabel.setText(s != null ? s : "Smoothing factor");
+			parameterField.setValue(pageBarGraph.smoothingFactor);
+			parameterField.setMinValue(0);
+			parameterField.setMaxValue(1);
+			parameterField.setEditable(true);
 			break;
 		}
 		averageOnlyComboBox.setSelectedIndex(pageBarGraph.getAverageOnly() ? 1 : 0);
@@ -438,16 +472,53 @@ class PageBarGraphMaker extends ComponentMaker {
 		averageTypeComboBox = new JComboBox(new String[] { "Growing-point running average", "Simple running average",
 				"Exponential running average" });
 		averageTypeComboBox.setToolTipText("Select the method of calculating the running average.");
+		averageTypeComboBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				switch (averageTypeComboBox.getSelectedIndex()) {
+				case 0:
+					parameterLabel.setText("Parameter");
+					parameterLabel.setEnabled(false);
+					parameterField.setText(null);
+					parameterField.setEditable(false);
+					break;
+				case 1:
+					String s = Modeler.getInternationalText("SamplingPoints");
+					parameterLabel.setText(s != null ? s : "Sampling points");
+					parameterLabel.setEnabled(true);
+					parameterField.setValue(pageBarGraph.samplingPoints);
+					parameterField.setEditable(true);
+					parameterField.setMinValue(10);
+					parameterField.setMaxValue(Modeler.tapeLength);
+					break;
+				case 2:
+					s = Modeler.getInternationalText("SmoothingFactor");
+					parameterLabel.setText(s != null ? s : "Smoothing factor");
+					parameterLabel.setEnabled(true);
+					parameterField.setValue(pageBarGraph.smoothingFactor);
+					parameterField.setEditable(true);
+					parameterField.setMinValue(0);
+					parameterField.setMaxValue(1);
+					break;
+				}
+			}
+		});
 		p.add(averageTypeComboBox);
 
 		// row 5
+		parameterLabel = new JLabel();
+		p.add(parameterLabel);
+		parameterField = new FloatNumberTextField(0.0f, -Float.MAX_VALUE, Float.MAX_VALUE);
+		parameterField.addActionListener(okListener);
+		p.add(parameterField);
+
+		// row 6
 		s = Modeler.getInternationalText("AverageOnly");
 		p.add(new JLabel(s != null ? s : "Average only", SwingConstants.LEFT));
 		averageOnlyComboBox = new JComboBox(new String[] { "No", "Yes" });
 		averageOnlyComboBox.setToolTipText("Select to show average only or not.");
 		p.add(averageOnlyComboBox);
 
-		// row 6
+		// row 7
 		s = Modeler.getInternationalText("TextLabel");
 		p.add(new JLabel(s != null ? s : "Description", SwingConstants.LEFT));
 		descriptionField = new JTextField();
@@ -455,21 +526,7 @@ class PageBarGraphMaker extends ComponentMaker {
 		descriptionField.setToolTipText("Type in the text to be displayed in the bar graph.");
 		p.add(descriptionField);
 
-		// row 7
-		p.add(new JLabel("Multiplier", SwingConstants.LEFT));
-		multiplierField = new FloatNumberTextField(1, -Float.MAX_VALUE, Float.MAX_VALUE);
-		multiplierField.addActionListener(okListener);
-		multiplierField.setToolTipText("Type in a value to multiply the output.");
-		p.add(multiplierField);
-
 		// row 8
-		p.add(new JLabel("Addend", SwingConstants.LEFT));
-		addendField = new FloatNumberTextField(0, -Float.MAX_VALUE, Float.MAX_VALUE);
-		addendField.addActionListener(okListener);
-		addendField.setToolTipText("Type in a value to be added to the output.");
-		p.add(addendField);
-
-		// row 9
 		s = Modeler.getInternationalText("UpperBoundLabel");
 		p.add(new JLabel(s != null ? s : "Set upper bound", SwingConstants.LEFT));
 		maxField = new FloatNumberTextField(1.0f, -Float.MAX_VALUE, Float.MAX_VALUE);
@@ -477,7 +534,7 @@ class PageBarGraphMaker extends ComponentMaker {
 		maxField.setToolTipText("Type in the upper bound this bar graph displays.");
 		p.add(maxField);
 
-		// row 10
+		// row 9
 		s = Modeler.getInternationalText("LowerBoundLabel");
 		p.add(new JLabel(s != null ? s : "Set lower bound", SwingConstants.LEFT));
 		minField = new FloatNumberTextField(-1.0f, -Float.MAX_VALUE, Float.MAX_VALUE);
@@ -485,7 +542,7 @@ class PageBarGraphMaker extends ComponentMaker {
 		minField.setToolTipText("Type in the lower bound this bar graph displays.");
 		p.add(minField);
 
-		// row 11
+		// row 10
 		s = Modeler.getInternationalText("CurrentValueLabel");
 		p.add(new JLabel(s != null ? s : "Current value", SwingConstants.LEFT));
 		valueField = new FloatNumberTextField(0.0f, -Float.MAX_VALUE, Float.MAX_VALUE);
@@ -493,7 +550,7 @@ class PageBarGraphMaker extends ComponentMaker {
 		valueField.setToolTipText("The current value of the output.");
 		p.add(valueField);
 
-		// row 12
+		// row 11
 		s = Modeler.getInternationalText("WidthLabel");
 		p.add(new JLabel(s != null ? s : "Width", SwingConstants.LEFT));
 		widthField = new IntegerTextField(100, 10, 400);
@@ -501,7 +558,7 @@ class PageBarGraphMaker extends ComponentMaker {
 		widthField.addActionListener(okListener);
 		p.add(widthField);
 
-		// row 13
+		// row 12
 		s = Modeler.getInternationalText("HeightLabel");
 		p.add(new JLabel(s != null ? s : "Height", SwingConstants.LEFT));
 		heightField = new IntegerTextField(200, 10, 400);
@@ -509,7 +566,7 @@ class PageBarGraphMaker extends ComponentMaker {
 		heightField.addActionListener(okListener);
 		p.add(heightField);
 
-		ModelerUtilities.makeCompactGrid(p, 13, 2, 5, 5, 10, 2);
+		ModelerUtilities.makeCompactGrid(p, 12, 2, 5, 5, 10, 2);
 
 		/* right panel */
 
@@ -527,6 +584,22 @@ class PageBarGraphMaker extends ComponentMaker {
 		p.add(orieComboBox);
 
 		// row 2
+		s = Modeler.getInternationalText("Multiplier");
+		p.add(new JLabel(s != null ? s : "Multiplier", SwingConstants.LEFT));
+		multiplierField = new FloatNumberTextField(1, -Float.MAX_VALUE, Float.MAX_VALUE);
+		multiplierField.addActionListener(okListener);
+		multiplierField.setToolTipText("Type in a value to multiply the output.");
+		p.add(multiplierField);
+
+		// row 3
+		s = Modeler.getInternationalText("Addend");
+		p.add(new JLabel(s != null ? s : "Addend", SwingConstants.LEFT));
+		addendField = new FloatNumberTextField(0, -Float.MAX_VALUE, Float.MAX_VALUE);
+		addendField.addActionListener(okListener);
+		addendField.setToolTipText("Type in a value to be added to the output.");
+		p.add(addendField);
+
+		// row 4
 		s = Modeler.getInternationalText("DrawTitle");
 		p.add(new JLabel(s != null ? s : "Draw title", SwingConstants.LEFT));
 		String[] yesno = new String[] { "Yes", "No" };
@@ -540,14 +613,14 @@ class PageBarGraphMaker extends ComponentMaker {
 		titleComboBox.setToolTipText("Select yes if a title should be drawn; select no otherwise.");
 		p.add(titleComboBox);
 
-		// row 3
+		// row 5
 		s = Modeler.getInternationalText("DrawTicks");
 		p.add(new JLabel(s != null ? s : "Draw ticks", SwingConstants.LEFT));
 		tickComboBox = new JComboBox(yesno);
 		tickComboBox.setToolTipText("Select yes if ticks should be drawn; select no otherwise.");
 		p.add(tickComboBox);
 
-		// row 4
+		// row 6
 		s = Modeler.getInternationalText("MajorTicks");
 		p.add(new JLabel(s != null ? s : "Major ticks", SwingConstants.LEFT));
 		majorTickSpinner = new JSpinner(new SpinnerNumberModel(pageBarGraph.getMajorTicks(), 0, 20, 1));
@@ -556,7 +629,7 @@ class PageBarGraphMaker extends ComponentMaker {
 		((JSpinner.DefaultEditor) majorTickSpinner.getEditor()).getTextField().addActionListener(okListener);
 		p.add(majorTickSpinner);
 
-		// row 5
+		// row 7
 		s = Modeler.getInternationalText("MinorTicks");
 		p.add(new JLabel(s != null ? s : "Minor ticks", SwingConstants.LEFT));
 		minorTickSpinner = new JSpinner(new SpinnerNumberModel(pageBarGraph.getMinorTicks(), 0, 100, 1));
@@ -565,14 +638,14 @@ class PageBarGraphMaker extends ComponentMaker {
 		((JSpinner.DefaultEditor) minorTickSpinner.getEditor()).getTextField().addActionListener(okListener);
 		p.add(minorTickSpinner);
 
-		// row 6
+		// row 8
 		s = Modeler.getInternationalText("DigitalFormat");
 		p.add(new JLabel(s != null ? s : "Digital format", SwingConstants.LEFT));
 		formatComboBox = new JComboBox(new String[] { "Fixed point", "Scientific notation" });
 		formatComboBox.setToolTipText("Select the digital format.");
 		p.add(formatComboBox);
 
-		// row 7
+		// row 9
 		s = Modeler.getInternationalText("MaximumFractionDigits");
 		p.add(new JLabel(s != null ? s : "Maximum fraction digits", SwingConstants.LEFT));
 		maximumFractionDigitField = new IntegerTextField(5, 0, 20);
@@ -581,7 +654,7 @@ class PageBarGraphMaker extends ComponentMaker {
 		maximumFractionDigitField.addActionListener(okListener);
 		p.add(maximumFractionDigitField);
 
-		// row 8
+		// row 10
 		s = Modeler.getInternationalText("MaximumIntegerDigits");
 		p.add(new JLabel(s != null ? s : "Maximum integer digits", SwingConstants.LEFT));
 		maximumIntegerDigitField = new IntegerTextField(1, 0, 20);
@@ -590,14 +663,14 @@ class PageBarGraphMaker extends ComponentMaker {
 		maximumIntegerDigitField.addActionListener(okListener);
 		p.add(maximumIntegerDigitField);
 
-		// row 9
+		// row 11
 		s = Modeler.getInternationalText("DrawLabels");
 		p.add(new JLabel(s != null ? s : "Draw labels", SwingConstants.LEFT));
 		labelComboBox = new JComboBox(yesno);
 		labelComboBox.setToolTipText("Select yes if labels should be drawn; select no otherwise.");
 		p.add(labelComboBox);
 
-		// row 10
+		// row 12
 		s = Modeler.getInternationalText("BarColor");
 		p.add(new JLabel(s != null ? s : "Bar color", SwingConstants.LEFT));
 		s = Modeler.getInternationalText("FillingColor");
@@ -607,7 +680,7 @@ class PageBarGraphMaker extends ComponentMaker {
 		fgComboBox.setToolTipText("Select the color of the bar.");
 		p.add(fgComboBox);
 
-		// row 11
+		// row 13
 		p.add(new JLabel(s != null ? s : "Filling color", SwingConstants.LEFT));
 		bgComboBox = new ColorComboBox(pageBarGraph);
 		bgComboBox.setMinimumSize(new Dimension(80, 24));
@@ -616,7 +689,7 @@ class PageBarGraphMaker extends ComponentMaker {
 		bgComboBox.setToolTipText("Select the filling color in the bar box.");
 		p.add(bgComboBox);
 
-		ModelerUtilities.makeCompactGrid(p, 11, 2, 5, 5, 10, 2);
+		ModelerUtilities.makeCompactGrid(p, 13, 2, 5, 5, 10, 2);
 
 	}
 
