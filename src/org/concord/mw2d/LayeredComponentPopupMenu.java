@@ -20,6 +20,7 @@
 
 package org.concord.mw2d;
 
+import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -36,10 +37,12 @@ import javax.swing.event.PopupMenuListener;
 
 import org.concord.modeler.process.Executable;
 import org.concord.modeler.ui.IconPool;
+import org.concord.mw2d.models.ElectricField;
 import org.concord.mw2d.models.FieldArea;
 import org.concord.mw2d.models.ImageComponent;
 import org.concord.mw2d.models.Layered;
 import org.concord.mw2d.models.LineComponent;
+import org.concord.mw2d.models.MagneticField;
 
 class LayeredComponentPopupMenu extends JPopupMenu {
 
@@ -131,6 +134,19 @@ class LayeredComponentPopupMenu extends JPopupMenu {
 						physicsMenu.add(miEField);
 						physicsMenu.add(miBField);
 						physicsMenu.remove(miReflect);
+						FieldArea fa = (FieldArea) view.selectedComponent;
+						if (fa.getVectorField() instanceof ElectricField) {
+							miEField.setBackground(SystemColor.controlHighlight);
+							miBField.setBackground(miReflect.getBackground());
+						}
+						else if (fa.getVectorField() instanceof MagneticField) {
+							miEField.setBackground(miReflect.getBackground());
+							miBField.setBackground(SystemColor.controlHighlight);
+						}
+						else {
+							miEField.setBackground(miReflect.getBackground());
+							miBField.setBackground(miReflect.getBackground());
+						}
 					}
 					else if (view.selectedComponent instanceof LineComponent) {
 						physicsMenu.setEnabled(true);
