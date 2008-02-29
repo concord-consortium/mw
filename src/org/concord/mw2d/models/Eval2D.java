@@ -1960,8 +1960,15 @@ class Eval2D extends AbstractEval {
 				return null;
 			}
 			return "" + model.getParticleCount((byte) i, null);
+		case 2:
+			float[] x = parseArray(2, t);
+			if (x != null) {
+				x[1] *= IR_CONVERTER;
+				return "" + model.getParticleCountWithin((int) x[0], x[1]);
+			}
+			break;
 		case 5:
-			float[] x = parseArray(5, t);
+			x = parseArray(5, t);
 			if (x != null) {
 				for (int k = 1; k < 5; k++)
 					x[k] *= IR_CONVERTER;

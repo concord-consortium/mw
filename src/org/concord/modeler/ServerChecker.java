@@ -33,7 +33,7 @@ import org.concord.modeler.util.FileUtilities;
 class ServerChecker {
 
 	private static ServerChecker checker = new ServerChecker();
-	private static int CHECK_INTERVAL = 30000; // check every 30 seconds?
+	private static int CHECK_INTERVAL = 5000; // check every 5 seconds?
 
 	private Map<String, Long> lastCheckTimeMap;
 	private Map<String, Boolean> availabilityMap;

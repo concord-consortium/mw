@@ -400,8 +400,9 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		return hostIsLocal ? LOCAL_STATIC_ROOT : REMOTE_STATIC_ROOT;
 	}
 
-	public static String getModelSpaceAddress() {
-		return (hostIsLocal ? LOCAL_CONTEXT_ROOT : REMOTE_CONTEXT_ROOT) + "modelspace.jsp?client=mw";
+	public static String getMyModelSpaceAddress() {
+		return (hostIsLocal ? LOCAL_CONTEXT_ROOT : REMOTE_CONTEXT_ROOT) + "mymodelspace.jsp?client=mw&author="
+				+ user.getUserID();
 	}
 
 	public static String getMyReportAddress() {
@@ -2240,10 +2241,10 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		menuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (user.getUserID() != null && !user.getUserID().trim().equals("")) {
-					navigator.visitLocation(getContextRoot() + "mymodelspace.jsp?client=mw&author=" + user.getUserID());
+					navigator.visitLocation(getMyModelSpaceAddress());
 				}
 				else {
-					navigator.visitLocation(getModelSpaceAddress());
+					navigator.visitLocation(getContextRoot() + "modelspace.jsp?client=mw");
 				}
 			}
 		});
