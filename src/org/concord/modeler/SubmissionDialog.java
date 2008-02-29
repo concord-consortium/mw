@@ -102,8 +102,8 @@ class SubmissionDialog extends JDialog {
 		panel.add(titleField, c);
 
 		// Level label and combo box
-		s = Modeler.getInternationalText("UserLevel");
-		JLabel label = new JLabel(s != null ? s : "Level");
+		s = Modeler.getInternationalText("Publicity");
+		JLabel label = new JLabel(s != null ? s : "Publicity");
 		label.setBorder(border);
 		c.gridx = 0;
 		c.gridy = 1;
@@ -114,18 +114,14 @@ class SubmissionDialog extends JDialog {
 		c.fill = GridBagConstraints.NONE;
 		panel.add(label, c);
 		levelComboBox = new JComboBox();
-		s = Modeler.getInternationalText("GeneralPublic");
-		levelComboBox.addItem(s != null ? s : "General Public");
-		s = Modeler.getInternationalText("ElementarySchool");
-		levelComboBox.addItem(s != null ? s : "Elementary School");
-		s = Modeler.getInternationalText("MiddleSchool");
-		levelComboBox.addItem(s != null ? s : "Middle School");
-		s = Modeler.getInternationalText("HighSchool");
-		levelComboBox.addItem(s != null ? s : "High School");
-		s = Modeler.getInternationalText("College");
-		levelComboBox.addItem(s != null ? s : "College");
-		s = Modeler.getInternationalText("GraduateSchool");
-		levelComboBox.addItem(s != null ? s : "Graduate School");
+		s = Modeler.getInternationalText("AnyoneCanSee");
+		levelComboBox.addItem(s != null ? s : "Anyone can see");
+		s = Modeler.getInternationalText("OnlyMyClassCanSee");
+		levelComboBox.addItem(s != null ? s : "Only my class can see");
+		s = Modeler.getInternationalText("OnlyMyTeacherCanSee");
+		levelComboBox.addItem(s != null ? s : "Only my teacher can see");
+		s = Modeler.getInternationalText("OnlyMyselfCanSee");
+		levelComboBox.addItem(s != null ? s : "Only myself can see");
 		levelComboBox.setPreferredSize(mediumField);
 		c.gridx = 1;
 		panel.add(levelComboBox, c);
@@ -214,7 +210,7 @@ class SubmissionDialog extends JDialog {
 
 			public void windowActivated(WindowEvent e) {
 				titleField.selectAll();
-				titleField.requestFocus();
+				titleField.requestFocusInWindow();
 			}
 		});
 
@@ -298,7 +294,21 @@ class SubmissionDialog extends JDialog {
 		if (taskType == Upload.UPLOAD_FOLDER)
 			sb.append("&firstpage=" + encode(FileUtilities.getFileName(firstPage)));
 		sb.append("&title=" + encode(titleField.getText()));
-		sb.append("&level=" + encode(levelComboBox.getSelectedItem().toString()));
+		sb.append("&accesslevel=");
+		switch (levelComboBox.getSelectedIndex()) {
+		case 0:
+			sb.append("all");
+			break;
+		case 1:
+			sb.append("class");
+			break;
+		case 2:
+			sb.append("teacher");
+			break;
+		case 3:
+			sb.append("self");
+			break;
+		}
 		sb.append("&subject=" + encode(subjectComboBox.getSelectedItem().toString()));
 		sb.append("&userid=" + encode(Modeler.user.getUserID()));
 

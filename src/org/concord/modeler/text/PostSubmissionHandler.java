@@ -117,7 +117,7 @@ final class PostSubmissionHandler {
 						dialog.dispose();
 						page.getNavigator().visitLocation(
 								taskType == Upload.UPLOAD_REPORT ? Modeler.getMyReportAddress() : Modeler
-										.getModelSpaceAddress());
+										.getMyModelSpaceAddress());
 					}
 				}.start();
 			}

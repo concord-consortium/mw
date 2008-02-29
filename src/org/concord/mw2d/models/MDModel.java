@@ -1125,6 +1125,25 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	/** @return the number of particles of the specified type inside the specified shape */
 	public abstract int getParticleCount(byte type, Shape shape);
 
+	/** @return the number of particles inside a circle of the specified radius around the specified particle */
+	public int getParticleCountWithin(int index, float radius) {
+		int max = getNumberOfParticles();
+		if (index < 0 || index == max)
+			return -1;
+		int n = 0;
+		Particle a = getParticle(index);
+		double dx, dy;
+		for (int i = 0; i < max; i++) {
+			if (index == i)
+				continue;
+			dx = getParticle(i).rx - a.rx;
+			dy = getParticle(i).ry - a.ry;
+			if (dx * dx + dy * dy <= radius * radius)
+				n++;
+		}
+		return n;
+	}
+
 	/**
 	 * @return the average speed of the particles of the specified type inside the specified shape in the specified
 	 *         direction.
