@@ -1070,7 +1070,7 @@ class Eval2D extends AbstractEval {
 		// print
 		matcher = PRINT.matcher(ci);
 		if (matcher.find()) {
-			if (evaluatePrintClause(ci.substring(matcher.end()).trim()))
+			if (evaluatePrintClause(ci.substring(matcher.end()).trim().toLowerCase()))
 				return true;
 		}
 
