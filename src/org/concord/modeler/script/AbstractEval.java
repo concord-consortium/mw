@@ -837,8 +837,8 @@ public abstract class AbstractEval {
 			matcher = DEFINE_VAR.matcher(ci);
 			if (matcher.find()) {
 				int end = matcher.end();
-				String variable = ci.substring(ci.indexOf("%"), end);
-				String value = ci.substring(end).trim();
+				String variable = ci.substring(ci.indexOf("%"), end).toLowerCase();
+				String value = ci.substring(end).trim().toLowerCase();
 				if (value.startsWith("<t>") || value.startsWith("<T>")) {
 					String s;
 					if (value.endsWith("</t>") || value.endsWith("</T>")) {
@@ -921,6 +921,7 @@ public abstract class AbstractEval {
 	}
 
 	protected String useDefinitions(String s) {
+		s = s.toLowerCase();
 		if (!definition.isEmpty()) {
 			synchronized (definition) {
 				for (String variable : definition.keySet()) {
