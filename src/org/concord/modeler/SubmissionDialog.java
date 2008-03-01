@@ -56,11 +56,12 @@ class SubmissionDialog extends JDialog {
 	private Page page;
 	private String firstPage;
 	private byte taskType = Upload.UPLOAD_PAGE;
+	private static boolean showUploadDisclaimer = true;
 
 	private JLabel descriptionLabel;
 	private JLabel entryPageLabel;
 	private JTextField titleField;
-	private JComboBox levelComboBox;
+	private JComboBox privacyComboBox;
 	private JComboBox subjectComboBox;
 	private JComboBox entryPageList;
 
@@ -102,8 +103,8 @@ class SubmissionDialog extends JDialog {
 		panel.add(titleField, c);
 
 		// Level label and combo box
-		s = Modeler.getInternationalText("Publicity");
-		JLabel label = new JLabel(s != null ? s : "Publicity");
+		s = Modeler.getInternationalText("Privacy");
+		JLabel label = new JLabel(s != null ? s : "Privacy");
 		label.setBorder(border);
 		c.gridx = 0;
 		c.gridy = 1;
@@ -113,18 +114,18 @@ class SubmissionDialog extends JDialog {
 		c.weighty = 0.0;
 		c.fill = GridBagConstraints.NONE;
 		panel.add(label, c);
-		levelComboBox = new JComboBox();
+		privacyComboBox = new JComboBox();
 		s = Modeler.getInternationalText("AnyoneCanSee");
-		levelComboBox.addItem(s != null ? s : "Anyone can see");
+		privacyComboBox.addItem(s != null ? s : "Anyone can see");
 		s = Modeler.getInternationalText("OnlyMyClassCanSee");
-		levelComboBox.addItem(s != null ? s : "Only my class can see");
+		privacyComboBox.addItem(s != null ? s : "Only my class can see");
 		s = Modeler.getInternationalText("OnlyMyTeacherCanSee");
-		levelComboBox.addItem(s != null ? s : "Only my teacher can see");
+		privacyComboBox.addItem(s != null ? s : "Only my teacher can see");
 		s = Modeler.getInternationalText("OnlyMyselfCanSee");
-		levelComboBox.addItem(s != null ? s : "Only myself can see");
-		levelComboBox.setPreferredSize(mediumField);
+		privacyComboBox.addItem(s != null ? s : "Only myself can see");
+		privacyComboBox.setPreferredSize(mediumField);
 		c.gridx = 1;
-		panel.add(levelComboBox, c);
+		panel.add(privacyComboBox, c);
 
 		// Subject
 		s = Modeler.getInternationalText("Subject");
@@ -177,6 +178,31 @@ class SubmissionDialog extends JDialog {
 										JOptionPane.ERROR_MESSAGE);
 						return;
 					}
+				}
+				String who = null;
+				switch (privacyComboBox.getSelectedIndex()) {
+				case 0:
+					who = "anyone";
+					break;
+				case 1:
+					who = "your class";
+					break;
+				case 2:
+					who = "your teacher";
+					break;
+				}
+				if (who != null && showUploadDisclaimer) {
+					String s1 = Modeler.getInternationalText("SubmitFileDisclaimer");
+					String s2 = Modeler.getInternationalText("Disclaimer");
+					int i = JOptionPane.showOptionDialog(JOptionPane.getFrameForComponent(page), s1 != null ? s1
+							: "You are about to submit files to an area that can be viewed by " + who
+									+ ".\nDo you want to continue?", s2 != null ? s2 : "Disclaimer",
+							JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+							ServerGate.DIALOG_OPTIONS, ServerGate.DIALOG_OPTIONS[0]);
+					if (i == JOptionPane.NO_OPTION)
+						return;
+					if (i == JOptionPane.CANCEL_OPTION)
+						showUploadDisclaimer = false;
 				}
 				submit();
 			}
@@ -294,10 +320,10 @@ class SubmissionDialog extends JDialog {
 		if (taskType == Upload.UPLOAD_FOLDER)
 			sb.append("&firstpage=" + encode(FileUtilities.getFileName(firstPage)));
 		sb.append("&title=" + encode(titleField.getText()));
-		sb.append("&accesslevel=");
-		switch (levelComboBox.getSelectedIndex()) {
+		sb.append("&privacy=");
+		switch (privacyComboBox.getSelectedIndex()) {
 		case 0:
-			sb.append("all");
+			sb.append("public");
 			break;
 		case 1:
 			sb.append("class");
@@ -306,7 +332,7 @@ class SubmissionDialog extends JDialog {
 			sb.append("teacher");
 			break;
 		case 3:
-			sb.append("self");
+			sb.append("private");
 			break;
 		}
 		sb.append("&subject=" + encode(subjectComboBox.getSelectedItem().toString()));

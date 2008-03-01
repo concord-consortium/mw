@@ -36,7 +36,7 @@ import org.concord.modeler.text.Page;
  */
 class ServerGate {
 
-	private final static String[] DIALOG_OPTIONS = { "Yes", "No", "Don't show this message again." };
+	final static String[] DIALOG_OPTIONS = { "Yes", "No", "Don't show this message again." };
 	private final static byte POST_COMMENT = 0;
 	private final static byte SUBMIT_PAGES = 1;
 
@@ -57,7 +57,6 @@ class ServerGate {
 	private CommentView commentView;
 	private SubmissionDialog submissionDialog;
 	private ReportDialog reportDialog;
-	private static boolean showUploadDisclaimer = true;
 
 	ActionListener commentAction;
 	ActionListener viewCommentAction;
@@ -214,21 +213,6 @@ class ServerGate {
 			JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(page), s != null ? s
 					: "You are not logged in yet. Please try again.", "Message", JOptionPane.WARNING_MESSAGE);
 			return false;
-		}
-		if (showUploadDisclaimer) {
-			String s1 = Modeler.getInternationalText("SubmitFileDisclaimer");
-			String s2 = Modeler.getInternationalText("Disclaimer");
-			int i = JOptionPane
-					.showOptionDialog(
-							JOptionPane.getFrameForComponent(page),
-							s1 != null ? s1
-									: "You are about to submit files to a public area that can be viewed by anyone.\nDo you want to continue?",
-							s2 != null ? s2 : "Disclaimer", JOptionPane.YES_NO_CANCEL_OPTION,
-							JOptionPane.QUESTION_MESSAGE, null, DIALOG_OPTIONS, DIALOG_OPTIONS[0]);
-			if (i == JOptionPane.NO_OPTION)
-				return false;
-			if (i == JOptionPane.CANCEL_OPTION)
-				showUploadDisclaimer = false;
 		}
 		return true;
 	}
