@@ -640,7 +640,7 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 					}
 				}
 			};
-			flyThread.setPriority(Thread.MIN_PRIORITY);
+			flyThread.setPriority(Thread.NORM_PRIORITY);
 			flyThread.start();
 		}
 		else {
@@ -706,7 +706,7 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 				}
 			}
 		};
-		blinkInteractionThread.setPriority(Thread.MIN_PRIORITY);
+		blinkInteractionThread.setPriority(Thread.NORM_PRIORITY);
 		blinkInteractionThread.start();
 	}
 
@@ -994,7 +994,7 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 				setMoving(false);
 			}
 		};
-		navThread.setPriority(immediately ? Thread.NORM_PRIORITY + 1 : Thread.MIN_PRIORITY);
+		navThread.setPriority(immediately ? Thread.NORM_PRIORITY + 1 : Thread.NORM_PRIORITY);
 		navThread.start();
 	}
 
@@ -1021,7 +1021,7 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 				setMoving(false);
 			}
 		};
-		navThread.setPriority(Thread.MIN_PRIORITY);
+		navThread.setPriority(Thread.NORM_PRIORITY);
 		navThread.start();
 	}
 
@@ -1106,7 +1106,7 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 				setMoving(false);
 			}
 		};
-		navThread.setPriority(Thread.MIN_PRIORITY);
+		navThread.setPriority(Thread.NORM_PRIORITY);
 		navThread.start();
 	}
 
