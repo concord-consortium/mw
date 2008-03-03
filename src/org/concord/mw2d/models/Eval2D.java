@@ -2368,7 +2368,7 @@ class Eval2D extends AbstractEval {
 		// action
 		Matcher matcher = ACTION.matcher(str);
 		if (matcher.find()) {
-			str = str.substring(matcher.end()).trim();
+			str = str.substring(matcher.end()).trim().toUpperCase();
 			matcher = ACTION_ID.matcher(str);
 			if (matcher.find()) {
 				if (actionIDMap == null)
