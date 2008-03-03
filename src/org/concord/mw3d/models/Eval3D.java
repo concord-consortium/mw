@@ -733,11 +733,11 @@ class Eval3D extends AbstractEval {
 	}
 
 	private boolean evaluateSetClause(String str) {
-
+		
 		// action
 		Matcher matcher = ACTION.matcher(str);
 		if (matcher.find()) {
-			str = str.substring(matcher.end()).trim();
+			str = str.substring(matcher.end()).trim().toUpperCase();
 			matcher = ACTION_ID.matcher(str);
 			if (matcher.find()) {
 				if (actionIDMap == null)
