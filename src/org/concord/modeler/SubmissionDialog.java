@@ -65,7 +65,7 @@ class SubmissionDialog extends JDialog {
 	private JComboBox subjectComboBox;
 	private JComboBox entryPageList;
 
-	public SubmissionDialog(final Frame owner) {
+	SubmissionDialog(final Frame owner, boolean hasTeacher) {
 
 		super(owner, "Submit this page", true);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -115,14 +115,7 @@ class SubmissionDialog extends JDialog {
 		c.fill = GridBagConstraints.NONE;
 		panel.add(label, c);
 		privacyComboBox = new JComboBox();
-		s = Modeler.getInternationalText("AnyoneCanSee");
-		privacyComboBox.addItem(s != null ? s : "Anyone can see");
-		s = Modeler.getInternationalText("OnlyMyClassCanSee");
-		privacyComboBox.addItem(s != null ? s : "Only my class can see");
-		s = Modeler.getInternationalText("OnlyMyTeacherCanSee");
-		privacyComboBox.addItem(s != null ? s : "Only my teacher can see");
-		s = Modeler.getInternationalText("OnlyMyselfCanSee");
-		privacyComboBox.addItem(s != null ? s : "Only myself can see");
+		setStudentPrivacyOptions(hasTeacher);
 		privacyComboBox.setPreferredSize(mediumField);
 		c.gridx = 1;
 		panel.add(privacyComboBox, c);
@@ -180,16 +173,22 @@ class SubmissionDialog extends JDialog {
 					}
 				}
 				String who = null;
-				switch (privacyComboBox.getSelectedIndex()) {
-				case 0:
-					who = "anyone";
-					break;
-				case 1:
-					who = "your class";
-					break;
-				case 2:
-					who = "your teacher";
-					break;
+				if (Modeler.user.hasTeacher()) {
+					switch (privacyComboBox.getSelectedIndex()) {
+					case 0:
+						who = "anyone";
+						break;
+					case 1:
+						who = "your class";
+						break;
+					case 2:
+						who = "your teacher";
+						break;
+					}
+				}
+				else {
+					if (privacyComboBox.getSelectedIndex() == 0)
+						who = "anyone";
 				}
 				if (who != null && showUploadDisclaimer) {
 					String s1 = Modeler.getInternationalText("SubmitFileDisclaimer");
@@ -240,6 +239,20 @@ class SubmissionDialog extends JDialog {
 			}
 		});
 
+	}
+
+	void setStudentPrivacyOptions(boolean hasTeacher) {
+		privacyComboBox.removeAllItems();
+		String s = Modeler.getInternationalText("AnyoneCanSee");
+		privacyComboBox.addItem(s != null ? s : "Anyone can see");
+		if (hasTeacher) {
+			s = Modeler.getInternationalText("OnlyMyClassCanSee");
+			privacyComboBox.addItem(s != null ? s : "Only my class can see");
+			s = Modeler.getInternationalText("OnlyMyTeacherCanSee");
+			privacyComboBox.addItem(s != null ? s : "Only my teacher can see");
+		}
+		s = Modeler.getInternationalText("OnlyMyselfCanSee");
+		privacyComboBox.addItem(s != null ? s : "Only myself can see");
 	}
 
 	void setTaskType(byte i) {
@@ -321,19 +334,31 @@ class SubmissionDialog extends JDialog {
 			sb.append("&firstpage=" + encode(FileUtilities.getFileName(firstPage)));
 		sb.append("&title=" + encode(titleField.getText()));
 		sb.append("&privacy=");
-		switch (privacyComboBox.getSelectedIndex()) {
-		case 0:
-			sb.append("public");
-			break;
-		case 1:
-			sb.append("class");
-			break;
-		case 2:
-			sb.append("teacher");
-			break;
-		case 3:
-			sb.append("private");
-			break;
+		if (Modeler.user.hasTeacher()) {
+			switch (privacyComboBox.getSelectedIndex()) {
+			case 0:
+				sb.append("public");
+				break;
+			case 1:
+				sb.append("class");
+				break;
+			case 2:
+				sb.append("teacher");
+				break;
+			case 3:
+				sb.append("private");
+				break;
+			}
+		}
+		else {
+			switch (privacyComboBox.getSelectedIndex()) {
+			case 0:
+				sb.append("public");
+				break;
+			case 1:
+				sb.append("private");
+				break;
+			}
 		}
 		sb.append("&subject=" + encode(subjectComboBox.getSelectedItem().toString()));
 		sb.append("&userid=" + encode(Modeler.user.getUserID()));

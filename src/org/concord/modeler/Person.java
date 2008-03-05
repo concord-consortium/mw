@@ -52,6 +52,10 @@ public class Person implements Serializable {
 		return true;
 	}
 
+	public boolean hasTeacher() {
+		return teacher != null && !"none".equalsIgnoreCase(teacher);
+	}
+
 	public void setFirstName(String s) {
 		firstName = s;
 	}
