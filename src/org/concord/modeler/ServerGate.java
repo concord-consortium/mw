@@ -110,8 +110,10 @@ class ServerGate {
 				if (!question(SUBMIT_PAGES))
 					return;
 				if (shallWeContinue()) {
+					boolean b = Modeler.user.hasTeacher();
 					if (submissionDialog == null)
-						submissionDialog = new SubmissionDialog(JOptionPane.getFrameForComponent(page));
+						submissionDialog = new SubmissionDialog(JOptionPane.getFrameForComponent(page), b);
+					else submissionDialog.setStudentPrivacyOptions(b);
 					submissionDialog.setTaskType(Upload.UPLOAD_FOLDER);
 					submissionDialog.setPage(page);
 					submissionDialog.setVisible(true);
@@ -124,8 +126,10 @@ class ServerGate {
 				if (!question(SUBMIT_PAGES))
 					return;
 				if (shallWeContinue()) {
+					boolean b = Modeler.user.hasTeacher();
 					if (submissionDialog == null)
-						submissionDialog = new SubmissionDialog(JOptionPane.getFrameForComponent(page));
+						submissionDialog = new SubmissionDialog(JOptionPane.getFrameForComponent(page), b);
+					else submissionDialog.setStudentPrivacyOptions(b);
 					submissionDialog.setTaskType(Upload.UPLOAD_PAGE);
 					submissionDialog.setPage(page);
 					submissionDialog.setVisible(true);

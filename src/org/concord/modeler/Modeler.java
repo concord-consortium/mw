@@ -2294,17 +2294,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0, true));
 		menuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String s = navigator.getHomeDirectory();
-				if (Locale.getDefault().equals(Locale.PRC)) {
-					s += "cn/manual/index.cml";
-				}
-				else if (Locale.getDefault().equals(Locale.TAIWAN)) {
-					s += "tw/manual/preface.cml";
-				}
-				else {
-					s += "tutorial/index.cml";
-				}
-				navigator.visitLocation(s);
+				navigator.visitLocation(navigator.getHomeDirectory() + "tutorial/index.cml");
 			}
 		});
 		menu.add(menuItem);
@@ -2315,17 +2305,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		menuItem.setMnemonic(KeyEvent.VK_O);
 		menuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String s = navigator.getHomeDirectory();
-				if (Locale.getDefault().equals(Locale.PRC)) {
-					s += "cn/manual/index.cml";
-				}
-				else if (Locale.getDefault().equals(Locale.TAIWAN)) {
-					s += "tw/manual/preface.cml";
-				}
-				else {
-					s += "tutorial/index.cml";
-				}
-				openPageInNewWindow(s);
+				openPageInNewWindow(navigator.getHomeDirectory() + "tutorial/index.cml");
 			}
 		});
 		menu.add(menuItem);
