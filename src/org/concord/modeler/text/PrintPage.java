@@ -179,8 +179,8 @@ class PrintPage extends JComponent implements Printable, Pageable {
 				// construct a mutable attribute set for the current element
 				sas = new SimpleAttributeSet(content.getAttributes());
 				// reduce the font size to a portion of its original size
-				StyleConstants.setFontSize(sas, (int) (StyleConstants.getFontSize(sas) * Page.getPrintParameters()
-						.getCharacterScale()));
+				StyleConstants.setFontSize(sas, (int) (StyleConstants.getFontSize(sas)
+						* Page.getPrintParameters().getCharacterScale() * 0.5));
 
 				try {
 
