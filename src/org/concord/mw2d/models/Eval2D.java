@@ -878,6 +878,20 @@ class Eval2D extends AbstractEval {
 		// System.out.println(ci);
 		// System.out.println("-------------------------");
 
+		// load
+		matcher = LOAD.matcher(ci);
+		if (matcher.find()) {
+			if (evaluateLoadClause(ci.substring(matcher.end()).trim()))
+				return true;
+		}
+
+		// script/source
+		matcher = SOURCE.matcher(ci);
+		if (matcher.find()) {
+			if (evaluateSourceClause(ci.substring(matcher.end()).trim()))
+				return true;
+		}
+
 		// select
 		matcher = SELECT.matcher(ci);
 		if (matcher.find()) {
@@ -1050,20 +1064,6 @@ class Eval2D extends AbstractEval {
 		matcher = DELAY.matcher(ci);
 		if (matcher.find()) {
 			if (evaluateDelayClause(ci.substring(matcher.end()).trim()))
-				return true;
-		}
-
-		// load
-		matcher = LOAD.matcher(ci);
-		if (matcher.find()) {
-			if (evaluateLoadClause(ci.substring(matcher.end()).trim()))
-				return true;
-		}
-
-		// script/source
-		matcher = SOURCE.matcher(ci);
-		if (matcher.find()) {
-			if (evaluateSourceClause(ci.substring(matcher.end()).trim()))
 				return true;
 		}
 
