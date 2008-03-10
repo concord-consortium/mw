@@ -921,6 +921,8 @@ public abstract class AbstractEval {
 	}
 
 	protected String useDefinitions(String s) {
+		if (s.indexOf("%") == -1)
+			return s;
 		s = s.toLowerCase();
 		if (!definition.isEmpty()) {
 			synchronized (definition) {
