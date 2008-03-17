@@ -179,10 +179,10 @@ public final class ImageStreamGenerator {
 		p.add(button);
 
 		s = JobTable.getInternationalText("Frame");
-		Object[] lengthChoices = new String[] { " 50 " + (s != null ? s : "frames"),
-				"100 " + (s != null ? s : "frames"), "200 " + (s != null ? s : "frames"),
-				"300 " + (s != null ? s : "frames"), "400 " + (s != null ? s : "frames"),
-				"500 " + (s != null ? s : "frames") };
+		Object[] lengthChoices = new String[] { " 100 " + (s != null ? s : "frames"),
+				"200 " + (s != null ? s : "frames"), "400 " + (s != null ? s : "frames"),
+				"800 " + (s != null ? s : "frames"), "1600 " + (s != null ? s : "frames"),
+				"3200 " + (s != null ? s : "frames") };
 		JComboBox comboBox = new JComboBox(lengthChoices);
 		comboBox.setSelectedIndex(1);
 		comboBox.addItemListener(new ItemListener() {
@@ -191,22 +191,22 @@ public final class ImageStreamGenerator {
 					JComboBox cb = (JComboBox) e.getSource();
 					switch (cb.getSelectedIndex()) {
 					case 0:
-						snapshoter.setLifetime(50);
-						break;
-					case 1:
 						snapshoter.setLifetime(100);
 						break;
-					case 2:
+					case 1:
 						snapshoter.setLifetime(200);
 						break;
-					case 3:
-						snapshoter.setLifetime(300);
-						break;
-					case 4:
+					case 2:
 						snapshoter.setLifetime(400);
 						break;
+					case 3:
+						snapshoter.setLifetime(800);
+						break;
+					case 4:
+						snapshoter.setLifetime(1600);
+						break;
 					case 5:
-						snapshoter.setLifetime(500);
+						snapshoter.setLifetime(3200);
 						break;
 					}
 				}
