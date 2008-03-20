@@ -411,7 +411,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 	}
 
 	private boolean setLookAndFeel(String className) {
-		if ("yes".equals(System.getProperty("mw.nolookandfeel")))
+		if ("true".equals(System.getProperty("mw.nolookandfeel")))
 			return false;
 		boolean b = false;
 		try {
