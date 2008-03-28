@@ -30,14 +30,21 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.Toolkit;
+import java.beans.XMLDecoder;
+import java.beans.XMLEncoder;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.security.AccessControlException;
 import java.security.Policy;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.prefs.Preferences;
 
@@ -60,11 +67,13 @@ public class Initializer {
 	private JProgressBar progressBar;
 	private Preferences preference;
 	private File propDirectory, cacheDirectory, pluginDirectory, galleryDirectory;
+	private Map<String, String> systemProperties;
 
 	private static Initializer sharedInstance = new Initializer();
 
 	private Initializer() {
 		preference = Preferences.userNodeForPackage(Modeler.class);
+		systemProperties = new HashMap<String, String>();
 		checkDir();
 	}
 
@@ -78,6 +87,7 @@ public class Initializer {
 		if (f.exists())
 			HistoryManager.sharedInstance().readHistory(f);
 		recognizeUser();
+		readSystemProperties();
 	}
 
 	public Preferences getPreferences() {
@@ -96,6 +106,9 @@ public class Initializer {
 		if (IS_JAVA5)
 			System.setProperty("sun.swing.enableImprovedDragGesture", "true");
 		ModelerUtilities.init();
+		File f = new File(sharedInstance.propDirectory, "filechooser.xml");
+		if (f.exists())
+			ModelerUtilities.fileChooser.readHistory(f);
 	}
 
 	private void setupSecurity() {
@@ -245,6 +258,53 @@ public class Initializer {
 		if (!galleryDirectory.exists())
 			galleryDirectory.mkdir();
 
+	}
+
+	final void putSystemProperty(String key, String val) {
+		systemProperties.put(key, val);
+	}
+
+	final String getSystemProperty(String key) {
+		return systemProperties.get(key);
+	}
+
+	private void readSystemProperties() {
+		XMLDecoder in = null;
+		try {
+			in = new XMLDecoder(new BufferedInputStream(new FileInputStream(new File(propDirectory, "system.xml"))));
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (in == null)
+			return;
+		try {
+			systemProperties = (HashMap) in.readObject();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			in.close();
+		}
+	}
+
+	final void writeSystemProperties() {
+		XMLEncoder out = null;
+		try {
+			out = new XMLEncoder(new BufferedOutputStream(new FileOutputStream(new File(propDirectory, "system.xml"))));
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+		if (out == null)
+			return;
+		try {
+			out.writeObject(systemProperties);
+		}
+		finally {
+			out.close();
+		}
 	}
 
 	void setMessage(final String s) {

@@ -285,7 +285,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		navigator = new Navigator(page);
 		serverGate = new ServerGate(page);
 		editor.setServerGate(serverGate);
-		String s = preference.get(PreferencesDialog.HOME_PAGE, null);
+		String s = Initializer.sharedInstance().getSystemProperty(PreferencesDialog.HOME_PAGE);
 		if (s != null)
 			navigator.setHomePage(s);
 		page.setNavigator(navigator);
@@ -615,11 +615,11 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		else {
 			if (startingURL == null) {
 				if (PreferencesDialog.HOME_PAGE.equals(spt)) {
-					String hp = preference.get(PreferencesDialog.HOME_PAGE, null);
+					String hp = Initializer.sharedInstance().getSystemProperty(PreferencesDialog.HOME_PAGE);
 					navigator.visitLocation(hp != null ? hp : navigator.getHomePage());
 				}
 				else if (PreferencesDialog.LAST_VISITED_PAGE.equals(spt)) {
-					String lpv = preference.get(PreferencesDialog.LAST_VISITED_PAGE, null);
+					String lpv = Initializer.sharedInstance().getSystemProperty(PreferencesDialog.LAST_VISITED_PAGE);
 					if (lpv != null)
 						navigator.visitLocation(lpv);
 				}
@@ -748,11 +748,12 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 			preference.putInt("Height", editor.getHeight());
 		}
 
-		preference.put(PreferencesDialog.LAST_VISITED_PAGE, editor.getPage().getAddress());
+		Initializer.sharedInstance().putSystemProperty(PreferencesDialog.LAST_VISITED_PAGE,
+				editor.getPage().getAddress());
 		if (preferencesDialog != null) {
 
 			// save home page settings, if the preferences dialog has ever been invoked.
-			preference.put(PreferencesDialog.HOME_PAGE, preferencesDialog.getHome());
+			Initializer.sharedInstance().putSystemProperty(PreferencesDialog.HOME_PAGE, preferencesDialog.getHome());
 			preference.put("Start From", preferencesDialog.getStartPageType());
 
 			/* save proxy server settings */
@@ -809,6 +810,9 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 				new File(Initializer.sharedInstance().getPropertyDirectory(), "bookmarks.xml"));
 		HistoryManager.sharedInstance().writeHistory(
 				new File(Initializer.sharedInstance().getPropertyDirectory(), "history.xml"));
+		ModelerUtilities.fileChooser.writeHistory(new File(Initializer.sharedInstance().getPropertyDirectory(),
+				"filechooser.xml"));
+		Initializer.sharedInstance().writeSystemProperties();
 
 	}
 
@@ -874,7 +878,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 				m.editor.getPage().openHyperlink(currentAddress);
 			}
 			else if (currentAddress.equals("Untitled.cml")) {
-				String s = preference.get(PreferencesDialog.HOME_PAGE, null);
+				String s = Initializer.sharedInstance().getSystemProperty(PreferencesDialog.HOME_PAGE);
 				m.editor.getPage().openHyperlink(s != null ? s : m.navigator.getHomePage());
 			}
 			m.toFront();

@@ -199,7 +199,6 @@ public class BookmarkManager {
 
 	}
 
-	@SuppressWarnings("unchecked")
 	public void readBookmarks(File file) {
 		XMLDecoder in = null;
 		try {
@@ -231,8 +230,12 @@ public class BookmarkManager {
 		}
 		if (out == null)
 			return;
-		out.writeObject(bookmarks);
-		out.close();
+		try {
+			out.writeObject(bookmarks);
+		}
+		finally {
+			out.close();
+		}
 	}
 
 }

@@ -864,7 +864,7 @@ class PreferencesDialog extends JDialog {
 			setUseProxy(false);
 		}
 
-		s = pref.get(HOME_PAGE, null);
+		s = Initializer.sharedInstance().getSystemProperty(HOME_PAGE);
 		setHome(s != null ? s : modeler.navigator.getHomePage());
 
 		s = pref.get("Start From", null);
