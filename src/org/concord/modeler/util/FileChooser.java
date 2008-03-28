@@ -20,12 +20,21 @@
 
 package org.concord.modeler.util;
 
+import java.awt.EventQueue;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.XMLDecoder;
+import java.beans.XMLEncoder;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.prefs.Preferences;
+import java.util.Map;
 
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
@@ -43,13 +52,13 @@ import org.concord.modeler.FileFilterFactory;
 
 public class FileChooser extends JFileChooser {
 
-	private final static int NUM_FILES = 4;
+	private final static String LATEST_PATH = "Latest Path";
 	private final static String[] RECENT_FILES = new String[] { "Recent File 1", "Recent File 2", "Recent File 3",
 			"Recent File 4" };
 	private final static File DUMMY_FILE = new File("");
 
+	private Map<String, String> historyMap;
 	private List<String> recentFiles;
-	private Preferences preference;
 	private String lastVisitedPath;
 
 	public FileChooser() {
@@ -70,17 +79,6 @@ public class FileChooser extends JFileChooser {
 	public void addChoosableFileFilters(String[] ext) {
 		for (String s : ext)
 			addChoosableFileFilter(FileFilterFactory.getFilter(s));
-	}
-
-	public void setPreferences(Preferences p) {
-		preference = p;
-		if (preference == null)
-			return;
-		for (int i = 3; i >= 0; i--) {
-			String s = preference.get(RECENT_FILES[i], null);
-			if (s != null)
-				recentFiles.add(s);
-		}
 	}
 
 	/** remember the last opened file */
@@ -116,43 +114,44 @@ public class FileChooser extends JFileChooser {
 	/** save the last visited path to the hard drive */
 	public void rememberPath(String path) {
 		lastVisitedPath = path;
-		if (preference == null)
-			return;
-		preference.put("Latest Path", path);
+		historyMap.put(LATEST_PATH, path);
 	}
 
 	public String getLastVisitedPath() {
-		if (preference == null) {
+		if (historyMap == null)
 			return lastVisitedPath;
-		}
-		return preference.get("Latest Path", null);
+		return historyMap.get(LATEST_PATH);
 	}
 
-	public void rememberFile(String fileName, JMenu recentFilesMenu) {
-		if (preference == null)
+	public void rememberFile(String fileName, final JMenu recentFilesMenu) {
+		if (historyMap == null)
 			return;
 		if (fileName == null)
 			return;
+		int max = RECENT_FILES.length;
 		if (recentFiles.contains(fileName)) {
 			recentFiles.remove(fileName);
 		}
 		else {
-			if (recentFiles.size() >= NUM_FILES)
+			if (recentFiles.size() >= max)
 				recentFiles.remove(0);
 		}
 		recentFiles.add(fileName);
-		int n = recentFiles.size();
-		for (int i = 0; i < 4; i++) {
-			if (i < recentFiles.size())
-				preference.put(RECENT_FILES[3 - i], recentFiles.get(i));
+		final int n = recentFiles.size();
+		for (int i = 0; i < max; i++) {
+			if (i < n)
+				historyMap.put(RECENT_FILES[max - 1 - i], recentFiles.get(i));
 		}
-		if (recentFilesMenu == null)
-			return;
-		JMenuItem mi;
-		for (int i = 0; i < n; i++) {
-			mi = recentFilesMenu.getItem(i);
-			mi.setText(recentFiles.get(n - 1 - i));
-		}
+		if (recentFilesMenu != null)
+			EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					JMenuItem mi;
+					for (int i = 0; i < n; i++) {
+						mi = recentFilesMenu.getItem(i);
+						mi.setText(recentFiles.get(n - 1 - i));
+					}
+				}
+			});
 	}
 
 	public String[] getRecentFiles() {
@@ -171,6 +170,7 @@ public class FileChooser extends JFileChooser {
 		setFileHidingEnabled(true);
 		setFileView(new CustomizedFileView());
 		recentFiles = new ArrayList<String>();
+		historyMap = new HashMap<String, String>();
 		addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent e) {
 				String s = e.getPropertyName();
@@ -181,6 +181,52 @@ public class FileChooser extends JFileChooser {
 				}
 			}
 		});
+	}
+
+	public void readHistory(File file) {
+		XMLDecoder in = null;
+		try {
+			in = new XMLDecoder(new BufferedInputStream(new FileInputStream(file)));
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (in == null)
+			return;
+		try {
+			historyMap = (HashMap) in.readObject();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			in.close();
+		}
+		if (historyMap == null)
+			return;
+		for (int i = 3; i >= 0; i--) {
+			String s = historyMap.get(RECENT_FILES[i]);
+			if (s != null)
+				recentFiles.add(s);
+		}
+	}
+
+	public void writeHistory(File file) {
+		XMLEncoder out = null;
+		try {
+			out = new XMLEncoder(new BufferedOutputStream(new FileOutputStream(file)));
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+		if (out == null)
+			return;
+		try {
+			out.writeObject(historyMap);
+		}
+		finally {
+			out.close();
+		}
 	}
 
 }

@@ -133,7 +133,6 @@ public final class ModelerUtilities {
 		Initializer.sharedInstance().setMessage("Initializing file chooser...");
 		fileChooser = new FileChooser(System.getProperty("user.dir"));
 		fileChooser.setFileHidingEnabled(false);
-		fileChooser.setPreferences(Initializer.sharedInstance().getPreferences());
 		Page.setFileChooser(ModelerUtilities.fileChooser);
 		XYGrapher.setFileChooser(fileChooser);
 		JNLPSaver.setFileChooser(fileChooser);
