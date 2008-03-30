@@ -278,7 +278,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		statusBar = new StatusBar();
 		ConnectionManager.sharedInstance().addProgressListener(statusBar);
 
-		Initializer.sharedInstance().setMessage("Initializing Editor...");
+		Initializer.sharedInstance().setMessage("Creating editor...");
 		editor = new Editor(statusBar);
 		editor.addEditorListener(this);
 		Page page = editor.getPage();
@@ -297,10 +297,10 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 
 		editor.createToolBars();
 
-		Initializer.sharedInstance().setMessage("Creating GUI: Modeler tool bar...");
+		Initializer.sharedInstance().setMessage("Creating tool bar...");
 		createToolBar();
 
-		Initializer.sharedInstance().setMessage("Creating GUI: Modeler menu bar...");
+		Initializer.sharedInstance().setMessage("Creating menu bar...");
 		createMenuBar();
 		setJMenuBar(menuBar);
 
@@ -350,6 +350,16 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 				savePageAndClose();
 			}
 		});
+
+		if (windowCount == 0) {
+			Initializer.sharedInstance().setMessage("Updating UI...");
+			EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					SwingUtilities.updateComponentTreeUI(Modeler.this);
+					ModelerUtilities.updateUI();
+				}
+			});
+		}
 
 		windowCount++;
 
@@ -416,12 +426,6 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		boolean b = false;
 		try {
 			UIManager.setLookAndFeel(className);
-			EventQueue.invokeLater(new Runnable() {
-				public void run() {
-					SwingUtilities.updateComponentTreeUI(Modeler.this);
-					ModelerUtilities.updateUI();
-				}
-			});
 			b = true;
 		}
 		catch (Exception e) {
