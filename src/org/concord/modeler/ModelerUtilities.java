@@ -51,7 +51,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.lang.reflect.Method;
+import java.net.InetAddress;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.security.cert.Certificate;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -165,6 +168,41 @@ public final class ModelerUtilities {
 		}
 		for (int i = 8; i <= 72; i++)
 			FONT_SIZE[i - 8] = i;
+	}
+
+	/** ping the MW server */
+	public static boolean pingMwServer() {
+		try {
+			return ping(new URL(Modeler.getContextRoot()), 10000);
+		}
+		catch (MalformedURLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	public static boolean ping(URL url, int timeout) {
+		return ping(url.getHost(), timeout);
+	}
+
+	private static boolean ping(String host, int timeout) {
+		InetAddress address = null;
+		try {
+			address = InetAddress.getByName(host);
+		}
+		catch (UnknownHostException e) {
+			e.printStackTrace();
+			return false;
+		}
+		boolean b = false;
+		try {
+			b = address.isReachable(timeout);
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return b;
 	}
 
 	static boolean testQuicktime() {

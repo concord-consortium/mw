@@ -93,9 +93,6 @@ public class ConnectionManager {
 		}
 		catch (IOException e) {
 			e.printStackTrace();
-			String host = u.getHost();
-			ServerChecker.sharedInstance().setLastCheckTime(host, System.currentTimeMillis());
-			ServerChecker.sharedInstance().setAvailable(host, false);
 			return null;
 		}
 		connection.setConnectTimeout(connectTimeout);
@@ -338,11 +335,7 @@ public class ConnectionManager {
 		if (url.toString().toLowerCase().startsWith("jar:"))
 			return null;
 
-		String host = url.getHost();
-		if (!ServerChecker.sharedInstance().shouldCheck(host)) {
-			if (!ServerChecker.sharedInstance().isAvailable(host))
-				return null;
-		}
+		// if (!ModelerUtilities.ping(url, 10000)) return null;
 
 		URLConnection connect = getConnection(url);
 		if (connect == null)
@@ -357,8 +350,6 @@ public class ConnectionManager {
 		}
 		catch (IOException e) {
 			e.printStackTrace();
-			ServerChecker.sharedInstance().setLastCheckTime(host, System.currentTimeMillis());
-			ServerChecker.sharedInstance().setAvailable(host, false);
 			return null;
 		}
 
