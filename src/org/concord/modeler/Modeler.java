@@ -3088,7 +3088,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					Initializer.sharedInstance().setMessage("Testing connection to the main MW server...");
-					ConnectionManager.sharedInstance().setWorkOffline(!ServerChecker.sharedInstance().check());
+					ConnectionManager.sharedInstance().setWorkOffline(!ModelerUtilities.pingMwServer());
 					Initializer.init();
 					final Modeler m = createModeler();
 					m.pack();
@@ -3106,7 +3106,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 				public Object construct() {
 					Debugger.print("Starting main loader");
 					Initializer.sharedInstance().setMessage("Testing connection to the main MW server...");
-					ConnectionManager.sharedInstance().setWorkOffline(!ServerChecker.sharedInstance().check());
+					ConnectionManager.sharedInstance().setWorkOffline(!ModelerUtilities.pingMwServer());
 					Initializer.init();
 					return createModeler();
 				}
