@@ -20,7 +20,9 @@
 package org.concord.modeler.text;
 
 import java.awt.Image;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -127,13 +129,15 @@ class MultiplePageReportFormatter extends ReportFormatter {
 							try {
 								if (image != null) {
 									StyleConstants.setIcon(style, image);
-									doc.insertString(doc.getLength(), "\n\n", null);
 									doc.insertString(doc.getLength(), " ", style);
-									doc.insertString(doc.getLength(), "\n\n", null);
+									doc.insertString(doc.getLength(), "\n", null);
 									Object comment = SnapshotGallery.sharedInstance().getProperty(
 											"comment:" + image.getDescription());
 									if (comment != null)
-										doc.insertString(doc.getLength(), comment.toString(), null);
+										doc.insertString(doc.getLength(), comment.toString() + "   ", null);
+									doc.insertString(doc.getLength(), "("
+											+ DateFormat.getTimeInstance().format(new Date(qa.getTimestamp())) + ")",
+											tinyStyle);
 									doc.insertString(doc.getLength(), "\n\n", null);
 								}
 								else {
@@ -177,7 +181,11 @@ class MultiplePageReportFormatter extends ReportFormatter {
 									doc.insertString(doc.getLength(), "NOT ANSWERED.\n\n", highlightStyle);
 								}
 								else {
-									doc.insertString(doc.getLength(), s2 + s1 + "\n\n", answerStyle);
+									doc.insertString(doc.getLength(), s2 + s1 + "  ", answerStyle);
+									doc.insertString(doc.getLength(), "("
+											+ DateFormat.getTimeInstance().format(new Date(qa.getTimestamp())) + ")",
+											tinyStyle);
+									doc.insertString(doc.getLength(), "\n\n", null);
 								}
 							}
 							catch (BadLocationException ble) {
@@ -193,7 +201,11 @@ class MultiplePageReportFormatter extends ReportFormatter {
 									doc.insertString(doc.getLength(), answer + "\n\n", highlightStyle);
 								}
 								else {
-									doc.insertString(doc.getLength(), answer + "\n\n", answerStyle);
+									doc.insertString(doc.getLength(), answer, answerStyle);
+									doc.insertString(doc.getLength(), "    ("
+											+ DateFormat.getTimeInstance().format(new Date(qa.getTimestamp())) + ")",
+											tinyStyle);
+									doc.insertString(doc.getLength(), "\n\n", null);
 								}
 							}
 							catch (BadLocationException ble) {
