@@ -20,6 +20,7 @@
 package org.concord.modeler.text;
 
 import java.awt.Color;
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.Map;
 
@@ -39,7 +40,7 @@ import org.concord.modeler.ui.IconPool;
  */
 abstract class ReportFormatter {
 
-	static Style questionStyle, answerStyle, titleStyle, subtitleStyle, linkStyle, highlightStyle;
+	static Style questionStyle, answerStyle, titleStyle, subtitleStyle, linkStyle, highlightStyle, tinyStyle;
 	final static int MAX_IMAGE = 5;
 
 	Page page;
@@ -151,7 +152,8 @@ abstract class ReportFormatter {
 					+ "\n", highlightStyle);
 
 			s = Modeler.getInternationalText("Date");
-			doc.insertString(doc.getLength(), (s != null ? s : "Date") + ": " + new Date() + "\n", answerStyle);
+			doc.insertString(doc.getLength(), (s != null ? s : "Submission Time") + ": "
+					+ DateFormat.getInstance().format(new Date()) + "\n", answerStyle);
 
 		}
 		catch (BadLocationException ble) {
@@ -198,6 +200,12 @@ abstract class ReportFormatter {
 			linkStyle = page.addStyle(null, answerStyle);
 			StyleConstants.setForeground(linkStyle, Page.getLinkColor());
 			StyleConstants.setUnderline(linkStyle, true);
+		}
+		if (tinyStyle == null) {
+			tinyStyle = page.addStyle(null, null);
+			StyleConstants.setFontSize(tinyStyle, Page.getDefaultFontSize() - 4);
+			StyleConstants.setFontFamily(tinyStyle, Page.getDefaultFontFamily());
+			StyleConstants.setForeground(tinyStyle, Color.gray);
 		}
 	}
 
