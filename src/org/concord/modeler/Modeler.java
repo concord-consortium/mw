@@ -355,7 +355,6 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 			Initializer.sharedInstance().setMessage("Updating UI...");
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					SwingUtilities.updateComponentTreeUI(Modeler.this);
 					ModelerUtilities.updateUI();
 				}
 			});
