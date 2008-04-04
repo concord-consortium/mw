@@ -381,8 +381,8 @@ public class Navigator {
 		return comboBox;
 	}
 
-	private JTextField getTextField() {
-		return (JTextField) (comboBox.getEditor().getEditorComponent());
+	JTextField getTextField() {
+		return (JTextField) comboBox.getEditor().getEditorComponent();
 	}
 
 	public Action getAction(String key) {
