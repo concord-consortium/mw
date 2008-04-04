@@ -143,7 +143,7 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	double tx, ty;
 
 	/*
-	 * custom external force applied to this particle.
+	 * custom external force applied to this particle. Unit: eV/A
 	 */
 	float hx, hy;
 
@@ -1193,7 +1193,7 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	/** render this particle's custom force vector on the passed graphics */
 	public void drawCustomForceVector(Graphics2D g) {
 		if (Math.abs(hx) > ZERO || Math.abs(hy) > ZERO)
-			drawVector(g, hx * 120, hy * 120, getView().getForceFlavor());
+			drawVector(g, hx, hy, getView().getForceFlavor());
 	}
 
 	private void drawVector(Graphics2D g, double x, double y, VectorFlavor flavor) {
