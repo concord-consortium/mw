@@ -42,6 +42,7 @@ import javax.swing.plaf.basic.BasicBorders;
 import org.concord.modeler.ModelerUtilities;
 import org.concord.modeler.ui.ColorComboBox;
 import org.concord.modeler.ui.ColorRectangle;
+import org.concord.modeler.ui.FloatNumberTextField;
 import org.concord.modeler.ui.HyperlinkLabel;
 import org.concord.modeler.ui.RealNumberTextField;
 import org.concord.mw2d.models.Particle;
@@ -130,14 +131,26 @@ abstract class PropertiesPanel extends JPanel {
 	}
 
 	static void applyBounds(RealNumberTextField t) {
-		double d = t.getValue();
-		if (d > t.getMaxValue()) {
-			d = t.getMaxValue();
-			t.setValue(d);
+		double x = t.getValue();
+		if (x > t.getMaxValue()) {
+			x = t.getMaxValue();
+			t.setValue(x);
 		}
-		else if (d < t.getMinValue()) {
-			d = t.getMinValue();
-			t.setValue(d);
+		else if (x < t.getMinValue()) {
+			x = t.getMinValue();
+			t.setValue(x);
+		}
+	}
+
+	static void applyBounds(FloatNumberTextField t) {
+		float x = t.getValue();
+		if (x > t.getMaxValue()) {
+			x = t.getMaxValue();
+			t.setValue(x);
+		}
+		else if (x < t.getMinValue()) {
+			x = t.getMinValue();
+			t.setValue(x);
 		}
 	}
 

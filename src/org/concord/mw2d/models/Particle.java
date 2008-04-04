@@ -1191,7 +1191,7 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	}
 
 	/** render this particle's custom force vector on the passed graphics */
-	public void drawCustomForceVector(Graphics2D g) {
+	public void drawExternalForceVector(Graphics2D g) {
 		if (Math.abs(hx) > ZERO || Math.abs(hy) > ZERO)
 			drawVector(g, hx, hy, getView().getForceFlavor());
 	}

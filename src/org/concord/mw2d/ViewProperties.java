@@ -71,7 +71,7 @@ class ViewProperties extends JDialog {
 	private JCheckBox dipoleCheckBox;
 	private JCheckBox vdwLinesCheckBox;
 	private JCheckBox vdwCirclesCheckBox;
-	private JCheckBox customForceCheckBox;
+	private JCheckBox externalForceCheckBox;
 	private JCheckBox velocityCheckBox;
 	private JCheckBox momentumCheckBox;
 	private JCheckBox angularMomentumCheckBox;
@@ -240,11 +240,11 @@ class ViewProperties extends JDialog {
 			chargeCheckBox.setText(s);
 		p2.add(chargeCheckBox);
 
-		customForceCheckBox = new JCheckBox(view.getSwitches().get("Show Custom Force"));
+		externalForceCheckBox = new JCheckBox(view.getSwitches().get("Show Custom Force"));
 		s = MDView.getInternationalText("ShowCustomForce");
 		if (s != null)
-			customForceCheckBox.setText(s);
-		p2.add(customForceCheckBox);
+			externalForceCheckBox.setText(s);
+		p2.add(externalForceCheckBox);
 		p2.add(new JPanel());
 
 		s = MDView.getInternationalText("ShowVanderWaalsSpheres");
@@ -636,11 +636,11 @@ class ViewProperties extends JDialog {
 			dipoleCheckBox.setText(s);
 		p.add(dipoleCheckBox);
 
-		customForceCheckBox = new JCheckBox(view.getSwitches().get("Show Custom Force"));
-		s = MDView.getInternationalText("ShowCustomForce");
+		externalForceCheckBox = new JCheckBox(view.getSwitches().get("Show External Force"));
+		s = MDView.getInternationalText("ShowExternalForce");
 		if (s != null)
-			customForceCheckBox.setText(s);
-		p.add(customForceCheckBox);
+			externalForceCheckBox.setText(s);
+		p.add(externalForceCheckBox);
 
 		momentumCheckBox = new JCheckBox(view.getActionMap().get("Momentum Vector of Center of Mass"));
 		s = MDView.getInternationalText("MomentumVectorOfCenterOfMass");
@@ -725,7 +725,7 @@ class ViewProperties extends JDialog {
 		setStateOfToggleButton(indexCheckBox, view.getShowParticleIndex(), false);
 		setStateOfToggleButton(clockCheckBox, view.getShowClock(), false);
 		setStateOfToggleButton(chargeCheckBox, view.getDrawCharge(), false);
-		setStateOfToggleButton(customForceCheckBox, view.getDrawCustomForce(), false);
+		setStateOfToggleButton(externalForceCheckBox, view.getDrawExternalForce(), false);
 		if (view instanceof AtomisticView) {
 			AtomisticView av = (AtomisticView) view;
 			switch (av.getDisplayStyle()) {

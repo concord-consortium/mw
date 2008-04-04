@@ -1288,7 +1288,7 @@ public class MesoModel extends MDModel {
 		view.setEnergizer(vs.getEnergizer());
 		view.setDrawCharge(vs.getDrawCharge());
 		view.setDrawDipole(vs.getDrawDipole());
-		view.setDrawCustomForce(vs.getDrawCustomForce());
+		view.setDrawExternalForce(vs.getDrawExternalForce());
 		view.setShowParticleIndex(vs.getShowParticleIndex());
 		view.setShowClock(vs.getShowClock());
 		view.showLinearMomenta(vs.getShowVVectors());
@@ -1361,7 +1361,7 @@ public class MesoModel extends MDModel {
 		vs.setEnergizer(view.getEnergizer());
 		vs.setDrawCharge(view.getDrawCharge());
 		vs.setDrawDipole(view.getDrawDipole());
-		vs.setDrawCustomForce(view.getDrawCustomForce());
+		vs.setDrawExternalForce(view.getDrawExternalForce());
 		vs.setShowParticleIndex(view.getShowParticleIndex());
 		vs.setShowClock(view.getShowClock());
 		vs.setShowVVectors(view.linearMomentaShown());

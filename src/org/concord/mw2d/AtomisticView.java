@@ -2007,8 +2007,8 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				at.drawAccelerationVector(g);
 			if (forceVector)
 				at.drawForceVector(g);
-			if (drawCustomForce)
-				at.drawCustomForceVector(g);
+			if (drawExternalForce)
+				at.drawExternalForceVector(g);
 		}
 		if (at.velocitySelected())
 			at.drawSelectedVelocityVector(g, getBackground(), readyToAdjustVelocityVector);
