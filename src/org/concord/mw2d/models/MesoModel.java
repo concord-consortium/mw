@@ -1053,6 +1053,10 @@ public class MesoModel extends MDModel {
 
 		if (numberOfParticles == 1) {
 
+			gb[0].fx = gb[0].hx / gb[0].mass;
+			gb[0].fy = gb[0].hy / gb[0].mass;
+			gb[0].tau = gb[0].gamma / gb[0].inertia;
+
 			if (gb[0].friction > 0.0f) {
 				double dmp = GF_CONVERSION_CONSTANT * gb[0].friction * universe.getViscosity() / gb[0].mass;
 				gb[0].fx -= dmp * gb[0].vx;
@@ -1101,10 +1105,6 @@ public class MesoModel extends MDModel {
 			if (gb[0].getUserField() != null) {
 				gb[0].getUserField().dyn(gb[0]);
 			}
-
-			gb[0].fx += gb[0].hx;
-			gb[0].fy += gb[0].hy;
-			gb[0].tau += gb[0].gamma;
 
 			return vsum;
 
@@ -1164,6 +1164,9 @@ public class MesoModel extends MDModel {
 
 		double inverseMass = 1.0;
 		for (int i = 0; i < numberOfParticles; i++) {
+			gb[i].fx += gb[i].hx;
+			gb[i].fy += gb[i].hy;
+			gb[i].tau += gb[i].gamma;
 			inverseMass = GF_CONVERSION_CONSTANT / gb[i].mass;
 			gb[i].fx *= inverseMass;
 			gb[i].fy *= inverseMass;
@@ -1223,12 +1226,6 @@ public class MesoModel extends MDModel {
 					}
 				}
 			}
-		}
-
-		for (int i = 0; i < numberOfParticles; i++) {
-			gb[i].fx += gb[i].hx;
-			gb[i].fy += gb[i].hy;
-			gb[i].tau += gb[i].gamma;
 		}
 
 		return vsum / numberOfParticles;
