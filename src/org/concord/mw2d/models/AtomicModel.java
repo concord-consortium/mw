@@ -2658,8 +2658,8 @@ public abstract class AtomicModel extends MDModel {
 		}
 
 		for (int i = 0; i < numberOfAtoms; i++) {
-			atom[i].fx = 0.0;
-			atom[i].fy = 0.0;
+			atom[i].fx = 0;
+			atom[i].fy = 0;
 		}
 		if (obstacles != null) {
 			RectangularObstacle obs;
@@ -2750,6 +2750,9 @@ public abstract class AtomicModel extends MDModel {
 			if (atom[0].getUserField() != null) {
 				atom[0].getUserField().dyn(atom[0]);
 			}
+
+			atom[0].fx += atom[0].hx;
+			atom[0].fy += atom[0].hy;
 
 			if (time < 0) {
 				atom[0].fx *= atom[0].mass;
@@ -3050,6 +3053,11 @@ public abstract class AtomicModel extends MDModel {
 					eAF += etemp;
 				}
 			}
+		}
+
+		for (int i = 0; i < numberOfAtoms; i++) {
+			atom[i].fx += atom[i].hx;
+			atom[i].fy += atom[i].hy;
 		}
 
 		if (time < 0) {

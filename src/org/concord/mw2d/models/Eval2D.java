@@ -2818,6 +2818,26 @@ class Eval2D extends AbstractEval {
 				notifyChange();
 				return true;
 			}
+			else if (s0 == "hx") {
+				int n = model.getNumberOfParticles();
+				for (int i = 0; i < n; i++) {
+					Particle p = model.getParticle(i);
+					if (p.isSelected())
+						p.hx = (float) x;
+				}
+				notifyChange();
+				return true;
+			}
+			else if (s0 == "hy") {
+				int n = model.getNumberOfParticles();
+				for (int i = 0; i < n; i++) {
+					Particle p = model.getParticle(i);
+					if (p.isSelected())
+						p.hy = (float) x;
+				}
+				notifyChange();
+				return true;
+			}
 			else if (s0 == "kelvin") {
 				int n = model.getNumberOfParticles();
 				if (model instanceof AtomicModel) {
@@ -4088,6 +4108,12 @@ class Eval2D extends AbstractEval {
 			m.gb[i].ay = x;
 		else if (s == "alpha")
 			m.gb[i].alpha = x;
+		else if (s == "hx")
+			m.gb[i].hx = (float) x;
+		else if (s == "hy")
+			m.gb[i].hy = (float) x;
+		else if (s == "gamma")
+			m.gb[i].gamma = (float) x;
 		else if (s == "charge")
 			m.gb[i].charge = x;
 		else if (s == "dipole")
@@ -4157,6 +4183,10 @@ class Eval2D extends AbstractEval {
 			m.atom[i].ax = x;
 		else if (s == "ay")
 			m.atom[i].ay = x;
+		else if (s == "hx")
+			m.atom[i].hx = (float) x;
+		else if (s == "hy")
+			m.atom[i].hy = (float) x;
 		else if (s == "charge")
 			m.atom[i].charge = x;
 		else if (s == "friction")

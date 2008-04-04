@@ -1046,9 +1046,9 @@ public class MesoModel extends MDModel {
 		eMF = 0.0;
 		eRS = 0.0;
 		for (int i = 0; i < numberOfParticles; i++) {
-			gb[i].fx = 0.0;
-			gb[i].fy = 0.0;
-			gb[i].tau = 0.0;
+			gb[i].fx = 0;
+			gb[i].fy = 0;
+			gb[i].tau = 0;
 		}
 
 		if (numberOfParticles == 1) {
@@ -1101,6 +1101,10 @@ public class MesoModel extends MDModel {
 			if (gb[0].getUserField() != null) {
 				gb[0].getUserField().dyn(gb[0]);
 			}
+
+			gb[0].fx += gb[0].hx;
+			gb[0].fy += gb[0].hy;
+			gb[0].tau += gb[0].gamma;
 
 			return vsum;
 
@@ -1219,6 +1223,12 @@ public class MesoModel extends MDModel {
 					}
 				}
 			}
+		}
+
+		for (int i = 0; i < numberOfParticles; i++) {
+			gb[i].fx += gb[i].hx;
+			gb[i].fy += gb[i].hy;
+			gb[i].tau += gb[i].gamma;
 		}
 
 		return vsum / numberOfParticles;
