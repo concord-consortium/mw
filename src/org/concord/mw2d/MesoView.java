@@ -617,8 +617,8 @@ public class MesoView extends MDView {
 			p.drawOmega(g, getBackground());
 		if (showLinearMomenta)
 			p.drawVelocityVector(g);
-		if (drawCustomForce)
-			p.drawCustomForceVector(g);
+		if (drawExternalForce)
+			p.drawExternalForceVector(g);
 		if (p.velocitySelected())
 			p.drawSelectedVelocityVector(g, getBackground(), readyToAdjustVelocityVector);
 		if (p.getOmegaSelection())

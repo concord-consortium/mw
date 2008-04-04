@@ -177,7 +177,7 @@ public abstract class MDView extends PrintableComponent {
 	boolean drawString = true;
 	double relativeKEForShading = 1.0;
 	boolean showClock = true, showParticleIndex, drawCharge = true, showSelectionHalo = true;
-	boolean drawCustomForce;
+	boolean drawExternalForce;
 	boolean showMirrorImages = true;
 	float chargeIncrement = 0.5f;
 	short actionID = SELE_ID;
@@ -332,7 +332,7 @@ public abstract class MDView extends PrintableComponent {
 		a = new AbstractAction() {
 			public Object getValue(String key) {
 				if (key.equalsIgnoreCase("state"))
-					return getDrawCustomForce() ? Boolean.TRUE : Boolean.FALSE;
+					return getDrawExternalForce() ? Boolean.TRUE : Boolean.FALSE;
 				return super.getValue(key);
 			}
 
@@ -341,7 +341,7 @@ public abstract class MDView extends PrintableComponent {
 					return;
 				Object o = e.getSource();
 				if (o instanceof JToggleButton)
-					setDrawCustomForce(((JToggleButton) o).isSelected());
+					setDrawExternalForce(((JToggleButton) o).isSelected());
 			}
 
 			public String toString() {
@@ -2312,16 +2312,16 @@ public abstract class MDView extends PrintableComponent {
 		return drawCharge;
 	}
 
-	public void setDrawCustomForce(boolean b) {
-		if (drawCustomForce == b)
+	public void setDrawExternalForce(boolean b) {
+		if (drawExternalForce == b)
 			return;
-		drawCustomForce = b;
+		drawExternalForce = b;
 		getModel().notifyChange();
 		repaint();
 	}
 
-	public boolean getDrawCustomForce() {
-		return drawCustomForce;
+	public boolean getDrawExternalForce() {
+		return drawExternalForce;
 	}
 
 	public void setVelocityFlavor(VectorFlavor vf) {
@@ -3316,7 +3316,8 @@ public abstract class MDView extends PrintableComponent {
 		private Color background = Color.white;
 		private int markColor = 0xffccccff;
 		private boolean energizer;
-		private boolean showParticleIndex, showClock = true, drawCharge = true, showMirrorImages = true, drawCustomForce;
+		private boolean showParticleIndex, showClock = true, drawCharge = true, showMirrorImages = true,
+				drawExternalForce;
 		private FillMode fillMode;
 		private VectorFlavor velocityFlavor;
 		private VectorFlavor momentumFlavor;
@@ -3441,12 +3442,12 @@ public abstract class MDView extends PrintableComponent {
 			return drawCharge;
 		}
 
-		public void setDrawCustomForce(boolean b) {
-			drawCustomForce = b;
+		public void setDrawExternalForce(boolean b) {
+			drawExternalForce = b;
 		}
 
-		public boolean getDrawCustomForce() {
-			return drawCustomForce;
+		public boolean getDrawExternalForce() {
+			return drawExternalForce;
 		}
 
 		public void setShowClock(boolean b) {

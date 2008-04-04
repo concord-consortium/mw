@@ -48,6 +48,7 @@ import org.concord.modeler.process.Executable;
 import org.concord.modeler.ui.ColorComboBox;
 import org.concord.modeler.ui.ColorRectangle;
 import org.concord.modeler.ui.ComboBoxRenderer;
+import org.concord.modeler.ui.FloatNumberTextField;
 import org.concord.modeler.ui.HyperlinkLabel;
 import org.concord.modeler.ui.RealNumberTextField;
 import org.concord.modeler.ui.RestrictedTextField;
@@ -80,6 +81,8 @@ class AtomPropertiesPanel extends PropertiesPanel {
 	private RealNumberTextField ryField;
 	private RealNumberTextField vxField;
 	private RealNumberTextField vyField;
+	private FloatNumberTextField hxField;
+	private FloatNumberTextField hyField;
 	private HyperlinkLabel leftXLabel;
 	private HyperlinkLabel leftYLabel;
 	private HyperlinkLabel leftVxLabel;
@@ -142,6 +145,14 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		velo = atom.isMovable() ? 10000 * atom.getVy() : 0;
 		vyField = new RealNumberTextField(velo, -10000, 10000, 10);
 		vyField.setEditable(atom.isMovable());
+
+		float hval = atom.isMovable() ? 10 * atom.getHx() : 0;
+		hxField = new FloatNumberTextField(hval, -10, 10, 10);
+		hxField.setEditable(atom.isMovable());
+
+		hval = atom.isMovable() ? 10 * atom.getHy() : 0;
+		hyField = new FloatNumberTextField(hval, -10, 10, 10);
+		hyField.setEditable(atom.isMovable());
 
 		massField = new RealNumberTextField(atom.getMass() * 120, 1, 1000000.0, 10);
 		massField.setEnabled(!atom.isAminoAcid());
@@ -207,6 +218,8 @@ class AtomPropertiesPanel extends PropertiesPanel {
 				applyBounds(springField);
 				applyBounds(vxField);
 				applyBounds(vyField);
+				applyBounds(hxField);
+				applyBounds(hyField);
 
 				boolean changed = false;
 
@@ -268,6 +281,16 @@ class AtomPropertiesPanel extends PropertiesPanel {
 					changed = true;
 				}
 
+				if (Math.abs(atom.getHx() * 10 - hxField.getValue()) > ZERO) {
+					atom.setHx(hxField.getValue() * 0.1f);
+					changed = true;
+				}
+
+				if (Math.abs(atom.getHy() * 10 - hyField.getValue()) > ZERO) {
+					atom.setHy(hyField.getValue() * 0.1f);
+					changed = true;
+				}
+
 				if (atom.isAminoAcid()) {
 					final String s = codonField.getText();
 					if (s.trim().equals("") || s.length() != 3) {
@@ -319,6 +342,8 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		ryField.setAction(okAction);
 		vxField.setAction(okAction);
 		vyField.setAction(okAction);
+		hxField.setAction(okAction);
+		hyField.setAction(okAction);
 		massField.setAction(okAction);
 		chargeField.setAction(okAction);
 		springField.setAction(okAction);
@@ -412,6 +437,15 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		panel.add(new JLabel(s != null ? s : "Damping"));
 		panel.add(frictionField);
 		panel.add(createSmallerFontLabel("<html>eV*fs/&#197;<sup>2</sup></html>"));
+
+		s = MDView.getInternationalText("ExternalForce");
+		panel.add(new JLabel((s != null ? s : "External force") + "-x"));
+		panel.add(hxField);
+		panel.add(createSmallerFontLabel("<html>eV/&#197;</html>"));
+
+		panel.add(new JLabel((s != null ? s : "External force") + "-y"));
+		panel.add(hyField);
+		panel.add(createSmallerFontLabel("<html>eV/&#197;</html>"));
 
 		leftXLabel = new HyperlinkLabel(
 				atom.isMovable() ? "<html><font color=\"#0000ff\"><u><em>X</em></u></font></html>" : "X");
@@ -537,7 +571,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		panel.add(label);
 		panel.add(createSmallerFontLabel("<html>&#197;/fs<sup>2</sup></html>"));
 
-		makeCompactGrid(panel, atom.isAminoAcid() ? 17 : 16, 3, 5, 5, 10, 2);
+		makeCompactGrid(panel, atom.isAminoAcid() ? 19 : 18, 3, 5, 5, 10, 2);
 
 		panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		add(panel, BorderLayout.SOUTH);
