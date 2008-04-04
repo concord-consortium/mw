@@ -2676,6 +2676,9 @@ public abstract class AtomicModel extends MDModel {
 
 		if (numberOfAtoms == 1) {
 
+			atom[0].fx = atom[0].hx / atom[0].mass;
+			atom[0].fy = atom[0].hy / atom[0].mass;
+
 			double etemp;
 
 			if (atom[0].friction > ZERO) {
@@ -2751,12 +2754,11 @@ public abstract class AtomicModel extends MDModel {
 				atom[0].getUserField().dyn(atom[0]);
 			}
 
-			atom[0].fx += atom[0].hx;
-			atom[0].fy += atom[0].hy;
-
 			if (time < 0) {
 				atom[0].fx *= atom[0].mass;
 				atom[0].fy *= atom[0].mass;
+				atom[0].fx += atom[0].hx;
+				atom[0].fy += atom[0].hy;
 			}
 
 			return vsum;
@@ -2965,6 +2967,8 @@ public abstract class AtomicModel extends MDModel {
 
 		double inverseMass;
 		for (int i = 0; i < numberOfAtoms; i++) {
+			atom[i].fx += atom[i].hx;
+			atom[i].fy += atom[i].hy;
 			inverseMass = 1.0 / atom[i].mass;
 			atom[i].fx *= inverseMass;
 			atom[i].fy *= inverseMass;
@@ -3055,15 +3059,12 @@ public abstract class AtomicModel extends MDModel {
 			}
 		}
 
-		for (int i = 0; i < numberOfAtoms; i++) {
-			atom[i].fx += atom[i].hx;
-			atom[i].fy += atom[i].hy;
-		}
-
 		if (time < 0) {
 			for (int i = 0; i < numberOfAtoms; i++) {
 				atom[i].fx *= atom[i].mass;
 				atom[i].fy *= atom[i].mass;
+				atom[i].fx += atom[i].hx;
+				atom[i].fy += atom[i].hy;
 			}
 		}
 
