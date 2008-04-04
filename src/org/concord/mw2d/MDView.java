@@ -348,8 +348,8 @@ public abstract class MDView extends PrintableComponent {
 				return (String) getValue(Action.NAME);
 			}
 		};
-		a.putValue(Action.NAME, "Show Custom Force");
-		a.putValue(Action.SHORT_DESCRIPTION, "Show Custom Force");
+		a.putValue(Action.NAME, "Show External Force");
+		a.putValue(Action.SHORT_DESCRIPTION, "Show External Force");
 		booleanSwitches.put(a.toString(), a);
 
 		ComponentPrinter printer = new ComponentPrinter(this, "Printing a Model");

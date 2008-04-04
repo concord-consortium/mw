@@ -240,8 +240,8 @@ class ViewProperties extends JDialog {
 			chargeCheckBox.setText(s);
 		p2.add(chargeCheckBox);
 
-		externalForceCheckBox = new JCheckBox(view.getSwitches().get("Show Custom Force"));
-		s = MDView.getInternationalText("ShowCustomForce");
+		externalForceCheckBox = new JCheckBox(view.getSwitches().get("Show External Force"));
+		s = MDView.getInternationalText("ShowExternalForce");
 		if (s != null)
 			externalForceCheckBox.setText(s);
 		p2.add(externalForceCheckBox);
