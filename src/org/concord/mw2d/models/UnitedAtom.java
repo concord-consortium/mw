@@ -181,15 +181,17 @@ public abstract class UnitedAtom extends Particle {
 		dipoleMoment = 0.0;
 	}
 
-	public void duplicate(Particle ua) {
-		if (!(ua instanceof UnitedAtom))
-			throw new IllegalArgumentException("target not UnitedAtom");
-		super.duplicate(ua);
-		theta = ((UnitedAtom) ua).theta;
-		omega = ((UnitedAtom) ua).omega;
-		dipoleMoment = ((UnitedAtom) ua).dipoleMoment;
-		inertia = ((UnitedAtom) ua).inertia;
-		dipoleColor = ((UnitedAtom) ua).dipoleColor;
+	public void duplicate(Particle p) {
+		if (!(p instanceof UnitedAtom))
+			throw new IllegalArgumentException("target not a UnitedAtom");
+		super.duplicate(p);
+		UnitedAtom ua = (UnitedAtom) p;
+		theta = ua.theta;
+		omega = ua.omega;
+		gamma = ua.gamma;
+		dipoleMoment = ua.dipoleMoment;
+		inertia = ua.inertia;
+		dipoleColor = ua.dipoleColor;
 	}
 
 	public void setMovable(boolean b) {

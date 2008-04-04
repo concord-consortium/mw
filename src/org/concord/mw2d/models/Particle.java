@@ -449,7 +449,7 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	}
 
 	public void setHx(float hx) {
-	this.hx=hx;
+		this.hx = hx;
 	}
 
 	public float getHy() {
@@ -457,7 +457,7 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	}
 
 	public void setHy(float hy) {
-		this.hy=hy;
+		this.hy = hy;
 	}
 
 	/** rx=rx*d */
@@ -726,6 +726,8 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 		ry = p.ry;
 		vx = p.vx;
 		vy = p.vy;
+		hx = p.hx;
+		hy = p.hy;
 		name = p.name;
 		charge = p.charge;
 		friction = p.friction;
@@ -1186,6 +1188,12 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	/** render this particle's force vector on the passed graphics */
 	public void drawForceVector(Graphics2D g) {
 		drawVector(g, fx * 120, fy * 120, getView().getForceFlavor());
+	}
+
+	/** render this particle's custom force vector on the passed graphics */
+	public void drawCustomForceVector(Graphics2D g) {
+		if (Math.abs(hx) > ZERO || Math.abs(hy) > ZERO)
+			drawVector(g, hx * 12, hy * 12, getView().getForceFlavor());
 	}
 
 	private void drawVector(Graphics2D g, double x, double y, VectorFlavor flavor) {

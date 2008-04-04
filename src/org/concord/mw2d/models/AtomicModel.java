@@ -3588,6 +3588,7 @@ public abstract class AtomicModel extends MDModel {
 		vs.setBackground(view.getBackground());
 		vs.setMarkColor(view.getMarkColor().getRGB());
 		vs.setDrawCharge(view.getDrawCharge());
+		vs.setDrawCustomForce(view.getDrawCustomForce());
 		vs.setShowParticleIndex(view.getShowParticleIndex());
 		vs.setShowMirrorImages(view.getShowMirrorImages());
 		vs.setShowClock(view.getShowClock());
@@ -3897,10 +3898,10 @@ public abstract class AtomicModel extends MDModel {
 		view.setMarkColor(new Color(vs.getMarkColor()));
 		view.setEnergizer(vs.getEnergizer());
 		view.setDrawCharge(vs.getDrawCharge());
+		view.setDrawCustomForce(vs.getDrawCustomForce());
 		view.setShowParticleIndex(vs.getShowParticleIndex());
 		view.setShowMirrorImages(vs.getShowMirrorImages());
 		view.setColorCoding(vs.getColorCode());
-		view.setDrawCharge(vs.getDrawCharge());
 		view.setShowClock(vs.getShowClock());
 		view.setShowSites(false);
 		view.showVDWCircles(vs.getShowVDWCircles());

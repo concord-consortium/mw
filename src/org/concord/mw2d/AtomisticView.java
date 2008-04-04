@@ -1485,6 +1485,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			}
 		}
 		model.setNumberOfParticles(nAtom);
+		model.computeForce(-1);
 
 		deadBonds.clear();
 		deadBends.clear();
@@ -2006,6 +2007,8 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				at.drawAccelerationVector(g);
 			if (forceVector)
 				at.drawForceVector(g);
+			if (drawCustomForce)
+				at.drawCustomForceVector(g);
 		}
 		if (at.velocitySelected())
 			at.drawSelectedVelocityVector(g, getBackground(), readyToAdjustVelocityVector);
