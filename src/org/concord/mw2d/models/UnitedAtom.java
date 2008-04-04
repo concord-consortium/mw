@@ -93,6 +93,9 @@ public abstract class UnitedAtom extends Particle {
 	/* the torque exerted on this uniaxial particle */
 	transient double tau;
 
+	/* the custom torque exerted on this uniaxial particle */
+	float gamma;
+
 	/* the angular displacement from previous angle */
 	double delta;
 
@@ -167,6 +170,7 @@ public abstract class UnitedAtom extends Particle {
 		alpha = 0;
 		tau = 0;
 		dipoleMoment = 0.0;
+		gamma = 0;
 	}
 
 	public void eraseProperties() {
@@ -254,6 +258,14 @@ public abstract class UnitedAtom extends Particle {
 
 	public void setTau(double d) {
 		tau = d;
+	}
+
+	public float getGamma() {
+		return gamma;
+	}
+
+	public void setGamma(float gamma) {
+		this.gamma = gamma;
 	}
 
 	/** given a speed scalar, assign an angular velocity in a random direction */

@@ -142,6 +142,11 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	 */
 	double tx, ty;
 
+	/*
+	 * custom external force applied to this particle.
+	 */
+	float hx, hy;
+
 	/* the harmonic potential restraint to the center of mass */
 	PointRestraint restraint;
 
@@ -439,6 +444,22 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 		fy = d;
 	}
 
+	public float getHx() {
+		return hx;
+	}
+
+	public void setHx(float hx) {
+	this.hx=hx;
+	}
+
+	public float getHy() {
+		return hy;
+	}
+
+	public void setHy(float hy) {
+		this.hy=hy;
+	}
+
 	/** rx=rx*d */
 	public void scaleRx(double d) {
 		rx *= d;
@@ -677,6 +698,7 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 		vx = vy = 0;
 		ax = ay = 0;
 		fx = fy = 0;
+		hx = hy = 0;
 		visible = true;
 		movable = true;
 		marked = false;
