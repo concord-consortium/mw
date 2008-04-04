@@ -71,6 +71,7 @@ class ViewProperties extends JDialog {
 	private JCheckBox dipoleCheckBox;
 	private JCheckBox vdwLinesCheckBox;
 	private JCheckBox vdwCirclesCheckBox;
+	private JCheckBox customForceCheckBox;
 	private JCheckBox velocityCheckBox;
 	private JCheckBox momentumCheckBox;
 	private JCheckBox angularMomentumCheckBox;
@@ -202,7 +203,7 @@ class ViewProperties extends JDialog {
 		panel.add(p, BorderLayout.NORTH);
 
 		String s = MDView.getInternationalText("GeneralOptions");
-		JPanel p2 = new JPanel(new GridLayout(4, 2, 5, 5));
+		JPanel p2 = new JPanel(new GridLayout(5, 2, 5, 5));
 		p2.setBorder(BorderFactory.createTitledBorder(s != null ? s : "General Options"));
 		p.add(p2, BorderLayout.NORTH);
 
@@ -238,6 +239,13 @@ class ViewProperties extends JDialog {
 		if (s != null)
 			chargeCheckBox.setText(s);
 		p2.add(chargeCheckBox);
+
+		customForceCheckBox = new JCheckBox(view.getSwitches().get("Show Custom Force"));
+		s = MDView.getInternationalText("ShowCustomForce");
+		if (s != null)
+			customForceCheckBox.setText(s);
+		p2.add(customForceCheckBox);
+		p2.add(new JPanel());
 
 		s = MDView.getInternationalText("ShowVanderWaalsSpheres");
 		vdwCirclesCheckBox = new JCheckBox(s != null ? s : "Show VDW Spheres");
@@ -605,7 +613,7 @@ class ViewProperties extends JDialog {
 		p.add(clockCheckBox);
 		p.add(new JPanel());
 
-		p = new JPanel(new GridLayout(5, 1, 5, 5));
+		p = new JPanel(new GridLayout(6, 1, 5, 5));
 		s = MDView.getInternationalText("Style");
 		p.setBorder(BorderFactory.createTitledBorder(s != null ? s : "Particle Options"));
 		panel.add(p, BorderLayout.CENTER);
@@ -627,6 +635,12 @@ class ViewProperties extends JDialog {
 		if (s != null)
 			dipoleCheckBox.setText(s);
 		p.add(dipoleCheckBox);
+
+		customForceCheckBox = new JCheckBox(view.getSwitches().get("Show Custom Force"));
+		s = MDView.getInternationalText("ShowCustomForce");
+		if (s != null)
+			customForceCheckBox.setText(s);
+		p.add(customForceCheckBox);
 
 		momentumCheckBox = new JCheckBox(view.getActionMap().get("Momentum Vector of Center of Mass"));
 		s = MDView.getInternationalText("MomentumVectorOfCenterOfMass");
@@ -711,6 +725,7 @@ class ViewProperties extends JDialog {
 		setStateOfToggleButton(indexCheckBox, view.getShowParticleIndex(), false);
 		setStateOfToggleButton(clockCheckBox, view.getShowClock(), false);
 		setStateOfToggleButton(chargeCheckBox, view.getDrawCharge(), false);
+		setStateOfToggleButton(customForceCheckBox, view.getDrawCustomForce(), false);
 		if (view instanceof AtomisticView) {
 			AtomisticView av = (AtomisticView) view;
 			switch (av.getDisplayStyle()) {

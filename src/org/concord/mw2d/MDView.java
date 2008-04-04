@@ -177,6 +177,7 @@ public abstract class MDView extends PrintableComponent {
 	boolean drawString = true;
 	double relativeKEForShading = 1.0;
 	boolean showClock = true, showParticleIndex, drawCharge = true, showSelectionHalo = true;
+	boolean drawCustomForce;
 	boolean showMirrorImages = true;
 	float chargeIncrement = 0.5f;
 	short actionID = SELE_ID;
@@ -326,6 +327,29 @@ public abstract class MDView extends PrintableComponent {
 		};
 		a.putValue(Action.NAME, "Show Charge");
 		a.putValue(Action.SHORT_DESCRIPTION, "Show Charge");
+		booleanSwitches.put(a.toString(), a);
+
+		a = new AbstractAction() {
+			public Object getValue(String key) {
+				if (key.equalsIgnoreCase("state"))
+					return getDrawCustomForce() ? Boolean.TRUE : Boolean.FALSE;
+				return super.getValue(key);
+			}
+
+			public void actionPerformed(ActionEvent e) {
+				if (ModelerUtilities.stopFiring(e))
+					return;
+				Object o = e.getSource();
+				if (o instanceof JToggleButton)
+					setDrawCustomForce(((JToggleButton) o).isSelected());
+			}
+
+			public String toString() {
+				return (String) getValue(Action.NAME);
+			}
+		};
+		a.putValue(Action.NAME, "Show Custom Force");
+		a.putValue(Action.SHORT_DESCRIPTION, "Show Custom Force");
 		booleanSwitches.put(a.toString(), a);
 
 		ComponentPrinter printer = new ComponentPrinter(this, "Printing a Model");
@@ -2288,6 +2312,18 @@ public abstract class MDView extends PrintableComponent {
 		return drawCharge;
 	}
 
+	public void setDrawCustomForce(boolean b) {
+		if (drawCustomForce == b)
+			return;
+		drawCustomForce = b;
+		getModel().notifyChange();
+		repaint();
+	}
+
+	public boolean getDrawCustomForce() {
+		return drawCustomForce;
+	}
+
 	public void setVelocityFlavor(VectorFlavor vf) {
 		velocityFlavor = vf;
 		if (vf.getWidth() != 1.0f || vf.getStyle() != LineStyle.STROKE_NUMBER_1) {
@@ -3280,7 +3316,7 @@ public abstract class MDView extends PrintableComponent {
 		private Color background = Color.white;
 		private int markColor = 0xffccccff;
 		private boolean energizer;
-		private boolean showParticleIndex, showClock = true, drawCharge = true, showMirrorImages = true;
+		private boolean showParticleIndex, showClock = true, drawCharge = true, showMirrorImages = true, drawCustomForce;
 		private FillMode fillMode;
 		private VectorFlavor velocityFlavor;
 		private VectorFlavor momentumFlavor;
@@ -3403,6 +3439,14 @@ public abstract class MDView extends PrintableComponent {
 
 		public boolean getDrawCharge() {
 			return drawCharge;
+		}
+
+		public void setDrawCustomForce(boolean b) {
+			drawCustomForce = b;
+		}
+
+		public boolean getDrawCustomForce() {
+			return drawCustomForce;
 		}
 
 		public void setShowClock(boolean b) {

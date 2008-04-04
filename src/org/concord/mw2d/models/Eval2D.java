@@ -241,6 +241,9 @@ class Eval2D extends AbstractEval {
 				s = replaceAll(s, "%particle\\[" + v + "\\]\\.charge", p.charge);
 				s = replaceAll(s, "%particle\\[" + v + "\\]\\.friction", p.friction);
 				s = replaceAll(s, "%particle\\[" + v + "\\]\\.mass", p.mass * M_CONVERTER);
+				s = replaceAll(s, "%particle\\[" + v + "\\]\\.hx", p.hx);
+				s = replaceAll(s, "%particle\\[" + v + "\\]\\.hy", p.hy);
+				s = replaceAll(s, "%particle\\[" + v + "\\]\\.gamma", p.gamma);
 				if (frame < 0) {
 					s = replaceAll(s, "%particle\\[" + v + "\\]\\.rx", p.rx * R_CONVERTER);
 					s = replaceAll(s, "%particle\\[" + v + "\\]\\.ry", p.ry * R_CONVERTER);
@@ -269,6 +272,8 @@ class Eval2D extends AbstractEval {
 				s = replaceAll(s, "%particle\\[" + v + "\\]\\.charge", a.charge);
 				s = replaceAll(s, "%particle\\[" + v + "\\]\\.friction", a.friction);
 				s = replaceAll(s, "%particle\\[" + v + "\\]\\.mass", a.mass * M_CONVERTER);
+				s = replaceAll(s, "%particle\\[" + v + "\\]\\.hx", a.hx);
+				s = replaceAll(s, "%particle\\[" + v + "\\]\\.hy", a.hy);
 				if (frame < 0) {
 					s = replaceAll(s, "%particle\\[" + v + "\\]\\.rx", a.rx * R_CONVERTER);
 					s = replaceAll(s, "%particle\\[" + v + "\\]\\.ry", a.ry * R_CONVERTER);
@@ -314,6 +319,8 @@ class Eval2D extends AbstractEval {
 				s = replaceAll(s, "%atom\\[" + v + "\\]\\.sigma", a.sigma * 0.1);
 				s = replaceAll(s, "%atom\\[" + v + "\\]\\.epsilon", a.epsilon);
 				s = replaceAll(s, "%atom\\[" + v + "\\]\\.friction", a.friction);
+				s = replaceAll(s, "%atom\\[" + v + "\\]\\.hx", a.hx);
+				s = replaceAll(s, "%atom\\[" + v + "\\]\\.hy", a.hy);
 				if (frame < 0) {
 					s = replaceAll(s, "%atom\\[" + v + "\\]\\.rx", a.rx * R_CONVERTER);
 					s = replaceAll(s, "%atom\\[" + v + "\\]\\.ry", a.ry * R_CONVERTER);
