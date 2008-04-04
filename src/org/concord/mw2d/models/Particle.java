@@ -143,7 +143,7 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	double tx, ty;
 
 	/*
-	 * custom external force applied to this particle. Unit: eV/A
+	 * custom external force applied to this particle. Unit: 10*eV/A
 	 */
 	float hx, hy;
 
