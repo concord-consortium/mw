@@ -32,6 +32,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 
 import org.concord.modeler.draw.FillMode;
 import org.concord.modeler.event.ModelEvent;
@@ -1294,9 +1295,19 @@ public class MesoModel extends MDModel {
 		view.showLinearMomenta(vs.getShowVVectors());
 		view.showAngularMomenta(vs.getShowOmegas());
 
+		int n = state.getNumberOfParticles();
+		if (n > gb.length) {
+			n = gb.length;
+			EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view),
+							"The model contains more particles than default.", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			});
+		}
 		GayBerneParticle gbp = null;
 		int pointer = 0;
-		while (pointer < state.getNumberOfParticles()) {
+		while (pointer < n) {
 			if (pointer % 10 == 0)
 				monitor.setProgressMessage("Reading particle " + pointer + "...");
 			gbp = (GayBerneParticle) in.readObject();

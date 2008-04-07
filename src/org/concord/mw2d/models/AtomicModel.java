@@ -39,6 +39,7 @@ import java.util.Map;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import javax.swing.event.ChangeListener;
 
 import org.concord.modeler.ModelerUtilities;
@@ -3929,6 +3930,15 @@ public abstract class AtomicModel extends MDModel {
 		Atom at = null;
 		int pointer = 0;
 		int nas = state.getNumberOfParticles();
+		if (nas > atom.length) {
+			nas = atom.length;
+			EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view),
+							"The model contains more particles than default.", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			});
+		}
 		while (pointer < nas) {
 			if (pointer % 10 == 0)
 				monitor.setProgressMessage("Reading atom " + pointer + "...");
