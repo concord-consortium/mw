@@ -454,6 +454,7 @@ public class PageTextField extends JPanel implements Embeddable, HtmlService, Se
 		if (page == null)
 			return null;
 		PageTextField field = new PageTextField();
+		field.setChangable(true);
 		if (maker == null) {
 			maker = new PageTextFieldMaker(field);
 		}

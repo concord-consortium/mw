@@ -439,6 +439,7 @@ public class PageTextArea extends JPanel implements Embeddable, HtmlService, Sea
 		if (page == null)
 			return null;
 		PageTextArea area = new PageTextArea();
+		area.setChangable(true);
 		area.buttonPanel.setBackground(page.getBackground());
 		if (maker == null) {
 			maker = new PageTextAreaMaker(area);
