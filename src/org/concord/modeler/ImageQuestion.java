@@ -455,6 +455,7 @@ public class ImageQuestion extends JPanel implements Embeddable, TransferListene
 		if (page == null)
 			return null;
 		ImageQuestion iq = new ImageQuestion();
+		iq.setChangable(true);
 		if (maker == null) {
 			maker = new ImageQuestionMaker(iq);
 		}

@@ -361,6 +361,7 @@ public class PageMultipleChoice extends MultipleChoice implements Embeddable, Mu
 		if (page == null)
 			return null;
 		PageMultipleChoice choice = new PageMultipleChoice();
+		choice.setChangable(true);
 		if (maker == null) {
 			maker = new PageMultipleChoiceMaker(choice);
 		}
