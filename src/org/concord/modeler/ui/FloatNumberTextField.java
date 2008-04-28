@@ -150,7 +150,7 @@ public class FloatNumberTextField extends PastableTextField {
 
 				int i;
 				for (i = 0; i < old.length; i++) {
-					if (old[i] == '.') {
+					if (old[i] == '.' || old[i] == ',') {
 						countDot++;
 					}
 				}
@@ -163,7 +163,7 @@ public class FloatNumberTextField extends PastableTextField {
 					if (Character.isDigit(source[i])) {
 						result[j++] = source[i];
 					}
-					else if (source[i] == '.') {
+					else if (source[i] == '.' || source[i] == ',') {
 						if (countDot == 0)
 							result[j++] = source[i];
 					}
