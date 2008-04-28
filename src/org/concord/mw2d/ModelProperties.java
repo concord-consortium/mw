@@ -29,6 +29,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.text.NumberFormat;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -97,6 +98,10 @@ public abstract class ModelProperties extends JDialog {
 
 	public void destroy() {
 		dispose();
+	}
+
+	static String format(double number) {
+		return NumberFormat.getInstance().format(number);
 	}
 
 	abstract void confirm();
