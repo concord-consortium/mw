@@ -163,10 +163,10 @@ public class MesoModelProperties extends ModelProperties {
 
 		s = MDView.getInternationalText("PhysicalBoundLabel");
 		p.add(new JLabel(s != null ? s : "Physical Bound", SwingConstants.LEFT));
-		label = new JLabel(model.getBoundary().getType() == RectangularBoundary.DBC_ID ? "(0, 0, "
-				+ format(0.1 * dim.width) + ", " + format(0.1 * dim.height) + ")" : "("
-				+ format(0.1 * model.getBoundary().x) + ", " + format(0.1 * model.getBoundary().y) + ", "
-				+ format(0.1 * model.getBoundary().width) + ", " + format(0.1 * model.getBoundary().height) + ")");
+		label = new JLabel(model.getBoundary().getType() == RectangularBoundary.DBC_ID ? "(0 / 0 / "
+				+ format(0.1 * dim.width) + " / " + format(0.1 * dim.height) + ")" : "("
+				+ format(0.1 * model.getBoundary().x) + " / " + format(0.1 * model.getBoundary().y) + " / "
+				+ format(0.1 * model.getBoundary().width) + " / " + format(0.1 * model.getBoundary().height) + ")");
 		label.setBorder(BUTTON_BORDER);
 		p.add(label);
 		p.add(new JLabel(" \u00c5"));
