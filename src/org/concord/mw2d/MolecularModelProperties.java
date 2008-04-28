@@ -266,9 +266,9 @@ public class MolecularModelProperties extends ModelProperties {
 
 		s = MDView.getInternationalText("PhysicalBoundLabel");
 		p.add(new JLabel(s != null ? s : "Physical Bound", SwingConstants.LEFT));
-		label = new JLabel(bound.getType() == RectangularBoundary.DBC_ID ? "(0, 0, " + 0.1f * (float) dim.width + ", "
-				+ 0.1f * (float) dim.height + ")" : "(" + 0.1f * (float) bound.x + ", " + 0.1f * (float) bound.y + ", "
-				+ 0.1f * (float) bound.width + ", " + 0.1f * (float) bound.height + ")");
+		label = new JLabel(bound.getType() == RectangularBoundary.DBC_ID ? "(0, 0, " + format(0.1 * dim.width) + ", "
+				+ format(0.1 * dim.height) + ")" : "(" + format(0.1 * bound.x) + ", " + format(0.1 * bound.y) + ", "
+				+ format(0.1 * bound.width) + ", " + format(0.1 * bound.height) + ")");
 		label.setBorder(BUTTON_BORDER);
 		p.add(label);
 		p.add(new JLabel(" \u00c5"));
