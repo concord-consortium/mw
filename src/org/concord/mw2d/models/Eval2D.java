@@ -3619,7 +3619,7 @@ class Eval2D extends AbstractEval {
 			out(ScriptEvent.FAILED, "Cursor's hot spot coordinate error: " + s);
 			return false;
 		}
-		s = s.substring(0, lp);
+		s = s.substring(0, lp).trim();
 		if (FileUtilities.isRelative(s)) {
 			Object o = model.getProperty("url");
 			if (o == null) {

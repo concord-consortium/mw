@@ -1397,16 +1397,18 @@ public abstract class AbstractEval {
 		else {
 			f = new File(address);
 		}
-		if (!f.exists())
+		if (!f.exists()) {
 			return null;
+		}
+		URL u = null;
 		try {
-			return ModelerUtilities
-					.createCursor(f.toURI().toURL(), new Point(x, y), FileUtilities.getFileName(address));
+			u = f.toURI().toURL();
 		}
 		catch (MalformedURLException e) {
 			e.printStackTrace();
 			return null;
 		}
+		return ModelerUtilities.createCursor(u, new Point(x, y), FileUtilities.getFileName(address));
 	}
 
 	protected static void fillCursorIDMap() {
