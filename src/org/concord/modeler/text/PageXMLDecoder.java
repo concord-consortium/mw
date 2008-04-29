@@ -2129,6 +2129,7 @@ final class PageXMLDecoder {
 			t.setPage(page);
 			if (titleText != null) {
 				t.decodeText(titleText);
+				t.setOriginalText(titleText);
 				titleText = null;
 			}
 			if (!opaque) {
