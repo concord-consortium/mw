@@ -21,6 +21,7 @@ package org.concord.modeler.script;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.EventQueue;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
@@ -28,6 +29,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -48,6 +50,7 @@ import javax.swing.JScrollPane;
 
 import org.concord.modeler.ConnectionManager;
 import org.concord.modeler.MidiPlayer;
+import org.concord.modeler.ModelerUtilities;
 import org.concord.modeler.SampledAudioPlayer;
 import org.concord.modeler.ScriptCallback;
 import org.concord.modeler.Scriptable;
@@ -96,6 +99,7 @@ public abstract class AbstractEval {
 	protected List<String> externalScripts;
 	protected Map<Integer, String> mouseScripts;
 	protected Point mouseLocation;
+	protected static Map<String, Integer> cursorIDMap;
 
 	// used in translateInfixToPostfix, parentheses are parsed along with the logical operators
 	private final static Pattern LOGICAL_EXPRESSION = compile("(" + REGEX_NOT + ")|(" + REGEX_OR + ")|(" + REGEX_AND
@@ -1363,6 +1367,59 @@ public abstract class AbstractEval {
 		}
 		catch (Throwable t) { // in case the players have unexpected errors
 			t.printStackTrace();
+		}
+	}
+
+	protected Cursor loadCursor(String address, int x, int y) {
+		if (address == null)
+			return null;
+		File f = null;
+		if (FileUtilities.isRemote(address)) {
+			URL u = null;
+			try {
+				u = new URL(address);
+			}
+			catch (MalformedURLException e) {
+				e.printStackTrace();
+				return null;
+			}
+			ConnectionManager.sharedInstance().setCheckUpdate(true);
+			try {
+				f = ConnectionManager.sharedInstance().shouldUpdate(u);
+				if (f == null)
+					f = ConnectionManager.sharedInstance().cache(u);
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+		else {
+			f = new File(address);
+		}
+		if (!f.exists())
+			return null;
+		try {
+			return ModelerUtilities
+					.createCursor(f.toURI().toURL(), new Point(x, y), FileUtilities.getFileName(address));
+		}
+		catch (MalformedURLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	protected static void fillCursorIDMap() {
+		if (cursorIDMap == null) {
+			cursorIDMap = new HashMap<String, Integer>();
+			try {
+				for (Field f : Cursor.class.getFields()) {
+					cursorIDMap.put(f.getName(), f.getInt(null));
+				}
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

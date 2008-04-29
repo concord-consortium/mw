@@ -182,6 +182,7 @@ public abstract class MDView extends PrintableComponent {
 	float chargeIncrement = 0.5f;
 	short actionID = SELE_ID;
 	Cursor previousCursor;
+	private Cursor externalCursor;
 	RectangularBoundary boundary;
 	Map<String, Action> booleanSwitches;
 	Map<String, Action> multipleChoices;
@@ -742,6 +743,7 @@ public abstract class MDView extends PrintableComponent {
 	}
 
 	public void clear() {
+		externalCursor = null;
 		setFillMode(FillMode.getNoFillMode());
 		setBackgroundImage(null);
 		destroyAllLayeredComponents();
@@ -2416,6 +2418,14 @@ public abstract class MDView extends PrintableComponent {
 
 	public void setBoundary(RectangularBoundary b) {
 		boundary = b;
+	}
+
+	public void setExternalCursor(Cursor cursor) {
+		externalCursor = cursor;
+	}
+
+	public void setCursor(Cursor cursor) {
+		super.setCursor(externalCursor == null ? cursor : externalCursor);
 	}
 
 	public void setEnergizer(boolean b) {
