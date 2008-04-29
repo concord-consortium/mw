@@ -22,6 +22,7 @@ package org.concord.mw2d.models;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Shape;
@@ -1050,6 +1051,13 @@ class Eval2D extends AbstractEval {
 		matcher = SOUND.matcher(ci);
 		if (matcher.find()) {
 			if (evaluateSoundClause(ci.substring(matcher.end()).trim()))
+				return true;
+		}
+
+		// mouse cursor
+		matcher = CURSOR.matcher(ci);
+		if (matcher.find()) {
+			if (evaluateCursorClause(ci.substring(matcher.end()).trim()))
 				return true;
 		}
 
@@ -2378,8 +2386,7 @@ class Eval2D extends AbstractEval {
 			str = str.substring(matcher.end()).trim().toUpperCase();
 			matcher = ACTION_ID.matcher(str);
 			if (matcher.find()) {
-				if (actionIDMap == null)
-					fillActionIDMap();
+				fillActionIDMap();
 				if (!actionIDMap.containsKey(str)) {
 					out(ScriptEvent.FAILED, "Unrecognized parameter: " + str);
 					return false;
@@ -3583,6 +3590,50 @@ class Eval2D extends AbstractEval {
 			address = FileUtilities.getCodeBase((String) o) + address;
 		}
 		playSound(address);
+		return true;
+	}
+
+	private boolean evaluateCursorClause(String s) {
+		if (s == null)
+			return false;
+		if ("null".equalsIgnoreCase(s)) {
+			view.setExternalCursor(null);
+			return true;
+		}
+		if (s.endsWith("_CURSOR")) {
+			fillCursorIDMap();
+			int id = cursorIDMap.get(s);
+			Cursor c = Cursor.getPredefinedCursor(id);
+			if (c == null)
+				return false;
+			view.setExternalCursor(c);
+			return true;
+		}
+		int lp = s.indexOf("(");
+		int rp = s.indexOf(")");
+		float[] hotspot = null;
+		if (lp != -1 && rp != -1) {
+			hotspot = parseArray(2, s.substring(lp, rp));
+		}
+		else {
+			out(ScriptEvent.FAILED, "Cursor's hot spot coordinate error: " + s);
+			return false;
+		}
+		s = s.substring(0, lp);
+		if (FileUtilities.isRelative(s)) {
+			Object o = model.getProperty("url");
+			if (o == null) {
+				out(ScriptEvent.FAILED, "Codebase missing.");
+				return false;
+			}
+			s = FileUtilities.getCodeBase((String) o) + s;
+		}
+		Cursor c = loadCursor(s, hotspot != null ? (int) hotspot[0] : 0, hotspot != null ? (int) hotspot[1] : 0);
+		if (c == null) {
+			out(ScriptEvent.FAILED, "Failed in loading cursor image: " + s);
+			return false;
+		}
+		view.setExternalCursor(c);
 		return true;
 	}
 
@@ -5969,15 +6020,16 @@ class Eval2D extends AbstractEval {
 	}
 
 	private static void fillActionIDMap() {
-		if (actionIDMap == null)
+		if (actionIDMap == null) {
 			actionIDMap = new HashMap<String, Short>();
-		try {
-			for (Field f : UserAction.class.getFields()) {
-				actionIDMap.put(f.getName(), f.getShort(null));
+			try {
+				for (Field f : UserAction.class.getFields()) {
+					actionIDMap.put(f.getName(), f.getShort(null));
+				}
 			}
-		}
-		catch (Exception e) {
-			e.printStackTrace();
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
