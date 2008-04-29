@@ -50,6 +50,7 @@ import org.concord.modeler.ui.ColorMenu;
 import org.concord.modeler.ui.FloatNumberTextField;
 import org.concord.modeler.ui.HyperlinkLabel;
 import org.concord.modeler.ui.RealNumberTextField;
+import org.concord.mw2d.models.Element;
 import org.concord.mw2d.models.RectangularObstacle;
 
 class ObstaclePropertiesPanel extends PropertiesPanel {
@@ -100,6 +101,42 @@ class ObstaclePropertiesPanel extends PropertiesPanel {
 
 		String s = null;
 
+		final JCheckBox ntPassCheckBox = new JCheckBox("Nt");
+		ntPassCheckBox.setSelected(obs.isPermeable(Element.ID_NT));
+		ntPassCheckBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				obs.setPermeable(Element.ID_NT, e.getStateChange() == ItemEvent.SELECTED);
+			}
+		});
+		ntPassCheckBox.setSelected(obs.isPermeable(Element.ID_NT));
+
+		final JCheckBox plPassCheckBox = new JCheckBox("Pl");
+		ntPassCheckBox.setSelected(obs.isPermeable(Element.ID_PL));
+		plPassCheckBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				obs.setPermeable(Element.ID_PL, e.getStateChange() == ItemEvent.SELECTED);
+			}
+		});
+		plPassCheckBox.setSelected(obs.isPermeable(Element.ID_PL));
+
+		final JCheckBox wsPassCheckBox = new JCheckBox("Ws");
+		ntPassCheckBox.setSelected(obs.isPermeable(Element.ID_WS));
+		wsPassCheckBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				obs.setPermeable(Element.ID_WS, e.getStateChange() == ItemEvent.SELECTED);
+			}
+		});
+		wsPassCheckBox.setSelected(obs.isPermeable(Element.ID_WS));
+
+		final JCheckBox ckPassCheckBox = new JCheckBox("Ck");
+		ntPassCheckBox.setSelected(obs.isPermeable(Element.ID_CK));
+		ckPassCheckBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				obs.setPermeable(Element.ID_CK, e.getStateChange() == ItemEvent.SELECTED);
+			}
+		});
+		ckPassCheckBox.setSelected(obs.isPermeable(Element.ID_CK));
+
 		s = MDView.getInternationalText("West");
 		westProbeLabel = new HyperlinkLabel(s != null ? s : "West");
 		westProbeLabel.setEnabled(false);
@@ -121,39 +158,39 @@ class ObstaclePropertiesPanel extends PropertiesPanel {
 		northProbeLabel.setToolTipText("Customize the pressure gauge on this side");
 
 		final JCheckBox westProbeCheckBox = new JCheckBox();
+		westProbeCheckBox.setSelected(obs.isWestProbe());
 		westProbeCheckBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				setWestProbeLabel(e.getStateChange() == ItemEvent.SELECTED);
 			}
 		});
-		westProbeCheckBox.setSelected(obs.isWestProbe());
 		setWestProbeLabel(obs.isWestProbe());
 
 		final JCheckBox eastProbeCheckBox = new JCheckBox();
+		eastProbeCheckBox.setSelected(obs.isEastProbe());
 		eastProbeCheckBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				setEastProbeLabel(e.getStateChange() == ItemEvent.SELECTED);
 			}
 		});
-		eastProbeCheckBox.setSelected(obs.isEastProbe());
 		setEastProbeLabel(obs.isEastProbe());
 
 		final JCheckBox southProbeCheckBox = new JCheckBox();
+		southProbeCheckBox.setSelected(obs.isSouthProbe());
 		southProbeCheckBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				setSouthProbeLabel(e.getStateChange() == ItemEvent.SELECTED);
 			}
 		});
-		southProbeCheckBox.setSelected(obs.isSouthProbe());
 		setSouthProbeLabel(obs.isSouthProbe());
 
 		final JCheckBox northProbeCheckBox = new JCheckBox();
+		northProbeCheckBox.setSelected(obs.isNorthProbe());
 		northProbeCheckBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				setNorthProbeLabel(e.getStateChange() == ItemEvent.SELECTED);
 			}
 		});
-		northProbeCheckBox.setSelected(obs.isNorthProbe());
 		setNorthProbeLabel(obs.isNorthProbe());
 
 		final RealNumberTextField widthField = new RealNumberTextField(0.1 * obs.getWidth(), 1, 100);
@@ -401,7 +438,7 @@ class ObstaclePropertiesPanel extends PropertiesPanel {
 		JPanel panel = new JPanel(new SpringLayout());
 		panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory
 				.createEmptyBorder(10, 10, 10, 10)));
-		add(panel, BorderLayout.CENTER);
+		add(panel, BorderLayout.NORTH);
 
 		// row 1
 		panel.add(new JLabel("Type and index"));
@@ -477,6 +514,17 @@ class ObstaclePropertiesPanel extends PropertiesPanel {
 		panel.add(visibleComboBox);
 
 		makeCompactGrid(panel, 14, 3, 5, 5, 10, 2);
+
+		panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		add(panel, BorderLayout.CENTER);
+
+		s = MDView.getInternationalText("Permeability");
+		panel.add(new JLabel((s != null ? s : "Permeability") + ":"));
+
+		panel.add(ntPassCheckBox);
+		panel.add(plPassCheckBox);
+		panel.add(wsPassCheckBox);
+		panel.add(ckPassCheckBox);
 
 		panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		add(panel, BorderLayout.SOUTH);

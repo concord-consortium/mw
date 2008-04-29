@@ -2178,8 +2178,8 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			obstacles.add(new RectangularObstacle(d.getX(), d.getY(), d.getWidth() == 0 ? 1 : d.getWidth(), d
 					.getHeight() == 0 ? 1 : d.getHeight(), d.getVx(), d.getVy(), d.getExternalFx(), d.getExternalFy(),
 					d.getUserField(), d.getElasticity(), d.getFriction(), d.getDensity(), d.isWestProbe(), d
-							.isNorthProbe(), d.isEastProbe(), d.isSouthProbe(), d.isBounced(), d.isVisible(), d
-							.isRoundCornered(), d.getFillMode()));
+							.isNorthProbe(), d.isEastProbe(), d.isSouthProbe(), d.getPermeability(), d.isBounced(), d
+							.isVisible(), d.isRoundCornered(), d.getFillMode()));
 		}
 	}
 
@@ -2920,8 +2920,8 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 				o = (RectangularObstacle) it.next();
 				obstacles.add(new RectangularObstacle.Delegate(o.x, o.y, o.width, o.height, o.getVx(), o.getVy(), o
 						.getExternalFx(), o.getExternalFy(), o.getUserField(), o.getElasticity(), o.getFriction(), o
-						.getDensity(), o.isWestProbe(), o.isNorthProbe(), o.isEastProbe(), o.isSouthProbe(), o
-						.isBounced(), o.isVisible(), o.getRoundCornerRadius() > 0, o.getFillMode()));
+						.getDensity(), o.isWestProbe(), o.isNorthProbe(), o.isEastProbe(), o.isSouthProbe(),
+						o.permeable, o.isBounced(), o.isVisible(), o.getRoundCornerRadius() > 0, o.getFillMode()));
 			}
 		}
 
