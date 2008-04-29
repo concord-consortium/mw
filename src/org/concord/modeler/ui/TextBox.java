@@ -60,6 +60,7 @@ public class TextBox extends JPanel implements HtmlService, Searchable {
 
 	protected HTMLPane textBody;
 	private FrameHeader header;
+	private String originalText;
 
 	private TextComponentPopupMenu popupMenu;
 	private JScrollPane scroller;
@@ -299,6 +300,14 @@ public class TextBox extends JPanel implements HtmlService, Searchable {
 		textBody.setPage(url);
 	}
 
+	public void setOriginalText(String text) {
+		originalText = text;
+	}
+
+	public String getOriginalText() {
+		return originalText;
+	}
+
 	public void setText(String text) {
 		if (text == null) {
 			setContentType("text/html");
@@ -335,8 +344,8 @@ public class TextBox extends JPanel implements HtmlService, Searchable {
 	}
 
 	/** encode the HTML text so that it can be embedded into XML */
-	public String encodeText() {
-		return XMLCharacterEncoder.encode(getText());
+	protected String encodeText() {
+		return XMLCharacterEncoder.encode(originalText == null ? getText() : originalText);
 	}
 
 	/** decode the encoded HTML text embedded in XML */
