@@ -117,6 +117,8 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 
 	float elasticity = 1.0f;
 
+	boolean[] permeable = new boolean[4];
+
 	/* the user field exerted on this object to steer its motion */
 	private UserField userField;
 
@@ -167,6 +169,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 		super();
 		group = new Vector<GeneralPath>();
 		this.density = HEAVY + HEAVY;
+		Arrays.fill(permeable, false);
 	}
 
 	public RectangularObstacle(Rectangle r) {
@@ -179,13 +182,14 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 	}
 
 	public RectangularObstacle(double x, double y, double w, double h, FillMode fm) {
-		this(x, y, w, h, 0, 0, 0, 0, null, 1, 0, HEAVY + HEAVY, false, false, false, false, true, true, false, fm);
+		this(x, y, w, h, 0, 0, 0, 0, null, 1, 0, HEAVY + HEAVY, false, false, false, false, new boolean[] { false,
+				false, false, false }, true, true, false, fm);
 	}
 
 	public RectangularObstacle(double x, double y, double w, double h, double vx, double vy, float px, float py,
 			UserField userField, float elasticity, float friction, double density, boolean westProbe,
-			boolean northProbe, boolean eastProbe, boolean southProbe, boolean bounced, boolean visible,
-			boolean roundCornered, FillMode fm) {
+			boolean northProbe, boolean eastProbe, boolean southProbe, boolean[] permeable, boolean bounced,
+			boolean visible, boolean roundCornered, FillMode fm) {
 		this(x, y, w, h);
 		setFillMode(fm);
 		this.vx = vx;
@@ -201,6 +205,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 		this.northProbe = northProbe;
 		this.eastProbe = eastProbe;
 		this.southProbe = southProbe;
+		this.permeable = permeable;
 		bounceAtBoundary = bounced;
 		cornerArcRadius = roundCornered ? defaultRoundCornerRadius : 0;
 	}
@@ -319,6 +324,18 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 
 	public boolean isBounced() {
 		return bounceAtBoundary;
+	}
+
+	public void setPermeable(byte id, boolean b) {
+		if (id < 0 || id >= permeable.length)
+			return;
+		permeable[id] = b;
+	}
+
+	public boolean isPermeable(byte id) {
+		if (id < 0 || id >= permeable.length)
+			return false;
+		return permeable[id];
 	}
 
 	public void setWestProbe(boolean b) {
@@ -553,16 +570,18 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 				Arrays.fill(pSouth, 0);
 		}
 
-		int id;
+		byte id;
 		byte xing;
 		boolean isFixed = !isMovable();
 
 		for (short i = 0; i < numberOfAtoms; i++) {
 
 			Atom a = atom[i];
+			id = (byte) a.getID();
+			if (isPermeable(id))
+				continue;
 
 			radius = a.sigma * 0.5;
-			id = a.getID();
 
 			if ((a.rx - radius < x1 && a.rx + radius > x0) && (a.ry - radius < y1 && a.ry + radius > y0)) {
 				if (!isFixed)
@@ -1830,15 +1849,17 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 		private float elasticity = 1.0f;
 		private FillMode fillMode;
 		private boolean westProbe, eastProbe, southProbe, northProbe;
+		private boolean[] permeableArray = new boolean[4];
 		private UserField userField;
 
 		public Delegate() {
+			Arrays.fill(permeableArray, false);
 		}
 
 		public Delegate(double x, double y, double width, double height, double vx, double vy, float px, float py,
 				UserField userField, float elasticity, float friction, double density, boolean westProbe,
-				boolean northProbe, boolean eastProbe, boolean southProbe, boolean bounced, boolean visible,
-				boolean roundCornered, FillMode fillMode) {
+				boolean northProbe, boolean eastProbe, boolean southProbe, boolean[] permeable, boolean bounced,
+				boolean visible, boolean roundCornered, FillMode fillMode) {
 			this.x = x;
 			this.y = y;
 			this.width = width;
@@ -1859,6 +1880,15 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 			this.eastProbe = eastProbe;
 			this.southProbe = southProbe;
 			this.northProbe = northProbe;
+			permeableArray = permeable;
+		}
+
+		public void setPermeability(boolean[] b) {
+			permeableArray = b;
+		}
+
+		public boolean[] getPermeability() {
+			return permeableArray;
 		}
 
 		public void setWestProbe(boolean b) {
