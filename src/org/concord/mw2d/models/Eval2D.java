@@ -470,8 +470,10 @@ class Eval2D extends AbstractEval {
 			s = replaceAll(s, "%obstacle\\[" + v + "\\]\\.height", o.height * R_CONVERTER);
 			s = replaceAll(s, "%obstacle\\[" + v + "\\]\\.friction", o.friction);
 			s = replaceAll(s, "%obstacle\\[" + v + "\\]\\.elasticity", o.elasticity);
-			s = replaceAll(s, "%obstacle\\[" + v + "\\]\\.externalfx", o.getExternalFx() * 1000);
-			s = replaceAll(s, "%obstacle\\[" + v + "\\]\\.externalfy", o.getExternalFy() * 1000);
+			s = replaceAll(s, "%obstacle\\[" + v + "\\]\\.hx", o.getHx() * 1000);
+			s = replaceAll(s, "%obstacle\\[" + v + "\\]\\.hy", o.getHy() * 1000);
+			s = replaceAll(s, "%obstacle\\[" + v + "\\]\\.externalfx", o.getHx() * 1000); // deprecated
+			s = replaceAll(s, "%obstacle\\[" + v + "\\]\\.externalfy", o.getHy() * 1000); // deprecated
 			lb0 = lb;
 			lb = s.indexOf("%obstacle[");
 			if (lb0 == lb) // infinite loop
@@ -4502,10 +4504,14 @@ class Eval2D extends AbstractEval {
 			obs.setDensity(x * 0.01);
 		else if (s == "friction")
 			obs.setFriction((float) x);
-		else if (s == "externalfx")
-			obs.setExternalFx((float) (x * 0.001));
-		else if (s == "externalfy")
-			obs.setExternalFy((float) (x * 0.001));
+		else if (s == "hx")
+			obs.setHx((float) (x * 0.001));
+		else if (s == "hy")
+			obs.setHy((float) (x * 0.001));
+		else if (s == "externalfx") // deprecated
+			obs.setHx((float) (x * 0.001));
+		else if (s == "externalfy") // deprecated
+			obs.setHy((float) (x * 0.001));
 		else if (s == "elasticity") {
 			if (x > 1)
 				x = 1;

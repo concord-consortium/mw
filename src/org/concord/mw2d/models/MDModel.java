@@ -2919,9 +2919,9 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			for (Iterator it = obs.iterator(); it.hasNext();) {
 				o = (RectangularObstacle) it.next();
 				obstacles.add(new RectangularObstacle.Delegate(o.x, o.y, o.width, o.height, o.getVx(), o.getVy(), o
-						.getExternalFx(), o.getExternalFy(), o.getUserField(), o.getElasticity(), o.getFriction(), o
-						.getDensity(), o.isWestProbe(), o.isNorthProbe(), o.isEastProbe(), o.isSouthProbe(),
-						o.permeable, o.isBounced(), o.isVisible(), o.getRoundCornerRadius() > 0, o.getFillMode()));
+						.getHx(), o.getHy(), o.getUserField(), o.getElasticity(), o.getFriction(), o.getDensity(), o
+						.isWestProbe(), o.isNorthProbe(), o.isEastProbe(), o.isSouthProbe(), o.permeable,
+						o.isBounced(), o.isVisible(), o.getRoundCornerRadius() > 0, o.getFillMode()));
 			}
 		}
 

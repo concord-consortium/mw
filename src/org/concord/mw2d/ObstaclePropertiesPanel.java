@@ -108,34 +108,30 @@ class ObstaclePropertiesPanel extends PropertiesPanel {
 				obs.setPermeable(Element.ID_NT, e.getStateChange() == ItemEvent.SELECTED);
 			}
 		});
-		ntPassCheckBox.setSelected(obs.isPermeable(Element.ID_NT));
 
 		final JCheckBox plPassCheckBox = new JCheckBox("Pl");
-		ntPassCheckBox.setSelected(obs.isPermeable(Element.ID_PL));
+		plPassCheckBox.setSelected(obs.isPermeable(Element.ID_PL));
 		plPassCheckBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				obs.setPermeable(Element.ID_PL, e.getStateChange() == ItemEvent.SELECTED);
 			}
 		});
-		plPassCheckBox.setSelected(obs.isPermeable(Element.ID_PL));
 
 		final JCheckBox wsPassCheckBox = new JCheckBox("Ws");
-		ntPassCheckBox.setSelected(obs.isPermeable(Element.ID_WS));
+		wsPassCheckBox.setSelected(obs.isPermeable(Element.ID_WS));
 		wsPassCheckBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				obs.setPermeable(Element.ID_WS, e.getStateChange() == ItemEvent.SELECTED);
 			}
 		});
-		wsPassCheckBox.setSelected(obs.isPermeable(Element.ID_WS));
 
 		final JCheckBox ckPassCheckBox = new JCheckBox("Ck");
-		ntPassCheckBox.setSelected(obs.isPermeable(Element.ID_CK));
+		ckPassCheckBox.setSelected(obs.isPermeable(Element.ID_CK));
 		ckPassCheckBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				obs.setPermeable(Element.ID_CK, e.getStateChange() == ItemEvent.SELECTED);
 			}
 		});
-		ckPassCheckBox.setSelected(obs.isPermeable(Element.ID_CK));
 
 		s = MDView.getInternationalText("West");
 		westProbeLabel = new HyperlinkLabel(s != null ? s : "West");
@@ -211,10 +207,10 @@ class ObstaclePropertiesPanel extends PropertiesPanel {
 		final RealNumberTextField vyField = new RealNumberTextField(10000 * obs.getVy(), -10000, 10000);
 		vyField.setMaximumFractionDigits(6);
 
-		final FloatNumberTextField fxField = new FloatNumberTextField(obs.getExternalFx() * 1000, -1000, 1000);
+		final FloatNumberTextField fxField = new FloatNumberTextField(obs.getHx() * 1000, -1000, 1000);
 		fxField.setMaximumFractionDigits(6);
 
-		final FloatNumberTextField fyField = new FloatNumberTextField(obs.getExternalFy() * 1000, -1000, 1000);
+		final FloatNumberTextField fyField = new FloatNumberTextField(obs.getHy() * 1000, -1000, 1000);
 		fyField.setMaximumFractionDigits(6);
 
 		final RealNumberTextField frictionField = new RealNumberTextField(obs.getFriction(), 0.0, 100.0, 10);
@@ -368,12 +364,12 @@ class ObstaclePropertiesPanel extends PropertiesPanel {
 					obs.setVy(vyField.getValue() * 0.0001);
 					changed = true;
 				}
-				if (Math.abs(obs.getExternalFx() * 1000 - fxField.getValue()) > ZERO) {
-					obs.setExternalFx((float) (fxField.getValue() * 0.001));
+				if (Math.abs(obs.getHx() * 1000 - fxField.getValue()) > ZERO) {
+					obs.setHx((float) (fxField.getValue() * 0.001));
 					changed = true;
 				}
-				if (Math.abs(obs.getExternalFy() * 1000 - fyField.getValue()) > ZERO) {
-					obs.setExternalFy((float) (fyField.getValue() * 0.001));
+				if (Math.abs(obs.getHy() * 1000 - fyField.getValue()) > ZERO) {
+					obs.setHy((float) (fyField.getValue() * 0.001));
 					changed = true;
 				}
 				if (Math.abs(obs.getElasticity() - elasticityField.getValue()) > ZERO) {

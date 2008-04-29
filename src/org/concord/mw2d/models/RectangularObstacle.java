@@ -156,7 +156,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 	private float[][] psBuffer = new float[5][40];
 	private float[][] pnBuffer = new float[5][40];
 	private boolean westProbe, eastProbe, northProbe, southProbe;
-	private float px, py;
+	private float hx, hy;
 
 	private static double va1, vo1;
 	private List<Integer> colList;
@@ -186,7 +186,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 				false, false, false }, true, true, false, fm);
 	}
 
-	public RectangularObstacle(double x, double y, double w, double h, double vx, double vy, float px, float py,
+	public RectangularObstacle(double x, double y, double w, double h, double vx, double vy, float hx, float hy,
 			UserField userField, float elasticity, float friction, double density, boolean westProbe,
 			boolean northProbe, boolean eastProbe, boolean southProbe, boolean[] permeable, boolean bounced,
 			boolean visible, boolean roundCornered, FillMode fm) {
@@ -194,8 +194,8 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 		setFillMode(fm);
 		this.vx = vx;
 		this.vy = vy;
-		this.px = px;
-		this.py = py;
+		this.hx = hx;
+		this.hy = hy;
 		this.userField = userField;
 		this.density = density;
 		this.elasticity = elasticity;
@@ -370,20 +370,20 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 		return northProbe;
 	}
 
-	public void setExternalFx(float x) {
-		px = x;
+	public void setHx(float x) {
+		hx = x;
 	}
 
-	public float getExternalFx() {
-		return px;
+	public float getHx() {
+		return hx;
 	}
 
-	public void setExternalFy(float y) {
-		py = y;
+	public void setHy(float y) {
+		hy = y;
 	}
 
-	public float getExternalFy() {
-		return py;
+	public float getHy() {
+		return hy;
 	}
 
 	public void setPartOfSystem(boolean b) {
@@ -482,8 +482,8 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 			return;
 
 		double r = MDModel.GF_CONVERSION_CONSTANT * model.getUniverse().getViscosity() * friction;
-		ax += px - r * vx;
-		ay += py - r * vy;
+		ax += hx - r * vx;
+		ay += hy - r * vy;
 		if (userField != null)
 			userField.dyn(this);
 		dx = vx * dt + ax * dt2;
@@ -1277,7 +1277,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 					g.drawRect((int) (x + i * 20 + 10), (int) (y + height - 7), 5, 5);
 			}
 
-			if (Math.abs(px) > Particle.ZERO || Math.abs(py) > Particle.ZERO)
+			if (Math.abs(hx) > Particle.ZERO || Math.abs(hy) > Particle.ZERO)
 				paintExternalForce(g);
 
 			if (userField != null && UserField.isRenderable()) {
@@ -1356,7 +1356,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 			tempLine = new Line2D.Double();
 		g.setStroke(ViewAttribute.THIN);
 
-		if (px < -Particle.ZERO) {
+		if (hx < -Particle.ZERO) {
 			for (i = 0; i < ny; i++) {
 				half = (i + 0.5) * delta;
 				/* draw arrows on the right side */
@@ -1368,7 +1368,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 				g.draw(tempLine);
 			}
 		}
-		else if (px > Particle.ZERO) {
+		else if (hx > Particle.ZERO) {
 			for (i = 0; i < ny; i++) {
 				half = (i + 0.5) * delta;
 				/* draw arrows on the left side */
@@ -1380,7 +1380,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 				g.draw(tempLine);
 			}
 		}
-		if (py < -Particle.ZERO) {
+		if (hy < -Particle.ZERO) {
 			for (i = 0; i < nx; i++) {
 				half = (i + 0.5) * delta;
 				/* draw arrows on the lower side */
@@ -1392,7 +1392,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 				g.draw(tempLine);
 			}
 		}
-		else if (py > Particle.ZERO) {
+		else if (hy > Particle.ZERO) {
 			for (i = 0; i < nx; i++) {
 				half = (i + 0.5) * delta;
 				/* draw arrows on the northern side */
@@ -1840,7 +1840,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 
 		private double x, y, width, height;
 		private double vx, vy;
-		private float px, py;
+		private float hx, hy;
 		private double density = HEAVY + HEAVY;
 		private boolean bounced = true;
 		private boolean visible = true;
@@ -1856,7 +1856,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 			Arrays.fill(permeableArray, false);
 		}
 
-		public Delegate(double x, double y, double width, double height, double vx, double vy, float px, float py,
+		public Delegate(double x, double y, double width, double height, double vx, double vy, float hx, float hy,
 				UserField userField, float elasticity, float friction, double density, boolean westProbe,
 				boolean northProbe, boolean eastProbe, boolean southProbe, boolean[] permeable, boolean bounced,
 				boolean visible, boolean roundCornered, FillMode fillMode) {
@@ -1867,8 +1867,8 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 			this.fillMode = fillMode;
 			this.vx = vx;
 			this.vy = vy;
-			this.px = px;
-			this.py = py;
+			this.hx = hx;
+			this.hy = hy;
 			this.userField = userField;
 			this.elasticity = elasticity;
 			this.friction = friction;
@@ -2012,19 +2012,19 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 		}
 
 		public void setExternalFx(float x) {
-			px = x;
+			hx = x;
 		}
 
 		public float getExternalFx() {
-			return px;
+			return hx;
 		}
 
 		public void setExternalFy(float y) {
-			py = y;
+			hy = y;
 		}
 
 		public float getExternalFy() {
-			return py;
+			return hy;
 		}
 
 		public void setDensity(double d) {
