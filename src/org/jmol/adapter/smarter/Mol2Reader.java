@@ -94,8 +94,7 @@ class Mol2Reader extends AtomSetCollectionReader {
 		if (readLine() != null && (line.length() == 0 || line.charAt(0) != '@')) {
 			// optional comment
 			if (readLine() != null && line.length() != 0 && line.charAt(0) != '@') {
-				thisDataSetName += ": " + readLineTrimmed();
-				readLine();
+				thisDataSetName += ": " + line.trim();
 			}
 		}
 		newAtomSet(thisDataSetName);

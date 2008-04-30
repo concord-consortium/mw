@@ -113,7 +113,7 @@ final public class Atom extends Point3fi implements Tuple {
 		}
 
 		byte specialAtomID = lookupSpecialAtomID(atomName);
-		if (specialAtomID == JmolConstants.ATOMID_ALPHA_CARBON && group3.equalsIgnoreCase("CA")) {
+		if (specialAtomID == JmolConstants.ATOMID_ALPHA_CARBON && "CA".equalsIgnoreCase(group3)) {
 			specialAtomID = 0;
 		}
 		// Logger.debug("atom - "+atomName+" specialAtomID=" + specialAtomID);
