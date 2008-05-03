@@ -1851,6 +1851,17 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 								});
 							}
 						}
+						else if (src instanceof PageMd3d) {
+							final String script = ((PageMd3d) src).getMolecularModel().getInitializationScript();
+							if (script != null) {
+								EventQueue.invokeLater(new Runnable() {
+									public void run() {
+										//((PageMd3d) src).setInitializationScriptToRun(true);
+										((PageMd3d) src).runScript(script);
+									}
+								});
+							}
+						}
 					}
 				}
 			});

@@ -21,6 +21,7 @@
 package org.concord.mw3d.models;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.io.File;
@@ -313,6 +314,13 @@ class Eval3D extends AbstractEval {
 		matcher = SELECT.matcher(ci);
 		if (matcher.find()) {
 			if (evaluateSelectClause(ci.substring(matcher.end()).trim()))
+				return true;
+		}
+
+		// mouse cursor
+		matcher = CURSOR.matcher(ci);
+		if (matcher.find()) {
+			if (evaluateCursorClause(ci.substring(matcher.end()).trim()))
 				return true;
 		}
 
@@ -634,6 +642,50 @@ class Eval3D extends AbstractEval {
 		return true;
 	}
 
+	private boolean evaluateCursorClause(String s) {
+		if (s == null)
+			return false;
+		if ("null".equalsIgnoreCase(s)) {
+			view.setExternalCursor(null);
+			return true;
+		}
+		if (s.endsWith("_CURSOR")) {
+			fillCursorIDMap();
+			int id = cursorIDMap.get(s);
+			Cursor c = Cursor.getPredefinedCursor(id);
+			if (c == null)
+				return false;
+			view.setExternalCursor(c);
+			return true;
+		}
+		int lp = s.indexOf("(");
+		int rp = s.indexOf(")");
+		float[] hotspot = null;
+		if (lp != -1 && rp != -1) {
+			hotspot = parseArray(2, s.substring(lp, rp));
+		}
+		else {
+			out(ScriptEvent.FAILED, "Cursor's hot spot coordinate error: " + s);
+			return false;
+		}
+		s = s.substring(0, lp).trim();
+		if (FileUtilities.isRelative(s)) {
+			String address = view.getResourceAddress();
+			if (address == null) {
+				out(ScriptEvent.FAILED, "Codebase missing.");
+				return false;
+			}
+			s = FileUtilities.getCodeBase(address) + s;
+		}
+		Cursor c = loadCursor(s, hotspot != null ? (int) hotspot[0] : 0, hotspot != null ? (int) hotspot[1] : 0);
+		if (c == null) {
+			out(ScriptEvent.FAILED, "Failed in loading cursor image: " + s);
+			return false;
+		}
+		view.setExternalCursor(c);
+		return true;
+	}
+
 	// TODO
 	private boolean evaluateBuildRBondClause(String str) {
 		String[] s = str.split(REGEX_SEPARATOR);
@@ -733,7 +785,7 @@ class Eval3D extends AbstractEval {
 	}
 
 	private boolean evaluateSetClause(String str) {
-		
+
 		// action
 		Matcher matcher = ACTION.matcher(str);
 		if (matcher.find()) {
