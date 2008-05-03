@@ -264,6 +264,14 @@ public class MolecularModel {
 
 	}
 
+	public void setInitializationScript(String s) {
+		initializationScript = s;
+	}
+
+	public String getInitializationScript() {
+		return initializationScript;
+	}
+
 	public boolean isScriptRunning() {
 		if (eval == null)
 			return false;
@@ -1903,14 +1911,6 @@ public class MolecularModel {
 
 	public ExternalField getExternalField(String s) {
 		return null;
-	}
-
-	public void setInitializationScript(String s) {
-		initializationScript = s;
-	}
-
-	public String getInitializationScript() {
-		return initializationScript;
 	}
 
 	/* show the <i>i</i>-th frame of the movie */

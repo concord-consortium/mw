@@ -69,6 +69,7 @@ public class ModelState implements Serializable {
 	private String trajectorySelection;
 	private String unmovableSelection;
 	private String translucentSelection;
+	private String initScript;
 
 	private FillMode fillMode = FillMode.getNoFillMode();
 	private HeatBath heatBath;
@@ -79,6 +80,14 @@ public class ModelState implements Serializable {
 	private List<TBondState> tbonds;
 
 	public ModelState() {
+	}
+
+	public void setInitScript(String s) {
+		initScript = s;
+	}
+
+	public String getInitScript() {
+		return initScript;
 	}
 
 	public void setZDepthMagnification(int i) {

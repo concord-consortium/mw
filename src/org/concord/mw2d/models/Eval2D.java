@@ -822,13 +822,11 @@ class Eval2D extends AbstractEval {
 				if (matcher.find()) {
 					byte i = Byte.parseByte(address);
 					String s = externalScripts.get(i);
-					if (s != null) {
-						evaluateExternalClause(s);
-					}
-					else {
+					if (s == null) {
 						out(ScriptEvent.FAILED, "External command error: " + ci);
 						return false;
 					}
+					evaluateExternalClause(s);
 				}
 				else {
 					evaluateExternalClause(readFrom(address));

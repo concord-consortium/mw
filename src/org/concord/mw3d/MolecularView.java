@@ -21,6 +21,7 @@
 package org.concord.mw3d;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
@@ -119,6 +120,7 @@ public class MolecularView extends Draw {
 	private JmolAdapter adapter;
 	ErrorReminder errorReminder;
 
+	private Cursor externalCursor;
 	private boolean renderingCallTriggeredByLoading;
 	private byte actionID = DEFA_ID;
 	private Atom atomCopy;
@@ -1322,6 +1324,15 @@ public class MolecularView extends Draw {
 			navigator.clear();
 		startingScene = null;
 		setActionID(DEFA_ID);
+		externalCursor = null;
+	}
+
+	public void setExternalCursor(Cursor cursor) {
+		externalCursor = cursor;
+	}
+
+	public void setCursor(Cursor cursor) {
+		super.setCursor(externalCursor == null ? cursor : externalCursor);
 	}
 
 	void fitIntoWindow() {

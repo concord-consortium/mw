@@ -674,6 +674,7 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 			Point3f cp = view.getViewer().getCameraPosition();
 			state.setCameraPosition(cp.x + " " + cp.y + " " + cp.z);
 		}
+		state.setInitScript(model.getInitializationScript());
 		state.setZDepthMagnification(view.getViewer().getZDepthMagnification());
 		state.setShowAtomIndex(view.getShowAtomIndex());
 		state.setShowGlassSimulationBox(view.getShowGlassSimulationBox());
@@ -799,6 +800,7 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 				}
 			}
 		}
+		model.setInitializationScript(state.getInitScript());
 		model.setTimeStep(state.getTimeStep());
 		model.setLength(state.getLength());
 		model.setWidth(state.getWidth());
