@@ -514,7 +514,7 @@ class PageSliderMaker extends ComponentMaker {
 		// row 1
 		s = Modeler.getInternationalText("WidthLabel");
 		p2.add(new JLabel(s != null ? s : "Width", SwingConstants.LEFT));
-		widthField = new IntegerTextField(200, 50, 600);
+		widthField = new IntegerTextField(200, 30, 600);
 		widthField.setToolTipText("Type in an integer to set the width of this slider, if it will not be auto-sized.");
 		widthField.addActionListener(okListener);
 		p2.add(widthField);
