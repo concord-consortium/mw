@@ -96,7 +96,7 @@ public abstract class AbstractEval {
 	protected volatile boolean interrupted;
 	protected List<String[]> loopList;
 	protected Map<String, String> withinMap;
-	protected List<String> externalScripts;
+	protected Map<Byte, String> externalScripts;
 	protected Map<Integer, String> mouseScripts;
 	protected Point mouseLocation;
 	protected static Map<String, Integer> cursorIDMap;
@@ -132,7 +132,7 @@ public abstract class AbstractEval {
 		if (sharedDefinition == null)
 			sharedDefinition = Collections.synchronizedMap(new HashMap<Class, Map<String, String>>());
 		loopList = Collections.synchronizedList(new ArrayList<String[]>());
-		externalScripts = Collections.synchronizedList(new ArrayList<String>());
+		externalScripts = Collections.synchronizedMap(new HashMap<Byte, String>());
 		commentedOutScripts = Collections.synchronizedList(new ArrayList<String>());
 		mouseScripts = Collections.synchronizedMap(new HashMap<Integer, String>());
 		mouseLocation = new Point();
@@ -715,16 +715,21 @@ public abstract class AbstractEval {
 
 	/** separate external scripts and store them */
 	protected String separateExternalScripts(String script) {
-		externalScripts.clear();
+		// externalScripts.clear();
+		// when external blocks intertwine with mouse blocks, they will be reduced to "external #". When
+		// they are passed to the mouse callback, setScript(String) will be called, which subsequently
+		// calls this method. If we clear the externalScripts map every time, then the "external #" stored
+		// in the previous setScript call will be lost.
 		if (script == null)
 			return null;
 		String lowerCase = script.toLowerCase();
 		int beg = lowerCase.indexOf("beginexternal");
 		int end = lowerCase.indexOf("endexternal");
 		int beg0 = -1;
+		byte index = 0;
 		while (beg != -1 && end != -1) {
 			String s = script.substring(beg + 14, end).trim();
-			externalScripts.add(s);
+			externalScripts.put(index++, s);
 			beg0 = beg;
 			beg = lowerCase.indexOf("beginexternal", end);
 			if (beg0 == beg) // infinite loop
@@ -736,10 +741,10 @@ public abstract class AbstractEval {
 		for (int i = 0; i < n; i++)
 			split[i] = split[i].trim();
 		int m = 0;
-		for (String s : externalScripts) {
+		for (Byte x : externalScripts.keySet()) {
 			for (int i = m; i < n; i++) {
-				if (split[i].equals(s)) {
-					split[i] = "external " + externalScripts.indexOf(s) + ";";
+				if (split[i].equals(externalScripts.get(x))) {
+					split[i] = "external " + x + ";";
 					m = i + 1;
 				}
 			}
