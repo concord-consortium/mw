@@ -820,9 +820,15 @@ class Eval2D extends AbstractEval {
 			if (address != null && !address.equals("")) {
 				Matcher matcher = NNI.matcher(address);
 				if (matcher.find()) {
-					int i = Integer.parseInt(address);
-					if (i >= 0 && i < externalScripts.size())
-						evaluateExternalClause(externalScripts.get(i));
+					byte i = Byte.parseByte(address);
+					String s = externalScripts.get(i);
+					if (s != null) {
+						evaluateExternalClause(s);
+					}
+					else {
+						out(ScriptEvent.FAILED, "External command error: " + ci);
+						return false;
+					}
 				}
 				else {
 					evaluateExternalClause(readFrom(address));
