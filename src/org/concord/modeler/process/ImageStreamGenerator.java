@@ -184,7 +184,6 @@ public final class ImageStreamGenerator {
 				"800 " + (s != null ? s : "frames"), "1600 " + (s != null ? s : "frames"),
 				"3200 " + (s != null ? s : "frames") };
 		JComboBox comboBox = new JComboBox(lengthChoices);
-		comboBox.setSelectedIndex(1);
 		comboBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
