@@ -242,42 +242,48 @@ class Eval3D extends AbstractEval {
 		return s;
 	}
 
+	void evaluate() throws InterruptedException {
+		while (true) {
+			evaluate2();
+			synchronized (this) {
+				wait();
+			}
+		}
+	}
+
 	/*
 	 * the thread that calls this method goes to "wait" until it is notified. When it returns, it will evaluate the
 	 * script. If you want to do a different script, pass in through the script setter. The "stop" flag indicates the
 	 * end of executing the current script.
 	 */
-	void evaluate() throws InterruptedException {
-		while (true) {
-			EventQueue.invokeLater(new Runnable() {
-				public void run() {
-					// model.notifyModelListeners(new ModelEvent(model, ModelEvent.SCRIPT_START));
-				}
-			});
-			stop = false;
-			interrupted = false;
-			if (script == null) {
-				out(ScriptEvent.FAILED, "No script.");
-				return;
-			}
-			script = script.trim();
-			if (script.equals("")) {
-				out(ScriptEvent.FAILED, "No script.");
-				return;
-			}
-			script = removeCommentedOutScripts(script);
-			script = separateExternalScripts(script);
-			String[] command = COMMAND_BREAK.split(script);
-			if (command.length < 1) {
-				out(ScriptEvent.FAILED, "No script.");
-				return;
-			}
-			evalDefinitions(command);
-			evalCommandSet(command);
+	private void evaluate2() throws InterruptedException {
+		stop = false;
+		interrupted = false;
+		if (script == null) {
+			out(ScriptEvent.FAILED, "No script.");
+			return;
+		}
+		script = script.trim();
+		if (script.equals("")) {
+			out(ScriptEvent.FAILED, "No script.");
+			return;
+		}
+		script = removeCommentedOutScripts(script);
+		script = separateExternalScripts(script);
+		String[] command = COMMAND_BREAK.split(script);
+		if (command.length < 1) {
+			out(ScriptEvent.FAILED, "No script.");
+			return;
+		}
+		evalDefinitions(command);
+		evalCommandSet(command);
+		String s = scriptQueue.pollFirst();
+		if (s != null) {
+			setScript(s);
+			evaluate2();
+		}
+		else {
 			stop();
-			synchronized (this) {
-				wait();
-			}
 		}
 	}
 

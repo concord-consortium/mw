@@ -38,6 +38,7 @@ import java.util.BitSet;
 import java.util.Collections;
 import java.util.EmptyStackException;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -100,6 +101,7 @@ public abstract class AbstractEval {
 	protected Map<Integer, String> mouseScripts;
 	protected Point mouseLocation;
 	protected static Map<String, Integer> cursorIDMap;
+	protected LinkedList<String> scriptQueue;
 
 	// used in translateInfixToPostfix, parentheses are parsed along with the logical operators
 	private final static Pattern LOGICAL_EXPRESSION = compile("(" + REGEX_NOT + ")|(" + REGEX_OR + ")|(" + REGEX_AND
@@ -125,6 +127,7 @@ public abstract class AbstractEval {
 	private boolean notifySaver = true;
 
 	protected AbstractEval() {
+		scriptQueue = new LinkedList<String>();
 		if (mathEval == null)
 			mathEval = new Evaluator();
 		logicalStack = new Stack<Object>();
@@ -203,13 +206,39 @@ public abstract class AbstractEval {
 		}
 	}
 
-	public synchronized void setScript(String script) {
+	public void appendScript(String s) {
+		scriptQueue.offerLast(s);
+		if (stop) {
+			halt();
+			setScript(scriptQueue.pollFirst());
+		}
+	}
+
+	protected void setScript(String script) {
 		this.script = script;
 		resetNestedConstruct();
 	}
 
-	public synchronized String getScript() {
-		return script;
+	/**
+	 * The following was used to interrupt the evalThread to get out from the sleep method, which is used in delay. The
+	 * consequence is that a new thread has to be created after the current one is interrupted. An alternative is to
+	 * slice the sleeping time into a fraction of second so that the script thread does not get blocked for too long in
+	 * the sleep method.
+	 * 
+	 * <pre>
+	 * if (evalThread != null) {
+	 * 	if (!eval.isStopped()) {
+	 * 		evalThread.interrupt();
+	 * 		evalThread = null;
+	 * 	}
+	 * }
+	 * </pre>
+	 */
+	public void halt() {
+		if (!isStopped()) {
+			stop();
+		}
+		stopLoops();
 	}
 
 	public double parseMathExpression(String expression) {

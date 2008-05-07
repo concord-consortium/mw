@@ -796,12 +796,19 @@ class Eval2D extends AbstractEval {
 		}
 		evalDefinitions(command);
 		evalCommandSet(command);
-		stop();
-		if (view instanceof AtomisticView) {
-			AtomisticView av = (AtomisticView) view;
-			if (av.getUseJmol()) {
-				av.refreshJmol();
-				av.repaint();
+		String s = scriptQueue.pollFirst();
+		if (s != null) {
+			setScript(s);
+			evaluate2();
+		}
+		else {
+			stop();
+			if (view instanceof AtomisticView) {
+				AtomisticView av = (AtomisticView) view;
+				if (av.getUseJmol()) {
+					av.refreshJmol();
+					av.repaint();
+				}
 			}
 		}
 	}
@@ -3897,7 +3904,8 @@ class Eval2D extends AbstractEval {
 	private synchronized boolean evaluateSourceClause(String address) throws InterruptedException {
 		String s = readFrom(address);
 		if (s != null) {
-			setScript(s);
+			stop = true;
+			appendScript(s);
 			evaluate();
 			return true;
 		}

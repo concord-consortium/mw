@@ -282,25 +282,17 @@ public class MolecularModel {
 	 * stop the script execution thread.
 	 */
 	public void haltScriptExecution() {
-		if (eval == null)
-			return;
-		/*
-		 * The following was used to interrupt the evalThread to get out from the sleep method, which is used in delay.
-		 * The consequence is that a new thread has to be created after the current one is interrupted. An alternative
-		 * is to slice the sleeping time into a fraction of second so that the script thread does not get blocked for
-		 * too long in the sleep method. ---> if (evalThread != null) { if (!eval.isStopped()) { evalThread.interrupt();
-		 * evalThread = null; } }
-		 */
-		if (!eval.isStopped()) {
-			eval.stop();
-		}
+		if (eval != null)
+			eval.halt();
 	}
 
 	public String runScript(final String script) {
 		if (eval == null)
 			eval = new Eval3D(this);
-		haltScriptExecution();
-		eval.setScript(script);
+		// haltScriptExecution();
+		eval.appendScript(script);
+		if (!eval.isStopped())
+			return null;
 		if (evalThread == null) {
 			evalThread = new Thread("Script Runner") {
 				public void run() {
