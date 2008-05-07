@@ -291,7 +291,7 @@ class Eval3D extends AbstractEval {
 
 		String ciLC = ci.toLowerCase();
 
-		// define -- skip
+		// skip the following commands
 		if (ciLC.startsWith("define ") || ciLC.startsWith("static ") || ciLC.startsWith("clearqueue"))
 			return true;
 
