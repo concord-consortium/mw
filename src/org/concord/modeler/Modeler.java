@@ -437,9 +437,11 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 	 */
 	public void destroy() {
 
-		editor.getPage().removePageListener(this);
-		editor.removeEditorListener(this);
-		editor.destroy();
+		if (editor != null) {
+			editor.getPage().removePageListener(this);
+			editor.removeEditorListener(this);
+			editor.destroy();
+		}
 
 		windowList.remove(this);
 		requestStopListening();
