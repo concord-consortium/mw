@@ -864,19 +864,8 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 
 	/** stop the action script execution thread. */
 	public void haltScriptExecution() {
-		if (evalAction == null)
-			return;
-		/*
-		 * The following was used to interrupt the evalThread to get out from the sleep method, which is used in delay.
-		 * The consequence is that a new thread has to be created after the current one is interrupted. An alternative
-		 * is to slice the sleeping time into a fraction of second so that the script thread does not get blocked for
-		 * too long in the sleep method. ---> if (evalThread != null) { if (!eval.isStopped()) { evalThread.interrupt();
-		 * evalThread = null; } }
-		 */
-		if (!evalAction.isStopped()) {
-			evalAction.stop();
-		}
-		evalAction.stopLoops();
+		if (evalAction != null)
+			evalAction.halt();
 	}
 
 	public void setInitializationScriptToRun(boolean b) {
@@ -898,7 +887,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 
 	private void runTaskScript(String script) {
 		createTaskEvaluator();
-		evalTask.setScript(script);
+		evalTask.appendScript(script);
 		try {
 			evalTask.evaluate2();
 		}
@@ -937,9 +926,10 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	}
 
 	private String runScript2(String script) {
-		haltScriptExecution();
-		evalAction.setScript(script);
-		// System.out.println(Thread.activeCount());
+		// haltScriptExecution();
+		evalAction.appendScript(script);
+		if (!evalAction.isStopped())
+			return null;
 		if (evalThread == null) {
 			evalThread = new Thread("Script Runner") {
 				public void run() {
