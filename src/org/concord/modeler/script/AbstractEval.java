@@ -217,6 +217,12 @@ public abstract class AbstractEval {
 			if (s.substring(0, 10).equalsIgnoreCase("clearqueue")) {
 				halt();
 				scriptQueue.clear();
+				try {
+					Thread.sleep(200); // give it 0.2 second to halt
+				}
+				catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 				setScript(s.substring(10));
 			}
 			else {
