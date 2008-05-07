@@ -214,16 +214,16 @@ public abstract class AbstractEval {
 		else {
 			s = s.trim();
 			// clear queue
-			if (s.substring(0, 10).equalsIgnoreCase("clearqueue")) {
+			if (s.substring(0, 4).equalsIgnoreCase("exit")) {
 				halt();
 				scriptQueue.clear();
 				try {
-					Thread.sleep(200); // give it 0.2 second to halt
+					Thread.sleep(100); // give it a little while to halt
 				}
 				catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				setScript(s.substring(10));
+				setScript(s.substring(4));
 			}
 			else {
 				scriptQueue.offerLast(s);
@@ -576,7 +576,7 @@ public abstract class AbstractEval {
 			if (firstWhileFalse) // if the while command is evaluated false for the first time
 				continue;
 
-			if ("return".equalsIgnoreCase(ci)) {
+			if ("return".equalsIgnoreCase(ci) || "exit".equalsIgnoreCase(ci)) {
 				stop();
 				ifLevel = ifLevelBeforeWhile;
 				return false;
