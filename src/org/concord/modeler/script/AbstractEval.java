@@ -207,10 +207,21 @@ public abstract class AbstractEval {
 	}
 
 	public void appendScript(String s) {
-		scriptQueue.offerLast(s);
 		if (stop) {
 			halt();
-			setScript(scriptQueue.pollFirst());
+			setScript(s);
+		}
+		else {
+			s = s.trim();
+			// clear queue
+			if (s.substring(0, 10).equalsIgnoreCase("clearqueue")) {
+				halt();
+				scriptQueue.clear();
+				setScript(s.substring(10));
+			}
+			else {
+				scriptQueue.offerLast(s);
+			}
 		}
 	}
 
