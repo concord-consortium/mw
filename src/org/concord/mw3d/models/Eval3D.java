@@ -289,8 +289,10 @@ class Eval3D extends AbstractEval {
 
 	protected boolean evalCommand(String ci) throws InterruptedException {
 
+		String ciLC = ci.toLowerCase();
+
 		// define -- skip
-		if (ci.toLowerCase().startsWith("define "))
+		if (ciLC.startsWith("define ") || ciLC.startsWith("static ") || ciLC.startsWith("clearqueue"))
 			return true;
 
 		logicalStack.clear();
