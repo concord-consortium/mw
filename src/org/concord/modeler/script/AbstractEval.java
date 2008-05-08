@@ -576,7 +576,7 @@ public abstract class AbstractEval {
 			if (firstWhileFalse) // if the while command is evaluated false for the first time
 				continue;
 
-			if ("return".equalsIgnoreCase(ci) || "exit".equalsIgnoreCase(ci)) {
+			if ("return".equalsIgnoreCase(ci)) {
 				stop();
 				ifLevel = ifLevelBeforeWhile;
 				return false;
