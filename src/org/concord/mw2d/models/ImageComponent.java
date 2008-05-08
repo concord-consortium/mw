@@ -92,6 +92,7 @@ public class ImageComponent implements ModelComponent, Layered {
 		setLoopCount(d.getLoopCount());
 		setLayer(d.getLayer());
 		setLocation(d.getX(), d.getY());
+		setAngle(d.getAngle());
 		String s = d.getHostType();
 		if (s != null) {
 			int index = d.getHostIndex();
@@ -118,9 +119,6 @@ public class ImageComponent implements ModelComponent, Layered {
 			else if (s.endsWith("Obstacle")) {
 				setHost(model.getObstacles().get(index));
 			}
-		}
-		else {
-			setAngle(d.getAngle());
 		}
 	}
 
