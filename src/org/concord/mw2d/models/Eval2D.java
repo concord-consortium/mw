@@ -563,6 +563,7 @@ class Eval2D extends AbstractEval {
 			ic = view.getImage(i);
 			s = replaceAll(s, "%image\\[" + v + "\\]\\.x", ic.getRx() * R_CONVERTER);
 			s = replaceAll(s, "%image\\[" + v + "\\]\\.y", ic.getRy() * R_CONVERTER);
+			s = replaceAll(s, "%image\\[" + v + "\\]\\.angle", Math.toDegrees(ic.getAngle()));
 			s = replaceAll(s, "%image\\[" + v + "\\]\\.width", ic.getWidth() * R_CONVERTER);
 			s = replaceAll(s, "%image\\[" + v + "\\]\\.height", ic.getHeight() * R_CONVERTER);
 			lb0 = lb;
@@ -4602,6 +4603,8 @@ class Eval2D extends AbstractEval {
 			ic[i].translateTo(x * IR_CONVERTER, ic[i].getRy());
 		else if (s == "y")
 			ic[i].translateTo(ic[i].getRx(), x * IR_CONVERTER);
+		else if (s == "angle")
+			ic[i].setAngle((float) Math.toRadians(x));
 		else {
 			out(ScriptEvent.FAILED, "Cannot set propery: " + str2);
 			b = false;
