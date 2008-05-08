@@ -3566,6 +3566,15 @@ class Eval2D extends AbstractEval {
 				ic.setHost(at);
 				view.repaint();
 			}
+			else if ("bond".equals(s[2])) {
+				RadialBond rb = ((MolecularModel) model).getBonds().get(i2);
+				if (rb == null) {
+					out(ScriptEvent.FAILED, "Radial bond " + i2 + " does not exist.");
+					return false;
+				}
+				ic.setHost(rb);
+				view.repaint();
+			}
 			return true;
 		}
 		else if (lcStr.startsWith("textbox")) {
