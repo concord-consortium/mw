@@ -42,11 +42,13 @@ import javax.swing.SpringLayout;
 import javax.swing.border.EmptyBorder;
 
 import org.concord.modeler.ConnectionManager;
+import org.concord.modeler.ui.FloatNumberTextField;
 import org.concord.modeler.ui.IntegerTextField;
 import org.concord.modeler.util.FileUtilities;
 import org.concord.mw2d.models.Atom;
 import org.concord.mw2d.models.GayBerneParticle;
 import org.concord.mw2d.models.ImageComponent;
+import org.concord.mw2d.models.RadialBond;
 import org.concord.mw2d.models.RectangularObstacle;
 
 class ImagePropertiesDialog extends JDialog {
@@ -68,6 +70,7 @@ class ImagePropertiesDialog extends JDialog {
 	private JLabel currentDelayLabel;
 	private JLabel attachLabel;
 	private IntegerTextField loopField;
+	private FloatNumberTextField angleField;
 	private JTabbedPane tabbedPane;
 	private JPanel animPanel;
 
@@ -127,19 +130,30 @@ class ImagePropertiesDialog extends JDialog {
 		mainPanel.add(dimensionLabel);
 
 		// row 7
+		s = MDView.getInternationalText("Angle");
+		mainPanel.add(new JLabel((s != null ? s : "Angle") + ":"));
+		angleField = new FloatNumberTextField(-180, 180);
+		mainPanel.add(angleField);
+
+		// row 8
 		s = MDView.getInternationalText("AttachToLabel");
 		mainPanel.add(new JLabel((s != null ? s : "Attached to") + ":"));
 		attachLabel = new JLabel("None");
 		mainPanel.add(attachLabel);
 
-		PropertiesPanel.makeCompactGrid(mainPanel, 7, 2, 5, 5, 20, 10);
+		PropertiesPanel.makeCompactGrid(mainPanel, 8, 2, 5, 5, 20, 10);
 
 		JPanel p = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 5));
 
 		okListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (image != null && loopField != null) {
-					image.setLoopCount(loopField.getValue());
+				if (image != null) {
+					if (loopField != null) {
+						image.setLoopCount(loopField.getValue());
+					}
+					if (angleField != null) {
+						image.setAngle((float) Math.toRadians(angleField.getValue()));
+					}
 				}
 				dispose();
 			}
@@ -280,6 +294,9 @@ class ImagePropertiesDialog extends JDialog {
 				if (image.getHost() instanceof Atom) {
 					attachLabel.setText("Atom " + image.getHost().toString());
 				}
+				else if (image.getHost() instanceof RadialBond) {
+					attachLabel.setText("Radial Bond " + ((RadialBond) image.getHost()).getIndex());
+				}
 				else if (image.getHost() instanceof GayBerneParticle) {
 					attachLabel.setText("Gay-Berne Particle " + image.getHost().toString());
 				}
@@ -291,6 +308,7 @@ class ImagePropertiesDialog extends JDialog {
 				attachLabel.setText("None");
 			}
 
+			angleField.setValue((float) Math.toDegrees(image.getAngle()));
 			dimensionLabel.setText(image.getWidth() + " x " + image.getHeight() + " pixels, at (" + (int) image.getRx()
 					+ ", " + (int) image.getRy() + ")");
 

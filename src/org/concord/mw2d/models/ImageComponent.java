@@ -119,6 +119,9 @@ public class ImageComponent implements ModelComponent, Layered {
 				setHost(model.getObstacles().get(index));
 			}
 		}
+		else {
+			setAngle(d.getAngle());
+		}
 	}
 
 	private void init(String address) throws IOException {
