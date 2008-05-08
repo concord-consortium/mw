@@ -796,7 +796,13 @@ class Eval2D extends AbstractEval {
 		}
 		evalDefinitions(command);
 		evalCommandSet(command);
-		String s = scriptQueue.pollFirst();
+		String s = null;
+		try {
+			s = scriptQueue.removeFirst();
+		}
+		catch (Exception e) {
+			s = null;
+		}
 		if (s != null) {
 			setScript(s);
 			evaluate2();
