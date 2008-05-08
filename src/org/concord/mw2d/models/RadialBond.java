@@ -239,6 +239,13 @@ public class RadialBond implements ModelComponent {
 		return 0.5 * (atom1.getRy() + atom2.getRy());
 	}
 
+	double getAngle() {
+		double dx = atom2.rx - atom1.rx;
+		double dy = atom2.ry - atom1.ry;
+		double t = dx / Math.hypot(dx, dy);
+		return dy < 0 ? Math.PI - Math.acos(t) : Math.acos(t) - Math.PI;
+	}
+
 	public boolean equals(Object o) {
 		if (!(o instanceof RadialBond))
 			return false;

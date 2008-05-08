@@ -57,6 +57,7 @@ public class ImageComponent implements ModelComponent, Layered {
 	private Image[] images;
 	private int loopCount = 1000;
 	private double x, y;
+	private float angle;
 	private double savedX = -1.0, savedY = -1.0;
 	private boolean stateStored;
 	private int frameCounter, loopCounter;
@@ -97,6 +98,16 @@ public class ImageComponent implements ModelComponent, Layered {
 			if (s.endsWith("Atom")) {
 				if (model instanceof MolecularModel) {
 					setHost(((MolecularModel) model).getAtom(index));
+				}
+			}
+			else if (s.endsWith("RadialBond")) {
+				if (model instanceof MolecularModel) {
+					MolecularModel mm = (MolecularModel) model;
+					if (mm.bonds != null) {
+						int n = mm.bonds.size();
+						if (index < n && index >= 0)
+							setHost(mm.bonds.get(index));
+					}
 				}
 			}
 			else if (s.endsWith("GayBerneParticle")) {
@@ -258,6 +269,16 @@ public class ImageComponent implements ModelComponent, Layered {
 			return;
 		if (host != null)
 			setLocation(host.getRx() - 0.5 * getLogicalScreenWidth(), host.getRy() - 0.5 * getLogicalScreenHeight());
+		double xc = 0, yc = 0;
+		if (host instanceof RadialBond) {
+			angle = (float) ((RadialBond) host).getAngle();
+		}
+		boolean hasAngle = Math.abs(angle) > Particle.ZERO;
+		if (hasAngle) {
+			xc = x + getLogicalScreenWidth() * 0.5;
+			yc = y + getLogicalScreenHeight() * 0.5;
+			((Graphics2D) g).rotate(angle, xc, yc);
+		}
 		if (n == 1) {
 			if (images[0] != null)
 				g.drawImage(images[0], (int) x, (int) y, null);
@@ -273,6 +294,9 @@ public class ImageComponent implements ModelComponent, Layered {
 			g.drawRect((int) (getXFrame() - 2), (int) (getYFrame() - 2), getWidth() + 4, getHeight() + 4);
 			g.setColor(oldColor);
 			((Graphics2D) g).setStroke(oldStroke);
+		}
+		if (hasAngle) {
+			((Graphics2D) g).rotate(-angle, xc, yc);
 		}
 	}
 
@@ -294,6 +318,14 @@ public class ImageComponent implements ModelComponent, Layered {
 
 	public int getLoopCount() {
 		return loopCount;
+	}
+
+	public void setAngle(float angle) {
+		this.angle = angle;
+	}
+
+	public float getAngle() {
+		return angle;
 	}
 
 	/** return the current x coordinate of this image */
@@ -481,6 +513,7 @@ public class ImageComponent implements ModelComponent, Layered {
 
 		private String uri;
 		private int loopCount = 1000;
+		private float angle;
 
 		public Delegate() {
 		}
@@ -492,12 +525,16 @@ public class ImageComponent implements ModelComponent, Layered {
 			loopCount = ic.getLoopCount();
 			x = ic.getRx();
 			y = ic.getRy();
+			angle = ic.angle;
 			layer = ic.layer;
 			layerPosition = (byte) ((MDView) ic.getHostModel().getView()).getLayerPosition(ic);
 			if (ic.getHost() != null) {
 				hostType = ic.getHost().getClass().toString();
 				if (ic.getHost() instanceof Particle) {
 					hostIndex = ((Particle) ic.getHost()).getIndex();
+				}
+				else if (ic.getHost() instanceof RadialBond) {
+					hostIndex = ((RadialBond) ic.getHost()).getIndex();
 				}
 				else if (ic.getHost() instanceof RectangularObstacle) {
 					hostIndex = ic.getHostModel().getObstacles().indexOf(ic.getHost());
@@ -519,6 +556,14 @@ public class ImageComponent implements ModelComponent, Layered {
 
 		public String getURI() {
 			return uri;
+		}
+
+		public void setAngle(float angle) {
+			this.angle = angle;
+		}
+
+		public float getAngle() {
+			return angle;
 		}
 
 	}

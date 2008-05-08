@@ -49,6 +49,7 @@ import javax.swing.event.ListSelectionListener;
 import org.concord.modeler.event.ModelEvent;
 import org.concord.mw2d.models.Atom;
 import org.concord.mw2d.models.GayBerneParticle;
+import org.concord.mw2d.models.ImageComponent;
 import org.concord.mw2d.models.Layered;
 import org.concord.mw2d.models.LineComponent;
 import org.concord.mw2d.models.MDModel;
@@ -98,7 +99,7 @@ class AttachDialog extends JDialog {
 			if (bonds != null) {
 				int size = bonds.size();
 				if (size > 0) {
-					if (mc instanceof LineComponent) {
+					if (mc instanceof LineComponent || mc instanceof ImageComponent) {
 						RadialBond[] rb = new RadialBond[size];
 						for (int i = 0; i < size; i++) {
 							rb[i] = bonds.get(i);
