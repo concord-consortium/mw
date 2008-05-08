@@ -214,7 +214,7 @@ public abstract class AbstractEval {
 		else {
 			s = s.trim();
 			// clear queue
-			if (s.substring(0, 4).equalsIgnoreCase("exit")) {
+			if (s.substring(0, 6).equalsIgnoreCase("cancel")) {
 				halt();
 				scriptQueue.clear();
 				try {
@@ -223,7 +223,7 @@ public abstract class AbstractEval {
 				catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				setScript(s.substring(4));
+				setScript(s.substring(6));
 			}
 			else {
 				scriptQueue.offerLast(s);
