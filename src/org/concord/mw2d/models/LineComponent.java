@@ -157,7 +157,7 @@ public class LineComponent extends AbstractLine implements ModelComponent, Layer
 	protected void attachToHost() {
 		if (host == null)
 			return;
-		if (host instanceof Particle) {
+		if (host instanceof Particle || host instanceof RectangularObstacle) {
 			switch (getAttachmentPosition()) {
 			case CENTER:
 				setLocation(host.getRx(), host.getRy());
