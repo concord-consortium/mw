@@ -226,7 +226,7 @@ public abstract class AbstractEval {
 				setScript(s.substring(6));
 			}
 			else {
-				scriptQueue.offerLast(s);
+				scriptQueue.addLast(s);
 			}
 		}
 	}
