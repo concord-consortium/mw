@@ -214,7 +214,7 @@ public abstract class AbstractEval {
 		else {
 			s = s.trim();
 			// cancel current and pending scripts
-			if (s.substring(0, 6).equalsIgnoreCase("cancel")) {
+			if (s.length() >= 6 && s.substring(0, 6).equalsIgnoreCase("cancel")) {
 				halt();
 				clearScriptQueue();
 				try {
