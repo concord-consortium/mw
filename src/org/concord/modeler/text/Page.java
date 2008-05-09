@@ -760,6 +760,9 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 						if (EventQueue.isDispatchThread())
 							((IconWrapper) e).showBoundary(b);
 					}
+					else if (e instanceof ModelCanvas) {
+						((ModelCanvas) e).getContainer().getView().setEditable(b);
+					}
 				}
 			}
 		}

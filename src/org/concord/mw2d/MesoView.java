@@ -1501,63 +1501,65 @@ public class MesoView extends MDView {
 			break;
 
 		case SELE_ID:
-			dragSelected = false;
-			if (selectedComponent instanceof GayBerneParticle) {
-				GayBerneParticle p = (GayBerneParticle) selectedComponent;
-				if (p.getRestraint() != null) {
-					int amp = (int) (400.0 / p.getRestraint().getK());
-					Vector2D loc = moveSpring(x, y, (int) p.getRestraint().getX0(), (int) p.getRestraint().getY0(), 0,
-							amp);
-					if (loc == null)
-						return;
-					p.setRx(loc.getX());
-					p.setRy(loc.getY());
-				}
-				else {
-					p.setRx(x - clickPoint.x);
-					p.setRy(y - clickPoint.y);
-				}
-				boundary.setRBC(p, RectangularBoundary.TRANSLATION);
-				dragSelected = true;
-			}
-			else if (selectedComponent instanceof ImageComponent) {
-				ImageComponent ic = (ImageComponent) selectedComponent;
-				if (ic.getHost() == null) {
-					ic.translateTo(x - clickPoint.x, y - clickPoint.y);
+			if (isEditable() || !dragObjectOnlyWhenEditing) {
+				dragSelected = false;
+				if (selectedComponent instanceof GayBerneParticle) {
+					GayBerneParticle p = (GayBerneParticle) selectedComponent;
+					if (p.getRestraint() != null) {
+						int amp = (int) (400.0 / p.getRestraint().getK());
+						Vector2D loc = moveSpring(x, y, (int) p.getRestraint().getX0(), (int) p.getRestraint().getY0(),
+								0, amp);
+						if (loc == null)
+							return;
+						p.setRx(loc.getX());
+						p.setRy(loc.getY());
+					}
+					else {
+						p.setRx(x - clickPoint.x);
+						p.setRy(y - clickPoint.y);
+					}
+					boundary.setRBC(p, RectangularBoundary.TRANSLATION);
 					dragSelected = true;
 				}
-			}
-			else if (selectedComponent instanceof TextBoxComponent) {
-				TextBoxComponent tb = (TextBoxComponent) selectedComponent;
-				if (tb.getHost() == null || tb.getAttachmentPosition() != TextBoxComponent.BOX_CENTER) {
-					tb.translateTo(x - clickPoint.x, y - clickPoint.y);
-					dragSelected = true;
+				else if (selectedComponent instanceof ImageComponent) {
+					ImageComponent ic = (ImageComponent) selectedComponent;
+					if (ic.getHost() == null) {
+						ic.translateTo(x - clickPoint.x, y - clickPoint.y);
+						dragSelected = true;
+					}
 				}
-			}
-			else if (selectedComponent instanceof LineComponent) {
-				LineComponent lc = (LineComponent) selectedComponent;
-				if (lc.getHost() == null) {
-					lc.translateTo(x - clickPoint.x, y - clickPoint.y);
-					dragSelected = true;
+				else if (selectedComponent instanceof TextBoxComponent) {
+					TextBoxComponent tb = (TextBoxComponent) selectedComponent;
+					if (tb.getHost() == null || tb.getAttachmentPosition() != TextBoxComponent.BOX_CENTER) {
+						tb.translateTo(x - clickPoint.x, y - clickPoint.y);
+						dragSelected = true;
+					}
 				}
-			}
-			else if (selectedComponent instanceof RectangleComponent) {
-				RectangleComponent rc = (RectangleComponent) selectedComponent;
-				if (rc.getHost() == null) {
-					rc.translateTo(x - clickPoint.x, y - clickPoint.y);
-					dragSelected = true;
+				else if (selectedComponent instanceof LineComponent) {
+					LineComponent lc = (LineComponent) selectedComponent;
+					if (lc.getHost() == null) {
+						lc.translateTo(x - clickPoint.x, y - clickPoint.y);
+						dragSelected = true;
+					}
 				}
-			}
-			else if (selectedComponent instanceof EllipseComponent) {
-				EllipseComponent ec = (EllipseComponent) selectedComponent;
-				if (ec.getHost() == null) {
-					ec.translateTo(x - clickPoint.x, y - clickPoint.y);
-					dragSelected = true;
+				else if (selectedComponent instanceof RectangleComponent) {
+					RectangleComponent rc = (RectangleComponent) selectedComponent;
+					if (rc.getHost() == null) {
+						rc.translateTo(x - clickPoint.x, y - clickPoint.y);
+						dragSelected = true;
+					}
 				}
-			}
-			if (dragSelected) {
-				repaint();
-				setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+				else if (selectedComponent instanceof EllipseComponent) {
+					EllipseComponent ec = (EllipseComponent) selectedComponent;
+					if (ec.getHost() == null) {
+						ec.translateTo(x - clickPoint.x, y - clickPoint.y);
+						dragSelected = true;
+					}
+				}
+				if (dragSelected) {
+					repaint();
+					setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+				}
 			}
 			break;
 
