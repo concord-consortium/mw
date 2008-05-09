@@ -380,8 +380,6 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 	public void reset() {
 		view.navigator.setEnabled(true);
 		stopAction.actionPerformed(null);
-		if (model.isEmpty())
-			return;
 		model.clear();
 		view.reset();
 		repaint();

@@ -289,7 +289,6 @@ public class MolecularModel {
 	public String runScript(final String script) {
 		if (eval == null)
 			eval = new Eval3D(this);
-		// haltScriptExecution();
 		eval.appendScript(script);
 		if (!eval.isStopped())
 			return null;
@@ -307,7 +306,8 @@ public class MolecularModel {
 			evalThread.setUncaughtExceptionHandler(new DisasterHandler(DisasterHandler.SCRIPT_ERROR, new Runnable() {
 				public void run() {
 					evalThread = null;
-					haltScriptExecution();
+					eval.clearScriptQueue();
+					eval.halt();
 				}
 			}, null, getView()));
 			evalThread.start();
@@ -1648,6 +1648,8 @@ public class MolecularModel {
 	}
 
 	public void clear() {
+		// haltScriptExecution();
+		// if we halt scripts, then the scripts that may call this method will not be able to run
 		tot = 0;
 		kin = 0;
 		pot = 0;
