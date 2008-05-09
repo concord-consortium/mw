@@ -3581,6 +3581,7 @@ public abstract class AtomicModel extends MDModel {
 
 		AtomisticView.State vs = new AtomisticView.State();
 		vs.setRenderingMethod(view.getRenderingMethod());
+		vs.setDragObjectOnlyWhenEditing(view.getDragObjectOnlyWhenEditing());
 		vs.setUseJmol(view.getUseJmol());
 		vs.setElementColors(view.getElementColors());
 		vs.setBackground(view.getBackground());
@@ -3889,6 +3890,7 @@ public abstract class AtomicModel extends MDModel {
 		monitor.setProgressMessage("Reading view...");
 		final AtomisticView.State vs = (AtomisticView.State) in.readObject();
 		view.setRenderingMethod(vs.getRenderingMethod());
+		view.setDragObjectOnlyWhenEditing(vs.getDragObjectOnlyWhenEditing());
 		view.setUseJmol(vs.getUseJmol() || !vs.getMonochromatic());
 		view.setElementColors(vs.getElementColors());
 		view.setFillMode(vs.getFillMode());

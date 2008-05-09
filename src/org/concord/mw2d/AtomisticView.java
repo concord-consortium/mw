@@ -4603,137 +4603,141 @@ public class AtomisticView extends MDView implements BondChangeListener {
 
 		case SELE_ID:
 
-			if (selectedComponent instanceof RectangularObstacle) {
-				if (obsRectSelected > RectangularObstacle.INSIDE) {
-					RectangularObstacle r2d = (RectangularObstacle) selectedComponent;
-					int xbox = (int) r2d.getWidth();
-					int ybox = (int) r2d.getHeight();
-					int xmin = (int) r2d.getX();
-					int ymin = (int) r2d.getY();
-					switch (obsRectSelected) {
-					case RectangularObstacle.NW:
-						xbox = xbox + xmin - x;
-						ybox = ybox + ymin - y;
-						xmin = x;
-						ymin = y;
-						break;
-					case RectangularObstacle.NORTH:
-						ybox = ybox + ymin - y;
-						ymin = y;
-						break;
-					case RectangularObstacle.NE:
-						xbox = x - xmin;
-						ybox = ybox + ymin - y;
-						ymin = y;
-						break;
-					case RectangularObstacle.EAST:
-						xbox = x - xmin;
-						break;
-					case RectangularObstacle.SE:
-						xbox = x - xmin;
-						ybox = y - ymin;
-						break;
-					case RectangularObstacle.SOUTH:
-						ybox = y - ymin;
-						break;
-					case RectangularObstacle.SW:
-						xbox = xbox + xmin - x;
-						ybox = y - ymin;
-						xmin = x;
-						break;
-					case RectangularObstacle.WEST:
-						xbox = xbox + xmin - x;
-						xmin = x;
-						break;
-					}
-					if (xbox < 0) {
-						xmin = x;
-						xbox = -xbox;
-					}
-					if (ybox < 0) {
-						ymin = y;
-						ybox = -ybox;
-					}
-					if (xbox == 0)
-						xbox = 1;
-					if (ybox == 0)
-						ybox = 1;
-					r2d.setRect(xmin, ymin, xbox, ybox);
-					model.notifyChange();
-					repaint();
-					return;
-				}
-			}
+			if (isEditable() || !dragObjectOnlyWhenEditing) {
 
-			dragSelected = false;
-			if (selectedComponent instanceof Molecule) {
-				dragSelected = true;
-				Molecule mol = (Molecule) selectedComponent;
-				mol.translateTo(x - clickPoint.x, y - clickPoint.y);
-				BoundaryFactory.setRBC(mol, boundary);
-				refreshForces();
-			}
-			else if (selectedComponent instanceof Atom) {
-				dragSelected = true;
-				Atom a = (Atom) selectedComponent;
-				if (a.getRestraint() != null) {
-					int amp = a.isBonded() ? 5 : (int) (400.0 / a.getRestraint().getK());
-					Vector2D loc = moveSpring(x, y, (int) a.getRestraint().getX0(), (int) a.getRestraint().getY0(), 0,
-							amp);
-					if (loc == null)
+				if (selectedComponent instanceof RectangularObstacle) {
+					if (obsRectSelected > RectangularObstacle.INSIDE) {
+						RectangularObstacle r2d = (RectangularObstacle) selectedComponent;
+						int xbox = (int) r2d.getWidth();
+						int ybox = (int) r2d.getHeight();
+						int xmin = (int) r2d.getX();
+						int ymin = (int) r2d.getY();
+						switch (obsRectSelected) {
+						case RectangularObstacle.NW:
+							xbox = xbox + xmin - x;
+							ybox = ybox + ymin - y;
+							xmin = x;
+							ymin = y;
+							break;
+						case RectangularObstacle.NORTH:
+							ybox = ybox + ymin - y;
+							ymin = y;
+							break;
+						case RectangularObstacle.NE:
+							xbox = x - xmin;
+							ybox = ybox + ymin - y;
+							ymin = y;
+							break;
+						case RectangularObstacle.EAST:
+							xbox = x - xmin;
+							break;
+						case RectangularObstacle.SE:
+							xbox = x - xmin;
+							ybox = y - ymin;
+							break;
+						case RectangularObstacle.SOUTH:
+							ybox = y - ymin;
+							break;
+						case RectangularObstacle.SW:
+							xbox = xbox + xmin - x;
+							ybox = y - ymin;
+							xmin = x;
+							break;
+						case RectangularObstacle.WEST:
+							xbox = xbox + xmin - x;
+							xmin = x;
+							break;
+						}
+						if (xbox < 0) {
+							xmin = x;
+							xbox = -xbox;
+						}
+						if (ybox < 0) {
+							ymin = y;
+							ybox = -ybox;
+						}
+						if (xbox == 0)
+							xbox = 1;
+						if (ybox == 0)
+							ybox = 1;
+						r2d.setRect(xmin, ymin, xbox, ybox);
+						model.notifyChange();
+						repaint();
 						return;
-					a.translateTo(loc.getX(), loc.getY());
+					}
 				}
-				else {
-					a.translateTo(x - clickPoint.x, y - clickPoint.y);
-				}
-				boundary.setRBC(a);
-				refreshForces();
-			}
-			else if (selectedComponent instanceof RectangularObstacle) {
-				if (obsRectSelected <= RectangularObstacle.INSIDE) {
-					((RectangularObstacle) selectedComponent).translateTo(x - clickPoint.x, y - clickPoint.y);
+
+				dragSelected = false;
+				if (selectedComponent instanceof Molecule) {
 					dragSelected = true;
+					Molecule mol = (Molecule) selectedComponent;
+					mol.translateTo(x - clickPoint.x, y - clickPoint.y);
+					BoundaryFactory.setRBC(mol, boundary);
+					refreshForces();
 				}
-			}
-			else if (selectedComponent instanceof ImageComponent) {
-				ImageComponent ic = (ImageComponent) selectedComponent;
-				if (ic.getHost() == null) {
-					ic.translateTo(x - clickPoint.x, y - clickPoint.y);
+				else if (selectedComponent instanceof Atom) {
 					dragSelected = true;
+					Atom a = (Atom) selectedComponent;
+					if (a.getRestraint() != null) {
+						int amp = a.isBonded() ? 5 : (int) (400.0 / a.getRestraint().getK());
+						Vector2D loc = moveSpring(x, y, (int) a.getRestraint().getX0(), (int) a.getRestraint().getY0(),
+								0, amp);
+						if (loc == null)
+							return;
+						a.translateTo(loc.getX(), loc.getY());
+					}
+					else {
+						a.translateTo(x - clickPoint.x, y - clickPoint.y);
+					}
+					boundary.setRBC(a);
+					refreshForces();
 				}
-			}
-			else if (selectedComponent instanceof TextBoxComponent) {
-				TextBoxComponent tb = (TextBoxComponent) selectedComponent;
-				if (tb.getHost() == null || tb.getAttachmentPosition() != TextBoxComponent.BOX_CENTER) {
-					tb.translateTo(x - clickPoint.x, y - clickPoint.y);
-					dragSelected = true;
+				else if (selectedComponent instanceof RectangularObstacle) {
+					if (obsRectSelected <= RectangularObstacle.INSIDE) {
+						((RectangularObstacle) selectedComponent).translateTo(x - clickPoint.x, y - clickPoint.y);
+						dragSelected = true;
+					}
 				}
-			}
-			else if (selectedComponent instanceof LineComponent) {
-				LineComponent lc = (LineComponent) selectedComponent;
-				if (lc.getHost() == null) {
-					lc.translateTo(x - clickPoint.x, y - clickPoint.y);
-					dragSelected = true;
+				else if (selectedComponent instanceof ImageComponent) {
+					ImageComponent ic = (ImageComponent) selectedComponent;
+					if (ic.getHost() == null) {
+						ic.translateTo(x - clickPoint.x, y - clickPoint.y);
+						dragSelected = true;
+					}
 				}
-			}
-			else if (selectedComponent instanceof RectangleComponent) {
-				RectangleComponent rc = (RectangleComponent) selectedComponent;
-				if (rc.getHost() == null) {
-					rc.translateTo(x - clickPoint.x, y - clickPoint.y);
-					dragSelected = true;
+				else if (selectedComponent instanceof TextBoxComponent) {
+					TextBoxComponent tb = (TextBoxComponent) selectedComponent;
+					if (tb.getHost() == null || tb.getAttachmentPosition() != TextBoxComponent.BOX_CENTER) {
+						tb.translateTo(x - clickPoint.x, y - clickPoint.y);
+						dragSelected = true;
+					}
 				}
-			}
-			else if (selectedComponent instanceof EllipseComponent) {
-				EllipseComponent ec = (EllipseComponent) selectedComponent;
-				if (ec.getHost() == null) {
-					ec.translateTo(x - clickPoint.x, y - clickPoint.y);
-					dragSelected = true;
+				else if (selectedComponent instanceof LineComponent) {
+					LineComponent lc = (LineComponent) selectedComponent;
+					if (lc.getHost() == null) {
+						lc.translateTo(x - clickPoint.x, y - clickPoint.y);
+						dragSelected = true;
+					}
 				}
-			}
-			if (dragSelected) {
-				repaint();
-				setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+				else if (selectedComponent instanceof RectangleComponent) {
+					RectangleComponent rc = (RectangleComponent) selectedComponent;
+					if (rc.getHost() == null) {
+						rc.translateTo(x - clickPoint.x, y - clickPoint.y);
+						dragSelected = true;
+					}
+				}
+				else if (selectedComponent instanceof EllipseComponent) {
+					EllipseComponent ec = (EllipseComponent) selectedComponent;
+					if (ec.getHost() == null) {
+						ec.translateTo(x - clickPoint.x, y - clickPoint.y);
+						dragSelected = true;
+					}
+				}
+				if (dragSelected) {
+					repaint();
+					setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+				}
+
 			}
 			break;
 

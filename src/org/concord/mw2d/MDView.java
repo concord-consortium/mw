@@ -177,6 +177,7 @@ public abstract class MDView extends PrintableComponent {
 	boolean drawString = true;
 	double relativeKEForShading = 1.0;
 	boolean showClock = true, showParticleIndex, drawCharge = true, showSelectionHalo = true;
+	boolean dragObjectOnlyWhenEditing;
 	boolean drawExternalForce;
 	boolean showMirrorImages = true;
 	float chargeIncrement = 0.5f;
@@ -212,6 +213,7 @@ public abstract class MDView extends PrintableComponent {
 	/* a friction field to counter the steering force on a particle. */
 	double steerFriction = 1.0;
 
+	private boolean editable;
 	private boolean clockPainted = true;
 	private String colorCoding = "None";
 	private boolean energizerOn;
@@ -578,6 +580,14 @@ public abstract class MDView extends PrintableComponent {
 		pm.removeAll();
 	}
 
+	public void setEditable(boolean b) {
+		editable = b;
+	}
+
+	public boolean isEditable() {
+		return editable;
+	}
+
 	public void addActionStateListener(ActionStateListener a) {
 		if (a == null)
 			return;
@@ -601,6 +611,14 @@ public abstract class MDView extends PrintableComponent {
 			return;
 		for (ActionStateListener a : actionStateListeners)
 			a.actionStateChanged(e);
+	}
+
+	public void setDragObjectOnlyWhenEditing(boolean b) {
+		dragObjectOnlyWhenEditing = b;
+	}
+
+	public boolean getDragObjectOnlyWhenEditing() {
+		return dragObjectOnlyWhenEditing;
 	}
 
 	/**
@@ -3325,6 +3343,7 @@ public abstract class MDView extends PrintableComponent {
 		private String colorCode;
 		private Color background = Color.white;
 		private int markColor = 0xffccccff;
+		private boolean dragObjectOnlyWhenEditing;
 		private boolean energizer;
 		private boolean showParticleIndex, showClock = true, drawCharge = true, showMirrorImages = true,
 				drawExternalForce;
@@ -3346,6 +3365,14 @@ public abstract class MDView extends PrintableComponent {
 			momentumFlavor = new VectorFlavor(Color.gray, ViewAttribute.THIN, 1);
 			accelerationFlavor = new VectorFlavor(Color.red, ViewAttribute.THIN, 100);
 			forceFlavor = new VectorFlavor(Color.orange, ViewAttribute.THIN, 1);
+		}
+
+		public void setDragObjectOnlyWhenEditing(boolean b) {
+			dragObjectOnlyWhenEditing = b;
+		}
+
+		public boolean getDragObjectOnlyWhenEditing() {
+			return dragObjectOnlyWhenEditing;
 		}
 
 		public void setRenderingMethod(int i) {
