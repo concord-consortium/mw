@@ -130,8 +130,8 @@ class ImagePropertiesDialog extends JDialog {
 		mainPanel.add(dimensionLabel);
 
 		// row 7
-		s = MDView.getInternationalText("Angle");
-		mainPanel.add(new JLabel((s != null ? s : "Angle") + ":"));
+		s = MDView.getInternationalText("RotationAngle");
+		mainPanel.add(new JLabel((s != null ? s : "Rotation Angle") + " (deg) :"));
 		angleField = new FloatNumberTextField(-180, 180);
 		mainPanel.add(angleField);
 

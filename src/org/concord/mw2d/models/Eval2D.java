@@ -824,7 +824,7 @@ class Eval2D extends AbstractEval {
 
 		String ciLC = ci.toLowerCase();
 
-		// define and static define -- skip
+		// skip
 		if (ciLC.startsWith("define ") || ciLC.startsWith("static ") || ciLC.startsWith("cancel"))
 			return true;
 

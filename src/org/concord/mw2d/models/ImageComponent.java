@@ -57,7 +57,7 @@ public class ImageComponent implements ModelComponent, Layered {
 	private Image[] images;
 	private int loopCount = 1000;
 	private double x, y;
-	private float angle;
+	private float angle, offsetAngle;
 	private double savedX = -1.0, savedY = -1.0;
 	private boolean stateStored;
 	private int frameCounter, loopCounter;
@@ -93,6 +93,7 @@ public class ImageComponent implements ModelComponent, Layered {
 		setLayer(d.getLayer());
 		setLocation(d.getX(), d.getY());
 		setAngle(d.getAngle());
+		setOffsetAngle(d.getOffsetAngle());
 		String s = d.getHostType();
 		if (s != null) {
 			int index = d.getHostIndex();
@@ -274,11 +275,12 @@ public class ImageComponent implements ModelComponent, Layered {
 		if (host instanceof RadialBond) {
 			angle = (float) ((RadialBond) host).getAngle();
 		}
-		boolean hasAngle = Math.abs(angle) > Particle.ZERO;
+		float a = angle + offsetAngle;
+		boolean hasAngle = Math.abs(a) > Particle.ZERO;
 		if (hasAngle) {
 			xc = x + getLogicalScreenWidth() * 0.5;
 			yc = y + getLogicalScreenHeight() * 0.5;
-			((Graphics2D) g).rotate(angle, xc, yc);
+			((Graphics2D) g).rotate(a, xc, yc);
 		}
 		if (n == 1) {
 			if (images[0] != null)
@@ -297,7 +299,7 @@ public class ImageComponent implements ModelComponent, Layered {
 			((Graphics2D) g).setStroke(oldStroke);
 		}
 		if (hasAngle) {
-			((Graphics2D) g).rotate(-angle, xc, yc);
+			((Graphics2D) g).rotate(-a, xc, yc);
 		}
 	}
 
@@ -319,6 +321,14 @@ public class ImageComponent implements ModelComponent, Layered {
 
 	public int getLoopCount() {
 		return loopCount;
+	}
+
+	public void setOffsetAngle(float offsetAngle) {
+		this.offsetAngle = offsetAngle;
+	}
+
+	public float getOffsetAngle() {
+		return offsetAngle;
 	}
 
 	public void setAngle(float angle) {
@@ -514,7 +524,7 @@ public class ImageComponent implements ModelComponent, Layered {
 
 		private String uri;
 		private int loopCount = 1000;
-		private float angle;
+		private float angle, offsetAngle;
 
 		public Delegate() {
 		}
@@ -527,6 +537,7 @@ public class ImageComponent implements ModelComponent, Layered {
 			x = ic.getRx();
 			y = ic.getRy();
 			angle = ic.angle;
+			offsetAngle = ic.offsetAngle;
 			layer = ic.layer;
 			layerPosition = (byte) ((MDView) ic.getHostModel().getView()).getLayerPosition(ic);
 			if (ic.getHost() != null) {
@@ -557,6 +568,14 @@ public class ImageComponent implements ModelComponent, Layered {
 
 		public String getURI() {
 			return uri;
+		}
+
+		public void setOffsetAngle(float offsetAngle) {
+			this.offsetAngle = offsetAngle;
+		}
+
+		public float getOffsetAngle() {
+			return offsetAngle;
 		}
 
 		public void setAngle(float angle) {

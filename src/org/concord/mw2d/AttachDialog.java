@@ -26,6 +26,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
@@ -47,6 +49,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.concord.modeler.event.ModelEvent;
+import org.concord.modeler.ui.IntegerTextField;
 import org.concord.mw2d.models.Atom;
 import org.concord.mw2d.models.GayBerneParticle;
 import org.concord.mw2d.models.ImageComponent;
@@ -261,6 +264,35 @@ class AttachDialog extends JDialog {
 			});
 			bg.add(b);
 			p.add(b);
+
+		}
+		else if (mc instanceof ImageComponent) {
+
+			final ImageComponent ic = (ImageComponent) mc;
+
+			JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
+			container.add(p, BorderLayout.CENTER);
+
+			s = MDView.getInternationalText("OffsetAngle");
+			p.add(new JLabel((s != null ? s : "Offset Angle") + ":"));
+
+			final IntegerTextField angleField = new IntegerTextField((int) Math.toDegrees(ic.getOffsetAngle()), -180,
+					180, 6);
+			angleField.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					ic.setOffsetAngle((float) Math.toRadians(angleField.getValue()));
+					view.repaint();
+				}
+			});
+			angleField.addFocusListener(new FocusAdapter() {
+				public void focusLost(FocusEvent e) {
+					ic.setOffsetAngle((float) Math.toRadians(angleField.getValue()));
+					view.repaint();
+				}
+			});
+			p.add(angleField);
+
+			p.add(new JLabel("<html>&#176;</html>"));
 
 		}
 		else if (mc instanceof LineComponent) {
