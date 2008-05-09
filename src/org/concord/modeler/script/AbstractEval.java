@@ -213,10 +213,10 @@ public abstract class AbstractEval {
 		}
 		else {
 			s = s.trim();
-			// clear queue
+			// cancel current and pending scripts
 			if (s.substring(0, 6).equalsIgnoreCase("cancel")) {
 				halt();
-				scriptQueue.clear();
+				clearScriptQueue();
 				try {
 					Thread.sleep(100); // give it a little while to halt
 				}
@@ -256,6 +256,10 @@ public abstract class AbstractEval {
 			stop();
 		}
 		stopLoops();
+	}
+
+	public void clearScriptQueue() {
+		scriptQueue.clear();
 	}
 
 	public double parseMathExpression(String expression) {

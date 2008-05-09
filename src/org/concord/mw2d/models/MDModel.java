@@ -611,6 +611,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			stateHolder.destroy();
 			stateHolder = null;
 		}
+		clearScriptQueue();
 		haltScriptExecution();
 		if (evalAction != null) {
 			evalAction.removeAllScriptListeners();
@@ -703,6 +704,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	}
 
 	public void output(File file) {
+		clearScriptQueue();
 		haltScriptExecution();
 		stopImmediately();
 		blockView(true);
@@ -868,6 +870,13 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			evalAction.halt();
 	}
 
+	private void clearScriptQueue() {
+		if (evalAction != null)
+			evalAction.clearScriptQueue();
+		if (evalTask != null)
+			evalTask.clearScriptQueue();
+	}
+
 	public void setInitializationScriptToRun(boolean b) {
 		initializationScriptToRun = b;
 	}
@@ -926,7 +935,6 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	}
 
 	private String runScript2(String script) {
-		// haltScriptExecution();
 		evalAction.appendScript(script);
 		if (!evalAction.isStopped())
 			return null;
@@ -945,7 +953,8 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			evalThread.setUncaughtExceptionHandler(new DisasterHandler(DisasterHandler.SCRIPT_ERROR, new Runnable() {
 				public void run() {
 					evalThread = null;
-					haltScriptExecution();
+					evalAction.clearScriptQueue();
+					evalAction.halt();
 				}
 			}, null, getView()));
 			evalThread.start();
@@ -1751,6 +1760,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	}
 
 	private void reset2(boolean ask) {
+		clearScriptQueue();
 		haltScriptExecution();
 		stopImmediately();
 		if (job != null)
@@ -2011,6 +2021,8 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 
 	/** this method can be used to empty a model. */
 	public void clear() {
+		// haltScriptExecution();
+		// if we halt scripts, then the scripts that may call this method will not be able to run
 		initializationScript = null;
 		tot = 0;
 		kin = 0;
