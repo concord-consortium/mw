@@ -129,11 +129,11 @@ class Eval2D extends AbstractEval {
 				view.repaint();
 				if (!getAsTask())
 					model.notifyModelListeners(new ModelEvent(model, ModelEvent.SCRIPT_END));
-				if (!model.initializationScriptToRun) {
-					notifyChange();
+				if (model.initializationScriptToRun) {
+					model.setInitializationScriptToRun(false);
 				}
 				else {
-					model.setInitializationScriptToRun(false);
+					notifyChange();
 				}
 			}
 		});
