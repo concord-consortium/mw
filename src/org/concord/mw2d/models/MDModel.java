@@ -2374,9 +2374,10 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	}
 
 	void copyFile(final String s, final File d) {
+		final byte i = FileUtilities.copy(new File(s), d);
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				switch (FileUtilities.copy(new File(s), d)) {
+				switch (i) {
 				case FileUtilities.SOURCE_NOT_FOUND:
 					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), "Source " + s
 							+ " is not found.", "File not found", JOptionPane.ERROR_MESSAGE);

@@ -3476,8 +3476,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			fileChooser.setSelectedFile(new File(fileChooser.getCurrentDirectory(), FileUtilities.changeExtension(
 					FileUtilities.getFileName(pageAddress), "zip")));
 		}
-		catch (NullPointerException npe) {
-			npe.printStackTrace();
+		catch (NullPointerException e) {
+			e.printStackTrace();
 			fileChooser.resetTextField();
 		}
 
@@ -3502,7 +3502,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			String filename = FileUtilities.getFileName(file.getAbsolutePath());
 			final File zipDir = new File(fileChooser.getCurrentDirectory(), FileUtilities.removeSuffix(filename));
 			zipDir.mkdir();
-
+			
 			ZipOutputStream zipOut = null;
 			try {
 				/*
