@@ -1042,30 +1042,24 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 		}
 	}
 
-	private boolean isScriptSetForScenes() {
-		for (Scene s : scenes) {
-			String t = s.getDepartScript();
-			if (t != null && !t.trim().equals(""))
-				return true;
-			t = s.getArriveScript();
-			if (t != null && !t.trim().equals(""))
-				return true;
-		}
+	private boolean isScriptSet(Scene s) {
+		String t = s.getDepartScript();
+		if (t != null && !t.trim().equals(""))
+			return true;
+		t = s.getArriveScript();
+		if (t != null && !t.trim().equals(""))
+			return true;
 		return false;
 	}
 
 	private void moveCameraToScene(Scene scene) {
-		if (scene == null)
-			return;
-		if (!isScriptSetForScenes())
-			setViewerProperties(scene);
-		jmol.viewer.moveCameraToScene(scene, false);
+		moveCameraToScene(scene, false);
 	}
 
 	private void moveCameraToScene(Scene scene, boolean immediately) {
 		if (scene == null)
 			return;
-		if (!isScriptSetForScenes())
+		if (!isScriptSet(scene))
 			setViewerProperties(scene);
 		jmol.viewer.moveCameraToScene(scene, immediately);
 	}
