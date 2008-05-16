@@ -372,6 +372,10 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 		return model.runScript(s);
 	}
 
+	public void setInitializationScriptToRun(boolean b) {
+		model.setInitializationScriptToRun(b);
+	}
+
 	public void haltScriptExecution() {
 		model.haltScriptExecution();
 		view.runJmolScript("exit");

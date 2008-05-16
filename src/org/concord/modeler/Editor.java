@@ -1856,7 +1856,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 							if (script != null) {
 								EventQueue.invokeLater(new Runnable() {
 									public void run() {
-										//((PageMd3d) src).setInitializationScriptToRun(true);
+										((PageMd3d) src).setInitializationScriptToRun(true);
 										((PageMd3d) src).runScript(script);
 									}
 								});

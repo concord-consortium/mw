@@ -923,7 +923,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 
 	public String runScript(String script) {
 		initEvalAction();
-		evalAction.setNotifySaver(true);
+		evalAction.setNotifySaver(!initializationScriptToRun);
 		return runScript2(script);
 	}
 

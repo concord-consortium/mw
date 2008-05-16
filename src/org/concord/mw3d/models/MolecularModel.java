@@ -95,7 +95,7 @@ public class MolecularModel {
 	private final static short DEFAULT_MINIMUM_JOB_CYCLE_TIME = 20;
 
 	MolecularView view;
-	Eval3D eval;
+	private Eval3D evalAction;
 	private Thread evalThread;
 	float modelTime;
 	float timeStep = 0.5f;
@@ -124,6 +124,7 @@ public class MolecularModel {
 	private static short minimumJobCycleTime = DEFAULT_MINIMUM_JOB_CYCLE_TIME;
 	private long systemTimeElapsed;
 	private Random random;
+	boolean initializationScriptToRun;
 	private String initializationScript;
 	private boolean exclusiveSelection = true;
 
@@ -272,31 +273,44 @@ public class MolecularModel {
 		return initializationScript;
 	}
 
-	public boolean isScriptRunning() {
-		if (eval == null)
+	public void setInitializationScriptToRun(boolean b) {
+		initializationScriptToRun = b;
+	}
+
+	public boolean isActionScriptRunning() {
+		if (evalAction == null)
 			return false;
-		return !eval.isStopped();
+		return !evalAction.isStopped();
 	}
 
 	/**
 	 * stop the script execution thread.
 	 */
 	public void haltScriptExecution() {
-		if (eval != null)
-			eval.halt();
+		if (evalAction != null)
+			evalAction.halt();
 	}
 
-	public String runScript(final String script) {
-		if (eval == null)
-			eval = new Eval3D(this);
-		eval.appendScript(script);
-		if (!eval.isStopped())
+	public String runScript(String script) {
+		initEvalAction();
+		evalAction.setNotifySaver(!initializationScriptToRun);
+		return runScript2(script);
+	}
+
+	private void initEvalAction() {
+		if (evalAction == null)
+			evalAction = new Eval3D(this);
+	}
+
+	public String runScript2(final String script) {
+		evalAction.appendScript(script);
+		if (!evalAction.isStopped())
 			return null;
 		if (evalThread == null) {
 			evalThread = new Thread("Script Runner") {
 				public void run() {
 					try {
-						eval.evaluate();
+						evalAction.evaluate();
 					}
 					catch (InterruptedException e) {
 					}
@@ -306,8 +320,8 @@ public class MolecularModel {
 			evalThread.setUncaughtExceptionHandler(new DisasterHandler(DisasterHandler.SCRIPT_ERROR, new Runnable() {
 				public void run() {
 					evalThread = null;
-					eval.clearScriptQueue();
-					eval.halt();
+					evalAction.clearScriptQueue();
+					evalAction.halt();
 				}
 			}, null, getView()));
 			evalThread.start();
@@ -319,8 +333,8 @@ public class MolecularModel {
 			}
 			catch (InterruptedException e) {
 			}
-			synchronized (eval) {
-				eval.notifyAll();
+			synchronized (evalAction) {
+				evalAction.notifyAll();
 			}
 		}
 		getView().repaint();
@@ -328,15 +342,15 @@ public class MolecularModel {
 	}
 
 	public void addScriptListener(ScriptListener listener) {
-		if (eval == null)
-			eval = new Eval3D(this);
-		eval.addScriptListener(listener);
+		if (evalAction == null)
+			evalAction = new Eval3D(this);
+		evalAction.addScriptListener(listener);
 	}
 
 	public void removeScriptListener(ScriptListener listener) {
-		if (eval == null)
+		if (evalAction == null)
 			return;
-		eval.removeScriptListener(listener);
+		evalAction.removeScriptListener(listener);
 	}
 
 	public void setChangeNotifier(Runnable notifier) {
