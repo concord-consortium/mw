@@ -1457,7 +1457,12 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		return componentPool;
 	}
 
-	List<Object> getComponentsOfGroup(String type) {
+	/**
+	 * return the components of the specified group. If type == "Question", PageTextField, PageTextArea,
+	 * PageMultipleChoice and ImageQuestion will be returned. If type == "Model Container", all the instances of Engine
+	 * will be returned.
+	 */
+	public List<Object> getComponentsOfGroup(String type) {
 		List<Object> list = new ArrayList<Object>();
 		Object name = null, attr = null;
 		AbstractDocument.BranchElement section = (AbstractDocument.BranchElement) getDocument().getDefaultRootElement();
