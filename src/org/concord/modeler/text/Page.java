@@ -771,9 +771,14 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	public void addPageListener(PageListener pl) {
 		if (pl == null)
 			return;
-		if (pageListenerList == null)
+		if (pageListenerList == null) {
 			pageListenerList = Collections.synchronizedList(new ArrayList<PageListener>());
-		pageListenerList.add(pl);
+			pageListenerList.add(pl);
+		}
+		else {
+			if (!pageListenerList.contains(pl))
+				pageListenerList.add(pl);
+		}
 	}
 
 	public void removePageListener(PageListener pl) {
@@ -3502,7 +3507,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			String filename = FileUtilities.getFileName(file.getAbsolutePath());
 			final File zipDir = new File(fileChooser.getCurrentDirectory(), FileUtilities.removeSuffix(filename));
 			zipDir.mkdir();
-			
+
 			ZipOutputStream zipOut = null;
 			try {
 				/*
