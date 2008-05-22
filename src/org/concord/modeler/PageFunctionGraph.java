@@ -49,6 +49,7 @@ public class PageFunctionGraph extends JPanel implements Embeddable {
 	Graph graph;
 	Page page;
 	private int index;
+	private String id;
 	private boolean marked;
 	private String borderType;
 	private static Color defaultBackground;
@@ -111,6 +112,7 @@ public class PageFunctionGraph extends JPanel implements Embeddable {
 				graph.addDataSource(g.graph.getDataSource(i));
 			}
 		}
+		setId(g.id);
 	}
 
 	public void addFunction(String expression) {
@@ -262,6 +264,14 @@ public class PageFunctionGraph extends JPanel implements Embeddable {
 
 	public int getIndex() {
 		return index;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getId() {
+		return id;
 	}
 
 	public String getBorderType() {

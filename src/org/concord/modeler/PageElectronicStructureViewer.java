@@ -55,6 +55,7 @@ public class PageElectronicStructureViewer extends ElectronicStructureViewer imp
 	int modelID = -1;
 	int elementID = Element.ID_NT;
 	private int index;
+	private String id;
 	private boolean marked;
 	private boolean wasOpaque;
 	private boolean changable;
@@ -93,6 +94,7 @@ public class PageElectronicStructureViewer extends ElectronicStructureViewer imp
 			scaleViewer();
 		}
 		setChangable(page.isEditable());
+		setId(viewer.id);
 	}
 
 	public String runScript(String script) {
@@ -292,6 +294,14 @@ public class PageElectronicStructureViewer extends ElectronicStructureViewer imp
 
 	public int getIndex() {
 		return index;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getId() {
+		return id;
 	}
 
 	public void setPage(Page p) {

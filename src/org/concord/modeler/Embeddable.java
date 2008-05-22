@@ -69,4 +69,10 @@ public interface Embeddable {
 
 	public Page getPage();
 
+	/** set a unique ID for this embedded object */
+	public void setId(String id);
+
+	/** get the unique ID for this embedded object */
+	public String getId();
+
 }

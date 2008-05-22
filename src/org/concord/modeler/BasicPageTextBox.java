@@ -54,6 +54,7 @@ public abstract class BasicPageTextBox extends TextBox implements AutoResizable,
 		SelfScriptListener {
 
 	protected int index = -1;
+	protected String id;
 	protected Page page;
 	protected boolean widthIsRelative, heightIsRelative;
 	protected float widthRatio = 1, heightRatio = 1;
@@ -89,6 +90,14 @@ public abstract class BasicPageTextBox extends TextBox implements AutoResizable,
 
 	public int getIndex() {
 		return index;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getId() {
+		return id;
 	}
 
 	public boolean isChangable() {

@@ -55,6 +55,7 @@ public class SearchTextField extends JPanel implements Embeddable {
 
 	Page page;
 	private int index;
+	private String id;
 	private boolean marked;
 	private int databaseType = 0;
 	private static int defaultColumn = 40;
@@ -138,6 +139,7 @@ public class SearchTextField extends JPanel implements Embeddable {
 		setColumns(t.getColumns());
 		setPreferredSize(t.getPreferredSize());
 		setChangable(page.isEditable());
+		setId(t.id);
 	}
 
 	public void destroy() {
@@ -189,6 +191,14 @@ public class SearchTextField extends JPanel implements Embeddable {
 
 	public int getIndex() {
 		return index;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getId() {
+		return id;
 	}
 
 	public void setPreferredSize(Dimension dim) {

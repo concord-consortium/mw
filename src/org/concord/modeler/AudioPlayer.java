@@ -64,6 +64,7 @@ public class AudioPlayer extends JPanel implements Embeddable, MetaEventListener
 	Page page;
 	String clipName;
 	private int index;
+	private String id;
 	private boolean showVolumeControl;
 	private boolean marked;
 	private String borderType;
@@ -95,6 +96,7 @@ public class AudioPlayer extends JPanel implements Embeddable, MetaEventListener
 		setToolTipText(player.getToolTipText());
 		setBackground(player.getBackground());
 		setChangable(page.isEditable());
+		setId(player.id);
 	}
 
 	public void setClipName(String s) {
@@ -450,6 +452,14 @@ public class AudioPlayer extends JPanel implements Embeddable, MetaEventListener
 
 	public int getIndex() {
 		return index;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getId() {
+		return id;
 	}
 
 	public void setMarked(boolean b) {

@@ -56,6 +56,7 @@ public class PageTextArea extends JPanel implements Embeddable, HtmlService, Sea
 
 	Page page;
 	int index;
+	String id;
 	String referenceAnswer;
 	private boolean marked;
 	private boolean changable;
@@ -123,6 +124,7 @@ public class PageTextArea extends JPanel implements Embeddable, HtmlService, Sea
 		setBorderType(t.getBorderType());
 		setChangable(page.isEditable());
 		referenceAnswer = t.referenceAnswer;
+		setId(t.id);
 	}
 
 	public void destroy() {
@@ -211,6 +213,14 @@ public class PageTextArea extends JPanel implements Embeddable, HtmlService, Sea
 
 	public int getIndex() {
 		return index;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getId() {
+		return id;
 	}
 
 	public void addClearButton() {

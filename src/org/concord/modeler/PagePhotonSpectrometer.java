@@ -41,6 +41,7 @@ public class PagePhotonSpectrometer extends PhotonSpectrometer implements Script
 	String modelClass;
 	int modelID = -1;
 	private int index;
+	private String id;
 	private boolean marked;
 	private boolean changable;
 	private JPopupMenu popupMenu;
@@ -69,6 +70,7 @@ public class PagePhotonSpectrometer extends PhotonSpectrometer implements Script
 		if (mc != null)
 			mc.getContainer().getModel().addModelListener(this);
 		setChangable(page.isEditable());
+		setId(pps.id);
 	}
 
 	public String runScript(String script) {
@@ -200,6 +202,14 @@ public class PagePhotonSpectrometer extends PhotonSpectrometer implements Script
 
 	public int getIndex() {
 		return index;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getId() {
+		return id;
 	}
 
 	public void setMarked(boolean b) {

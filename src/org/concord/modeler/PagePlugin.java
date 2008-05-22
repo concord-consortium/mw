@@ -83,6 +83,7 @@ abstract class PagePlugin extends JPanel implements Embeddable, Scriptable {
 	List<String> jarName;
 	Page page;
 	int index;
+	String id;
 	boolean changable = true;
 	boolean marked;
 	String borderType;
@@ -104,6 +105,7 @@ abstract class PagePlugin extends JPanel implements Embeddable, Scriptable {
 		setBackground(pagePlugin.getBackground());
 		setChangable(page.isEditable());
 		setClassName(pagePlugin.className);
+		setId(pagePlugin.id);
 		if (pagePlugin.jarName != null)
 			jarName = Collections.synchronizedList(new ArrayList<String>(pagePlugin.jarName));
 		if (pagePlugin.parameterMap != null)
@@ -310,6 +312,14 @@ abstract class PagePlugin extends JPanel implements Embeddable, Scriptable {
 
 	public int getIndex() {
 		return index;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getId() {
+		return id;
 	}
 
 	public void setMarked(boolean b) {

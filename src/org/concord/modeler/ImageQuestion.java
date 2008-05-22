@@ -62,6 +62,7 @@ public class ImageQuestion extends JPanel implements Embeddable, TransferListene
 
 	Page page;
 	int index;
+	String id;
 	String name;
 	private boolean marked;
 	private boolean opened;
@@ -160,6 +161,7 @@ public class ImageQuestion extends JPanel implements Embeddable, TransferListene
 		setQuestion(iq.getQuestion());
 		setBackground(iq.getBackground());
 		setChangable(page.isEditable());
+		setId(iq.id);
 	}
 
 	public boolean isTextSelected() {
@@ -315,6 +317,14 @@ public class ImageQuestion extends JPanel implements Embeddable, TransferListene
 
 	public int getIndex() {
 		return index;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getId() {
+		return id;
 	}
 
 	public void setMarked(boolean b) {
