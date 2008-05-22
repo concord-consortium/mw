@@ -49,6 +49,7 @@ public class PageCheckBox extends JCheckBox implements Embeddable, ModelCommunic
 	boolean autoSize = true;
 	boolean disabledAtRun, disabledAtScript;
 	private int index;
+	private String id;
 	private boolean marked;
 	private Color checkBoxBackground;
 	private boolean wasOpaque;
@@ -84,6 +85,7 @@ public class PageCheckBox extends JCheckBox implements Embeddable, ModelCommunic
 		setDisabledAtScript(checkBox.disabledAtScript);
 		setPreferredSize(checkBox.getPreferredSize());
 		setChangable(page.isEditable());
+		setId(checkBox.id);
 		Object o = checkBox.getClientProperty("selection script");
 		if (o != null)
 			putClientProperty("selection script", o);
@@ -213,6 +215,14 @@ public class PageCheckBox extends JCheckBox implements Embeddable, ModelCommunic
 
 	public int getIndex() {
 		return index;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getId() {
+		return id;
 	}
 
 	public void setOpaque(boolean b) {

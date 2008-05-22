@@ -79,6 +79,7 @@ public class PageDNAScroller extends DNAScroller implements Embeddable, ModelCom
 
 	private Page page;
 	private int index;
+	private String id;
 	private String modelClass;
 	private int modelID = -1;
 	private int proteinID = -1;
@@ -138,6 +139,7 @@ public class PageDNAScroller extends DNAScroller implements Embeddable, ModelCom
 		if (mc != null)
 			mc.getContainer().getModel().addModelListener(this);
 		setChangable(page.isEditable());
+		setId(s.id);
 	}
 
 	public void destroy() {
@@ -215,6 +217,14 @@ public class PageDNAScroller extends DNAScroller implements Embeddable, ModelCom
 
 	public int getIndex() {
 		return index;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getId() {
+		return id;
 	}
 
 	public int getProteinID() {

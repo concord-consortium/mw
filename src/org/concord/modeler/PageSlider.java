@@ -62,6 +62,7 @@ public class PageSlider extends JSlider implements Embeddable, ModelCommunicator
 	boolean disabledAtRun, disabledAtScript;
 	Map<String, String> actionLabelMap;
 	private int index;
+	private String id;
 	private boolean marked;
 	private boolean wasOpaque;
 	private Color sliderBackground;
@@ -133,6 +134,7 @@ public class PageSlider extends JSlider implements Embeddable, ModelCommunicator
 			putClientProperty("Label", o);
 			setupLabels((String) o);
 		}
+		setId(slider.id);
 	}
 
 	boolean isTargetClass() {
@@ -248,6 +250,14 @@ public class PageSlider extends JSlider implements Embeddable, ModelCommunicator
 
 	public int getIndex() {
 		return index;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getId() {
+		return id;
 	}
 
 	public void setPage(Page p) {

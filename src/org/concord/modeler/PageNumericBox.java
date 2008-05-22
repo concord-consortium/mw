@@ -57,6 +57,7 @@ public class PageNumericBox extends JLabel implements Embeddable, ModelCommunica
 	DecimalFormat formatter;
 	double value;
 	private int index;
+	private String id;
 	private boolean marked;
 	private String format = "Fixed point";
 	private Color originalForeground;
@@ -74,21 +75,21 @@ public class PageNumericBox extends JLabel implements Embeddable, ModelCommunica
 		formatter.setMaximumIntegerDigits(3);
 	}
 
-	public PageNumericBox(PageNumericBox g, Page parent) {
+	public PageNumericBox(PageNumericBox box, Page parent) {
 		this();
 		setPage(parent);
-		setModelID(g.modelID);
-		setDataType(g.getDataType());
-		setValue(g.getValue());
-		setMultiplier(g.getMultiplier());
-		setAddend(g.getAddend());
-		setFont(g.getFont());
-		setBorderType(g.getBorderType());
-		setFormat(g.getFormat());
-		formatter = g.formatter;
-		setForeground(g.getForeground());
-		setDescription(g.getDescription());
-		setPreferredSize(g.getPreferredSize());
+		setModelID(box.modelID);
+		setDataType(box.getDataType());
+		setValue(box.getValue());
+		setMultiplier(box.getMultiplier());
+		setAddend(box.getAddend());
+		setFont(box.getFont());
+		setBorderType(box.getBorderType());
+		setFormat(box.getFormat());
+		formatter = box.formatter;
+		setForeground(box.getForeground());
+		setDescription(box.getDescription());
+		setPreferredSize(box.getPreferredSize());
 		ModelCanvas mc = page.getComponentPool().get(modelID);
 		if (mc != null) {
 			MDModel m = mc.getContainer().getModel();
@@ -97,6 +98,7 @@ public class PageNumericBox extends JLabel implements Embeddable, ModelCommunica
 				m.getMovie().addMovieListener(this);
 		}
 		setChangable(page.isEditable());
+		setId(box.id);
 	}
 
 	public void destroy() {
@@ -156,6 +158,14 @@ public class PageNumericBox extends JLabel implements Embeddable, ModelCommunica
 
 	public int getIndex() {
 		return index;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getId() {
+		return id;
 	}
 
 	public void setValue(final double value) {

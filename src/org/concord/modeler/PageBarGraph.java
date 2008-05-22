@@ -57,6 +57,7 @@ public class PageBarGraph extends BarGraph implements Embeddable, ModelCommunica
 	int samplingPoints = 10;
 	private double initialValue;
 	private int index;
+	private String id;
 	private boolean marked;
 	private boolean changable;
 	private Color originalBackground, originalForeground;
@@ -100,6 +101,7 @@ public class PageBarGraph extends BarGraph implements Embeddable, ModelCommunica
 		setMinorTicks(g.getMinorTicks());
 		setMajorTicks(g.getMajorTicks());
 		setPreferredSize(g.getPreferredSize());
+		setId(g.id);
 		ModelCanvas mc = page.getComponentPool().get(modelID);
 		if (mc != null) {
 			MDModel m = mc.getContainer().getModel();
@@ -197,6 +199,14 @@ public class PageBarGraph extends BarGraph implements Embeddable, ModelCommunica
 
 	public int getIndex() {
 		return index;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getId() {
+		return id;
 	}
 
 	public void setPage(Page p) {

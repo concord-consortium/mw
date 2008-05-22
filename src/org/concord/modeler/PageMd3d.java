@@ -62,6 +62,7 @@ public class PageMd3d extends MolecularContainer implements BasicModel, Embeddab
 
 	Page page;
 	private int index;
+	private String id;
 	private boolean marked;
 	private boolean changable;
 	private Map<String, ChangeListener> changeMap;
@@ -437,6 +438,14 @@ public class PageMd3d extends MolecularContainer implements BasicModel, Embeddab
 
 	public int getIndex() {
 		return index;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getId() {
+		return id;
 	}
 
 	public void setMarked(boolean b) {

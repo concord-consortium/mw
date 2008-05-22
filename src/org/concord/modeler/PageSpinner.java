@@ -60,6 +60,7 @@ public class PageSpinner extends JComponent implements Embeddable, ModelCommunic
 	JSpinner spinner;
 	JLabel label;
 	private int index;
+	private String id;
 	private boolean marked;
 	private static Color defaultBackground, defaultForeground;
 	private JPopupMenu popupMenu;
@@ -87,24 +88,24 @@ public class PageSpinner extends JComponent implements Embeddable, ModelCommunic
 
 	}
 
-	public PageSpinner(PageSpinner s, Page parent) {
+	public PageSpinner(PageSpinner spinner, Page parent) {
 		this();
 		setPage(parent);
-		setModelID(s.modelID);
-		setModelClass(s.modelClass);
-		setMinimum(((Double) s.getMinimum()).doubleValue());
-		setMaximum(((Double) s.getMaximum()).doubleValue());
-		setStepSize(((Double) s.getStepSize()).doubleValue());
-		setValue(((Double) s.getValue()).doubleValue());
-		setName(s.getName());
-		setLabel(s.getLabel());
+		setModelID(spinner.modelID);
+		setModelClass(spinner.modelClass);
+		setMinimum(((Double) spinner.getMinimum()).doubleValue());
+		setMaximum(((Double) spinner.getMaximum()).doubleValue());
+		setStepSize(((Double) spinner.getStepSize()).doubleValue());
+		setValue(((Double) spinner.getValue()).doubleValue());
+		setName(spinner.getName());
+		setLabel(spinner.getLabel());
 		autoSize();
-		setDisabledAtRun(s.disabledAtRun);
-		setDisabledAtScript(s.disabledAtScript);
-		Object o = s.getScript();
+		setDisabledAtRun(spinner.disabledAtRun);
+		setDisabledAtScript(spinner.disabledAtScript);
+		Object o = spinner.getScript();
 		if (o instanceof String)
 			setScript((String) o);
-		ChangeListener[] cl = s.getChangeListeners();
+		ChangeListener[] cl = spinner.getChangeListeners();
 		if (cl != null) {
 			for (ChangeListener i : cl) {
 				if (i instanceof AbstractChange)
@@ -112,7 +113,7 @@ public class PageSpinner extends JComponent implements Embeddable, ModelCommunic
 			}
 		}
 		setChangable(page.isEditable());
-		setToolTipText(s.getToolTipText());
+		setToolTipText(spinner.getToolTipText());
 		if (isTargetClass()) {
 			try {
 				o = page.getEmbeddedComponent(Class.forName(modelClass), modelID);
@@ -128,6 +129,7 @@ public class PageSpinner extends JComponent implements Embeddable, ModelCommunic
 			if (mc != null)
 				mc.getContainer().getModel().addModelListener(this);
 		}
+		setId(spinner.id);
 	}
 
 	boolean isTargetClass() {
@@ -228,6 +230,14 @@ public class PageSpinner extends JComponent implements Embeddable, ModelCommunic
 
 	public int getIndex() {
 		return index;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getId() {
+		return id;
 	}
 
 	public void setLabel(String s) {

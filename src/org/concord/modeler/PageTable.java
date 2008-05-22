@@ -80,6 +80,7 @@ public class PageTable extends JScrollPane implements Embeddable, AutoResizable 
 	private JButton corner;
 	private boolean hasTableRowHeader;
 	private int index;
+	private String id;
 	private boolean marked;
 	private MouseWheelListener mouseWheelListener;
 	private DefaultListModel listModel;
@@ -263,6 +264,7 @@ public class PageTable extends JScrollPane implements Embeddable, AutoResizable 
 			setRowNames(t.getRowNames());
 		setCellAlignment(t.getCellAlignment());
 		setChangable(page.isEditable());
+		setId(t.id);
 	}
 
 	public void setOpaque(boolean b) {
@@ -615,6 +617,14 @@ public class PageTable extends JScrollPane implements Embeddable, AutoResizable 
 
 	public int getIndex() {
 		return index;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getId() {
+		return id;
 	}
 
 	public void setChangable(boolean b) {

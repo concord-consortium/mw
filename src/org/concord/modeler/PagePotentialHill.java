@@ -62,6 +62,7 @@ public class PagePotentialHill extends PotentialHill implements Embeddable, Mode
 
 	private Page page;
 	private int index;
+	private String id;
 	private String modelClass;
 	private int modelID = -1;
 	private boolean marked;
@@ -114,6 +115,7 @@ public class PagePotentialHill extends PotentialHill implements Embeddable, Mode
 			}
 		}
 		setChangable(page.isEditable());
+		setId(hill.id);
 	}
 
 	public void destroy() {
@@ -191,6 +193,14 @@ public class PagePotentialHill extends PotentialHill implements Embeddable, Mode
 
 	public int getIndex() {
 		return index;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getId() {
+		return id;
 	}
 
 	public void setPage(Page p) {
