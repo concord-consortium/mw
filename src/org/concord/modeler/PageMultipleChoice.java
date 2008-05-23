@@ -463,6 +463,10 @@ public class PageMultipleChoice extends MultipleChoice implements Embeddable, Mu
 	}
 
 	public void choicePicked(MultipleChoiceEvent e) {
+
+	}
+
+	public void answerChecked(MultipleChoiceEvent e) {
 		if (hasNoScripts())
 			return;
 		if (e.isSingleSelection()) {
