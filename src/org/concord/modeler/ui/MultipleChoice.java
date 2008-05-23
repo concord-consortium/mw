@@ -25,6 +25,8 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URL;
@@ -80,6 +82,25 @@ public abstract class MultipleChoice extends JPanel implements HtmlService, Sear
 		}
 	};
 
+	private ItemListener itemListener = new ItemListener() {
+		public void itemStateChanged(ItemEvent e) {
+			if (e.getSource() instanceof JRadioButton) {
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+					int[] si = getUserSelectedIndices();
+					if (si != null && si.length == 1) {
+						notifyChoicePicked(new MultipleChoiceEvent(MultipleChoice.this, si[0]));
+					}
+				}
+			}
+			else if (e.getSource() instanceof JCheckBox) {
+				int[] si = getUserSelectedIndices();
+				if (si != null) {
+					notifyChoicePicked(new MultipleChoiceEvent(MultipleChoice.this, si));
+				}
+			}
+		}
+	};
+
 	public MultipleChoice() {
 		this(true, "<html><body marginwidth=5 marginheight=5>Question</body></html>", null);
 	}
@@ -107,6 +128,7 @@ public abstract class MultipleChoice extends JPanel implements HtmlService, Sear
 			choices = new JRadioButton[n];
 			for (int i = 0; i < n; i++) {
 				choices[i] = new JRadioButton(options[i]);
+				choices[i].addItemListener(itemListener);
 				buttonGroup.add(choices[i]);
 			}
 		}
@@ -114,6 +136,7 @@ public abstract class MultipleChoice extends JPanel implements HtmlService, Sear
 			choices = new JCheckBox[n];
 			for (int i = 0; i < n; i++) {
 				choices[i] = new JCheckBox(options[i]);
+				choices[i].addItemListener(itemListener);
 			}
 		}
 
@@ -159,7 +182,7 @@ public abstract class MultipleChoice extends JPanel implements HtmlService, Sear
 						int[] selectedIndices = getUserSelectedIndices();
 						if (selectedIndices != null && selectedIndices.length == 1) {
 							int si = selectedIndices[0];
-							notifyMultipleChoiceListeners(new MultipleChoiceEvent(MultipleChoice.this, si));
+							notifyAnswerChecked(new MultipleChoiceEvent(MultipleChoice.this, si));
 							boolean b = si == answer[0];
 							if (b) {
 								if (hasNoScripts()) {
@@ -199,7 +222,7 @@ public abstract class MultipleChoice extends JPanel implements HtmlService, Sear
 								break;
 							}
 						}
-						notifyMultipleChoiceListeners(new MultipleChoiceEvent(MultipleChoice.this, b));
+						notifyAnswerChecked(new MultipleChoiceEvent(MultipleChoice.this, b));
 						if (b) {
 							if (hasNoScripts()) {
 								String s = Modeler.getInternationalText("Correct");
@@ -261,7 +284,15 @@ public abstract class MultipleChoice extends JPanel implements HtmlService, Sear
 			listeners.remove(mcl);
 	}
 
-	private void notifyMultipleChoiceListeners(MultipleChoiceEvent e) {
+	private void notifyAnswerChecked(MultipleChoiceEvent e) {
+		if (listeners == null)
+			return;
+		for (MultipleChoiceListener mcl : listeners) {
+			mcl.answerChecked(e);
+		}
+	}
+
+	private void notifyChoicePicked(MultipleChoiceEvent e) {
 		if (listeners == null)
 			return;
 		for (MultipleChoiceListener mcl : listeners) {
@@ -626,6 +657,11 @@ public abstract class MultipleChoice extends JPanel implements HtmlService, Sear
 					for (ActionListener x : al)
 						rb[i].addActionListener(x);
 				}
+				ItemListener[] il = choices[i].getItemListeners();
+				if (il != null) {
+					for (ItemListener x : il)
+						rb[i].addItemListener(x);
+				}
 				buttonGroup.add(rb[i]);
 			}
 			choices = rb;
@@ -647,6 +683,11 @@ public abstract class MultipleChoice extends JPanel implements HtmlService, Sear
 				if (al != null) {
 					for (ActionListener x : al)
 						cb[i].addActionListener(x);
+				}
+				ItemListener[] il = choices[i].getItemListeners();
+				if (il != null) {
+					for (ItemListener x : il)
+						cb[i].addItemListener(x);
 				}
 			}
 			choices = cb;

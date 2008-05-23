@@ -26,7 +26,7 @@ public class MultipleChoiceEvent extends EventObject {
 
 	private boolean singleSelection;
 	private boolean correctAnswer;
-	private int selectedIndex = -1;
+	private int[] selectedIndices;
 
 	public MultipleChoiceEvent(Object source) {
 		super(source);
@@ -39,10 +39,17 @@ public class MultipleChoiceEvent extends EventObject {
 		singleSelection = false;
 	}
 
+	/** for multiple selection questions */
+	public MultipleChoiceEvent(Object source, int[] selectedIndices) {
+		super(source);
+		this.selectedIndices = selectedIndices;
+		singleSelection = false;
+	}
+
 	/** for single selection questions */
 	public MultipleChoiceEvent(Object source, int selectedIndex) {
 		super(source);
-		this.selectedIndex = selectedIndex;
+		selectedIndices = new int[] { selectedIndex };
 		singleSelection = true;
 	}
 
@@ -55,7 +62,13 @@ public class MultipleChoiceEvent extends EventObject {
 	}
 
 	public int getSelectedIndex() {
-		return selectedIndex;
+		if (selectedIndices == null || selectedIndices.length == 0)
+			return -1;
+		return selectedIndices[0];
+	}
+
+	public int[] getSelectedIndices() {
+		return selectedIndices;
 	}
 
 }
