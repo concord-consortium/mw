@@ -448,13 +448,40 @@ public abstract class MultipleChoice extends JPanel implements HtmlService, Sear
 	}
 
 	public void setSelected(int i, boolean b) {
+		setSelected(i, b, true);
+	}
+
+	public void setSelected(int i, boolean b, boolean notifyListeners) {
 		if (choices == null)
 			return;
 		if (i < 0 || i >= choices.length)
 			return;
 		if (choices[i] == null)
 			return;
-		choices[i].setSelected(b);
+		if (!notifyListeners) {
+			ItemListener[] il = choices[i].getItemListeners();
+			if (il != null) {
+				for (ItemListener x : il)
+					choices[i].removeItemListener(x);
+			}
+			ActionListener[] al = choices[i].getActionListeners();
+			if (al != null) {
+				for (ActionListener x : al)
+					choices[i].removeActionListener(x);
+			}
+			choices[i].setSelected(b);
+			if (il != null) {
+				for (ItemListener x : il)
+					choices[i].addItemListener(x);
+			}
+			if (al != null) {
+				for (ActionListener x : al)
+					choices[i].addActionListener(x);
+			}
+		}
+		else {
+			choices[i].setSelected(b);
+		}
 	}
 
 	public void clearSelection() {
