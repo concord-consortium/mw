@@ -463,7 +463,9 @@ public class PageMultipleChoice extends MultipleChoice implements Embeddable, Mu
 	}
 
 	public void choicePicked(MultipleChoiceEvent e) {
-
+		// int[] x = e.getSelectedIndices();
+		// for (int i = 0; i < x.length; i++) System.out.print(x[i]);
+		// System.out.println("");
 	}
 
 	public void answerChecked(MultipleChoiceEvent e) {
