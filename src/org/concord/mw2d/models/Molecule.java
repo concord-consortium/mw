@@ -470,10 +470,10 @@ public class Molecule implements ModelComponent {
 		translateTo(p.getX(), p.getY());
 	}
 
-	public void translateBondCenterTo(RadialBond rb, Point2D p) {
+	public void translateBondCenterTo(RadialBond rb, double x, double y) {
 		double x0 = rb.getRx();
 		double y0 = rb.getRy();
-		translateBy(p.getX() - x0, p.getY() - y0);
+		translateBy(x - x0, y - y0);
 	}
 
 	/**

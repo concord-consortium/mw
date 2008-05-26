@@ -153,6 +153,12 @@ public class ImageComponent implements ModelComponent, Layered {
 		if (host instanceof Atom) {
 			((Atom) host).storeCurrentState();
 		}
+		else if (host instanceof RadialBond) {
+			if (model instanceof MolecularModel) {
+				Molecule m = ((MolecularModel) model).molecules.getMolecule((RadialBond) host);
+				m.storeCurrentState();
+			}
+		}
 		else if (host instanceof RectangularObstacle) {
 			((RectangularObstacle) host).storeCurrentState();
 		}
@@ -165,6 +171,12 @@ public class ImageComponent implements ModelComponent, Layered {
 		y = savedY;
 		if (host instanceof Atom) {
 			((Atom) host).restoreState();
+		}
+		else if (host instanceof RadialBond) {
+			if (model instanceof MolecularModel) {
+				Molecule m = ((MolecularModel) model).molecules.getMolecule((RadialBond) host);
+				m.restoreState();
+			}
 		}
 		else if (host instanceof RectangularObstacle) {
 			((RectangularObstacle) host).restoreState();

@@ -66,10 +66,10 @@ public class TextBoxComponent extends TextContainer implements ModelComponent, L
 		setShadowType((byte) d.getShadowType());
 		setForegroundColor(d.getForegroundColor());
 		setLayer(d.getLayer());
-		setAttachmentPosition(d.getAttachmentPosition());
 		setCallOut(d.isCallOut());
 		if (isCallOut())
 			getCallOutPoint().setLocation(d.getCallOutPoint());
+		setAttachmentPosition(d.getAttachmentPosition());
 		String s = d.getHostType();
 		if (s != null) {
 			int index = d.getHostIndex();
@@ -93,6 +93,18 @@ public class TextBoxComponent extends TextContainer implements ModelComponent, L
 		savedX = getRx();
 		savedY = getRy();
 		stateStored = true;
+		if (host instanceof Atom) {
+			((Atom) host).storeCurrentState();
+		}
+		else if (host instanceof RadialBond) {
+			if (model instanceof MolecularModel) {
+				Molecule m = ((MolecularModel) model).molecules.getMolecule((RadialBond) host);
+				m.storeCurrentState();
+			}
+		}
+		else if (host instanceof RectangularObstacle) {
+			((RectangularObstacle) host).storeCurrentState();
+		}
 	}
 
 	public void restoreState() {
@@ -100,6 +112,18 @@ public class TextBoxComponent extends TextContainer implements ModelComponent, L
 			return;
 		setRx(savedX);
 		setRy(savedY);
+		if (host instanceof Atom) {
+			((Atom) host).restoreState();
+		}
+		else if (host instanceof RadialBond) {
+			if (model instanceof MolecularModel) {
+				Molecule m = ((MolecularModel) model).molecules.getMolecule((RadialBond) host);
+				m.restoreState();
+			}
+		}
+		else if (host instanceof RectangularObstacle) {
+			((RectangularObstacle) host).restoreState();
+		}
 	}
 
 	/** TODO */
@@ -196,7 +220,7 @@ public class TextBoxComponent extends TextContainer implements ModelComponent, L
 		private int borderType, shadowType;
 		private String text;
 		private FillMode fillMode = FillMode.getNoFillMode();
-		private byte attachmentPosition = BOX_CENTER;
+		private byte attachmentPosition = ARROW_HEAD;
 		private boolean callOut;
 		private Point callOutPoint = new Point(20, 20);
 		private float angle;

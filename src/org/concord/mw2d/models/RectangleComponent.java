@@ -96,6 +96,18 @@ public class RectangleComponent extends AbstractRectangle implements ModelCompon
 		savedArcWidth = getArcWidth();
 		savedArcHeight = getArcHeight();
 		stateStored = true;
+		if (host instanceof Atom) {
+			((Atom) host).storeCurrentState();
+		}
+		else if (host instanceof RadialBond) {
+			if (model instanceof MolecularModel) {
+				Molecule m = ((MolecularModel) model).molecules.getMolecule((RadialBond) host);
+				m.storeCurrentState();
+			}
+		}
+		else if (host instanceof RectangularObstacle) {
+			((RectangularObstacle) host).storeCurrentState();
+		}
 	}
 
 	public void restoreState() {
@@ -104,6 +116,18 @@ public class RectangleComponent extends AbstractRectangle implements ModelCompon
 		setRect(savedX, savedY, savedW, savedH);
 		setArcWidth(savedArcWidth);
 		setArcHeight(savedArcHeight);
+		if (host instanceof Atom) {
+			((Atom) host).restoreState();
+		}
+		else if (host instanceof RadialBond) {
+			if (model instanceof MolecularModel) {
+				Molecule m = ((MolecularModel) model).molecules.getMolecule((RadialBond) host);
+				m.restoreState();
+			}
+		}
+		else if (host instanceof RectangularObstacle) {
+			((RectangularObstacle) host).restoreState();
+		}
 	}
 
 	/** TODO */
