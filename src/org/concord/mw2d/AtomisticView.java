@@ -2031,13 +2031,13 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		if (a == null)
 			throw new IllegalArgumentException("Null atom");
 		boundary.setRBC(a);
-		refreshForces();
 		if (intersects(a, noOverlapTolerance)) {
 			a.restoreState();
 			refreshForces();
 			repaint();
 			return false;
 		}
+		refreshForces();
 		return true;
 	}
 
@@ -4700,9 +4700,18 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				}
 				else if (selectedComponent instanceof ImageComponent) {
 					ImageComponent ic = (ImageComponent) selectedComponent;
-					if (ic.getHost() == null) {
-						ic.translateTo(x - clickPoint.x, y - clickPoint.y);
-						dragSelected = true;
+					ic.translateTo(x - clickPoint.x, y - clickPoint.y);
+					dragSelected = true;
+					ModelComponent host = ic.getHost();
+					if (host instanceof Atom) {
+						Atom a = (Atom) host;
+						a.translateTo(ic.getRx() + ic.getWidth() * 0.5, ic.getRy() + ic.getHeight() * 0.5);
+						boundary.setRBC(a);
+						refreshForces();
+					}
+					else if (host instanceof RectangularObstacle) {
+						RectangularObstacle obs = (RectangularObstacle) host;
+						obs.translateCenterTo(ic.getRx() + ic.getWidth() * 0.5, ic.getRy() + ic.getHeight() * 0.5);
 					}
 				}
 				else if (selectedComponent instanceof TextBoxComponent) {
@@ -5020,6 +5029,17 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				}
 				else if (selectedComponent instanceof Layered) {
 					b = true;
+					if (selectedComponent instanceof ImageComponent) {
+						ModelComponent host = ((ImageComponent) selectedComponent).getHost();
+						if (host instanceof Atom) {
+							b = finalizeAtomLocation((Atom) host, false);
+							if (!b)
+								errorReminder.show(ErrorReminder.OBJECT_OVERLAP);
+						}
+						else if (host instanceof RectangularObstacle) {
+							b = finalizeObstacleLocation((RectangularObstacle) host);
+						}
+					}
 				}
 				if (b) {
 					model.notifyChange();
@@ -6170,8 +6190,14 @@ public class AtomisticView extends MDView implements BondChangeListener {
 					((Molecule) mc).translateTo(x, y);
 				else if (mc instanceof RectangularObstacle)
 					((RectangularObstacle) mc).translateCenterTo(x, y);
-				else if (mc instanceof Layered)
+				else if (mc instanceof Layered) {
 					((Layered) mc).setLocation(x, y);
+					ModelComponent host = ((Layered) mc).getHost();
+					if (host instanceof Atom) {
+						Atom a = (Atom) host;
+						a.translateTo(((Layered) mc).getCenter());
+					}
+				}
 			}
 			else if (presentationName.equals("Rotation")) {
 				if (mc instanceof Molecule)

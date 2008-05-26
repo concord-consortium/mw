@@ -150,6 +150,12 @@ public class ImageComponent implements ModelComponent, Layered {
 		savedX = x;
 		savedY = y;
 		stateStored = true;
+		if (host instanceof Atom) {
+			((Atom) host).storeCurrentState();
+		}
+		else if (host instanceof RectangularObstacle) {
+			((RectangularObstacle) host).storeCurrentState();
+		}
 	}
 
 	public void restoreState() {
@@ -157,6 +163,12 @@ public class ImageComponent implements ModelComponent, Layered {
 			return;
 		x = savedX;
 		y = savedY;
+		if (host instanceof Atom) {
+			((Atom) host).restoreState();
+		}
+		else if (host instanceof RectangularObstacle) {
+			((RectangularObstacle) host).restoreState();
+		}
 	}
 
 	/** TODO */
