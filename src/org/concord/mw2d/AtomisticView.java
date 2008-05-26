@@ -79,7 +79,6 @@ import org.concord.mw2d.models.AngularBond;
 import org.concord.mw2d.models.AngularBondCollection;
 import org.concord.mw2d.models.Atom;
 import org.concord.mw2d.models.Benzene;
-import org.concord.mw2d.models.BoundaryFactory;
 import org.concord.mw2d.models.ChainMolecule;
 import org.concord.mw2d.models.CurvedRibbon;
 import org.concord.mw2d.models.CurvedSurface;
@@ -2059,7 +2058,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		if (!(selectedComponent instanceof Molecule))
 			throw new RuntimeException("target not a molecule");
 		Molecule mol = (Molecule) selectedComponent;
-		BoundaryFactory.setRBC(mol, boundary);
+		boundary.setRBC(mol);
 		if (intersects(mol)) {
 			errorReminder.show(ErrorReminder.OBJECT_OVERLAP);
 			mol.restoreState();
@@ -3355,7 +3354,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 						rBond.render(g2);
 					}
 					if (boundary.isPeriodic() && showMirrorImages) {
-						mirrorBonds = BoundaryFactory.createMirrorBonds(model);
+						mirrorBonds = boundary.createMirrorBonds();
 						paintMirrorBonds(g2);
 					}
 				}
@@ -4672,7 +4671,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 					dragSelected = true;
 					Molecule mol = (Molecule) selectedComponent;
 					mol.translateTo(x - clickPoint.x, y - clickPoint.y);
-					BoundaryFactory.setRBC(mol, boundary);
+					boundary.setRBC(mol);
 					refreshForces();
 				}
 				else if (selectedComponent instanceof Atom) {
@@ -4707,6 +4706,13 @@ public class AtomisticView extends MDView implements BondChangeListener {
 						Atom a = (Atom) host;
 						a.translateTo(ic.getRx() + ic.getWidth() * 0.5, ic.getRy() + ic.getHeight() * 0.5);
 						boundary.setRBC(a);
+						refreshForces();
+					}
+					else if (host instanceof RadialBond) {
+						RadialBond rBond = (RadialBond) host;
+						Molecule m = molecules.getMolecule(rBond);
+						m.translateBondCenterTo(rBond, ic.getCenter());
+						boundary.setRBC(m);
 						refreshForces();
 					}
 					else if (host instanceof RectangularObstacle) {
@@ -4846,7 +4852,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			else if (selectedComponent instanceof Molecule) {
 				Molecule mol = (Molecule) selectedComponent;
 				mol.translateTo(x, y);
-				BoundaryFactory.setRBC(mol, boundary);
+				boundary.setRBC(mol);
 			}
 			else if (selectedComponent instanceof RectangularObstacle) {
 				((RectangularObstacle) selectedComponent).translateTo(x - clickPoint.x, y - clickPoint.y);

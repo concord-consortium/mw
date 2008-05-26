@@ -2583,19 +2583,19 @@ public abstract class AtomicModel extends MDModel {
 	void putInBounds() {
 		switch (boundary.getType()) {
 		case RectangularBoundary.DBC_ID:
-			boundary.setRBC(this);
+			boundary.setRBC();
 			break;
 		case RectangularBoundary.RBC_ID:
-			boundary.setRBC(this);
+			boundary.setRBC();
 			break;
 		case RectangularBoundary.PBC_ID:
-			boundary.setPBC(this);
+			boundary.setPBC();
 			break;
 		case RectangularBoundary.XRYPBC_ID:
-			boundary.setXRYPBC(this);
+			boundary.setXRYPBC();
 			break;
 		case RectangularBoundary.XPYRBC_ID:
-			boundary.setXPYRBC(this);
+			boundary.setXPYRBC();
 			break;
 		}
 	}

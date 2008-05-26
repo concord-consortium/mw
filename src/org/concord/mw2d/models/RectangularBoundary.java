@@ -496,6 +496,61 @@ public class RectangularBoundary extends Rectangle2D.Double implements Boundary 
 		return npbc;
 	}
 
+	/**
+	 * create mirror images of bonds when applying periodic boundary conditions. This should be called whenever there
+	 * are bonds in the central box.
+	 * 
+	 * @return a list containing the mirror bond lines
+	 */
+	public List createMirrorBonds() {
+		if (!(model instanceof MolecularModel))
+			return null;
+		if (mirrorBoxes == null || mirrorBoxes.isEmpty())
+			return null;
+		RadialBondCollection bonds = ((MolecularModel) model).bonds;
+		List<Line2D.Float> lines = Collections.synchronizedList(new ArrayList<Line2D.Float>());
+		List<Line2D> mirrors = Collections.synchronizedList(new ArrayList<Line2D>());
+		RadialBond rBond;
+		synchronized (bonds) {
+			for (Iterator it = bonds.iterator(); it.hasNext();) {
+				rBond = (RadialBond) it.next();
+				lines.add(new Line2D.Float((float) rBond.getAtom1().rx, (float) rBond.getAtom1().ry, (float) rBond
+						.getAtom2().rx, (float) rBond.getAtom2().ry));
+			}
+		}
+
+		Rectangle rect;
+		float dx, dy, x1, y1, x2, y2;
+		int w = model.getView().getWidth();
+		int h = model.getView().getHeight();
+		synchronized (mirrorBoxes) {
+			for (Iterator i = mirrorBoxes.iterator(); i.hasNext();) {
+				rect = (Rectangle) i.next();
+				dx = (float) (rect.x - model.boundary.x);
+				dy = (float) (rect.y - model.boundary.y);
+				synchronized (lines) {
+					for (Line2D.Float l2d : lines) {
+						x1 = l2d.x1 + dx;
+						y1 = l2d.y1 + dy;
+						x2 = l2d.x2 + dx;
+						y2 = l2d.y2 + dy;
+						if (Math.min(x1, x2) > 0 && Math.max(x1, x2) < w && Math.min(y1, y2) > 0
+								&& Math.max(y1, y2) < h) {
+							mirrors.add(new Line2D.Float(x1, y1, x2, y2));
+						}
+						else if (Line2D.linesIntersect(x1, y1, x2, y2, 0, 0, 0, h)
+								|| Line2D.linesIntersect(x1, y1, x2, y2, w, 0, w, h)
+								|| Line2D.linesIntersect(x1, y1, x2, y2, 0, 0, w, 0)
+								|| Line2D.linesIntersect(x1, y1, x2, y2, 0, h, w, h)) {
+							mirrors.add(new Line2D.Float(x1, y1, x2, y2));
+						}
+					}
+				}
+			}
+		}
+		return mirrors;
+	}
+
 	public void setInelasticByRescaling(boolean value) {
 		inelasticByRescaling = value;
 	}
@@ -512,53 +567,67 @@ public class RectangularBoundary extends Rectangle2D.Double implements Boundary 
 		return scaleFactor;
 	}
 
-	public void setPBC(AtomicModel model) {
-
-		double x0 = x;
-		double y0 = y;
-		double dx = width;
-		double dy = height;
-		double x1 = x0 + dx;
-		double y1 = y0 + dy;
-
-		Atom at;
-		for (int i = 0, n = model.getNumberOfAtoms(); i < n; i++) {
-			at = model.atom[i];
-			if (at.isBonded())
-				continue;
-			if (at.rx < x0)
-				at.rx += dx;
-			else if (at.rx > x1)
-				at.rx -= dx;
-			if (at.ry < y0)
-				at.ry += dy;
-			else if (at.ry > y1)
-				at.ry -= dy;
-		}
-
-		List<Photon> photonList = model.getPhotons();
-		if (photonList != null && !photonList.isEmpty()) {
-			synchronized (photonList) {
-				for (Photon photon : photonList) {
-					if (photon.x < x0)
-						photon.x += dx;
-					else if (photon.x > x1)
-						photon.x -= dx;
-					if (photon.y < y0)
-						photon.y += dy;
-					else if (photon.y > y1)
-						photon.y -= dy;
+	/** apply the Periodic Boundary Condition. */
+	public void setPBC() {
+		int n = model.getNumberOfParticles();
+		if (n <= 0)
+			return;
+		double x1 = x + width;
+		double y1 = y + height;
+		if (model instanceof AtomicModel) {
+			AtomicModel am = (AtomicModel) model;
+			Atom at;
+			for (int i = 0; i < n; i++) {
+				at = am.atom[i];
+				if (at.isBonded())
+					continue;
+				if (at.rx < x)
+					at.rx += width;
+				else if (at.rx > x1)
+					at.rx -= width;
+				if (at.ry < y)
+					at.ry += height;
+				else if (at.ry > y1)
+					at.ry -= height;
+			}
+			List<Photon> photonList = am.getPhotons();
+			if (photonList != null && !photonList.isEmpty()) {
+				synchronized (photonList) {
+					for (Photon photon : photonList) {
+						if (photon.x < x)
+							photon.x += width;
+						else if (photon.x > x1)
+							photon.x -= width;
+						if (photon.y < y)
+							photon.y += height;
+						else if (photon.y > y1)
+							photon.y -= height;
+					}
 				}
 			}
 		}
-
+		else if (model instanceof MesoModel) {
+			MesoModel mm = (MesoModel) model;
+			GayBerneParticle gb;
+			for (int i = 0; i < n; i++) {
+				gb = mm.gb[i];
+				if (gb.rx < x)
+					gb.rx += width;
+				else if (gb.rx >= x1)
+					gb.rx -= width;
+				if (gb.ry < y)
+					gb.ry += height;
+				else if (gb.ry >= y1)
+					gb.ry -= height;
+			}
+		}
 	}
 
 	/**
 	 * apply reflectory boundary conditions to all atoms. This method cares about the visual atom-size effect. As soon
 	 * as the edge of a ball (not the center of mass) hits the wall it is bounced back.
 	 */
-	public void setRBC(AtomicModel model) {
+	public void setRBC() {
 
 		double xmin, ymin, xmax, ymax;
 		if (type != DBC_ID) {
@@ -603,170 +672,213 @@ public class RectangularBoundary extends Rectangle2D.Double implements Boundary 
 			}
 		}
 
-		boolean isWestWallSink = wall.isSink(Wall.WEST);
-		boolean isEastWallSink = wall.isSink(Wall.EAST);
-		boolean isSouthWallSink = wall.isSink(Wall.SOUTH);
-		boolean isNorthWallSink = wall.isSink(Wall.NORTH);
+		if (model instanceof AtomicModel) {
 
-		Atom at;
-		boolean toSink;
-		double radius;
-		for (int i = 0, nat = model.getNumberOfAtoms(); i < nat; i++) {
-			at = model.atom[i];
-			toSink = wall.toSink((byte) at.getID());
-			radius = 0.5 * at.sigma;
-			if (!isWestWallSink || (isWestWallSink && !toSink)) {
-				if (at.rx < xmin + radius) {
-					// at.rx=xmin+radius; //do not use this: it causes potential energy shift
-					if (wall.isElastic(Wall.WEST)) {
-						at.vx = Math.abs(at.vx);
-					}
-					else {
-						if (!inelasticByRescaling) {
-							double theta = Math.random() * Math.PI * 2.0;
-							at.vx = -SimpleMath.sign(at.vx) * Math.sqrt(wall.getTemperature(Wall.WEST))
-									* AtomicModel.VT_CONVERSION_CONSTANT * magnifier * Math.cos(theta);
-							at.vy = Math.sqrt(wall.getTemperature(Wall.WEST)) * AtomicModel.VT_CONVERSION_CONSTANT
-									* magnifier * Math.sin(theta);
-						}
-						else {
-							at.vx = scaleFactor * Math.abs(at.vx);
-						}
-					}
-				}
-			}
-			if (!isEastWallSink || (isEastWallSink && !toSink)) {
-				if (at.rx > xmax - radius) {
-					// at.rx=xmax-radius;
-					if (wall.isElastic(Wall.EAST)) {
-						at.vx = -Math.abs(at.vx);
-					}
-					else {
-						if (!inelasticByRescaling) {
-							double theta = Math.random() * Math.PI * 2.0;
-							at.vx = -SimpleMath.sign(at.vx) * Math.sqrt(wall.getTemperature(Wall.EAST))
-									* AtomicModel.VT_CONVERSION_CONSTANT * magnifier * Math.cos(theta);
-							at.vy = Math.sqrt(wall.getTemperature(Wall.EAST)) * AtomicModel.VT_CONVERSION_CONSTANT
-									* magnifier * Math.sin(theta);
-						}
-						else {
-							at.vx = -scaleFactor * Math.abs(at.vx);
-						}
-					}
-				}
-			}
-			if (!isNorthWallSink || (isNorthWallSink && !toSink)) {
-				if (at.ry < ymin + radius) {
-					// at.ry=ymin+radius;
-					if (wall.isElastic(Wall.NORTH)) {
-						at.vy = Math.abs(at.vy);
-					}
-					else {
-						if (!inelasticByRescaling) {
-							double theta = Math.random() * Math.PI * 2.0;
-							at.vy = -SimpleMath.sign(at.vy) * Math.sqrt(wall.getTemperature(Wall.NORTH))
-									* AtomicModel.VT_CONVERSION_CONSTANT * magnifier * Math.sin(theta);
-							at.vx = Math.sqrt(wall.getTemperature(Wall.NORTH)) * AtomicModel.VT_CONVERSION_CONSTANT
-									* magnifier * Math.cos(theta);
-						}
-						else {
-							at.vy = scaleFactor * Math.abs(at.vy);
-						}
-					}
-				}
-			}
-			if (!isSouthWallSink || (isSouthWallSink && !toSink)) {
-				if (at.ry > ymax - radius) {
-					// at.ry=ymax-radius;
-					if (wall.isElastic(Wall.SOUTH)) {
-						at.vy = -Math.abs(at.vy);
-					}
-					else {
-						if (!inelasticByRescaling) {
-							double theta = Math.random() * Math.PI * 2.0;
-							at.vy = -SimpleMath.sign(at.vy) * Math.sqrt(wall.getTemperature(Wall.SOUTH))
-									* AtomicModel.VT_CONVERSION_CONSTANT * magnifier * Math.sin(theta);
-							at.vx = Math.sqrt(wall.getTemperature(Wall.SOUTH)) * AtomicModel.VT_CONVERSION_CONSTANT
-									* magnifier * Math.cos(theta);
-						}
-						else {
-							at.vy = -scaleFactor * Math.abs(at.vy);
-						}
-					}
-				}
-			}
-		}
+			AtomicModel am = (AtomicModel) model;
 
-		// sink simulation
-		if (model.getJob().getIndexOfStep() % 10 == 0) {
-			if (markedAtomList == null)
-				markedAtomList = new ArrayList<Integer>();
-			else markedAtomList.clear();
-			for (int i = 0, nat = model.getNumberOfAtoms(); i < nat; i++) {
-				at = model.atom[i];
+			boolean isWestWallSink = wall.isSink(Wall.WEST);
+			boolean isEastWallSink = wall.isSink(Wall.EAST);
+			boolean isSouthWallSink = wall.isSink(Wall.SOUTH);
+			boolean isNorthWallSink = wall.isSink(Wall.NORTH);
+
+			Atom at;
+			boolean toSink;
+			double radius;
+			for (int i = 0, nat = am.getNumberOfAtoms(); i < nat; i++) {
+				at = am.atom[i];
+				toSink = wall.toSink((byte) at.getID());
 				radius = 0.5 * at.sigma;
-				if (!wall.toSink((byte) at.getID()))
-					continue;
-				if (isWestWallSink && at.rx < xmin - radius) {
-					markedAtomList.add(i);
+				if (!isWestWallSink || (isWestWallSink && !toSink)) {
+					if (at.rx < xmin + radius) {
+						// at.rx=xmin+radius; //do not use this: it causes potential energy shift
+						if (wall.isElastic(Wall.WEST)) {
+							at.vx = Math.abs(at.vx);
+						}
+						else {
+							if (!inelasticByRescaling) {
+								double theta = Math.random() * Math.PI * 2.0;
+								at.vx = -SimpleMath.sign(at.vx) * Math.sqrt(wall.getTemperature(Wall.WEST))
+										* AtomicModel.VT_CONVERSION_CONSTANT * magnifier * Math.cos(theta);
+								at.vy = Math.sqrt(wall.getTemperature(Wall.WEST)) * AtomicModel.VT_CONVERSION_CONSTANT
+										* magnifier * Math.sin(theta);
+							}
+							else {
+								at.vx = scaleFactor * Math.abs(at.vx);
+							}
+						}
+					}
 				}
-				if (isEastWallSink && at.rx > xmax + radius) {
-					markedAtomList.add(i);
+				if (!isEastWallSink || (isEastWallSink && !toSink)) {
+					if (at.rx > xmax - radius) {
+						// at.rx=xmax-radius;
+						if (wall.isElastic(Wall.EAST)) {
+							at.vx = -Math.abs(at.vx);
+						}
+						else {
+							if (!inelasticByRescaling) {
+								double theta = Math.random() * Math.PI * 2.0;
+								at.vx = -SimpleMath.sign(at.vx) * Math.sqrt(wall.getTemperature(Wall.EAST))
+										* AtomicModel.VT_CONVERSION_CONSTANT * magnifier * Math.cos(theta);
+								at.vy = Math.sqrt(wall.getTemperature(Wall.EAST)) * AtomicModel.VT_CONVERSION_CONSTANT
+										* magnifier * Math.sin(theta);
+							}
+							else {
+								at.vx = -scaleFactor * Math.abs(at.vx);
+							}
+						}
+					}
 				}
-				if (isNorthWallSink && at.ry < ymin - radius) {
-					markedAtomList.add(i);
+				if (!isNorthWallSink || (isNorthWallSink && !toSink)) {
+					if (at.ry < ymin + radius) {
+						// at.ry=ymin+radius;
+						if (wall.isElastic(Wall.NORTH)) {
+							at.vy = Math.abs(at.vy);
+						}
+						else {
+							if (!inelasticByRescaling) {
+								double theta = Math.random() * Math.PI * 2.0;
+								at.vy = -SimpleMath.sign(at.vy) * Math.sqrt(wall.getTemperature(Wall.NORTH))
+										* AtomicModel.VT_CONVERSION_CONSTANT * magnifier * Math.sin(theta);
+								at.vx = Math.sqrt(wall.getTemperature(Wall.NORTH)) * AtomicModel.VT_CONVERSION_CONSTANT
+										* magnifier * Math.cos(theta);
+							}
+							else {
+								at.vy = scaleFactor * Math.abs(at.vy);
+							}
+						}
+					}
 				}
-				if (isSouthWallSink && at.ry > ymax + radius) {
-					markedAtomList.add(i);
-				}
-			}
-			if (!markedAtomList.isEmpty())
-				model.view.removeMarkedAtoms(markedAtomList);
-		}
-
-		List<Photon> photonList = model.getPhotons();
-		if (photonList != null && !photonList.isEmpty()) {
-			if (lightThrough) {
-				xmin -= 50;
-				xmax += 50;
-				ymin -= 50;
-				ymax += 50;
-				Photon photon;
-				synchronized (photonList) {
-					for (Iterator it = photonList.iterator(); it.hasNext();) {
-						photon = (Photon) it.next();
-						if (photon.x < xmin || photon.x > xmax || photon.y < ymin || photon.y > ymax) {
-							it.remove();
-							if (!photon.isFromLightSource())
-								model.notifyModelListeners(new ModelEvent(model, "Photon emitted", null, photon));
+				if (!isSouthWallSink || (isSouthWallSink && !toSink)) {
+					if (at.ry > ymax - radius) {
+						// at.ry=ymax-radius;
+						if (wall.isElastic(Wall.SOUTH)) {
+							at.vy = -Math.abs(at.vy);
+						}
+						else {
+							if (!inelasticByRescaling) {
+								double theta = Math.random() * Math.PI * 2.0;
+								at.vy = -SimpleMath.sign(at.vy) * Math.sqrt(wall.getTemperature(Wall.SOUTH))
+										* AtomicModel.VT_CONVERSION_CONSTANT * magnifier * Math.sin(theta);
+								at.vx = Math.sqrt(wall.getTemperature(Wall.SOUTH)) * AtomicModel.VT_CONVERSION_CONSTANT
+										* magnifier * Math.cos(theta);
+							}
+							else {
+								at.vy = -scaleFactor * Math.abs(at.vy);
+							}
 						}
 					}
 				}
 			}
-			else {
-				synchronized (photonList) {
-					for (Photon photon : photonList) {
-						if (photon.x < xmin) {
-							photon.x = (float) xmin;
-							photon.setAngle(photon.getAngle() + (float) Math.PI);
+
+			// sink simulation
+			if (model.getJob().getIndexOfStep() % 10 == 0) {
+				if (markedAtomList == null)
+					markedAtomList = new ArrayList<Integer>();
+				else markedAtomList.clear();
+				for (int i = 0, nat = am.getNumberOfAtoms(); i < nat; i++) {
+					at = am.atom[i];
+					radius = 0.5 * at.sigma;
+					if (!wall.toSink((byte) at.getID()))
+						continue;
+					if (isWestWallSink && at.rx < xmin - radius) {
+						markedAtomList.add(i);
+					}
+					if (isEastWallSink && at.rx > xmax + radius) {
+						markedAtomList.add(i);
+					}
+					if (isNorthWallSink && at.ry < ymin - radius) {
+						markedAtomList.add(i);
+					}
+					if (isSouthWallSink && at.ry > ymax + radius) {
+						markedAtomList.add(i);
+					}
+				}
+				if (!markedAtomList.isEmpty())
+					am.view.removeMarkedAtoms(markedAtomList);
+			}
+
+			List<Photon> photonList = am.getPhotons();
+			if (photonList != null && !photonList.isEmpty()) {
+				if (lightThrough) {
+					xmin -= 50;
+					xmax += 50;
+					ymin -= 50;
+					ymax += 50;
+					Photon photon;
+					synchronized (photonList) {
+						for (Iterator it = photonList.iterator(); it.hasNext();) {
+							photon = (Photon) it.next();
+							if (photon.x < xmin || photon.x > xmax || photon.y < ymin || photon.y > ymax) {
+								it.remove();
+								if (!photon.isFromLightSource())
+									am.notifyModelListeners(new ModelEvent(am, "Photon emitted", null, photon));
+							}
 						}
-						else if (photon.x > xmax) {
-							photon.x = (float) xmax;
-							photon.setAngle(photon.getAngle() + (float) Math.PI);
-						}
-						if (photon.y < ymin) {
-							photon.y = (float) ymin;
-							photon.setAngle(-photon.getAngle());
-						}
-						else if (photon.y > ymax) {
-							photon.y = (float) ymax;
-							photon.setAngle(-photon.getAngle());
+					}
+				}
+				else {
+					synchronized (photonList) {
+						for (Photon photon : photonList) {
+							if (photon.x < xmin) {
+								photon.x = (float) xmin;
+								photon.setAngle(photon.getAngle() + (float) Math.PI);
+							}
+							else if (photon.x > xmax) {
+								photon.x = (float) xmax;
+								photon.setAngle(photon.getAngle() + (float) Math.PI);
+							}
+							if (photon.y < ymin) {
+								photon.y = (float) ymin;
+								photon.setAngle(-photon.getAngle());
+							}
+							else if (photon.y > ymax) {
+								photon.y = (float) ymax;
+								photon.setAngle(-photon.getAngle());
+							}
 						}
 					}
 				}
 			}
 		}
 
+		else if (model instanceof MesoModel) {
+			MesoModel mm = (MesoModel) model;
+			int n = mm.getNumberOfParticles();
+			if (n <= 0)
+				return;
+			double sinTheta, cosTheta;
+			double dx, dy;
+			GayBerneParticle gb;
+			for (int i = 0; i < n; i++) {
+				gb = mm.gb[i];
+				sinTheta = Math.sin(gb.theta);
+				cosTheta = Math.cos(gb.theta);
+				dx = gb.breadth * gb.breadth * sinTheta * sinTheta + gb.length * gb.length * cosTheta * cosTheta;
+				dx = Math.sqrt(dx) * 0.5;
+				dy = gb.breadth * gb.breadth * cosTheta * cosTheta + gb.length * gb.length * sinTheta * sinTheta;
+				dy = Math.sqrt(dy) * 0.5;
+				if (gb.rx < x + dx) {
+					// gb.rx=x+dx;
+					gb.vx = -gb.vx;
+					gb.omega = -gb.omega;
+				}
+				else if (gb.rx >= xmax - dx) {
+					// gb.rx=xmax-dx;
+					gb.vx = -gb.vx;
+					gb.omega = -gb.omega;
+				}
+				if (gb.ry < y + dy) {
+					// gb.ry=y+dy;
+					gb.vy = -gb.vy;
+					gb.omega = -gb.omega;
+				}
+				else if (gb.ry >= ymax - dy) {
+					// gb.ry=ymax-dy;
+					gb.vy = -gb.vy;
+					gb.omega = -gb.omega;
+				}
+			}
+		}
 	}
 
 	public void setRBC(Atom atom) {
@@ -794,17 +906,77 @@ public class RectangularBoundary extends Rectangle2D.Double implements Boundary 
 			atom.ry = ymax - radius;
 	}
 
-	/** apply reflectory boundary conditions in x-axis and periodic boundary conditions in y-axis. */
-	public void setXRYPBC(AtomicModel model) {
+	public void setRBC(Molecule mol) {
+		if (mol == null || mol.size() == 0)
+			return;
+		int x0 = (int) getMinX();
+		int y0 = (int) getMinY();
+		int x1 = (int) getMaxX();
+		int y1 = (int) getMaxY();
+		Atom i_N = null, i_S = null, i_W = null, i_E = null;
+		int xmax = 0, xmin = 2000, ymax = 0, ymin = 2000;
+		synchronized (mol) {
+			for (Atom atom : mol.atoms) {
+				if (atom.rx > xmax) {
+					xmax = (int) atom.rx;
+					i_E = atom;
+				}
+				else if (atom.rx < xmin) {
+					xmin = (int) atom.rx;
+					i_W = atom;
+				}
+				if (atom.ry > ymax) {
+					ymax = (int) atom.ry;
+					i_S = atom;
+				}
+				else if (atom.ry < ymin) {
+					ymin = (int) atom.ry;
+					i_N = atom;
+				}
+			}
+			if (i_W != null) {
+				if (xmin < x0 + 0.5 * i_W.sigma) {
+					for (Atom atom : mol.atoms) {
+						atom.rx += (x0 + 0.5 * i_W.sigma - xmin);
+					}
+				}
+			}
+			if (i_E != null) {
+				if (xmax > x1 - 0.5 * i_E.sigma) {
+					for (Atom atom : mol.atoms) {
+						atom.rx -= (xmax - x1 + 0.5 * i_E.sigma);
+					}
+				}
+			}
+			if (i_N != null) {
+				if (ymin < y0 + 0.5 * i_N.sigma) {
+					for (Atom atom : mol.atoms) {
+						atom.ry += (y0 + 0.5 * i_N.sigma - ymin);
+					}
+				}
+			}
+			if (i_S != null) {
+				if (ymax > y1 - 0.5 * i_S.sigma) {
+					for (Atom atom : mol.atoms) {
+						atom.ry -= (ymax - y1 + 0.5 * i_S.sigma);
+					}
+				}
+			}
+		}
+	}
 
+	/** apply reflectory boundary conditions in x-axis and periodic boundary conditions in y-axis. */
+	public void setXRYPBC() {
+		if (!(model instanceof MolecularModel))
+			return;
+		MolecularModel mm = (MolecularModel) model;
 		double xmin = x;
 		double xmax = x + width;
-
-		if (!model.getObstacles().isEmpty()) {
+		if (!mm.getObstacles().isEmpty()) {
 			RectangularObstacle rect = null;
-			synchronized (model.getObstacles().getSynchronizationLock()) {
-				for (int iobs = 0, nobs = model.getObstacles().size(); iobs < nobs; iobs++) {
-					rect = model.getObstacles().get(iobs);
+			synchronized (mm.getObstacles().getSynchronizationLock()) {
+				for (int iobs = 0, nobs = mm.getObstacles().size(); iobs < nobs; iobs++) {
+					rect = mm.getObstacles().get(iobs);
 					if (rect.x < xmin) {
 						rect.x = xmin;
 						rect.vx = rect.isBounced() ? Math.abs(rect.vx) : 0;
@@ -816,11 +988,10 @@ public class RectangularBoundary extends Rectangle2D.Double implements Boundary 
 				}
 			}
 		}
-
 		Atom at = null;
 		double radius;
-		for (int i = 0, nat = model.getNumberOfAtoms(); i < nat; i++) {
-			at = model.atom[i];
+		for (int i = 0, nat = mm.getNumberOfAtoms(); i < nat; i++) {
+			at = mm.atom[i];
 			radius = 0.5 * at.sigma;
 			if (at.rx < xmin + radius) {
 				if (wall.isElastic(Wall.WEST)) {
@@ -853,8 +1024,7 @@ public class RectangularBoundary extends Rectangle2D.Double implements Boundary 
 			else if (at.ry > y + height)
 				at.ry -= height;
 		}
-
-		List<Photon> photonList = model.getPhotons();
+		List<Photon> photonList = mm.getPhotons();
 		if (photonList != null && !photonList.isEmpty()) {
 			synchronized (photonList) {
 				if (lightThrough) {
@@ -867,7 +1037,7 @@ public class RectangularBoundary extends Rectangle2D.Double implements Boundary 
 							if (photon.x < xmin || photon.x > xmax) {
 								it.remove();
 								if (!photon.isFromLightSource())
-									model.notifyModelListeners(new ModelEvent(model, "Photon emitted", null, photon));
+									mm.notifyModelListeners(new ModelEvent(mm, "Photon emitted", null, photon));
 							}
 						}
 					}
@@ -892,20 +1062,20 @@ public class RectangularBoundary extends Rectangle2D.Double implements Boundary 
 				}
 			}
 		}
-
 	}
 
 	/** apply periodic boundary conditions in x-axis and reflectory boundary conditions in y-axis. */
-	public void setXPYRBC(AtomicModel model) {
-
+	public void setXPYRBC() {
+		if (!(model instanceof MolecularModel))
+			return;
+		MolecularModel mm = (MolecularModel) model;
 		double ymin = y;
 		double ymax = y + height;
-
-		if (!model.getObstacles().isEmpty()) {
+		if (!mm.getObstacles().isEmpty()) {
 			RectangularObstacle rect = null;
-			synchronized (model.getObstacles().getSynchronizationLock()) {
-				for (int iobs = 0, nobs = model.getObstacles().size(); iobs < nobs; iobs++) {
-					rect = model.getObstacles().get(iobs);
+			synchronized (mm.getObstacles().getSynchronizationLock()) {
+				for (int iobs = 0, nobs = mm.getObstacles().size(); iobs < nobs; iobs++) {
+					rect = mm.getObstacles().get(iobs);
 					if (rect.y < ymin) {
 						rect.y = ymin;
 						rect.vy = rect.isBounced() ? Math.abs(rect.vy) : 0;
@@ -917,11 +1087,10 @@ public class RectangularBoundary extends Rectangle2D.Double implements Boundary 
 				}
 			}
 		}
-
 		Atom at = null;
 		double radius;
-		for (int i = 0, nat = model.getNumberOfAtoms(); i < nat; i++) {
-			at = model.atom[i];
+		for (int i = 0, nat = mm.getNumberOfAtoms(); i < nat; i++) {
+			at = mm.atom[i];
 			radius = 0.5 * at.sigma;
 			if (at.ry < ymin + radius) {
 				if (wall.isElastic(Wall.NORTH)) {
@@ -954,8 +1123,7 @@ public class RectangularBoundary extends Rectangle2D.Double implements Boundary 
 			else if (at.rx > x + width)
 				at.rx -= width;
 		}
-
-		List<Photon> photonList = model.getPhotons();
+		List<Photon> photonList = mm.getPhotons();
 		if (photonList != null && !photonList.isEmpty()) {
 			synchronized (photonList) {
 				if (lightThrough) {
@@ -967,7 +1135,7 @@ public class RectangularBoundary extends Rectangle2D.Double implements Boundary 
 						if (photon.y < ymin || photon.y > ymax) {
 							it.remove();
 							if (!photon.isFromLightSource())
-								model.notifyModelListeners(new ModelEvent(model, "Photon emitted", null, photon));
+								mm.notifyModelListeners(new ModelEvent(mm, "Photon emitted", null, photon));
 						}
 					}
 				}
@@ -991,26 +1159,94 @@ public class RectangularBoundary extends Rectangle2D.Double implements Boundary 
 				}
 			}
 		}
-
 	}
 
-	/** apply periodic boundary conditions to all Gay-Berne particles */
-	public void setPBC(MesoModel model) {
-		if (model.gb == null || model.getNumberOfParticles() <= 0)
+	void processBondCrossingUnderPBC() {
+		if (!(model instanceof MolecularModel))
 			return;
-		double x1 = x + width;
-		double y1 = y + height;
-		GayBerneParticle gb;
-		for (int i = 0, n = model.getNumberOfParticles(); i < n; i++) {
-			gb = model.gb[i];
-			if (gb.rx < x)
-				gb.rx += width;
-			else if (gb.rx >= x1)
-				gb.rx -= width;
-			if (gb.ry < y)
-				gb.ry += height;
-			else if (gb.ry >= y1)
-				gb.ry -= height;
+		MoleculeCollection molecules = ((MolecularModel) model).molecules;
+		if (molecules.isEmpty())
+			return;
+		double x0 = getX();
+		double y0 = getY();
+		double dx = getWidth();
+		double dy = getHeight();
+		double x1 = x0 + dx;
+		double y1 = y0 + dy;
+		Molecule mol;
+		Point2D p;
+		double delta_x, delta_y;
+		synchronized (molecules) {
+			for (Iterator it = molecules.iterator(); it.hasNext();) {
+				mol = (Molecule) it.next();
+				delta_x = 0.0;
+				delta_y = 0.0;
+				p = mol.getCenterOfMass2D();
+				if (p.getX() < x0)
+					delta_x = dx;
+				if (p.getX() > x1)
+					delta_x = -dx;
+				if (p.getY() < y0)
+					delta_y = dy;
+				if (p.getY() > y1)
+					delta_y = -dy;
+				if (Math.abs(delta_x) > 0.001 || Math.abs(delta_y) > 0.001)
+					mol.translateBy(delta_x, delta_y);
+			}
+		}
+	}
+
+	void processBondCrossingUnderXRYPBC() {
+		if (!(model instanceof MolecularModel))
+			return;
+		MoleculeCollection molecules = ((MolecularModel) model).molecules;
+		if (molecules.isEmpty())
+			return;
+		double y0 = getY();
+		double dy = getHeight();
+		double y1 = y0 + dy;
+		Molecule mol;
+		Point2D p;
+		double delta_y;
+		synchronized (molecules) {
+			for (Iterator it = molecules.iterator(); it.hasNext();) {
+				mol = (Molecule) it.next();
+				delta_y = 0.0;
+				p = mol.getCenterOfMass2D();
+				if (p.getY() < y0)
+					delta_y = dy;
+				if (p.getY() > y1)
+					delta_y = -dy;
+				if (Math.abs(delta_y) > 0.001)
+					mol.translateBy(0.0, delta_y);
+			}
+		}
+	}
+
+	void processBondCrossingUnderXPYRBC() {
+		if (!(model instanceof MolecularModel))
+			return;
+		MoleculeCollection molecules = ((MolecularModel) model).molecules;
+		if (molecules.isEmpty())
+			return;
+		double x0 = getX();
+		double dx = getWidth();
+		double x1 = x0 + dx;
+		Molecule mol;
+		Point2D p;
+		double delta_x;
+		synchronized (molecules) {
+			for (Iterator it = molecules.iterator(); it.hasNext();) {
+				mol = (Molecule) it.next();
+				delta_x = 0.0;
+				p = mol.getCenterOfMass2D();
+				if (p.getX() < x0)
+					delta_x = dx;
+				if (p.getX() > x1)
+					delta_x = -dx;
+				if (Math.abs(delta_x) > 0.001)
+					mol.translateBy(delta_x, 0.0);
+			}
 		}
 	}
 
@@ -1038,45 +1274,6 @@ public class RectangularBoundary extends Rectangle2D.Double implements Boundary 
 				gb.ry = y + dy;
 			else if (gb.ry >= y + height - dy)
 				gb.ry = y + height - dy;
-		}
-	}
-
-	public void setRBC(MesoModel model) {
-		if (model.getParticles() == null || model.getNumberOfParticles() == 0)
-			return;
-		double xmax = x + width;
-		double ymax = y + height;
-		double sinTheta, cosTheta;
-		double dx, dy;
-		GayBerneParticle gb;
-		for (int i = 0, n = model.getNumberOfParticles(); i < n; i++) {
-			gb = model.gb[i];
-			sinTheta = Math.sin(gb.theta);
-			cosTheta = Math.cos(gb.theta);
-			dx = gb.breadth * gb.breadth * sinTheta * sinTheta + gb.length * gb.length * cosTheta * cosTheta;
-			dx = Math.sqrt(dx) * 0.5;
-			dy = gb.breadth * gb.breadth * cosTheta * cosTheta + gb.length * gb.length * sinTheta * sinTheta;
-			dy = Math.sqrt(dy) * 0.5;
-			if (gb.rx < x + dx) {
-				// gb.rx=x+dx;
-				gb.vx = -gb.vx;
-				gb.omega = -gb.omega;
-			}
-			else if (gb.rx >= xmax - dx) {
-				// gb.rx=xmax-dx;
-				gb.vx = -gb.vx;
-				gb.omega = -gb.omega;
-			}
-			if (gb.ry < y + dy) {
-				// gb.ry=y+dy;
-				gb.vy = -gb.vy;
-				gb.omega = -gb.omega;
-			}
-			else if (gb.ry >= ymax - dy) {
-				// gb.ry=ymax-dy;
-				gb.vy = -gb.vy;
-				gb.omega = -gb.omega;
-			}
 		}
 	}
 

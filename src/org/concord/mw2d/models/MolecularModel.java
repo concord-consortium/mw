@@ -515,13 +515,13 @@ public class MolecularModel extends AtomicModel {
 		super.putInBounds();
 		switch (boundary.getType()) {
 		case RectangularBoundary.PBC_ID:
-			BoundaryFactory.setPBC_BondCrossing(this);
+			boundary.processBondCrossingUnderPBC();
 			break;
 		case RectangularBoundary.XRYPBC_ID:
-			BoundaryFactory.setXRYPBC_BondCrossing(this);
+			boundary.processBondCrossingUnderXRYPBC();
 			break;
 		case RectangularBoundary.XPYRBC_ID:
-			BoundaryFactory.setXPYRBC_BondCrossing(this);
+			boundary.processBondCrossingUnderXPYRBC();
 			break;
 		}
 	}
