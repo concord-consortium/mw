@@ -193,6 +193,34 @@ public class MoleculeCollection {
 		return -1;
 	}
 
+	public Molecule getMolecule(RadialBond bond) {
+		if (bond == null)
+			return null;
+		if (isEmpty())
+			return null;
+		synchronized (list) {
+			for (Molecule m : list) {
+				if (m.contains(bond))
+					return m;
+			}
+		}
+		return null;
+	}
+
+	public Molecule getMolecule(AngularBond bond) {
+		if (bond == null)
+			return null;
+		if (isEmpty())
+			return null;
+		synchronized (list) {
+			for (Molecule m : list) {
+				if (m.contains(bond))
+					return m;
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * sort atoms into molecules according to the bond network. Used, for example, after fragmentation of molecules
 	 * caused by random deletion.

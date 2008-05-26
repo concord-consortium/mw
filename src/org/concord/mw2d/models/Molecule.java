@@ -119,7 +119,13 @@ public class Molecule implements ModelComponent {
 	}
 
 	public boolean contains(Object o) {
-		return atoms.contains(o);
+		if (o instanceof Atom)
+			return atoms.contains(o);
+		if (o instanceof RadialBond)
+			return atoms.contains(((RadialBond) o).atom1);
+		if (o instanceof AngularBond)
+			return atoms.contains(((AngularBond) o).atom1);
+		return false;
 	}
 
 	public boolean equals(Object o) {
@@ -464,6 +470,12 @@ public class Molecule implements ModelComponent {
 		translateTo(p.getX(), p.getY());
 	}
 
+	public void translateBondCenterTo(RadialBond rb, Point2D p) {
+		double x0 = rb.getRx();
+		double y0 = rb.getRy();
+		translateBy(p.getX() - x0, p.getY() - y0);
+	}
+
 	/**
 	 * rotate this molecule such that it points to a specified point (usually the mouse cursor).
 	 * 
@@ -700,12 +712,12 @@ public class Molecule implements ModelComponent {
 	}
 
 	public void computeCenter() {
-		int[] exclusion = torque.getExclusion();
 		xCenter = yCenter = 0.0;
+		int[] exclusion = torque.getExclusion();
 		int m = exclusion != null ? exclusion.length : 0;
 		synchronized (atoms) {
 			outerloop: for (Atom a : atoms) {
-				if (m > 0) {
+				if (m > 0 && exclusion != null) {
 					for (int i : exclusion) {
 						if (i == a.index)
 							continue outerloop;

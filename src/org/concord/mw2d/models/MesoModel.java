@@ -954,7 +954,7 @@ public class MesoModel extends MDModel {
 				gb[i].ry += gb[i].fy / sumgrad * delta;
 				gb[i].theta += gb[i].tau / (0.5 * (gb[i].length + gb[i].breadth) * sumgrad) * delta;
 			}
-			boundary.setRBC(this);
+			boundary.setRBC();
 		}
 		return pot;
 	}
@@ -1017,13 +1017,13 @@ public class MesoModel extends MDModel {
 	synchronized void putGBsInBounds() {
 		switch (boundary.getType()) {
 		case RectangularBoundary.DBC_ID:
-			boundary.setRBC(this);
+			boundary.setRBC();
 			break;
 		case RectangularBoundary.RBC_ID:
-			boundary.setRBC(this);
+			boundary.setRBC();
 			break;
 		case RectangularBoundary.PBC_ID:
-			boundary.setPBC(this);
+			boundary.setPBC();
 			break;
 		}
 	}
