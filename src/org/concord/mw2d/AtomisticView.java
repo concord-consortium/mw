@@ -2054,10 +2054,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		return true;
 	}
 
-	private boolean finalizeMoleculeLocation() {
-		if (!(selectedComponent instanceof Molecule))
-			throw new RuntimeException("target not a molecule");
-		Molecule mol = (Molecule) selectedComponent;
+	private boolean finalizeMoleculeLocation(Molecule mol) {
 		boundary.setRBC(mol);
 		if (intersects(mol)) {
 			errorReminder.show(ErrorReminder.OBJECT_OVERLAP);
@@ -2072,7 +2069,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		if (!(selectedComponent instanceof Molecule))
 			throw new RuntimeException("target not a molecule");
 		Molecule mol = (Molecule) selectedComponent;
-		if (!finalizeMoleculeLocation()) {
+		if (!finalizeMoleculeLocation(mol)) {
 			nAtom -= mol.size();
 			List list = mol.getBonds();
 			if (list != null && !list.isEmpty()) {
@@ -4701,52 +4698,32 @@ public class AtomisticView extends MDView implements BondChangeListener {
 					ImageComponent ic = (ImageComponent) selectedComponent;
 					ic.translateTo(x - clickPoint.x, y - clickPoint.y);
 					dragSelected = true;
-					ModelComponent host = ic.getHost();
-					if (host instanceof Atom) {
-						Atom a = (Atom) host;
-						a.translateTo(ic.getRx() + ic.getWidth() * 0.5, ic.getRy() + ic.getHeight() * 0.5);
-						boundary.setRBC(a);
-						refreshForces();
-					}
-					else if (host instanceof RadialBond) {
-						RadialBond rBond = (RadialBond) host;
-						Molecule m = molecules.getMolecule(rBond);
-						m.translateBondCenterTo(rBond, ic.getCenter());
-						boundary.setRBC(m);
-						refreshForces();
-					}
-					else if (host instanceof RectangularObstacle) {
-						RectangularObstacle obs = (RectangularObstacle) host;
-						obs.translateCenterTo(ic.getRx() + ic.getWidth() * 0.5, ic.getRy() + ic.getHeight() * 0.5);
-					}
+					moveHostTo(ic.getHost(), ic.getRx() + ic.getWidth() * 0.5, ic.getRy() + ic.getHeight() * 0.5);
 				}
 				else if (selectedComponent instanceof TextBoxComponent) {
 					TextBoxComponent tb = (TextBoxComponent) selectedComponent;
-					if (tb.getHost() == null || tb.getAttachmentPosition() != TextBoxComponent.BOX_CENTER) {
-						tb.translateTo(x - clickPoint.x, y - clickPoint.y);
-						dragSelected = true;
-					}
+					dragSelected = true;
+					tb.translateTo(x - clickPoint.x, y - clickPoint.y);
+					if (tb.getAttachmentPosition() == TextBoxComponent.BOX_CENTER)
+						moveHostTo(tb.getHost(), tb.getRx() + 0.5 * tb.getWidth(), tb.getRy() + 0.5 * tb.getHeight());
 				}
 				else if (selectedComponent instanceof LineComponent) {
 					LineComponent lc = (LineComponent) selectedComponent;
-					if (lc.getHost() == null) {
-						lc.translateTo(x - clickPoint.x, y - clickPoint.y);
-						dragSelected = true;
-					}
+					lc.translateTo(x - clickPoint.x, y - clickPoint.y);
+					dragSelected = true;
+					moveHostTo(lc.getHost(), lc.getRx(), lc.getRy());
 				}
 				else if (selectedComponent instanceof RectangleComponent) {
 					RectangleComponent rc = (RectangleComponent) selectedComponent;
-					if (rc.getHost() == null) {
-						rc.translateTo(x - clickPoint.x, y - clickPoint.y);
-						dragSelected = true;
-					}
+					rc.translateTo(x - clickPoint.x, y - clickPoint.y);
+					dragSelected = true;
+					moveHostTo(rc.getHost(), rc.getRx(), rc.getRy());
 				}
 				else if (selectedComponent instanceof EllipseComponent) {
 					EllipseComponent ec = (EllipseComponent) selectedComponent;
-					if (ec.getHost() == null) {
-						ec.translateTo(x - clickPoint.x, y - clickPoint.y);
-						dragSelected = true;
-					}
+					ec.translateTo(x - clickPoint.x, y - clickPoint.y);
+					dragSelected = true;
+					moveHostTo(ec.getHost(), ec.getRx(), ec.getRy());
 				}
 				if (dragSelected) {
 					repaint();
@@ -5018,7 +4995,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			if (dragSelected) {
 				boolean b = false;
 				if (selectedComponent instanceof Molecule) {
-					if (finalizeMoleculeLocation())
+					if (finalizeMoleculeLocation((Molecule) selectedComponent))
 						b = true;
 				}
 				else if (selectedComponent instanceof Atom) {
@@ -5035,16 +5012,17 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				}
 				else if (selectedComponent instanceof Layered) {
 					b = true;
-					if (selectedComponent instanceof ImageComponent) {
-						ModelComponent host = ((ImageComponent) selectedComponent).getHost();
-						if (host instanceof Atom) {
-							b = finalizeAtomLocation((Atom) host, false);
-							if (!b)
-								errorReminder.show(ErrorReminder.OBJECT_OVERLAP);
-						}
-						else if (host instanceof RectangularObstacle) {
-							b = finalizeObstacleLocation((RectangularObstacle) host);
-						}
+					ModelComponent host = ((Layered) selectedComponent).getHost();
+					if (host instanceof Atom) {
+						b = finalizeAtomLocation((Atom) host, false);
+						if (!b)
+							errorReminder.show(ErrorReminder.OBJECT_OVERLAP);
+					}
+					else if (host instanceof RadialBond) {
+						b = finalizeMoleculeLocation(molecules.getMolecule((RadialBond) host));
+					}
+					else if (host instanceof RectangularObstacle) {
+						b = finalizeObstacleLocation((RectangularObstacle) host);
 					}
 				}
 				if (b) {
@@ -5372,6 +5350,26 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		e.consume();
 	}
 
+	private void moveHostTo(ModelComponent host, double x, double y) {
+		if (host instanceof Atom) {
+			Atom a = (Atom) host;
+			a.translateTo(x, y);
+			boundary.setRBC(a);
+			refreshForces();
+		}
+		else if (host instanceof RadialBond) {
+			RadialBond rBond = (RadialBond) host;
+			Molecule m = molecules.getMolecule(rBond);
+			m.translateBondCenterTo(rBond, x, y);
+			boundary.setRBC(m);
+			refreshForces();
+		}
+		else if (host instanceof RectangularObstacle) {
+			RectangularObstacle obs = (RectangularObstacle) host;
+			obs.translateCenterTo(x, y);
+		}
+	}
+
 	private void fillSelectedArea(int element) {
 		boolean b = false;
 		for (int k = 0; k < nAtom; k++) {
@@ -5509,7 +5507,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				Molecule mol = (Molecule) selectedComponent;
 				mol.storeCurrentState();
 				mol.translateBy(dx, dy);
-				finalizeMoleculeLocation();
+				finalizeMoleculeLocation((Molecule) selectedComponent);
 				refreshForces();
 			}
 

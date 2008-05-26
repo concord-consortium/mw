@@ -79,7 +79,7 @@ public abstract class TextContainer implements DrawingElement {
 	private int[] xPoints = new int[4];
 	private int[] yPoints = new int[4];
 	private Rectangle rectangle = new Rectangle();
-	private byte attachmentPosition = BOX_CENTER;
+	private byte attachmentPosition = ARROW_HEAD;
 
 	public TextContainer(String text) {
 		setText(text);
