@@ -49,6 +49,7 @@ import org.concord.modeler.ModelerUtilities;
 import org.concord.modeler.math.Vector2D;
 import org.concord.modeler.ui.IconPool;
 import org.concord.modeler.util.FileUtilities;
+import org.concord.mw2d.models.Boundary;
 import org.concord.mw2d.models.EllipseComponent;
 import org.concord.mw2d.models.GayBerneParticle;
 import org.concord.mw2d.models.ImageComponent;
@@ -60,6 +61,7 @@ import org.concord.mw2d.models.ModelComponent;
 import org.concord.mw2d.models.PointRestraint;
 import org.concord.mw2d.models.RectangleComponent;
 import org.concord.mw2d.models.RectangularBoundary;
+import org.concord.mw2d.models.RectangularObstacle;
 import org.concord.mw2d.models.TextBoxComponent;
 import org.concord.mw2d.models.UserField;
 import org.concord.mw2d.ui.GayBerneConfigure;
@@ -193,7 +195,7 @@ public class MesoView extends MDView {
 			model.notifyChange();
 			if (!doNotFireUndoEvent) {
 				Layered[] i2 = null;
-				if (layerRemoved) {
+				if (layerRemoved && lay != null) {
 					int n = lay.size();
 					if (n > 0) {
 						i2 = new Layered[n];
@@ -202,8 +204,8 @@ public class MesoView extends MDView {
 					}
 				}
 				model.getUndoManager().undoableEditHappened(
-						new UndoableEditEvent(model, new UndoableDeletion(UndoAction.BLOCK_REMOVE,
-								particleRemoved ? list.size() : 0, i2)));
+						new UndoableEditEvent(model, new UndoableDeletion(UndoAction.BLOCK_REMOVE, list != null ? list
+								.size() : 0, i2)));
 				updateUndoUIComponents();
 			}
 		}
@@ -1523,38 +1525,34 @@ public class MesoView extends MDView {
 				}
 				else if (selectedComponent instanceof ImageComponent) {
 					ImageComponent ic = (ImageComponent) selectedComponent;
-					if (ic.getHost() == null) {
-						ic.translateTo(x - clickPoint.x, y - clickPoint.y);
-						dragSelected = true;
-					}
+					ic.translateTo(x - clickPoint.x, y - clickPoint.y);
+					dragSelected = true;
+					moveHostTo(ic.getHost(), ic.getRx() + ic.getWidth() * 0.5, ic.getRy() + ic.getHeight() * 0.5);
 				}
 				else if (selectedComponent instanceof TextBoxComponent) {
 					TextBoxComponent tb = (TextBoxComponent) selectedComponent;
-					if (tb.getHost() == null || tb.getAttachmentPosition() != TextBoxComponent.BOX_CENTER) {
-						tb.translateTo(x - clickPoint.x, y - clickPoint.y);
-						dragSelected = true;
-					}
+					tb.translateTo(x - clickPoint.x, y - clickPoint.y);
+					dragSelected = true;
+					if (tb.getAttachmentPosition() == TextBoxComponent.BOX_CENTER)
+						moveHostTo(tb.getHost(), tb.getRx() + 0.5 * tb.getWidth(), tb.getRy() + 0.5 * tb.getHeight());
 				}
 				else if (selectedComponent instanceof LineComponent) {
 					LineComponent lc = (LineComponent) selectedComponent;
-					if (lc.getHost() == null) {
-						lc.translateTo(x - clickPoint.x, y - clickPoint.y);
-						dragSelected = true;
-					}
+					lc.translateTo(x - clickPoint.x, y - clickPoint.y);
+					dragSelected = true;
+					moveHostTo(lc.getHost(), lc.getRx(), lc.getRy());
 				}
 				else if (selectedComponent instanceof RectangleComponent) {
 					RectangleComponent rc = (RectangleComponent) selectedComponent;
-					if (rc.getHost() == null) {
-						rc.translateTo(x - clickPoint.x, y - clickPoint.y);
-						dragSelected = true;
-					}
+					rc.translateTo(x - clickPoint.x, y - clickPoint.y);
+					dragSelected = true;
+					moveHostTo(rc.getHost(), rc.getRx(), rc.getRy());
 				}
 				else if (selectedComponent instanceof EllipseComponent) {
 					EllipseComponent ec = (EllipseComponent) selectedComponent;
-					if (ec.getHost() == null) {
-						ec.translateTo(x - clickPoint.x, y - clickPoint.y);
-						dragSelected = true;
-					}
+					ec.translateTo(x - clickPoint.x, y - clickPoint.y);
+					dragSelected = true;
+					moveHostTo(ec.getHost(), ec.getRx(), ec.getRy());
 				}
 				if (dragSelected) {
 					repaint();
@@ -1722,6 +1720,12 @@ public class MesoView extends MDView {
 				}
 				else if (selectedComponent instanceof Layered) {
 					b = true;
+					ModelComponent host = ((Layered) selectedComponent).getHost();
+					if (host instanceof GayBerneParticle) {
+						b = finalizeLocation((GayBerneParticle) host);
+						if (!b)
+							errorReminder.show(ErrorReminder.OBJECT_OVERLAP);
+					}
 				}
 				if (b) {
 					model.notifyChange();
@@ -1951,6 +1955,19 @@ public class MesoView extends MDView {
 		if (hasFocus())
 			e.consume();
 
+	}
+
+	private void moveHostTo(ModelComponent host, double x, double y) {
+		if (host instanceof GayBerneParticle) {
+			GayBerneParticle p = (GayBerneParticle) host;
+			p.translateTo(x, y);
+			boundary.setRBC(p, Boundary.TRANSLATION);
+			refreshForces();
+		}
+		else if (host instanceof RectangularObstacle) {
+			RectangularObstacle obs = (RectangularObstacle) host;
+			obs.translateCenterTo(x, y);
+		}
 	}
 
 	public void notifyNOPChange() {
