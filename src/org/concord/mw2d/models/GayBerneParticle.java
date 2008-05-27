@@ -521,7 +521,7 @@ public class GayBerneParticle extends UnitedAtom {
 	 * @param handle
 	 *            the index of one of the four handles
 	 */
-	public synchronized void rotateTo(int x, int y, int handle) {
+	public void rotateTo(int x, int y, int handle) {
 		double distance = Math.hypot(rx - x, ry - y);
 		double theta = (x - rx) / distance;
 		theta = y > ry ? Math.acos(theta) : 2.0 * Math.PI - Math.acos(theta);

@@ -59,6 +59,7 @@ public class ImageComponent implements ModelComponent, Layered {
 	private double x, y;
 	private float angle, offsetAngle;
 	private double savedX = -1.0, savedY = -1.0;
+	private float savedAngle;
 	private boolean stateStored;
 	private int frameCounter, loopCounter;
 	private long previousFrameTime, currentTime;
@@ -149,22 +150,9 @@ public class ImageComponent implements ModelComponent, Layered {
 	public void storeCurrentState() {
 		savedX = x;
 		savedY = y;
+		savedAngle = angle;
 		stateStored = true;
-		if (host instanceof Atom) {
-			((Atom) host).storeCurrentState();
-		}
-		else if (host instanceof RadialBond) {
-			if (model instanceof MolecularModel) {
-				Molecule m = ((MolecularModel) model).molecules.getMolecule((RadialBond) host);
-				m.storeCurrentState();
-			}
-		}
-		else if (host instanceof RectangularObstacle) {
-			((RectangularObstacle) host).storeCurrentState();
-		}
-		else if (host instanceof GayBerneParticle) {
-			((GayBerneParticle) host).storeCurrentState();
-		}
+		HostStateManager.storeCurrentState(host);
 	}
 
 	public void restoreState() {
@@ -172,21 +160,8 @@ public class ImageComponent implements ModelComponent, Layered {
 			return;
 		x = savedX;
 		y = savedY;
-		if (host instanceof Atom) {
-			((Atom) host).restoreState();
-		}
-		else if (host instanceof RadialBond) {
-			if (model instanceof MolecularModel) {
-				Molecule m = ((MolecularModel) model).molecules.getMolecule((RadialBond) host);
-				m.restoreState();
-			}
-		}
-		else if (host instanceof RectangularObstacle) {
-			((RectangularObstacle) host).restoreState();
-		}
-		else if (host instanceof GayBerneParticle) {
-			((GayBerneParticle) host).restoreState();
-		}
+		angle = savedAngle;
+		HostStateManager.restoreState(host);
 	}
 
 	/** TODO */

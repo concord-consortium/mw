@@ -589,6 +589,10 @@ public class RadialBond implements ModelComponent {
 		return atom1.equals(atom) || atom2.equals(atom);
 	}
 
+	public Molecule getMolecule() {
+		return model.molecules.getMolecule(atom1);
+	}
+
 	public Atom getAtom1() {
 		return atom1;
 	}

@@ -115,7 +115,8 @@ class CrystalReader extends ColumnDataParser {
 						container.view.setMolecularStyle(container.view.getMolecularStyle());
 					}
 				});
-				subMenu.add(menuItem);
+				if (subMenu != null)
+					subMenu.add(menuItem);
 
 			}
 

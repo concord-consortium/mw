@@ -107,21 +107,7 @@ public class LineComponent extends AbstractLine implements ModelComponent, Layer
 		savedX2 = getX2();
 		savedY2 = getY2();
 		stateStored = true;
-		if (host instanceof Atom) {
-			((Atom) host).storeCurrentState();
-		}
-		else if (host instanceof RadialBond) {
-			if (model instanceof MolecularModel) {
-				Molecule m = ((MolecularModel) model).molecules.getMolecule((RadialBond) host);
-				m.storeCurrentState();
-			}
-		}
-		else if (host instanceof RectangularObstacle) {
-			((RectangularObstacle) host).storeCurrentState();
-		}
-		else if (host instanceof GayBerneParticle) {
-			((GayBerneParticle) host).storeCurrentState();
-		}
+		HostStateManager.storeCurrentState(host);
 	}
 
 	public void restoreState() {
@@ -129,21 +115,7 @@ public class LineComponent extends AbstractLine implements ModelComponent, Layer
 			return;
 		setEndPoint1(savedX1, savedY1);
 		setEndPoint2(savedX2, savedY2);
-		if (host instanceof Atom) {
-			((Atom) host).restoreState();
-		}
-		else if (host instanceof RadialBond) {
-			if (model instanceof MolecularModel) {
-				Molecule m = ((MolecularModel) model).molecules.getMolecule((RadialBond) host);
-				m.restoreState();
-			}
-		}
-		else if (host instanceof RectangularObstacle) {
-			((RectangularObstacle) host).restoreState();
-		}
-		else if (host instanceof GayBerneParticle) {
-			((GayBerneParticle) host).restoreState();
-		}
+		HostStateManager.restoreState(host);
 	}
 
 	/** TODO */
