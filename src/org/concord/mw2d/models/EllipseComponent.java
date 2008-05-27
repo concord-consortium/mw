@@ -106,6 +106,9 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 		else if (host instanceof RectangularObstacle) {
 			((RectangularObstacle) host).storeCurrentState();
 		}
+		else if (host instanceof GayBerneParticle) {
+			((GayBerneParticle) host).storeCurrentState();
+		}
 	}
 
 	public void restoreState() {
@@ -123,6 +126,9 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 		}
 		else if (host instanceof RectangularObstacle) {
 			((RectangularObstacle) host).restoreState();
+		}
+		else if (host instanceof GayBerneParticle) {
+			((GayBerneParticle) host).restoreState();
 		}
 	}
 

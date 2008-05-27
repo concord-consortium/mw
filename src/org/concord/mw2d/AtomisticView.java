@@ -1699,7 +1699,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			model.notifyChange();
 			if (!doNotFireUndoEvent) {
 				RectangularObstacle[] r2 = null;
-				if (obstacleRemoved) {
+				if (obstacleRemoved && obs != null) {
 					int n = obs.size();
 					if (n > 0) {
 						r2 = new RectangularObstacle[n];
@@ -1708,7 +1708,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 					}
 				}
 				Layered[] i2 = null;
-				if (layerRemoved) {
+				if (layerRemoved && lay != null) {
 					int n = lay.size();
 					if (n > 0) {
 						i2 = new Layered[n];
@@ -1717,7 +1717,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 					}
 				}
 				model.getUndoManager().undoableEditHappened(
-						new UndoableEditEvent(model, new UndoableDeletion(UndoAction.BLOCK_REMOVE, atomRemoved ? list
+						new UndoableEditEvent(model, new UndoableDeletion(UndoAction.BLOCK_REMOVE, list != null ? list
 								.size() : 0, r2, i2)));
 				updateUndoUIComponents();
 			}
@@ -4297,7 +4297,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 							if (a1 == null) {
 								a1 = at;
 							}
-							else if (a2 == null) {
+							else {
 								a2 = at;
 								break;
 							}
@@ -4361,7 +4361,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 							if (a1 == null) {
 								a1 = at;
 							}
-							else if (a2 == null) {
+							else {
 								a2 = at;
 								break;
 							}

@@ -119,6 +119,9 @@ public class LineComponent extends AbstractLine implements ModelComponent, Layer
 		else if (host instanceof RectangularObstacle) {
 			((RectangularObstacle) host).storeCurrentState();
 		}
+		else if (host instanceof GayBerneParticle) {
+			((GayBerneParticle) host).storeCurrentState();
+		}
 	}
 
 	public void restoreState() {
@@ -137,6 +140,9 @@ public class LineComponent extends AbstractLine implements ModelComponent, Layer
 		}
 		else if (host instanceof RectangularObstacle) {
 			((RectangularObstacle) host).restoreState();
+		}
+		else if (host instanceof GayBerneParticle) {
+			((GayBerneParticle) host).restoreState();
 		}
 	}
 
