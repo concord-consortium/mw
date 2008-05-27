@@ -5019,7 +5019,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 							errorReminder.show(ErrorReminder.OBJECT_OVERLAP);
 					}
 					else if (host instanceof RadialBond) {
-						b = finalizeMoleculeLocation(molecules.getMolecule((RadialBond) host));
+						b = finalizeMoleculeLocation(((RadialBond) host).getMolecule());
 					}
 					else if (host instanceof RectangularObstacle) {
 						b = finalizeObstacleLocation((RectangularObstacle) host);
@@ -5359,7 +5359,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		}
 		else if (host instanceof RadialBond) {
 			RadialBond rBond = (RadialBond) host;
-			Molecule m = molecules.getMolecule(rBond);
+			Molecule m = rBond.getMolecule();
 			m.translateBondCenterTo(rBond, x, y);
 			boundary.setRBC(m);
 			refreshForces();

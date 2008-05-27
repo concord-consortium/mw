@@ -29,7 +29,6 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -45,8 +44,8 @@ public class Molecule implements ModelComponent {
 	private final static Color DARK_GREEN = new Color(0x99cc00);
 
 	List<Atom> atoms;
-	private Map<Atom, Double> savedCRD;
-	private Point2D savedCOM;
+	private Map<Atom, Point2D.Double> savedCRD;
+	private Point2D savedCenter;
 	private boolean visible = true, marked;
 	private boolean selected, blinking;
 	private MolecularTorque torque;
@@ -58,13 +57,13 @@ public class Molecule implements ModelComponent {
 	 * The graphical handle that the user can grab to rotate this molecule. If null, no graphics associated with this
 	 * method will be displayed.
 	 */
-	static Rectangle2D rotateRect;
+	static Rectangle2D.Double rotateRect;
 
 	/*
 	 * The graphical components for rotating this molecule. If null, no graphics associated with this method will be
 	 * displayed.
 	 */
-	static Line2D[] rotateCrossLine;
+	static Line2D.Double[] rotateCrossLine;
 
 	public Molecule() {
 		super();
@@ -72,7 +71,7 @@ public class Molecule implements ModelComponent {
 		if (rotateRect == null)
 			rotateRect = new Rectangle2D.Double();
 		if (rotateCrossLine == null)
-			rotateCrossLine = new Line2D[] { new Line2D.Double(), new Line2D.Double() };
+			rotateCrossLine = new Line2D.Double[] { new Line2D.Double(), new Line2D.Double() };
 	}
 
 	public void addAtom(Atom a) {
@@ -382,9 +381,9 @@ public class Molecule implements ModelComponent {
 	}
 
 	public void storeCurrentState() {
-		savedCOM = getCenterOfMass2D();
+		savedCenter = getCenterOfMass2D();
 		if (savedCRD == null) {
-			savedCRD = new HashMap<Atom, Double>();
+			savedCRD = new HashMap<Atom, Point2D.Double>();
 		}
 		else {
 			savedCRD.clear();
@@ -483,25 +482,24 @@ public class Molecule implements ModelComponent {
 	 *            the x coordinate of the hot spot
 	 * @param y
 	 *            the y coordinate of the hot spot
-	 * @return the rotation angle
 	 */
-	public double rotateTo(int x, int y) {
+	public void rotateTo(int x, int y) {
 
-		if (savedCOM == null)
-			savedCOM = getCenterOfMass2D();
+		if (savedCenter == null)
+			savedCenter = getCenterOfMass2D();
 
-		double dx = x - savedCOM.getX();
-		double dy = y - savedCOM.getY();
+		double dx = x - savedCenter.getX();
+		double dy = y - savedCenter.getY();
 		double distance = Math.hypot(dx, dy);
 		if (distance < 1.0)
-			return 0.0;
+			return;
 
 		double costheta = dx / distance;
 		double sintheta = dy / distance;
-		x = (int) (savedCOM.getX() + 60.0 * costheta);
-		y = (int) (savedCOM.getY() + 60.0 * sintheta);
+		x = (int) (savedCenter.getX() + 60.0 * costheta);
+		y = (int) (savedCenter.getY() + 60.0 * sintheta);
 		rotateRect.setRect(x - 4, y - 4, 8, 8);
-		rotateCrossLine[0].setLine(savedCOM.getX(), savedCOM.getY(), x, y);
+		rotateCrossLine[0].setLine(savedCenter.getX(), savedCenter.getY(), x, y);
 		rotateCrossLine[1].setLine(x - 10.0 * sintheta, y + 10.0 * costheta, x + 10.0 * sintheta, y - 10.0 * costheta);
 		costheta = -costheta;
 		sintheta = -sintheta;
@@ -520,19 +518,17 @@ public class Molecule implements ModelComponent {
 					oldX = oldPoint.getX();
 					oldY = oldPoint.getY();
 				}
-				dx = oldX - savedCOM.getX();
-				dy = oldY - savedCOM.getY();
+				dx = oldX - savedCenter.getX();
+				dy = oldY - savedCenter.getY();
 				distance = Math.hypot(dx, dy);
 				if (distance > 0.1) {
 					costheta0 = dx / distance;
 					sintheta0 = dy / distance;
-					at.rx = savedCOM.getX() + distance * (costheta * costheta0 - sintheta * sintheta0);
-					at.ry = savedCOM.getY() + distance * (costheta * sintheta0 + sintheta * costheta0);
+					at.rx = savedCenter.getX() + distance * (costheta * costheta0 - sintheta * sintheta0);
+					at.ry = savedCenter.getY() + distance * (costheta * sintheta0 + sintheta * costheta0);
 				}
 			}
 		}
-
-		return Math.acos(costheta);
 
 	}
 
@@ -544,8 +540,8 @@ public class Molecule implements ModelComponent {
 	 */
 	public void rotateBy(double angle) {
 
-		if (savedCOM == null)
-			savedCOM = getCenterOfMass2D();
+		if (savedCenter == null)
+			savedCenter = getCenterOfMass2D();
 
 		double costheta = Math.cos(angle);
 		double sintheta = Math.sin(angle);
@@ -563,14 +559,14 @@ public class Molecule implements ModelComponent {
 					oldX = oldPoint.getX();
 					oldY = oldPoint.getY();
 				}
-				dx = oldX - savedCOM.getX();
-				dy = oldY - savedCOM.getY();
+				dx = oldX - savedCenter.getX();
+				dy = oldY - savedCenter.getY();
 				distance = Math.hypot(dx, dy);
 				if (distance > 0.1) {
 					costheta0 = dx / distance;
 					sintheta0 = dy / distance;
-					at.rx = savedCOM.getX() + distance * (costheta * costheta0 - sintheta * sintheta0);
-					at.ry = savedCOM.getY() + distance * (costheta * sintheta0 + sintheta * costheta0);
+					at.rx = savedCenter.getX() + distance * (costheta * costheta0 - sintheta * sintheta0);
+					at.ry = savedCenter.getY() + distance * (costheta * sintheta0 + sintheta * costheta0);
 				}
 			}
 		}
