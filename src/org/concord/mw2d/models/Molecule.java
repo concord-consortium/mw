@@ -45,6 +45,7 @@ public class Molecule implements ModelComponent {
 
 	List<Atom> atoms;
 	private Map<Atom, Point2D.Double> savedCRD;
+	private double savedHandleX, savedHandleY;
 	private Point2D savedCenter;
 	private boolean visible = true, marked;
 	private boolean selected, blinking;
@@ -392,6 +393,10 @@ public class Molecule implements ModelComponent {
 			for (Atom a : atoms)
 				savedCRD.put(a, new Point2D.Double(a.getRx(), a.getRy()));
 		}
+		if (selected) {
+			savedHandleX = rotateCrossLine[0].x2;
+			savedHandleY = rotateCrossLine[0].y2;
+		}
 	}
 
 	public void restoreState() {
@@ -484,6 +489,82 @@ public class Molecule implements ModelComponent {
 	 *            the y coordinate of the hot spot
 	 */
 	public void rotateTo(int x, int y) {
+
+		if (savedCenter == null)
+			savedCenter = getCenterOfMass2D();
+
+		double dx = x - savedCenter.getX();
+		double dy = y - savedCenter.getY();
+		double distance = Math.hypot(dx, dy);
+		if (distance < 1.0)
+			return;
+
+		double sintheta0 = 0, costheta0 = 0;
+		boolean b = false;
+		if (savedHandleX != 0 && savedHandleY != 0) {
+			costheta0 = savedHandleX - savedCenter.getX();
+			sintheta0 = savedHandleY - savedCenter.getY();
+			double r = Math.hypot(costheta0, sintheta0);
+			costheta0 /= r;
+			sintheta0 /= r;
+			b = true;
+		}
+
+		double costheta = dx / distance;
+		double sintheta = dy / distance;
+		x = (int) (savedCenter.getX() + 60.0 * costheta);
+		y = (int) (savedCenter.getY() + 60.0 * sintheta);
+		rotateRect.setRect(x - 4, y - 4, 8, 8);
+		rotateCrossLine[0].setLine(savedCenter.getX(), savedCenter.getY(), x, y);
+		rotateCrossLine[1].setLine(x - 10.0 * sintheta, y + 10.0 * costheta, x + 10.0 * sintheta, y - 10.0 * costheta);
+
+		if (b) {
+			double c = costheta0 * costheta + sintheta0 * sintheta;
+			double s = sintheta0 * costheta - costheta0 * sintheta;
+			costheta = c;
+			sintheta = s;
+		}
+		else {
+			costheta = -costheta;
+			sintheta = -sintheta;
+		}
+
+		Point2D oldPoint;
+		double oldX, oldY;
+		synchronized (atoms) {
+			for (Atom at : atoms) {
+				if (savedCRD == null || savedCRD.isEmpty()) {
+					oldX = at.rx;
+					oldY = at.ry;
+				}
+				else {
+					oldPoint = savedCRD.get(at);
+					oldX = oldPoint.getX();
+					oldY = oldPoint.getY();
+				}
+				dx = oldX - savedCenter.getX();
+				dy = oldY - savedCenter.getY();
+				distance = Math.hypot(dx, dy);
+				if (distance > 0.1) {
+					costheta0 = dx / distance;
+					sintheta0 = dy / distance;
+					at.rx = savedCenter.getX() + distance * (costheta * costheta0 + sintheta * sintheta0);
+					at.ry = savedCenter.getY() + distance * (costheta * sintheta0 - sintheta * costheta0);
+				}
+			}
+		}
+
+	}
+
+	/**
+	 * rotate this molecule such that it points to a specified point (usually the mouse cursor).
+	 * 
+	 * @param x
+	 *            the x coordinate of the hot spot
+	 * @param y
+	 *            the y coordinate of the hot spot
+	 */
+	public void rotateTo2(int x, int y) {
 
 		if (savedCenter == null)
 			savedCenter = getCenterOfMass2D();
