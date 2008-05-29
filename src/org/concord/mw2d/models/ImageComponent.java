@@ -28,6 +28,7 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Stroke;
 import java.awt.Toolkit;
+import java.awt.geom.Ellipse2D;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -50,6 +51,10 @@ import org.concord.mw2d.ViewAttribute;
 
 public class ImageComponent implements ModelComponent, Layered {
 
+	/* the handles to rotate this particle */
+	private static Ellipse2D.Float[] rotc = { new Ellipse2D.Float(), new Ellipse2D.Float(), new Ellipse2D.Float(),
+			new Ellipse2D.Float() };
+
 	private GifDecoder gifDecoder;
 	private boolean selected, blinking, marked;
 	private int layer = FRONT;
@@ -65,6 +70,7 @@ public class ImageComponent implements ModelComponent, Layered {
 	private long previousFrameTime, currentTime;
 	private String address;
 	private ModelComponent host;
+	private boolean selectedToRotate;
 
 	public ImageComponent(String address) throws IOException {
 		if (address == null)
@@ -189,6 +195,17 @@ public class ImageComponent implements ModelComponent, Layered {
 		return true;
 	}
 
+	public boolean isSelectedToRotate() {
+		return selectedToRotate;
+	}
+
+	public void setSelectedToRotate(boolean b) {
+		selectedToRotate = b;
+		if (b) {
+			locateCircles();
+		}
+	}
+
 	/** set a model component this image should tag after */
 	public void setHost(ModelComponent mc) {
 		if (mc != null)
@@ -274,6 +291,7 @@ public class ImageComponent implements ModelComponent, Layered {
 		int n = images.length;
 		if (n <= 0)
 			return;
+		Graphics2D g2 = (Graphics2D) g;
 		if (host != null)
 			setLocation(host.getRx() - 0.5 * getLogicalScreenWidth(), host.getRy() - 0.5 * getLogicalScreenHeight());
 		double xc = 0, yc = 0;
@@ -285,26 +303,35 @@ public class ImageComponent implements ModelComponent, Layered {
 		if (hasAngle) {
 			xc = x + getLogicalScreenWidth() * 0.5;
 			yc = y + getLogicalScreenHeight() * 0.5;
-			((Graphics2D) g).rotate(a, xc, yc);
+			g2.rotate(a, xc, yc);
 		}
 		if (n == 1) {
 			if (images[0] != null)
-				g.drawImage(images[0], (int) x, (int) y, null);
+				g2.drawImage(images[0], (int) x, (int) y, null);
 		}
 		else {
-			g.drawImage(images[frameCounter < n ? frameCounter : n - 1], (int) getXFrame(), (int) getYFrame(), null);
+			g2.drawImage(images[frameCounter < n ? frameCounter : n - 1], (int) getXFrame(), (int) getYFrame(), null);
 		}
 		if (selected && ((MDView) model.getView()).getShowSelectionHalo()) {
-			Stroke oldStroke = ((Graphics2D) g).getStroke();
-			Color oldColor = g.getColor();
-			g.setColor(((MDView) model.getView()).contrastBackground());
-			((Graphics2D) g).setStroke(ViewAttribute.THIN_DASHED);
-			g.drawRect((int) (getXFrame() - 2), (int) (getYFrame() - 2), getWidth() + 4, getHeight() + 4);
-			g.setColor(oldColor);
-			((Graphics2D) g).setStroke(oldStroke);
+			Stroke oldStroke = g2.getStroke();
+			Color oldColor = g2.getColor();
+			g2.setColor(((MDView) model.getView()).contrastBackground());
+			g2.setStroke(ViewAttribute.THIN_DASHED);
+			g2.drawRect((int) (getXFrame() - 2), (int) (getYFrame() - 2), getWidth() + 4, getHeight() + 4);
+			if (selectedToRotate) {
+				g2.setStroke(ViewAttribute.THIN);
+				g2.setColor(Color.green);
+				for (Ellipse2D i : rotc)
+					g2.fill(i);
+				g2.setColor(((MDView) model.getView()).contrastBackground());
+				for (Ellipse2D i : rotc)
+					g2.draw(i);
+			}
+			g2.setColor(oldColor);
+			g2.setStroke(oldStroke);
 		}
 		if (hasAngle) {
-			((Graphics2D) g).rotate(-a, xc, yc);
+			g2.rotate(-a, xc, yc);
 		}
 	}
 
@@ -358,16 +385,6 @@ public class ImageComponent implements ModelComponent, Layered {
 	public void setLocation(double x, double y) {
 		this.x = x;
 		this.y = y;
-	}
-
-	/** same as <code>setLocation(double, double)</code> */
-	public void translateTo(double x, double y) {
-		setLocation(x, y);
-	}
-
-	public void translateBy(double dx, double dy) {
-		x += dx;
-		y += dy;
 	}
 
 	/** return the location of this image */
@@ -442,6 +459,102 @@ public class ImageComponent implements ModelComponent, Layered {
 		if (gifDecoder == null)
 			return 0;
 		return gifDecoder.getLogicalScreenHeight();
+	}
+
+	/** same as <code>setLocation(double, double)</code> */
+	public void translateTo(double x, double y) {
+		setLocation(x, y);
+	}
+
+	public void translateBy(double dx, double dy) {
+		x += dx;
+		y += dy;
+	}
+
+	public int getRotationHandle(int x, int y) {
+		for (int i = 0; i < rotc.length; i++) {
+			if (rotc[i].contains(x, y))
+				return i;
+		}
+		return -1;
+	}
+
+	/**
+	 * rotate to a given direction specified by the position.
+	 * 
+	 * @param px
+	 *            the x coordinate of the hot spot
+	 * @param py
+	 *            the y coordinate of the hot spot
+	 * @param handle
+	 *            the index of one of the four handles
+	 */
+	public void rotateTo(int px, int py, int handle) {
+		double w2 = getLogicalScreenWidth() * 0.5;
+		double h2 = getLogicalScreenHeight() * 0.5;
+		double rx = x + w2;
+		double ry = y + h2;
+		double distance = Math.hypot(rx - px, ry - py);
+		double theta = (px - rx) / distance;
+		theta = py > ry ? Math.acos(theta) : 2.0 * Math.PI - Math.acos(theta);
+		double theta0;
+		switch (handle) {
+		case 0:
+			rx = w2;
+			ry = h2;
+			break;
+		case 1:
+			rx = -w2;
+			ry = h2;
+			break;
+		case 2:
+			rx = -w2;
+			ry = -h2;
+			break;
+		case 3:
+			rx = w2;
+			ry = -h2;
+			break;
+		}
+		distance = Math.hypot(rx, ry);
+		theta0 = rx / distance;
+		theta0 = ry > 0.0 ? Math.acos(theta0) : 2.0 * Math.PI - Math.acos(theta0);
+		setAngle((float) (theta - theta0));
+		locateCircles();
+		model.getView().repaint();
+	}
+
+	private void locateCircles() {
+		double cosTheta = Math.cos(angle);
+		double sinTheta = Math.sin(angle);
+		double w2 = getLogicalScreenWidth() * 0.5;
+		double h2 = getLogicalScreenHeight() * 0.5;
+		double rx = x + w2;
+		double ry = y + h2;
+		/* southeast circle */
+		double xold = w2;
+		double yold = h2;
+		double xpos = rx + xold * cosTheta - yold * sinTheta;
+		double ypos = ry + xold * sinTheta + yold * cosTheta;
+		rotc[0].setFrame(xpos - 3, ypos - 3, 6, 6);
+		/* southwest circle */
+		xold = -w2;
+		yold = h2;
+		xpos = rx + xold * cosTheta - yold * sinTheta;
+		ypos = ry + xold * sinTheta + yold * cosTheta;
+		rotc[1].setFrame(xpos - 3, ypos - 3, 6, 6);
+		/* northwest circle */
+		xold = -w2;
+		yold = -h2;
+		xpos = rx + xold * cosTheta - yold * sinTheta;
+		ypos = ry + xold * sinTheta + yold * cosTheta;
+		rotc[2].setFrame(xpos - 3, ypos - 3, 6, 6);
+		/* northeast circle */
+		xold = w2;
+		yold = -h2;
+		xpos = rx + xold * cosTheta - yold * sinTheta;
+		ypos = ry + xold * sinTheta + yold * cosTheta;
+		rotc[3].setFrame(xpos - 3, ypos - 3, 6, 6);
 	}
 
 	public void setSelected(boolean b) {
