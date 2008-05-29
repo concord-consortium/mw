@@ -721,6 +721,16 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			}
 			break;
 		}
+		if (actionID == ROTA_ID) {
+			if (selectedComponent instanceof ImageComponent) {
+				((ImageComponent) selectedComponent).setSelectedToRotate(true);
+			}
+		}
+		else {
+			if (selectedComponent instanceof ImageComponent) {
+				((ImageComponent) selectedComponent).setSelectedToRotate(false);
+			}
+		}
 		resetAddObjectIndicator();
 		if (actionID != VELO_ID)
 			selectVelocity(null);

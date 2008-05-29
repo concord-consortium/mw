@@ -166,6 +166,7 @@ public abstract class MDView extends PrintableComponent {
 	 * collections such as bonds.
 	 */
 	boolean dragSelected;
+
 	boolean readyToAdjustVelocityVector;
 	boolean readyToAdjustDistanceVector;
 	int indexOfSelectedMeasurement = -1;
