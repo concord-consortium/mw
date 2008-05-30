@@ -496,44 +496,50 @@ public class ImageComponent implements ModelComponent, Layered, Rotatable {
 	 *            the index of one of the four handles
 	 */
 	public void rotateTo(int px, int py, int handle) {
-		double w2 = getLogicalScreenWidth() * 0.5;
-		double h2 = getLogicalScreenHeight() * 0.5;
-		double rx = x + w2;
-		double ry = y + h2;
-		double distance = Math.hypot(rx - px, ry - py);
-		double theta = (px - rx) / distance;
-		theta = py > ry ? Math.acos(theta) : 2.0 * Math.PI - Math.acos(theta);
-		double theta0;
-		switch (handle) {
-		case 0:
-			rx = w2;
-			ry = h2;
-			break;
-		case 1:
-			rx = -w2;
-			ry = h2;
-			break;
-		case 2:
-			rx = -w2;
-			ry = -h2;
-			break;
-		case 3:
-			rx = w2;
-			ry = -h2;
-			break;
+		if (host instanceof RadialBond) {
+			Molecule m = ((RadialBond) host).getMolecule();
+			m.rotateTo(px, py, handle);
 		}
-		distance = Math.hypot(rx, ry);
-		theta0 = rx / distance;
-		theta0 = ry > 0.0 ? Math.acos(theta0) : 2.0 * Math.PI - Math.acos(theta0);
-		theta0 += offsetAngle;
-		setAngle((float) (theta - theta0));
+		else {
+			double w2 = getLogicalScreenWidth() * 0.5;
+			double h2 = getLogicalScreenHeight() * 0.5;
+			double rx = x + w2;
+			double ry = y + h2;
+			double distance = Math.hypot(rx - px, ry - py);
+			double theta = (px - rx) / distance;
+			theta = py > ry ? Math.acos(theta) : 2.0 * Math.PI - Math.acos(theta);
+			double theta0;
+			switch (handle) {
+			case 0:
+				rx = w2;
+				ry = h2;
+				break;
+			case 1:
+				rx = -w2;
+				ry = h2;
+				break;
+			case 2:
+				rx = -w2;
+				ry = -h2;
+				break;
+			case 3:
+				rx = w2;
+				ry = -h2;
+				break;
+			}
+			distance = Math.hypot(rx, ry);
+			theta0 = rx / distance;
+			theta0 = ry > 0.0 ? Math.acos(theta0) : 2.0 * Math.PI - Math.acos(theta0);
+			theta0 += offsetAngle;
+			setAngle((float) (theta - theta0));
+		}
 		locateRotationHandles();
 		model.getView().repaint();
 	}
 
 	private void locateRotationHandles() {
-		double cosTheta = Math.cos(angle + offsetAngle);
-		double sinTheta = Math.sin(angle + offsetAngle);
+		double cosTheta = Math.cos(host instanceof Rotatable ? angle : angle + offsetAngle);
+		double sinTheta = Math.sin(host instanceof Rotatable ? angle : angle + offsetAngle);
 		double w2 = getLogicalScreenWidth() * 0.5;
 		double h2 = getLogicalScreenHeight() * 0.5;
 		double rx = x + w2;
