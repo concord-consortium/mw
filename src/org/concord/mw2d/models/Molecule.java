@@ -39,7 +39,7 @@ import java.util.Map;
 import org.concord.mw2d.UserAction;
 import org.concord.mw2d.ViewAttribute;
 
-public class Molecule implements ModelComponent {
+public class Molecule implements ModelComponent, Rotatable {
 
 	private final static Color DARK_GREEN = new Color(0x99cc00);
 
@@ -51,6 +51,7 @@ public class Molecule implements ModelComponent {
 	private boolean selected, blinking;
 	private MolecularTorque torque;
 	private double xCenter, yCenter;
+	private boolean selectedToRotate;
 
 	MolecularModel model;
 
@@ -242,7 +243,7 @@ public class Molecule implements ModelComponent {
 	public void setSelected(boolean b) {
 		selected = b;
 		if (b) {
-			setRect();
+			locateRotationHandles();
 			model.view.setSelectedComponent(this);
 		}
 	}
@@ -370,12 +371,24 @@ public class Molecule implements ModelComponent {
 		}
 	}
 
-	public boolean isRotationHandleSelected(int x, int y) {
-		return rotateRect.contains(x, y);
+	public int getRotationHandle(int x, int y) {
+		return rotateRect.contains(x, y) ? 0 : -1;
 	}
 
-	private void setRect() {
+	public boolean isSelectedToRotate() {
+		return selectedToRotate;
+	}
+
+	public void setSelectedToRotate(boolean b) {
+		selectedToRotate = b;
+		if (b)
+			locateRotationHandles();
+	}
+
+	private void locateRotationHandles() {
 		Point com = getCenterOfMass();
+		if (com.x == Math.round(rotateCrossLine[0].x1) && com.y == Math.round(rotateCrossLine[0].y1))
+			return;
 		rotateRect.setRect(com.x - 64, com.y - 4, 8, 8);
 		rotateCrossLine[0].setLine(com.x, com.y, com.x - 60, com.y);
 		rotateCrossLine[1].setLine(com.x - 60, com.y - 10, com.x - 60, com.y + 10);
@@ -487,8 +500,10 @@ public class Molecule implements ModelComponent {
 	 *            the x coordinate of the hot spot
 	 * @param y
 	 *            the y coordinate of the hot spot
+	 * @param handle
+	 *            the index of the handle (0 for now, as there is only one handle)
 	 */
-	public void rotateTo(int x, int y) {
+	public void rotateTo(int x, int y, int handle) {
 
 		if (savedCenter == null)
 			savedCenter = getCenterOfMass2D();

@@ -49,7 +49,7 @@ import org.concord.mw2d.ViewAttribute;
  * @author Charles Xie
  */
 
-public class ImageComponent implements ModelComponent, Layered {
+public class ImageComponent implements ModelComponent, Layered, Rotatable {
 
 	/* the handles to rotate this particle */
 	private static Ellipse2D.Float[] rotc = { new Ellipse2D.Float(), new Ellipse2D.Float(), new Ellipse2D.Float(),
@@ -202,7 +202,7 @@ public class ImageComponent implements ModelComponent, Layered {
 	public void setSelectedToRotate(boolean b) {
 		selectedToRotate = b;
 		if (b) {
-			locateCircles();
+			locateRotationHandles();
 		}
 	}
 
@@ -312,26 +312,30 @@ public class ImageComponent implements ModelComponent, Layered {
 		else {
 			g2.drawImage(images[frameCounter < n ? frameCounter : n - 1], (int) getXFrame(), (int) getYFrame(), null);
 		}
-		if (selected && ((MDView) model.getView()).getShowSelectionHalo()) {
+		if (selected && !selectedToRotate && ((MDView) model.getView()).getShowSelectionHalo()) {
 			Stroke oldStroke = g2.getStroke();
 			Color oldColor = g2.getColor();
 			g2.setColor(((MDView) model.getView()).contrastBackground());
 			g2.setStroke(ViewAttribute.THIN_DASHED);
 			g2.drawRect((int) (getXFrame() - 2), (int) (getYFrame() - 2), getWidth() + 4, getHeight() + 4);
-			if (selectedToRotate) {
-				g2.setStroke(ViewAttribute.THIN);
-				g2.setColor(Color.green);
-				for (Ellipse2D i : rotc)
-					g2.fill(i);
-				g2.setColor(((MDView) model.getView()).contrastBackground());
-				for (Ellipse2D i : rotc)
-					g2.draw(i);
-			}
 			g2.setColor(oldColor);
 			g2.setStroke(oldStroke);
 		}
 		if (hasAngle) {
 			g2.rotate(-a, xc, yc);
+		}
+		if (selected && selectedToRotate && ((MDView) model.getView()).getShowSelectionHalo()) {
+			Stroke oldStroke = g2.getStroke();
+			Color oldColor = g2.getColor();
+			g2.setStroke(ViewAttribute.THIN);
+			g2.setColor(Color.green);
+			for (Ellipse2D i : rotc)
+				g2.fill(i);
+			g2.setColor(((MDView) model.getView()).contrastBackground());
+			for (Ellipse2D i : rotc)
+				g2.draw(i);
+			g2.setColor(oldColor);
+			g2.setStroke(oldStroke);
 		}
 	}
 
@@ -520,11 +524,11 @@ public class ImageComponent implements ModelComponent, Layered {
 		theta0 = rx / distance;
 		theta0 = ry > 0.0 ? Math.acos(theta0) : 2.0 * Math.PI - Math.acos(theta0);
 		setAngle((float) (theta - theta0));
-		locateCircles();
+		locateRotationHandles();
 		model.getView().repaint();
 	}
 
-	private void locateCircles() {
+	private void locateRotationHandles() {
 		double cosTheta = Math.cos(angle);
 		double sinTheta = Math.sin(angle);
 		double w2 = getLogicalScreenWidth() * 0.5;

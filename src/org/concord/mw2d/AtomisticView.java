@@ -111,6 +111,7 @@ import org.concord.mw2d.models.ReactionModel;
 import org.concord.mw2d.models.RectangleComponent;
 import org.concord.mw2d.models.RectangularBoundary;
 import org.concord.mw2d.models.RectangularObstacle;
+import org.concord.mw2d.models.Rotatable;
 import org.concord.mw2d.models.TextBoxComponent;
 import org.concord.mw2d.models.TriatomicMolecule;
 import org.concord.mw2d.models.UserField;
@@ -159,8 +160,8 @@ public class AtomisticView extends MDView implements BondChangeListener {
 	private AtomMutationPopupMenu atomMutationPopupMenu;
 
 	/* action accessories */
+	private int rotationHandle = -1;
 	private boolean restoreMolecule;
-	private boolean readyToRotate;
 	boolean bondBeingMade, bendBeingMade;
 	private long keyPressedTime;
 	private Ellipse2D.Float addAtomIndicator = new Ellipse2D.Float();
@@ -708,27 +709,20 @@ public class AtomisticView extends MDView implements BondChangeListener {
 
 	public void setAction(short id) {
 		super.setAction(id);
-		switch (actionID) {
-		case DELE_ID:
+		if (actionID == DELE_ID) {
 			if (selectedComponent != null) {
 				selectedComponent.setSelected(false);
 				selectedComponent = null;
 			}
-			break;
-		case ROTA_ID:
-			if (selectedComponent instanceof Molecule) {
-				selectedComponent.setSelected(true); // calling this just to set the rotation handles
-			}
-			break;
 		}
 		if (actionID == ROTA_ID) {
-			if (selectedComponent instanceof ImageComponent) {
-				((ImageComponent) selectedComponent).setSelectedToRotate(true);
+			if (selectedComponent instanceof Rotatable) {
+				((Rotatable) selectedComponent).setSelectedToRotate(true);
 			}
 		}
 		else {
-			if (selectedComponent instanceof ImageComponent) {
-				((ImageComponent) selectedComponent).setSelectedToRotate(false);
+			if (selectedComponent instanceof Rotatable) {
+				((Rotatable) selectedComponent).setSelectedToRotate(false);
 			}
 		}
 		resetAddObjectIndicator();
@@ -1764,7 +1758,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 
 	public Molecule whichMolecule(int x, int y) {
 		if (selectedComponent instanceof Molecule)
-			if (actionID == ROTA_ID && ((Molecule) selectedComponent).isRotationHandleSelected(x, y))
+			if (actionID == ROTA_ID && ((Molecule) selectedComponent).getRotationHandle(x, y) != -1)
 				return (Molecule) selectedComponent;
 		Atom at = whichAtom(x, y);
 		if (at == null)
@@ -2103,28 +2097,33 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		return true;
 	}
 
-	private boolean finalizeMoleculeRotation() {
-		if (!(selectedComponent instanceof Molecule))
-			throw new RuntimeException("The selected component is not a molecule");
-		/* check if atoms are out of bound */
-		Molecule mol = (Molecule) selectedComponent;
-		Atom at;
-		synchronized (mol.getSynchronizedLock()) {
-			for (Iterator it = mol.iterator(); it.hasNext();) {
-				at = (Atom) it.next();
-				if (!boundary.contains(at.getRx(), at.getRy())) {
-					errorReminder.show(ErrorReminder.OUT_OF_BOUND);
-					mol.restoreState();
-					repaint();
-					return false;
+	private boolean finalizeRotation() {
+		if (!(selectedComponent instanceof Rotatable))
+			throw new RuntimeException("The selected component is not rotatable");
+		if (selectedComponent instanceof Molecule) {
+			/* check if atoms are out of bound */
+			Molecule mol = (Molecule) selectedComponent;
+			Atom at;
+			synchronized (mol.getSynchronizedLock()) {
+				for (Iterator it = mol.iterator(); it.hasNext();) {
+					at = (Atom) it.next();
+					if (!boundary.contains(at.getRx(), at.getRy())) {
+						errorReminder.show(ErrorReminder.OUT_OF_BOUND);
+						mol.restoreState();
+						repaint();
+						return false;
+					}
 				}
 			}
+			if (intersects(mol)) {
+				errorReminder.show(ErrorReminder.OBJECT_OVERLAP);
+				mol.restoreState();
+				repaint();
+				return false;
+			}
 		}
-		if (intersects(mol)) {
-			errorReminder.show(ErrorReminder.OBJECT_OVERLAP);
-			mol.restoreState();
-			repaint();
-			return false;
+		else if (selectedComponent instanceof ImageComponent) {
+
 		}
 		return true;
 	}
@@ -2171,12 +2170,19 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		return list;
 	}
 
-	private boolean selectMolecule(int x, int y) {
+	private boolean selectRotatable(int x, int y) {
 		Molecule mol = whichMolecule(x, y);
 		if (mol == null)
 			mol = whichMolecularObject(x, y);
 		if (mol != null) {
 			mol.setSelected(true);
+			return true;
+		}
+		ModelComponent mc = whichLayeredComponent(x, y);
+		if (mc instanceof Rotatable) {
+			setSelectedComponent(mc);
+			mc.setSelected(true);
+			((Rotatable) mc).setSelectedToRotate(true);
 			return true;
 		}
 		return false;
@@ -3895,23 +3901,24 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			break;
 
 		case ROTA_ID:
-			if (selectedComponent instanceof Molecule) {
-				if (((Molecule) selectedComponent).isRotationHandleSelected(x, y)) {
-					readyToRotate = true;
+			if (selectedComponent instanceof Rotatable) {
+				Rotatable r = (Rotatable) selectedComponent;
+				rotationHandle = r.getRotationHandle(x, y);
+				if (rotationHandle != -1) {
+					r.setSelectedToRotate(true);
 					setCursor(rotateCursor3);
 					selectedComponent.storeCurrentState();
 				}
 				else {
-					readyToRotate = false;
+					r.setSelectedToRotate(false);
 					setCursor(rotateCursor2);
-					showActionTip("Drag the small handle on the left of the selected molecule to rotate", x + 10,
-							y + 10);
-					selectMolecule(x, y);
+					showActionTip("Drag the small handle(s) of the selected object to rotate", x + 10, y + 10);
+					selectRotatable(x, y);
 				}
 			}
 			else {
 				showActionTip("Click to select an object to rotate", x + 10, y + 10);
-				selectMolecule(x, y);
+				selectRotatable(x, y);
 			}
 			repaint();
 			break;
@@ -4516,8 +4523,8 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			break;
 
 		case ROTA_ID:
-			if (selectedComponent instanceof Molecule) {
-				setCursor(((Molecule) selectedComponent).isRotationHandleSelected(x, y) ? rotateCursor1
+			if (selectedComponent instanceof Rotatable) {
+				setCursor(((Rotatable) selectedComponent).getRotationHandle(x, y) != -1 ? rotateCursor1
 						: previousCursor);
 			}
 			break;
@@ -4792,9 +4799,10 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			break;
 
 		case ROTA_ID:
-			if (selectedComponent instanceof Molecule) {
-				if (readyToRotate) {
-					((Molecule) selectedComponent).rotateTo(x, y);
+			if (selectedComponent instanceof Rotatable) {
+				Rotatable r = (Rotatable) selectedComponent;
+				if (r.isSelectedToRotate()) {
+					r.rotateTo(x, y, rotationHandle);
 					repaint();
 				}
 			}
@@ -5148,14 +5156,20 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			break;
 
 		case ROTA_ID:
-			if (readyToRotate) {
-				if (finalizeMoleculeRotation()) {
-					model.notifyChange();
-					readyToRotate = false;
-					if (selectedComponent != null && !doNotFireUndoEvent) {
-						model.getUndoManager().undoableEditHappened(
-								new UndoableEditEvent(model, new UndoableMoving(selectedComponent)));
-						updateUndoUIComponents();
+			if (selectedComponent instanceof Rotatable) {
+				if (rotationHandle >= 0) {
+					rotationHandle = -1;
+					Rotatable r = (Rotatable) selectedComponent;
+					if (r.isSelectedToRotate()) {
+						if (finalizeRotation()) {
+							model.notifyChange();
+							r.setSelectedToRotate(false);
+							if (selectedComponent != null && !doNotFireUndoEvent) {
+								model.getUndoManager().undoableEditHappened(
+										new UndoableEditEvent(model, new UndoableMoving(selectedComponent)));
+								updateUndoUIComponents();
+							}
+						}
 					}
 				}
 			}
