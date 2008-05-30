@@ -913,7 +913,7 @@ class Eval2D extends AbstractEval {
 				return true;
 		}
 
-		// script/source
+		// source
 		matcher = SOURCE.matcher(ci);
 		if (matcher.find()) {
 			if (evaluateSourceClause(ci.substring(matcher.end()).trim()))

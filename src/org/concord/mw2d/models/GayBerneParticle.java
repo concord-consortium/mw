@@ -177,7 +177,7 @@ public class GayBerneParticle extends UnitedAtom {
 		breadth = savedBreadth;
 		length = savedLength;
 		locateRects();
-		locateCircles();
+		locateRotationHandles();
 	}
 
 	public Rectangle2D getBounds2D() {
@@ -314,7 +314,7 @@ public class GayBerneParticle extends UnitedAtom {
 		super.setSelected(b);
 		if (b) {
 			locateRects();
-			locateCircles();
+			locateRotationHandles();
 			view.setSelectedComponent(this);
 		}
 	}
@@ -322,7 +322,7 @@ public class GayBerneParticle extends UnitedAtom {
 	public void setSelectedToRotate(boolean b) {
 		super.setSelectedToRotate(b);
 		if (b) {
-			locateCircles();
+			locateRotationHandles();
 			setSelectedToResize(false);
 		}
 	}
@@ -344,7 +344,7 @@ public class GayBerneParticle extends UnitedAtom {
 		ellipse.width = length;
 		if (selected) {
 			locateRects();
-			locateCircles();
+			locateRotationHandles();
 		}
 	}
 
@@ -357,7 +357,7 @@ public class GayBerneParticle extends UnitedAtom {
 		ellipse.height = breadth;
 		if (selected) {
 			locateRects();
-			locateCircles();
+			locateRotationHandles();
 		}
 	}
 
@@ -424,7 +424,7 @@ public class GayBerneParticle extends UnitedAtom {
 		return ellipse;
 	}
 
-	private void locateCircles() {
+	private void locateRotationHandles() {
 		double cosTheta = Math.cos(theta);
 		double sinTheta = Math.sin(theta);
 		/* southeast circle */
@@ -549,7 +549,7 @@ public class GayBerneParticle extends UnitedAtom {
 		theta0 = xold / distance;
 		theta0 = yold > 0.0 ? Math.acos(theta0) : 2.0 * Math.PI - Math.acos(theta0);
 		setTheta(theta - theta0);
-		locateCircles();
+		locateRotationHandles();
 		view.repaint();
 	}
 
