@@ -70,6 +70,7 @@ class AttachDialog extends JDialog {
 	private JList obstacleList;
 	private JList bondList;
 	private JRadioButton centerButton, endpoint1Button, endpoint2Button;
+	private IntegerTextField angleField;
 
 	AttachDialog(final MDModel model) {
 
@@ -127,6 +128,7 @@ class AttachDialog extends JDialog {
 			public void valueChanged(ListSelectionEvent e) {
 				if (particleList.hasFocus()) {
 					if (!e.getValueIsAdjusting()) {
+						angleField.setEnabled(true);
 						if (obstacleList != null)
 							obstacleList.clearSelection();
 						if (bondList != null)
@@ -158,6 +160,7 @@ class AttachDialog extends JDialog {
 				public void valueChanged(ListSelectionEvent e) {
 					if (bondList.hasFocus()) {
 						if (!e.getValueIsAdjusting()) {
+							angleField.setEnabled(true);
 							particleList.clearSelection();
 							if (obstacleList != null)
 								obstacleList.clearSelection();
@@ -187,6 +190,7 @@ class AttachDialog extends JDialog {
 				public void valueChanged(ListSelectionEvent e) {
 					if (obstacleList.hasFocus()) {
 						if (!e.getValueIsAdjusting()) {
+							angleField.setEnabled(true);
 							particleList.clearSelection();
 							if (bondList != null)
 								bondList.clearSelection();
@@ -276,8 +280,8 @@ class AttachDialog extends JDialog {
 			s = MDView.getInternationalText("OffsetAngle");
 			p.add(new JLabel((s != null ? s : "Offset Angle") + ":"));
 
-			final IntegerTextField angleField = new IntegerTextField((int) Math.toDegrees(ic.getOffsetAngle()), -180,
-					180, 6);
+			angleField = new IntegerTextField((int) Math.toDegrees(ic.getOffsetAngle()), -180, 180, 6);
+			angleField.setEnabled(false);
 			angleField.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					ic.setOffsetAngle((float) Math.toRadians(angleField.getValue()));
