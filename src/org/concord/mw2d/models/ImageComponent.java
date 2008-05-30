@@ -211,6 +211,8 @@ public class ImageComponent implements ModelComponent, Layered, Rotatable {
 		if (mc != null)
 			storeCurrentState();
 		host = mc;
+		if (host == null)
+			offsetAngle = 0;
 	}
 
 	/** get a model component this image will tag after */
@@ -523,14 +525,15 @@ public class ImageComponent implements ModelComponent, Layered, Rotatable {
 		distance = Math.hypot(rx, ry);
 		theta0 = rx / distance;
 		theta0 = ry > 0.0 ? Math.acos(theta0) : 2.0 * Math.PI - Math.acos(theta0);
+		theta0 += offsetAngle;
 		setAngle((float) (theta - theta0));
 		locateRotationHandles();
 		model.getView().repaint();
 	}
 
 	private void locateRotationHandles() {
-		double cosTheta = Math.cos(angle);
-		double sinTheta = Math.sin(angle);
+		double cosTheta = Math.cos(angle + offsetAngle);
+		double sinTheta = Math.sin(angle + offsetAngle);
 		double w2 = getLogicalScreenWidth() * 0.5;
 		double h2 = getLogicalScreenHeight() * 0.5;
 		double rx = x + w2;
