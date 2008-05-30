@@ -215,16 +215,6 @@ class AttachDialog extends JDialog {
 
 		container.add(box, BorderLayout.NORTH);
 
-		if (mc.getHost() instanceof Atom) {
-			particleList.setSelectedValue(mc.getHost(), true);
-		}
-		if (mc.getHost() instanceof RadialBond) {
-			bondList.setSelectedValue(mc.getHost(), true);
-		}
-		else if (mc.getHost() instanceof RectangularObstacle) {
-			obstacleList.setSelectedValue(mc.getHost(), true);
-		}
-
 		if (mc instanceof TextBoxComponent) {
 
 			final TextBoxComponent t = (TextBoxComponent) mc;
@@ -281,7 +271,6 @@ class AttachDialog extends JDialog {
 			p.add(new JLabel((s != null ? s : "Offset Angle") + ":"));
 
 			angleField = new IntegerTextField((int) Math.toDegrees(ic.getOffsetAngle()), -180, 180, 6);
-			angleField.setEnabled(false);
 			angleField.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					ic.setOffsetAngle((float) Math.toRadians(angleField.getValue()));
@@ -359,6 +348,26 @@ class AttachDialog extends JDialog {
 			bg.add(endpoint2Button);
 			p.add(endpoint2Button);
 
+		}
+
+		if (mc.getHost() instanceof Atom) {
+			particleList.setSelectedValue(mc.getHost(), true);
+			if (angleField != null)
+				angleField.setEnabled(true);
+		}
+		if (mc.getHost() instanceof RadialBond) {
+			bondList.setSelectedValue(mc.getHost(), true);
+			if (angleField != null)
+				angleField.setEnabled(true);
+		}
+		else if (mc.getHost() instanceof RectangularObstacle) {
+			obstacleList.setSelectedValue(mc.getHost(), true);
+			if (angleField != null)
+				angleField.setEnabled(true);
+		}
+		else {
+			if (angleField != null)
+				angleField.setEnabled(false);
 		}
 
 		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
