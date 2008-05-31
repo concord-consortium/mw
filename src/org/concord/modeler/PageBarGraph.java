@@ -42,7 +42,7 @@ import org.concord.modeler.util.DataQueue;
 import org.concord.modeler.util.FloatQueue;
 import org.concord.mw2d.models.MDModel;
 
-public class PageBarGraph extends BarGraph implements Embeddable, ModelCommunicator, MovieListener {
+public class PageBarGraph extends BarGraph implements Embeddable, Scriptable, ModelCommunicator, MovieListener {
 
 	public final static byte GROWING_POINT_RUNNING_AVERAGE = 0;
 	public final static byte SIMPLE_RUNNING_AVERAGE = 1;
@@ -64,6 +64,7 @@ public class PageBarGraph extends BarGraph implements Embeddable, ModelCommunica
 	private JPopupMenu popupMenu;
 	private static PageBarGraphMaker maker;
 	private MouseListener popupMouseListener;
+	private BarGraphScripter scripter;
 
 	public PageBarGraph() {
 		super();
@@ -110,6 +111,12 @@ public class PageBarGraph extends BarGraph implements Embeddable, ModelCommunica
 				m.getMovie().addMovieListener(this);
 		}
 		setChangable(page.isEditable());
+	}
+
+	public String runScript(String script) {
+		if (scripter == null)
+			scripter = new BarGraphScripter(this);
+		return scripter.runScript(script);
 	}
 
 	public void destroy() {
@@ -219,6 +226,10 @@ public class PageBarGraph extends BarGraph implements Embeddable, ModelCommunica
 
 	public void setInitialValue(double x) {
 		initialValue = x;
+	}
+
+	public double getInitialValue() {
+		return initialValue;
 	}
 
 	public void setAverageType(byte i) {

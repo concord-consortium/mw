@@ -3930,6 +3930,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 						msg = sendScript(token, PageTextBox.class);
 					else if (t0 == "colorbar")
 						msg = sendScript(token, IconWrapper.class);
+					else if (t0 == "bargraph")
+						msg = sendScript(token, PageBarGraph.class);
 					else if (t0 == "xygraph")
 						msg = sendScript(token, PageXYGraph.class);
 					else if (t0 == "energylevel")
