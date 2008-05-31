@@ -168,6 +168,8 @@ public class ImageComponent implements ModelComponent, Layered, Rotatable {
 		y = savedY;
 		angle = savedAngle;
 		HostStateManager.restoreState(host);
+		if (selectedToRotate)
+			locateRotationHandles();
 	}
 
 	/** TODO */

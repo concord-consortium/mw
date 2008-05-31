@@ -371,6 +371,10 @@ public class Molecule implements ModelComponent, Rotatable {
 		}
 	}
 
+	public double getAngle() {
+		return 0;
+	}
+
 	public int getRotationHandle(int x, int y) {
 		return rotateRect.contains(x, y) ? 0 : -1;
 	}
@@ -381,8 +385,6 @@ public class Molecule implements ModelComponent, Rotatable {
 
 	public void setSelectedToRotate(boolean b) {
 		selectedToRotate = b;
-		if (b)
-			locateRotationHandles();
 	}
 
 	private void locateRotationHandles() {

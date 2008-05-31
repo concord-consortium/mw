@@ -2103,27 +2103,40 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		if (selectedComponent instanceof Molecule) {
 			/* check if atoms are out of bound */
 			Molecule mol = (Molecule) selectedComponent;
-			Atom at;
-			synchronized (mol.getSynchronizedLock()) {
-				for (Iterator it = mol.iterator(); it.hasNext();) {
-					at = (Atom) it.next();
-					if (!boundary.contains(at.getRx(), at.getRy())) {
-						errorReminder.show(ErrorReminder.OUT_OF_BOUND);
-						mol.restoreState();
-						repaint();
-						return false;
-					}
-				}
-			}
-			if (intersects(mol)) {
-				errorReminder.show(ErrorReminder.OBJECT_OVERLAP);
-				mol.restoreState();
-				repaint();
-				return false;
-			}
+			return finalizeMoleculeRotation(mol);
 		}
 		else if (selectedComponent instanceof ImageComponent) {
+			ImageComponent ic = (ImageComponent) selectedComponent;
+			ModelComponent host = ic.getHost();
+			if (host instanceof RadialBond) {
+				Molecule mol = ((RadialBond) host).getMolecule();
+				boolean b = finalizeMoleculeRotation(mol);
+				if (!b)
+					ic.restoreState();
+				return b;
+			}
+		}
+		return true;
+	}
 
+	private boolean finalizeMoleculeRotation(Molecule mol) {
+		Atom at;
+		synchronized (mol.getSynchronizedLock()) {
+			for (Iterator it = mol.iterator(); it.hasNext();) {
+				at = (Atom) it.next();
+				if (!boundary.contains(at.getRx(), at.getRy())) {
+					errorReminder.show(ErrorReminder.OUT_OF_BOUND);
+					mol.restoreState();
+					repaint();
+					return false;
+				}
+			}
+		}
+		if (intersects(mol)) {
+			errorReminder.show(ErrorReminder.OBJECT_OVERLAP);
+			mol.restoreState();
+			repaint();
+			return false;
 		}
 		return true;
 	}
@@ -6134,42 +6147,55 @@ public class AtomisticView extends MDView implements BondChangeListener {
 	private class UndoableMoving extends AbstractUndoableEdit {
 
 		private ModelComponent mc;
-		private double x, y;
+		private double x, y, angle;
 		private String presentationName;
 		private Point2D redoCOM;
 		private Map<Atom, Point2D> redoCRD;
 
-		private void storeRedoState(Molecule mol) {
-			redoCOM = mol.getCenterOfMass2D();
-			if (redoCRD == null) {
-				redoCRD = new HashMap<Atom, Point2D>();
-			}
-			else {
-				redoCRD.clear();
-			}
-			Atom at;
-			synchronized (mol.getSynchronizedLock()) {
-				for (Iterator it = mol.iterator(); it.hasNext();) {
-					at = (Atom) it.next();
-					redoCRD.put(at, new Point2D.Double(at.getRx(), at.getRy()));
+		private void storeRedoState(Rotatable r) {
+			if (r instanceof Molecule) {
+				Molecule mol = (Molecule) r;
+				redoCOM = mol.getCenterOfMass2D();
+				if (redoCRD == null) {
+					redoCRD = new HashMap<Atom, Point2D>();
 				}
+				else {
+					redoCRD.clear();
+				}
+				Atom at;
+				synchronized (mol.getSynchronizedLock()) {
+					for (Iterator it = mol.iterator(); it.hasNext();) {
+						at = (Atom) it.next();
+						redoCRD.put(at, new Point2D.Double(at.getRx(), at.getRy()));
+					}
+				}
+			}
+			else if (r instanceof ImageComponent) {
+
 			}
 		}
 
-		private void redo(Molecule mol) {
-			if (redoCOM == null || redoCRD.isEmpty())
-				return;
-			Atom at;
-			Point2D point;
-			synchronized (mol.getSynchronizedLock()) {
-				for (Iterator it = mol.iterator(); it.hasNext();) {
-					at = (Atom) it.next();
-					point = redoCRD.get(at);
-					if (point != null) {
-						at.setRx(point.getX());
-						at.setRy(point.getY());
+		private void redo(Rotatable r) {
+			if (r instanceof Molecule) {
+				if (redoCOM == null || redoCRD.isEmpty())
+					return;
+				Molecule mol = (Molecule) r;
+				Atom at;
+				Point2D point;
+				synchronized (mol.getSynchronizedLock()) {
+					for (Iterator it = mol.iterator(); it.hasNext();) {
+						at = (Atom) it.next();
+						point = redoCRD.get(at);
+						if (point != null) {
+							at.setRx(point.getX());
+							at.setRy(point.getY());
+						}
 					}
 				}
+			}
+			else if (r instanceof ImageComponent) {
+				if (angle != 0)
+					((ImageComponent) r).setAngle((float) angle);
 			}
 		}
 
@@ -6177,11 +6203,14 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			this.mc = mc;
 			x = mc.getRx();
 			y = mc.getRy();
+			if (mc instanceof ImageComponent) {
+				angle = ((ImageComponent) mc).getAngle();
+			}
 			switch (actionID) {
 			case ROTA_ID:
 				presentationName = "Rotation";
-				if (mc instanceof Molecule)
-					storeRedoState((Molecule) mc);
+				if (mc instanceof Rotatable)
+					storeRedoState((Rotatable) mc);
 				break;
 			case SELE_ID:
 				presentationName = "Translation";
@@ -6228,8 +6257,8 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				}
 			}
 			else if (presentationName.equals("Rotation")) {
-				if (mc instanceof Molecule)
-					redo((Molecule) mc);
+				if (mc instanceof Rotatable)
+					redo((Rotatable) mc);
 			}
 			doNotFireUndoEvent = false;
 			if (!mc.isSelected())
