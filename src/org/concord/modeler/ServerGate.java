@@ -39,6 +39,8 @@ class ServerGate {
 	final static String[] DIALOG_OPTIONS = { "Yes", "No", "Don't show this message again." };
 	private final static byte POST_COMMENT = 0;
 	private final static byte SUBMIT_PAGES = 1;
+	private final static byte REGISTER = 11;
+	private final static byte LOGIN = 12;
 
 	static {
 		String s = Modeler.getInternationalText("Yes");
@@ -57,6 +59,7 @@ class ServerGate {
 	private CommentView commentView;
 	private SubmissionDialog submissionDialog;
 	private ReportDialog reportDialog;
+	private byte flag = REGISTER;
 
 	ActionListener commentAction;
 	ActionListener viewCommentAction;
@@ -170,6 +173,7 @@ class ServerGate {
 			Page p = new Page();
 			p.setPreferredSize(new Dimension(500, 300));
 			p.visit(Modeler.getContextRoot() + "login.jsp?client=mw&action=logout");
+			flag = LOGIN;
 			String[] ops = new String[] { "OK", "Cancel" };
 			i = JOptionPane.showOptionDialog(JOptionPane.getFrameForComponent(page), p, "Log in",
 					JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, ops, ops[0]);
@@ -188,6 +192,7 @@ class ServerGate {
 			Page p = new Page();
 			p.setPreferredSize(new Dimension(500, 300));
 			p.visit(Modeler.getContextRoot() + "login.jsp?client=mw");
+			flag = LOGIN;
 			s = Modeler.getInternationalText("Login");
 			i = JOptionPane.showConfirmDialog(JOptionPane.getFrameForComponent(page), p, s != null ? s : "Login",
 					JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
@@ -196,6 +201,7 @@ class ServerGate {
 		Page p = new Page();
 		p.setPreferredSize(new Dimension(800, 600));
 		p.visit(Modeler.getContextRoot() + "register.jsp?client=mw&onreport=yes");
+		flag = REGISTER;
 		s = Modeler.getInternationalText("DoneWithRegistration");
 		s2 = Modeler.getInternationalText("CancelButton");
 		String s3 = Modeler.getInternationalText("Registration");
@@ -213,9 +219,22 @@ class ServerGate {
 			return false;
 		}
 		if (Modeler.user.isEmpty()) {
-			String s = Modeler.getInternationalText("YouAreNotLoggedInYetPleaseTryAgain");
-			JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(page), s != null ? s
-					: "You are not logged in yet. Please try again.", "Message", JOptionPane.WARNING_MESSAGE);
+			switch (flag) {
+			case LOGIN:
+				String s = Modeler.getInternationalText("YouAreNotLoggedInYetPleaseTryAgain");
+				JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(page), s != null ? s
+						: "You are not logged in yet. Please try again.", "Message", JOptionPane.WARNING_MESSAGE);
+				break;
+			case REGISTER:
+				s = Modeler.getInternationalText("RegistrationNotCompletedPleaseTryAgain");
+				JOptionPane
+						.showMessageDialog(
+								JOptionPane.getFrameForComponent(page),
+								s != null ? s
+										: "Sorry, we are unable to complete your registration. Please try again.\nMake sure you press the Continue Button inside the registration\npage and follow the instructions.",
+								"Message", JOptionPane.WARNING_MESSAGE);
+				break;
+			}
 			return false;
 		}
 		return true;
