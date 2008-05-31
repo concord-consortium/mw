@@ -493,6 +493,28 @@ public class Molecule implements ModelComponent, Rotatable {
 		translateBy(x - x0, y - y0);
 	}
 
+	void rotateBondToAngle(RadialBond rb, double angle) {
+		double delta = angle - rb.getAngle();
+		double costheta0 = Math.cos(delta);
+		double sintheta0 = Math.sin(delta);
+		if (savedCenter == null)
+			savedCenter = getCenterOfMass2D();
+		double costheta, sintheta, distance;
+		synchronized (atoms) {
+			for (Atom at : atoms) {
+				costheta = at.rx - savedCenter.getX();
+				sintheta = at.ry - savedCenter.getY();
+				distance = Math.hypot(costheta, sintheta);
+				if (distance > 0.1) {
+					costheta /= distance;
+					sintheta /= distance;
+					at.rx = savedCenter.getX() + distance * (costheta * costheta0 - sintheta * sintheta0);
+					at.ry = savedCenter.getY() + distance * (sintheta * costheta0 + costheta * sintheta0);
+				}
+			}
+		}
+	}
+
 	/**
 	 * rotate this molecule such that it points to a specified point (usually the mouse cursor).
 	 * 
@@ -574,7 +596,7 @@ public class Molecule implements ModelComponent, Rotatable {
 	 * @param angle
 	 *            the angle this molecule is to rotate, in radians. Clockwise rotation angle is positive.
 	 */
-	public void rotateBy(double angle) {
+	void rotateBy(double angle) {
 
 		if (savedCenter == null)
 			savedCenter = getCenterOfMass2D();
@@ -602,7 +624,7 @@ public class Molecule implements ModelComponent, Rotatable {
 					costheta0 = dx / distance;
 					sintheta0 = dy / distance;
 					at.rx = savedCenter.getX() + distance * (costheta * costheta0 - sintheta * sintheta0);
-					at.ry = savedCenter.getY() + distance * (costheta * sintheta0 + sintheta * costheta0);
+					at.ry = savedCenter.getY() + distance * (sintheta * costheta0 + costheta * sintheta0);
 				}
 			}
 		}

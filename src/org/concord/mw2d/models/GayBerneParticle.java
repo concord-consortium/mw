@@ -39,7 +39,7 @@ import org.concord.mw2d.MesoView;
 import org.concord.mw2d.ViewAttribute;
 import org.concord.mw2d.ui.GayBerneConfigure;
 
-public class GayBerneParticle extends UnitedAtom {
+public class GayBerneParticle extends UnitedAtom implements Rotatable {
 
 	private final static short MIN_LENGTH = 15;
 	private final static short MAX_LENGTH = 240;

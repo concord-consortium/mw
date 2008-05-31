@@ -239,6 +239,7 @@ public class RadialBond implements ModelComponent {
 		return 0.5 * (atom1.getRy() + atom2.getRy());
 	}
 
+	/* return the angle in the range of (-90, 90) degrees. */
 	double getAngle() {
 		double dx = atom2.rx - atom1.rx;
 		double dy = atom2.ry - atom1.ry;
