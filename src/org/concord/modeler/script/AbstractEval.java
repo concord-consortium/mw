@@ -42,6 +42,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import java.util.TreeMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -135,7 +136,7 @@ public abstract class AbstractEval {
 		if (sharedDefinition == null)
 			sharedDefinition = Collections.synchronizedMap(new HashMap<Class, Map<String, String>>());
 		loopList = Collections.synchronizedList(new ArrayList<String[]>());
-		externalScripts = Collections.synchronizedMap(new HashMap<Byte, String>());
+		externalScripts = Collections.synchronizedMap(new TreeMap<Byte, String>());
 		commentedOutScripts = Collections.synchronizedList(new ArrayList<String>());
 		mouseScripts = Collections.synchronizedMap(new HashMap<Integer, String>());
 		mouseLocation = new Point();

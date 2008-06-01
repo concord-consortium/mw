@@ -199,7 +199,7 @@ class ServerGate {
 			return i == JOptionPane.OK_OPTION || i == JOptionPane.CLOSED_OPTION;
 		}
 		Page p = new Page();
-		p.setPreferredSize(new Dimension(800, 600));
+		p.setPreferredSize(new Dimension(900, 600));
 		p.visit(Modeler.getContextRoot() + "register.jsp?client=mw&onreport=yes");
 		flag = REGISTER;
 		s = Modeler.getInternationalText("DoneWithRegistration");
