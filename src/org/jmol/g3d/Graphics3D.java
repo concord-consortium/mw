@@ -112,6 +112,17 @@ final public class Graphics3D {
 		// setFontOfSize(13);
 	}
 
+	public void destroy() {
+		releaseBuffers();
+		platform = null;
+	}
+
+	private void releaseBuffers() {
+		pbuf = null;
+		zbuf = null;
+		platform.releaseBuffers();
+	}
+
 	/**
 	 * Sets the window size. This will be smaller than the rendering size if FullSceneAntialiasing is enabled
 	 * 
@@ -135,9 +146,7 @@ final public class Graphics3D {
 		isFullSceneAntialiasingEnabled = enableFullSceneAntialiasing;
 		width = -1;
 		height = -1;
-		pbuf = null;
-		zbuf = null;
-		platform.releaseBuffers();
+		releaseBuffers();
 	}
 
 	/**

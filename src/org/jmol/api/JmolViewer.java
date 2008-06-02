@@ -411,7 +411,8 @@ abstract public class JmolViewer extends JmolSimpleViewer {
 	abstract public void setAxisDiameter(int i);
 
 	/** XIE */
-	// abstract public void clearBounds();
+	abstract public boolean isHoverEnabled();
+
 	/** XIE */
 	abstract public void setHoverEnabled(boolean b);
 

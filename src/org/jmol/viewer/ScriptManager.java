@@ -32,9 +32,9 @@ import org.jmol.util.Logger;
 
 class ScriptManager {
 
-	Viewer viewer;
-	Thread queueThread;
-	Vector scriptQueue = new Vector();
+	private Viewer viewer;
+	private Thread queueThread;
+	private Vector scriptQueue = new Vector();
 	boolean useQueue = true; // new default
 
 	ScriptManager(Viewer viewer) {
@@ -105,7 +105,7 @@ class ScriptManager {
 	}
 
 	Object runNextScript() {
-		if (scriptQueue.size() == 0)
+		if (scriptQueue.isEmpty())
 			return null;
 		Vector scriptItem = (Vector) scriptQueue.get(0);
 		String script = (String) scriptItem.get(0);
@@ -115,11 +115,10 @@ class ScriptManager {
 		boolean isQuiet = ((Boolean) scriptItem.get(4)).booleanValue();
 		Vector tokenInfo = (Vector) scriptItem.get(5);
 		Logger.debug(scriptQueue.size() + " scripts; running: " + script);
-		if (scriptQueue.isEmpty())
-			return null; // XIE
+		// XIE if (scriptQueue.isEmpty()) return null;
 		scriptQueue.remove(0);
 		Object returnInfo = runScript(returnType, script, statusList, isScriptFile, isQuiet, tokenInfo);
-		if (scriptQueue.size() == 0) // might have been cleared with an exit
+		if (scriptQueue.isEmpty()) // might have been cleared with an exit
 			return null;
 		return returnInfo;
 	}
@@ -133,22 +132,24 @@ class ScriptManager {
 		if (scriptQueueRunning)
 			return;
 		scriptQueueRunning = true;
+		if (queueThread != null)
+			queueThread.interrupt();
 		queueThread = new Thread(new ScriptQueueRunnable());
-		queueThread.setName("Jmol script " + queueThread.getName());
+		queueThread.setName("Jmol Script " + queueThread.getName());
+		// System.out.println(queueThread.getName());
 		// XIE: handle uncaught exceptions
 		queueThread.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-			public void uncaughtException(final Thread t, final Throwable e) {
+			public void uncaughtException(Thread t, final Throwable e) {
 				e.printStackTrace();
 				scriptQueueRunning = false;
 				queueThread = null;
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						if (viewer == null)
-							return;
-						JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(viewer.getAwtComponent()),
-								"Fatal script error.", "Script Error", JOptionPane.ERROR_MESSAGE);
-					}
-				});
+				if (viewer != null)
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(viewer.getAwtComponent()),
+									"Fatal script error, thrown by: " + e, "Script Error", JOptionPane.ERROR_MESSAGE);
+						}
+					});
 			}
 		});
 		queueThread.start();
@@ -159,11 +160,10 @@ class ScriptManager {
 
 	class ScriptQueueRunnable implements Runnable {
 		public void run() {
-			while (scriptQueue.size() != 0) {
+			while (!scriptQueue.isEmpty()) {
 				runNextScript();
 			}
 			scriptQueueRunning = false;
-			queueThread = null;
 		}
 
 		public void stop() {
