@@ -396,6 +396,7 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 		requestStopMoveTo = true;
 		setSpinOn(false);
 		jmol.viewer.clearScriptQueue(); // stop pending scripts immediately
+		jmol.viewer.setHoverEnabled(false);
 	}
 
 	public void clear() {
@@ -1314,6 +1315,7 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 				informationManager.displayInformation();
 				jmol.waitForInitializationScript();
 				runScript(initializationScript + (customInitializationScript == null ? "" : customInitializationScript));
+				// jmol.viewer.setHoverEnabled(true);
 				menuBar.updateMenusAfterLoading();
 				toolBar.updateButtonsAfterLoading();
 			}
@@ -1410,6 +1412,7 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 
 	private void decode(XMLDecoder in) throws Exception {
 		ModelState state = (ModelState) in.readObject();
+		setHoverEnabled(state.isHoverEnabled());
 		hasAnimationControls = state.getShowAnimationControls();
 		jmol.viewer.setZDepthMagnification(state.getZDepthMagnification());
 		jmol.viewer.setAxisStyle(state.getAxisStyle());
@@ -1517,6 +1520,7 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 		state.setBlinkInteractionCenters(blinkInteractionCenters);
 		state.setShowAnimationControls(hasAnimationControls);
 		state.setZDepthMagnification(jmol.viewer.getZDepthMagnification());
+		state.setHoverEnabled(isHoverEnabled());
 		state.setAxisStyle(jmol.viewer.getAxisStyle());
 		state.setFillMode(jmol.getFillMode());
 		state.setTitle(informationManager.title);
@@ -1657,6 +1661,18 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 	public boolean areAxesShown() {
 		synchronized (lock) {
 			return jmol.viewer.getShowAxes();
+		}
+	}
+
+	public void setHoverEnabled(boolean b) {
+		synchronized (lock) {
+			jmol.viewer.setHoverEnabled(b);
+		}
+	}
+
+	public boolean isHoverEnabled() {
+		synchronized (lock) {
+			return jmol.viewer.isHoverEnabled();
 		}
 	}
 
@@ -1970,6 +1986,22 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 		a.putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_X));
 		a.putValue("state", areAxesShown() ? Boolean.TRUE : Boolean.FALSE);
 		jmol.getActionMap().put("axes", a);
+
+		// hover action
+		a = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				setHoverEnabled(((AbstractButton) e.getSource()).isSelected());
+				notifyChange();
+			}
+
+			public String toString() {
+				return (String) getValue(SHORT_DESCRIPTION);
+			}
+		};
+		a.putValue(Action.NAME, "Enable Hover Text");
+		a.putValue(Action.SHORT_DESCRIPTION, "Enable hover text over atoms");
+		a.putValue("state", isHoverEnabled() ? Boolean.TRUE : Boolean.FALSE);
+		jmol.getActionMap().put("hover", a);
 
 		// show selection action
 		a = new AbstractAction() {

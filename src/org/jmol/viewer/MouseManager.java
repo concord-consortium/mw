@@ -34,7 +34,7 @@ abstract class MouseManager {
 
 	Viewer viewer;
 
-	Thread hoverWatcherThread;
+	private Thread hoverWatcherThread;
 
 	int previousDragX, previousDragY;
 	int xCurrent, yCurrent;
@@ -43,13 +43,13 @@ abstract class MouseManager {
 	int modifiersWhenPressed;
 	boolean wasDragged;
 
-	boolean measurementMode = false;
-	boolean drawMode = false;
+	boolean measurementMode;
+	boolean drawMode;
 	boolean measuresEnabled = true;
-	boolean hoverActive = false;
+	boolean hoverActive;
 	private boolean measurementEnabled = true; // XIE
 
-	boolean rubberbandSelectionMode = false;
+	boolean rubberbandSelectionMode;
 	int xAnchor, yAnchor;
 	final static Rectangle rectRubber = new Rectangle();
 
@@ -57,19 +57,25 @@ abstract class MouseManager {
 
 	MouseManager(Viewer viewer) {
 		this.viewer = viewer;
-		hoverWatcherThread = new Thread(new HoverWatcher(), "Jmol Hover Watcher");
-		hoverWatcherThread.start();
 	}
 
 	// XIE
 	void setHoverWatcherEnabled(boolean b) {
 		if (b) {
 			hoverWatcherThread = new Thread(new HoverWatcher(), "Jmol Hover Watcher");
+			hoverWatcherThread.setPriority(Thread.MIN_PRIORITY);
 			hoverWatcherThread.start();
 		}
 		else {
-			hoverWatcherThread.interrupt();
+			if (hoverWatcherThread != null) {
+				hoverWatcherThread.interrupt();
+				hoverWatcherThread = null;
+			}
 		}
+	}
+
+	boolean isHoverWatcherEnabled() {
+		return hoverWatcherThread != null;
 	}
 
 	// XIE
@@ -85,7 +91,7 @@ abstract class MouseManager {
 
 	void setModeMouse(int modeMouse) {
 		if (modeMouse == JmolConstants.MOUSE_NONE) {
-			hoverWatcherThread.interrupt();
+			setHoverWatcherEnabled(false);
 			removeMouseListeners11();
 			removeMouseListeners14();
 		}
@@ -173,12 +179,12 @@ abstract class MouseManager {
 		// viewer.setStatusUserAction("mousePressed: " + modifiers);
 
 		switch (modifiers & BUTTON_MODIFIER_MASK) {
-		/***************************************************************************************************************
+		/*
 		 * mth 2004 03 17 this isPopupTrigger stuff just doesn't work reliably for me and I don't have a Mac to test out
 		 * CTRL-CLICK behavior Therefore ... we are going to implement both gestures to bring up the popup menu The fact
 		 * that we are using CTRL_LEFT may interfere with other platforms if/when we need to support multiple
 		 * selections, but we will cross that bridge when we come to it
-		 **************************************************************************************************************/
+		 */
 		case CTRL_LEFT: // on MacOSX this brings up popup
 		case RIGHT: // with multi-button mice, this will too
 			viewer.popupMenu(x, y);
@@ -229,8 +235,7 @@ abstract class MouseManager {
 		switch (viewer.getPickingMode()) {
 		case JmolConstants.PICKING_DRAW:
 			drawMode = true;
-			// fall through...
-			// other cases here?
+			// fall through... other cases here?
 		case JmolConstants.PICKING_LABEL:
 		case JmolConstants.PICKING_MEASURE_DISTANCE:
 		case JmolConstants.PICKING_MEASURE_ANGLE:
@@ -414,9 +419,7 @@ abstract class MouseManager {
 	long mouseMovedTime;
 
 	void mouseMoved(long time, int x, int y, int modifiers) {
-		/*
-		 * if (logMouseEvents) Logger.debug("mouseMoved("+x+","+y+","+modifiers"+)");
-		 */
+		// if (logMouseEvents) Logger.debug("mouseMoved("+x+","+y+","+modifiers"+)");
 		hoverOff();
 		timeCurrent = mouseMovedTime = time;
 		mouseMovedX = xCurrent = x;
@@ -539,8 +542,7 @@ abstract class MouseManager {
 
 	class HoverWatcher implements Runnable {
 		public void run() {
-			Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
-			while (true) {
+			while (hoverWatcherThread != null) {
 				try {
 					Thread.sleep(1000);
 					if (xCurrent == mouseMovedX && yCurrent == mouseMovedY && timeCurrent == mouseMovedTime) {
@@ -548,21 +550,24 @@ abstract class MouseManager {
 						long currentTime = System.currentTimeMillis();
 						int howLong = (int) (currentTime - mouseMovedTime);
 						if (howLong > HOVER_TIME) {
-							int atomIndex = viewer.findNearestAtomIndex(xCurrent, yCurrent);
-							if (atomIndex != -1)
-								hoverOn(atomIndex);
+							if (hoverWatcherThread != null && !viewer.getInMotion() && !viewer.getSpinOn()) {
+								int atomIndex = viewer.findNearestAtomIndex(xCurrent, yCurrent);
+								if (atomIndex != -1)
+									hoverOn(atomIndex);
+							}
 						}
 					}
 				}
 				catch (InterruptedException ie) {
 					Logger.debug("Hover InterruptedException!");
-					return;
+					break;
 				}
 				catch (Exception ie) {
 					Logger.debug("Hover Exception!" + ie);
-					return;
+					break;
 				}
 			}
+			hoverWatcherThread = null;
 		}
 	}
 }

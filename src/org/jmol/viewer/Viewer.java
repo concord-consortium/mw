@@ -851,6 +851,10 @@ public class Viewer extends JmolViewer {
 		mouseManager.setHoverWatcherEnabled(b);
 	}
 
+	public boolean isHoverEnabled() {
+		return mouseManager.isHoverWatcherEnabled();
+	}
+
 	/** XIE */
 	public void setMeasurementEnabled(boolean b) {
 		mouseManager.setMeasurementEnabled(b);
@@ -1915,6 +1919,12 @@ public class Viewer extends JmolViewer {
 	public void setModeMouse(int modeMouse) {
 		// call before setting viewer=null
 		mouseManager.setModeMouse(modeMouse);
+		if (modeMouse == JmolConstants.MOUSE_NONE) {
+			// applet is being destroyed
+			clearScriptQueue();
+			haltScriptExecution();
+			g3d.destroy();
+		}
 	}
 
 	Rectangle getRubberBandSelection() {

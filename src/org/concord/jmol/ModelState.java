@@ -41,6 +41,7 @@ public class ModelState implements Serializable {
 	private SceneState startingScene;
 	private List<SceneState> itinerary;
 	private FillMode fillMode = FillMode.getNoFillMode();
+	private boolean hover;
 	private byte axisStyle;
 	private int zDepthMagnification = 5;
 	private boolean showAnimationControls;
@@ -97,6 +98,14 @@ public class ModelState implements Serializable {
 
 	public int getZDepthMagnification() {
 		return zDepthMagnification;
+	}
+
+	public void setHoverEnabled(boolean b) {
+		hover = b;
+	}
+
+	public boolean isHoverEnabled() {
+		return hover;
 	}
 
 	public void setAxisStyle(byte style) {

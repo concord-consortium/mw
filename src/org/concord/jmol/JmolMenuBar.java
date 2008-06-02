@@ -809,6 +809,12 @@ class JmolMenuBar extends JMenuBar {
 		menu.add(miAnimationPanel);
 		menu.addSeparator();
 
+		final JMenuItem miHover = new JCheckBoxMenuItem(jmolContainer.jmol.getActionMap().get("hover"));
+		s = getInternationalText("EnableHoverText");
+		if (s != null)
+			miHover.setText(s);
+		menu.add(miHover);
+
 		final JMenuItem miAxes = new JCheckBoxMenuItem(jmolContainer.jmol.getActionMap().get("axes"));
 		s = getInternationalText("ShowAxes");
 		if (s != null)
@@ -872,6 +878,7 @@ class JmolMenuBar extends JMenuBar {
 				ModelerUtilities.setWithoutNotifyingListeners(miAnimationPanel, jmolContainer.hasAnimationPanel());
 				ModelerUtilities.setWithoutNotifyingListeners(miShowHBonds, jmolContainer.areHydrogenBondsShown());
 				ModelerUtilities.setWithoutNotifyingListeners(miShowSSBonds, jmolContainer.areSSBondsShown());
+				ModelerUtilities.setWithoutNotifyingListeners(miHover, jmolContainer.isHoverEnabled());
 				ModelerUtilities.setWithoutNotifyingListeners(miAxes, jmolContainer.areAxesShown());
 				ModelerUtilities.setWithoutNotifyingListeners(miBoundBox, jmolContainer.isBoundBoxShown());
 				byte axisStyle = jmolContainer.jmol.viewer.getAxisStyle();
