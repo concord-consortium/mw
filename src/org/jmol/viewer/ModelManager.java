@@ -63,8 +63,9 @@ class ModelManager {
 	}
 
 	void clear() {
-		if (frame != null)
-			frame.cleanUp();
+		if (frame != null) {
+			frame.clear();
+		}
 		fullPathName = fileName = modelSetName = null;
 		frame = null;
 		haveFile = false;

@@ -65,7 +65,7 @@ public final class Frame {
 	float maxVanderwaalsRadius = Float.MIN_VALUE;
 	CellInfo[] cellInfos;
 	int atomCount;
-	public Atom[] atoms;
+	public volatile Atom[] atoms;
 	int bondCount;
 	Bond[] bonds;
 	int groupCount;
@@ -118,7 +118,7 @@ public final class Frame {
 	int bfactor100Hi;
 
 	// XIE
-	void cleanUp() {
+	void clear() {
 		htAtomMap.clear();
 	}
 

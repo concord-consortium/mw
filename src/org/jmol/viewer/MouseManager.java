@@ -37,8 +37,8 @@ abstract class MouseManager {
 	private Thread hoverWatcherThread;
 
 	int previousDragX, previousDragY;
-	int xCurrent, yCurrent;
-	long timeCurrent;
+	int xCurrent = -1, yCurrent = -1;
+	long timeCurrent = -1;
 
 	int modifiersWhenPressed;
 	boolean wasDragged;
@@ -47,7 +47,12 @@ abstract class MouseManager {
 	boolean drawMode;
 	boolean measuresEnabled = true;
 	boolean hoverActive;
-	private boolean measurementEnabled = true; // XIE
+	int mouseMovedX, mouseMovedY;
+	long mouseMovedTime;
+
+	// XIE
+	private boolean measurementEnabled = true;
+	private volatile boolean hoverSuspended;
 
 	boolean rubberbandSelectionMode;
 	int xAnchor, yAnchor;
@@ -76,6 +81,10 @@ abstract class MouseManager {
 
 	boolean isHoverWatcherEnabled() {
 		return hoverWatcherThread != null;
+	}
+
+	void setHoverSuspended(boolean b) {
+		hoverSuspended = b;
 	}
 
 	// XIE
@@ -415,9 +424,6 @@ abstract class MouseManager {
 		}
 	}
 
-	int mouseMovedX, mouseMovedY;
-	long mouseMovedTime;
-
 	void mouseMoved(long time, int x, int y, int modifiers) {
 		// if (logMouseEvents) Logger.debug("mouseMoved("+x+","+y+","+modifiers"+)");
 		hoverOff();
@@ -545,25 +551,24 @@ abstract class MouseManager {
 			while (hoverWatcherThread != null) {
 				try {
 					Thread.sleep(1000);
-					if (xCurrent == mouseMovedX && yCurrent == mouseMovedY && timeCurrent == mouseMovedTime) {
-						// the last event was mouse move
-						long currentTime = System.currentTimeMillis();
-						int howLong = (int) (currentTime - mouseMovedTime);
-						if (howLong > HOVER_TIME) {
-							if (hoverWatcherThread != null && !viewer.getInMotion() && !viewer.getSpinOn()) {
+					if (!hoverSuspended && !viewer.getInMotion() && !viewer.getSpinOn()) {
+						if (xCurrent == mouseMovedX && yCurrent == mouseMovedY && timeCurrent == mouseMovedTime) {
+							// the last event was mouse move
+							if (System.currentTimeMillis() - mouseMovedTime > HOVER_TIME) {
 								int atomIndex = viewer.findNearestAtomIndex(xCurrent, yCurrent);
-								if (atomIndex != -1)
+								if (atomIndex != -1) {
 									hoverOn(atomIndex);
+								}
 							}
 						}
 					}
 				}
-				catch (InterruptedException ie) {
+				catch (InterruptedException e) {
 					Logger.debug("Hover InterruptedException!");
 					break;
 				}
-				catch (Exception ie) {
-					Logger.debug("Hover Exception!" + ie);
+				catch (Exception e) {
+					Logger.debug("Hover Exception!" + e);
 					break;
 				}
 			}

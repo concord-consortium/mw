@@ -1315,9 +1315,9 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 				informationManager.displayInformation();
 				jmol.waitForInitializationScript();
 				runScript(initializationScript + (customInitializationScript == null ? "" : customInitializationScript));
-				// jmol.viewer.setHoverEnabled(true);
 				menuBar.updateMenusAfterLoading();
 				toolBar.updateButtonsAfterLoading();
+				jmol.viewer.loadingCompleted();
 			}
 		});
 
@@ -1411,8 +1411,8 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 	}
 
 	private void decode(XMLDecoder in) throws Exception {
+		jmol.viewer.loadingStarted();
 		ModelState state = (ModelState) in.readObject();
-		setHoverEnabled(state.isHoverEnabled());
 		hasAnimationControls = state.getShowAnimationControls();
 		jmol.viewer.setZDepthMagnification(state.getZDepthMagnification());
 		jmol.viewer.setAxisStyle(state.getAxisStyle());
@@ -1478,6 +1478,7 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 			rover.setChasePlaneDistance(state.getChasePlaneDistance());
 			jmol.viewer.setRoverColor(rover.getColor());
 		}
+		setHoverEnabled(state.isHoverEnabled());
 	}
 
 	private Scene getScene(String s) {
