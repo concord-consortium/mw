@@ -55,6 +55,10 @@ abstract public class JmolViewer extends JmolSimpleViewer {
 	/** XIE */
 	abstract public void cleanUp();
 
+	abstract public void loadingStarted();
+
+	abstract public void loadingCompleted();
+
 	/** XIE */
 	abstract public void runScriptImmediatelyWithoutThread(String s);
 

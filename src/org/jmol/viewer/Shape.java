@@ -71,6 +71,12 @@ abstract class Shape {
 	void initShape() {
 	}
 
+	void destroy() {
+		viewer = null;
+		frame = null;
+		g3d = null;
+	}
+
 	void setSize(int size, BitSet bsSelected) {
 	}
 

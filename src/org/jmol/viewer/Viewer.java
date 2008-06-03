@@ -165,6 +165,16 @@ public class Viewer extends JmolViewer {
 		modelManager.clear();
 	}
 
+	/** when loading starts */
+	public void loadingStarted() {
+		mouseManager.setHoverSuspended(true);
+	}
+
+	/** when loading completes */
+	public void loadingCompleted() {
+		mouseManager.setHoverSuspended(false);
+	}
+
 	/**
 	 * NOTE: for APPLICATION (not APPLET) call
 	 * 
@@ -269,7 +279,8 @@ public class Viewer extends JmolViewer {
 		case Attachment.ATOM_HOST:
 			Atom[] atoms = modelManager.frame.atoms;
 			if (SiteAnnotation.class == c) {
-				for (int i = 0; i < modelManager.frame.atomCount; i++) {
+				int atomCount = modelManager.frame.atomCount;
+				for (int i = 0; i < atomCount; i++) {
 					if (atoms[i].annotationKey && atoms[i].pin != null && atoms[i].pin.withinHandle(x, y)) {
 						if (atoms[i].screenZ < zmin) {
 							zmin = atoms[i].screenZ;
@@ -2253,6 +2264,7 @@ public class Viewer extends JmolViewer {
 		statusManager.clear();
 		stateManager.clear(global);
 		refresh(0, "Viewer:clear()");
+		g3d.destroy();
 		System.gc();
 	}
 

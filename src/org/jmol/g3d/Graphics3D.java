@@ -114,7 +114,7 @@ final public class Graphics3D {
 
 	public void destroy() {
 		releaseBuffers();
-		platform = null;
+		// platform = null;
 	}
 
 	private void releaseBuffers() {
