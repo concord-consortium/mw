@@ -2189,7 +2189,7 @@ public abstract class MDView extends PrintableComponent {
 		g.setFont(ViewAttribute.FONT_BOLD_18);
 		String s = getInternationalText("PleaseWait");
 		if (s == null)
-			s = "Loading model, please wait......";
+			s = "Loading model, please wait...";
 		FontMetrics fm = g.getFontMetrics();
 		g.drawString(s, (getWidth() - fm.stringWidth(s)) >> 1, (getHeight() - fm.getHeight()) >> 1);
 		g.setFont(ViewAttribute.FONT_BOLD_15);

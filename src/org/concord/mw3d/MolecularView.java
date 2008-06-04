@@ -1394,7 +1394,7 @@ public class MolecularView extends Draw {
 			FontMetrics fm = g.getFontMetrics();
 			String s = MolecularContainer.getInternationalText("PleaseWait");
 			if (s == null)
-				s = "Loading data, please wait......";
+				s = "Loading data, please wait...";
 			g.drawString(s, (getWidth() - fm.stringWidth(s)) >> 1, (getHeight() - fm.getHeight()) >> 1);
 			g.setFont(FONT_BOLD_15);
 			fm = g.getFontMetrics();

@@ -690,7 +690,7 @@ class Jmol extends Draw {
 			g.setColor(new Color(0xffffff ^ bg.getRGB()));
 			String s = JmolContainer.getInternationalText("PleaseWait");
 			if (s == null)
-				s = "Loading data, please wait......";
+				s = "Loading data, please wait...";
 			g.setFont(FONT_BOLD_18);
 			FontMetrics fm = g.getFontMetrics();
 			g.drawString(s, (getWidth() - fm.stringWidth(s)) >> 1, (getHeight() - fm.getHeight()) >> 1);
