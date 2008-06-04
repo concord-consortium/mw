@@ -768,6 +768,9 @@ public class PageMolecularViewer extends JmolContainer implements BasicModel, Em
 					String newAddress = FileUtilities.getCodeBase(page.getAddress()) + oldAddress;
 					if (System.getProperty("os.name").startsWith("Windows"))
 						newAddress = newAddress.replace('\\', '/');
+					setResourceAddress(newAddress);
+					if (newAddress.indexOf(" ") != -1)
+						newAddress = "\"" + newAddress + "\"";
 					ci = ci.replaceAll(oldAddress, newAddress);
 				}
 			}
@@ -778,6 +781,8 @@ public class PageMolecularViewer extends JmolContainer implements BasicModel, Em
 					String newAddress = FileUtilities.getCodeBase(page.getAddress()) + oldAddress;
 					if (System.getProperty("os.name").startsWith("Windows"))
 						newAddress = newAddress.replace('\\', '/');
+					if (newAddress.indexOf(" ") != -1)
+						newAddress = "\"" + newAddress + "\"";
 					ci = ci.replaceAll(oldAddress, newAddress);
 				}
 			}

@@ -281,6 +281,8 @@ public class Viewer extends JmolViewer {
 			if (SiteAnnotation.class == c) {
 				int atomCount = modelManager.frame.atomCount;
 				for (int i = 0; i < atomCount; i++) {
+					if (atoms[i] == null)
+						continue;
 					if (atoms[i].annotationKey && atoms[i].pin != null && atoms[i].pin.withinHandle(x, y)) {
 						if (atoms[i].screenZ < zmin) {
 							zmin = atoms[i].screenZ;
@@ -1934,7 +1936,7 @@ public class Viewer extends JmolViewer {
 			// applet is being destroyed
 			clearScriptQueue();
 			haltScriptExecution();
-			g3d.destroy();
+			// g3d.destroy();
 		}
 	}
 
@@ -2264,7 +2266,7 @@ public class Viewer extends JmolViewer {
 		statusManager.clear();
 		stateManager.clear(global);
 		refresh(0, "Viewer:clear()");
-		g3d.destroy();
+		// g3d.destroy();
 		System.gc();
 	}
 
