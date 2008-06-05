@@ -195,7 +195,7 @@ class Eval2D extends AbstractEval {
 			double x = parseMathExpression(v);
 			if (Double.isNaN(x))
 				break;
-			i = (int) x;
+			i = (int) Math.round(x);
 			if (i < 0 || i >= 4) {
 				out(ScriptEvent.FAILED, i + " is an invalid index: must be between 0 and 3 (inclusive).");
 				break;
@@ -231,7 +231,7 @@ class Eval2D extends AbstractEval {
 			double x = parseMathExpression(v);
 			if (Double.isNaN(x))
 				break;
-			i = (int) x;
+			i = (int) Math.round(x);
 			if (i < 0 || i >= n) {
 				out(ScriptEvent.FAILED, i + " is an invalid index: must be between 0 and " + (n - 1) + " (inclusive).");
 				break;
@@ -306,7 +306,7 @@ class Eval2D extends AbstractEval {
 				double x = parseMathExpression(v);
 				if (Double.isNaN(x))
 					break;
-				i = (int) x;
+				i = (int) Math.round(x);
 				if (i < 0 || i >= n) {
 					out(ScriptEvent.FAILED, i + " is an invalid index: must be between 0 and " + (n - 1)
 							+ " (inclusive).");
@@ -366,7 +366,7 @@ class Eval2D extends AbstractEval {
 			double x = parseMathExpression(v);
 			if (Double.isNaN(x))
 				break;
-			i = (int) x;
+			i = (int) Math.round(x);
 			if (i < 0 || i >= n) {
 				out(ScriptEvent.FAILED, "Radial bond " + i + " does not exist.");
 				break;
@@ -405,7 +405,7 @@ class Eval2D extends AbstractEval {
 			double x = parseMathExpression(v);
 			if (Double.isNaN(x))
 				break;
-			i = (int) x;
+			i = (int) Math.round(x);
 			if (i < 0 || i >= n) {
 				out(ScriptEvent.FAILED, "Angular bond " + i + " does not exist.");
 				break;
@@ -447,7 +447,7 @@ class Eval2D extends AbstractEval {
 			double x = parseMathExpression(v);
 			if (Double.isNaN(x))
 				break;
-			i = (int) x;
+			i = (int) Math.round(x);
 			if (i < 0 || i >= n) {
 				out(ScriptEvent.FAILED, "Obstacle " + i + " does not exist.");
 				break;
@@ -503,7 +503,7 @@ class Eval2D extends AbstractEval {
 			double x = parseMathExpression(v);
 			if (Double.isNaN(x))
 				break;
-			i = (int) x;
+			i = (int) Math.round(x);
 			if (i < 0 || i >= n) {
 				out(ScriptEvent.FAILED, "Molecule " + i + " does not exist.");
 				break;
@@ -554,7 +554,7 @@ class Eval2D extends AbstractEval {
 			double x = parseMathExpression(v);
 			if (Double.isNaN(x))
 				break;
-			i = (int) x;
+			i = (int) Math.round(x);
 			if (i < 0 || i >= n) {
 				out(ScriptEvent.FAILED, "Image " + i + " does not exist.");
 				break;
@@ -590,7 +590,7 @@ class Eval2D extends AbstractEval {
 			double x = parseMathExpression(v);
 			if (Double.isNaN(x))
 				break;
-			i = (int) x;
+			i = (int) Math.round(x);
 			if (i < 0 || i >= n) {
 				out(ScriptEvent.FAILED, "Line " + i + " does not exist.");
 				break;
@@ -625,7 +625,7 @@ class Eval2D extends AbstractEval {
 			double x = parseMathExpression(v);
 			if (Double.isNaN(x))
 				break;
-			i = (int) x;
+			i = (int) Math.round(x);
 			if (i < 0 || i >= n) {
 				out(ScriptEvent.FAILED, "Rectangle " + i + " does not exist.");
 				break;
@@ -671,7 +671,7 @@ class Eval2D extends AbstractEval {
 			double x = parseMathExpression(v);
 			if (Double.isNaN(x))
 				break;
-			i = (int) x;
+			i = (int) Math.round(x);
 			if (i < 0 || i >= n) {
 				out(ScriptEvent.FAILED, "Ellipse " + i + " does not exist.");
 				break;
@@ -717,7 +717,7 @@ class Eval2D extends AbstractEval {
 			double x = parseMathExpression(v);
 			if (Double.isNaN(x))
 				break;
-			i = (int) x;
+			i = (int) Math.round(x);
 			if (i < 0 || i >= n) {
 				out(ScriptEvent.FAILED, "Text box " + i + " does not exist.");
 				break;
@@ -1628,7 +1628,7 @@ class Eval2D extends AbstractEval {
 		double x = parseMathExpression(s[0]);
 		if (Double.isNaN(x))
 			return false;
-		int i = (int) x;
+		int i = (int) Math.round(x);
 		if (i >= n) {
 			out(ScriptEvent.FAILED, "Atom index out of limit: i=" + i + ">=" + n);
 			return false;
@@ -1636,7 +1636,7 @@ class Eval2D extends AbstractEval {
 		x = parseMathExpression(s[1]);
 		if (Double.isNaN(x))
 			return false;
-		int j = (int) x;
+		int j = (int) Math.round(x);
 		if (j >= n) {
 			out(ScriptEvent.FAILED, "Atom index out of limit: j=" + j + ">=" + n);
 			return false;
@@ -1683,7 +1683,7 @@ class Eval2D extends AbstractEval {
 		double x = parseMathExpression(s[0]);
 		if (Double.isNaN(x))
 			return false;
-		int i = (int) x;
+		int i = (int) Math.round(x);
 		if (i >= n) {
 			out(ScriptEvent.FAILED, "Atom index out of limit: i=" + i + ">=" + n);
 			return false;
@@ -1691,7 +1691,7 @@ class Eval2D extends AbstractEval {
 		x = parseMathExpression(s[1]);
 		if (Double.isNaN(x))
 			return false;
-		int j = (int) x;
+		int j = (int) Math.round(x);
 		if (j >= n) {
 			out(ScriptEvent.FAILED, "Atom index out of limit: j=" + j + ">=" + n);
 			return false;
@@ -1703,7 +1703,7 @@ class Eval2D extends AbstractEval {
 		x = parseMathExpression(s[2]);
 		if (Double.isNaN(x))
 			return false;
-		int k = (int) x;
+		int k = (int) Math.round(x);
 		if (k >= n) {
 			out(ScriptEvent.FAILED, "Atom index out of limit: k=" + k + ">=" + n);
 			return false;
@@ -1849,7 +1849,7 @@ class Eval2D extends AbstractEval {
 					String[] s = str.split(REGEX_SEPARATOR + "+");
 					id1 = Float.valueOf(s[0].trim()).byteValue();
 					id2 = Float.valueOf(s[1].trim()).byteValue();
-					length = (int) (Float.valueOf(s[2].trim()) * IR_CONVERTER);
+					length = Math.round((Float.valueOf(s[2].trim()) * IR_CONVERTER));
 				}
 				catch (Exception e) {
 					out(ScriptEvent.FAILED, "Script error at: " + str + "\n" + e);
@@ -3185,7 +3185,7 @@ class Eval2D extends AbstractEval {
 						double x = parseMathExpression(s[1]);
 						if (Double.isNaN(x))
 							return false;
-						int i1 = (int) x;
+						int i1 = (int) Math.round(x);
 						if (i1 < 0 || i1 > Element.ID_CK) {
 							out(ScriptEvent.FAILED, "Unsupported element: type " + i1);
 							return false;
@@ -3193,7 +3193,7 @@ class Eval2D extends AbstractEval {
 						x = parseMathExpression(s[2]);
 						if (Double.isNaN(x))
 							return false;
-						int i2 = (int) x;
+						int i2 = (int) Math.round(x);
 						if (i2 < 0 || i2 > Element.ID_CK) {
 							out(ScriptEvent.FAILED, "Unsupported element: type " + i2);
 							return false;
@@ -3256,7 +3256,7 @@ class Eval2D extends AbstractEval {
 			double a = parseMathExpression(s1);
 			if (Double.isNaN(a))
 				return false;
-			int id = (int) a;
+			int id = (int) Math.round(a);
 			if (((AtomisticView) view).insertAnAtom(x, y, id, true, false)) {
 				view.repaint();
 				notifyChange();
@@ -3339,7 +3339,7 @@ class Eval2D extends AbstractEval {
 							str = str.substring(i + 1);
 							double z = parseMathExpression(str);
 							if (!Double.isNaN(z)) {
-								ic.setHost(model.getParticle((int) z));
+								ic.setHost(model.getParticle((int) Math.round(z)));
 								view.addLayeredComponent(ic);
 								view.repaint();
 								return true;
@@ -3714,7 +3714,7 @@ class Eval2D extends AbstractEval {
 	}
 
 	private boolean evaluateDelayClause(String str) throws InterruptedException {
-		if (str.matches(REGEX_NONNEGATIVE_DECIMAL) || str.matches(REGEX_NONNEGATIVE_INTEGER)) {
+		if (str.matches(REGEX_NONNEGATIVE_DECIMAL)) {
 			float sec = Float.valueOf(str).floatValue();
 			int millis = (int) (sec * 1000);
 			while (!stop && millis > 0) {
@@ -3733,7 +3733,7 @@ class Eval2D extends AbstractEval {
 		}
 		if (str.toLowerCase().startsWith("modeltime")) {
 			str = str.substring(9).trim();
-			if (str.matches(REGEX_NONNEGATIVE_DECIMAL) || str.matches(REGEX_NONNEGATIVE_INTEGER)) {
+			if (str.matches(REGEX_NONNEGATIVE_DECIMAL)) {
 				int i = Math.round(Float.valueOf(str).floatValue() / (float) model.getTimeStep());
 				int step0 = model.job != null ? model.job.getIndexOfStep() : 0;
 				AbstractLoadable l = new AbstractLoadable(i) {
@@ -4169,7 +4169,7 @@ class Eval2D extends AbstractEval {
 		double z = parseMathExpression(str1.substring(lb + 1, rb));
 		if (Double.isNaN(z))
 			return;
-		int i = (int) z;
+		int i = (int) Math.round(z);
 		if (i >= m.numberOfParticles) {
 			out(ScriptEvent.FAILED, "Particle " + i + " doesn't exisit.");
 			return;
@@ -4248,7 +4248,7 @@ class Eval2D extends AbstractEval {
 		double z = parseMathExpression(str1.substring(lb + 1, rb));
 		if (Double.isNaN(z))
 			return;
-		int i = (int) z;
+		int i = (int) Math.round(z);
 		if (i >= m.numberOfAtoms) {
 			out(ScriptEvent.FAILED, "Atom " + i + " doesn't exisit.");
 			return;
@@ -4312,7 +4312,7 @@ class Eval2D extends AbstractEval {
 		double z = parseMathExpression(str1.substring(lb + 1, rb));
 		if (Double.isNaN(z))
 			return;
-		int i = (int) z;
+		int i = (int) Math.round(z);
 		if (i >= m.numberOfAtoms) {
 			out(ScriptEvent.FAILED, "Atom " + i + " doesn't exisit.");
 			return;
@@ -4342,7 +4342,7 @@ class Eval2D extends AbstractEval {
 		double z = parseMathExpression(str1.substring(lb + 1, rb));
 		if (Double.isNaN(z))
 			return;
-		int i = (int) z;
+		int i = (int) Math.round(z);
 		if (i >= m.bonds.size() || i < 0) {
 			out(ScriptEvent.FAILED, "Radial bond " + i + " doesn't exisit.");
 			return;
@@ -4385,7 +4385,7 @@ class Eval2D extends AbstractEval {
 		double z = parseMathExpression(str1.substring(lb + 1, rb));
 		if (Double.isNaN(z))
 			return;
-		int i = (int) z;
+		int i = (int) Math.round(z);
 		if (i >= m.bonds.size()) {
 			out(ScriptEvent.FAILED, "Radial bond " + i + " doesn't exisit.");
 			return;
@@ -4443,7 +4443,7 @@ class Eval2D extends AbstractEval {
 		double z = parseMathExpression(str1.substring(lb + 1, rb));
 		if (Double.isNaN(z))
 			return;
-		int i = (int) z;
+		int i = (int) Math.round(z);
 		if (i >= m.bends.size() || i < 0) {
 			out(ScriptEvent.FAILED, "Angular bond " + i + " doesn't exisit.");
 			return;
@@ -4476,7 +4476,7 @@ class Eval2D extends AbstractEval {
 		double z = parseMathExpression(str1.substring(lb + 1, rb));
 		if (Double.isNaN(z))
 			return;
-		int i = (int) z;
+		int i = (int) Math.round(z);
 		if (i >= Element.NMAX) {
 			out(ScriptEvent.FAILED, "Element " + i + " doesn't exisit.");
 			return;
@@ -4508,7 +4508,7 @@ class Eval2D extends AbstractEval {
 		double z = parseMathExpression(str1.substring(lb + 1, rb));
 		if (Double.isNaN(z))
 			return;
-		int i = (int) z;
+		int i = (int) Math.round(z);
 		if (i < 0 || i >= m.obstacles.size()) {
 			out(ScriptEvent.FAILED, "Obstacle " + i + " doesn't exisit.");
 			return;
@@ -4566,7 +4566,7 @@ class Eval2D extends AbstractEval {
 		double z = parseMathExpression(str1.substring(lb + 1, rb));
 		if (Double.isNaN(z))
 			return;
-		int i = (int) z;
+		int i = (int) Math.round(z);
 		if (i < 0 || i >= m.obstacles.size()) {
 			out(ScriptEvent.FAILED, "Obstacle " + i + " doesn't exisit.");
 			return;
@@ -4591,7 +4591,7 @@ class Eval2D extends AbstractEval {
 		double z = parseMathExpression(str1.substring(lb + 1, rb));
 		if (Double.isNaN(z))
 			return;
-		int i = (int) z;
+		int i = (int) Math.round(z);
 		ImageComponent[] ic = view.getImages();
 		if (i < 0 || i >= ic.length) {
 			out(ScriptEvent.FAILED, "Image " + i + " doesn't exisit.");
@@ -4621,7 +4621,7 @@ class Eval2D extends AbstractEval {
 		double z = parseMathExpression(str1.substring(lb + 1, rb));
 		if (Double.isNaN(z))
 			return;
-		int i = (int) z;
+		int i = (int) Math.round(z);
 		LineComponent[] c = view.getLines();
 		if (i < 0 || i >= c.length) {
 			out(ScriptEvent.FAILED, "Line " + i + " doesn't exisit.");
@@ -4688,7 +4688,7 @@ class Eval2D extends AbstractEval {
 		double z = parseMathExpression(str1.substring(lb + 1, rb));
 		if (Double.isNaN(z))
 			return;
-		int i = (int) z;
+		int i = (int) Math.round(z);
 		RectangleComponent[] c = view.getRectangles();
 		if (i < 0 || i >= c.length) {
 			out(ScriptEvent.FAILED, "Rectangle " + i + " doesn't exisit.");
@@ -4785,7 +4785,7 @@ class Eval2D extends AbstractEval {
 		double z = parseMathExpression(str1.substring(lb + 1, rb));
 		if (Double.isNaN(z))
 			return;
-		int i = (int) z;
+		int i = (int) Math.round(z);
 		EllipseComponent[] c = view.getEllipses();
 		if (i < 0 || i >= c.length) {
 			out(ScriptEvent.FAILED, "Ellipse " + i + " doesn't exisit.");
@@ -4907,7 +4907,7 @@ class Eval2D extends AbstractEval {
 		double z = parseMathExpression(str1.substring(lb + 1, rb));
 		if (Double.isNaN(z))
 			return;
-		int i = (int) z;
+		int i = (int) Math.round(z);
 		TextBoxComponent[] t = view.getTextBoxes();
 		if (i >= t.length) {
 			out(ScriptEvent.FAILED, "Text box " + i + " doesn't exisit.");

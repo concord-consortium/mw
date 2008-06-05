@@ -209,7 +209,7 @@ class TextBoxScripter extends ComponentScripter {
 	}
 
 	private void delay(String str) {
-		if (str.matches(Compiler.REGEX_NONNEGATIVE_DECIMAL) || str.matches(Compiler.REGEX_NONNEGATIVE_INTEGER)) {
+		if (str.matches(Compiler.REGEX_NONNEGATIVE_DECIMAL)) {
 			float sec = Float.valueOf(str).floatValue();
 			int millis = (int) (sec * 1000);
 			try {
