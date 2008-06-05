@@ -70,12 +70,12 @@ class ConsoleDocument extends DefaultStyledDocument {
 		this.consoleTextPane = consoleTextPane;
 	}
 
-	/** Removes all content of the script window, and add a new prompt. */
+	/* Removes all content of the script window, and add a new prompt. */
 	void clearContent() {
 		try {
 			super.remove(0, getLength());
 		}
-		catch (javax.swing.text.BadLocationException exception) {
+		catch (BadLocationException exception) {
 			System.out.println("Could not clear script window content: " + exception.getMessage());
 		}
 		setPrompt();
@@ -95,7 +95,7 @@ class ConsoleDocument extends DefaultStyledDocument {
 		}
 	}
 
-	/**
+	/*
 	 * it looks like the positionBeforePrompt does not track when it started out as 0 and a insertString at location 0
 	 * occurs. It may be better to track the position after the prompt in stead
 	 */
@@ -203,7 +203,7 @@ class ConsoleDocument extends DefaultStyledDocument {
 		// consoleTextPane.setCaretPosition(offs + str.length());
 	}
 
-	/**
+	/*
 	 * Replaces current command on script.
 	 * 
 	 * @param newCommand
