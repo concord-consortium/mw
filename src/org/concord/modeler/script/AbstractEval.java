@@ -83,7 +83,7 @@ public abstract class AbstractEval {
 	protected final static float ZERO = 1000000 * Float.MIN_VALUE;
 	protected final static byte ON = 51;
 	protected final static byte OFF = 52;
-	protected final static Pattern NNI = compile(REGEX_NONNEGATIVE_INTEGER);
+	protected final static Pattern NNI = compile("\\d+");
 	protected final static short DELAY_FRACTION = 500;
 
 	protected static Evaluator mathEval;
@@ -1248,8 +1248,8 @@ public abstract class AbstractEval {
 		if (i < ci.length() - 1) {
 			String s = ci.substring(i).trim();
 			if (s != null && !s.equals("")) {
-				if (s.matches(REGEX_NONNEGATIVE_INTEGER)) {
-					return Short.valueOf(s).shortValue();
+				if (s.matches(REGEX_NONNEGATIVE_DECIMAL)) {
+					return Double.valueOf(s).shortValue();
 				}
 				s = replaceVariablesWithValues(useDefinitions(s));
 				double x = parseMathExpression(s);

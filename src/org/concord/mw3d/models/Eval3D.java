@@ -114,7 +114,7 @@ class Eval3D extends AbstractEval {
 			double x = parseMathExpression(v);
 			if (Double.isNaN(x))
 				break;
-			i = (int) x;
+			i = (int) Math.round(x);
 			if (i < 0 || i >= 4) {
 				out(ScriptEvent.FAILED, i + " is an invalid index: must be between 0 and 3 (inclusive).");
 				break;
@@ -145,7 +145,7 @@ class Eval3D extends AbstractEval {
 			double x = parseMathExpression(v);
 			if (Double.isNaN(x))
 				break;
-			i = (int) x;
+			i = (int) Math.round(x);
 			if (i < 0 || i >= n) {
 				out(ScriptEvent.FAILED, i + " is an invalid index: must be between 0 and " + (n - 1) + " (inclusive).");
 				break;
@@ -195,7 +195,7 @@ class Eval3D extends AbstractEval {
 			double x = parseMathExpression(v);
 			if (Double.isNaN(x))
 				break;
-			i = (int) x;
+			i = (int) Math.round(x);
 			if (i < 0 || i >= n) {
 				out(ScriptEvent.FAILED, "Molecule " + i + " does not exist.");
 				break;
@@ -650,7 +650,7 @@ class Eval3D extends AbstractEval {
 		double x = parseMathExpression(str);
 		if (Double.isNaN(x))
 			return false;
-		view.setCameraAtom((int) x);
+		view.setCameraAtom((int) Math.round(x));
 		view.repaint();
 		model.notifyChange();
 		return true;
@@ -706,12 +706,12 @@ class Eval3D extends AbstractEval {
 		if (s.length != 3)
 			return false;
 		int n = model.getAtomCount();
-		int i = (int) Float.parseFloat(s[0]);
+		int i = Math.round(Float.parseFloat(s[0]));
 		if (i >= n) {
 			out(ScriptEvent.FAILED, "Atom index out of limit: i=" + i + ">=" + n);
 			return false;
 		}
-		int j = (int) Float.parseFloat(s[1]);
+		int j = Math.round(Float.parseFloat(s[1]));
 		if (j >= n) {
 			out(ScriptEvent.FAILED, "Atom index out of limit: j=" + j + ">=" + n);
 			return false;
@@ -733,12 +733,12 @@ class Eval3D extends AbstractEval {
 		if (s.length != 4)
 			return false;
 		int n = model.getAtomCount();
-		int i = (int) Float.parseFloat(s[0]);
+		int i = Math.round(Float.parseFloat(s[0]));
 		if (i >= n) {
 			out(ScriptEvent.FAILED, "Atom index out of limit: i=" + i + ">=" + n);
 			return false;
 		}
-		int j = (int) Float.parseFloat(s[1]);
+		int j = Math.round(Float.parseFloat(s[1]));
 		if (j >= n) {
 			out(ScriptEvent.FAILED, "Atom index out of limit: j=" + j + ">=" + n);
 			return false;
@@ -747,7 +747,7 @@ class Eval3D extends AbstractEval {
 			out(ScriptEvent.FAILED, "Cannot build an angular bond for identical atoms: i=j=" + i);
 			return false;
 		}
-		int k = (int) Float.parseFloat(s[2]);
+		int k = Math.round(Float.parseFloat(s[2]));
 		if (k >= n) {
 			out(ScriptEvent.FAILED, "Atom index out of limit: k=" + k + ">=" + n);
 			return false;
@@ -844,7 +844,7 @@ class Eval3D extends AbstractEval {
 	}
 
 	private boolean evaluateDelayClause(String str) throws InterruptedException {
-		if (str.matches(REGEX_NONNEGATIVE_DECIMAL) || str.matches(REGEX_NONNEGATIVE_INTEGER)) {
+		if (str.matches(REGEX_NONNEGATIVE_DECIMAL)) {
 			float sec = Float.valueOf(str).floatValue();
 			int millis = (int) (sec * 1000);
 			while (!stop && millis > 0) {
@@ -863,7 +863,7 @@ class Eval3D extends AbstractEval {
 		}
 		if (str.toLowerCase().startsWith("modeltime")) {
 			str = str.substring(9).trim();
-			if (str.matches(REGEX_NONNEGATIVE_DECIMAL) || str.matches(REGEX_NONNEGATIVE_INTEGER)) {
+			if (str.matches(REGEX_NONNEGATIVE_DECIMAL)) {
 				int i = Math.round(Float.valueOf(str).floatValue() / model.getTimeStep());
 				int step0 = model.job != null ? model.job.getIndexOfStep() : 0;
 				AbstractLoadable l = new AbstractLoadable(i) {
@@ -1063,7 +1063,7 @@ class Eval3D extends AbstractEval {
 		double z = parseMathExpression(str1.substring(lb + 1, rb));
 		if (Double.isNaN(z))
 			return;
-		int i = (int) z;
+		int i = (int) Math.round(z);
 		if (i >= model.getAtomCount()) {
 			out(ScriptEvent.FAILED, "Atom " + i + " doesn't exisit.");
 			return;
