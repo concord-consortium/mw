@@ -138,6 +138,7 @@ class Sticks extends Shape {
     Bond[] bonds = frame.bonds;
     for (int i = frame.bondCount; --i >= 0;) {
       Bond bond = bonds[i];
+      if(bond == null || bond.atom1 == null || bond.atom2 == null) continue;
       if ((bond.shapeVisibilityFlags & myVisibilityFlag) == 0
           || frame.bsHidden.get(bond.atom1.atomIndex)
           || frame.bsHidden.get(bond.atom2.atomIndex))

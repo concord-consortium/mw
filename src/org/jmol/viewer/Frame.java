@@ -66,7 +66,7 @@ public final class Frame {
 	CellInfo[] cellInfos;
 	int atomCount;
 	public volatile Atom[] atoms;
-	int bondCount;
+	volatile int bondCount;
 	Bond[] bonds;
 	int groupCount;
 	Group[] groups;
@@ -120,6 +120,7 @@ public final class Frame {
 	// XIE
 	void clear() {
 		htAtomMap.clear();
+		Group.clear();
 	}
 
 	class Molecule {
@@ -485,7 +486,7 @@ public final class Frame {
 		checkNewGroup(atomCount, modelIndex, chainID, group3, groupSequenceNumber, groupInsertionCode);
 
 		if (atomCount == atoms.length)
-			growAtomArrays(ATOM_GROWTH_INCREMENT);
+			growAtomArrays();
 
 		Atom atom = new Atom(this, currentModelIndex, atomCount, atomSymmetry, atomSite, atomicAndIsotopeNumber,
 				atomName, mad, formalCharge, partialCharge, occupancy, bfactor, x, y, z, isHetero, atomSerial, chainID,
@@ -1127,8 +1128,9 @@ public final class Frame {
 	private Bond addBond(Bond bond) {
 		if (bond == null)
 			return null;
-		if (bondCount == bonds.length)
+		if (bondCount == bonds.length) {
 			bonds = (Bond[]) ArrayUtil.setLength(bonds, bondCount + growthIncrement);
+		}
 		return bonds[bondCount++] = bond;
 	}
 
@@ -1761,7 +1763,7 @@ public final class Frame {
 	void deleteAllBonds() {
 		stateScripts.clear();
 		viewer.setShapeProperty(JmolConstants.SHAPE_STICKS, "reset", null);
-		for (int i = bondCount; --i >= 0;) {
+		for (int i = 0; i < bonds.length; i++) {
 			bonds[i].deleteAtomReferences();
 			bonds[i] = null;
 		}
