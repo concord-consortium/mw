@@ -551,13 +551,15 @@ abstract class MouseManager {
 			while (hoverWatcherThread != null) {
 				try {
 					Thread.sleep(1000);
-					if (!hoverSuspended && !viewer.getInMotion() && !viewer.getSpinOn()) {
-						if (xCurrent == mouseMovedX && yCurrent == mouseMovedY && timeCurrent == mouseMovedTime) {
-							// the last event was mouse move
-							if (System.currentTimeMillis() - mouseMovedTime > HOVER_TIME) {
-								int atomIndex = viewer.findNearestAtomIndex(xCurrent, yCurrent);
-								if (atomIndex != -1) {
-									hoverOn(atomIndex);
+					if (viewer.getAwtComponent().isVisible()) {
+						if (!hoverSuspended && !viewer.getInMotion() && !viewer.getSpinOn()) {
+							if (xCurrent == mouseMovedX && yCurrent == mouseMovedY && timeCurrent == mouseMovedTime) {
+								// the last event was mouse move
+								if (System.currentTimeMillis() - mouseMovedTime > HOVER_TIME) {
+									int atomIndex = viewer.findNearestAtomIndex(xCurrent, yCurrent);
+									if (atomIndex != -1) {
+										hoverOn(atomIndex);
+									}
 								}
 							}
 						}

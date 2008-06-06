@@ -23,19 +23,20 @@
  */
 
 package org.jmol.adapter.smarter;
+
 class Bond {
-  int atomIndex1;
-  int atomIndex2;
-  int order;
+	int atomIndex1;
+	int atomIndex2;
+	int order;
 
-  Bond() {
-    atomIndex1 = atomIndex2 = -1;
-    order = 1;
-  }
+	Bond() {
+		atomIndex1 = atomIndex2 = -1;
+		order = 1;
+	}
 
-  Bond(int atomIndex1, int atomIndex2, int order) {
-    this.atomIndex1 = atomIndex1;
-    this.atomIndex2 = atomIndex2;
-    this.order = order;
-  }
+	Bond(int atomIndex1, int atomIndex2, int order) {
+		this.atomIndex1 = atomIndex1;
+		this.atomIndex2 = atomIndex2;
+		this.order = order;
+	}
 }
