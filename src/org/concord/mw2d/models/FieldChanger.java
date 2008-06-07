@@ -136,7 +136,7 @@ class FieldChanger extends AbstractChange {
 		}
 		if (f == null)
 			return 0.0;
-		return f.getIntensity();
+		return Math.abs(f.getIntensity());
 	}
 
 	public String toString() {
