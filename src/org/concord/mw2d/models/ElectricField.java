@@ -91,16 +91,29 @@ public class ElectricField implements VectorField, Serializable {
 
 	public void setIntensity(double dc) {
 		this.dc = Math.abs(dc);
-		if (o == WEST || o == EAST) {
-			o = dc > 0 ? EAST : WEST;
+		// ugly fixes of mapping negative values to direction changes
+		if (dc < 0) {
+			if (o == SOUTH) {
+				o = NORTH;
+			}
+			else if (o == EAST) {
+				o = WEST;
+			}
 		}
-		else if (o == SOUTH || o == NORTH) {
-			o = dc > 0 ? SOUTH : NORTH;
+		else {
+			if (o == NORTH) {
+				o = SOUTH;
+			}
+			else if (o == WEST) {
+				o = EAST;
+			}
 		}
 	}
 
 	public double getIntensity() {
-		return dc;
+		if (o == SOUTH || o == EAST)
+			return dc;
+		return -dc;
 	}
 
 	public void setOrientation(int o) {

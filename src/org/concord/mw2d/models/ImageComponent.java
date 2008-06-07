@@ -28,6 +28,7 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Stroke;
 import java.awt.Toolkit;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.io.File;
 import java.io.IOException;
@@ -296,6 +297,7 @@ public class ImageComponent implements ModelComponent, Layered, Rotatable {
 		if (n <= 0)
 			return;
 		Graphics2D g2 = (Graphics2D) g;
+		AffineTransform at = null;
 		if (host != null)
 			setLocation(host.getRx() - 0.5 * getLogicalScreenWidth(), host.getRy() - 0.5 * getLogicalScreenHeight());
 		double xc = 0, yc = 0;
@@ -307,6 +309,7 @@ public class ImageComponent implements ModelComponent, Layered, Rotatable {
 		float a = angle + offsetAngle;
 		boolean hasAngle = Math.abs(a) > Particle.ZERO;
 		if (hasAngle) {
+			at = g2.getTransform();
 			xc = x + getLogicalScreenWidth() * 0.5;
 			yc = y + getLogicalScreenHeight() * 0.5;
 			g2.rotate(a, xc, yc);
@@ -328,7 +331,7 @@ public class ImageComponent implements ModelComponent, Layered, Rotatable {
 			g2.setStroke(oldStroke);
 		}
 		if (hasAngle) {
-			g2.rotate(-a, xc, yc);
+			g2.setTransform(at);
 		}
 		if (selected && selectedToRotate && ((MDView) model.getView()).getShowSelectionHalo()) {
 			Stroke oldStroke = g2.getStroke();

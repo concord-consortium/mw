@@ -400,7 +400,7 @@ class ElectricFieldEditor extends JDialog {
 			rbE.setSelected(direction == ElectricField.EAST);
 			rbS.setSelected(direction == ElectricField.SOUTH);
 			rbN.setSelected(direction == ElectricField.NORTH);
-			sliderDC.setValue((int) (100.0 * ef.getIntensity()));
+			sliderDC.setValue((int) (100.0 * Math.abs(ef.getIntensity())));
 			ampSlider.setValue((int) (100.0 * ef.getAmplitude()));
 			double df = (FRQ_MAX - FRQ_MIN) / frqSlider.getMaximum();
 			frqSlider.setValue((int) ((ef.getFrequency() - FRQ_MIN) / df));

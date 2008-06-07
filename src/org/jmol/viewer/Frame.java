@@ -121,6 +121,10 @@ public final class Frame {
 	void clear() {
 		htAtomMap.clear();
 		Group.clear();
+		if (removedAtomList != null)
+			removedAtomList.clear();
+		if (keptAtomList != null)
+			keptAtomList.clear();
 	}
 
 	class Molecule {

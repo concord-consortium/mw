@@ -368,7 +368,6 @@ class Jmol extends Draw {
 		viewer.removeAll();
 		viewer.setFrankOn(true);
 		removeAllImages();
-		repaint();
 		startingScene = null;
 		if (viewer.getNavigationMode())
 			viewer.setCameraPosition(0, 0, 0);
@@ -376,6 +375,7 @@ class Jmol extends Draw {
 		viewer.setDepthCueing(false);
 		viewer.setInteractionCentersVisible(true);
 		waitForInitializationScript = false;
+		repaint();
 	}
 
 	void setScriptRunning(final boolean b) {
