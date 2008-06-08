@@ -1768,8 +1768,10 @@ public final class Frame {
 		stateScripts.clear();
 		viewer.setShapeProperty(JmolConstants.SHAPE_STICKS, "reset", null);
 		for (int i = 0; i < bonds.length; i++) {
-			bonds[i].deleteAtomReferences();
-			bonds[i] = null;
+			if (bonds[i] != null) {
+				bonds[i].deleteAtomReferences();
+				bonds[i] = null;
+			}
 		}
 		bondCount = 0;
 	}
