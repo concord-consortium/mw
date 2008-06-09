@@ -388,7 +388,6 @@ class LimitedLineReader {
       sb.append(buf, ichBeginningOfLine, cchLine);
       return "" + sb;
     }
-    //Logger.debug("org.jmol.adapter.smarter.Resolver short input buffer");
     // miguel 2005 01 26
     // for now, just return the empty string.
     // it will only affect the Resolver code

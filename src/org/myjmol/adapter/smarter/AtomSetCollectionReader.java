@@ -37,8 +37,6 @@ import java.io.BufferedReader;
 /*
  * Notes 9/2006 Bob Hanson
  * 
- * all parsing functions now moved to org.jmol.util.Parser
- * 
  * to add symmetry capability to any reader, some or all of the following 
  * methods need to be there:
  * 
