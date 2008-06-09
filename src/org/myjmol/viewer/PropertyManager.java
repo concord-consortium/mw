@@ -23,9 +23,6 @@
  */
 package org.myjmol.viewer;
 
-//import org.jmol.util.Logger;
-
-
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;

@@ -140,7 +140,7 @@ public class SmarterJmolAdapter extends JmolAdapter {
       }
       return "unknown DOM reader error";
     } catch (Exception e) {
-      org.jmol.util.Logger.error(null, e);
+      Logger.error(null, e);
       return "" + e;
     }
   }

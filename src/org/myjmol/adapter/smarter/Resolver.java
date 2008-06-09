@@ -45,7 +45,7 @@ class Resolver {
       determineAtomSetCollectionReader(bufferedReader, logger);
     logger.log("The Resolver thinks", atomSetCollectionReaderName);
     String className =
-      "org.jmol.adapter.smarter." + atomSetCollectionReaderName + "Reader";
+      "org.myjmol.adapter.smarter." + atomSetCollectionReaderName + "Reader";
 
     if (atomSetCollectionReaderName == null)
       return "unrecognized file format for file " + name;

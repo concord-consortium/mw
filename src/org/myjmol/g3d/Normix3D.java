@@ -24,8 +24,6 @@
 
 package org.myjmol.g3d;
 
-//import org.jmol.util.Bmp;
-
 import javax.vecmath.Vector3f;
 import javax.vecmath.Matrix3f;
 import java.util.Random;

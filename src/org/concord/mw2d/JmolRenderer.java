@@ -81,17 +81,17 @@ class JmolRenderer {
 		// remove the jmol listeners
 		MouseListener[] m = view.getMouseListeners();
 		for (MouseListener i : m) {
-			if (i.getClass().getName().startsWith("org.jmol"))
+			if (i.getClass().getName().startsWith("org.myjmol"))
 				view.removeMouseListener(i);
 		}
 		MouseMotionListener[] a = view.getMouseMotionListeners();
 		for (MouseMotionListener i : a) {
-			if (i.getClass().getName().startsWith("org.jmol"))
+			if (i.getClass().getName().startsWith("org.myjmol"))
 				view.removeMouseMotionListener(i);
 		}
 		MouseWheelListener[] b = view.getMouseWheelListeners();
 		for (MouseWheelListener i : b) {
-			if (i.getClass().getName().startsWith("org.jmol"))
+			if (i.getClass().getName().startsWith("org.myjmol"))
 				view.removeMouseWheelListener(i);
 		}
 

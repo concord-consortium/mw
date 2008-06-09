@@ -1153,7 +1153,7 @@ public final class Frame {
 
 	Shape allocateShape(int shapeID) {
 		String classBase = JmolConstants.shapeClassBases[shapeID];
-		String className = "org.jmol.viewer." + classBase;
+		String className = "org.myjmol.viewer." + classBase;
 
 		try {
 			Class shapeClass = Class.forName(className);
