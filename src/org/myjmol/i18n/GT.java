@@ -49,14 +49,14 @@ public class GT {
     Logger.debug("Instantiating gettext wrapper...");
     try {
       if (!ignoreApplicationBundle) {
-        addBundles("org.jmol.translation.Jmol.Messages");
+        addBundles("org.myjmol.translation.Jmol.Messages");
       }
     } catch (Exception exception) {
       Logger.error("Some exception occured!", exception);
       translationResources = null;
     }
     try {
-      addBundles("org.jmol.translation.JmolApplet.Messages");
+      addBundles("org.myjmol.translation.JmolApplet.Messages");
     } catch (Exception exception) {
       Logger.error("Some exception occured!", exception);
     }

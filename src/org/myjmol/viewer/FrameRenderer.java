@@ -82,7 +82,7 @@ class FrameRenderer {
 
 	ShapeRenderer allocateRenderer(int refShape, Graphics3D g3d) {
 		String classBase = JmolConstants.shapeClassBases[refShape] + "Renderer";
-		String className = "org.jmol.viewer." + classBase;
+		String className = "org.myjmol.viewer." + classBase;
 		try {
 			Class shapeClass = Class.forName(className);
 			ShapeRenderer renderer = (ShapeRenderer) shapeClass.newInstance();
