@@ -20,7 +20,7 @@
 
 package org.concord.mw2d;
 
-import org.jmol.api.JmolAdapter;
+import org.myjmol.api.JmolAdapter;
 
 import org.concord.mw2d.models.Atom;
 import org.concord.mw2d.models.MolecularModel;

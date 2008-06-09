@@ -56,14 +56,14 @@ import org.concord.modeler.draw.Draw;
 import org.concord.modeler.draw.FillMode;
 import org.concord.modeler.draw.GradientFactory;
 import org.concord.modeler.util.FileUtilities;
-import org.jmol.adapter.smarter.SmarterJmolAdapter;
 import org.jmol.api.Attachment;
-import org.jmol.api.Cockpit;
-import org.jmol.api.JmolStatusListener;
-import org.jmol.api.JmolViewer;
-import org.jmol.api.Navigator;
-import org.jmol.api.Scene;
 import org.jmol.api.SiteAnnotation;
+import org.myjmol.adapter.smarter.SmarterJmolAdapter;
+import org.myjmol.api.Cockpit;
+import org.myjmol.api.JmolStatusListener;
+import org.myjmol.api.JmolViewer;
+import org.myjmol.api.Navigator;
+import org.myjmol.api.Scene;
 
 class Jmol extends Draw {
 

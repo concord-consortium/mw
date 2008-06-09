@@ -47,7 +47,7 @@ import org.concord.modeler.process.Job;
 import org.concord.modeler.process.Loadable;
 import org.concord.modeler.util.FloatQueue;
 import org.concord.modeler.util.HomoQueueGroup;
-import org.jmol.api.Pair;
+import org.myjmol.api.Pair;
 
 /**
  * For physical units used in the molecular dynamics simulations, we assume the following:

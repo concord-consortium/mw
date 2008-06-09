@@ -40,7 +40,7 @@ import org.concord.modeler.ModelerUtilities;
 import org.concord.modeler.ui.ColorComboBox;
 import org.concord.modeler.ui.PastableTextArea;
 import org.jmol.api.SiteAnnotation;
-import org.jmol.g3d.Graphics3D;
+import org.myjmol.g3d.Graphics3D;
 
 /**
  * @author Charles Xie

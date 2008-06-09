@@ -78,7 +78,7 @@ import javax.swing.event.PopupMenuListener;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
 
-import org.jmol.api.JmolStatusListener;
+import org.myjmol.api.JmolStatusListener;
 
 import org.concord.jmol.CommandEvent;
 import org.concord.jmol.CommandListener;

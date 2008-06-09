@@ -79,8 +79,8 @@ import org.concord.modeler.util.FileChooser;
 import org.concord.modeler.util.FileUtilities;
 import org.jmol.api.Attachment;
 import org.jmol.api.InteractionCenter;
-import org.jmol.api.Scene;
 import org.jmol.api.SiteAnnotation;
+import org.myjmol.api.Scene;
 
 public abstract class JmolContainer extends JPanel implements LoadMoleculeListener, CommandListener {
 

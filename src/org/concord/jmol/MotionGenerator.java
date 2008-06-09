@@ -29,7 +29,7 @@ import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
 
 import org.jmol.api.InteractionCenter;
-import org.jmol.api.JmolViewer;
+import org.myjmol.api.JmolViewer;
 
 /**
  * The interaction between the Rover and the Interaction Centers are given by the following potential energy function:

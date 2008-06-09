@@ -17,9 +17,9 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * END LICENSE */
-package org.myjmol.api;
+package org.jmol.api;
 
-import java.io.Serializable;
+import javax.vecmath.Point3f;
 
 import org.myjmol.g3d.Graphics3D;
 
@@ -27,28 +27,61 @@ import org.myjmol.g3d.Graphics3D;
  * @author Charles Xie
  * 
  */
-public abstract class Attachment implements Serializable {
+public class InteractionCenter extends Attachment {
 
-	public final static byte ATOM_HOST = 0;
-	public final static byte BOND_HOST = 1;
+	private Point3f center;
+	private int charge = 1;
+	private float radius = 0.5f;
+	private int hostIndex = -1;
 
-	private byte hostType = ATOM_HOST;
-	private int keyRgb = Graphics3D.getArgb(Graphics3D.GOLD);
-
-	public void setKeyRgb(int i) {
-		keyRgb = i;
+	public InteractionCenter() {
+		super();
+		setKeyRgb(Graphics3D.getArgb(Graphics3D.OLIVE));
+		center = new Point3f();
 	}
 
-	public int getKeyRgb() {
-		return keyRgb;
+	public void setHost(int i) {
+		hostIndex = i;
 	}
 
-	public void setHostType(byte b) {
-		hostType = b;
+	public int getHost() {
+		return hostIndex;
 	}
 
-	public byte getHostType() {
-		return hostType;
+	public void setCharge(int i) {
+		charge = i;
+	}
+
+	public int getCharge() {
+		return charge;
+	}
+
+	public void setRadius(float radius) {
+		this.radius = radius;
+	}
+
+	public float getRadius() {
+		return radius;
+	}
+
+	public void setCoordinates(float x, float y, float z) {
+		center.set(x, y, z);
+	}
+
+	public Point3f getCoorindates() {
+		return center;
+	}
+
+	public float getX() {
+		return center.x;
+	}
+
+	public float getY() {
+		return center.y;
+	}
+
+	public float getZ() {
+		return center.z;
 	}
 
 }

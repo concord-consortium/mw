@@ -37,8 +37,8 @@ import org.concord.mw2d.models.RadialBond;
 import org.concord.mw2d.models.RadialBondCollection;
 import org.concord.mw2d.models.ReactionModel;
 
-import org.jmol.api.JmolAdapter;
-import org.jmol.api.JmolViewer;
+import org.myjmol.api.JmolAdapter;
+import org.myjmol.api.JmolViewer;
 
 class JmolRenderer {
 

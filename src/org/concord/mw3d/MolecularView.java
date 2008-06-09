@@ -53,12 +53,12 @@ import javax.vecmath.Point3f;
 import javax.vecmath.Point3i;
 import javax.vecmath.Vector3f;
 
-import org.jmol.api.Cockpit;
-import org.jmol.api.JmolAdapter;
-import org.jmol.api.JmolViewer;
-import org.jmol.api.Navigator;
-import org.jmol.api.Scene;
-import org.jmol.viewer.JmolConstants;
+import org.myjmol.api.Cockpit;
+import org.myjmol.api.JmolAdapter;
+import org.myjmol.api.JmolViewer;
+import org.myjmol.api.Navigator;
+import org.myjmol.api.Scene;
+import org.myjmol.viewer.JmolConstants;
 
 import org.concord.modeler.ConnectionManager;
 import org.concord.modeler.ModelerUtilities;

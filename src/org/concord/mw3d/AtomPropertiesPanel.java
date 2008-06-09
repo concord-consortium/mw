@@ -41,7 +41,7 @@ import org.concord.modeler.ui.FloatNumberTextField;
 import org.concord.modeler.ui.HyperlinkLabel;
 import org.concord.modeler.util.DataQueueUtilities;
 import org.concord.mw3d.models.Atom;
-import org.jmol.api.JmolViewer;
+import org.myjmol.api.JmolViewer;
 
 class AtomPropertiesPanel extends PropertiesPanel {
 
