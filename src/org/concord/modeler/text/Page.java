@@ -342,7 +342,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	Action printAction, htmlizeAction, saveAsAction;
 	private Action gradeAction, hintAction, bulletAction, selectAllAction, hyperlinkAction, propertiesAction;
 	private Action increaseFontSizeAction, decreaseFontSizeAction, increaseIndentAction, decreaseIndentAction;
-	private Action insertFileAction, refreshAction, newAction, scriptAction, closeAction;
+	private Action insertFileAction, refreshAction, newAction, scriptAction, closeAction, pastePlainTextAction;
 	private Action openAction, saveAction, colorBarAction, symbolAction, insertComponentAction;
 	private Action insertAtomContainerAction, insertChemContainerAction, insertProsynContainerAction;
 	private Action insertGBContainerAction;
@@ -663,7 +663,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		insertFileAction = null;
 		selectAllAction = null;
 		bulletAction = null;
-		// numberingAction=null;
+		pastePlainTextAction = null;
 		symbolAction = null;
 		hyperlinkAction = null;
 		printAction = null;
@@ -2180,7 +2180,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				increaseFontSizeAction, decreaseFontSizeAction, bulletAction, printPreviewAction, pageSetupAction,
 				printAction, propertiesAction, symbolAction, hyperlinkAction, imageReader, colorBarAction,
 				insertAtomContainerAction, insertGBContainerAction, insertChemContainerAction,
-				insertProsynContainerAction, insertComponentAction, fontAction, paragraphAction, insertBulletAction };
+				insertProsynContainerAction, insertComponentAction, fontAction, paragraphAction, insertBulletAction,
+				pastePlainTextAction };
 		Action[] old = super.getActions();
 		/* change the select all action and its key binding */
 		for (Action a : old) {
@@ -5497,6 +5498,14 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		propertiesAction.putValue(Action.NAME, SET_PROPERTIES);
 		propertiesAction.putValue(Action.SHORT_DESCRIPTION, "Set properties of this page");
 		propertiesAction.putValue(Action.SMALL_ICON, IconPool.getIcon("properties"));
+
+		pastePlainTextAction = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				Page.super.paste();
+			}
+		};
+		pastePlainTextAction.putValue(Action.NAME, "Paste Plain Text");
+		pastePlainTextAction.putValue(Action.SHORT_DESCRIPTION, "Paste Plain Text");
 
 	}
 

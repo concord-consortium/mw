@@ -1258,6 +1258,12 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 				.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_MASK));
 		menu.add(menuItem);
 		editor.addEnabledComponentWhenEditable(menuItem);
+
+		menuItem = new JMenuItem(page.getAction("Paste Plain Text"));
+		s = getInternationalText("PastePlainText");
+		menuItem.setText(s != null ? s : "Paste Plain Text");
+		menu.add(menuItem);
+		editor.addEnabledComponentWhenEditable(menuItem);
 		menu.addSeparator();
 
 		s = getInternationalText("Title");
