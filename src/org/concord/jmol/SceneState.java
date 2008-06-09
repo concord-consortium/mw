@@ -21,7 +21,7 @@ package org.concord.jmol;
 
 import java.io.Serializable;
 
-import org.jmol.api.Scene;
+import org.myjmol.api.Scene;
 
 /**
  * @author Charles Xie

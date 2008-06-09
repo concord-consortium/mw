@@ -39,7 +39,7 @@ import org.concord.modeler.ui.ColorComboBox;
 import org.concord.modeler.ui.FloatNumberTextField;
 import org.concord.modeler.ui.IntegerTextField;
 import org.jmol.api.InteractionCenter;
-import org.jmol.g3d.Graphics3D;
+import org.myjmol.g3d.Graphics3D;
 
 /**
  * @author Charles Xie

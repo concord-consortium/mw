@@ -22,7 +22,7 @@ package org.concord.mw3d.models;
 
 import javax.vecmath.Vector3f;
 
-import org.jmol.api.Pair;
+import org.myjmol.api.Pair;
 
 class ForceCalculator {
 

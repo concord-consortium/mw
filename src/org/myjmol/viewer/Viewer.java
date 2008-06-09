@@ -24,6 +24,9 @@
 package org.myjmol.viewer;
 
 
+import org.jmol.api.Attachment;
+import org.jmol.api.InteractionCenter;
+import org.jmol.api.SiteAnnotation;
 import org.myjmol.api.*;
 import org.myjmol.g3d.*;
 import org.myjmol.i18n.GT;

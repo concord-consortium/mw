@@ -51,7 +51,7 @@ import org.concord.modeler.ModelerUtilities;
 import org.concord.modeler.ui.IconPool;
 import org.concord.modeler.ui.IntegerTextField;
 import org.concord.modeler.ui.PastableTextField;
-import org.jmol.viewer.JmolConstants;
+import org.myjmol.viewer.JmolConstants;
 
 import static org.concord.jmol.JmolContainer.getInternationalText;
 

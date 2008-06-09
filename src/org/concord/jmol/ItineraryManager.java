@@ -53,7 +53,7 @@ import javax.swing.event.ListSelectionListener;
 import org.concord.modeler.ModelerUtilities;
 import org.concord.modeler.ui.ListOrMapTransferHandler;
 import org.concord.modeler.ui.PastableTextArea;
-import org.jmol.api.Scene;
+import org.myjmol.api.Scene;
 
 /**
  * @author Charles Xie

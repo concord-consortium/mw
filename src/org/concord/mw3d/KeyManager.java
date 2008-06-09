@@ -21,17 +21,17 @@ package org.concord.mw3d;
 
 import java.awt.event.KeyEvent;
 
-import static org.jmol.api.Navigator.UP_PRESSED;
-import static org.jmol.api.Navigator.DOWN_PRESSED;
-import static org.jmol.api.Navigator.LEFT_PRESSED;
-import static org.jmol.api.Navigator.RIGHT_PRESSED;
-import static org.jmol.api.Navigator.PGUP_PRESSED;
-import static org.jmol.api.Navigator.PGDN_PRESSED;
-import static org.jmol.api.Navigator.X_PRESSED;
-import static org.jmol.api.Navigator.Y_PRESSED;
-import static org.jmol.api.Navigator.Z_PRESSED;
-import static org.jmol.api.Navigator.A_PRESSED;
-import static org.jmol.api.Navigator.S_PRESSED;
+import static org.myjmol.api.Navigator.A_PRESSED;
+import static org.myjmol.api.Navigator.DOWN_PRESSED;
+import static org.myjmol.api.Navigator.LEFT_PRESSED;
+import static org.myjmol.api.Navigator.PGDN_PRESSED;
+import static org.myjmol.api.Navigator.PGUP_PRESSED;
+import static org.myjmol.api.Navigator.RIGHT_PRESSED;
+import static org.myjmol.api.Navigator.S_PRESSED;
+import static org.myjmol.api.Navigator.UP_PRESSED;
+import static org.myjmol.api.Navigator.X_PRESSED;
+import static org.myjmol.api.Navigator.Y_PRESSED;
+import static org.myjmol.api.Navigator.Z_PRESSED;
 
 /**
  * @author Charles Xie
