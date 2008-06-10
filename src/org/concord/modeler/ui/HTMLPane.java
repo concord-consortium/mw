@@ -651,11 +651,14 @@ public class HTMLPane extends MyEditorPane {
 			if (bm instanceof JToggleButton.ToggleButtonModel) {
 				bm.addItemListener(new ItemListener() {
 					public void itemStateChanged(ItemEvent e) {
-						String script = e.getStateChange() == ItemEvent.SELECTED ? input.getSelectedScript() : input
-								.getDeselectedScript();
+						boolean selected = e.getStateChange() == ItemEvent.SELECTED;
+						String script = selected ? input.getSelectedScript() : input.getDeselectedScript();
 						if (script != null)
 							fireLinkUpdate(new HyperlinkEvent(HTMLPane.this, HyperlinkEvent.EventType.ACTIVATED, null,
 									script, source));
+						script = selected ? input.getSelectedSelfScript() : input.getDeselectedSelfScript();
+						if (script != null)
+							notifySelfScriptListeners(new SelfScriptEvent(source, script));
 					}
 				});
 			}
