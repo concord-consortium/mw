@@ -26,6 +26,7 @@ import java.awt.Point;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -45,6 +46,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.event.ChangeListener;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.html.FormView;
 
@@ -229,13 +231,42 @@ public class TextBox extends JPanel implements HtmlService, Searchable {
 		list.get(i).setEnabled(b);
 	}
 
-	public void setEmbeddedComponentSelected(int i, boolean b) {
+	/** set the selection state of a component without causing the listeners on it to fire */
+	public void setEmbeddedComponentSelected(int i, boolean b, boolean silent) {
 		List<JComponent> list = getEmbeddedComponents();
 		if (list == null || i >= list.size() || i < 0)
 			return;
 		JComponent c = list.get(i);
-		if (c instanceof AbstractButton)
-			((AbstractButton) c).setSelected(b);
+		if (c instanceof AbstractButton) {
+			AbstractButton ab = (AbstractButton) c;
+			if (silent) {
+				ItemListener[] il = ab.getItemListeners();
+				if (il != null)
+					for (ItemListener x : il)
+						ab.removeItemListener(x);
+				ActionListener[] al = ab.getActionListeners();
+				if (al != null)
+					for (ActionListener x : al)
+						ab.removeActionListener(x);
+				ChangeListener[] cl = ab.getChangeListeners();
+				if (cl != null)
+					for (ChangeListener x : cl)
+						ab.removeChangeListener(x);
+				ab.setSelected(b);
+				if (il != null)
+					for (ItemListener x : il)
+						ab.addItemListener(x);
+				if (al != null)
+					for (ActionListener x : al)
+						ab.addActionListener(x);
+				if (cl != null)
+					for (ChangeListener x : cl)
+						ab.addChangeListener(x);
+			}
+			else {
+				ab.setSelected(b);
+			}
+		}
 	}
 
 	public void setContentType(String type) {

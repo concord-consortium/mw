@@ -43,9 +43,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.swing.AbstractButton;
 import javax.swing.AbstractListModel;
 import javax.swing.ButtonModel;
-import javax.swing.DefaultButtonModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.Icon;
@@ -461,6 +461,9 @@ public class HTMLPane extends MyEditorPane {
 					else if ("value" == s) {
 						input.setValue(attr.toString());
 					}
+					else if ("alt" == s) {
+						input.setAlt(attr.toString());
+					}
 					else if ("model" == s) {
 						input.setModel(attr);
 					}
@@ -478,9 +481,6 @@ public class HTMLPane extends MyEditorPane {
 					}
 					else if ("question" == s) {
 						input.setQuestion(attr.toString());
-					}
-					else if ("disable_at_run" == s) {
-						input.setDisableAtRun("true".equals(attr.toString()));
 					}
 				}
 				if (form == null) // when a single input tag is used without a form envelop
@@ -647,9 +647,14 @@ public class HTMLPane extends MyEditorPane {
 				((Document) input.getModel()).putProperty("question", input.getQuestion());
 		}
 		else if (input.getModel() instanceof ButtonModel) {
-			ButtonModel bm = (ButtonModel) input.getModel();
-			if (bm instanceof JToggleButton.ToggleButtonModel) {
-				bm.addItemListener(new ItemListener() {
+			final AbstractButton ab = getAbstractButton((ButtonModel) input.getModel());
+			if (ab == null)
+				return;
+			ab.setToolTipText(input.getAlt());
+			if (ab instanceof JToggleButton) {
+				for (ItemListener l : ab.getItemListeners())
+					ab.removeItemListener(l);
+				ab.addItemListener(new ItemListener() {
 					public void itemStateChanged(ItemEvent e) {
 						boolean selected = e.getStateChange() == ItemEvent.SELECTED;
 						String script = selected ? input.getSelectedScript() : input.getDeselectedScript();
@@ -662,12 +667,10 @@ public class HTMLPane extends MyEditorPane {
 					}
 				});
 			}
-			else if (bm != null) {
-				if (bm instanceof DefaultButtonModel) {
-					for (ActionListener l : ((DefaultButtonModel) bm).getActionListeners())
-						bm.removeActionListener(l);
-				}
-				bm.addActionListener(new ActionListener() {
+			else {
+				for (ActionListener l : ab.getActionListeners())
+					ab.removeActionListener(l);
+				ab.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						String script = input.getSelectedScript();
 						if (script != null)
@@ -680,11 +683,31 @@ public class HTMLPane extends MyEditorPane {
 				});
 			}
 		}
-
 	}
 
 	public List<HtmlForm> getForms() {
 		return formList;
+	}
+
+	private AbstractButton getAbstractButton(ButtonModel bm) {
+		if (getContentType().equals("text/plain"))
+			return null;
+		Component[] c = getComponents();
+		if (c == null || c.length == 0)
+			return null;
+		Container container = null;
+		JComponent comp = null;
+		for (Component x : c) {
+			if (x instanceof Container) {
+				container = (Container) x;
+				comp = (JComponent) container.getComponent(0);
+				if (comp instanceof AbstractButton) {
+					if (bm == ((AbstractButton) comp).getModel())
+						return (AbstractButton) comp;
+				}
+			}
+		}
+		return null;
 	}
 
 	public List<JComponent> getEmbeddedComponents() {
