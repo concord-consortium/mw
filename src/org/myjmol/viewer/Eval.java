@@ -2453,11 +2453,15 @@ class Eval { // implements Runnable {
 	}
 
 	void hover() {
+		if (!viewer.isHoverEnabled())
+			viewer.setHoverEnabled(true);
 		String strLabel = (String) statement[1].value;
-		if (strLabel.equalsIgnoreCase("on"))
+		if (strLabel.equalsIgnoreCase("on")) {
 			strLabel = "%U";
-		else if (strLabel.equalsIgnoreCase("off"))
+		}
+		else if (strLabel.equalsIgnoreCase("off")) {
 			strLabel = null;
+		}
 		viewer.loadShape(JmolConstants.SHAPE_HOVER);
 		viewer.setShapeProperty(JmolConstants.SHAPE_HOVER, "label", strLabel);
 	}
