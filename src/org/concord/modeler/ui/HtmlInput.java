@@ -40,6 +40,7 @@ public class HtmlInput {
 	private String type;
 	private String name;
 	private String value;
+	private String alt;
 
 	// MW-only input attributes
 	private String selectedScript;
@@ -47,7 +48,6 @@ public class HtmlInput {
 	private String selectedSelfScript;
 	private String deselectedSelfScript;
 	private String question;
-	private boolean disableAtRun;
 
 	private Object model;
 	private Element sourceElement;
@@ -56,13 +56,12 @@ public class HtmlInput {
 
 	}
 
-	/** TODO: Once the script is running, we wish to disable the control until it completes. */
-	public void setDisableAtRun(boolean b) {
-		disableAtRun = b;
+	public void setAlt(String alt) {
+		this.alt = alt;
 	}
 
-	public boolean getDisableAtRun() {
-		return disableAtRun;
+	public String getAlt() {
+		return alt;
 	}
 
 	public void setName(String name) {

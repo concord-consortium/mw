@@ -148,7 +148,7 @@ class TextBoxScripter extends ComponentScripter {
 					final int i2 = i;
 					EventQueue.invokeLater(new Runnable() {
 						public void run() {
-							textBox.setEmbeddedComponentSelected(i2, true);
+							textBox.setEmbeddedComponentSelected(i2, true, false);
 						}
 					});
 				}
@@ -166,7 +166,26 @@ class TextBoxScripter extends ComponentScripter {
 					final boolean b = "true".equalsIgnoreCase(s[1]);
 					EventQueue.invokeLater(new Runnable() {
 						public void run() {
-							textBox.setEmbeddedComponentSelected(i2, b);
+							textBox.setEmbeddedComponentSelected(i2, b, false);
+						}
+					});
+				}
+			}
+			else if (s.length == 3) {
+				int i = -1;
+				try {
+					i = Integer.parseInt(s[0]);
+				}
+				catch (NumberFormatException e) {
+					e.printStackTrace();
+				}
+				if (i >= 0) {
+					final int i2 = i;
+					final boolean b = "true".equalsIgnoreCase(s[1]);
+					final boolean silent = "silent".equalsIgnoreCase(s[2]);
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							textBox.setEmbeddedComponentSelected(i2, b, silent);
 						}
 					});
 				}
