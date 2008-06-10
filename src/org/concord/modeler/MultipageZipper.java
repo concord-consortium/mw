@@ -81,21 +81,21 @@ public class MultipageZipper {
 		notifyProgressListeners(new ProgressEvent(this, 0, 0, 100, "Excluding files......"));
 		File[] f = folder.listFiles();
 		boolean excluded;
-		for (int i = 0; i < f.length; i++) {
+		for (File i : f) {
 			excluded = false;
-			if (f[i].isDirectory()) {
+			if (i.isDirectory()) {
 				excluded = true;
 			}
 			else {
-				for (int m = 0; m < exclusion.length; m++) {
-					if (f[i].getName().toLowerCase().endsWith(exclusion[m])) {
+				for (String m : exclusion) {
+					if (i.getName().toLowerCase().endsWith(m)) {
 						excluded = true;
 						break;
 					}
 				}
 			}
 			if (!excluded) {
-				keep.add(f[i]);
+				keep.add(i);
 			}
 		}
 		excludeNotLinked(entry);
@@ -129,8 +129,8 @@ public class MultipageZipper {
 		notifyProgressListeners(new ProgressEvent(this, 0, 0, 100, "Adding files......"));
 		for (File file : keep) {
 			String s = file.getName().toLowerCase();
-			if (s.endsWith(".cml") || s.endsWith(".html") || s.endsWith(".htm") || s.endsWith(".mws")
-					|| s.endsWith(".spt")) {
+			if (s.endsWith(".cml") || s.endsWith(".mml") || s.endsWith(".gbl") || s.endsWith(".html")
+					|| s.endsWith(".htm") || s.endsWith(".mws") || s.endsWith(".spt")) {
 				linkFiles.add(file);
 			}
 			else if (s.endsWith(".mml") || s.endsWith(".gbl") || s.endsWith(".xyz") || s.endsWith(".mdd")
