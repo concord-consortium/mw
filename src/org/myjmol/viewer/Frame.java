@@ -25,7 +25,6 @@
 
 package org.myjmol.viewer;
 
-
 import org.myjmol.api.JmolAdapter;
 import org.myjmol.bspt.Bspf;
 import org.myjmol.bspt.SphereIterator;
@@ -120,7 +119,6 @@ public final class Frame {
 	// XIE
 	void clear() {
 		htAtomMap.clear();
-		Group.clear();
 		if (removedAtomList != null)
 			removedAtomList.clear();
 		if (keptAtomList != null)
