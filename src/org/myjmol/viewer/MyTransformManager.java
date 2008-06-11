@@ -274,8 +274,7 @@ class MyTransformManager extends TransformManager {
 
 	void scaleFitToScreen() {
 		// must set this for cases in which viewer doesn't have a frame yet
-		xFixedTranslation = width >> 1;
-		yFixedTranslation = height >> 1;
+		translateCenterTo(width >> 1, height >> 1);
 		if (width == 0 || height == 0 || !viewer.haveFrame())
 			return;
 		setTranslationCenterToScreen();

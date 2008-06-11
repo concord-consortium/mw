@@ -43,10 +43,6 @@ abstract class TransformManager {
 		this.viewer = viewer;
 	}
 
-	/*******************************************************************************************************************
-	 * GENERAL METHODS
-	 ******************************************************************************************************************/
-
 	void homePosition() {
 		// reset
 		// System.out.println("TransformManager:homePosition - "+Thread.currentThread());
@@ -678,8 +674,7 @@ abstract class TransformManager {
 
 	void setTranslationCenterToScreen() {
 		// translate to the middle of the screen
-		xFixedTranslation = width / 2;
-		yFixedTranslation = height / 2;
+		translateCenterTo(width / 2, height / 2);
 		// 2005 02 22
 		// switch to finding larger screen dimension
 		// find smaller screen dimension

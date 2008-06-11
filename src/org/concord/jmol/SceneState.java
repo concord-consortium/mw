@@ -39,6 +39,7 @@ public class SceneState implements Serializable {
 	private byte atomColoring = JmolContainer.COLOR_ATOM_BY_ELEMENT;
 	private String scheme = JmolContainer.BALL_AND_STICK;
 	private byte atomSelection = JmolContainer.SELECT_ALL;
+	private float xTrans, yTrans;
 
 	public SceneState() {
 	}
@@ -64,6 +65,8 @@ public class SceneState implements Serializable {
 		if (o instanceof Byte) {
 			atomSelection = ((Byte) o).byteValue();
 		}
+		xTrans = scene.getXTrans();
+		yTrans = scene.getYTrans();
 	}
 
 	public void setScheme(String scheme) {
@@ -144,6 +147,22 @@ public class SceneState implements Serializable {
 
 	public String getArriveScript() {
 		return arriveScript;
+	}
+
+	public void setXTrans(float xTrans) {
+		this.xTrans = xTrans;
+	}
+
+	public float getXTrans() {
+		return xTrans;
+	}
+
+	public void setYTrans(float yTrans) {
+		this.yTrans = yTrans;
+	}
+
+	public float getYTrans() {
+		return yTrans;
 	}
 
 	public String toString() {
