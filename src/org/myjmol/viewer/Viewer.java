@@ -2258,6 +2258,7 @@ public class Viewer extends JmolViewer {
 		setRefreshing(true); // XIE: move up for refreshing in the first time
 		if (modelManager.getFrame() == null)
 			return;
+		setBooleanProperty("slabEnabled", false);
 		fileManager.clear();
 		repaintManager.clear();
 		transformManager.clear();
