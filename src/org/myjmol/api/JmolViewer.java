@@ -154,6 +154,14 @@ abstract public class JmolViewer extends JmolSimpleViewer {
 	/** XIE */
 	abstract public Point3f getRotationCenter();
 
+	abstract public void translateToXPercent(float percent);
+
+	abstract public float getTranslationXPercent();
+
+	abstract public void translateToYPercent(float percent);
+
+	abstract public float getTranslationYPercent();
+
 	/** XIE */
 	abstract public void setNavigationMode(boolean b);
 
@@ -328,7 +336,7 @@ abstract public class JmolViewer extends JmolSimpleViewer {
 
 	/** XIE: moveTo in the specified time in seconds */
 	abstract public void moveTo(float timeInSeconds, float axisX, float axisY, float axisZ, float degrees, int zoom,
-			int dx, int dy);
+			float dx, float dy);
 
 	/** XIE */
 	abstract public void stopMotion(boolean b);

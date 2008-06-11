@@ -33,6 +33,7 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
@@ -177,6 +178,13 @@ class Jmol extends Draw {
 
 	};
 
+	private ComponentAdapter resizeListener = new ComponentAdapter() {
+		public void componentResized(ComponentEvent e) {
+			updateSize();
+			repaint();
+		}
+	};
+
 	Jmol(JmolContainer c) {
 
 		super();
@@ -232,12 +240,6 @@ class Jmol extends Draw {
 		cockpit = new Cockpit(viewer);
 		cockpit.setBackground(Color.black);
 
-		addComponentListener(new ComponentAdapter() {
-			public void componentResized(ComponentEvent e) {
-				updateSize();
-			}
-		});
-
 		addFocusListener(new FocusListener() {
 			public void focusGained(FocusEvent e) {
 				if (jmolMouseWheelListener != null)
@@ -254,6 +256,17 @@ class Jmol extends Draw {
 			}
 		});
 
+	}
+
+	void setResizeListener(boolean b) {
+		if (b) {
+			ComponentListener[] cl = getComponentListeners();
+			for (ComponentListener x : cl)
+				if (x == resizeListener)
+					return;
+			addComponentListener(resizeListener);
+		}
+		else removeComponentListener(resizeListener);
 	}
 
 	void waitForInitializationScript() {
@@ -414,6 +427,8 @@ class Jmol extends Draw {
 		startingScene.setProperty("selection", new Byte(ss.getAtomSelection()));
 		startingScene.setProperty("atomcoloring", new Byte(ss.getAtomColoring()));
 		startingScene.setProperty("scheme", ss.getScheme());
+		startingScene.setXTrans(ss.getXTrans());
+		startingScene.setYTrans(ss.getYTrans());
 	}
 
 	Scene getStartingScene() {

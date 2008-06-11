@@ -901,6 +901,8 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 				currentScene.getRotationAxis().set(x[0], x[1], x[2]);
 				currentScene.setRotationAngle(x[3]);
 				currentScene.setZoomPercent(x[4]);
+				currentScene.setXTrans(jmol.viewer.getTranslationXPercent());
+				currentScene.setYTrans(jmol.viewer.getTranslationYPercent());
 				setSceneProperties(currentScene);
 				int index = scenes.indexOf(currentScene);
 				notifyNavigationListeners(new NavigationEvent(this, NavigationEvent.ARRIVAL, index, index, scenes
@@ -921,6 +923,8 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 				x[i] = Float.parseFloat(t[i]);
 			}
 			currentScene = new Scene(jmol.viewer.getCameraPosition(), new Vector3f(x[0], x[1], x[2]), x[3], x[4]);
+			currentScene.setXTrans(jmol.viewer.getTranslationXPercent());
+			currentScene.setYTrans(jmol.viewer.getTranslationYPercent());
 			setSceneProperties(currentScene);
 			scenes.add(currentScene);
 			notifyNavigationListeners(new NavigationEvent(this, NavigationEvent.ARRIVAL, scenes.size() - 1, scenes
@@ -1261,7 +1265,13 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 			if (cp != null) {
 				jmol.viewer.setCameraPosition(cp.x, cp.y, cp.z);
 			}
-			script.append("moveto 0 " + currentScene.rotationToString() + ";");
+			if (getNavigationMode()) {
+				script.append("moveto 0 " + currentScene.rotationToString() + ";");
+			}
+			else {
+				script.append("moveto 0 " + currentScene.rotationToString() + " " + currentScene.getXTrans() + " "
+						+ currentScene.getYTrans() + ";");
+			}
 			setViewerProperties(currentScene);
 		}
 		else {
@@ -1325,6 +1335,7 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 
 	void initializationScriptCompleted() {
 		setRoverMode(roverMode);
+		jmol.setResizeListener(true);
 	}
 
 	private void restoreStates(String s) {
@@ -1437,6 +1448,8 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 				s.setProperty("selection", new Byte(ss.getAtomSelection()));
 				s.setProperty("atomcoloring", new Byte(ss.getAtomColoring()));
 				s.setProperty("scheme", ss.getScheme());
+				s.setXTrans(ss.getXTrans());
+				s.setYTrans(ss.getYTrans());
 				scenes.add(s);
 			}
 			notifyNavigationListeners(new NavigationEvent(this, NavigationEvent.ARRIVAL, 0, 0, scenes.size(), null,
@@ -1511,6 +1524,8 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 				ss.setAtomSelection(atomSelection);
 				ss.setAtomColoring(atomColoring);
 				ss.setScheme(scheme);
+				ss.setXTrans(jmol.viewer.getTranslationXPercent());
+				ss.setYTrans(jmol.viewer.getTranslationYPercent());
 				state.setStartingScene(ss);
 			}
 			else {

@@ -43,6 +43,7 @@ public class Scene {
 	private short transitionTime = 3;
 	private Map<Object, Object> properties;
 	private Scene previous;
+	private float xTrans, yTrans;
 
 	public Scene(Point3f cameraPosition, Vector3f rotationAxis, float rotationAngle, float zoomPercent) {
 		if (cameraPosition != null) {
@@ -146,6 +147,26 @@ public class Scene {
 
 	public float getZoomPercent() {
 		return zoomPercent;
+	}
+
+	/** if not in the navigation mode, store the percentage of translation in the x direction */
+	public void setXTrans(float xTrans) {
+		this.xTrans = xTrans;
+	}
+
+	/** if not in the navigation mode, returns the percentage of translation in the x direction */
+	public float getXTrans() {
+		return xTrans;
+	}
+
+	/** if not in the navigation mode, store the percentage of translation in the y direction */
+	public void setYTrans(float yTrans) {
+		this.yTrans = yTrans;
+	}
+
+	/** if not in the navigation mode, returns the percentage of translation in the y direction */
+	public float getYTrans() {
+		return yTrans;
 	}
 
 	public String rotationToString() {

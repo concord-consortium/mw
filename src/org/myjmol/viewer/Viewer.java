@@ -23,7 +23,6 @@
  */
 package org.myjmol.viewer;
 
-
 import org.jmol.api.Attachment;
 import org.jmol.api.InteractionCenter;
 import org.jmol.api.SiteAnnotation;
@@ -555,7 +554,7 @@ public class Viewer extends JmolViewer {
 		}
 		else {
 			moveTo(immediately ? 0 : scene.getTransitionTime(), a.x, a.y, a.z, scene.getRotationAngle(), (int) scene
-					.getZoomPercent(), 0, 0);
+					.getZoomPercent(), scene.getXTrans(), scene.getYTrans());
 		}
 		String s = scene.getArriveInformation();
 		if (s != null) {
@@ -1111,7 +1110,7 @@ public class Viewer extends JmolViewer {
 	}
 
 	/** XIE */
-	public void moveTo(float seconds, float ax, float ay, float az, float deg, int zoom, int dx, int dy) {
+	public void moveTo(float seconds, float ax, float ay, float az, float deg, int zoom, float dx, float dy) {
 		transformManager.myMoveTo(seconds, ax, ay, az, deg, zoom, dx, dy);
 	}
 
@@ -1410,13 +1409,13 @@ public class Viewer extends JmolViewer {
 		refresh(1, "Viewer:translateXYBy()");
 	}
 
-	void translateToXPercent(float percent) {
+	public void translateToXPercent(float percent) {
 		// Eval.translate()
 		transformManager.translateToXPercent(percent);
 		refresh(1, "Viewer:translateToXPercent()");
 	}
 
-	void translateToYPercent(float percent) {
+	public void translateToYPercent(float percent) {
 		// Eval.translate()
 		transformManager.translateToYPercent(percent);
 		refresh(1, "Viewer:translateToYPercent()");
@@ -1428,11 +1427,11 @@ public class Viewer extends JmolViewer {
 		// Eval.translate()
 	}
 
-	float getTranslationXPercent() {
+	public float getTranslationXPercent() {
 		return transformManager.getTranslationXPercent();
 	}
 
-	float getTranslationYPercent() {
+	public float getTranslationYPercent() {
 		return transformManager.getTranslationYPercent();
 	}
 
