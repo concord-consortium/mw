@@ -136,7 +136,7 @@ class TextBoxScripter extends ComponentScripter {
 		matcher = SELECT_COMPONENT.matcher(ci);
 		if (matcher.find()) {
 			String[] s = ci.substring(matcher.end()).trim().split("\\s+");
-			if (s.length == 1) {
+			if (s.length >= 1) {
 				int i = -1;
 				try {
 					i = Integer.parseInt(s[0]);
@@ -145,47 +145,18 @@ class TextBoxScripter extends ComponentScripter {
 					e.printStackTrace();
 				}
 				if (i >= 0) {
+					boolean a = true;
+					if (s.length >= 2)
+						a = "true".equalsIgnoreCase(s[1]);
+					boolean b = false;
+					if (s.length >= 3)
+						b = "execute".equalsIgnoreCase(s[2]);
 					final int i2 = i;
+					final boolean a2 = a;
+					final boolean b2 = b;
 					EventQueue.invokeLater(new Runnable() {
 						public void run() {
-							textBox.setEmbeddedComponentSelected(i2, true, false);
-						}
-					});
-				}
-			}
-			else if (s.length == 2) {
-				int i = -1;
-				try {
-					i = Integer.parseInt(s[0]);
-				}
-				catch (NumberFormatException e) {
-					e.printStackTrace();
-				}
-				if (i >= 0) {
-					final int i2 = i;
-					final boolean b = "true".equalsIgnoreCase(s[1]);
-					EventQueue.invokeLater(new Runnable() {
-						public void run() {
-							textBox.setEmbeddedComponentSelected(i2, b, false);
-						}
-					});
-				}
-			}
-			else if (s.length == 3) {
-				int i = -1;
-				try {
-					i = Integer.parseInt(s[0]);
-				}
-				catch (NumberFormatException e) {
-					e.printStackTrace();
-				}
-				if (i >= 0) {
-					final int i2 = i;
-					final boolean b = "true".equalsIgnoreCase(s[1]);
-					final boolean silent = "silent".equalsIgnoreCase(s[2]);
-					EventQueue.invokeLater(new Runnable() {
-						public void run() {
-							textBox.setEmbeddedComponentSelected(i2, b, silent);
+							textBox.setComponentSelected(i2, a2, b2);
 						}
 					});
 				}
@@ -196,7 +167,7 @@ class TextBoxScripter extends ComponentScripter {
 		matcher = SELECT_COMBOBOX.matcher(ci);
 		if (matcher.find()) {
 			String[] s = ci.substring(matcher.end()).trim().split("\\s+");
-			if (s.length == 2) {
+			if (s.length >= 2) {
 				int i = -1, j = -1;
 				try {
 					i = Integer.parseInt(s[0]);
@@ -206,19 +177,22 @@ class TextBoxScripter extends ComponentScripter {
 					e.printStackTrace();
 				}
 				if (i >= 0 && j >= 0) {
+					boolean b = false;
+					if (s.length >= 3)
+						b = "execute".equalsIgnoreCase(s[2]);
 					final int i2 = i;
 					final int j2 = j;
+					final boolean b2 = b;
 					EventQueue.invokeLater(new Runnable() {
 						public void run() {
 							List comboBoxes = textBox.getEmbeddedComponents(JComboBox.class);
 							if (comboBoxes == null || comboBoxes.isEmpty())
 								return;
-							if (i2 >= comboBoxes.size())
-								return;
-							JComboBox cb = (JComboBox) comboBoxes.get(i2);
-							if (j2 >= cb.getItemCount())
-								return;
-							cb.setSelectedIndex(j2);
+							if (i2 < comboBoxes.size()) {
+								JComboBox cb = (JComboBox) comboBoxes.get(i2);
+								if (j2 < cb.getItemCount())
+									textBox.setSelectedIndex(cb, j2, b2);
+							}
 						}
 					});
 				}

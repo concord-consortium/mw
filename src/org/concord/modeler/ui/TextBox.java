@@ -231,15 +231,18 @@ public class TextBox extends JPanel implements HtmlService, Searchable {
 		list.get(i).setEnabled(b);
 	}
 
-	/** set the selection state of a component without causing the listeners on it to fire */
-	public void setEmbeddedComponentSelected(int i, boolean b, boolean silent) {
+	/** set the selection state of a component without or with causing the listeners on it to fire */
+	public void setComponentSelected(int i, boolean b, boolean execute) {
 		List<JComponent> list = getEmbeddedComponents();
 		if (list == null || i >= list.size() || i < 0)
 			return;
 		JComponent c = list.get(i);
 		if (c instanceof AbstractButton) {
 			AbstractButton ab = (AbstractButton) c;
-			if (silent) {
+			if (execute) {
+				ab.setSelected(b);
+			}
+			else {
 				ItemListener[] il = ab.getItemListeners();
 				if (il != null)
 					for (ItemListener x : il)
@@ -263,9 +266,30 @@ public class TextBox extends JPanel implements HtmlService, Searchable {
 					for (ChangeListener x : cl)
 						ab.addChangeListener(x);
 			}
-			else {
-				ab.setSelected(b);
-			}
+		}
+	}
+
+	/** set the selected index of a combo box without or with causing the listeners on it to fire */
+	public void setSelectedIndex(JComboBox cb, int iSelected, boolean execute) {
+		if (execute) {
+			cb.setSelectedIndex(iSelected);
+		}
+		else {
+			ActionListener[] al = cb.getActionListeners();
+			if (al != null)
+				for (ActionListener x : al)
+					cb.removeActionListener(x);
+			ItemListener[] il = cb.getItemListeners();
+			if (il != null)
+				for (ItemListener x : il)
+					cb.removeItemListener(x);
+			cb.setSelectedIndex(iSelected);
+			if (al != null)
+				for (ActionListener x : al)
+					cb.addActionListener(x);
+			if (il != null)
+				for (ItemListener x : il)
+					cb.addItemListener(x);
 		}
 	}
 
