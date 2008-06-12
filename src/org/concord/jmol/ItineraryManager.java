@@ -20,6 +20,7 @@
 package org.concord.jmol;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -110,6 +111,7 @@ class ItineraryManager {
 		for (int i = 0; i < n; i++)
 			listModel.addElement((s != null ? s : "Scene") + " #" + (i + 1));
 		final JList sceneList = new JList(listModel);
+		sceneList.setBackground(Color.lightGray);
 		sceneList.setSelectedIndex(selectedIndex);
 		sceneList.setCellRenderer(new MyListCellRenderer());
 		sceneList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -133,7 +135,7 @@ class ItineraryManager {
 		sceneList.setTransferHandler(new ListOrMapTransferHandler(jmolContainer.scenes));
 		sceneList.setDragEnabled(true);
 		JScrollPane scroller = new JScrollPane(sceneList);
-		scroller.setPreferredSize(new Dimension(150, 200));
+		scroller.setPreferredSize(new Dimension(140, 200));
 		contentPane.add(scroller, BorderLayout.WEST);
 
 		JPanel editPanel = new JPanel(new BorderLayout(5, 5));
