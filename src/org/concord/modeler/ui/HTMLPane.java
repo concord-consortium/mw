@@ -50,13 +50,12 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
 import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.ListDataEvent;
-import javax.swing.event.ListDataListener;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -560,13 +559,12 @@ public class HTMLPane extends MyEditorPane {
 					}
 				}
 				if (model != null && (!map.isEmpty() || !selfMap.isEmpty())) {
-					final Element a = elem;
-					model.addListDataListener(new ListDataListener() {
-						public void contentsChanged(ListDataEvent e) {
-							Object src = e.getSource();
-							if (src instanceof DefaultComboBoxModel) {
-								int p = ((DefaultComboBoxModel) src).getIndexOf(((DefaultComboBoxModel) src)
-										.getSelectedItem());
+					final JComboBox cb = getComboBox(model);
+					if (cb != null) {
+						final Element a = elem;
+						cb.addItemListener(new ItemListener() {
+							public void itemStateChanged(ItemEvent e) {
+								int p = cb.getSelectedIndex();
 								if (!map.isEmpty()) {
 									Object[] o = map.values().toArray();
 									if (p >= 0 && p < o.length) {
@@ -584,14 +582,8 @@ public class HTMLPane extends MyEditorPane {
 									}
 								}
 							}
-						}
-
-						public void intervalAdded(ListDataEvent e) {
-						}
-
-						public void intervalRemoved(ListDataEvent e) {
-						}
-					});
+						});
+					}
 				}
 			}
 
@@ -704,6 +696,27 @@ public class HTMLPane extends MyEditorPane {
 				if (comp instanceof AbstractButton) {
 					if (bm == ((AbstractButton) comp).getModel())
 						return (AbstractButton) comp;
+				}
+			}
+		}
+		return null;
+	}
+
+	private JComboBox getComboBox(AbstractListModel lm) {
+		if (getContentType().equals("text/plain"))
+			return null;
+		Component[] c = getComponents();
+		if (c == null || c.length == 0)
+			return null;
+		Container container = null;
+		JComponent comp = null;
+		for (Component x : c) {
+			if (x instanceof Container) {
+				container = (Container) x;
+				comp = (JComponent) container.getComponent(0);
+				if (comp instanceof JComboBox) {
+					if (lm == ((JComboBox) comp).getModel())
+						return (JComboBox) comp;
 				}
 			}
 		}
