@@ -2198,10 +2198,8 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		s = getInternationalText("SubmitCurrentFolder");
 		final JMenuItem uploadCurrentFolderMI = new JMenuItem((s != null ? s : "Submit Current Activity Folder")
 				+ "...");
-		s = getInternationalText("MakeComments");
-		final JMenuItem commentMI = new JMenuItem((s != null ? s : "Make Comments") + "...");
-		s = getInternationalText("ViewComments");
-		final JMenuItem viewCommentMI = new JMenuItem((s != null ? s : "View Discussion about Current Page") + "...");
+		final JMenuItem commentMI = new JMenuItem();
+		final JMenuItem viewCommentMI = new JMenuItem();
 
 		s = getInternationalText("Webspace");
 		menu = new JMenu(s != null ? s : "Webspace");
@@ -2279,17 +2277,16 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		editor.addEnabledComponentWhenNotEditable(menuItem);
 		menu.addSeparator();
 
-		commentMI.setAccelerator(IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_MASK
-				| KeyEvent.SHIFT_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_MASK
-				| KeyEvent.SHIFT_MASK, true));
-		commentMI.setMnemonic(KeyEvent.VK_O);
-		commentMI.addActionListener(serverGate.commentAction);
+		commentMI.setAction(serverGate.commentAction);
+		s = getInternationalText("MakeComments");
+		commentMI.setText((s != null ? s : "Make Comments") + "...");
 		menu.add(commentMI);
 		if (IS_MAC)
 			navigator.addEnabledComponentWhenRemote(commentMI);
 
-		viewCommentMI.setMnemonic(KeyEvent.VK_D);
-		viewCommentMI.addActionListener(serverGate.viewCommentAction);
+		viewCommentMI.setAction(serverGate.viewCommentAction);
+		s = getInternationalText("ViewComments");
+		viewCommentMI.setText((s != null ? s : "View Discussion about Current Page") + "...");
 		menu.add(viewCommentMI);
 		if (IS_MAC)
 			navigator.addEnabledComponentWhenRemote(viewCommentMI);

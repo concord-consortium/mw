@@ -5575,10 +5575,4 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		}
 	}
 
-	private abstract class DefaultAction extends AbstractAction {
-		public String toString() {
-			return (String) getValue(SHORT_DESCRIPTION);
-		}
-	}
-
 }

@@ -22,12 +22,15 @@ package org.concord.modeler;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
 
+import org.concord.modeler.text.DefaultAction;
 import org.concord.modeler.text.Page;
 
 /**
@@ -61,8 +64,8 @@ class ServerGate {
 	private ReportDialog reportDialog;
 	private byte flag = REGISTER;
 
-	ActionListener commentAction;
-	ActionListener viewCommentAction;
+	Action commentAction;
+	Action viewCommentAction;
 	ActionListener uploadCurrentFolderAction;
 	ActionListener uploadAction;
 	Action uploadReportAction;
@@ -71,12 +74,16 @@ class ServerGate {
 		this.page = page;
 		init();
 		page.setUploadReportAction(uploadReportAction);
+		page.putActivityAction(commentAction);
+		page.putActivityAction(viewCommentAction);
 	}
 
 	private void init() {
 
-		commentAction = new ActionListener() {
+		commentAction = new DefaultAction() {
 			public void actionPerformed(ActionEvent e) {
+				if (ModelerUtilities.stopFiring(e))
+					return;
 				if (!question(POST_COMMENT))
 					return;
 				if (!page.isRemote()) {
@@ -99,14 +106,24 @@ class ServerGate {
 				commentDialog.setVisible(true);
 			}
 		};
+		commentAction.putValue(Action.NAME, "Comment");
+		commentAction.putValue(Action.SHORT_DESCRIPTION, "Comment");
+		commentAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_O);
+		commentAction.putValue(Action.ACCELERATOR_KEY, Modeler.IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_C,
+				KeyEvent.META_MASK | KeyEvent.SHIFT_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_C,
+				KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK, true));
 
-		viewCommentAction = new ActionListener() {
+		viewCommentAction = new DefaultAction() {
 			public void actionPerformed(ActionEvent e) {
+				if (ModelerUtilities.stopFiring(e))
+					return;
 				if (commentView == null)
 					commentView = new CommentView();
 				commentView.showComments(page.getAddress(), page.getTitle(), JOptionPane.getFrameForComponent(page));
 			}
 		};
+		viewCommentAction.putValue(Action.NAME, "View Comments");
+		viewCommentAction.putValue(Action.SHORT_DESCRIPTION, "View comments");
 
 		uploadCurrentFolderAction = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
