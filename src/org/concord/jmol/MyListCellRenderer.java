@@ -59,7 +59,7 @@ class MyListCellRenderer extends JLabel implements ListCellRenderer {
 		}
 		else {
 			setIcon(INDENT_ICON);
-			setBackground(new Color(255, (int) (255 * Math.random()), (int) (255 * Math.random())));
+			setBackground(Color.white);
 			setForeground(list.getForeground());
 		}
 		setOpaque(true);
