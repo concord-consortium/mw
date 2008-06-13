@@ -243,7 +243,12 @@ public class PageApplet extends PagePlugin {
 			return;
 		if (applet instanceof JApplet) {
 			JApplet ja = (JApplet) applet;
-			add(ja.getContentPane(), BorderLayout.CENTER);
+			if (ja.getContentPane().getComponentCount() > 0) {
+				add(ja.getContentPane(), BorderLayout.CENTER);
+			}
+			else {
+				add(ja, BorderLayout.CENTER);
+			}
 		}
 		else {
 			add(applet, BorderLayout.CENTER);
@@ -257,7 +262,7 @@ public class PageApplet extends PagePlugin {
 				// web browser cannot be the event-dispatching thread (there are some methods that
 				// do not like to be invoked from the event-dispatching thread, e.g.
 				// EventQueue.invokeAndWait(Runnable r).
-				SwingWorker worker = new SwingWorker("Applet Starter", Thread.MIN_PRIORITY) {
+				SwingWorker worker = new SwingWorker("Applet Starter", Thread.MIN_PRIORITY + 1) {
 					public Object construct() {
 						try {
 							applet.init();

@@ -226,7 +226,7 @@ public class PageJContainer extends PagePlugin {
 		plugin.getWindow().setPreferredSize(getPreferredSize());
 		add(plugin.getWindow(), BorderLayout.CENTER);
 		validate();
-		SwingWorker worker = new SwingWorker("Cache plugin resources", Thread.MIN_PRIORITY) {
+		SwingWorker worker = new SwingWorker("Cache plugin resources", Thread.MIN_PRIORITY + 1) {
 			public Object construct() {
 				cacheResources();
 				plugin.putParameter("codebase", codeBase);
