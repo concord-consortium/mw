@@ -116,7 +116,7 @@ abstract class PagePlugin extends JPanel implements Embeddable, Scriptable {
 				PagePlugin.this.start();
 			}
 		};
-		t.setPriority(Thread.MIN_PRIORITY);
+		t.setPriority(Thread.MIN_PRIORITY + 1);
 		t.start();
 	}
 
