@@ -243,15 +243,15 @@ public class PageApplet extends PagePlugin {
 			return;
 		if (applet instanceof JApplet) {
 			JApplet ja = (JApplet) applet;
-			if (ja.getContentPane().getComponentCount() > 0) {
+			if (ja.getComponentCount() > 0) { // if there are components inside the applet,
 				add(ja.getContentPane(), BorderLayout.CENTER);
 			}
 			else {
-				add(ja, BorderLayout.CENTER);
+				add(ja, BorderLayout.CENTER); // surely as heavyweighted as JApplet
 			}
 		}
 		else {
-			add(applet, BorderLayout.CENTER);
+			add(applet, BorderLayout.CENTER); // surely as heavyweighted as Applet
 		}
 		applet.resize(getPreferredSize());
 		applet.setPreferredSize(getPreferredSize()); // FIXME
