@@ -2194,7 +2194,7 @@ public abstract class MDView extends PrintableComponent {
 		g.drawString(s, (getWidth() - fm.stringWidth(s)) >> 1, (getHeight() - fm.getHeight()) >> 1);
 		g.setFont(ViewAttribute.FONT_BOLD_15);
 		fm = g.getFontMetrics();
-		s = "Molecular Workbench, Concord Consortium";
+		s = "2D Simulator, Molecular Workbench";
 		g.drawString(s, (getWidth() - fm.stringWidth(s)) >> 1, (getHeight() >> 1) + fm.getHeight());
 	}
 

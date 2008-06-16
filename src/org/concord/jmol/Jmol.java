@@ -709,7 +709,7 @@ class Jmol extends Draw {
 			g.setFont(FONT_BOLD_18);
 			FontMetrics fm = g.getFontMetrics();
 			g.drawString(s, (getWidth() - fm.stringWidth(s)) >> 1, (getHeight() - fm.getHeight()) >> 1);
-			s = "Powered by Jmol in Molecular Workbench";
+			s = "Jmol Container, Molecular Workbench";
 			g.setFont(FONT_BOLD_15);
 			fm = g.getFontMetrics();
 			g.drawString(s, (getWidth() - fm.stringWidth(s)) >> 1, (getHeight() >> 1) + fm.getHeight());
