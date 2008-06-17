@@ -75,7 +75,7 @@ import org.concord.modeler.util.FileUtilities;
  * 
  */
 
-abstract class PagePlugin extends JPanel implements Embeddable, Scriptable {
+abstract class PagePlugin extends JPanel implements Embeddable, Scriptable, NativelyScriptable {
 
 	final static String PARAMETER_PATTERN = "(?i)(name[\\s&&[^\\r\\n]]*=[\\s&&[^\\r\\n]]*)|(value[\\s&&[^\\r\\n]]*=[\\s&&[^\\r\\n]]*)";
 

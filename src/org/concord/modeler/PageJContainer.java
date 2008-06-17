@@ -430,6 +430,10 @@ public class PageJContainer extends PagePlugin {
 		return scripter.runScript(script);
 	}
 
+	public String runNativeScript(String script) {
+		return "error";
+	}
+
 	void snapshot() {
 		if (plugin == null)
 			return;

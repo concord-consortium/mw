@@ -431,6 +431,22 @@ public class PageApplet extends PagePlugin {
 		return scripter.runScript(script);
 	}
 
+	public String runNativeScript(String script) {
+		System.out.println(script);
+		if (implementMwService()) {
+			try {
+				Method method = applet.getClass().getMethod("runNativeScript", new Class[] { String.class });
+				if (method != null)
+					return (String) method.invoke(applet, new Object[] { script });
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+				return e.getMessage();
+			}
+		}
+		return "error";
+	}
+
 	void snapshot() {
 		boolean b = false;
 		if (implementMwService()) {
