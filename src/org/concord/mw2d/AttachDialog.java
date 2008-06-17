@@ -128,7 +128,8 @@ class AttachDialog extends JDialog {
 			public void valueChanged(ListSelectionEvent e) {
 				if (particleList.hasFocus()) {
 					if (!e.getValueIsAdjusting()) {
-						angleField.setEnabled(true);
+						if (angleField != null)
+							angleField.setEnabled(true);
 						if (obstacleList != null)
 							obstacleList.clearSelection();
 						if (bondList != null)
@@ -160,7 +161,8 @@ class AttachDialog extends JDialog {
 				public void valueChanged(ListSelectionEvent e) {
 					if (bondList.hasFocus()) {
 						if (!e.getValueIsAdjusting()) {
-							angleField.setEnabled(true);
+							if (angleField != null)
+								angleField.setEnabled(true);
 							particleList.clearSelection();
 							if (obstacleList != null)
 								obstacleList.clearSelection();
@@ -190,7 +192,8 @@ class AttachDialog extends JDialog {
 				public void valueChanged(ListSelectionEvent e) {
 					if (obstacleList.hasFocus()) {
 						if (!e.getValueIsAdjusting()) {
-							angleField.setEnabled(true);
+							if (angleField != null)
+								angleField.setEnabled(true);
 							particleList.clearSelection();
 							if (bondList != null)
 								bondList.clearSelection();
