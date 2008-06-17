@@ -1360,6 +1360,7 @@ abstract class TransformManager {
 		if (spinOn) {
 			if (spinThread == null) {
 				spinThread = new SpinThread(endDegrees);
+				spinThread.setName("Jmol Spin Thread");
 				spinThread.setPriority(Thread.MIN_PRIORITY); // XIE
 				spinThread.start();
 			}
