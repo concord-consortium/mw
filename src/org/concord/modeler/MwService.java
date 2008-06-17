@@ -33,6 +33,8 @@ import java.io.OutputStream;
 public interface MwService {
 
 	public Component getSnapshotComponent();
+	
+	public void runNativeScript(String script);
 
 	public void loadState(InputStream is) throws IOException;
 

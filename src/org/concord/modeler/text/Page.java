@@ -148,6 +148,7 @@ import org.concord.modeler.Model;
 import org.concord.modeler.ModelCanvas;
 import org.concord.modeler.Modeler;
 import org.concord.modeler.ModelerUtilities;
+import org.concord.modeler.NativelyScriptable;
 import org.concord.modeler.Navigable;
 import org.concord.modeler.Navigator;
 import org.concord.modeler.PageApplet;
@@ -248,6 +249,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 
 	private final static String UNKNOWN_LOCATION = "? unknown location......";
 	private final static Pattern SCRIPT_PATTERN = Pattern.compile("(?i)script(\\s*):");
+	private final static Pattern NATIVE_SCRIPT_PATTERN = Pattern.compile("(?i)nativescript(\\s*):");
 	private final static Pattern SCRIPT_PATTERN2 = Pattern.compile("(?i)@");
 	private static String softwareVersion = "x";
 	private static boolean nativeLookAndFeelUsed;
@@ -3786,6 +3788,10 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 					if (matcher.find()) {
 						return executeScripts(s.split(SCRIPT_PATTERN2.pattern()));
 					}
+					matcher = NATIVE_SCRIPT_PATTERN.matcher(s);
+					if (matcher.find()) {
+						return executeNativeScripts(s.split(NATIVE_SCRIPT_PATTERN.pattern()));
+					}
 				}
 				return writeErrorMessage(s);
 			}
@@ -3794,8 +3800,10 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 
 	private void processHyperlink(String href) {
 		href = fixLink(href.trim());
-		Matcher matcher = SCRIPT_PATTERN.matcher(href);
-		if (matcher.find()) {
+		if (NATIVE_SCRIPT_PATTERN.matcher(href).find()) {
+			executeNativeScripts(href.split(NATIVE_SCRIPT_PATTERN.pattern()));
+		}
+		else if (SCRIPT_PATTERN.matcher(href).find()) {
 			executeScripts(href.split(SCRIPT_PATTERN.pattern()));
 		}
 		else {
@@ -3890,6 +3898,29 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				if (o instanceof Scriptable) {
 					return ((Scriptable) o).runScript(token[2].trim());
 				}
+				if (o instanceof NativelyScriptable) {
+					return ((NativelyScriptable) o).runNativeScript(token[2].trim());
+				}
+			}
+		}
+		return writeErrorMessage(Arrays.asList(token) + " for " + klass);
+	}
+
+	private String sendNativeScript(String[] token, Class klass) {
+		int n = -1;
+		try {
+			n = Integer.valueOf(token[1].trim()).intValue();
+		}
+		catch (NumberFormatException e) {
+			e.printStackTrace();
+			n = -1;
+		}
+		if (n > 0) {
+			if (token[2] != null && token[2].trim().length() > 0) {
+				Object o = getEmbeddedComponent(klass, n - 1);
+				if (o instanceof NativelyScriptable) {
+					return ((NativelyScriptable) o).runNativeScript(token[2].trim());
+				}
 			}
 		}
 		return writeErrorMessage(Arrays.asList(token) + " for " + klass);
@@ -3957,6 +3988,40 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 							runScript(token[2].trim());
 						}
 					}
+				}
+				output += msg;
+				commentOut = str.endsWith("//");
+			}
+		}
+		return output;
+	}
+
+	private String executeNativeScripts(String[] s) {
+		String output = "";
+		String msg = "";
+		boolean commentOut = false;
+		synchronized (scriptLock) {
+			for (String str : s) {
+				msg = "";
+				str = str.trim();
+				if (str.equals(""))
+					continue;
+				if (commentOut) {
+					commentOut = str.endsWith("//");
+					continue;
+				}
+				String[] token = str.split(":");
+				if (token.length >= 3) {
+					// reconnect "http://......" and others that should not have been broken up
+					if (token.length >= 4) {
+						for (int k = 3; k < token.length; k++)
+							token[2] += ":" + token[k];
+					}
+					String t0 = token[0].trim().intern();
+					if (t0 == "applet")
+						msg = sendNativeScript(token, PageApplet.class);
+					else if (t0 == "plugin")
+						msg = sendNativeScript(token, PageJContainer.class);
 				}
 				output += msg;
 				commentOut = str.endsWith("//");
