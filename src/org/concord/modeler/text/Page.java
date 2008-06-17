@@ -4018,7 +4018,9 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 							token[2] += ":" + token[k];
 					}
 					String t0 = token[0].trim().intern();
-					if (t0 == "applet")
+					if (t0 == "mw3d")
+						msg = sendNativeScript(token, PageMd3d.class);
+					else if (t0 == "applet")
 						msg = sendNativeScript(token, PageApplet.class);
 					else if (t0 == "plugin")
 						msg = sendNativeScript(token, PageJContainer.class);
