@@ -58,7 +58,8 @@ import org.concord.mw3d.MolecularView;
 
 import static javax.swing.Action.*;
 
-public class PageMd3d extends MolecularContainer implements BasicModel, Embeddable, Scriptable, Engine {
+public class PageMd3d extends MolecularContainer implements BasicModel, Embeddable, Scriptable, NativelyScriptable,
+		Engine {
 
 	Page page;
 	private int index;
@@ -399,6 +400,11 @@ public class PageMd3d extends MolecularContainer implements BasicModel, Embeddab
 	/** runs MW scripts. For Jmol scripts, call runJmolScript */
 	public String runScript(String script) {
 		return runMwScript(script);
+	}
+
+	/** runs Jmol scripts. */
+	public String runNativeScript(String script) {
+		return runJmolScript(script);
 	}
 
 	public void addModelListener(ModelListener ml) {

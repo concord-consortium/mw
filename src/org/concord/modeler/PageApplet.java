@@ -432,7 +432,6 @@ public class PageApplet extends PagePlugin {
 	}
 
 	public String runNativeScript(String script) {
-		System.out.println(script);
 		if (implementMwService()) {
 			try {
 				Method method = applet.getClass().getMethod("runNativeScript", new Class[] { String.class });
