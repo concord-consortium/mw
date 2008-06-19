@@ -431,6 +431,15 @@ public class PageJContainer extends PagePlugin {
 	}
 
 	public String runNativeScript(String script) {
+		try {
+			Method method = plugin.getClass().getMethod("runNativeScript", new Class[] { String.class });
+			if (method != null)
+				return (String) method.invoke(plugin, new Object[] { script });
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return e.getMessage();
+		}
 		return "error";
 	}
 
