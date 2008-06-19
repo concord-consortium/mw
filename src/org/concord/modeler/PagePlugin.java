@@ -70,7 +70,7 @@ import org.concord.modeler.util.FileUtilities;
  * @see org.concord.modeler.MwService
  * @see org.concord.modeler.PluginService
  * @see org.concord.modeler.PageApplet
- * @see org.concord.modeler.PagePlugin
+ * @see org.concord.modeler.PageJContainer
  * @author Charles Xies
  * 
  */
