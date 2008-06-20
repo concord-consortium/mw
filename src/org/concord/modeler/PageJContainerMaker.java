@@ -48,6 +48,7 @@ import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -55,6 +56,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -89,6 +92,8 @@ class PageJContainerMaker extends ComponentMaker {
 	private JButton okButton;
 	private JTextArea parameterArea;
 	private IntegerTextField widthField, heightField;
+	private JTabbedPane tabbedPane;
+	private JComboBox knownPluginComboBox;
 	private JTextField codeBaseField, jarField, mainClassField;
 	private static Map<String, List<String>> jarClassMap;
 	private JPanel contentPane;
@@ -101,16 +106,54 @@ class PageJContainerMaker extends ComponentMaker {
 		pageJContainer = pp;
 	}
 
-	void confirm() {
-		if (jarList.isSelectionEmpty())
-			return;
+	boolean confirm() {
+		boolean remote = tabbedPane.getSelectedIndex() == 0;
 		if (pageJContainer.jarName == null)
 			pageJContainer.jarName = new ArrayList<String>();
 		else pageJContainer.jarName.clear();
-		Object[] o = jarList.getSelectedValues();
-		for (Object i : o)
-			pageJContainer.jarName.add((String) i);
-		pageJContainer.className = (String) classComboBox.getSelectedItem();
+		if (remote) {
+			String codeBase = codeBaseField.getText();
+			if (codeBase == null || codeBase.trim().equals("")) {
+				JOptionPane.showMessageDialog(dialog, "Code base must be provided.", "Code base required",
+						JOptionPane.ERROR_MESSAGE);
+				return false;
+			}
+			pageJContainer.setCodeBase(codeBase);
+			String mainClass = mainClassField.getText();
+			if (mainClass == null || mainClass.trim().equals("")) {
+				JOptionPane.showMessageDialog(dialog, "Main class must be provided.", "Main class required",
+						JOptionPane.ERROR_MESSAGE);
+				return false;
+			}
+			pageJContainer.className = mainClass;
+			String jar = jarField.getText();
+			if (jar == null || jar.trim().equals("")) {
+				JOptionPane.showMessageDialog(dialog, "At least one jar file must be provided.", "Jar file required",
+						JOptionPane.ERROR_MESSAGE);
+				return false;
+			}
+			String[] s = jar.split(",{1}(\\s*)");
+			for (String x : s) {
+				if (!x.trim().equals(""))
+					pageJContainer.jarName.add(x.trim());
+			}
+		}
+		else {
+			if (jarList.getModel().getSize() <= 0) {
+				JOptionPane.showMessageDialog(dialog, "No local jar file is found in this folder.",
+						"Jar files required", JOptionPane.ERROR_MESSAGE);
+				return false;
+			}
+			if (jarList.isSelectionEmpty()) {
+				JOptionPane.showMessageDialog(dialog, "You must select a local jar file.", "Jar files required",
+						JOptionPane.ERROR_MESSAGE);
+				return false;
+			}
+			Object[] o = jarList.getSelectedValues();
+			for (Object i : o)
+				pageJContainer.jarName.add((String) i);
+			pageJContainer.className = (String) classComboBox.getSelectedItem();
+		}
 		String s = parameterArea.getText();
 		if (s != null && !s.trim().equals("")) {
 			pageJContainer.parseParameters(s);
@@ -124,6 +167,7 @@ class PageJContainerMaker extends ComponentMaker {
 		pageJContainer.page.getSaveReminder().setChanged(true);
 		pageJContainer.page.reload();
 		pageJContainer.start();
+		return true;
 	}
 
 	void invoke(Page page) {
@@ -131,6 +175,8 @@ class PageJContainerMaker extends ComponentMaker {
 		pageJContainer.page = page;
 		page.deselect();
 		createContentPane();
+
+		boolean remote = pageJContainer.getCodeBase() != null;
 
 		if (needNewDialog(dialog, page)) {
 			String s = Modeler.getInternationalText("CustomizePluginDialogTitle");
@@ -160,6 +206,25 @@ class PageJContainerMaker extends ComponentMaker {
 		borderComboBox.setSelectedItem(pageJContainer.getBorderType());
 		bgComboBox.setColor(pageJContainer.getBackground());
 		okButton.setEnabled(jarList.getModel().getSize() > 0);
+		tabbedPane.setSelectedIndex(remote ? 0 : 1);
+		if (remote) {
+			jarList.clearSelection();
+			codeBaseField.setText(pageJContainer.getCodeBase());
+			mainClassField.setText(pageJContainer.className);
+			String jarNames = "";
+			for (String x : pageJContainer.jarName)
+				jarNames += x + ", ";
+			jarField.setText(jarNames.substring(0, jarNames.length() - 2));
+			PluginInfo pi = PluginManager.getPluginInfoByMainClass(pageJContainer.className);
+			if (pi != null)
+				knownPluginComboBox.setSelectedItem(pi.getName());
+		}
+		else {
+			knownPluginComboBox.setSelectedIndex(0);
+			codeBaseField.setText(null);
+			mainClassField.setText(null);
+			jarField.setText(null);
+		}
 
 		dialog.setVisible(true);
 
@@ -249,9 +314,10 @@ class PageJContainerMaker extends ComponentMaker {
 
 		ActionListener okListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				confirm();
-				dialog.dispose();
-				cancel = false;
+				if (confirm()) {
+					dialog.dispose();
+					cancel = false;
+				}
 			}
 		};
 
@@ -274,70 +340,74 @@ class PageJContainerMaker extends ComponentMaker {
 		p.add(button);
 
 		JPanel p2 = new JPanel(new BorderLayout());
-		JTabbedPane tabbedPane = new JTabbedPane();
+		tabbedPane = new JTabbedPane();
 		tabbedPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		tabbedPane.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				switch (tabbedPane.getSelectedIndex()) {
+				case 0:
+					break;
+				case 1:
+					break;
+				}
+			}
+		});
 		p2.add(tabbedPane, BorderLayout.NORTH);
 		contentPane.add(p2, BorderLayout.NORTH);
 
-		// system-wide plugin settings
-
-		JTabbedPane tabbedPane2 = new JTabbedPane();
-		tabbedPane.addTab("System-wide plugin", tabbedPane2);
-
-		// known plugins
+		// jars are on a remote site
 
 		JPanel p3 = new JPanel(new BorderLayout());
-		tabbedPane2.addTab("Known plugins", p3);
+		s = Modeler.getInternationalText("RemoteSite");
+		tabbedPane.addTab(s != null ? s : "Remote site", p3);
+
 		p = new JPanel(new SpringLayout());
 		p.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		p3.add(p, BorderLayout.NORTH);
 
 		// row 1
-		s = Modeler.getInternationalText("SelectPlugins");
-		p.add(new JLabel(s != null ? s : "Select plugin", SwingConstants.LEFT));
+		s = Modeler.getInternationalText("SelectKnownPlugins");
+		p.add(new JLabel(s != null ? s : "Select known plugin", SwingConstants.LEFT));
 
-		JComboBox pluginComboBox = new JComboBox();
-		pluginComboBox.addItem("None");
+		knownPluginComboBox = new JComboBox();
+		knownPluginComboBox.addItem("None");
 		if (PluginManager.getPlugins() != null) {
 			for (PluginInfo x : PluginManager.getPlugins())
-				pluginComboBox.addItem(x.getName());
+				knownPluginComboBox.addItem(x.getName());
 		}
-		pluginComboBox.addItemListener(new ItemListener() {
+		knownPluginComboBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
-					PluginInfo pi = PluginManager.getPluginInfo(e.getItem().toString());
-					pageJContainer.jarName.clear();
-					if (pi == null) {
-						pageJContainer.className = null;
+					PluginInfo pi = PluginManager.getPluginInfoByName(e.getItem().toString());
+					if (pi != null) {
+						mainClassField.setText(pi.getMainClass());
+						List<String> list = pi.getJarList();
+						codeBaseField.setText(FileUtilities.getCodeBase(list.get(0)));
+						String x = "";
+						for (String s : list) {
+							x += FileUtilities.getFileName(s) + ", ";
+						}
+						jarField.setText(x.substring(0, x.length() - 2));
 					}
 					else {
-						pageJContainer.className = pi.getMainClass();
-						pageJContainer.jarName.addAll(pi.getJarList());
+						mainClassField.setText(null);
+						codeBaseField.setText(null);
+						jarField.setText(null);
 					}
 				}
 			}
 		});
-		p.add(pluginComboBox);
+		p.add(knownPluginComboBox);
 
-		ModelerUtilities.makeCompactGrid(p, 1, 2, 5, 5, 10, 2);
-
-		// unknown plugins
-
-		p3 = new JPanel(new BorderLayout());
-		tabbedPane2.addTab("Unknown plugins", p3);
-		p = new JPanel(new SpringLayout());
-		p.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		p3.add(p, BorderLayout.NORTH);
-
-		// row 1
-		s = Modeler.getInternationalText("URLOfDownloadFolder");
-		p.add(new JLabel(s != null ? s : "URL of download folder", SwingConstants.LEFT));
-		codeBaseField = new JTextField("http://");
-		codeBaseField.setToolTipText("Type the URL of the folder to download the plugin");
+		// row 2
+		s = Modeler.getInternationalText("CodeBase");
+		p.add(new JLabel(s != null ? s : "Code base", SwingConstants.LEFT));
+		codeBaseField = new JTextField();
+		codeBaseField.setToolTipText("Type the code base of the plugin");
 		codeBaseField.addActionListener(okListener);
 		p.add(codeBaseField);
 
-		// row 2
+		// row 3
 		s = Modeler.getInternationalText("NameOfJar");
 		p.add(new JLabel(s != null ? s : "Names of jar files", SwingConstants.LEFT));
 		jarField = new JTextField();
@@ -345,7 +415,7 @@ class PageJContainerMaker extends ComponentMaker {
 		jarField.addActionListener(okListener);
 		p.add(jarField);
 
-		// row 3
+		// row 4
 		s = Modeler.getInternationalText("MainClass");
 		p.add(new JLabel(s != null ? s : "Main class", SwingConstants.LEFT));
 		mainClassField = new JTextField();
@@ -353,13 +423,14 @@ class PageJContainerMaker extends ComponentMaker {
 		mainClassField.addActionListener(okListener);
 		p.add(mainClassField);
 
-		ModelerUtilities.makeCompactGrid(p, 3, 2, 5, 5, 10, 2);
+		ModelerUtilities.makeCompactGrid(p, 4, 2, 5, 5, 10, 2);
 
 		// page-scope plugin settings
 
 		p = new JPanel(new SpringLayout());
 		p.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		tabbedPane.addTab("Page-scope plugin", p);
+		s = Modeler.getInternationalText("LocalFiles");
+		tabbedPane.addTab("Local files", p);
 
 		// row 1
 		s = Modeler.getInternationalText("SelectJars");
