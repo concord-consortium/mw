@@ -49,7 +49,6 @@ import org.concord.modeler.util.SwingWorker;
 public class PageJContainer extends PagePlugin {
 
 	PluginService plugin;
-	private boolean systemWide;
 	private String codeBase;
 	private static PageJContainerMaker maker;
 	private PluginScripter scripter;
@@ -60,14 +59,6 @@ public class PageJContainer extends PagePlugin {
 
 	public PageJContainer(PageJContainer pageJContainer, Page parent) {
 		super(pageJContainer, parent);
-	}
-
-	public void setSystemWide(boolean b) {
-		systemWide = b;
-	}
-
-	public boolean isSystemWide() {
-		return systemWide;
 	}
 
 	public void setCodeBase(String s) {
@@ -499,8 +490,6 @@ public class PageJContainer extends PagePlugin {
 
 	public String toString() {
 		StringBuffer sb = new StringBuffer(super.toString());
-		if (systemWide)
-			sb.append("<systemwide>true</systemwide>");
 		if (codeBase != null)
 			sb.append("<codebase>" + codeBase + "</codebase>");
 		return sb.toString();

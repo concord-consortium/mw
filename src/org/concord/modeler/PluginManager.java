@@ -45,13 +45,25 @@ public class PluginManager {
 		plugins.add(pi);
 	}
 
-	public static PluginInfo getPluginInfo(String name) {
+	public static PluginInfo getPluginInfoByName(String name) {
 		if (name == null)
 			return null;
 		if (plugins == null || plugins.isEmpty())
 			return null;
 		for (PluginInfo x : plugins) {
 			if (name.equals(x.getName()))
+				return x;
+		}
+		return null;
+	}
+
+	public static PluginInfo getPluginInfoByMainClass(String mainClass) {
+		if (mainClass == null)
+			return null;
+		if (plugins == null || plugins.isEmpty())
+			return null;
+		for (PluginInfo x : plugins) {
+			if (mainClass.equals(x.getMainClass()))
 				return x;
 		}
 		return null;
