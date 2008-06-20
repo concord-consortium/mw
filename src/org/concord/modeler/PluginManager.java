@@ -33,6 +33,12 @@ public class PluginManager {
 	private PluginManager() {
 	}
 
+	public static PluginInfo[] getPlugins() {
+		if (plugins == null)
+			return null;
+		return plugins.toArray(new PluginInfo[0]);
+	}
+
 	public static void addPlugInfo(PluginInfo pi) {
 		if (plugins == null)
 			plugins = new ArrayList<PluginInfo>();

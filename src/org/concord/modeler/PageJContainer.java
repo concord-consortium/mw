@@ -49,6 +49,8 @@ import org.concord.modeler.util.SwingWorker;
 public class PageJContainer extends PagePlugin {
 
 	PluginService plugin;
+	private boolean systemWide;
+	private String codeBase;
 	private static PageJContainerMaker maker;
 	private PluginScripter scripter;
 
@@ -58,6 +60,22 @@ public class PageJContainer extends PagePlugin {
 
 	public PageJContainer(PageJContainer pageJContainer, Page parent) {
 		super(pageJContainer, parent);
+	}
+
+	public void setSystemWide(boolean b) {
+		systemWide = b;
+	}
+
+	public boolean isSystemWide() {
+		return systemWide;
+	}
+
+	public void setCodeBase(String s) {
+		codeBase = s;
+	}
+
+	public String getCodeBase() {
+		return codeBase;
 	}
 
 	private File[] createJarFiles() {
@@ -380,7 +398,7 @@ public class PageJContainer extends PagePlugin {
 					maker = new PageJContainerMaker(PageJContainer.this);
 				}
 				else {
-					maker.setObject(PageJContainer.this);
+					maker.setJContainer(PageJContainer.this);
 				}
 				maker.invoke(page);
 			}
@@ -471,12 +489,21 @@ public class PageJContainer extends PagePlugin {
 			maker = new PageJContainerMaker(pageJContainer);
 		}
 		else {
-			maker.setObject(pageJContainer);
+			maker.setJContainer(pageJContainer);
 		}
 		maker.invoke(page);
 		if (maker.cancel)
 			return null;
 		return pageJContainer;
+	}
+
+	public String toString() {
+		StringBuffer sb = new StringBuffer(super.toString());
+		if (systemWide)
+			sb.append("<systemwide>true</systemwide>");
+		if (codeBase != null)
+			sb.append("<codebase>" + codeBase + "</codebase>");
+		return sb.toString();
 	}
 
 }

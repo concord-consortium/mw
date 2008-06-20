@@ -61,5 +61,9 @@ public class PluginInfo {
 	public String getMainClass() {
 		return mainClass;
 	}
+	
+	public String toString() {
+		return name;
+	}
 
 }
