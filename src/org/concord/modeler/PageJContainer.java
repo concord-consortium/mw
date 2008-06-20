@@ -107,6 +107,21 @@ public class PageJContainer extends PagePlugin {
 		return file;
 	}
 
+	private void downloadJarFiles() {
+		File pluginDir = Initializer.sharedInstance().getPluginDirectory();
+		for (String x : jarName) {
+			URL u = null;
+			try {
+				u = new URL(codeBase + x);
+			}
+			catch (MalformedURLException e) {
+				e.printStackTrace();
+				continue;
+			}
+			FileUtilities.copy(u, new File(pluginDir, x));
+		}
+	}
+
 	public void start() {
 
 		if (jarName == null || jarName.isEmpty() || className == null) {
@@ -114,30 +129,61 @@ public class PageJContainer extends PagePlugin {
 			return;
 		}
 
-		final File[] file = createJarFiles();
-		if (file == null)
-			return;
-
 		setInitMessage();
 
-		// copy the jar files to the plugin folder, which is a trusted placeholder
-		File pluginDir = Initializer.sharedInstance().getPluginDirectory();
-		File pluginJar;
 		int n = jarName.size();
 		final URL[] url = new URL[n];
-		for (int i = 0; i < n; i++) {
-			pluginJar = new File(pluginDir, jarName.get(i));
-			if (!pluginJar.exists() || shouldReplace(pluginJar, file[i])) {
-				FileUtilities.copy(file[i], pluginJar);
-				pluginJar.setLastModified(file[i].lastModified());
-			}
-			try {
-				url[i] = pluginJar.toURI().toURL();
-			}
-			catch (MalformedURLException e) {
-				e.printStackTrace();
-				setErrorMessage("Errors in forming jar URLs: " + url[i]);
+		String cachedCodeBase = null;
+		File pluginDir = Initializer.sharedInstance().getPluginDirectory();
+
+		if (codeBase == null) {
+			final File[] file = createJarFiles();
+			if (file == null)
 				return;
+			cachedCodeBase = (file.length > 0 && file[0] != null) ? FileUtilities.getCodeBase(file[0].toString())
+					: page.getPathBase();
+			// copy the jar files to the plugin folder, which is a trusted placeholder
+			File pluginJar;
+			for (int i = 0; i < n; i++) {
+				pluginJar = new File(pluginDir, jarName.get(i));
+				if (!pluginJar.exists() || shouldReplace(pluginJar, file[i])) {
+					FileUtilities.copy(file[i], pluginJar);
+					pluginJar.setLastModified(file[i].lastModified());
+				}
+				try {
+					url[i] = pluginJar.toURI().toURL();
+				}
+				catch (MalformedURLException e) {
+					e.printStackTrace();
+					setErrorMessage("Errors in forming jar URLs: " + url[i]);
+					return;
+				}
+			}
+		}
+		else {
+			downloadJarFiles();
+			if (page.isRemote()) {
+				cachedCodeBase = FileUtilities.getCodeBase(ConnectionManager.sharedInstance().getLocalCopy(
+						page.getAddress()).toString());
+			}
+			else {
+				cachedCodeBase = page.getPathBase();
+			}
+			File pluginJar;
+			for (int i = 0; i < n; i++) {
+				pluginJar = new File(pluginDir, jarName.get(i));
+				if (!pluginJar.exists()) {
+					setErrorMessage(pluginJar + " was not found.");
+					return;
+				}
+				try {
+					url[i] = pluginJar.toURI().toURL();
+				}
+				catch (MalformedURLException e) {
+					e.printStackTrace();
+					setErrorMessage("Errors in forming jar URLs: " + url[i]);
+					return;
+				}
 			}
 		}
 
@@ -194,11 +240,10 @@ public class PageJContainer extends PagePlugin {
 				for (String key : parameterMap.keySet()) {
 					plugin.putParameter(key, parameterMap.get(key));
 				}
+			final String cachedCodeBase2 = cachedCodeBase;
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					String cachedCodeBase = (file.length > 0 && file[0] != null) ? FileUtilities.getCodeBase(file[0]
-							.toString()) : page.getPathBase();
-					initPlugin(cachedCodeBase);
+					initPlugin(cachedCodeBase2);
 				}
 			});
 		}
