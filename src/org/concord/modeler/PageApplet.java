@@ -383,7 +383,7 @@ public class PageApplet extends PagePlugin {
 					maker = new PageAppletMaker(PageApplet.this);
 				}
 				else {
-					maker.setObject(PageApplet.this);
+					maker.setApplet(PageApplet.this);
 				}
 				maker.invoke(page);
 			}
@@ -488,7 +488,7 @@ public class PageApplet extends PagePlugin {
 			maker = new PageAppletMaker(applet);
 		}
 		else {
-			maker.setObject(applet);
+			maker.setApplet(applet);
 		}
 		maker.invoke(page);
 		if (maker.cancel)
