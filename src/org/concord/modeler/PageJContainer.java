@@ -110,6 +110,11 @@ public class PageJContainer extends PagePlugin {
 	private void downloadJarFiles() {
 		File pluginDir = Initializer.sharedInstance().getPluginDirectory();
 		for (String x : jarName) {
+			File f = new File(pluginDir, x);
+			long ftime = -1;
+			if (f.exists()) {
+				ftime = f.lastModified();
+			}
 			URL u = null;
 			try {
 				u = new URL(codeBase + x);
@@ -118,7 +123,17 @@ public class PageJContainer extends PagePlugin {
 				e.printStackTrace();
 				continue;
 			}
-			FileUtilities.copy(u, new File(pluginDir, x));
+			long utime = -1;
+			try {
+				utime = u.openConnection().getLastModified();
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+				continue;
+			}
+			if (utime > ftime) {
+				FileUtilities.copy(u, f);
+			}
 		}
 	}
 

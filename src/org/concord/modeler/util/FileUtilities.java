@@ -288,6 +288,7 @@ public class FileUtilities {
 			return SOURCE_NOT_FOUND;
 		if (s.length() == 0)
 			return FILE_ACCESS_ERROR;
+		long lastModified = s.lastModified();
 		FileInputStream is = null;
 		try {
 			is = new FileInputStream(s);
@@ -339,6 +340,7 @@ public class FileUtilities {
 		}
 		if (returnError)
 			return WRITING_ERROR;
+		dest.setLastModified(lastModified);
 		if (dest != d) {
 			copy(dest, d);
 			// WARNING: The following comment-out method would slow the process - DON'T USE
@@ -370,6 +372,7 @@ public class FileUtilities {
 			e.printStackTrace();
 			return SOURCE_NOT_FOUND;
 		}
+		long lastModified = connect.getLastModified();
 		InputStream is = null;
 		try {
 			is = connect.getInputStream();
@@ -414,6 +417,7 @@ public class FileUtilities {
 		}
 		if (returnError)
 			return WRITING_ERROR;
+		d.setLastModified(lastModified);
 		return COPY_SUCCESS;
 	}
 
