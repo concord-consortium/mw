@@ -20,31 +20,27 @@
 
 package org.concord.modeler.text;
 
+import java.awt.EventQueue;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.concord.modeler.PageApplet;
-import org.concord.modeler.PageJContainer;
+import javax.swing.JOptionPane;
+
+import org.concord.modeler.PagePlugin;
 
 class JavaStarter {
 
-	private List<Object> list;
+	private List<PagePlugin> list;
 
 	JavaStarter() {
-		list = Collections.synchronizedList(new ArrayList<Object>());
+		list = Collections.synchronizedList(new ArrayList<PagePlugin>());
 	}
 
-	void enroll(PageApplet applet) {
-		if (applet == null)
+	void enroll(PagePlugin pi) {
+		if (pi == null)
 			return;
-		list.add(applet);
-	}
-
-	void enroll(PageJContainer plugin) {
-		if (plugin == null)
-			return;
-		list.add(plugin);
+		list.add(pi);
 	}
 
 	void start() {
@@ -52,19 +48,33 @@ class JavaStarter {
 		if (list.isEmpty())
 			return;
 
-		Thread t = new Thread("Applet Starter") {
+		Thread t = new Thread("Plugin Starter") {
 			public void run() {
 				synchronized (list) {
-					for (Object a : list) {
-						if (a instanceof PageApplet)
-							((PageApplet) a).start();
-						else if (a instanceof PageJContainer)
-							((PageJContainer) a).start();
+					for (PagePlugin a : list) {
+						a.start();
 					}
 				}
 			}
 		};
-		t.setPriority(Thread.MIN_PRIORITY);
+		t.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+			public void uncaughtException(Thread t, final Throwable e) {
+				e.printStackTrace();
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						PagePlugin pi = list.get(0);
+						JOptionPane
+								.showMessageDialog(
+										pi == null ? null : JOptionPane.getFrameForComponent(pi),
+										"Fatal error in starting plugin, thrown by: "
+												+ e
+												+ "\nPlease reload the page. If the error persists, please restart the software.",
+										"Error", JOptionPane.ERROR_MESSAGE);
+					}
+				});
+			}
+		});
+		t.setPriority(Thread.MIN_PRIORITY + 1);
 		t.start();
 
 	}
