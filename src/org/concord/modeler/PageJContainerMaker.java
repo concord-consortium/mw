@@ -366,7 +366,7 @@ class PageJContainerMaker extends ComponentMaker {
 		p3.add(p, BorderLayout.NORTH);
 
 		// row 1
-		s = Modeler.getInternationalText("SelectKnownPlugins");
+		s = Modeler.getInternationalText("SelectKnownPlugin");
 		p.add(new JLabel(s != null ? s : "Select known plugin", SwingConstants.LEFT));
 
 		knownPluginComboBox = new JComboBox();
@@ -408,7 +408,7 @@ class PageJContainerMaker extends ComponentMaker {
 		p.add(codeBaseField);
 
 		// row 3
-		s = Modeler.getInternationalText("NameOfJar");
+		s = Modeler.getInternationalText("NamesOfJarFiles");
 		p.add(new JLabel(s != null ? s : "Names of jar files", SwingConstants.LEFT));
 		jarField = new JTextField();
 		jarField.setToolTipText("Type the names of the jar files needed for the plugin, separated by commas");
@@ -416,8 +416,8 @@ class PageJContainerMaker extends ComponentMaker {
 		p.add(jarField);
 
 		// row 4
-		s = Modeler.getInternationalText("MainClass");
-		p.add(new JLabel(s != null ? s : "Main class", SwingConstants.LEFT));
+		s = Modeler.getInternationalText("SelectPluginMainClass");
+		p.add(new JLabel(s != null ? s : "Select plugin's main class", SwingConstants.LEFT));
 		mainClassField = new JTextField();
 		mainClassField.setToolTipText("Type the full name of the main class, e.g. com.dot.app.MyMainClass");
 		mainClassField.addActionListener(okListener);
@@ -430,7 +430,7 @@ class PageJContainerMaker extends ComponentMaker {
 		p = new JPanel(new SpringLayout());
 		p.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		s = Modeler.getInternationalText("LocalFiles");
-		tabbedPane.addTab("Local files", p);
+		tabbedPane.addTab(s != null ? s : "Local files", p);
 
 		// row 1
 		s = Modeler.getInternationalText("SelectJars");
