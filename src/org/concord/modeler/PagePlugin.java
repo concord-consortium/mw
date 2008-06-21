@@ -39,6 +39,7 @@ import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingConstants;
@@ -75,7 +76,7 @@ import org.concord.modeler.util.FileUtilities;
  * 
  */
 
-abstract class PagePlugin extends JPanel implements Embeddable, Scriptable, NativelyScriptable {
+abstract public class PagePlugin extends JPanel implements Embeddable, Scriptable, NativelyScriptable {
 
 	final static String PARAMETER_PATTERN = "(?i)(name[\\s&&[^\\r\\n]]*=[\\s&&[^\\r\\n]]*)|(value[\\s&&[^\\r\\n]]*=[\\s&&[^\\r\\n]]*)";
 
@@ -110,12 +111,24 @@ abstract class PagePlugin extends JPanel implements Embeddable, Scriptable, Nati
 			jarName = Collections.synchronizedList(new ArrayList<String>(pagePlugin.jarName));
 		if (pagePlugin.parameterMap != null)
 			parameterMap = new HashMap<String, String>(pagePlugin.parameterMap);
-		Thread t = new Thread("Plugin starter") {
+		Thread t = new Thread("Plugin Starter") {
 			public void run() {
 				setPage(parent); // set again in case destroy() is called before this.
 				PagePlugin.this.start();
 			}
 		};
+		t.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+			public void uncaughtException(Thread t, final Throwable e) {
+				e.printStackTrace();
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(PagePlugin.this),
+								"Fatal error in starting plugin: " + className + ", thrown by: " + e, "Error",
+								JOptionPane.ERROR_MESSAGE);
+					}
+				});
+			}
+		});
 		t.setPriority(Thread.MIN_PRIORITY + 1);
 		t.start();
 	}
