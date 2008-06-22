@@ -564,21 +564,23 @@ public class HTMLPane extends MyEditorPane {
 						final Element a = elem;
 						cb.addItemListener(new ItemListener() {
 							public void itemStateChanged(ItemEvent e) {
-								int p = cb.getSelectedIndex();
-								if (!map.isEmpty()) {
-									Object[] o = map.values().toArray();
-									if (p >= 0 && p < o.length) {
-										if (o[p] != null)
-											fireLinkUpdate(new HyperlinkEvent(HTMLPane.this,
-													HyperlinkEvent.EventType.ACTIVATED, null, o[p].toString(), a));
+								if (e.getStateChange() == ItemEvent.SELECTED) {
+									int p = cb.getSelectedIndex();
+									if (!map.isEmpty()) {
+										Object[] o = map.values().toArray();
+										if (p >= 0 && p < o.length) {
+											if (o[p] != null)
+												fireLinkUpdate(new HyperlinkEvent(HTMLPane.this,
+														HyperlinkEvent.EventType.ACTIVATED, null, o[p].toString(), a));
 
+										}
 									}
-								}
-								if (!selfMap.isEmpty()) {
-									Object[] o = selfMap.values().toArray();
-									if (p >= 0 && p < o.length) {
-										if (o[p] != null)
-											notifySelfScriptListeners(new SelfScriptEvent(a, o[p].toString()));
+									if (!selfMap.isEmpty()) {
+										Object[] o = selfMap.values().toArray();
+										if (p >= 0 && p < o.length) {
+											if (o[p] != null)
+												notifySelfScriptListeners(new SelfScriptEvent(a, o[p].toString()));
+										}
 									}
 								}
 							}

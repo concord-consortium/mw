@@ -344,6 +344,11 @@ public class PageJContainer extends PagePlugin {
 		}
 	}
 
+	public void saveJars(File parent) {
+		if (codeBase == null)
+			super.saveJars(parent);
+	}
+
 	public void saveResources(File parent) {
 		if (plugin == null)
 			return;
