@@ -618,6 +618,7 @@ public abstract class AbstractEval {
 	/** evaluate individual command. */
 	protected abstract boolean evalCommand(String ci) throws InterruptedException;
 
+	@SuppressWarnings("unused")
 	protected boolean evaluateSingleKeyword(String str) throws InterruptedException {
 		if ("break".equalsIgnoreCase(str)) {
 			stopLoops();
@@ -980,6 +981,10 @@ public abstract class AbstractEval {
 		}
 	}
 
+	/**
+	 * FIXME: what do we do with expression that does not have an obvious word separator between variables, such as
+	 * %varone%vartwo? Should it be (%var)one(%var)two, or (%varone)(%vartwo), or something else?
+	 */
 	protected String useDefinitions(String s) {
 		if (s.indexOf("%") == -1)
 			return s;

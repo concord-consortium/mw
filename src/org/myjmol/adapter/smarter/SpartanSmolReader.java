@@ -24,7 +24,6 @@
 
 package org.myjmol.adapter.smarter;
 
-
 import java.io.BufferedReader;
 import java.util.Hashtable;
 
@@ -37,77 +36,73 @@ import org.myjmol.util.Logger;
 
 class SpartanSmolReader extends AtomSetCollectionReader {
 
-  final boolean debugReader = false;
-  boolean isCompoundDocument;
+	final boolean debugReader = false;
+	boolean isCompoundDocument;
 
-  String modelName = "Spartan file";
-  int atomCount;
+	String modelName = "Spartan file";
+	int atomCount;
 
-  Hashtable moData = new Hashtable();
+	Hashtable moData = new Hashtable();
 
-  AtomSetCollection readAtomSetCollection(BufferedReader reader)
-      throws Exception {
-    this.reader = reader;
-    readLine();
-    isCompoundDocument = (line.indexOf("Compound Document") >= 0);
-    atomSetCollection = new AtomSetCollection("spartan "
-        + (isCompoundDocument ? "compound document file" : "smol"));
+	AtomSetCollection readAtomSetCollection(BufferedReader reader) throws Exception {
+		this.reader = reader;
+		readLine();
+		isCompoundDocument = (line.indexOf("Compound Document") >= 0);
+		atomSetCollection = new AtomSetCollection("spartan " + (isCompoundDocument ? "compound document file" : "smol"));
 
-    String bondData = "";
-    SpartanArchive spartanArchive = null;
-    try {
-      while (line != null) {
-        //if (atomCount == 0)
-          //Logger.debug(line);
-        if (line.equals("HESSIAN") && bondData != null) {
-          //cache for later if necessary -- this is from the INPUT section
-          while (readLine() != null
-              && line.indexOf("ENDHESS") < 0)
-            bondData += line + " ";
-          //Logger.debug("bonddata:" + bondData);
-        }
-        if (line.equals("BEGINARCHIVE")
-            || line.equals("BEGIN Compound Document Entry: Archive")) {
-          spartanArchive = new SpartanArchive(this, logger, atomSetCollection,
-              moData, bondData);
-          bondData = null;
-          readArchiveHeader();
-          atomCount = spartanArchive.readArchive(line, false);
-          if (atomCount > 0) {
-            atomSetCollection.setAtomSetName(modelName);
-          }
-        } else if (atomCount > 0 && line.indexOf("BEGINPROPARC") == 0
-            || line.equals("BEGIN Compound Document Entry: PropertyArchive")) {
-          spartanArchive.readProperties();
-          if (!atomSetCollection
-              .setAtomSetCollectionPartialCharges("MULCHARGES"))
-            atomSetCollection.setAtomSetCollectionPartialCharges("Q1_CHARGES");
-        }
-        readLine();
-      }
-    } catch (Exception e) {
-      Logger.error("Could not read file at line: " + line, e);
-      //TODO: Why this?
-      //new NullPointerException();
-    }
-    // info out of order -- still a chance, at least for first model
-    if (atomCount > 0 && spartanArchive != null && bondData != null)
-      spartanArchive.addBonds(bondData);
-    if (atomSetCollection.atomCount == 0) {
-      atomSetCollection.errorMessage = "No atoms in file";
-    }
-    return atomSetCollection;
-  }
+		String bondData = "";
+		SpartanArchive spartanArchive = null;
+		try {
+			while (line != null) {
+				// if (atomCount == 0)
+				// Logger.debug(line);
+				if (line.equals("HESSIAN") && bondData != null) {
+					// cache for later if necessary -- this is from the INPUT section
+					while (readLine() != null && line.indexOf("ENDHESS") < 0)
+						bondData += line + " ";
+					// Logger.debug("bonddata:" + bondData);
+				}
+				if (line.equals("BEGINARCHIVE") || line.equals("BEGIN Compound Document Entry: Archive")) {
+					spartanArchive = new SpartanArchive(this, logger, atomSetCollection, moData, bondData);
+					bondData = null;
+					readArchiveHeader();
+					atomCount = spartanArchive.readArchive(line, false);
+					if (atomCount > 0) {
+						atomSetCollection.setAtomSetName(modelName);
+					}
+				}
+				else if (atomCount > 0 && line.indexOf("BEGINPROPARC") == 0
+						|| line.equals("BEGIN Compound Document Entry: PropertyArchive")) {
+					if (spartanArchive != null)
+						spartanArchive.readProperties();
+					if (!atomSetCollection.setAtomSetCollectionPartialCharges("MULCHARGES"))
+						atomSetCollection.setAtomSetCollectionPartialCharges("Q1_CHARGES");
+				}
+				readLine();
+			}
+		}
+		catch (Exception e) {
+			Logger.error("Could not read file at line: " + line, e);
+			// TODO: Why this?
+			// new NullPointerException();
+		}
+		// info out of order -- still a chance, at least for first model
+		if (atomCount > 0 && spartanArchive != null && bondData != null)
+			spartanArchive.addBonds(bondData);
+		if (atomSetCollection.atomCount == 0) {
+			atomSetCollection.errorMessage = "No atoms in file";
+		}
+		return atomSetCollection;
+	}
 
-  void readArchiveHeader()
-      throws Exception {
-    String modelInfo = readLine();
-    logger.log(modelInfo);
-    atomSetCollection.setCollectionName(modelInfo);
-    modelName = readLine();
-    logger.log(modelName);
-    //    5  17  11  18   0   1  17   0 RHF      3-21G(d)           NOOPT FREQ
-    readLine();
-  }
+	void readArchiveHeader() throws Exception {
+		String modelInfo = readLine();
+		logger.log(modelInfo);
+		atomSetCollection.setCollectionName(modelInfo);
+		modelName = readLine();
+		logger.log(modelName);
+		// 5 17 11 18 0 1 17 0 RHF 3-21G(d) NOOPT FREQ
+		readLine();
+	}
 
 }

@@ -950,14 +950,13 @@ class Eval3D extends AbstractEval {
 		return true;
 	}
 
-	// synchronization
-	private synchronized boolean evaluateSourceClause(String address) throws InterruptedException {
+	private synchronized boolean evaluateSourceClause(String address) {
 		out(ScriptEvent.FAILED, "Syntax error: " + address);
 		return false;
 	}
 
 	// synchronization prevents two minimizers to run at the same time.
-	private synchronized boolean evaluateMinimizeClause(String str) throws InterruptedException {
+	private synchronized boolean evaluateMinimizeClause(String str) {
 		out(ScriptEvent.FAILED, "Syntax error: " + str);
 		return false;
 	}

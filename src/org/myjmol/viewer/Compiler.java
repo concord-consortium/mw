@@ -911,10 +911,9 @@ class Compiler {
 	 * clauseResidueSpec::= { clauseResNameSpec } { clauseResNumSpec } { clauseChainSpec } { clauseAtomSpec } {
 	 * clauseAlternateSpec } { clauseModelSpec }
 	 * 
-	 * clauseResNameSpec::= * | [ resNamePattern ] | resNamePattern
-	 *  // question marks are part of identifiers // they get split up and dealt with as wildcards at runtime // and the
-	 * integers which are residue number chains get bundled // in with the identifier and also split out at runtime //
-	 * iff a variable of that name does not exist
+	 * clauseResNameSpec::= * | [ resNamePattern ] | resNamePattern // question marks are part of identifiers // they
+	 * get split up and dealt with as wildcards at runtime // and the integers which are residue number chains get
+	 * bundled // in with the identifier and also split out at runtime // iff a variable of that name does not exist
 	 * 
 	 * resNamePattern ::= up to 3 alphanumeric chars with * and ?
 	 * 
@@ -1451,7 +1450,8 @@ class Compiler {
 			while ((tokenT = tokenNext()) != null && tokenT.tok != Token.rightsquare) {
 				strSpec += tokenT.value;
 			}
-			tok = tokenT.tok;
+			if (tokenT != null)
+				tok = tokenT.tok;
 			if (tok != Token.rightsquare)
 				return false;
 			if (strSpec == "")

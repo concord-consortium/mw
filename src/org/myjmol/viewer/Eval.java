@@ -2405,7 +2405,7 @@ class Eval { // implements Runnable {
 		if (dataType.equalsIgnoreCase("model")) {
 			// only if first character is "|" do we consider "|" to be new line
 			char newLine = viewer.getInlineChar();
-			if (dataString.length() > 0 && dataString.charAt(0) != newLine)
+			if (dataString != null && dataString.length() > 0 && dataString.charAt(0) != newLine)
 				newLine = '\0';
 			viewer.loadInline(dataString, newLine);
 			return;
@@ -5364,7 +5364,6 @@ class Eval { // implements Runnable {
 			}
 			if (str.equalsIgnoreCase("noplane")) {
 				propertyName = "plane";
-				propertyValue = null;
 				break;
 			}
 			invalidArgument(1, str);
@@ -5399,7 +5398,7 @@ class Eval { // implements Runnable {
 		}
 		if (moData == null)
 			evalError(GT._("no MO basis/coefficient data available for this frame"));
-		Vector mos = (Vector) (moData.get("mos"));
+		Vector mos = moData != null ? (Vector) (moData.get("mos")) : null;
 		int nOrb = (mos == null ? 0 : mos.size());
 		if (nOrb == 0)
 			evalError(GT._("no MO coefficient data available"));
