@@ -25,73 +25,74 @@ package org.myjmol.viewer;
 
 import java.util.BitSet;
 
-
 class NucleicPolymer extends Polymer {
 
-  NucleicPolymer(Monomer[] monomers) {
-    super(monomers);
-  }
+	NucleicPolymer(Monomer[] monomers) {
+		super(monomers);
+	}
 
-  Atom getNucleicPhosphorusAtom(int monomerIndex) {
-    return monomers[monomerIndex].getLeadAtom();
-  }
+	Atom getNucleicPhosphorusAtom(int monomerIndex) {
+		return monomers[monomerIndex].getLeadAtom();
+	}
 
-  boolean hasWingPoints() { return true; }
+	boolean hasWingPoints() {
+		return true;
+	}
 
-  void calcHydrogenBonds(BitSet bsA, BitSet bsB) {
-    for (int i = model.getPolymerCount(); --i >= 0; ) {
-      Polymer otherPolymer = model.getPolymer(i);
-      if (otherPolymer == this) // don't look at self
-        continue;
-      if (otherPolymer == null || !(otherPolymer instanceof NucleicPolymer))
-        continue;
-      lookForHbonds((NucleicPolymer)otherPolymer, bsA, bsB);
-    }
-  }
+	void calcHydrogenBonds(BitSet bsA, BitSet bsB) {
+		for (int i = model.getPolymerCount(); --i >= 0;) {
+			Polymer otherPolymer = model.getPolymer(i);
+			if (otherPolymer == this) // don't look at self
+				continue;
+			if (otherPolymer == null || !(otherPolymer instanceof NucleicPolymer))
+				continue;
+			lookForHbonds((NucleicPolymer) otherPolymer, bsA, bsB);
+		}
+	}
 
-  void lookForHbonds(NucleicPolymer other, BitSet bsA, BitSet bsB) {
-    //Logger.debug("NucleicPolymer.lookForHbonds()");
-    for (int i = monomerCount; --i >= 0; ) {
-      NucleicMonomer myNucleotide = (NucleicMonomer)monomers[i];
-      if (! myNucleotide.isPurine())
-        continue;
-      Atom myN1 = myNucleotide.getN1();
-      Atom bestN3 = null;
-      float minDist2 = 5*5;
-      NucleicMonomer bestNucleotide = null;
-      for (int j = other.monomerCount; --j >= 0; ) {
-        NucleicMonomer otherNucleotide = (NucleicMonomer)other.monomers[j];
-        if (! otherNucleotide.isPyrimidine())
-          continue;
-        Atom otherN3 = otherNucleotide.getN3();
-        float dist2 = myN1.distanceSquared(otherN3);
-        if (dist2 < minDist2) {
-          bestNucleotide = otherNucleotide;
-          bestN3 = otherN3;
-          minDist2 = dist2;
-        }
-      }
-      if (bestN3 != null) {
-        createHydrogenBond(myN1, bestN3, bsA, bsB);
-        if (myNucleotide.isGuanine()) {
-          createHydrogenBond(myNucleotide.getN2(),
-                             bestNucleotide.getO2(), bsA, bsB);
-          createHydrogenBond(myNucleotide.getO6(),
-                             bestNucleotide.getN4(), bsA, bsB);
-        } else {
-          createHydrogenBond(myNucleotide.getN6(),
-                             bestNucleotide.getO4(), bsA, bsB);
-        }
-      }
-    }
-  }
+	void lookForHbonds(NucleicPolymer other, BitSet bsA, BitSet bsB) {
+		// Logger.debug("NucleicPolymer.lookForHbonds()");
+		for (int i = monomerCount; --i >= 0;) {
+			NucleicMonomer myNucleotide = (NucleicMonomer) monomers[i];
+			if (!myNucleotide.isPurine())
+				continue;
+			Atom myN1 = myNucleotide.getN1();
+			Atom bestN3 = null;
+			float minDist2 = 5 * 5;
+			NucleicMonomer bestNucleotide = null;
+			for (int j = other.monomerCount; --j >= 0;) {
+				NucleicMonomer otherNucleotide = (NucleicMonomer) other.monomers[j];
+				if (!otherNucleotide.isPyrimidine())
+					continue;
+				Atom otherN3 = otherNucleotide.getN3();
+				float dist2 = myN1.distanceSquared(otherN3);
+				if (dist2 < minDist2) {
+					bestNucleotide = otherNucleotide;
+					bestN3 = otherN3;
+					minDist2 = dist2;
+				}
+			}
+			if (bestN3 != null) {
+				createHydrogenBond(myN1, bestN3, bsA, bsB);
+				if (bestNucleotide != null) {
+					if (myNucleotide.isGuanine()) {
+						createHydrogenBond(myNucleotide.getN2(), bestNucleotide.getO2(), bsA, bsB);
+						createHydrogenBond(myNucleotide.getO6(), bestNucleotide.getN4(), bsA, bsB);
+					}
+					else {
+						createHydrogenBond(myNucleotide.getN6(), bestNucleotide.getO4(), bsA, bsB);
+					}
+				}
+			}
+		}
+	}
 
-  void createHydrogenBond(Atom atom1, Atom atom2, BitSet bsA, BitSet bsB) {
-    //Logger.debug("createHydrogenBond:" +
-    // atom1.getAtomNumber() + "<->" + atom2.getAtomNumber());
-    if (atom1 != null && atom2 != null) {
-      Frame frame = model.mmset.frame;
-      frame.addHydrogenBond(atom1, atom2, JmolConstants.BOND_H_NUCLEOTIDE, bsA, bsB);
-    }
-  }
+	void createHydrogenBond(Atom atom1, Atom atom2, BitSet bsA, BitSet bsB) {
+		// Logger.debug("createHydrogenBond:" +
+		// atom1.getAtomNumber() + "<->" + atom2.getAtomNumber());
+		if (atom1 != null && atom2 != null) {
+			Frame frame = model.mmset.frame;
+			frame.addHydrogenBond(atom1, atom2, JmolConstants.BOND_H_NUCLEOTIDE, bsA, bsB);
+		}
+	}
 }

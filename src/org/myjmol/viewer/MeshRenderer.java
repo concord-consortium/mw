@@ -218,37 +218,48 @@ abstract class MeshRenderer extends ShapeRenderer {
 					colixC = backgroundColix;
 			}
 			if (iB == iC) {
-				g3d.fillCylinder(colixA, Graphics3D.ENDCAPS_SPHERICAL, (iA == iB ? 6 : 3), screens[iA], screens[iB]);
+				if (screens != null)
+					g3d
+							.fillCylinder(colixA, Graphics3D.ENDCAPS_SPHERICAL, (iA == iB ? 6 : 3), screens[iA],
+									screens[iB]);
 			}
 			else if (vertexIndexes.length == 3) {
 				if (fill)
-					if (iShowTriangles)
-						g3d.fillTriangle(screens[iA], colixA, normixes[iA], screens[iB], colixB, normixes[iB],
-								screens[iC], colixC, normixes[iC], 0.1f);
-					else {
-						if (frontOnly && transformedVectors[normixes[iA]].z < 0
-								&& transformedVectors[normixes[iB]].z < 0 && transformedVectors[normixes[iC]].z < 0)
-							continue;
-						if (screens != null && normixes != null) // XIE
+					if (screens != null && normixes != null) {
+						if (iShowTriangles)
+							g3d.fillTriangle(screens[iA], colixA, normixes[iA], screens[iB], colixB, normixes[iB],
+									screens[iC], colixC, normixes[iC], 0.1f);
+						else {
+							if (frontOnly && transformedVectors[normixes[iA]].z < 0
+									&& transformedVectors[normixes[iB]].z < 0 && transformedVectors[normixes[iC]].z < 0)
+								continue;
 							g3d.fillTriangle(screens[iA], colixA, normixes[iA], screens[iB], colixB, normixes[iB],
 									screens[iC], colixC, normixes[iC]);
+						}
 					}
-				else
-				// FIX ME ... need a drawTriangle routine with multiple colors
-				g3d.drawTriangle(colixA, screens[iA], screens[iB], screens[iC]);
+					else
+					// FIX ME ... need a drawTriangle routine with multiple colors
+					if (screens != null)
+						g3d.drawTriangle(colixA, screens[iA], screens[iB], screens[iC]);
 
 			}
 			else if (vertexIndexes.length == 4) {
 				int iD = vertexIndexes[3];
 				short colixD = vertexColixes != null ? vertexColixes[iD] : colix;
 				if (fill) {
-					if (frontOnly && transformedVectors[normixes[iA]].z < 0 && transformedVectors[normixes[iB]].z < 0
-							&& transformedVectors[normixes[iC]].z < 0 && transformedVectors[normixes[iD]].z < 0)
-						continue;
-					g3d.fillQuadrilateral(screens[iA], colixA, normixes[iA], screens[iB], colixB, normixes[iB],
-							screens[iC], colixC, normixes[iC], screens[iD], colixD, normixes[iD]);
+					if (screens != null && normixes != null) {
+						if (frontOnly && transformedVectors[normixes[iA]].z < 0
+								&& transformedVectors[normixes[iB]].z < 0 && transformedVectors[normixes[iC]].z < 0
+								&& transformedVectors[normixes[iD]].z < 0)
+							continue;
+						g3d.fillQuadrilateral(screens[iA], colixA, normixes[iA], screens[iB], colixB, normixes[iB],
+								screens[iC], colixC, normixes[iC], screens[iD], colixD, normixes[iD]);
+					}
 				}
-				else g3d.drawQuadrilateral(colixA, screens[iA], screens[iB], screens[iC], screens[iD]);
+				else {
+					if (screens != null)
+						g3d.drawQuadrilateral(colixA, screens[iA], screens[iB], screens[iC], screens[iD]);
+				}
 
 				// } else {
 				// Logger.debug("MeshRenderer: polygon with > 4 sides");

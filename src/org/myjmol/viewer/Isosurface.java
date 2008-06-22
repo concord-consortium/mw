@@ -92,7 +92,6 @@
 
 package org.myjmol.viewer;
 
-
 import java.io.BufferedReader;
 import java.util.BitSet;
 import java.util.Enumeration;
@@ -4254,9 +4253,7 @@ class Isosurface extends MeshCollection {
 			for (int i = 0; i < nH; i++) {
 				atomNo[i] = 1;
 				solvent_atomRadius[i] = r;
-				solvent_ptAtom[i] = hAtoms[i];
-				if (logMessages)
-					Logger.debug("draw {" + hAtoms[i].x + " " + hAtoms[i].y + " " + hAtoms[i].z + "};");
+				solvent_ptAtom[i] = hAtoms != null ? hAtoms[i] : null;
 			}
 			iAtom = nH;
 			for (int i = firstSet; i <= lastSet; i++) {
@@ -4343,7 +4340,8 @@ class Isosurface extends MeshCollection {
 		for (int i = 0; i < nAtomsWritten; i++) {
 			pt.set(solvent_ptAtom[i]);
 			pt.scale(1 / ANGSTROMS_PER_BOHR);
-			jvxlFileHeader.append(atomNo[i] + " " + atomNo[i] + ".0 " + pt.x + " " + pt.y + " " + pt.z + "\n");
+			if (atomNo != null)
+				jvxlFileHeader.append(atomNo[i] + " " + atomNo[i] + ".0 " + pt.x + " " + pt.y + " " + pt.z + "\n");
 		}
 		atomCount = -Integer.MAX_VALUE;
 		negativeAtomCount = false;

@@ -861,9 +861,9 @@ class Eval2D extends AbstractEval {
 				return true;
 		}
 
-		// System.out.println(model + ">command = " + ci);
+		// System.out.println("Before using definitions --> " + ci);
 		// System.out.println(definition);
-		// System.out.println(useDefinitions(ci));
+		// System.out.println("After using definitions ---> " + useDefinitions(ci));
 
 		// increment or decrement operator
 		matcher = INCREMENT_DECREMENT.matcher(ci);
