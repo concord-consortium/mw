@@ -2027,6 +2027,85 @@ class Eval2D extends AbstractEval {
 		return null;
 	}
 
+	private static double distanceSquare(double dx, double dy) {
+		return dx * dx + dy * dy;
+	}
+
+	private String evaluateNearestParticleFunction(final String clause) {
+		if (clause == null || clause.equals(""))
+			return null;
+		int nop = model.getNumberOfParticles();
+		if (nop <= 1)
+			return "" + (nop - 1);
+		int i = clause.indexOf("(");
+		int j = clause.lastIndexOf(")");
+		if (i == -1 || j == -1) {
+			out(ScriptEvent.FAILED, "function must be enclosed within parenthesis: " + clause);
+			return null;
+		}
+		String s = clause.substring(i + 1, j);
+		String[] t = s.split(",");
+		int n = t.length;
+		switch (n) {
+		case 2:
+			float[] x = parseArray(2, t);
+			if (x != null) {
+				for (int k = 0; k < x.length; k++)
+					x[k] *= IR_CONVERTER;
+				double dmin = Double.MAX_VALUE;
+				int imin = -1;
+				double r = 0;
+				Particle p = null;
+				for (int k = 0; k < nop; k++) {
+					p = model.getParticle(k);
+					r = distanceSquare(p.rx - x[0], p.ry - x[1]);
+					if (r < dmin) {
+						dmin = r;
+						imin = k;
+					}
+				}
+				return "" + imin;
+			}
+			break;
+		case 3:
+			x = parseArray(3, t);
+			if (x != null) {
+				int id = (int) x[0];
+				for (int k = 1; k < x.length; k++)
+					x[k] *= IR_CONVERTER;
+				double dmin = Double.MAX_VALUE;
+				int imin = -1;
+				double r = 0;
+				Particle p = null;
+				for (int k = 0; k < nop; k++) {
+					p = model.getParticle(k);
+					if (p instanceof Atom) {
+						if (((Atom) p).id == id) {
+							r = distanceSquare(p.rx - x[0], p.ry - x[1]);
+							if (r < dmin) {
+								dmin = r;
+								imin = k;
+							}
+						}
+					}
+					else if (p instanceof GayBerneParticle) {
+						r = distanceSquare(p.rx - x[0], p.ry - x[1]);
+						if (r < dmin) {
+							dmin = r;
+							imin = k;
+						}
+					}
+				}
+				return "" + imin;
+			}
+			break;
+		default:
+			out(ScriptEvent.FAILED, "argument error: " + clause);
+			return null;
+		}
+		return null;
+	}
+
 	private String evaluateSpeedFunction(final String clause) {
 		if (clause == null || clause.equals(""))
 			return null;
@@ -2695,6 +2774,11 @@ class Eval2D extends AbstractEval {
 			}
 			else if (exp.startsWith("speed(")) {
 				exp = evaluateSpeedFunction(exp);
+				if (exp != null)
+					storeDefinition(isStatic, var, exp);
+			}
+			else if (exp.startsWith("nearest(")) {
+				exp = evaluateNearestParticleFunction(exp);
 				if (exp != null)
 					storeDefinition(isStatic, var, exp);
 			}
