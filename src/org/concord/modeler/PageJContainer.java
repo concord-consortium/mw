@@ -22,6 +22,7 @@ package org.concord.modeler;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -35,14 +36,17 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.net.URLConnection;
 import java.security.cert.Certificate;
 
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
 import org.concord.modeler.text.Page;
+import org.concord.modeler.ui.ProcessMonitor;
 import org.concord.modeler.util.FileUtilities;
 import org.concord.modeler.util.SwingWorker;
 
@@ -123,16 +127,22 @@ public class PageJContainer extends PagePlugin {
 				e.printStackTrace();
 				continue;
 			}
-			long utime = -1;
-			try {
-				utime = u.openConnection().getLastModified();
-			}
-			catch (IOException e) {
-				e.printStackTrace();
+			URLConnection conn = ConnectionManager.getConnection(u);
+			if (conn == null)
 				continue;
-			}
+			long utime = conn.getLastModified();
+			int contentLength = conn.getContentLength();
 			if (utime > ftime) {
-				FileUtilities.copy(u, f);
+				Download download = new Download();
+				download.setInfo(utime, contentLength);
+				ProcessMonitor m = new ProcessMonitor(JOptionPane.getFrameForComponent(this));
+				m.getProgressBar().setMinimum(0);
+				m.getProgressBar().setMaximum(100);
+				m.getProgressBar().setPreferredSize(new Dimension(300, 20));
+				download.setProcessMonitor(m);
+				download.getProcessMonitor().setTitle(" Downloading plugin updates: " + u + "...");
+				download.getProcessMonitor().setLocationRelativeTo(this);
+				download.downloadWithoutThread(u, f);
 			}
 		}
 	}

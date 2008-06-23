@@ -52,6 +52,7 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -459,8 +460,6 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		}
 
 		BookmarkManager.sharedInstance().removeBookmarkListener(this);
-		Downloader.sharedInstance().setProcessMonitor(null);
-		Downloader.sharedInstance().removeDownloadListener(this);
 		Zipper.sharedInstance().setProcessMonitor(null);
 		Zipper.sharedInstance().removeComponentToLock(preinstallMenu);
 		MultipageZipper.sharedInstance().removeProgressListener(editor.getPage());
@@ -642,6 +641,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		}
 
 		Debugger.print("Load starting page");
+		LogDumper.sharedInstance().dump(new Date() + ": Starting page loaded.");
 
 	}
 

@@ -64,7 +64,8 @@ class UpdateManager {
 			e.printStackTrace();
 		}
 
-		Downloader.sharedInstance().addDownloadListener(modeler);
+		Download download = new Download();
+		download.addDownloadListener(modeler);
 
 		String s = Modeler.getInternationalText("Yes");
 		String s2 = Modeler.getInternationalText("Later");
@@ -83,7 +84,7 @@ class UpdateManager {
 		if (JOptionPane.showOptionDialog(JOptionPane.getFrameForComponent(modeler), msg, s != null ? s
 				: "Update Notice", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, icon, options,
 				options[0]) == JOptionPane.YES_OPTION) {
-			if (!downloadUpdates(modeler))
+			if (!downloadUpdates(modeler, download))
 				ExternalClient.open(ExternalClient.HTML_CLIENT, Modeler.getContextRoot());
 		}
 
@@ -119,16 +120,16 @@ class UpdateManager {
 		return t;
 	}
 
-	private static boolean downloadUpdates(Component parent) {
-		if (Downloader.sharedInstance().getProcessMonitor() == null) {
+	private static boolean downloadUpdates(Component parent, Download download) {
+		if (download.getProcessMonitor() == null) {
 			ProcessMonitor m = new ProcessMonitor(JOptionPane.getFrameForComponent(parent));
 			m.getProgressBar().setMinimum(0);
 			m.getProgressBar().setMaximum(100);
 			m.getProgressBar().setPreferredSize(new Dimension(300, 20));
-			Downloader.sharedInstance().setProcessMonitor(m);
+			download.setProcessMonitor(m);
 		}
-		Downloader.sharedInstance().getProcessMonitor().setTitle(" Downloading updates ......");
-		Downloader.sharedInstance().getProcessMonitor().setLocationRelativeTo(parent);
+		download.getProcessMonitor().setTitle(" Downloading MW updates ...");
+		download.getProcessMonitor().setLocationRelativeTo(parent);
 		URL url = null;
 		try {
 			url = new URL(getPackedJarPath());
@@ -142,7 +143,7 @@ class UpdateManager {
 			jarLocation = ModelerUtilities.validateJarLocationOnMacOSX(jarLocation);
 		File jarFile = new File(jarLocation);
 		packFile = new File(jarFile.getParentFile(), PACK_NAME);
-		Downloader.sharedInstance().downloadInAThread(url, packFile);
+		download.downloadInAThread(url, packFile);
 		return true;
 	}
 
