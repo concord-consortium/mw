@@ -142,7 +142,6 @@ import org.concord.modeler.HtmlService;
 import org.concord.modeler.ImageQuestion;
 import org.concord.modeler.Initializer;
 import org.concord.modeler.InstancePool;
-import org.concord.modeler.LogDumper;
 import org.concord.modeler.MidiPlayer;
 import org.concord.modeler.Model;
 import org.concord.modeler.ModelCanvas;
@@ -4073,7 +4072,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		if (!isReading()) {
 			stopAllRunningModels();
 			DATE.setTime(System.currentTimeMillis());
-			LogDumper.sharedInstance().dump(DATE + " : " + str);
+			// LogDumper.sharedInstance().dump(DATE + " : " + str);
 			final String address = ModelerUtilities.convertURLToFilePath(str.trim());
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {

@@ -2106,6 +2106,43 @@ class Eval2D extends AbstractEval {
 		return null;
 	}
 
+	private String evaluateWhichParticleFunction(final String clause) {
+		if (clause == null || clause.equals(""))
+			return null;
+		int nop = model.getNumberOfParticles();
+		if (nop <= 0)
+			return "-1";
+		int i = clause.indexOf("(");
+		int j = clause.lastIndexOf(")");
+		if (i == -1 || j == -1) {
+			out(ScriptEvent.FAILED, "function must be enclosed within parenthesis: " + clause);
+			return null;
+		}
+		String s = clause.substring(i + 1, j);
+		String[] t = s.split(",");
+		int n = t.length;
+		switch (n) {
+		case 2:
+			float[] x = parseArray(2, t);
+			if (x != null) {
+				for (int k = 0; k < x.length; k++)
+					x[k] *= IR_CONVERTER;
+				Particle p = null;
+				for (int k = 0; k < nop; k++) {
+					p = model.getParticle(k);
+					if (p.contains(x[0], x[1]))
+						return "" + k;
+				}
+				return "-1";
+			}
+			break;
+		default:
+			out(ScriptEvent.FAILED, "argument error: " + clause);
+			return null;
+		}
+		return null;
+	}
+
 	private String evaluateSpeedFunction(final String clause) {
 		if (clause == null || clause.equals(""))
 			return null;
@@ -2779,6 +2816,11 @@ class Eval2D extends AbstractEval {
 			}
 			else if (exp.startsWith("nearest(")) {
 				exp = evaluateNearestParticleFunction(exp);
+				if (exp != null)
+					storeDefinition(isStatic, var, exp);
+			}
+			else if (exp.startsWith("whichparticle(")) {
+				exp = evaluateWhichParticleFunction(exp);
 				if (exp != null)
 					storeDefinition(isStatic, var, exp);
 			}
