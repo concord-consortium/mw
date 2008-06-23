@@ -4072,7 +4072,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		if (!isReading()) {
 			stopAllRunningModels();
 			DATE.setTime(System.currentTimeMillis());
-			// LogDumper.sharedInstance().dump(DATE + " : " + str);
+			// org.concord.modeler.LogDumper.sharedInstance().dump(DATE + " : " + str);
 			final String address = ModelerUtilities.convertURLToFilePath(str.trim());
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {

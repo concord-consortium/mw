@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2006  The Concord Consortium, Inc.,
+ *   Copyright (C) 2008  The Concord Consortium, Inc.,
  *   25 Love Lane, Concord, MA 01742
  *
  *   This program is free software; you can redistribute it and/or modify
@@ -35,20 +35,27 @@ import javax.swing.JOptionPane;
 import org.concord.modeler.ui.ProcessMonitor;
 import org.concord.modeler.util.SwingWorker;
 
-class Downloader {
+class Download {
 
-	private final static Downloader sharedInstance = new Downloader();
 	private ProcessMonitor monitor;
-	private long lastModified;
-	private int contentLength;
+	private long lastModified = -1;
+	private int contentLength = -1;
 	private List<DownloadListener> listenerList;
 	private int byteCount;
 
-	private Downloader() {
+	Download() {
 	}
 
-	public final static Downloader sharedInstance() {
-		return sharedInstance;
+	/* if the information has been obtained elsewhere, pass them on */
+	void setInfo(long lastModified, int contentLength) {
+		this.lastModified = lastModified;
+		this.contentLength = contentLength;
+	}
+
+	private void destroy() {
+		if (listenerList != null)
+			listenerList.clear();
+		monitor = null;
 	}
 
 	public void addDownloadListener(DownloadListener dll) {
@@ -67,7 +74,7 @@ class Downloader {
 		listenerList.remove(dll);
 	}
 
-	protected void fireDownloadEvent(DownloadEvent e) {
+	private void fireDownloadEvent(DownloadEvent e) {
 		if (listenerList == null || listenerList.isEmpty())
 			return;
 		for (DownloadListener dll : listenerList) {
@@ -93,10 +100,35 @@ class Downloader {
 		return monitor;
 	}
 
+	public void downloadWithoutThread(final URL url, final File des) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				fireDownloadEvent(new DownloadEvent(Download.this, DownloadEvent.DOWNLOAD_STARTED));
+			}
+		});
+		download(url, des);
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				if (des.length() == contentLength) {
+					des.setLastModified(lastModified);
+					fireDownloadEvent(new DownloadEvent(Download.this, DownloadEvent.DOWNLOAD_COMPLETED));
+				}
+				else {
+					fireDownloadEvent(new DownloadEvent(Download.this, DownloadEvent.DOWNLOAD_ABORTED));
+				}
+				destroy();
+			}
+		});
+	}
+
 	public void downloadInAThread(final URL url, final File des) {
-		new SwingWorker() {
+		new SwingWorker("Downloading " + url) {
 			public Object construct() {
-				fireDownloadEvent(new DownloadEvent(Downloader.this, DownloadEvent.DOWNLOAD_STARTED));
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						fireDownloadEvent(new DownloadEvent(Download.this, DownloadEvent.DOWNLOAD_STARTED));
+					}
+				});
 				download(url, des);
 				return null;
 			}
@@ -104,17 +136,18 @@ class Downloader {
 			public void finished() {
 				if (des.length() == contentLength) {
 					des.setLastModified(lastModified);
-					fireDownloadEvent(new DownloadEvent(Downloader.this, DownloadEvent.DOWNLOAD_COMPLETED));
+					fireDownloadEvent(new DownloadEvent(Download.this, DownloadEvent.DOWNLOAD_COMPLETED));
 				}
 				else {
-					fireDownloadEvent(new DownloadEvent(Downloader.this, DownloadEvent.DOWNLOAD_ABORTED));
+					fireDownloadEvent(new DownloadEvent(Download.this, DownloadEvent.DOWNLOAD_ABORTED));
 				}
+				destroy();
 			}
 		}.start();
 	}
 
 	private void showErrorMessage() {
-		fireDownloadEvent(new DownloadEvent(Downloader.this, DownloadEvent.DOWNLOAD_ABORTED));
+		fireDownloadEvent(new DownloadEvent(Download.this, DownloadEvent.DOWNLOAD_ABORTED));
 		if (monitor == null)
 			return;
 		monitor.hide();
@@ -137,7 +170,8 @@ class Downloader {
 			});
 		}
 
-		getFileInfo(url);
+		if (lastModified == -1 && contentLength == -1)
+			getFileInfo(url); // don't redo the work if they have been done
 		if (contentLength == -1) {
 			if (monitor != null) {
 				EventQueue.invokeLater(new Runnable() {
@@ -188,6 +222,7 @@ class Downloader {
 			while ((amount = is.read(b)) != -1) {
 				fos.write(b, 0, amount);
 				byteCount += amount;
+				// try {Thread.sleep(10);}catch (InterruptedException ie) {} // simulating network slowdown
 				if (monitor != null) {
 					EventQueue.invokeLater(new Runnable() {
 						public void run() {
@@ -229,8 +264,6 @@ class Downloader {
 	}
 
 	private void getFileInfo(URL url) {
-		lastModified = -1;
-		contentLength = -1;
 		URLConnection conn = ConnectionManager.getConnection(url);
 		if (conn == null)
 			return;
