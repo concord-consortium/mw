@@ -107,15 +107,13 @@ class Download {
 			}
 		});
 		download(url, des);
+		final boolean success = des.length() == contentLength;
+		if (success)
+			des.setLastModified(lastModified);
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				if (des.length() == contentLength) {
-					des.setLastModified(lastModified);
-					fireDownloadEvent(new DownloadEvent(Download.this, DownloadEvent.DOWNLOAD_COMPLETED));
-				}
-				else {
-					fireDownloadEvent(new DownloadEvent(Download.this, DownloadEvent.DOWNLOAD_ABORTED));
-				}
+				fireDownloadEvent(new DownloadEvent(Download.this, success ? DownloadEvent.DOWNLOAD_COMPLETED
+						: DownloadEvent.DOWNLOAD_ABORTED));
 				destroy();
 			}
 		});
