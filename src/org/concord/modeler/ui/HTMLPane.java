@@ -463,6 +463,9 @@ public class HTMLPane extends MyEditorPane {
 					else if ("alt" == s) {
 						input.setAlt(attr.toString());
 					}
+					else if ("enabled" == s) {
+						input.setEnabled("true".equalsIgnoreCase(attr.toString()));
+					}
 					else if ("model" == s) {
 						input.setModel(attr);
 					}
@@ -551,6 +554,9 @@ public class HTMLPane extends MyEditorPane {
 						if (!attr.toString().equals("select")) // "name" tags collide!!!
 							select.setName(attr.toString());
 					}
+					else if (s.equals("enabled")) {
+						select.setEnabled("true".equalsIgnoreCase(attr.toString()));
+					}
 					else if (s.startsWith("script")) {
 						map.put(s, attr);
 					}
@@ -561,6 +567,7 @@ public class HTMLPane extends MyEditorPane {
 				if (model != null && (!map.isEmpty() || !selfMap.isEmpty())) {
 					final JComboBox cb = getComboBox(model);
 					if (cb != null) {
+						cb.setEnabled(select.getEnabled());
 						final Element a = elem;
 						cb.addItemListener(new ItemListener() {
 							public void itemStateChanged(ItemEvent e) {
@@ -645,6 +652,7 @@ public class HTMLPane extends MyEditorPane {
 			if (ab == null)
 				return;
 			ab.setToolTipText(input.getAlt());
+			ab.setEnabled(input.getEnabled());
 			if (ab instanceof JToggleButton) {
 				for (ItemListener l : ab.getItemListeners())
 					ab.removeItemListener(l);

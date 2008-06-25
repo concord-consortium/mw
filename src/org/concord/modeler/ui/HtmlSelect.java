@@ -36,8 +36,11 @@ import javax.swing.text.Element;
  */
 public class HtmlSelect {
 
-	// standard input tags
+	// standard select tags
 	private String name;
+
+	// MW-specific tags
+	private boolean enabled = true;
 
 	private List<HtmlOption> options;
 
@@ -45,7 +48,14 @@ public class HtmlSelect {
 	private Element sourceElement;
 
 	public HtmlSelect() {
+	}
 
+	public void setEnabled(boolean b) {
+		enabled = b;
+	}
+
+	public boolean getEnabled() {
+		return enabled;
 	}
 
 	public void addOption(HtmlOption o) {
