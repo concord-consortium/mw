@@ -48,12 +48,20 @@ public class HtmlInput {
 	private String selectedSelfScript;
 	private String deselectedSelfScript;
 	private String question;
+	private boolean enabled = true;
 
 	private Object model;
 	private Element sourceElement;
 
 	public HtmlInput() {
+	}
 
+	public void setEnabled(boolean b) {
+		enabled = b;
+	}
+
+	public boolean getEnabled() {
+		return enabled;
 	}
 
 	public void setAlt(String alt) {
