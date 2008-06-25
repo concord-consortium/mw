@@ -133,6 +133,7 @@ public class PageJContainer extends PagePlugin {
 			long utime = conn.getLastModified();
 			int contentLength = conn.getContentLength();
 			if (utime > ftime) {
+				System.out.println(new java.util.Date(utime) + " > " + new java.util.Date(ftime));
 				Download download = new Download();
 				download.setInfo(utime, contentLength);
 				ProcessMonitor m = new ProcessMonitor(JOptionPane.getFrameForComponent(this));
@@ -216,12 +217,7 @@ public class PageJContainer extends PagePlugin {
 		Class c = null;
 		URLClassLoader loader = URLClassLoader.newInstance(url, Modeler.class.getClassLoader());
 		try {
-			if (className.endsWith(".class")) {
-				c = loader.loadClass(FileUtilities.removeSuffix(className));
-			}
-			else {
-				c = loader.loadClass(className);
-			}
+			c = loader.loadClass(className.endsWith(".class") ? FileUtilities.removeSuffix(className) : className);
 		}
 		catch (Throwable e) {
 			e.printStackTrace();
