@@ -149,7 +149,7 @@ public class ImageComponent implements ModelComponent, Layered, Rotatable {
 				}
 			}
 			else {
-				//images[0] = new ImageIcon(address).getImage();
+				// images[0] = new ImageIcon(address).getImage();
 				if (FileUtilities.isRemote(address)) {
 					images[0] = Toolkit.getDefaultToolkit().createImage(new URL(address));
 				}
@@ -259,7 +259,7 @@ public class ImageComponent implements ModelComponent, Layered, Rotatable {
 	/** show the next frame of this animated image. */
 	public void nextFrame() {
 
-		int n = images.length;
+		int n = images != null ? images.length : 0;
 		if (n <= 1)
 			return;
 		if (gifDecoder == null)

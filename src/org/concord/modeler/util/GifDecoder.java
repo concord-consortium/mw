@@ -236,7 +236,14 @@ public class GifDecoder {
 	private void read(ImageInputStream iis) throws IOException {
 		reader.reset();
 		reader.setInput(iis);
-		int n = reader.getNumImages(true);
+		int n = 0;
+		try {
+			n = reader.getNumImages(true);
+		}
+		catch (IllegalStateException e) {
+			e.printStackTrace();
+			return;
+		}
 		getStreamAttributes();
 		images = new BufferedImage[n];
 		offsets = new Point[n];
