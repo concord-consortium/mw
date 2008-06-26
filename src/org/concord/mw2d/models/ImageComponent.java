@@ -149,7 +149,13 @@ public class ImageComponent implements ModelComponent, Layered, Rotatable {
 				}
 			}
 			else {
-				images[0] = new ImageIcon(address).getImage();
+				//images[0] = new ImageIcon(address).getImage();
+				if (FileUtilities.isRemote(address)) {
+					images[0] = Toolkit.getDefaultToolkit().createImage(new URL(address));
+				}
+				else {
+					images[0] = Toolkit.getDefaultToolkit().createImage(address);
+				}
 			}
 		}
 	}
