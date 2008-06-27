@@ -38,8 +38,8 @@ import org.concord.modeler.util.SwingWorker;
 class Download {
 
 	private ProcessMonitor monitor;
-	private long lastModified = -1;
-	private int contentLength = -1;
+	private long lastModified;
+	private int contentLength;
 	private List<DownloadListener> listenerList;
 	private int byteCount;
 

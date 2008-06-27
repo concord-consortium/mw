@@ -115,7 +115,7 @@ public class PageJContainer extends PagePlugin {
 		File pluginDir = Initializer.sharedInstance().getPluginDirectory();
 		for (String x : jarName) {
 			File f = new File(pluginDir, x);
-			long ftime = -1;
+			long ftime = 0;
 			if (f.exists()) {
 				ftime = f.lastModified();
 			}
@@ -130,15 +130,18 @@ public class PageJContainer extends PagePlugin {
 			}
 			URLConnection conn = ConnectionManager.getConnection(u);
 			if (conn == null) {
-				setErrorMessage("Cannot connect to the Internet to download the plugin at: " + codeBase);
+				setErrorMessage("Cannot connect to the Internet to " + codeBase);
 				return false;
 			}
 			long utime = conn.getLastModified();
-			int contentLength = conn.getContentLength();
-			if (utime > ftime) {
+			if (utime == 0) {
+				setErrorMessage("Cannot connect to the Internet to download the plugin at: " + codeBase);
+				return false;
+			}
+			else if (utime > ftime) {
 				System.out.println(new java.util.Date(utime) + " > " + new java.util.Date(ftime));
 				Download download = new Download();
-				download.setInfo(utime, contentLength);
+				download.setInfo(utime, conn.getContentLength());
 				ProcessMonitor m = new ProcessMonitor(JOptionPane.getFrameForComponent(this));
 				m.getProgressBar().setMinimum(0);
 				m.getProgressBar().setMaximum(100);
