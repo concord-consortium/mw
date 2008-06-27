@@ -24,6 +24,8 @@ import java.io.InputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import javax.swing.JPopupMenu;
+
 /**
  * @see org.concord.modeler.PageApplet
  * @author Charles Xie
@@ -33,7 +35,9 @@ import java.io.OutputStream;
 public interface MwService {
 
 	public Component getSnapshotComponent();
-	
+
+	public JPopupMenu getPopupMenu();
+
 	public void runNativeScript(String script);
 
 	public void loadState(InputStream is) throws IOException;
