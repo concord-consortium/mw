@@ -111,7 +111,7 @@ public class PageJContainer extends PagePlugin {
 		return file;
 	}
 
-	private void downloadJarFiles() {
+	private boolean downloadJarFiles() {
 		File pluginDir = Initializer.sharedInstance().getPluginDirectory();
 		for (String x : jarName) {
 			File f = new File(pluginDir, x);
@@ -125,11 +125,14 @@ public class PageJContainer extends PagePlugin {
 			}
 			catch (MalformedURLException e) {
 				e.printStackTrace();
-				continue;
+				setErrorMessage("Error in URL for downloading plugin: " + (codeBase + x));
+				return false;
 			}
 			URLConnection conn = ConnectionManager.getConnection(u);
-			if (conn == null)
-				continue;
+			if (conn == null) {
+				setErrorMessage("Cannot connect to the Internet to download the plugin at: " + codeBase);
+				return false;
+			}
 			long utime = conn.getLastModified();
 			int contentLength = conn.getContentLength();
 			if (utime > ftime) {
@@ -146,6 +149,7 @@ public class PageJContainer extends PagePlugin {
 				download.downloadWithoutThread(u, f);
 			}
 		}
+		return true;
 	}
 
 	public void start() {
@@ -187,28 +191,29 @@ public class PageJContainer extends PagePlugin {
 			}
 		}
 		else {
-			downloadJarFiles();
-			if (page.isRemote()) {
-				cachedCodeBase = FileUtilities.getCodeBase(ConnectionManager.sharedInstance().getLocalCopy(
-						page.getAddress()).toString());
-			}
-			else {
-				cachedCodeBase = page.getPathBase();
-			}
-			File pluginJar;
-			for (int i = 0; i < n; i++) {
-				pluginJar = new File(pluginDir, jarName.get(i));
-				if (!pluginJar.exists()) {
-					setErrorMessage(pluginJar + " was not found.");
-					return;
+			if (downloadJarFiles()) {
+				if (page.isRemote()) {
+					cachedCodeBase = FileUtilities.getCodeBase(ConnectionManager.sharedInstance().getLocalCopy(
+							page.getAddress()).toString());
 				}
-				try {
-					url[i] = pluginJar.toURI().toURL();
+				else {
+					cachedCodeBase = page.getPathBase();
 				}
-				catch (MalformedURLException e) {
-					e.printStackTrace();
-					setErrorMessage("Errors in forming jar URLs: " + url[i]);
-					return;
+				File pluginJar;
+				for (int i = 0; i < n; i++) {
+					pluginJar = new File(pluginDir, jarName.get(i));
+					if (!pluginJar.exists()) {
+						setErrorMessage(pluginJar + " was not found.");
+						return;
+					}
+					try {
+						url[i] = pluginJar.toURI().toURL();
+					}
+					catch (MalformedURLException e) {
+						e.printStackTrace();
+						setErrorMessage("Errors in forming jar URLs: " + url[i]);
+						return;
+					}
 				}
 			}
 		}
