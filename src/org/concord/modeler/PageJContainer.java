@@ -194,29 +194,29 @@ public class PageJContainer extends PagePlugin {
 			}
 		}
 		else {
-			if (downloadJarFiles()) {
-				if (page.isRemote()) {
-					cachedCodeBase = FileUtilities.getCodeBase(ConnectionManager.sharedInstance().getLocalCopy(
-							page.getAddress()).toString());
+			if (!downloadJarFiles())
+				return;
+			if (page.isRemote()) {
+				cachedCodeBase = FileUtilities.getCodeBase(ConnectionManager.sharedInstance().getLocalCopy(
+						page.getAddress()).toString());
+			}
+			else {
+				cachedCodeBase = page.getPathBase();
+			}
+			File pluginJar;
+			for (int i = 0; i < n; i++) {
+				pluginJar = new File(pluginDir, jarName.get(i));
+				if (!pluginJar.exists()) {
+					setErrorMessage(pluginJar + " was not found.");
+					return;
 				}
-				else {
-					cachedCodeBase = page.getPathBase();
+				try {
+					url[i] = pluginJar.toURI().toURL();
 				}
-				File pluginJar;
-				for (int i = 0; i < n; i++) {
-					pluginJar = new File(pluginDir, jarName.get(i));
-					if (!pluginJar.exists()) {
-						setErrorMessage(pluginJar + " was not found.");
-						return;
-					}
-					try {
-						url[i] = pluginJar.toURI().toURL();
-					}
-					catch (MalformedURLException e) {
-						e.printStackTrace();
-						setErrorMessage("Errors in forming jar URLs: " + url[i]);
-						return;
-					}
+				catch (MalformedURLException e) {
+					e.printStackTrace();
+					setErrorMessage("Errors in forming jar URLs: " + url[i]);
+					return;
 				}
 			}
 		}
