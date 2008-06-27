@@ -409,7 +409,13 @@ public class PageApplet extends PagePlugin {
 		popupMenu.add(mi);
 
 		if (applet instanceof MwService) {
-			JPopupMenu pp = ((MwService) applet).getPopupMenu();
+			JPopupMenu pp = null;
+			try {
+				pp = ((MwService) applet).getPopupMenu();
+			}
+			catch (Throwable e) {
+				e.printStackTrace();
+			}
 			if (pp != null) {
 				popupMenu.addSeparator();
 				int n = pp.getComponentCount();

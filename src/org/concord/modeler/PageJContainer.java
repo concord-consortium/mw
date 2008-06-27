@@ -492,7 +492,13 @@ public class PageJContainer extends PagePlugin {
 		});
 		popupMenu.add(mi);
 
-		JPopupMenu pp = plugin.getPopupMenu();
+		JPopupMenu pp = null;
+		try {
+			pp = plugin.getPopupMenu();
+		}
+		catch (Throwable e) {
+			e.printStackTrace();
+		}
 		if (pp != null) {
 			popupMenu.addSeparator();
 			int n = pp.getComponentCount();
