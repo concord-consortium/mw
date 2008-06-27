@@ -284,7 +284,8 @@ abstract public class PagePlugin extends JPanel implements Embeddable, Scriptabl
 
 	// should a be replaced by b?
 	static boolean shouldReplace(File a, File b) {
-		return a.lastModified() != b.lastModified() || a.length() != b.length();
+		// return a.lastModified() != b.lastModified() || a.length() != b.length();
+		return a.lastModified() < b.lastModified();
 	}
 
 	public void saveJars(File parent) {

@@ -134,12 +134,11 @@ public class PageJContainer extends PagePlugin {
 				return false;
 			}
 			long utime = conn.getLastModified();
-			if (utime == 0) {
+			if (utime == 0 && ftime == 0) {
 				setErrorMessage("Cannot connect to the Internet to download the plugin at: " + codeBase);
 				return false;
 			}
 			else if (utime > ftime) {
-				System.out.println(new java.util.Date(utime) + " > " + new java.util.Date(ftime));
 				Download download = new Download();
 				download.setInfo(utime, conn.getContentLength());
 				ProcessMonitor m = new ProcessMonitor(JOptionPane.getFrameForComponent(this));
