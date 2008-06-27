@@ -408,6 +408,22 @@ public class PageApplet extends PagePlugin {
 		});
 		popupMenu.add(mi);
 
+		if (applet instanceof MwService) {
+			JPopupMenu pp = ((MwService) applet).getPopupMenu();
+			if (pp != null) {
+				popupMenu.addSeparator();
+				int n = pp.getComponentCount();
+				if (n > 0) {
+					Component[] c = new Component[n];
+					for (int i = 0; i < n; i++) {
+						c[i] = pp.getComponent(i);
+					}
+					for (Component x : c)
+						popupMenu.add(x);
+				}
+			}
+		}
+
 		popupMenu.pack();
 
 		popupMenu.addPopupMenuListener(new PopupMenuListener() {
