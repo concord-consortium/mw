@@ -38,7 +38,7 @@ public interface MwService {
 
 	public JPopupMenu getPopupMenu();
 
-	public void runNativeScript(String script);
+	public String runNativeScript(String script);
 
 	public void loadState(InputStream is) throws IOException;
 
