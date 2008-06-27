@@ -21,7 +21,6 @@
 package org.concord.mw2d.models;
 
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -37,6 +36,7 @@ import java.net.URL;
 import javax.swing.ImageIcon;
 
 import org.concord.modeler.ConnectionManager;
+import org.concord.modeler.Modeler;
 import org.concord.modeler.text.XMLCharacterEncoder;
 import org.concord.modeler.util.FileUtilities;
 import org.concord.modeler.util.GifDecoder;
@@ -140,16 +140,13 @@ public class ImageComponent implements ModelComponent, Layered, Rotatable {
 		}
 		else {
 			images = new Image[1];
-			if (EventQueue.isDispatchThread()) {
-				if (FileUtilities.isRemote(address)) {
-					images[0] = Toolkit.getDefaultToolkit().createImage(new URL(address));
-				}
-				else {
-					images[0] = Toolkit.getDefaultToolkit().createImage(address);
-				}
+			if (Modeler.isDirectMW()) {
+				// The image will be preloaded by using MediaTracker to monitor the loading state of the image.
+				images[0] = new ImageIcon(address).getImage();
 			}
 			else {
-				// images[0] = new ImageIcon(address).getImage();
+				// Workaround: somehow loading image through ImageIcon doesn't work when MW is embedded.
+				// The API doc doesn't say this method utilizes MediaTracker.
 				if (FileUtilities.isRemote(address)) {
 					images[0] = Toolkit.getDefaultToolkit().createImage(new URL(address));
 				}
