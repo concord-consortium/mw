@@ -398,6 +398,10 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 
 	}
 
+	public static boolean isDirectMW() {
+		return directMW;
+	}
+
 	public static boolean isMac() {
 		return IS_MAC;
 	}
