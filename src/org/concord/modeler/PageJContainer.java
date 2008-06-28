@@ -63,6 +63,7 @@ public class PageJContainer extends PagePlugin {
 
 	public PageJContainer(PageJContainer pageJContainer, Page parent) {
 		super(pageJContainer, parent);
+		codeBase = pageJContainer.codeBase;
 	}
 
 	public void setCodeBase(String s) {
@@ -146,7 +147,12 @@ public class PageJContainer extends PagePlugin {
 				m.getProgressBar().setMaximum(100);
 				m.getProgressBar().setPreferredSize(new Dimension(300, 20));
 				download.setProcessMonitor(m);
-				download.getProcessMonitor().setTitle(" Downloading plugin updates: " + u + "...");
+				if (ftime == 0) {
+					download.getProcessMonitor().setTitle(" Downloading plugin: " + u + "...");
+				}
+				else {
+					download.getProcessMonitor().setTitle(" Downloading plugin updates: " + u + "...");
+				}
 				download.getProcessMonitor().setLocationRelativeTo(this);
 				download.downloadWithoutThread(u, f);
 			}
