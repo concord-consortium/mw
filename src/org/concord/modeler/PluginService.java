@@ -73,10 +73,22 @@ public interface PluginService extends MwService {
 	/** If the plugin needs to do something to release the memory, do it in this method. */
 	public void destroy() throws Exception;
 
+	/**
+	 * force the main class to implement MouseListener if it hasn't already. In most cases, the main class subclasses
+	 * JComponent. So there is no need to handle this interface unless you want to customize it.
+	 */
 	public void addMouseListener(MouseListener listener);
 
+	/**
+	 * force the main class to implement MouseMotionListener if it hasn't already. In most cases, the main class
+	 * subclasses JComponent. So there is no need to handle this interface unless you want to customize it.
+	 */
 	public void addMouseMotionListener(MouseMotionListener listener);
 
+	/**
+	 * force the main class to implement KeyListener if it hasn't already. In most cases, the main class subclasses
+	 * JComponent. So there is no need to handle this interface unless you want to customize it.
+	 */
 	public void addKeyListener(KeyListener listener);
 
 }
