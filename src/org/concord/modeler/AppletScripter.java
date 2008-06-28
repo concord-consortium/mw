@@ -32,7 +32,7 @@ class AppletScripter extends ComponentScripter {
 	AppletScripter(PageApplet applet) {
 		super(true);
 		this.applet = applet;
-		setName("Applet script runner #" + applet.getIndex());
+		setName("Applet Script Runner #" + applet.getIndex());
 	}
 
 	protected void evalCommand(String ci) {

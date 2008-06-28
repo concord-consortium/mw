@@ -307,7 +307,7 @@ public class MolecularModel {
 		if (!evalAction.isStopped())
 			return null;
 		if (evalThread == null) {
-			evalThread = new Thread("Script Runner") {
+			evalThread = new Thread("3D Model Script Runner") {
 				public void run() {
 					try {
 						evalAction.evaluate();

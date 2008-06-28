@@ -49,7 +49,7 @@ class PageScripter extends ComponentScripter {
 	PageScripter(Page page) {
 		super(true);
 		this.page = page;
-		setName("Page script runner");
+		setName("Page Script Runner");
 	}
 
 	protected void evalCommand(String ci) {

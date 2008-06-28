@@ -32,7 +32,7 @@ class SpectrometerScripter extends ComponentScripter {
 	SpectrometerScripter(PagePhotonSpectrometer spectrometer) {
 		super(true);
 		this.spectrometer = spectrometer;
-		setName("Spectrometer script runner #" + spectrometer.getIndex());
+		setName("Spectrometer Script Runner #" + spectrometer.getIndex());
 	}
 
 	protected void evalCommand(String ci) {

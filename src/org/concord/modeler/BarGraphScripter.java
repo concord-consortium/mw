@@ -32,7 +32,7 @@ class BarGraphScripter extends ComponentScripter {
 	BarGraphScripter(PageBarGraph graph) {
 		super(true);
 		this.graph = graph;
-		setName("Bar graph script runner #" + graph.getIndex());
+		setName("Bar Graph Script Runner #" + graph.getIndex());
 	}
 
 	protected void evalCommand(String ci) {
