@@ -32,7 +32,7 @@ class PluginScripter extends ComponentScripter {
 	PluginScripter(PageJContainer jContainer) {
 		super(true);
 		this.jContainer = jContainer;
-		setName("Plugin script runner #" + jContainer.getIndex());
+		setName("Plugin Script Runner #" + jContainer.getIndex());
 	}
 
 	protected void evalCommand(String ci) {

@@ -939,7 +939,8 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		if (!evalAction.isStopped())
 			return null;
 		if (evalThread == null) {
-			evalThread = new Thread("Script Runner") {
+			evalThread = new Thread("2D Model Script Runner: "
+					+ (MDModel.this instanceof MesoModel ? "Gay-Berne Model" : "Molecular Model")) {
 				public void run() {
 					try {
 						evalAction.evaluate();

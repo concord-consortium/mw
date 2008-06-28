@@ -32,7 +32,7 @@ class ElectronicStructureViewerScripter extends ComponentScripter {
 	ElectronicStructureViewerScripter(PageElectronicStructureViewer viewer) {
 		super(true);
 		this.viewer = viewer;
-		setName("Electronic Structure Viewer script runner #" + viewer.getIndex());
+		setName("Electronic Structure Viewer Script Runner #" + viewer.getIndex());
 	}
 
 	protected void evalCommand(String ci) {

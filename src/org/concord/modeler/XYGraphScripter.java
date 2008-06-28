@@ -32,7 +32,7 @@ class XYGraphScripter extends ComponentScripter {
 	XYGraphScripter(PageXYGraph graph) {
 		super(true);
 		this.graph = graph;
-		setName("XY graph script runner #" + graph.getIndex());
+		setName("XY Graph Script Runner #" + graph.getIndex());
 	}
 
 	protected void evalCommand(String ci) {

@@ -44,7 +44,7 @@ class TextBoxScripter extends ComponentScripter {
 	TextBoxScripter(BasicPageTextBox textBox) {
 		super(false);
 		this.textBox = textBox;
-		setName("Text box script runner #" + textBox.getIndex());
+		setName("Text Box Script Runner #" + textBox.getIndex());
 	}
 
 	protected void evalCommand(String ci) {
