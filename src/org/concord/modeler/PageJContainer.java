@@ -544,6 +544,8 @@ public class PageJContainer extends PagePlugin {
 	}
 
 	public String runNativeScript(String script) {
+		if (plugin == null)
+			return "plugin not initiated";
 		try {
 			Method method = plugin.getClass().getMethod("runNativeScript", new Class[] { String.class });
 			if (method != null)
