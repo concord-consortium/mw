@@ -141,7 +141,11 @@ public class PageJContainer extends PagePlugin {
 				setErrorMessage("Cannot connect to the Internet to download the plugin at: " + codeBase);
 				return false;
 			}
-			else if (utime > ftime || fsize < usize) { // assuming that a plugin will only get larger?
+			else if (usize <= 0) {
+				setErrorMessage("Remote plugin file: " + u + " may be corrupted.");
+				return false;
+			}
+			else if (utime > ftime || fsize != usize) {
 				Download download = new Download();
 				download.setInfo(utime, conn.getContentLength());
 				ProcessMonitor m = new ProcessMonitor(JOptionPane.getFrameForComponent(this));
@@ -150,10 +154,13 @@ public class PageJContainer extends PagePlugin {
 				m.getProgressBar().setPreferredSize(new Dimension(300, 20));
 				download.setProcessMonitor(m);
 				if (ftime == 0) {
-					download.getProcessMonitor().setTitle(" Downloading plugin: " + u + "...");
+					String s = Modeler.getInternationalText("DownloadingPlugin");
+					download.getProcessMonitor().setTitle((s != null ? s : "Downloading plugin") + ": " + u + "...");
 				}
 				else {
-					download.getProcessMonitor().setTitle(" Downloading plugin updates: " + u + "...");
+					String s = Modeler.getInternationalText("DownloadingPluginUpdates");
+					download.getProcessMonitor().setTitle(
+							(s != null ? s : "Downloading plugin updates") + ": " + u + "...");
 				}
 				download.getProcessMonitor().setLocationRelativeTo(this);
 				download.downloadWithoutThread(u, f);
