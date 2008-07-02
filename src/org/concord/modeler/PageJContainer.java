@@ -135,11 +135,13 @@ public class PageJContainer extends PagePlugin {
 				return false;
 			}
 			long utime = conn.getLastModified();
+			long usize = conn.getContentLength();
+			long fsize = f.length();
 			if (utime == 0 && ftime == 0) {
 				setErrorMessage("Cannot connect to the Internet to download the plugin at: " + codeBase);
 				return false;
 			}
-			else if (utime > ftime) {
+			else if (utime > ftime || fsize < usize) { // assuming that a plugin will only get larger?
 				Download download = new Download();
 				download.setInfo(utime, conn.getContentLength());
 				ProcessMonitor m = new ProcessMonitor(JOptionPane.getFrameForComponent(this));
