@@ -62,14 +62,15 @@ public class ProcessMonitor {
 
 		progressBar = new JProgressBar();
 		progressBar.setStringPainted(true);
-		progressBar.setFont(new Font("Arial", Font.PLAIN, 9));
+		progressBar.setFont(new Font(null, Font.PLAIN, 9));
 
 		if (hasWindow) {
 			progressBar.setPreferredSize(new Dimension(150, 16));
 			JPanel p = new JPanel(new BorderLayout());
-			p.setBorder(BorderFactory.createLineBorder(Color.black));
+			p.setBorder(BorderFactory.createLineBorder(Color.gray, 2));
 			p.add(progressBar, BorderLayout.CENTER);
 			titleLabel = new JLabel();
+			titleLabel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 			p.add(titleLabel, BorderLayout.NORTH);
 			if (frame != null) {
 				window = new JWindow(frame);
