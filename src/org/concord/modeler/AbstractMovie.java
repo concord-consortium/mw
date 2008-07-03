@@ -66,7 +66,7 @@ public abstract class AbstractMovie implements Movie {
 		playMovie = new DefaultAction() {
 			public void actionPerformed(ActionEvent e) {
 				enableMovieActions(false);
-				new SwingWorker() {
+				new SwingWorker("Play Movie") {
 					public Object construct() {
 						return new Boolean(play());
 					}
@@ -96,7 +96,7 @@ public abstract class AbstractMovie implements Movie {
 		fastForwardMovie = new DefaultAction() {
 			public void actionPerformed(ActionEvent e) {
 				enableMovieActions(false);
-				new SwingWorker() {
+				new SwingWorker("Fast Forward Movie") {
 					public Object construct() {
 						return new Boolean(fastForward());
 					}
@@ -115,7 +115,7 @@ public abstract class AbstractMovie implements Movie {
 		rewindMovie = new DefaultAction() {
 			public void actionPerformed(ActionEvent e) {
 				enableMovieActions(false);
-				new SwingWorker() {
+				new SwingWorker("Rewind Movie") {
 					public Object construct() {
 						return new Boolean(rewind());
 					}

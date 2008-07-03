@@ -88,7 +88,7 @@ class StructureReader extends AbstractAction {
 		if (fileChooser.showOpenDialog(JOptionPane.getFrameForComponent(viewer)) == JFileChooser.APPROVE_OPTION) {
 			final File file = fileChooser.getSelectedFile();
 			selectedExtension = fileChooser.getFileFilter().getDescription().toLowerCase();
-			Thread t = new Thread() {
+			Thread t = new Thread("Structure Reader") {
 				public void run() {
 					viewer.clear();
 					viewer.setResourceAddress(file.getAbsolutePath());

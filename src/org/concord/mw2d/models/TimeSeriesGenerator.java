@@ -147,7 +147,7 @@ class TimeSeriesGenerator {
 				}
 			}
 		});
-		new SwingWorker() {
+		new SwingWorker("Time Series Generator") {
 			public Object construct() {
 				Curve[] c = new Curve[p.length];
 				double[] data;

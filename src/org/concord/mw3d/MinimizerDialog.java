@@ -155,6 +155,7 @@ class MinimizerDialog extends JDialog {
 				model.notifyChange();
 			}
 		});
+		t.setName("Energy Minimizer For 3D");
 		t.setPriority(Thread.MIN_PRIORITY);
 		t.start();
 	}
@@ -166,6 +167,7 @@ class MinimizerDialog extends JDialog {
 				model.notifyChange();
 			}
 		});
+		t.setName("Energy Minimizer For Selected Particles (3D)");
 		t.setPriority(Thread.MIN_PRIORITY);
 		t.start();
 	}

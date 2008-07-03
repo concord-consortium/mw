@@ -530,7 +530,7 @@ public abstract class AtomicModel extends MDModel {
 		setNumberOfParticles(k);
 		if (randomize) {
 			putInBounds();
-			Thread t = new Thread() {
+			Thread t = new Thread("Energy Minimizer in alignParticles()") {
 				public void run() {
 					for (int i = 0; i < 100; i++) {
 						steepestDescent(1.0);

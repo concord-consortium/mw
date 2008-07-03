@@ -228,7 +228,7 @@ class Mvd {
 				}
 			}
 		});
-		new SwingWorker() {
+		new SwingWorker("Mvd") {
 			public Object construct() {
 				Curve[] c = new Curve[p.length];
 				double[] data;

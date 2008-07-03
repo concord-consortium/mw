@@ -1713,7 +1713,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			}
 			else {
 				if (c instanceof PageMolecularViewer) {
-					new SwingWorker() {
+					new SwingWorker("Page:pasteComponent():copy molecular viewer") {
 						public Object construct() {
 							PageMolecularViewer mv = ((PageMolecularViewer) c).getCopy();
 							mv.loadCurrentResource();
@@ -2653,7 +2653,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		if (!b)
 			setEditable(true);
 		notifyPageListeners(new PageEvent(this, PageEvent.PAGE_READ_BEGIN));
-		new SwingWorker() {
+		new SwingWorker("Page:loadMDModel()") {
 			public Object construct() {
 				Model model = mc.getContainer().getModel();
 				mc.setResourceAddress(uri);
@@ -3197,7 +3197,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 					}
 				}
 				if (b) {
-					new SwingWorker() {
+					new SwingWorker("Page:saveAndClose()") {
 						public Object construct() {
 							synchronized (lock) {
 								SaveComponentStateReminder.setEnabled(false);
@@ -3729,7 +3729,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		t.setIndex(0);
 		insertComponent(t);
 		final String s = address;
-		Thread thread = new Thread("load html") {
+		Thread thread = new Thread("Load HTML") {
 			public void run() {
 				t.load(s, sendID);
 			}
@@ -5539,7 +5539,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 
 		propertiesAction = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
-				new SwingWorker() {
+				new SwingWorker("Page:propertiesAction") {
 					public Object construct() {
 						return getLastModifiedAndContentLength();
 					}

@@ -208,7 +208,7 @@ class Tcf {
 				}
 			}
 		});
-		new SwingWorker() {
+		new SwingWorker("Tcf") {
 			public Object construct() {
 				Curve[] c = new Curve[p.length];
 				double[] data;

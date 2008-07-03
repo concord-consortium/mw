@@ -69,7 +69,7 @@ class CommentView extends JComponent {
 		address = s;
 		this.title = title;
 
-		new SwingWorker() {
+		new SwingWorker("Get Comments") {
 			public Object construct() {
 				return getComments();
 			}

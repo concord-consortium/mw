@@ -289,7 +289,7 @@ public class PhotonSpectrometer extends JComponent {
 				 */
 			}
 		});
-		new SwingWorker() {
+		new SwingWorker("PhotonSpectrometer:showLineIntensity()") {
 			public Object construct() {
 				return getLineIntensity();
 			}

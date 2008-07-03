@@ -1480,7 +1480,7 @@ public class MolecularModel {
 					run2();
 				}
 			};
-			new Thread(r, "Energy Minimizer").start();
+			new Thread(r, "Energy Minimizer Before Running").start();
 		}
 		else {
 			run2();

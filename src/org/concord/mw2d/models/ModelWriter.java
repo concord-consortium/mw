@@ -165,7 +165,7 @@ public class ModelWriter extends AbstractAction {
 				success = false;
 			}
 			else {
-				new SwingWorker() {
+				new SwingWorker("Model Writer") {
 					public Object construct() {
 						model.output(file);
 						return file;

@@ -38,6 +38,8 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLConnection;
 import java.security.cert.Certificate;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -56,6 +58,8 @@ public class PageJContainer extends PagePlugin {
 	private String codeBase;
 	private static PageJContainerMaker maker;
 	private PluginScripter scripter;
+	private List<Download> downloadJobs;
+	private volatile boolean downloadCancelled;
 
 	public PageJContainer() {
 		super();
@@ -113,6 +117,9 @@ public class PageJContainer extends PagePlugin {
 	}
 
 	private boolean downloadJarFiles() {
+		if (downloadJobs == null)
+			downloadJobs = new ArrayList<Download>();
+		else downloadJobs.clear();
 		File pluginDir = Initializer.sharedInstance().getPluginDirectory();
 		for (String x : jarName) {
 			File f = new File(pluginDir, x);
@@ -147,6 +154,7 @@ public class PageJContainer extends PagePlugin {
 			}
 			else if (utime > ftime || fsize != usize) {
 				Download download = new Download();
+				downloadJobs.add(download);
 				download.setInfo(utime, conn.getContentLength());
 				ProcessMonitor m = new ProcessMonitor(JOptionPane.getFrameForComponent(this));
 				m.getProgressBar().setMinimum(0);
@@ -209,6 +217,8 @@ public class PageJContainer extends PagePlugin {
 		}
 		else {
 			if (!downloadJarFiles())
+				return;
+			if (downloadCancelled)
 				return;
 			if (page.isRemote()) {
 				cachedCodeBase = FileUtilities.getCodeBase(ConnectionManager.sharedInstance().getLocalCopy(
@@ -456,6 +466,12 @@ public class PageJContainer extends PagePlugin {
 				e.printStackTrace();
 				setErrorMessage("Errors in destroying: " + e);
 			}
+		}
+		if (downloadJobs != null) {
+			//for (Download d : downloadJobs)
+				//d.cancel();
+			//downloadCancelled = true;
+			downloadJobs.clear();
 		}
 	}
 

@@ -1098,7 +1098,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			}
 
 			public void windowOpened(WindowEvent e) {
-				new SwingWorker() {
+				new SwingWorker("Diffraction Instrument Creator") {
 					public Object construct() {
 						DiffractionInstrument d = new DiffractionInstrument(true);
 						d.setModel(model);
@@ -1558,7 +1558,8 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 
 				public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
 					setMenuItemWithoutNotifyingListeners(enableFlowMenuItem, model.isAtomFlowEnabled());
-					setMenuItemWithoutNotifyingListeners(dragOnlyWhenEditingMenuItem, view.getDragObjectOnlyWhenEditing());
+					setMenuItemWithoutNotifyingListeners(dragOnlyWhenEditingMenuItem, view
+							.getDragObjectOnlyWhenEditing());
 					setupFlowMenuItem.setEnabled(model.getRecorderDisabled() && model.isAtomFlowEnabled());
 					enableFlowMenuItem.setEnabled(model.getRecorderDisabled());
 					disableRecorderItem.setEnabled(!model.hasGraphs() && !hasDNAScroller()

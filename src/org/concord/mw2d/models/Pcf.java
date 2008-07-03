@@ -283,7 +283,7 @@ class Pcf {
 				}
 			}
 		});
-		new SwingWorker() {
+		new SwingWorker("Pcf") {
 			public Object construct() {
 				Curve[] c = new Curve[parameter.length];
 				double[] data;

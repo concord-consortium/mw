@@ -42,6 +42,7 @@ class Download {
 	private int contentLength;
 	private List<DownloadListener> listenerList;
 	private int byteCount;
+	private volatile boolean pleaseCancel;
 
 	Download() {
 	}
@@ -56,6 +57,10 @@ class Download {
 		if (listenerList != null)
 			listenerList.clear();
 		monitor = null;
+	}
+
+	public void cancel() {
+		pleaseCancel = true;
 	}
 
 	public void addDownloadListener(DownloadListener dll) {
@@ -108,8 +113,7 @@ class Download {
 		});
 		download(url, des);
 		final boolean success = des.length() == contentLength;
-		if (success)
-			des.setLastModified(lastModified);
+		des.setLastModified(lastModified);
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				fireDownloadEvent(new DownloadEvent(Download.this, success ? DownloadEvent.DOWNLOAD_COMPLETED
@@ -220,6 +224,8 @@ class Download {
 			while ((amount = is.read(b)) != -1) {
 				fos.write(b, 0, amount);
 				byteCount += amount;
+				if (pleaseCancel)
+					break;
 				// try {Thread.sleep(10);}catch (InterruptedException ie) {} // simulating network slowdown
 				if (monitor != null) {
 					EventQueue.invokeLater(new Runnable() {

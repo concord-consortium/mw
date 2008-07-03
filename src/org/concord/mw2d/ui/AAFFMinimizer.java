@@ -146,6 +146,7 @@ class AAFFMinimizer extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				job.stop = false;
 				Thread t = new Thread(job);
+				t.setName("Energy Minimizer");
 				t.setPriority(Thread.NORM_PRIORITY);
 				t.start();
 			}

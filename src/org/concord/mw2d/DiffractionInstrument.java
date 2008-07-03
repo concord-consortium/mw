@@ -345,7 +345,7 @@ public class DiffractionInstrument extends JPanel {
 		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		pattern.setMessage("Calculating, please wait......");
 		pattern.repaint();
-		new SwingWorker() {
+		new SwingWorker("DiffractionInstrument:scan()") {
 			public Object construct() {
 				pattern.setMessage(null);
 				createImage();
