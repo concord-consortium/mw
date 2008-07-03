@@ -66,7 +66,7 @@ final class PostSubmissionHandler {
 
 	void open(final URLConnection connect, final byte taskType) {
 
-		new SwingWorker() {
+		new SwingWorker("PostSubmissionHandler 1") {
 
 			public Object construct() {
 				EventQueue.invokeLater(new Runnable() {
@@ -103,7 +103,7 @@ final class PostSubmissionHandler {
 
 			public void finished() {
 				label.setText((String) get());
-				new SwingWorker() {
+				new SwingWorker("PostSubmissionHandler 2") {
 					public Object construct() {
 						try {
 							Thread.sleep(2000);

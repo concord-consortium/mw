@@ -164,7 +164,7 @@ class FeedbackArea extends JComponent {
 	}
 
 	public void updateData() {
-		new SwingWorker() {
+		new SwingWorker("Update Comments") {
 			public Object construct() {
 				return getData();
 			}

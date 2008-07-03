@@ -76,7 +76,7 @@ class Energizer {
 					model.notifyChange();
 				}
 			});
-			t.setName("Energizer");
+			t.setName("Quick Heater for 3D");
 			t.setPriority(Thread.MIN_PRIORITY);
 			t.start();
 		}

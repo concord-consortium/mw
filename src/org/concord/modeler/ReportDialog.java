@@ -297,7 +297,7 @@ class ReportDialog extends JDialog {
 	}
 
 	private void lookupCollaborators() {
-		SwingWorker worker = new SwingWorker() {
+		SwingWorker worker = new SwingWorker("Lookup Collaborators") {
 			public Object construct() {
 				return lookupClassmates();
 			}

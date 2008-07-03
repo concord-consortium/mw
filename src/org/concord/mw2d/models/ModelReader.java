@@ -116,7 +116,7 @@ public class ModelReader extends AbstractAction {
 			if (!filter.accept(selectedFile))
 				selectedFile = new File(selectedFile.getAbsolutePath() + "." + filter);
 			final File file = selectedFile;
-			new SwingWorker() {
+			new SwingWorker("Model Reader") {
 				public Object construct() {
 					model.input(file);
 					return file;

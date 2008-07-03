@@ -338,7 +338,7 @@ public class PageMolecularViewer extends JmolContainer implements BasicModel, Em
 					final String s = (String) (((JComboBox) o).getSelectedItem());
 					if (!"Select a model".equals(s)) {
 						setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-						new SwingWorker() {
+						new SwingWorker("Structure Importer") {
 							public Object construct() {
 								setResourceAddress(FileUtilities.getCodeBase(page.getAddress()) + s);
 								loadCurrentResource();

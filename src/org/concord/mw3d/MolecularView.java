@@ -355,6 +355,7 @@ public class MolecularView extends Draw {
 						viewer.moveCameraToScene(startingScene, false);
 					}
 				};
+				t.setName("Resetting View");
 				t.setPriority(Thread.MIN_PRIORITY);
 				t.start();
 			}

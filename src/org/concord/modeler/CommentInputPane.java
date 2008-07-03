@@ -172,7 +172,7 @@ class CommentInputPane extends JPanel {
 		JButton button = new JButton(s != null ? s : "Submit");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new SwingWorker() {
+				new SwingWorker("Submit Comment") {
 					public Object construct() {
 						return submitComment();
 					}

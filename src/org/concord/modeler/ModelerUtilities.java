@@ -842,7 +842,7 @@ public final class ModelerUtilities {
 					public void run() {
 						FileUtilities.copy(url, file);
 					}
-				}).start();
+				}, "Download: " + url).start();
 				fileChooser.rememberPath(fileChooser.getCurrentDirectory().toString());
 				success = true;
 			}
@@ -1037,7 +1037,7 @@ public final class ModelerUtilities {
 					public void run() {
 						saveImageIcon(icon, file, false);
 					}
-				});
+				}, "Save Image:" + icon);
 				t.setPriority(Thread.MIN_PRIORITY);
 				t.start();
 				fileChooser.rememberPath(fileChooser.getCurrentDirectory().toString());

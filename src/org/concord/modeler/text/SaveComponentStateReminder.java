@@ -87,7 +87,7 @@ class SaveComponentStateReminder {
 			suppress = true;
 		case JOptionPane.NO_OPTION:
 			parent.getProgressBar().setString("Saving model state: " + name + "......");
-			Thread t = new Thread(saveRun);
+			Thread t = new Thread(saveRun, "Save Model State: " + name);
 			t.setPriority(Thread.MIN_PRIORITY);
 			t.start();
 			break;

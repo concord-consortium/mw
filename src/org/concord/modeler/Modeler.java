@@ -2609,14 +2609,6 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 			reloadButton.setEnabled(false);
 		editor.addDisabledComponentWhileLoading(reloadButton);
 
-		if (!IS_MAC)
-			toolBar.add(new JLabel(toolBarSeparatorIcon));
-		s = getInternationalText("AddressLabel");
-		JLabel label = new JLabel(s != null ? "  " + s + "  " : "  Address  ");
-		label.setEnabled(false);
-		toolBar.add(label);
-		editor.addDisabledComponentWhileLoading(label);
-
 		navigator.getComboBox().setRequestFocusEnabled(false);
 		int fontSize = navigator.getComboBox().getFont().getSize();
 		navigator.getComboBox().setPreferredSize(new Dimension(400, fontSize * 2));

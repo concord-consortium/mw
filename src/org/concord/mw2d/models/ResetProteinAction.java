@@ -57,7 +57,7 @@ class ResetProteinAction extends ModelAction {
 				k = model.getNumberOfAtoms();
 				oldCursor = model.view.getCursor();
 
-				new SwingWorker() {
+				new SwingWorker("Reset Protein Action") {
 					public Object construct() {
 						EventQueue.invokeLater(new Runnable() {
 							public void run() {

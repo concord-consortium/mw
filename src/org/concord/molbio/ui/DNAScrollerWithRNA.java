@@ -296,6 +296,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 						repaint();
 					}
 				});
+				t.setName("One step transcription");
 				t.setPriority(Thread.MIN_PRIORITY);
 				t.start();
 			}
@@ -310,6 +311,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 					nextTranslationStep();
 				}
 			});
+			t.setName("One Step Translation");
 			t.setPriority(Thread.MIN_PRIORITY);
 			t.start();
 			return;

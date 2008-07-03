@@ -1257,6 +1257,7 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 							getModel().input(url);
 						}
 					};
+					t.setName("Model Inputter from a URL");
 					t.setPriority(Thread.MIN_PRIORITY);
 					t.start();
 				}

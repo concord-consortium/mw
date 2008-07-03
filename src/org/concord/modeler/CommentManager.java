@@ -83,7 +83,7 @@ class CommentManager {
 	}
 
 	void showComments(final Frame owner) {
-		new SwingWorker() {
+		new SwingWorker("Get Comments") {
 			public Object construct() {
 				return showComments();
 			}
