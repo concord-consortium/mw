@@ -143,6 +143,7 @@ class UpdateManager {
 			jarLocation = ModelerUtilities.validateJarLocationOnMacOSX(jarLocation);
 		File jarFile = new File(jarLocation);
 		packFile = new File(jarFile.getParentFile(), PACK_NAME);
+		download.getFileInfo(url);
 		download.downloadInAThread(url, packFile);
 		return true;
 	}
