@@ -183,13 +183,13 @@ class RadialBondPropertiesPanel extends PropertiesPanel {
 			p2.setBorder(BorderFactory.createEmptyBorder(2, 10, 10, 10));
 			add(p2, BorderLayout.CENTER);
 
+			s = MDView.getInternationalText("Torque");
 			p = new JPanel(new SpringLayout());
-			p.setBorder(BorderFactory.createTitledBorder("Torque"));
+			p.setBorder(BorderFactory.createTitledBorder(s != null ? s : "Torque"));
 			p2.add(p, BorderLayout.NORTH);
 
 			// row 1
 			torqueField = new FloatNumberTextField(bond.getTorque() * 10000, -50f, 50f);
-			s = MDView.getInternationalText("Torque");
 			p.add(new JLabel((s != null ? s : "Torque Force") + " [" + (int) torqueField.getMinValue() + ","
 					+ (int) torqueField.getMaxValue() + "]"));
 			torqueField.addActionListener(new ActionListener() {
@@ -228,8 +228,9 @@ class RadialBondPropertiesPanel extends PropertiesPanel {
 
 			makeCompactGrid(p, 2, 3, 5, 5, 10, 2);
 
+			s = MDView.getInternationalText("ForcedVibration");
 			p = new JPanel(new SpringLayout());
-			p.setBorder(BorderFactory.createTitledBorder("Forced vibration"));
+			p.setBorder(BorderFactory.createTitledBorder(s != null ? s : "Forced vibration"));
 			p2.add(p, BorderLayout.CENTER);
 
 			// row 1

@@ -4475,17 +4475,29 @@ class Eval2D extends AbstractEval {
 		}
 		String s = str2.toLowerCase().intern();
 		boolean b = true;
-		if (s == "color")
+		if (s == "color") {
 			m.bonds.get(i).setBondColor(new Color((int) x));
-		else if (s == "strength")
+		}
+		else if (s == "strength") {
 			if (Math.abs(x) < ZERO) {
 				m.bonds.remove(m.bonds.get(i));
 			}
 			else {
 				m.bonds.get(i).setBondStrength(x);
 			}
-		else if (s == "bondlength")
+		}
+		else if (s == "bondlength") {
 			m.bonds.get(i).setBondLength(x * IR_CONVERTER);
+		}
+		else if (s == "amplitude") {
+			m.bonds.get(i).setAmplitude(0.001f * (float) x);
+		}
+		else if (s == "period") {
+			m.bonds.get(i).setPeriod((int) x);
+		}
+		else if (s == "phase") {
+			m.bonds.get(i).setPhase((float) (x * Math.PI / 180));
+		}
 		else if (s == "torque") {
 			if (Math.abs(x) < ZERO) {
 				m.bonds.get(i).setTorque(0);
