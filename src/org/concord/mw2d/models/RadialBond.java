@@ -64,6 +64,9 @@ public class RadialBond implements ModelComponent {
 	double bondLength = 20, bondStrength = 0.2;
 	float torque;
 	byte torqueType;
+	float amplitude;
+	int period = 100;
+	float phase;
 
 	/*
 	 * Chemical energy stored in this bond. This energy is always set positive, though in the total energy calculation
@@ -546,6 +549,33 @@ public class RadialBond implements ModelComponent {
 		return torqueType;
 	}
 
+	/** sets the amplitude of forced vibration */
+	public void setAmplitude(float amplitude) {
+		this.amplitude = amplitude;
+	}
+
+	public float getAmplitude() {
+		return amplitude;
+	}
+
+	/** sets the period of forced vibration, in femtoseconds */
+	public void setPeriod(int period) {
+		this.period = period;
+	}
+
+	public int getPeriod() {
+		return period;
+	}
+
+	/** sets the phase of forced vibration (in radians) */
+	public void setPhase(float phase) {
+		this.phase = phase;
+	}
+
+	public float getPhase() {
+		return phase;
+	}
+
 	/**
 	 * set the coordinates <tt>x1,y1,x2,y2</tt> to the atoms' latest locations and relocate the hotspot.
 	 */
@@ -880,6 +910,21 @@ public class RadialBond implements ModelComponent {
 		}
 	}
 
+	void forceVibration(float time) {
+		if (Math.abs(amplitude) < ZERO)
+			return;
+		double cost = atom2.rx - atom1.rx;
+		double sint = atom2.ry - atom1.ry;
+		double k = MDModel.GF_CONVERSION_CONSTANT * amplitude * Math.cos(Math.PI * 2 * time / period + phase)
+				/ Math.hypot(cost, sint);
+		cost *= k;
+		sint *= k;
+		atom1.fx += cost / atom1.mass;
+		atom1.fy += sint / atom1.mass;
+		atom2.fx -= cost / atom2.mass;
+		atom2.fy -= sint / atom2.mass;
+	}
+
 	void applyTorque() {
 		if (Math.abs(torque) < ZERO)
 			return;
@@ -936,6 +981,8 @@ public class RadialBond implements ModelComponent {
 		private byte style = STANDARD_STICK_STYLE;
 		private float torque;
 		private byte torqueType;
+		private float amplitude, phase;
+		private int period = 100;
 
 		public Delegate() {
 		}
@@ -948,6 +995,9 @@ public class RadialBond implements ModelComponent {
 			chemicalEnergy = rb.chemicalEnergy;
 			torque = rb.torque;
 			torqueType = rb.torqueType;
+			amplitude = rb.amplitude;
+			period = rb.period;
+			phase = rb.phase;
 			solid = rb.solid;
 			smart = rb.smart;
 			closed = rb.closed;
@@ -1073,6 +1123,30 @@ public class RadialBond implements ModelComponent {
 
 		public byte getTorqueType() {
 			return torqueType;
+		}
+
+		public void setAmplitude(float amplitude) {
+			this.amplitude = amplitude;
+		}
+
+		public float getAmplitude() {
+			return amplitude;
+		}
+
+		public void setPeriod(int period) {
+			this.period = period;
+		}
+
+		public int getPeriod() {
+			return period;
+		}
+
+		public void setPhase(float phase) {
+			this.phase = phase;
+		}
+
+		public float getPhase() {
+			return phase;
 		}
 
 		public boolean equals(Object obj) {
