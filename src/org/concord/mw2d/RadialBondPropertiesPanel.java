@@ -75,12 +75,12 @@ class RadialBondPropertiesPanel extends PropertiesPanel {
 
 	RadialBondPropertiesPanel(final RadialBond bond) {
 
-		super(new BorderLayout(5, 5));
+		super(new BorderLayout());
 
 		JPanel p = new JPanel(new SpringLayout());
-		p.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory
-				.createEmptyBorder(10, 10, 10, 10)));
-		add(p, BorderLayout.CENTER);
+		p.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10), BorderFactory
+				.createTitledBorder("")));
+		add(p, BorderLayout.NORTH);
 
 		String s = null;
 
@@ -173,7 +173,21 @@ class RadialBondPropertiesPanel extends PropertiesPanel {
 		}
 		else {
 
-			// row 9
+			makeCompactGrid(p, 8, 3, 5, 5, 10, 2);
+
+		}
+
+		if (!(bond.getHostModel() instanceof ReactionModel)) {
+
+			JPanel p2 = new JPanel(new BorderLayout(2, 2));
+			p2.setBorder(BorderFactory.createEmptyBorder(2, 10, 10, 10));
+			add(p2, BorderLayout.CENTER);
+
+			p = new JPanel(new SpringLayout());
+			p.setBorder(BorderFactory.createTitledBorder("Torque"));
+			p2.add(p, BorderLayout.NORTH);
+
+			// row 1
 			torqueField = new FloatNumberTextField(bond.getTorque() * 10000, -50f, 50f);
 			s = MDView.getInternationalText("Torque");
 			p.add(new JLabel((s != null ? s : "Torque Force") + " [" + (int) torqueField.getMinValue() + ","
@@ -195,7 +209,7 @@ class RadialBondPropertiesPanel extends PropertiesPanel {
 			p.add(torqueField);
 			p.add(createSmallerFontLabel("<html>10<sup>-5</sup>eV/&#197;</html>"));
 
-			// row 10
+			// row 2
 			s = MDView.getInternationalText("TorqueType");
 			p.add(new JLabel(s != null ? s : "Torque Type"));
 			torqueTypeComboBox = new JComboBox(new String[] { "Atom 2 around atom 1", "Atom 1 around atom 2",
@@ -212,7 +226,13 @@ class RadialBondPropertiesPanel extends PropertiesPanel {
 			p.add(torqueTypeComboBox);
 			p.add(new JPanel());
 
-			// row 11
+			makeCompactGrid(p, 2, 3, 5, 5, 10, 2);
+
+			p = new JPanel(new SpringLayout());
+			p.setBorder(BorderFactory.createTitledBorder("Forced vibration"));
+			p2.add(p, BorderLayout.CENTER);
+
+			// row 1
 			amplitudeField = new FloatNumberTextField(bond.getAmplitude() * 1000, 0f, 100f);
 			s = MDView.getInternationalText("Amplitude");
 			p.add(new JLabel((s != null ? s : "Amplitude") + " [" + (int) amplitudeField.getMinValue() + ","
@@ -232,9 +252,9 @@ class RadialBondPropertiesPanel extends PropertiesPanel {
 				}
 			});
 			p.add(amplitudeField);
-			p.add(createSmallerFontLabel("<html>10<sup>-5</sup>eV/&#197;</html>"));
+			p.add(createSmallerFontLabel("<html>10<sup>-3</sup>eV/&#197;</html>"));
 
-			// row 12
+			// row 2
 			periodField = new IntegerTextField(bond.getPeriod(), 1, 1000000);
 			s = MDView.getInternationalText("Period");
 			p.add(new JLabel((s != null ? s : "Period") + " [" + periodField.getMinValue() + ","
@@ -256,7 +276,7 @@ class RadialBondPropertiesPanel extends PropertiesPanel {
 			p.add(periodField);
 			p.add(createSmallerFontLabel("fs"));
 
-			// row 13
+			// row 3
 			phaseField = new IntegerTextField((int) (bond.getPhase() * 180f / (float) Math.PI), 0, 360);
 			s = MDView.getInternationalText("Phase");
 			p.add(new JLabel((s != null ? s : "Phase") + " [0, 360]"));
@@ -277,7 +297,7 @@ class RadialBondPropertiesPanel extends PropertiesPanel {
 			p.add(phaseField);
 			p.add(createSmallerFontLabel("<html>Degrees</html>"));
 
-			makeCompactGrid(p, 13, 3, 5, 5, 10, 2);
+			makeCompactGrid(p, 3, 3, 5, 5, 10, 2);
 
 		}
 
