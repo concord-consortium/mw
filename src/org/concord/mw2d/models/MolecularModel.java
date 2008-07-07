@@ -627,6 +627,7 @@ public class MolecularModel extends AtomicModel {
 					vsum += etemp - rBond.getChemicalEnergy();
 					eRB += etemp;
 					rBond.applyTorque();
+					rBond.forceVibration(modelTime);
 				}
 			}
 
@@ -890,6 +891,9 @@ public class MolecularModel extends AtomicModel {
 					.getBondStrength(), rbd.getChemicalEnergy());
 			rBond.setTorque(rbd.getTorque());
 			rBond.setTorqueType(rbd.getTorqueType());
+			rBond.setAmplitude(rbd.getAmplitude());
+			rBond.setPeriod(rbd.getPeriod());
+			rBond.setPhase(rbd.getPhase());
 			rBond.setVisible(rbd.isVisible());
 			rBond.setSmart(rbd.isSmart());
 			rBond.setSolid(rbd.isSolid());

@@ -470,7 +470,7 @@ public class PageJContainer extends PagePlugin {
 		if (downloadJobs != null) {
 			//for (Download d : downloadJobs)
 				//d.cancel();
-			//downloadCancelled = true;
+			downloadCancelled = true;
 			downloadJobs.clear();
 		}
 	}

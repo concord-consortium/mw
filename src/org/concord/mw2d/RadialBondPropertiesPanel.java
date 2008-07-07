@@ -46,6 +46,7 @@ import org.concord.modeler.ui.ColorComboBox;
 import org.concord.modeler.ui.ColorRectangle;
 import org.concord.modeler.ui.ComboBoxRenderer;
 import org.concord.modeler.ui.FloatNumberTextField;
+import org.concord.modeler.ui.IntegerTextField;
 import org.concord.modeler.ui.RealNumberTextField;
 import org.concord.mw2d.models.RadialBond;
 import org.concord.mw2d.models.ReactionModel;
@@ -61,6 +62,8 @@ class RadialBondPropertiesPanel extends PropertiesPanel {
 	private JLabel leftColorLabel;
 	private FloatNumberTextField torqueField;
 	private JComboBox torqueTypeComboBox;
+	private FloatNumberTextField amplitudeField;
+	private IntegerTextField periodField, phaseField;
 
 	void destroy() {
 		removeListenersForTextField(lengthField);
@@ -209,7 +212,72 @@ class RadialBondPropertiesPanel extends PropertiesPanel {
 			p.add(torqueTypeComboBox);
 			p.add(new JPanel());
 
-			makeCompactGrid(p, 10, 3, 5, 5, 10, 2);
+			// row 11
+			amplitudeField = new FloatNumberTextField(bond.getAmplitude() * 1000, 0f, 100f);
+			s = MDView.getInternationalText("Amplitude");
+			p.add(new JLabel((s != null ? s : "Amplitude") + " [" + (int) amplitudeField.getMinValue() + ","
+					+ (int) amplitudeField.getMaxValue() + "]"));
+			amplitudeField.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					bond.setAmplitude(amplitudeField.getValue() * 0.001f);
+					bond.getHostModel().getView().repaint();
+					bond.getHostModel().notifyChange();
+					destroy();
+				}
+			});
+			amplitudeField.addFocusListener(new FocusAdapter() {
+				public void focusLost(FocusEvent e) {
+					bond.setAmplitude(amplitudeField.getValue() * 0.001f);
+					bond.getHostModel().getView().repaint();
+				}
+			});
+			p.add(amplitudeField);
+			p.add(createSmallerFontLabel("<html>10<sup>-5</sup>eV/&#197;</html>"));
+
+			// row 12
+			periodField = new IntegerTextField(bond.getPeriod(), 1, 1000000);
+			s = MDView.getInternationalText("Period");
+			p.add(new JLabel((s != null ? s : "Period") + " [" + periodField.getMinValue() + ","
+					+ periodField.getMaxValue() + "]"));
+			periodField.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					bond.setPeriod(periodField.getValue());
+					bond.getHostModel().getView().repaint();
+					bond.getHostModel().notifyChange();
+					destroy();
+				}
+			});
+			periodField.addFocusListener(new FocusAdapter() {
+				public void focusLost(FocusEvent e) {
+					bond.setPeriod(periodField.getValue());
+					bond.getHostModel().getView().repaint();
+				}
+			});
+			p.add(periodField);
+			p.add(createSmallerFontLabel("fs"));
+
+			// row 13
+			phaseField = new IntegerTextField((int) (bond.getPhase() * 180f / (float) Math.PI), 0, 360);
+			s = MDView.getInternationalText("Phase");
+			p.add(new JLabel((s != null ? s : "Phase") + " [0, 360]"));
+			phaseField.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					bond.setPhase(phaseField.getValue() * (float) Math.PI / 180f);
+					bond.getHostModel().getView().repaint();
+					bond.getHostModel().notifyChange();
+					destroy();
+				}
+			});
+			phaseField.addFocusListener(new FocusAdapter() {
+				public void focusLost(FocusEvent e) {
+					bond.setPhase(phaseField.getValue() * (float) Math.PI / 180f);
+					bond.getHostModel().getView().repaint();
+				}
+			});
+			p.add(phaseField);
+			p.add(createSmallerFontLabel("<html>Degrees</html>"));
+
+			makeCompactGrid(p, 13, 3, 5, 5, 10, 2);
 
 		}
 
