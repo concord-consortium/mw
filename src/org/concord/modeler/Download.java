@@ -267,7 +267,7 @@ class Download {
 
 	}
 
-	private void getFileInfo(URL url) {
+	void getFileInfo(URL url) {
 		URLConnection conn = ConnectionManager.getConnection(url);
 		if (conn == null)
 			return;
