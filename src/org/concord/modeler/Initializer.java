@@ -269,9 +269,12 @@ public class Initializer {
 	}
 
 	private void readSystemProperties() {
+		File f = new File(propDirectory, "system.xml");
+		if (!f.exists())
+			return;
 		XMLDecoder in = null;
 		try {
-			in = new XMLDecoder(new BufferedInputStream(new FileInputStream(new File(propDirectory, "system.xml"))));
+			in = new XMLDecoder(new BufferedInputStream(new FileInputStream(f)));
 		}
 		catch (Exception e) {
 			e.printStackTrace();
