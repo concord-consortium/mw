@@ -3149,6 +3149,42 @@ class Eval2D extends AbstractEval {
 				}
 				return true;
 			}
+			else if (s0 == "muscle_amplitude") {
+				if (model instanceof MolecularModel) {
+					MolecularModel mm = (MolecularModel) model;
+					if (!mm.bonds.isEmpty()) {
+						RadialBond rb;
+						synchronized (mm.bonds.getSynchronizationLock()) {
+							for (Iterator it = mm.bonds.iterator(); it.hasNext();) {
+								rb = (RadialBond) it.next();
+								if (rb.isSelected()) {
+									rb.setAmplitude((float) (x * 0.001));
+								}
+							}
+						}
+						notifyChange();
+					}
+				}
+				return true;
+			}
+			else if (s0 == "muscle_period") {
+				if (model instanceof MolecularModel) {
+					MolecularModel mm = (MolecularModel) model;
+					if (!mm.bonds.isEmpty()) {
+						RadialBond rb;
+						synchronized (mm.bonds.getSynchronizationLock()) {
+							for (Iterator it = mm.bonds.iterator(); it.hasNext();) {
+								rb = (RadialBond) it.next();
+								if (rb.isSelected()) {
+									rb.setPeriod((int) x);
+								}
+							}
+						}
+						notifyChange();
+					}
+				}
+				return true;
+			}
 			else if (s0 == "model_time") {
 				model.setModelTime((float) x);
 				notifyChange();
