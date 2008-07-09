@@ -115,6 +115,7 @@ class ReportDialog extends JDialog {
 		panel.add(descriptionLabel, c);
 		titleField = new PastableTextField();
 		titleField.setPreferredSize(longField);
+		titleField.setEditable(false);
 		c.gridx = 1;
 		c.gridy = 1;
 		c.gridwidth = 3; // spans across 3 columns
