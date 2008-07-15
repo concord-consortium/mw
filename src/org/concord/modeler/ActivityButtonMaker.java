@@ -255,7 +255,7 @@ class ActivityButtonMaker extends ComponentMaker {
 		}
 		else if (isScriptButton || scriptDefault) {
 			areaLabel
-					.setText("<html>Enter scripts in the following format:<br><font face=\"Courier New\" size=\"-2\">script:[component type]:[component index]:[script body]</font></html>");
+					.setText("<html>Enter scripts in the following format:<br><font face=\"Courier New\" size=\"-2\">(native)script:[component type]:[component index]:[script body]</font></html>");
 			textArea.setText((String) activityButton.getClientProperty("script"));
 		}
 		else if (isGradeButton) {
@@ -371,7 +371,7 @@ class ActivityButtonMaker extends ComponentMaker {
 		borderComboBox.setRenderer(new ComboBoxRenderer.BorderCell());
 		borderComboBox.setBackground(p.getBackground());
 		borderComboBox.setToolTipText("Select the border type for this button.");
-		borderComboBox.setPreferredSize(new Dimension(200, 24));
+		borderComboBox.setPreferredSize(new Dimension(250, 24));
 		p.add(borderComboBox);
 		borderComboBox.setEnabled(!Page.isNativeLookAndFeelUsed());
 

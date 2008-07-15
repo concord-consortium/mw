@@ -205,7 +205,6 @@ class PageJContainerMaker extends ComponentMaker {
 		heightField.setValue(pageJContainer.getPreferredSize().height);
 		borderComboBox.setSelectedItem(pageJContainer.getBorderType());
 		bgComboBox.setColor(pageJContainer.getBackground());
-		okButton.setEnabled(jarList.getModel().getSize() > 0);
 		tabbedPane.setSelectedIndex(remote ? 0 : 1);
 		if (remote) {
 			jarList.clearSelection();
@@ -218,12 +217,14 @@ class PageJContainerMaker extends ComponentMaker {
 			PluginInfo pi = PluginManager.getPluginInfoByMainClass(pageJContainer.className);
 			if (pi != null)
 				knownPluginComboBox.setSelectedItem(pi.getName());
+			okButton.setEnabled(pi != null);
 		}
 		else {
 			knownPluginComboBox.setSelectedIndex(0);
 			codeBaseField.setText(null);
 			mainClassField.setText(null);
 			jarField.setText(null);
+			okButton.setEnabled(jarList.getModel().getSize() > 0);
 		}
 
 		dialog.setVisible(true);
@@ -388,6 +389,8 @@ class PageJContainerMaker extends ComponentMaker {
 							x += FileUtilities.getFileName(s) + ", ";
 						}
 						jarField.setText(x.substring(0, x.length() - 2));
+						if (!okButton.isEnabled())
+							okButton.setEnabled(true);
 					}
 					else {
 						mainClassField.setText(null);
