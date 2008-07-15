@@ -330,8 +330,16 @@ class SubmissionDialog extends JDialog {
 		StringBuffer sb = new StringBuffer(Modeler.getContextRoot() + "modelupload?client=mw&action=upload");
 		String zipfile = FileUtilities.changeExtension(FileUtilities.getFileName(page.getAddress()), "zip");
 		sb.append("&zipfile=" + encode(zipfile));
-		if (taskType == Upload.UPLOAD_FOLDER)
+		if (taskType == Upload.UPLOAD_FOLDER) {
 			sb.append("&firstpage=" + encode(FileUtilities.getFileName(firstPage)));
+		}
+		else if (taskType == Upload.UPLOAD_PAGE) {
+			// support for users who directly uploads a file other than CML (e.g. a PDB file)
+			String ext = FileUtilities.getSuffix(page.getAddress());
+			if (!"cml".equalsIgnoreCase(ext)) {
+				sb.append("&firstpage=" + encode(FileUtilities.getFileName(page.getAddress())));
+			}
+		}
 		sb.append("&title=" + encode(titleField.getText()));
 		sb.append("&privacy=");
 		if (Modeler.user.hasTeacher()) {
