@@ -115,6 +115,7 @@ import org.concord.modeler.draw.LineStyle;
 import org.concord.modeler.draw.LineSymbols;
 import org.concord.modeler.draw.LineWidth;
 import org.concord.modeler.draw.StrokeFactory;
+import org.concord.modeler.event.PageEvent;
 import org.concord.modeler.g2d.Curve;
 import org.concord.modeler.util.FileUtilities;
 import org.concord.mw2d.ui.AtomContainer;
@@ -370,7 +371,6 @@ final class PageXMLDecoder {
 	private void finish() {
 		if (!EventQueue.isDispatchThread())
 			throw new RuntimeException("called by non-EDT thread");
-		page.lockActionsWhileLoading(false);
 		page.setReading(false);
 		page.setReadingModel(false);
 		loadingTime = System.currentTimeMillis() - loadingTime;
@@ -385,6 +385,8 @@ final class PageXMLDecoder {
 					+ " seconds.");
 			progressBar.setIndeterminate(false);
 		}
+		// notify Editor to update buttons accordingly
+		page.notifyPageListeners(new PageEvent(page, PageEvent.PAGE_READ_END));
 	}
 
 	private void loadBackgroundImage(String location) {
@@ -613,7 +615,6 @@ final class PageXMLDecoder {
 				});
 			}
 			page.setReading(true);
-			page.lockActionsWhileLoading(true);
 		}
 
 		public synchronized void endDocument() throws SAXException {
@@ -634,6 +635,7 @@ final class PageXMLDecoder {
 							mw3dConnector.loadResources();
 							mw2dConnector.loadResources();
 							jmolConnector.loadResources();
+							javaStarter.start();
 							EventQueue.invokeLater(new Runnable() {
 								public void run() {
 									progressBar.setValue(progressBar.getMaximum());
@@ -643,7 +645,6 @@ final class PageXMLDecoder {
 									mw3dConnector.finishLoading();
 									mw2dConnector.finishLoading();
 									jmolConnector.finishLoading();
-									javaStarter.start();
 									page.autoResizeComponents();
 									finish();
 								}

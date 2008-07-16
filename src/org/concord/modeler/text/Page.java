@@ -300,7 +300,6 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	private static String clipboardText;
 	private static boolean runOnCD;
 
-	private List<Action> actionToLockWhileLoading;
 	private List<Icon> selectedImages;
 	private List<JComponent> selectedComponents;
 	private List<PageListener> pageListenerList;
@@ -431,12 +430,6 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 
 		selectedComponents = Collections.synchronizedList(new ArrayList<JComponent>());
 		selectedImages = Collections.synchronizedList(new ArrayList<Icon>());
-
-		addActionToLockWhileLoading(saveAction);
-		addActionToLockWhileLoading(saveAsAction);
-		addActionToLockWhileLoading(refreshAction);
-		addActionToLockWhileLoading(openAction);
-		addActionToLockWhileLoading(newAction);
 
 		setEditable(false); // called to disable the caret
 
@@ -588,7 +581,6 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		actions.clear();
 		getInputMap().clear();
 		getActionMap().clear();
-		actionToLockWhileLoading.clear();
 		activityActionMap.clear();
 		pageListenerList.clear();
 		selectedComponents.clear();
@@ -839,23 +831,6 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 
 	public Action getUploadReportAction() {
 		return uploadReportAction;
-	}
-
-	public void addActionToLockWhileLoading(Action a) {
-		if (actionToLockWhileLoading == null)
-			actionToLockWhileLoading = new ArrayList<Action>();
-		actionToLockWhileLoading.add(a);
-	}
-
-	public void lockActionsWhileLoading(final boolean b) {
-		if (actionToLockWhileLoading == null || actionToLockWhileLoading.isEmpty())
-			return;
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				for (Action a : actionToLockWhileLoading)
-					a.setEnabled(!b);
-			}
-		});
 	}
 
 	public static PrintParameters getPrintParameters() {
@@ -3664,8 +3639,6 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				public void run() {
 					saveReminder.setChanged(false);
 					setReading(false);
-					// notify Editor to update buttons accordingly
-					notifyPageListeners(new PageEvent(Page.this, PageEvent.PAGE_READ_END));
 					if (!rememberViewPosition) {
 						rememberViewPosition = true;
 					}
