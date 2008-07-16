@@ -247,11 +247,39 @@ class SystemInfoDialog extends JDialog {
 		JPanel panel = new JPanel(new BorderLayout());
 		total.add(panel, BorderLayout.CENTER);
 
-		DefaultTableModel threadTableModel = new DefaultTableModel() {
+		final DefaultTableModel threadTableModel = new DefaultTableModel() {
 			public boolean isCellEditable(int row, int column) {
 				return false;
 			}
 		};
+		updateThreadTableModel(threadTableModel);
+		JTable table = new JTable(threadTableModel);
+		table.setBorder(BorderFactory.createLineBorder(table.getGridColor()));
+		table.setRowMargin(10);
+		table.setRowHeight(table.getRowHeight() + 5);
+		((DefaultTableColumnModel) table.getColumnModel()).setColumnMargin(10);
+		table.getColumnModel().getColumn(0).setPreferredWidth(250);
+		JScrollPane sp = new JScrollPane(table);
+		sp.setPreferredSize(new Dimension(400, 300));
+		panel.add(sp, BorderLayout.NORTH);
+
+		JPanel buttonPanel = new JPanel();
+		panel.add(buttonPanel, BorderLayout.SOUTH);
+
+		String s = Modeler.getInternationalText("Update");
+		JButton button = new JButton(s != null ? s : "Update");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				updateThreadTableModel(threadTableModel);
+			}
+		});
+		buttonPanel.add(button);
+
+		return total;
+
+	}
+
+	private void updateThreadTableModel(DefaultTableModel threadTableModel) {
 		Thread[] list = new Thread[Thread.activeCount()];
 		int n2 = Thread.enumerate(list);
 		String[] columnNames = { "Name", "Priority" };
@@ -267,18 +295,6 @@ class SystemInfoDialog extends JDialog {
 			rowData[i][1] = list[i].getPriority() + (list[i].isDaemon() ? " (Daemon)" : "");
 		}
 		threadTableModel.setDataVector(rowData, columnNames);
-		JTable table = new JTable(threadTableModel);
-		table.setBorder(BorderFactory.createLineBorder(table.getGridColor()));
-		table.setRowMargin(10);
-		table.setRowHeight(table.getRowHeight() + 5);
-		((DefaultTableColumnModel) table.getColumnModel()).setColumnMargin(10);
-		table.getColumnModel().getColumn(0).setPreferredWidth(250);
-		JScrollPane sp = new JScrollPane(table);
-		sp.setPreferredSize(new Dimension(400, 300));
-		panel.add(sp, BorderLayout.NORTH);
-
-		return total;
-
 	}
 
 }
