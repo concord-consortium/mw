@@ -2462,7 +2462,12 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		}
 		if (navigator != null)
 			navigator.reportDeadLink(pageAddress);
-		notifyPageListeners(new PageEvent(this, PageEvent.LOAD_ERROR, "loading error"));
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				notifyPageListeners(new PageEvent(Page.this, PageEvent.LOAD_ERROR, "loading error"));
+				notifyPageListeners(new PageEvent(Page.this, PageEvent.PAGE_READ_END));
+			}
+		});
 	}
 
 	private boolean loadPage(final String uri) throws IOException, SAXException, UnsupportedFormatException {
