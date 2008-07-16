@@ -31,6 +31,10 @@ class ImageAnnotater extends Draw {
 
 	ImageIcon image;
 
+	ImageAnnotater() {
+		setLineHasArrowByDefault(true);
+	}
+
 	public void setImage(ImageIcon image) {
 		this.image = image;
 		if (image != null)

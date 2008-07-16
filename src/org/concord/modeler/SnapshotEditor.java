@@ -167,8 +167,8 @@ class SnapshotEditor extends JPanel {
 		toolBar.add(button);
 		bg.add(button);
 
-		button = new JToggleButton(IconPool.getIcon("linetool"));
-		button.setToolTipText("Draw a line");
+		button = new JToggleButton(IconPool.getIcon("arrowtool"));
+		button.setToolTipText("Draw an arrow");
 		if (!Modeler.isMac())
 			button.setMargin(margin);
 		button.addActionListener(new ActionListener() {

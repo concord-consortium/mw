@@ -154,6 +154,9 @@ public final class IconPool {
 		icon = new ImageIcon(c.getResource("images/linetool.gif"));
 		map.put("linetool", icon);
 
+		icon = new ImageIcon(c.getResource("images/arrowtool.gif"));
+		map.put("arrowtool", icon);
+
 		icon = new ImageIcon(c.getResource("images/ellipsetool.gif"));
 		map.put("ellipsetool", icon);
 
