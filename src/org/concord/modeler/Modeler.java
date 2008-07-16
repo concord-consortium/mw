@@ -2549,7 +2549,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 			backButton.setFocusPainted(false);
 		}
 		toolBar.add(backButton);
-		editor.getPage().addActionToLockWhileLoading(backButton.getAction());
+		editor.addDisabledComponentWhileLoading(backButton);
 
 		forwardButton = new JButton(navigator.getAction(Navigator.FORWARD));
 		forwardButton.setHorizontalAlignment(SwingConstants.CENTER);
@@ -2562,7 +2562,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		if ("CDE/Motif".equals(lookandfeel))
 			forwardButton.setMargin(Editor.ZERO_INSETS);
 		toolBar.add(forwardButton);
-		editor.getPage().addActionToLockWhileLoading(forwardButton.getAction());
+		editor.addDisabledComponentWhileLoading(forwardButton);
 
 		homeButton = new JButton(navigator.getAction(Navigator.HOME));
 		homeButton.setHorizontalAlignment(SwingConstants.CENTER);
@@ -2576,7 +2576,6 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 			homeButton.setMargin(Editor.ZERO_INSETS);
 		toolBar.add(homeButton);
 		editor.addEnabledComponentWhenNotEditable(homeButton);
-		editor.getPage().addActionToLockWhileLoading(homeButton.getAction());
 		if (windowCount == 0)
 			homeButton.setEnabled(false);
 		editor.addDisabledComponentWhileLoading(homeButton);

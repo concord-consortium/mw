@@ -857,7 +857,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 				editCheckBox.setSelected(b);
 				editCheckBox.addActionListener(lockAction);
 				setToolBar(b);
-				updateActions(b);
+				enableActions(b);
 				editCheckBox.setToolTipText(b ? "Click to protect this page from changing"
 						: "Click to make this page editable");
 				statusBar.tipBar.setText(b ? "Editor mode" : "Viewer mode");
@@ -867,7 +867,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		});
 	}
 
-	private void updateActions(boolean b) {
+	private void enableActions(boolean b) {
 		if (!EventQueue.isDispatchThread()) {
 			System.err.println("<ERROR> Single thread rule violation");
 			return;
@@ -1903,7 +1903,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 				editCheckBox.requestFocusInWindow();
 			}
 			statusBar.showWebPageStatus();
-			updateActions(false);
+			enableActions(false);
 			toolBar[0].add(submitCommentButton);
 			toolBar[0].add(viewCommentButton);
 			toolBar[0].add(mwSpaceButton);
@@ -1911,7 +1911,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		}
 		else {
 			statusBar.showLocalPageStatus();
-			updateActions(editCheckBox.isSelected());
+			enableActions(editCheckBox.isSelected());
 			if (isEditable())
 				showAttributes(0);
 			toolBar[0].remove(submitCommentButton);

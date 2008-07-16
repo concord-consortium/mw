@@ -44,10 +44,18 @@ class JavaStarter {
 	}
 
 	void start() {
-
 		if (list.isEmpty())
 			return;
+		synchronized (list) {
+			for (PagePlugin a : list) {
+				a.start();
+			}
+		}
+	}
 
+	void startInNewThread() {
+		if (list.isEmpty())
+			return;
 		Thread t = new Thread("Plugin Starter") {
 			public void run() {
 				synchronized (list) {
@@ -76,7 +84,6 @@ class JavaStarter {
 		});
 		t.setPriority(Thread.MIN_PRIORITY + 1);
 		t.start();
-
 	}
 
 	void clear() {
