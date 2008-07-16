@@ -99,6 +99,7 @@ public abstract class Draw extends PrintableComponent {
 	private Rectangle selectedArea = new Rectangle();
 	private Point anchorPoint = new Point();
 	private Color contrastBgColor;
+	private boolean lineHasArrowByDefault;
 
 	private JPopupMenu popupMenu;
 	private CallOut callOutWindow;
@@ -254,6 +255,10 @@ public abstract class Draw extends PrintableComponent {
 			selectedElement = null;
 		}
 		hidePopupText();
+	}
+
+	public void setLineHasArrowByDefault(boolean b) {
+		lineHasArrowByDefault = b;
 	}
 
 	/** return the 24-bit color that is in contrast to the background. */
@@ -735,6 +740,8 @@ public abstract class Draw extends PrintableComponent {
 				DefaultLine l = new DefaultLine(clickPoint.x, clickPoint.y, dragPoint.x, dragPoint.y);
 				l.setSelected(true);
 				l.setComponent(this);
+				if (lineHasArrowByDefault)
+					l.setEndStyle(ArrowRectangle.STYLE1);
 				selectedElement = l;
 				addElement(l);
 				repaint();
