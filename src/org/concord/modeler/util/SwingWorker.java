@@ -128,7 +128,10 @@ public abstract class SwingWorker {
 	}
 
 	public SwingWorker(String name, int priority) {
+		this(name, priority, null);
+	}
 
+	public SwingWorker(String name, int priority, Thread.UncaughtExceptionHandler uncaughtExceptionHandler) {
 		Runnable doConstruct = new Runnable() {
 			public void run() {
 				try {
@@ -144,11 +147,11 @@ public abstract class SwingWorker {
 				});
 			}
 		};
-
 		Thread t = name == null ? new Thread(doConstruct) : new Thread(doConstruct, name);
 		t.setPriority(priority);
+		if (uncaughtExceptionHandler != null)
+			t.setUncaughtExceptionHandler(uncaughtExceptionHandler);
 		threadVar = new ThreadVar(t);
-
 	}
 
 	/**

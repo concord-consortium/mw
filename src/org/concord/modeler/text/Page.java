@@ -2628,7 +2628,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		if (!b)
 			setEditable(true);
 		notifyPageListeners(new PageEvent(this, PageEvent.PAGE_READ_BEGIN));
-		new SwingWorker("Page:loadMDModel()") {
+		new SwingWorker("Page:loadMDModel()", LOADER_THREAD_PRIORITY, new DisasterHandler(DisasterHandler.LOAD_ERROR,
+				null, null, Page.this)) {
 			public Object construct() {
 				Model model = mc.getContainer().getModel();
 				mc.setResourceAddress(uri);
@@ -2685,18 +2686,21 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				mv.setPreferredSize(new Dimension(getWidth() - 2, getHeight() - 2));
 				mv.setResourceAddress(uri);
 				mv.setCustomInitializationScript("reset;set frank on;");
-				Thread t = new Thread("Load molecule (full-page mode)") {
-					public void run() {
+				SwingWorker worker = new SwingWorker("Load molecule (full-page mode)", LOADER_THREAD_PRIORITY,
+						new DisasterHandler(DisasterHandler.LOAD_ERROR, null, null, Page.this)) {
+					public Object construct() {
 						mv.loadCurrentResource();
+						return null;
+					}
+
+					public void finished() {
+						if (!b)
+							setEditable(false);
+						setTitle(uri);
+						notifyPageListeners(new PageEvent(Page.this, PageEvent.PAGE_READ_END));
 					}
 				};
-				t.setPriority(LOADER_THREAD_PRIORITY);
-				t.setUncaughtExceptionHandler(new DisasterHandler(DisasterHandler.LOAD_ERROR, null, null, Page.this));
-				t.start();
-				if (!b)
-					setEditable(false);
-				setTitle(uri);
-				notifyPageListeners(new PageEvent(Page.this, PageEvent.PAGE_READ_END));
+				worker.start();
 			}
 		});
 		return true;
@@ -3702,14 +3706,18 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		t.setIndex(0);
 		insertComponent(t);
 		final String s = address;
-		Thread thread = new Thread("Load HTML") {
-			public void run() {
+		SwingWorker worker = new SwingWorker("Load HTML", LOADER_THREAD_PRIORITY, new DisasterHandler(
+				DisasterHandler.LOAD_ERROR, null, null, this)) {
+			public Object construct() {
 				t.load(s, sendID);
+				return null;
+			}
+
+			public void finished() {
+				notifyPageListeners(new PageEvent(Page.this, PageEvent.PAGE_READ_END));
 			}
 		};
-		thread.setPriority(LOADER_THREAD_PRIORITY);
-		thread.setUncaughtExceptionHandler(new DisasterHandler(DisasterHandler.LOAD_ERROR, null, null, this));
-		thread.start();
+		worker.start();
 	}
 
 	/** if there is a hyperlink at the specified location, open it */
