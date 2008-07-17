@@ -1068,7 +1068,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		if (c != null) {
 			if (c instanceof RadialBond) {
 				Molecule m = ((RadialBond) c).getMolecule();
-				// setSelectedComponent(m);
+				setSelectedComponent(m);
 			}
 			a.setHost(null);
 		}
@@ -1078,7 +1078,6 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		if (selectedComponent == null)
 			return;
 		super.removeSelectedComponent();
-
 		if (selectedComponent instanceof Atom) {
 			List<Integer> list = new ArrayList<Integer>();
 			list.add(((Atom) selectedComponent).getIndex());
