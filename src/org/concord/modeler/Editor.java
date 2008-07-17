@@ -1923,15 +1923,33 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		toolBar[0].repaint();
 		if (!initialized) {
 			initialized = true;
-			for (Component c : disabledComponentsWhileLoading) {
-				c.setEnabled(true);
-			}
+			enableDisabledComponentsWhileLoading(true);
 		}
 	}
 
 	private void enableDisabledComponentsWhileLoading(boolean b) {
+		if (!EventQueue.isDispatchThread())
+			throw new RuntimeException("Called in an unsafe thread");
 		for (Component c : disabledComponentsWhileLoading) {
-			c.setEnabled(b);
+			if (c instanceof AbstractButton) {
+				Action a = ((AbstractButton) c).getAction();
+				if (a != null) {
+					Object o = a.getValue("enabled");
+					if (o instanceof Boolean) {
+						if ((Boolean) o)
+							c.setEnabled(b);
+					}
+					else {
+						c.setEnabled(b);
+					}
+				}
+				else {
+					c.setEnabled(b);
+				}
+			}
+			else {
+				c.setEnabled(b);
+			}
 		}
 	}
 
