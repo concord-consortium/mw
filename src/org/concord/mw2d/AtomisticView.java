@@ -1062,8 +1062,19 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		}
 	}
 
-	public void removeSelectedComponent() {
+	public void removeLayeredComponent(Layered a) {
+		super.removeLayeredComponent(a);
+		ModelComponent c = a.getHost();
+		if (c != null) {
+			if (c instanceof RadialBond) {
+				Molecule m = ((RadialBond) c).getMolecule();
+				// setSelectedComponent(m);
+			}
+			a.setHost(null);
+		}
+	}
 
+	public void removeSelectedComponent() {
 		if (selectedComponent == null)
 			return;
 		super.removeSelectedComponent();
@@ -6034,14 +6045,14 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			case UndoAction.BLOCK_REMOVE:
 				undoRemoveMarkedAtoms(nRemoved);
 				if (removedObstacles != null) {
-					for (int i = 0; i < removedObstacles.length; i++)
-						obstacles.add(removedObstacles[i]);
+					for (RectangularObstacle i : removedObstacles)
+						obstacles.add(i);
 					if (nRemoved <= 0 && removedObstacles.length == 1)
 						removedObstacles[0].setSelected(true);
 				}
 				if (removedLayers != null) {
-					for (int i = 0; i < removedLayers.length; i++)
-						layerBasket.add(removedLayers[i]);
+					for (Layered i : removedLayers)
+						layerBasket.add(i);
 					if (nRemoved <= 0 && removedLayers.length == 1)
 						((ModelComponent) removedLayers[0]).setSelected(true);
 				}
@@ -6338,7 +6349,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 
 	}
 
-	/** Delegate state to serialize this class. */
+	/** Serializable state. */
 	public static class State extends MDView.State {
 
 		private byte displayStyle = StyleConstant.SPACE_FILLING;
