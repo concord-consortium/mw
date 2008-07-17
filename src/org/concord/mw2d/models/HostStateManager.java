@@ -30,7 +30,9 @@ class HostStateManager {
 			((Atom) host).storeCurrentState();
 		}
 		else if (host instanceof RadialBond) {
-			((RadialBond) host).getMolecule().storeCurrentState();
+			RadialBond rb = (RadialBond) host;
+			if (rb.getMolecule() != null)
+				rb.getMolecule().storeCurrentState();
 		}
 		else if (host instanceof RectangularObstacle) {
 			((RectangularObstacle) host).storeCurrentState();
@@ -45,7 +47,9 @@ class HostStateManager {
 			((Atom) host).restoreState();
 		}
 		else if (host instanceof RadialBond) {
-			((RadialBond) host).getMolecule().restoreState();
+			RadialBond rb = (RadialBond) host;
+			if (rb.getMolecule() != null)
+				rb.getMolecule().restoreState();
 		}
 		else if (host instanceof RectangularObstacle) {
 			((RectangularObstacle) host).restoreState();
