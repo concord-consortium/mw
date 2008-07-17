@@ -637,6 +637,7 @@ public class Navigator {
 			setEnabled(left.size() > 1);
 			putValue(SHORT_DESCRIPTION, left.size() <= 1 ? "Go back one page" : "Go to "
 					+ left.elementAt(left.size() - 2));
+			putValue("enabled", isEnabled());
 		}
 
 	}
@@ -670,6 +671,7 @@ public class Navigator {
 		protected void updateState() {
 			setEnabled(!right.isEmpty());
 			putValue(SHORT_DESCRIPTION, right.empty() ? "Go forward one page" : "Go to " + right.lastElement());
+			putValue("enabled", isEnabled());
 		}
 
 	}
