@@ -1463,14 +1463,18 @@ public abstract class MDView extends PrintableComponent {
 		}
 	}
 
-	public Layered getLayeredComponentHostedBy(ModelComponent mc) {
+	public List<Layered> getLayeredComponentHostedBy(ModelComponent mc) {
+		List<Layered> l = null;
 		synchronized (layerBasket) {
 			for (Layered c : layerBasket) {
-				if (c.getHost() == mc)
-					return c;
+				if (c.getHost() == mc) {
+					if (l == null)
+						l = new ArrayList<Layered>();
+					l.add(c);
+				}
 			}
 		}
-		return null;
+		return l;
 	}
 
 	public ImageComponent[] getImages() {

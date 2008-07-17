@@ -244,9 +244,11 @@ public class MesoView extends MDView {
 				gbBufferArray[temp].setSelected(gb[i].isSelected());
 				gbBufferArray[temp].setUserField(gb[i].getUserField());
 				if (!layerBasket.isEmpty()) {
-					Layered c = getLayeredComponentHostedBy(gb[i]);
-					if (c != null)
-						c.setHost(gbBufferArray[temp]);
+					List<Layered> l = getLayeredComponentHostedBy(gb[i]);
+					if (l != null) {
+						for (Layered c : l)
+							c.setHost(gbBufferArray[temp]);
+					}
 				}
 				// map the old indices of the surviving particles to the new ones
 				// liveParticleMap.put(i, new Integer(temp));
@@ -254,10 +256,12 @@ public class MesoView extends MDView {
 			}
 			else {
 				if (!layerBasket.isEmpty()) {
-					Layered c = getLayeredComponentHostedBy(gb[i]);
-					if (c != null) {
-						c.setHost(null);
-						layerBasket.remove(c);
+					List<Layered> l = getLayeredComponentHostedBy(gb[i]);
+					if (l != null) {
+						for (Layered c : l) {
+							c.setHost(null);
+							layerBasket.remove(c);
+						}
 					}
 				}
 				ii = gb.length - 1 - temq;
@@ -280,9 +284,11 @@ public class MesoView extends MDView {
 			gb[i].setSelected(gbBufferArray[i].isSelected());
 			gb[i].setUserField(gbBufferArray[i].getUserField());
 			if (!layerBasket.isEmpty()) {
-				Layered c = getLayeredComponentHostedBy(gbBufferArray[i]);
-				if (c != null)
-					c.setHost(gb[i]);
+				List<Layered> l = getLayeredComponentHostedBy(gbBufferArray[i]);
+				if (l != null) {
+					for (Layered c : l)
+						c.setHost(gb[i]);
+				}
 			}
 		}
 		model.setNumberOfParticles(nParticle);

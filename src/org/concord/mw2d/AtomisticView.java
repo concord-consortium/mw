@@ -1444,9 +1444,11 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				atomBufferArray[temp].setSelected(atom[i].isSelected());
 				atomBufferArray[temp].setUserField(atom[i].getUserField());
 				if (!layerBasket.isEmpty()) {
-					Layered c = getLayeredComponentHostedBy(atom[i]);
-					if (c != null)
-						c.setHost(atomBufferArray[temp]);
+					List<Layered> l = getLayeredComponentHostedBy(atom[i]);
+					if (l != null) {
+						for (Layered c : l)
+							c.setHost(atomBufferArray[temp]);
+					}
 				}
 				// map the old indices of the surviving atoms to the new ones
 				liveAtomMap.put(i, temp);
@@ -1454,10 +1456,12 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			}
 			else {
 				if (!layerBasket.isEmpty()) {
-					Layered c = getLayeredComponentHostedBy(atom[i]);
-					if (c != null) {
-						c.setHost(null);
-						layerBasket.remove(c); // WHAT IS THE IMPACT of this??
+					List<Layered> l = getLayeredComponentHostedBy(atom[i]);
+					if (l != null) {
+						for (Layered c : l) {
+							c.setHost(null);
+							layerBasket.remove(c); // WHAT IS THE IMPACT of this??
+						}
 					}
 				}
 				ii = atom.length - 1 - temq;
@@ -1482,9 +1486,11 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			atom[i].setSelected(atomBufferArray[i].isSelected());
 			atom[i].setUserField(atomBufferArray[i].getUserField());
 			if (!layerBasket.isEmpty()) {
-				Layered c = getLayeredComponentHostedBy(atomBufferArray[i]);
-				if (c != null)
-					c.setHost(atom[i]);
+				List<Layered> l = getLayeredComponentHostedBy(atomBufferArray[i]);
+				if (l != null) {
+					for (Layered c : l)
+						c.setHost(atom[i]);
+				}
 			}
 		}
 		model.setNumberOfParticles(nAtom);
@@ -1512,6 +1518,11 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				}
 				else {
 					i.remove();
+					List<Layered> l = getLayeredComponentHostedBy(rBond);
+					if (l != null) {
+						for (Layered x : l)
+							layerBasket.remove(x);
+					}
 					/*
 					 * store dead bonds for undoing: if a dead bond involves a live atom, rise that atomic index of the
 					 * bond delegate to the ghost area. The ghost area starts from the length of the atom array, so

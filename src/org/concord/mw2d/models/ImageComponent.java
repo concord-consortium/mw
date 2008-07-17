@@ -142,7 +142,12 @@ public class ImageComponent implements ModelComponent, Layered, Rotatable {
 			images = new Image[1];
 			if (Modeler.isDirectMW()) {
 				// The image will be preloaded by using MediaTracker to monitor the loading state of the image.
-				images[0] = new ImageIcon(address).getImage();
+				if (FileUtilities.isRemote(address)) {
+					images[0] = new ImageIcon(new URL(address)).getImage();
+				}
+				else {
+					images[0] = new ImageIcon(address).getImage();
+				}
 			}
 			else {
 				// Workaround: somehow loading image through ImageIcon doesn't work when MW is embedded.
