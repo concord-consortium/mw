@@ -1464,6 +1464,8 @@ public abstract class MDView extends PrintableComponent {
 	}
 
 	public List<Layered> getLayeredComponentHostedBy(ModelComponent mc) {
+		if (layerBasket == null || layerBasket.isEmpty())
+			return null;
 		List<Layered> l = null;
 		synchronized (layerBasket) {
 			for (Layered c : layerBasket) {

@@ -205,6 +205,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 	private List<AngularBond.Delegate> deadBends = new ArrayList<AngularBond.Delegate>();
 	private Map<Integer, Integer> liveAtomMap = new HashMap<Integer, Integer>();
 	private Map<Integer, Integer> deadAtomMap = new HashMap<Integer, Integer>();
+	private Map<Object, List<Layered>> deadLayered = new HashMap<Object, List<Layered>>();
 
 	private Mw2dRenderer mw2dRenderer;
 	private JmolRenderer jmolRenderer;
@@ -1068,7 +1069,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		if (c != null) {
 			if (c instanceof RadialBond) {
 				Molecule m = ((RadialBond) c).getMolecule();
-				setSelectedComponent(m);
+				m.setVisible(true);
 			}
 			a.setHost(null);
 		}
@@ -1432,6 +1433,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 
 		liveAtomMap.clear();
 		deadAtomMap.clear();
+		deadLayered.clear();
 		int temp = 0, temq = 0, ii = 0;
 		for (int i = 0; i < nAtom; i++) {
 			if (!list.contains(i)) {
@@ -1453,25 +1455,21 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				atomBufferArray[temp].set(atom[i]);
 				atomBufferArray[temp].setSelected(atom[i].isSelected());
 				atomBufferArray[temp].setUserField(atom[i].getUserField());
-				if (!layerBasket.isEmpty()) {
-					List<Layered> l = getLayeredComponentHostedBy(atom[i]);
-					if (l != null) {
-						for (Layered c : l)
-							c.setHost(atomBufferArray[temp]);
-					}
+				List<Layered> l = getLayeredComponentHostedBy(atom[i]);
+				if (l != null) {
+					for (Layered c : l)
+						c.setHost(atomBufferArray[temp]);
 				}
 				// map the old indices of the surviving atoms to the new ones
 				liveAtomMap.put(i, temp);
 				temp++;
 			}
 			else {
-				if (!layerBasket.isEmpty()) {
-					List<Layered> l = getLayeredComponentHostedBy(atom[i]);
-					if (l != null) {
-						for (Layered c : l) {
-							c.setHost(null);
-							layerBasket.remove(c); // WHAT IS THE IMPACT of this??
-						}
+				List<Layered> l = getLayeredComponentHostedBy(atom[i]);
+				if (l != null) {
+					for (Layered c : l) {
+						c.setHost(null);
+						layerBasket.remove(c); // WHAT IS THE IMPACT of this??
 					}
 				}
 				ii = atom.length - 1 - temq;
@@ -1485,6 +1483,8 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				atom[i].eraseProperties();
 				// map the original indices of the dead atoms to those of their backups
 				deadAtomMap.put(i, ii);
+				if (l != null)
+					deadLayered.put(atomBufferArray[ii], l);
 				temq++;
 			}
 		}
@@ -1495,12 +1495,10 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			atom[i].set(atomBufferArray[i]);
 			atom[i].setSelected(atomBufferArray[i].isSelected());
 			atom[i].setUserField(atomBufferArray[i].getUserField());
-			if (!layerBasket.isEmpty()) {
-				List<Layered> l = getLayeredComponentHostedBy(atomBufferArray[i]);
-				if (l != null) {
-					for (Layered c : l)
-						c.setHost(atom[i]);
-				}
+			List<Layered> l = getLayeredComponentHostedBy(atomBufferArray[i]);
+			if (l != null) {
+				for (Layered c : l)
+					c.setHost(atom[i]);
 			}
 		}
 		model.setNumberOfParticles(nAtom);
@@ -1543,27 +1541,29 @@ public class AtomisticView extends MDView implements BondChangeListener {
 							atom[deadAtomMap.get(origin)].setRadical(true);
 							atom[deadAtomMap.get(destin)].setRadical(true);
 						}
-						deadBonds.add(new RadialBond.Delegate(deadAtomMap.get(origin), deadAtomMap.get(destin), rBond
-								.getBondLength(), rBond.getBondStrength(), rBond.isSmart(), rBond.isSolid(), rBond
-								.isClosed(), rBond.getBondColor(), rBond.getBondStyle()));
+						RadialBond.Delegate d = addDeadBond(deadAtomMap.get(origin), deadAtomMap.get(destin), rBond);
+						if (l != null)
+							deadLayered.put(d, l);
 					}
 					else if (deadSet.contains(origin) && liveSet.contains(destin)) {
 						if (model instanceof ReactionModel) {
 							atom[deadAtomMap.get(origin)].setRadical(true);
 							atom[liveAtomMap.get(destin)].setRadical(true);
 						}
-						deadBonds.add(new RadialBond.Delegate(deadAtomMap.get(origin), liveAtomMap.get(destin)
-								+ atom.length, rBond.getBondLength(), rBond.getBondStrength(), rBond.isSmart(), rBond
-								.isSolid(), rBond.isClosed(), rBond.getBondColor(), rBond.getBondStyle()));
+						RadialBond.Delegate d = addDeadBond(deadAtomMap.get(origin), liveAtomMap.get(destin)
+								+ atom.length, rBond);
+						if (l != null)
+							deadLayered.put(d, l);
 					}
 					else if (liveSet.contains(origin) && deadSet.contains(destin)) {
 						if (model instanceof ReactionModel) {
 							atom[liveAtomMap.get(origin)].setRadical(true);
 							atom[deadAtomMap.get(destin)].setRadical(true);
 						}
-						deadBonds.add(new RadialBond.Delegate(liveAtomMap.get(origin) + atom.length, deadAtomMap
-								.get(destin), rBond.getBondLength(), rBond.getBondStrength(), rBond.isSmart(), rBond
-								.isSolid(), rBond.isClosed(), rBond.getBondColor(), rBond.getBondStyle()));
+						RadialBond.Delegate d = addDeadBond(liveAtomMap.get(origin) + atom.length, deadAtomMap
+								.get(destin), rBond);
+						if (l != null)
+							deadLayered.put(d, l);
 					}
 				}
 			}
@@ -1598,35 +1598,33 @@ public class AtomisticView extends MDView implements BondChangeListener {
 					i.remove();
 					/* explanation see the corresponding code of radial bonds */
 					if (deadSet.contains(origin) && deadSet.contains(destin) && deadSet.contains(middle)) {
-						deadBends.add(new AngularBond.Delegate(deadAtomMap.get(origin), deadAtomMap.get(destin),
-								deadAtomMap.get(middle), aBond.getBondAngle(), aBond.getBondStrength()));
+						addDeadBend(deadAtomMap.get(origin), deadAtomMap.get(destin), deadAtomMap.get(middle), aBond);
 					}
 					else if (liveSet.contains(origin) && deadSet.contains(destin) && deadSet.contains(middle)) {
-						deadBends.add(new AngularBond.Delegate(liveAtomMap.get(origin) + atom.length, deadAtomMap
-								.get(destin), deadAtomMap.get(middle), aBond.getBondAngle(), aBond.getBondStrength()));
+						addDeadBend(liveAtomMap.get(origin) + atom.length, deadAtomMap.get(destin), deadAtomMap
+								.get(middle), aBond);
 					}
 					else if (deadSet.contains(origin) && liveSet.contains(destin) && deadSet.contains(middle)) {
-						deadBends.add(new AngularBond.Delegate(deadAtomMap.get(origin), liveAtomMap.get(destin)
-								+ atom.length, deadAtomMap.get(middle), aBond.getBondAngle(), aBond.getBondStrength()));
+						addDeadBend(deadAtomMap.get(origin), liveAtomMap.get(destin) + atom.length, deadAtomMap
+								.get(middle), aBond);
 					}
 					else if (deadSet.contains(origin) && deadSet.contains(destin) && liveSet.contains(middle)) {
-						deadBends.add(new AngularBond.Delegate(deadAtomMap.get(origin), deadAtomMap.get(destin),
-								liveAtomMap.get(middle) + atom.length, aBond.getBondAngle(), aBond.getBondStrength()));
+						addDeadBend(deadAtomMap.get(origin), deadAtomMap.get(destin), liveAtomMap.get(middle)
+								+ atom.length, aBond);
 					}
 					else if (liveSet.contains(origin) && liveSet.contains(destin) && deadSet.contains(middle)) {
-						deadBends.add(new AngularBond.Delegate(liveAtomMap.get(origin) + atom.length, liveAtomMap
-								.get(destin)
-								+ atom.length, deadAtomMap.get(middle), aBond.getBondAngle(), aBond.getBondStrength()));
+						addDeadBend(liveAtomMap.get(origin) + atom.length, liveAtomMap.get(destin) + atom.length,
+								deadAtomMap.get(middle), aBond);
 					}
 					else if (liveSet.contains(origin) && deadSet.contains(destin) && liveSet.contains(middle)) {
-						deadBends.add(new AngularBond.Delegate(liveAtomMap.get(origin) + atom.length, deadAtomMap
-								.get(destin), liveAtomMap.get(middle) + atom.length, aBond.getBondAngle(), aBond
-								.getBondStrength()));
+						addDeadBend(liveAtomMap.get(origin) + atom.length, deadAtomMap.get(destin), liveAtomMap
+								.get(middle)
+								+ atom.length, aBond);
 					}
 					else if (deadSet.contains(origin) && liveSet.contains(destin) && liveSet.contains(middle)) {
-						deadBends.add(new AngularBond.Delegate(deadAtomMap.get(origin), liveAtomMap.get(destin)
-								+ atom.length, liveAtomMap.get(middle) + atom.length, aBond.getBondAngle(), aBond
-								.getBondStrength()));
+						addDeadBend(deadAtomMap.get(origin), liveAtomMap.get(destin) + atom.length, liveAtomMap
+								.get(middle)
+								+ atom.length, aBond);
 					}
 				}
 			}
@@ -1651,6 +1649,20 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			((ReactionModel) model).reassertFreeRadicals();
 		}
 
+	}
+
+	private RadialBond.Delegate addDeadBond(int i, int j, RadialBond r) {
+		RadialBond.Delegate d = new RadialBond.Delegate(i, j, r.getBondLength(), r.getBondStrength(), r.isSmart(), r
+				.isSolid(), r.isClosed(), r.getBondColor(), r.getBondStyle());
+		d.setVisible(r.isVisible());
+		deadBonds.add(d);
+		return d;
+	}
+
+	private AngularBond.Delegate addDeadBend(int i, int j, int k, AngularBond a) {
+		AngularBond.Delegate d = new AngularBond.Delegate(i, j, k, a.getBondAngle(), a.getBondStrength());
+		deadBends.add(d);
+		return d;
 	}
 
 	/* remove any obstacles intersecting the selected area */
@@ -2363,8 +2375,16 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		nAtom += nRemoved;
 		int incr = 0;
 		for (int i = oldNOA; i < nAtom; i++) {
-			atom[i].set(atomBufferArray[atom.length - 1 - incr]);
-			atom[i].setUserField(atomBufferArray[atom.length - 1 - incr].getUserField());
+			Atom a = atomBufferArray[atom.length - 1 - incr];
+			atom[i].set(a);
+			atom[i].setUserField(a.getUserField());
+			List<Layered> l = deadLayered.get(a);
+			if (l != null) {
+				for (Layered x : l) {
+					layerBasket.add(x);
+					x.setHost(atom[i]);
+				}
+			}
 			incr++;
 		}
 		if (incr == 0)
@@ -2384,8 +2404,17 @@ public class AtomisticView extends MDView implements BondChangeListener {
 					if (iAtom2 < atom.length)
 						iAtom2 = n - iAtom2;
 					else iAtom2 -= atom.length;
-					bonds.add(new RadialBond(atom[iAtom1], atom[iAtom2], rbd.getBondLength(), rbd.getBondStrength(),
-							rbd.isSmart(), rbd.isSolid(), rbd.isClosed(), rbd.getColor()));
+					RadialBond rb = new RadialBond(atom[iAtom1], atom[iAtom2], rbd.getBondLength(), rbd
+							.getBondStrength(), rbd.isSmart(), rbd.isSolid(), rbd.isClosed(), rbd.getColor());
+					rb.setVisible(rbd.isVisible());
+					List<Layered> l = deadLayered.get(rbd);
+					if (l != null) {
+						for (Layered x : l) {
+							layerBasket.add(x);
+							x.setHost(rb);
+						}
+					}
+					bonds.add(rb);
 				}
 			}
 		}
