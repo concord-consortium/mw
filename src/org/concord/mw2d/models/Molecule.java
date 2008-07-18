@@ -988,6 +988,11 @@ public class Molecule implements ModelComponent, Rotatable {
 						rBond2.setChemicalEnergy(rBond.getChemicalEnergy());
 						rBond2.setVisible(rBond.isVisible());
 						rBond2.setBondStyle(rBond.getBondStyle());
+						rBond2.setPhase(rBond.getPhase());
+						rBond2.setAmplitude(rBond.getAmplitude());
+						rBond2.setPeriod(rBond.getPeriod());
+						rBond2.setTorque(rBond.getTorque());
+						rBond2.setTorqueType(rBond.getTorqueType());
 						newBonds.add(rBond2);
 						break;
 					}
