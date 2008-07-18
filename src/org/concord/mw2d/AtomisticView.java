@@ -1655,14 +1655,49 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		RadialBond.Delegate d = new RadialBond.Delegate(i, j, r.getBondLength(), r.getBondStrength(), r.isSmart(), r
 				.isSolid(), r.isClosed(), r.getBondColor(), r.getBondStyle());
 		d.setVisible(r.isVisible());
+		if (r.getAmplitude() > 0) {
+			d.setAmplitude(r.getAmplitude());
+			d.setPeriod(r.getPeriod());
+			d.setPhase(r.getPhase());
+		}
+		d.setTorqueType(r.getTorqueType());
+		d.setTorque(r.getTorque());
 		deadBonds.add(d);
 		return d;
+	}
+
+	private RadialBond restoreDeadBond(int i, int j, RadialBond.Delegate d) {
+		RadialBond rb = new RadialBond(atom[i], atom[j], d.getBondLength(), d.getBondStrength(), d.isSmart(), d
+				.isSolid(), d.isClosed(), d.getColor());
+		rb.setVisible(d.isVisible());
+		if (d.getAmplitude() > 0) {
+			rb.setAmplitude(d.getAmplitude());
+			rb.setPeriod(d.getPeriod());
+			rb.setPhase(d.getPhase());
+		}
+		rb.setTorque(d.getTorque());
+		rb.setTorqueType(d.getTorqueType());
+		List<Layered> l = deadLayered.get(d);
+		if (l != null) {
+			for (Layered x : l) {
+				layerBasket.add(x);
+				x.setHost(rb);
+			}
+		}
+		bonds.add(rb);
+		return rb;
 	}
 
 	private AngularBond.Delegate addDeadBend(int i, int j, int k, AngularBond a) {
 		AngularBond.Delegate d = new AngularBond.Delegate(i, j, k, a.getBondAngle(), a.getBondStrength());
 		deadBends.add(d);
 		return d;
+	}
+
+	private AngularBond restoreDeadBend(int i, int j, int k, AngularBond.Delegate d) {
+		AngularBond a = new AngularBond(atom[i], atom[j], atom[k], d.getBondAngle(), d.getBondStrength());
+		bends.add(a);
+		return a;
 	}
 
 	/* remove any obstacles intersecting the selected area */
@@ -2325,22 +2360,20 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		}
 		int n = atom.length - 1 + oldNOA;
 		RadialBond.Delegate rbd = null;
-		if (deadBonds != null) {
+		if (!deadBonds.isEmpty()) {
 			synchronized (deadBonds) {
 				for (Iterator it = deadBonds.iterator(); it.hasNext();) {
 					rbd = (RadialBond.Delegate) it.next();
-					bonds.add(new RadialBond(atom[n - rbd.getAtom1()], atom[n - rbd.getAtom2()], rbd.getBondLength(),
-							rbd.getBondStrength(), rbd.isSmart(), rbd.isSolid(), rbd.isClosed(), rbd.getColor()));
+					restoreDeadBond(n - rbd.getAtom1(), n - rbd.getAtom2(), rbd);
 				}
 			}
 		}
-		if (deadBends != null) {
+		if (!deadBends.isEmpty()) {
 			AngularBond.Delegate abd;
 			synchronized (deadBends) {
 				for (Iterator it = deadBends.iterator(); it.hasNext();) {
 					abd = (AngularBond.Delegate) it.next();
-					bends.add(new AngularBond(atom[n - abd.getAtom1()], atom[n - abd.getAtom2()], atom[n
-							- abd.getAtom3()], abd.getBondAngle(), abd.getBondStrength()));
+					restoreDeadBend(n - abd.getAtom1(), n - abd.getAtom2(), n - abd.getAtom3(), abd);
 				}
 			}
 		}
@@ -2392,7 +2425,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		int n = atom.length - 1 + oldNOA;
 		RadialBond.Delegate rbd = null;
 		int iAtom1, iAtom2;
-		if (deadBonds != null) {
+		if (!deadBonds.isEmpty()) {
 			synchronized (deadBonds) {
 				for (Iterator it = deadBonds.iterator(); it.hasNext();) {
 					rbd = (RadialBond.Delegate) it.next();
@@ -2404,21 +2437,11 @@ public class AtomisticView extends MDView implements BondChangeListener {
 					if (iAtom2 < atom.length)
 						iAtom2 = n - iAtom2;
 					else iAtom2 -= atom.length;
-					RadialBond rb = new RadialBond(atom[iAtom1], atom[iAtom2], rbd.getBondLength(), rbd
-							.getBondStrength(), rbd.isSmart(), rbd.isSolid(), rbd.isClosed(), rbd.getColor());
-					rb.setVisible(rbd.isVisible());
-					List<Layered> l = deadLayered.get(rbd);
-					if (l != null) {
-						for (Layered x : l) {
-							layerBasket.add(x);
-							x.setHost(rb);
-						}
-					}
-					bonds.add(rb);
+					restoreDeadBond(iAtom1, iAtom2, rbd);
 				}
 			}
 		}
-		if (deadBends != null) {
+		if (!deadBends.isEmpty()) {
 			int iAtom3;
 			AngularBond.Delegate abd;
 			synchronized (deadBends) {
@@ -2436,8 +2459,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 					if (iAtom3 < atom.length)
 						iAtom3 = n - iAtom3;
 					else iAtom3 -= atom.length;
-					bends.add(new AngularBond(atom[iAtom1], atom[iAtom2], atom[iAtom3], abd.getBondAngle(), abd
-							.getBondStrength()));
+					restoreDeadBend(iAtom1, iAtom2, iAtom3, abd);
 				}
 			}
 		}
@@ -2888,7 +2910,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				pasteMoleculeAt(x, y);
 			}
 			else {
-				if (deadBonds != null) {
+				if (!deadBonds.isEmpty()) {
 					restoreRemovedMoleculeAt(x, y);
 				}
 			}
