@@ -380,6 +380,10 @@ public class Initializer {
 		splash.setVisible(true);
 	}
 
+	Component getSplash() {
+		return splash;
+	}
+
 	void hideSplashScreen() {
 		if (splash != null) {
 			EventQueue.invokeLater(new Runnable() {

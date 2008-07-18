@@ -3043,7 +3043,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 			}
 			else {
 				if (!s.startsWith("mw.jar") && !s.startsWith("dist/mw.jar")) {
-					JOptionPane.showMessageDialog(null,
+					JOptionPane.showMessageDialog(Initializer.sharedInstance().getSplash(),
 							"The file name must be exactly mw.jar in order to run in this mode.", "Security Error",
 							JOptionPane.ERROR_MESSAGE);
 					System.exit(-1);
@@ -3054,7 +3054,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 			if (resourceURL.indexOf("mw.jar") == -1) {
 				JOptionPane
 						.showMessageDialog(
-								null,
+								Initializer.sharedInstance().getSplash(),
 								"You cannot run mw.jar directly from a web page. Save it\nto your computer and then double-click on it.",
 								"Security Error", JOptionPane.ERROR_MESSAGE);
 				System.exit(-1);
