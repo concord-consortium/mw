@@ -243,12 +243,10 @@ public class MesoView extends MDView {
 				gbBufferArray[temp].set(gb[i]);
 				gbBufferArray[temp].setSelected(gb[i].isSelected());
 				gbBufferArray[temp].setUserField(gb[i].getUserField());
-				if (!layerBasket.isEmpty()) {
-					List<Layered> l = getLayeredComponentHostedBy(gb[i]);
-					if (l != null) {
-						for (Layered c : l)
-							c.setHost(gbBufferArray[temp]);
-					}
+				List<Layered> l = getLayeredComponentHostedBy(gb[i]);
+				if (l != null) {
+					for (Layered c : l)
+						c.setHost(gbBufferArray[temp]);
 				}
 				// map the old indices of the surviving particles to the new ones
 				// liveParticleMap.put(i, new Integer(temp));

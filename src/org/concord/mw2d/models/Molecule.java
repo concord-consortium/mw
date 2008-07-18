@@ -47,7 +47,7 @@ public class Molecule implements ModelComponent, Rotatable {
 	private Map<Atom, Point2D.Double> savedCRD;
 	private double savedHandleX, savedHandleY;
 	private Point2D savedCenter;
-	private boolean visible = true, marked;
+	private boolean marked;
 	private boolean selected, blinking;
 	private MolecularTorque torque;
 	private double xCenter, yCenter;
@@ -269,11 +269,15 @@ public class Molecule implements ModelComponent, Rotatable {
 	}
 
 	public void setVisible(boolean b) {
-		visible = b;
+		for (Atom a : atoms)
+			a.setVisible(b);
+		List<RadialBond> bonds = getBonds();
+		for (RadialBond x : bonds)
+			x.setVisible(b);
 	}
 
 	public boolean isVisible() {
-		return visible;
+		return atoms.get(0).isVisible();
 	}
 
 	public void setTorque(MolecularTorque mt) {
