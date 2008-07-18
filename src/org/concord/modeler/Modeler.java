@@ -3033,6 +3033,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		String userDir = System.getProperty("user.dir");
 		if (System.getProperty("os.name").startsWith("Windows"))
 			userDir = userDir.replace('\\', '/');
+		userDir = FileUtilities.httpEncode(userDir);
 		ClassLoader cl = Thread.currentThread().getContextClassLoader();
 		String resourceURL = cl.getResource("org").toString();
 		int i = resourceURL.indexOf(userDir);
