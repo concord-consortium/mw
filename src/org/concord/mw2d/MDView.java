@@ -817,6 +817,8 @@ public abstract class MDView extends PrintableComponent {
 		synchronized (layerBasket) {
 			for (Iterator it = layerBasket.iterator(); it.hasNext();) {
 				c = (Layered) it.next();
+				if (c.getHost() != null)
+					continue;
 				if (c instanceof LineComponent) {
 					intersected = ((LineComponent) c).intersects(selectedArea);
 				}
