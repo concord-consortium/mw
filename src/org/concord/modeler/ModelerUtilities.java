@@ -133,7 +133,7 @@ public final class ModelerUtilities {
 
 	public static void init() {
 
-		Initializer.sharedInstance().setMessage("Initializing file chooser...");
+		Initializer.sharedInstance().setMessage("Initializing...");
 		fileChooser = new FileChooser(System.getProperty("user.dir"));
 		fileChooser.setFileHidingEnabled(false);
 		Page.setFileChooser(ModelerUtilities.fileChooser);
@@ -148,12 +148,10 @@ public final class ModelerUtilities {
 		folderChooser.setAcceptAllFileFilterUsed(false);
 		folderChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
-		Initializer.sharedInstance().setMessage("Initializing color chooser...");
 		colorChooser = new JColorChooser();
 		colorChooser.setColor(Color.white);
 		ColorComboBox.setColorChooser(colorChooser);
 
-		Initializer.sharedInstance().setMessage("Initializing fill effect chooser...");
 		fillEffectChooser = new FillEffectChooser();
 		fillEffectChooser.setImageReader(imageReader);
 
