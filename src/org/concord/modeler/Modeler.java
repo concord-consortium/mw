@@ -3029,6 +3029,39 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		return m;
 	}
 
+	private static void warnAboutJar() {
+		String userDir = System.getProperty("user.dir");
+		if (System.getProperty("os.name").startsWith("Windows"))
+			userDir = userDir.replace('\\', '/');
+		ClassLoader cl = Thread.currentThread().getContextClassLoader();
+		String resourceURL = cl.getResource("org").toString();
+		int i = resourceURL.indexOf(userDir);
+		if (i != -1) {
+			String s = resourceURL.substring(i + userDir.length() + 1);
+			if (s.indexOf(".jar") == -1) { // likely in developer mode, disable security manager
+				System.setProperty("mw.nosecurity", "true");
+			}
+			else {
+				if (!s.startsWith("mw.jar") && !s.startsWith("dist/mw.jar")) {
+					JOptionPane.showMessageDialog(null,
+							"The file name must be exactly mw.jar in order to run in this mode.", "Security Error",
+							JOptionPane.ERROR_MESSAGE);
+					System.exit(-1);
+				}
+			}
+		}
+		else {
+			if (resourceURL.indexOf("mw.jar") == -1) {
+				JOptionPane
+						.showMessageDialog(
+								null,
+								"You cannot run mw.jar directly from a web page. Save it\nto your computer and then double-click on it.",
+								"Security Error", JOptionPane.ERROR_MESSAGE);
+				System.exit(-1);
+			}
+		}
+	}
+
 	public static void main(String[] args) {
 
 		// ModelerUtilities.printSystemProperties();
@@ -3087,6 +3120,11 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		if (hostIsLocal) {
 			javax.swing.RepaintManager.setCurrentManager(new ThreadCheckingRepaintManager());
 		}
+		else {
+			// warn user if the jar file is launched from untrusted path
+			if (!launchedByJWS)
+				warnAboutJar();
+		}
 
 		Debugger.print("Initialization");
 
@@ -3143,34 +3181,6 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		}
 
 		directMW = true;
-
-		// warn user if the jar file is launched from untrusted path
-		if (!launchedByJWS && !hostIsLocal) {
-			String userDir = System.getProperty("user.dir");
-			if (System.getProperty("os.name").startsWith("Windows"))
-				userDir = userDir.replace('\\', '/');
-			String resourceURL = cl.getResource("org").toString();
-			int i = resourceURL.indexOf(userDir);
-			if (i != -1) {
-				String s = resourceURL.substring(i + userDir.length() + 1);
-				if (!s.startsWith("mw.jar") && !s.startsWith("dist/mw.jar")) {
-					JOptionPane.showMessageDialog(null,
-							"The file name must be exactly mw.jar in order to run in this mode.", "Security Error",
-							JOptionPane.ERROR_MESSAGE);
-					System.exit(-1);
-				}
-			}
-			else {
-				if (resourceURL.indexOf("mw.jar") == -1) {
-					JOptionPane
-							.showMessageDialog(
-									null,
-									"You cannot run mw.jar directly from a web page. Save it\nto your computer and then double-click on it.",
-									"Security Error", JOptionPane.ERROR_MESSAGE);
-					System.exit(-1);
-				}
-			}
-		}
 
 		// signify the web launcher who is monitoring this process
 		if ("yes".equals(System.getProperty("mw.launcher")))
