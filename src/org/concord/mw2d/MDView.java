@@ -1486,18 +1486,27 @@ public abstract class MDView extends PrintableComponent {
 		List<Layered> l = getLayeredComponentHostedBy(source);
 		if (l != null && !l.isEmpty()) {
 			for (Layered x : l) {
+				Layered y = null;
 				if (x instanceof ImageComponent) {
-					ImageComponent y = null;
 					try {
 						y = new ImageComponent((ImageComponent) x);
 					}
 					catch (IOException e) {
 						e.printStackTrace();
 					}
-					if (y != null) {
-						addLayeredComponent(y);
-						y.setHost(acceptor);
-					}
+				}
+				else if (x instanceof RectangleComponent) {
+					y = new RectangleComponent((RectangleComponent) x);
+				}
+				else if (x instanceof EllipseComponent) {
+					y = new EllipseComponent((EllipseComponent) x);
+				}
+				else if (x instanceof LineComponent) {
+					y = new LineComponent((LineComponent) x);
+				}
+				if (y != null) {
+					addLayeredComponent(y);
+					y.setHost(acceptor);
 				}
 			}
 		}
