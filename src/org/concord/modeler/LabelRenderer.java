@@ -42,11 +42,19 @@ class LabelRenderer extends JLabel implements ListCellRenderer {
 
 		if (value instanceof PageMolecularViewer) {
 			PageMolecularViewer mv = (PageMolecularViewer) value;
-			setText("Jmol Molecular Viewer #" + mv.getIndex());
+			setText("3D Molecular Viewer #" + mv.getIndex());
 		}
 		else if (value instanceof PageMd3d) {
 			PageMd3d md = (PageMd3d) value;
 			setText("3D Molecular Simulator #" + md.getIndex());
+		}
+		else if (value instanceof PageJContainer) {
+			PageJContainer c = (PageJContainer) value;
+			setText("Plugin #" + c.getIndex());
+		}
+		else if (value instanceof PageApplet) {
+			PageApplet a = (PageApplet) value;
+			setText("Applet #" + a.getIndex());
 		}
 		else if (value != null) {
 			setText(value.toString());

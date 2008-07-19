@@ -163,6 +163,8 @@ abstract public class PagePlugin extends JPanel implements Embeddable, Scriptabl
 
 	public abstract void start();
 
+	abstract void snapshot();
+
 	String getResourceAddress() {
 		String dir = FileUtilities.getCodeBase(page.getAddress());
 		String name = FileUtilities.getFileName(page.getAddress());
@@ -472,6 +474,20 @@ abstract public class PagePlugin extends JPanel implements Embeddable, Scriptabl
 		nativeScriptAction.putValue(NAME, "Execute Native Script");
 		nativeScriptAction.putValue(SHORT_DESCRIPTION, ComponentMaker.EXECUTE_NATIVE_SCRIPT);
 
+		Action snapshotAction = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				if (ModelerUtilities.stopFiring(e))
+					return;
+				snapshot();
+			}
+
+			public String toString() {
+				return (String) getValue(SHORT_DESCRIPTION);
+			}
+		};
+		snapshotAction.putValue(NAME, "Take a Snapshot");
+		snapshotAction.putValue(SHORT_DESCRIPTION, "Take a snapshot");
+
 		AbstractChange nativeScriptChanger = new AbstractChange() {
 			public void stateChanged(ChangeEvent e) {
 				Object o = e.getSource();
@@ -559,6 +575,7 @@ abstract public class PagePlugin extends JPanel implements Embeddable, Scriptabl
 
 		actionMap = Collections.synchronizedMap(new TreeMap<String, Action>());
 		actionMap.put((String) nativeScriptAction.getValue(SHORT_DESCRIPTION), nativeScriptAction);
+		actionMap.put((String) snapshotAction.getValue(SHORT_DESCRIPTION), snapshotAction);
 		switchMap = Collections.synchronizedMap(new TreeMap<String, Action>());
 		switchMap.put((String) nativeScriptAction.getValue(SHORT_DESCRIPTION), nativeScriptAction);
 		multiSwitchMap = Collections.synchronizedMap(new TreeMap<String, Action>());
