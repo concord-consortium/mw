@@ -3185,7 +3185,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 
 		// signify the web launcher who is monitoring this process
 		if ("yes".equals(System.getProperty("mw.launcher")))
-			System.out.println("launched");
+			System.err.println("launched"); // why do we have to use the err stream?
 		if (!hostIsLocal) {
 			LogDumper.sharedInstance().redirectSystemOutput();
 		}
@@ -3193,4 +3193,5 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		ModelerUtilities.testQuicktime();
 
 	}
+
 }
