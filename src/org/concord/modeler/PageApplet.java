@@ -330,7 +330,10 @@ public class PageApplet extends PagePlugin {
 		String dir = FileUtilities.getCodeBase(s);
 		String name = FileUtilities.getFileName(s);
 		name = FileUtilities.getPrefix(name) + "$applet$" + index + ".aps";
-		File file = new File(dir, name);
+		saveStateToFile(new File(dir, name));
+	}
+
+	public void saveStateToFile(File file) {
 		OutputStream os = null;
 		try {
 			os = new BufferedOutputStream(new FileOutputStream(file));

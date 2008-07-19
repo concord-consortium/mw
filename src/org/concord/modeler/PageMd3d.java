@@ -216,7 +216,7 @@ public class PageMd3d extends MolecularContainer implements BasicModel, Embeddab
 
 		};
 		jmolScriptAction.putValue(NAME, "Execute Jmol Script");
-		jmolScriptAction.putValue(SHORT_DESCRIPTION, "Execute Jmol script");
+		jmolScriptAction.putValue(SHORT_DESCRIPTION, ComponentMaker.EXECUTE_JMOL_SCRIPT);
 
 		mwScriptAction = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
@@ -258,7 +258,7 @@ public class PageMd3d extends MolecularContainer implements BasicModel, Embeddab
 
 		};
 		mwScriptAction.putValue(NAME, "Execute MW Script");
-		mwScriptAction.putValue(SHORT_DESCRIPTION, "Execute MW script");
+		mwScriptAction.putValue(SHORT_DESCRIPTION, ComponentMaker.EXECUTE_MW_SCRIPT);
 
 		final String[] t = new String[] { "Space Filling", "Ball and Stick", "Stick", "Wireframe" };
 		styleChoices = new AbstractAction() {
@@ -373,7 +373,7 @@ public class PageMd3d extends MolecularContainer implements BasicModel, Embeddab
 				return (String) getProperty(SHORT_DESCRIPTION);
 			}
 		};
-		jmolScriptChanger.putProperty(AbstractChange.SHORT_DESCRIPTION, "Execute Jmol script");
+		jmolScriptChanger.putProperty(AbstractChange.SHORT_DESCRIPTION, ComponentMaker.EXECUTE_JMOL_SCRIPT);
 
 	}
 

@@ -32,13 +32,15 @@ import org.concord.modeler.text.Page;
  */
 abstract class ComponentMaker {
 
-	private final static String EXECUTE_MW_SCRIPT = "Execute MW script";
-	private final static String EXECUTE_JMOL_SCRIPT = "Execute Jmol script";
+	final static String EXECUTE_MW_SCRIPT = "Execute MW script";
+	final static String EXECUTE_JMOL_SCRIPT = "Execute Jmol script";
+	final static String EXECUTE_NATIVE_SCRIPT = "Execute native script";
 
 	boolean cancel;
 
 	static boolean isScriptActionKey(String s) {
-		return EXECUTE_MW_SCRIPT.equals(s) || EXECUTE_JMOL_SCRIPT.equals(s) || "Script".equals(s);
+		return EXECUTE_MW_SCRIPT.equals(s) || EXECUTE_JMOL_SCRIPT.equals(s) || EXECUTE_NATIVE_SCRIPT.equals(s)
+				|| "Script".equals(s);
 	}
 
 	static Object getScriptAction(Map m) {

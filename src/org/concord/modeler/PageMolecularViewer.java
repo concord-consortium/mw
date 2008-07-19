@@ -299,7 +299,7 @@ public class PageMolecularViewer extends JmolContainer implements BasicModel, Em
 			}
 		};
 		scriptAction.putValue(NAME, "Execute Jmol Script");
-		scriptAction.putValue(SHORT_DESCRIPTION, "Execute Jmol script");
+		scriptAction.putValue(SHORT_DESCRIPTION, ComponentMaker.EXECUTE_JMOL_SCRIPT);
 
 		// for combo boxes
 
@@ -446,7 +446,7 @@ public class PageMolecularViewer extends JmolContainer implements BasicModel, Em
 				return (String) getProperty(SHORT_DESCRIPTION);
 			}
 		};
-		scriptChanger.putProperty(AbstractChange.SHORT_DESCRIPTION, "Execute Jmol script");
+		scriptChanger.putProperty(AbstractChange.SHORT_DESCRIPTION, ComponentMaker.EXECUTE_JMOL_SCRIPT);
 
 		cpkRadiusChanger = new AbstractChange() {
 			public void stateChanged(ChangeEvent e) {
