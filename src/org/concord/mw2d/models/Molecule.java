@@ -976,7 +976,7 @@ public class Molecule implements ModelComponent, Rotatable {
 		if (model.bonds.isEmpty())
 			throw new RuntimeException("empty bond error!");
 		int iAtom;
-		RadialBond rBond, rBond2;
+		RadialBond rBond;
 		int relativeOrigin, relativeDestin;
 		List<RadialBond> newBonds = new ArrayList<RadialBond>();
 		synchronized (model.bonds.getSynchronizationLock()) {
@@ -987,18 +987,8 @@ public class Molecule implements ModelComponent, Rotatable {
 					if (rBond.contains(model.atom[iAtom])) {
 						relativeOrigin = map.get(rBond.getAtom1().getIndex());
 						relativeDestin = map.get(rBond.getAtom2().getIndex());
-						rBond2 = new RadialBond(model.atom[oldNOA + relativeOrigin],
-								model.atom[oldNOA + relativeDestin], rBond.getBondLength(), rBond.getBondStrength(),
-								rBond.isSmart(), rBond.isSolid(), rBond.isClosed(), rBond.getBondColor());
-						rBond2.setChemicalEnergy(rBond.getChemicalEnergy());
-						rBond2.setVisible(rBond.isVisible());
-						rBond2.setBondStyle(rBond.getBondStyle());
-						rBond2.setPhase(rBond.getPhase());
-						rBond2.setAmplitude(rBond.getAmplitude());
-						rBond2.setPeriod(rBond.getPeriod());
-						rBond2.setTorque(rBond.getTorque());
-						rBond2.setTorqueType(rBond.getTorqueType());
-						newBonds.add(rBond2);
+						newBonds.add(rBond.getCopy(model.atom[oldNOA + relativeOrigin], model.atom[oldNOA
+								+ relativeDestin]));
 						break;
 					}
 				}
@@ -1028,9 +1018,8 @@ public class Molecule implements ModelComponent, Rotatable {
 								relativeOrigin = map.get(aBond.getAtom1().getIndex());
 								relativeDestin = map.get(aBond.getAtom2().getIndex());
 								relativeMiddle = map.get(aBond.getAtom3().getIndex());
-								newBends.add(new AngularBond(model.atom[oldNOA + relativeOrigin], model.atom[oldNOA
-										+ relativeDestin], model.atom[oldNOA + relativeMiddle], aBond.getBondAngle(),
-										aBond.getBondStrength()));
+								newBends.add(aBond.getCopy(model.atom[oldNOA + relativeOrigin], model.atom[oldNOA
+										+ relativeDestin], model.atom[oldNOA + relativeMiddle]));
 								break;
 							}
 						}
@@ -1049,5 +1038,4 @@ public class Molecule implements ModelComponent, Rotatable {
 		return mol;
 
 	}
-
 }

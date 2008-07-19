@@ -44,6 +44,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.geom.Line2D;
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -1479,6 +1480,27 @@ public abstract class MDView extends PrintableComponent {
 			}
 		}
 		return l;
+	}
+
+	public void copyAttachedLayeredComponents(ModelComponent source, ModelComponent acceptor) {
+		List<Layered> l = getLayeredComponentHostedBy(source);
+		if (l != null && !l.isEmpty()) {
+			for (Layered x : l) {
+				if (x instanceof ImageComponent) {
+					ImageComponent y = null;
+					try {
+						y = new ImageComponent((ImageComponent) x);
+					}
+					catch (IOException e) {
+						e.printStackTrace();
+					}
+					if (y != null) {
+						addLayeredComponent(y);
+						y.setHost(acceptor);
+					}
+				}
+			}
+		}
 	}
 
 	public ImageComponent[] getImages() {

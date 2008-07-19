@@ -193,6 +193,11 @@ public class AngularBond implements ModelComponent {
 
 	}
 
+	AngularBond getCopy(Atom a1, Atom a2, Atom a3) {
+		AngularBond b = new AngularBond(a1, a2, a3, bondAngle, bondStrength);
+		return b;
+	}
+
 	/** TODO: currently this is not implemented */
 	public void storeCurrentState() {
 	}
