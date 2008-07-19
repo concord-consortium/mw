@@ -24,7 +24,7 @@ import org.concord.modeler.event.ModelListener;
 
 public interface ModelCommunicator extends ModelListener {
 
-	Class[] targetClass = new Class[] { PageMolecularViewer.class, PageMd3d.class };
+	Class[] targetClass = new Class[] { PageMolecularViewer.class, PageMd3d.class, PagePlugin.class };
 
 	public void setModelClass(String className);
 

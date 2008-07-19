@@ -78,6 +78,7 @@ import org.concord.modeler.HistoryManager;
 import org.concord.modeler.ImageQuestion;
 import org.concord.modeler.InstancePool;
 import org.concord.modeler.ModelCanvas;
+import org.concord.modeler.ModelCommunicator;
 import org.concord.modeler.ModelerUtilities;
 import org.concord.modeler.PageApplet;
 import org.concord.modeler.PageBarGraph;
@@ -139,9 +140,9 @@ final class PageXMLDecoder {
 	private Mw2dConnector mw2dConnector;
 	private Mw3dConnector mw3dConnector;
 	private JmolConnector jmolConnector;
+	private PluginConnector pluginConnector;
 	private RadioButtonConnector radioButtonConnector;
 	private HTMLComponentConnector htmlComponentConnector;
-	private JavaStarter javaStarter;
 	private InputStream inputStream;
 	private int elementCounter;
 	private long loadingTime;
@@ -162,9 +163,9 @@ final class PageXMLDecoder {
 		mw2dConnector = new Mw2dConnector(page);
 		mw3dConnector = new Mw3dConnector(page);
 		jmolConnector = new JmolConnector();
+		pluginConnector = new PluginConnector();
 		radioButtonConnector = new RadioButtonConnector();
 		htmlComponentConnector = new HTMLComponentConnector();
-		javaStarter = new JavaStarter();
 		saxHandler = new XMLHandler();
 		try {
 			saxParser = SAXParserFactory.newInstance().newSAXParser();
@@ -186,9 +187,9 @@ final class PageXMLDecoder {
 		mw2dConnector.clear();
 		mw3dConnector.clear();
 		jmolConnector.clear();
+		pluginConnector.clear();
 		radioButtonConnector.clear();
 		htmlComponentConnector.clear();
-		javaStarter.clear();
 		if (resourceLoadingThread != null)
 			resourceLoadingThread.interrupt();
 		resourceLoadingThread = null;
@@ -599,9 +600,9 @@ final class PageXMLDecoder {
 			mw2dConnector.clear();
 			mw3dConnector.clear();
 			jmolConnector.clear();
+			pluginConnector.clear();
 			radioButtonConnector.clear();
 			htmlComponentConnector.clear();
-			javaStarter.clear();
 			textBuffer.setLength(0);
 			elementCounter = 0;
 			page.setBackgroundSound(null);
@@ -635,7 +636,7 @@ final class PageXMLDecoder {
 							mw3dConnector.loadResources();
 							mw2dConnector.loadResources();
 							jmolConnector.loadResources();
-							javaStarter.start();
+							pluginConnector.start();
 							EventQueue.invokeLater(new Runnable() {
 								public void run() {
 									progressBar.setValue(progressBar.getMaximum());
@@ -645,6 +646,7 @@ final class PageXMLDecoder {
 									mw3dConnector.finishLoading();
 									mw2dConnector.finishLoading();
 									jmolConnector.finishLoading();
+									pluginConnector.connect();
 									page.autoResizeComponents();
 									finish();
 								}
@@ -3208,26 +3210,34 @@ final class PageXMLDecoder {
 			return t;
 		}
 
-		private PageSpinner createSpinner() {
-			PageSpinner s = new PageSpinner();
-			s.setPage(page);
-			s.setModelID(modelIndex);
+		private void connect(ModelCommunicator mc) {
+			mc.setModelID(modelIndex);
 			if (modelClass != null) {
-				s.setModelClass(modelClass);
+				mc.setModelClass(modelClass);
 				if (modelClass.equals(PageMolecularViewer.class.getName())) {
-					jmolConnector.linkModelListener(modelIndex, s);
+					jmolConnector.linkModelListener(modelIndex, mc);
 				}
 				else if (modelClass.equals(PageMd3d.class.getName())) {
-					mw3dConnector.linkModelListener(modelIndex, s);
+					mw3dConnector.linkModelListener(modelIndex, mc);
+				}
+				else if (modelClass.equals(PageJContainer.class.getName())
+						|| modelClass.equals(PageApplet.class.getName())) {
+					pluginConnector.linkModelCommunicator(modelIndex, mc);
 				}
 				else {
-					mw2dConnector.linkModelListener(modelIndex, s);
+					mw2dConnector.linkModelListener(modelIndex, mc);
 				}
 				modelClass = null;
 			}
 			else {
-				mw2dConnector.linkModelListener(modelIndex, s); // backward compatiblity
+				mw2dConnector.linkModelListener(modelIndex, mc); // backward compatiblity
 			}
+		}
+
+		private PageSpinner createSpinner() {
+			PageSpinner s = new PageSpinner();
+			s.setPage(page);
+			connect(s);
 			s.setMinimum(minimum);
 			s.setMaximum(maximum);
 			if (stepsize != 0) {
@@ -3268,23 +3278,7 @@ final class PageXMLDecoder {
 		private PageSlider createSlider() {
 			PageSlider s = new PageSlider();
 			s.setPage(page);
-			s.setModelID(modelIndex);
-			if (modelClass != null) {
-				s.setModelClass(modelClass);
-				if (modelClass.equals(PageMolecularViewer.class.getName())) {
-					jmolConnector.linkModelListener(modelIndex, s);
-				}
-				else if (modelClass.equals(PageMd3d.class.getName())) {
-					mw3dConnector.linkModelListener(modelIndex, s);
-				}
-				else {
-					mw2dConnector.linkModelListener(modelIndex, s);
-				}
-				modelClass = null;
-			}
-			else {
-				mw2dConnector.linkModelListener(modelIndex, s); // backward compatiblity
-			}
+			connect(s);
 			if (orientation == PageSlider.VERTICAL || orientation == PageSlider.HORIZONTAL) {
 				s.setOrientation(orientation);
 				orientation = -1;
@@ -3349,23 +3343,7 @@ final class PageXMLDecoder {
 		private PageCheckBox createCheckBox() {
 			PageCheckBox b = new PageCheckBox();
 			b.setPage(page);
-			b.setModelID(modelIndex);
-			if (modelClass != null) {
-				b.setModelClass(modelClass);
-				if (modelClass.equals(PageMolecularViewer.class.getName())) {
-					jmolConnector.linkModelListener(modelIndex, b);
-				}
-				else if (modelClass.equals(PageMd3d.class.getName())) {
-					mw3dConnector.linkModelListener(modelIndex, b);
-				}
-				else {
-					mw2dConnector.linkModelListener(modelIndex, b);
-				}
-				modelClass = null;
-			}
-			else {
-				mw2dConnector.linkModelListener(modelIndex, b); // backward compatiblity
-			}
+			connect(b);
 			if (!transparent) {
 				b.setOpaque(true);
 				transparent = true;
@@ -3427,23 +3405,7 @@ final class PageXMLDecoder {
 			}
 			radioButtonConnector.enroll(b);
 			b.setPage(page);
-			b.setModelID(modelIndex);
-			if (modelClass != null) {
-				b.setModelClass(modelClass);
-				if (modelClass.equals(PageMolecularViewer.class.getName())) {
-					jmolConnector.linkModelListener(modelIndex, b);
-				}
-				else if (modelClass.equals(PageMd3d.class.getName())) {
-					mw3dConnector.linkModelListener(modelIndex, b);
-				}
-				else {
-					mw2dConnector.linkModelListener(modelIndex, b);
-				}
-				modelClass = null;
-			}
-			else {
-				mw2dConnector.linkModelListener(modelIndex, b); // backward compatiblity
-			}
+			connect(b);
 			if (!transparent) {
 				b.setOpaque(true);
 				transparent = true;
@@ -3495,24 +3457,8 @@ final class PageXMLDecoder {
 
 		private PageComboBox createComboBox() {
 			PageComboBox cb = new PageComboBox();
-			cb.setModelID(modelIndex);
 			cb.setPage(page);
-			if (modelClass != null) {
-				cb.setModelClass(modelClass);
-				if (modelClass.equals(PageMolecularViewer.class.getName())) {
-					jmolConnector.linkModelListener(modelIndex, cb);
-				}
-				else if (modelClass.equals(PageMd3d.class.getName())) {
-					mw3dConnector.linkModelListener(modelIndex, cb);
-				}
-				else {
-					mw2dConnector.linkModelListener(modelIndex, cb);
-				}
-				modelClass = null;
-			}
-			else {
-				mw2dConnector.linkModelListener(modelIndex, cb); // backward compatiblity
-			}
+			connect(cb);
 			if (actionName != null) {
 				cb.setName(actionName);
 				actionName = null;
@@ -3547,24 +3493,8 @@ final class PageXMLDecoder {
 
 		private PageButton createButton() {
 			PageButton b = new PageButton();
-			b.setModelID(modelIndex);
 			b.setPage(page);
-			if (modelClass != null) {
-				b.setModelClass(modelClass);
-				if (modelClass.equals(PageMolecularViewer.class.getName())) {
-					jmolConnector.linkModelListener(modelIndex, b);
-				}
-				else if (modelClass.equals(PageMd3d.class.getName())) {
-					mw3dConnector.linkModelListener(modelIndex, b);
-				}
-				else {
-					mw2dConnector.linkModelListener(modelIndex, b);
-				}
-				modelClass = null;
-			}
-			else {
-				mw2dConnector.linkModelListener(modelIndex, b); // backward compatiblity
-			}
+			connect(b);
 			if (borderType != null) {
 				b.setBorderType(borderType);
 				borderType = null;
@@ -3721,7 +3651,7 @@ final class PageXMLDecoder {
 				borderType = null;
 			}
 			applet.setChangable(page.isEditable());
-			javaStarter.enroll(applet);
+			pluginConnector.enroll(applet);
 			return applet;
 		}
 
@@ -3759,7 +3689,7 @@ final class PageXMLDecoder {
 				borderType = null;
 			}
 			plugin.setChangable(page.isEditable());
-			javaStarter.enroll(plugin);
+			pluginConnector.enroll(plugin);
 			return plugin;
 		}
 
@@ -3793,23 +3723,7 @@ final class PageXMLDecoder {
 		private PageScriptConsole createScriptConsole() {
 			PageScriptConsole sc = new PageScriptConsole();
 			sc.setPage(page);
-			if (modelClass != null) {
-				sc.setModelClass(modelClass);
-				if (modelClass.equals(PageMolecularViewer.class.getName())) {
-					jmolConnector.linkModelListener(modelIndex, sc);
-				}
-				else if (modelClass.equals(PageMd3d.class.getName())) {
-					mw3dConnector.linkModelListener(modelIndex, sc);
-				}
-				else {
-					mw2dConnector.linkModelListener(modelIndex, sc);
-				}
-				modelClass = null;
-			}
-			else {
-				jmolConnector.linkModelListener(modelIndex, sc); // backward compatiblity
-			}
-			sc.setModelID(modelIndex);
+			connect(sc);
 			if (borderType != null) {
 				sc.setBorderType(borderType);
 				borderType = null;

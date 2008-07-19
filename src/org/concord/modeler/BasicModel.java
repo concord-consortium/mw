@@ -51,7 +51,7 @@ public interface BasicModel {
 
 	public boolean isRunning();
 
-	/** return the view of this view */
+	/** return the view of this model */
 	public JComponent getView();
 
 	public void addModelListener(ModelListener ml);

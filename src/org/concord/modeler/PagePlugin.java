@@ -19,14 +19,19 @@
  * END LICENSE */
 package org.concord.modeler;
 
+import static javax.swing.Action.NAME;
+import static javax.swing.Action.SHORT_DESCRIPTION;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseListener;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -36,18 +41,33 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
+import javax.swing.AbstractAction;
+import javax.swing.AbstractButton;
+import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JSlider;
+import javax.swing.JSpinner;
 import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
+import org.concord.modeler.event.AbstractChange;
+import org.concord.modeler.event.ModelEvent;
+import org.concord.modeler.event.ModelListener;
 import org.concord.modeler.text.ExternalClient;
 import org.concord.modeler.text.Page;
 import org.concord.modeler.text.XMLCharacterEncoder;
 import org.concord.modeler.ui.HyperlinkLabel;
+import org.concord.modeler.util.Evaluator;
 import org.concord.modeler.util.FileUtilities;
 
 /**
@@ -76,7 +96,7 @@ import org.concord.modeler.util.FileUtilities;
  * 
  */
 
-abstract public class PagePlugin extends JPanel implements Embeddable, Scriptable, NativelyScriptable {
+abstract public class PagePlugin extends JPanel implements Embeddable, Scriptable, NativelyScriptable, BasicModel {
 
 	final static String PARAMETER_PATTERN = "(?i)(name[\\s&&[^\\r\\n]]*=[\\s&&[^\\r\\n]]*)|(value[\\s&&[^\\r\\n]]*=[\\s&&[^\\r\\n]]*)";
 
@@ -92,6 +112,12 @@ abstract public class PagePlugin extends JPanel implements Embeddable, Scriptabl
 	Color defaultBackground, defaultForeground;
 	JPopupMenu popupMenu;
 	MouseListener popupMouseListener;
+
+	private Map<String, ChangeListener> changeMap;
+	private Map<String, Action> choiceMap;
+	private Map<String, Action> actionMap;
+	private Map<String, Action> switchMap;
+	private Map<String, Action> multiSwitchMap;
 
 	public PagePlugin() {
 		super();
@@ -223,6 +249,8 @@ abstract public class PagePlugin extends JPanel implements Embeddable, Scriptabl
 	}
 
 	abstract public void saveState(File parent);
+
+	abstract public void saveStateToFile(File file);
 
 	public void setClassName(String s) {
 		className = s;
@@ -396,6 +424,150 @@ abstract public class PagePlugin extends JPanel implements Embeddable, Scriptabl
 		popupMouseListener = new PopupMouseListener(this);
 		addMouseListener(popupMouseListener);
 
+		Action nativeScriptAction = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				if (ModelerUtilities.stopFiring(e))
+					return;
+				Object o = e.getSource();
+				if (o instanceof JCheckBox) {
+					JCheckBox cb = (JCheckBox) o;
+					if (cb.isSelected()) {
+						Object o2 = cb.getClientProperty("selection script");
+						if (o2 instanceof String) {
+							String s = (String) o2;
+							if (!s.trim().equals(""))
+								runNativeScript(s);
+						}
+					}
+					else {
+						Object o2 = cb.getClientProperty("deselection script");
+						if (o2 instanceof String) {
+							String s = (String) o2;
+							if (!s.trim().equals(""))
+								runNativeScript(s);
+						}
+					}
+				}
+				else if (o instanceof AbstractButton) {
+					Object o2 = ((AbstractButton) o).getClientProperty("script");
+					if (o2 instanceof String) {
+						String s = (String) o2;
+						if (!s.trim().equals(""))
+							runNativeScript(s);
+					}
+				}
+				else if (o instanceof JComboBox) {
+					JComboBox cb = (JComboBox) o;
+					Object s = cb.getClientProperty("script" + cb.getSelectedIndex());
+					if (s == null)
+						return;
+					runNativeScript((String) s);
+				}
+			}
+
+			public String toString() {
+				return (String) getValue(SHORT_DESCRIPTION);
+			}
+		};
+		nativeScriptAction.putValue(NAME, "Execute Native Script");
+		nativeScriptAction.putValue(SHORT_DESCRIPTION, ComponentMaker.EXECUTE_NATIVE_SCRIPT);
+
+		AbstractChange nativeScriptChanger = new AbstractChange() {
+			public void stateChanged(ChangeEvent e) {
+				Object o = e.getSource();
+				if (o instanceof JSlider) {
+					JSlider source = (JSlider) o;
+					Double scale = (Double) source.getClientProperty(SCALE);
+					double s = scale == null ? 1.0 : 1.0 / scale.doubleValue();
+					if (!source.getValueIsAdjusting()) {
+						String script = (String) source.getClientProperty("Script");
+						if (script != null) {
+							String result = source.getValue() * s + "";
+							if (result.endsWith(".0"))
+								result = result.substring(0, result.length() - 2);
+							script = script.replaceAll("(?i)%val", result);
+							result = source.getMaximum() * s + "";
+							if (result.endsWith(".0"))
+								result = result.substring(0, result.length() - 2);
+							script = script.replaceAll("(?i)%max", result);
+							result = source.getMinimum() * s + "";
+							if (result.endsWith(".0"))
+								result = result.substring(0, result.length() - 2);
+							script = script.replaceAll("(?i)%min", result);
+							int lq = script.indexOf('"');
+							int rq = script.indexOf('"', lq + 1);
+							while (lq != -1 && rq != -1 && lq != rq) {
+								String expression = script.substring(lq + 1, rq);
+								Evaluator mathEval = new Evaluator(expression.trim());
+								result = "" + mathEval.eval();
+								if (result.endsWith(".0"))
+									result = result.substring(0, result.length() - 2);
+								script = script.substring(0, lq) + result + script.substring(rq + 1);
+								lq = script.indexOf('"', rq + 1);
+								rq = script.indexOf('"', lq + 1);
+							}
+							runNativeScript(script);
+						}
+					}
+				}
+				else if (o instanceof JSpinner) {
+					JSpinner source = (JSpinner) o;
+					String script = (String) source.getClientProperty("Script");
+					if (script != null) {
+						String result = source.getValue() + "";
+						if (result.endsWith(".0"))
+							result = result.substring(0, result.length() - 2);
+						script = script.replaceAll("(?i)%val", result);
+						int lq = script.indexOf('"');
+						int rq = script.indexOf('"', lq + 1);
+						while (lq != -1 && rq != -1 && lq != rq) {
+							String expression = script.substring(lq + 1, rq);
+							Evaluator mathEval = new Evaluator(expression.trim());
+							result = "" + mathEval.eval();
+							if (result.endsWith(".0"))
+								result = result.substring(0, result.length() - 2);
+							script = script.substring(0, lq) + result + script.substring(rq + 1);
+							lq = script.indexOf('"', rq + 1);
+							rq = script.indexOf('"', lq + 1);
+						}
+						runNativeScript(script);
+					}
+				}
+			}
+
+			public double getMinimum() {
+				return 0.0;
+			}
+
+			public double getMaximum() {
+				return 100.0;
+			}
+
+			public double getStepSize() {
+				return 1.0;
+			}
+
+			public double getValue() {
+				return 0.0;
+			}
+
+			public String toString() {
+				return (String) getProperty(SHORT_DESCRIPTION);
+			}
+		};
+		nativeScriptChanger.putProperty(AbstractChange.SHORT_DESCRIPTION, ComponentMaker.EXECUTE_NATIVE_SCRIPT);
+
+		actionMap = Collections.synchronizedMap(new TreeMap<String, Action>());
+		actionMap.put((String) nativeScriptAction.getValue(SHORT_DESCRIPTION), nativeScriptAction);
+		switchMap = Collections.synchronizedMap(new TreeMap<String, Action>());
+		switchMap.put((String) nativeScriptAction.getValue(SHORT_DESCRIPTION), nativeScriptAction);
+		multiSwitchMap = Collections.synchronizedMap(new TreeMap<String, Action>());
+		multiSwitchMap.put((String) nativeScriptAction.getValue(SHORT_DESCRIPTION), nativeScriptAction);
+		changeMap = Collections.synchronizedMap(new TreeMap<String, ChangeListener>());
+		changeMap.put((String) nativeScriptChanger.getProperty(AbstractChange.SHORT_DESCRIPTION), nativeScriptChanger);
+		choiceMap = Collections.synchronizedMap(new TreeMap<String, Action>());
+		choiceMap.put((String) nativeScriptAction.getValue(SHORT_DESCRIPTION), nativeScriptAction);
+
 	}
 
 	public JPopupMenu getPopupMenu() {
@@ -495,6 +667,84 @@ abstract public class PagePlugin extends JPanel implements Embeddable, Scriptabl
 		else {
 			ExternalClient.open(ExternalClient.HTML_CLIENT, t);
 		}
+	}
+
+	public void input(File f) {
+		try {
+			loadState(new FileInputStream(f));
+		}
+		catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void input(URL url) {
+		try {
+			loadState(url.openStream());
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void output(File f) {
+		saveStateToFile(f);
+	}
+
+	public void run() {
+	}
+
+	public void stop() {
+	}
+
+	public boolean isRunning() {
+		return false;
+	}
+
+	public JComponent getView() {
+		return this;
+	}
+
+	public void addModelListener(ModelListener ml) {
+	}
+
+	public void removeModelListener(ModelListener ml) {
+	}
+
+	public List<ModelListener> getModelListeners() {
+		return null;
+	}
+
+	public void notifyModelListeners(ModelEvent e) {
+	}
+
+	public Map<String, Action> getActions() {
+		return actionMap;
+	}
+
+	public Map<String, ChangeListener> getChanges() {
+		return changeMap;
+	}
+
+	public Map<String, Action> getSwitches() {
+		return switchMap;
+	}
+
+	public Map<String, Action> getMultiSwitches() {
+		return multiSwitchMap;
+	}
+
+	public Map<String, Action> getChoices() {
+		return choiceMap;
+	}
+
+	public void haltScriptExecution() {
 	}
 
 	public String toString() {
