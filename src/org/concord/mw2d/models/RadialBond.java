@@ -438,8 +438,7 @@ public class RadialBond implements ModelComponent {
 	}
 
 	public String toString() {
-		return "Radial Bond (" + atom1 + ", " + atom2 + ", " + Particle.format.format(bondLength) + ", "
-				+ Particle.format.format(bondStrength) + ")";
+		return "Radial Bond#" + getIndex() + " [" + atom1 + ", " + atom2 + "]";
 	}
 
 	/** set the model this bond is associated with */
@@ -745,17 +744,7 @@ public class RadialBond implements ModelComponent {
 			g.draw(line);
 		}
 		if (selected && model.view.getShowSelectionHalo()) {
-			double cos = axis.x2 - axis.x1;
-			double sin = axis.y2 - axis.y1;
-			double d = 2 * stickWidth / Math.hypot(cos, sin);
-			cos *= d;
-			sin *= d;
-			g.setColor(model.view.contrastBackground());
-			g.setStroke(ViewAttribute.THIN_DASHED);
-			line.setLine(axis.x2 - sin, axis.y2 + cos, axis.x1 - sin, axis.y1 + cos);
-			g.draw(line);
-			line.setLine(axis.x2 + sin, axis.y2 - cos, axis.x1 + sin, axis.y1 - cos);
-			g.draw(line);
+			drawFlankLines(g, null, 2, null);
 		}
 	}
 
@@ -768,18 +757,22 @@ public class RadialBond implements ModelComponent {
 
 	private void drawGhost(Graphics2D g) {
 		if (selected && model.view.getShowSelectionHalo()) {
-			g.setColor(model.view.contrastBackground());
-			double cos = axis.x2 - axis.x1;
-			double sin = axis.y2 - axis.y1;
-			double d = 2 * stickWidth / Math.hypot(cos, sin);
-			cos *= d;
-			sin *= d;
-			g.setStroke(ViewAttribute.THIN_DASHED);
-			line.setLine(axis.x2 - sin, axis.y2 + cos, axis.x1 - sin, axis.y1 + cos);
-			g.draw(line);
-			line.setLine(axis.x2 + sin, axis.y2 - cos, axis.x1 + sin, axis.y1 - cos);
-			g.draw(line);
+			drawFlankLines(g, null, 2, null);
 		}
+	}
+
+	private void drawFlankLines(Graphics2D g, Color c, float ratio, Stroke stroke) {
+		g.setColor(c != null ? c : model.view.contrastBackground());
+		double cos = axis.x2 - axis.x1;
+		double sin = axis.y2 - axis.y1;
+		double d = ratio * stickWidth / Math.hypot(cos, sin);
+		cos *= d;
+		sin *= d;
+		g.setStroke(stroke != null ? stroke : ViewAttribute.THIN_DASHED);
+		line.setLine(axis.x2 - sin, axis.y2 + cos, axis.x1 - sin, axis.y1 + cos);
+		g.draw(line);
+		line.setLine(axis.x2 + sin, axis.y2 - cos, axis.x1 + sin, axis.y1 - cos);
+		g.draw(line);
 	}
 
 	private void drawArrow(Graphics2D g, double cost, double sint) {
@@ -829,9 +822,7 @@ public class RadialBond implements ModelComponent {
 			}
 		}
 		if (isBlinking()) {
-			g.setColor(blinkColor);
-			g.setStroke(ViewAttribute.DASHED);
-			g.draw(axis);
+			drawFlankLines(g, blinkColor, 4, ViewAttribute.THICKER_DASHED);
 		}
 		if (Math.abs(torque) > ZERO) {
 			if (!visible)

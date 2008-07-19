@@ -401,8 +401,6 @@ public class MoleculeCollection {
 			b = bs == null ? false : bs.get(i);
 			m = get(i);
 			m.setSelected(b);
-			for (int k = 0; k < m.size(); k++)
-				m.getAtom(k).setSelected(b);
 		}
 	}
 

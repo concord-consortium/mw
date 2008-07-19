@@ -242,6 +242,11 @@ public class Molecule implements ModelComponent, Rotatable {
 
 	public void setSelected(boolean b) {
 		selected = b;
+		for (Atom x : atoms)
+			x.setSelected(b);
+		List<RadialBond> bonds = getBonds();
+		for (RadialBond x : bonds)
+			x.setSelected(b);
 		if (b) {
 			locateRotationHandles();
 			model.view.setSelectedComponent(this);
