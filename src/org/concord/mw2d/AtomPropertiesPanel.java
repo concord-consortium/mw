@@ -177,8 +177,8 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		visibleCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				atom.setVisible(visibleCheckBox.isSelected());
-				((AtomisticView) atom.getView()).refreshJmol();
-				atom.getView().repaint();
+				((AtomisticView) atom.getHostModel().getView()).refreshJmol();
+				atom.getHostModel().getView().repaint();
 			}
 		});
 		visibleCheckBox.setEnabled(b);
@@ -224,7 +224,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 				boolean changed = false;
 
 				if (Math.abs(atom.getMass() * 120 - massField.getValue()) > ZERO) {
-					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(atom.getView()),
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(atom.getHostModel().getView()),
 							"The masses of all atoms of this type will be set to " + massField.getText() + " g/mol.",
 							"Setting mass", JOptionPane.INFORMATION_MESSAGE);
 					((AtomicModel) atom.getHostModel()).getElement(atom.getID()).setMass(massField.getValue() / 120);
@@ -322,7 +322,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 									atom.getHostModel().notifyModelListeners(
 											new ModelEvent(atom, "Selected index", null, new Integer(m
 													.indexOfAtom(atom))));
-									atom.getView().paintImmediately(atom.getBounds(10));
+									atom.getHostModel().getView().paintImmediately(atom.getBounds(10));
 									changed = true;
 								}
 							}
@@ -374,15 +374,13 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		s = MDView.getInternationalText("IndexLabel");
 		panel.add(new JLabel(s != null ? s : "Index"));
 		panel.add(createLabel(atom.getIndex()));
-		panel
-				.add(createSmallerFontLabel(atom.getView().getModel() instanceof ReactionModel ? (atom.isRadical() ? "Radical"
-						: "")
-						: ""));
+		panel.add(createSmallerFontLabel(atom.getHostModel() instanceof ReactionModel ? (atom.isRadical() ? "Radical"
+				: "") : ""));
 
 		s = MDView.getInternationalText("Color");
 		panel.add(new JLabel(s != null ? s : "Element color"));
 		panel.add(new JPanel());
-		ColorComboBox ballColorComboBox = new ColorComboBox(atom.getView());
+		ColorComboBox ballColorComboBox = new ColorComboBox(atom.getHostModel().getView());
 		ballColorComboBox.setRenderer(new ComboBoxRenderer.ColorCell(atom.getColor()));
 		ballColorComboBox.setPreferredSize(new Dimension(32, 18));
 		setColorComboBox(ballColorComboBox, atom.getColor());
@@ -403,7 +401,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 
 		panel.add(new JLabel("<html><i>&#963;</i> (&#197;)</html>", SwingConstants.LEFT));
 		panel.add(createLabel(0.1 * atom.getSigma()));
-		JButton button = new JButton(((AtomisticView) atom.getView()).editElements(atom.getID()));
+		JButton button = new JButton(((AtomisticView) atom.getHostModel().getView()).editElements(atom.getID()));
 		s = MDView.getInternationalText("ChangeButton");
 		if (s != null)
 			button.setText(s);
@@ -412,7 +410,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 
 		panel.add(new JLabel("<html><i>&#949;</i> (eV)</html>", SwingConstants.LEFT));
 		panel.add(createLabel(atom.getEpsilon()));
-		button = new JButton(((AtomisticView) atom.getView()).editElements(atom.getID()));
+		button = new JButton(((AtomisticView) atom.getHostModel().getView()).editElements(atom.getID()));
 		if (s != null)
 			button.setText(s);
 		button.setEnabled(b);
@@ -421,7 +419,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		s = MDView.getInternationalText("ChargeLabel");
 		panel.add(new JLabel((s != null ? s : "Charge") + " (e)"));
 		panel.add(chargeField);
-		ColorComboBox chargeColorComboBox = new ColorComboBox(atom.getView());
+		ColorComboBox chargeColorComboBox = new ColorComboBox(atom.getHostModel().getView());
 		chargeColorComboBox.setRenderer(new ComboBoxRenderer.ColorCell(atom.getChargeColor()));
 		chargeColorComboBox.setPreferredSize(new Dimension(32, 18));
 		setColorComboBox(chargeColorComboBox, atom.getChargeColor());
@@ -623,7 +621,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 
 		ElementColorListener(Atom atom) {
 			this.atom = atom;
-			view = (AtomisticView) atom.getView();
+			view = (AtomisticView) atom.getHostModel().getView();
 		}
 
 		public void actionPerformed(ActionEvent e) {

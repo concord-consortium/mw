@@ -34,8 +34,6 @@ import java.awt.geom.Rectangle2D;
 import javax.swing.SwingUtilities;
 
 import org.concord.modeler.math.SimpleMath;
-import org.concord.mw2d.MDView;
-import org.concord.mw2d.MesoView;
 import org.concord.mw2d.ViewAttribute;
 import org.concord.mw2d.ui.GayBerneConfigure;
 
@@ -46,7 +44,6 @@ public class GayBerneParticle extends UnitedAtom implements Rotatable {
 	private final static short MIN_BREADTH = 10;
 	private final static short MAX_BREADTH = 60;
 
-	private transient MesoView view;
 	private transient MesoModel model;
 	private boolean stateStored;
 	private double savedRx, savedRy, savedVx, savedVy;
@@ -116,30 +113,14 @@ public class GayBerneParticle extends UnitedAtom implements Rotatable {
 		return -1;
 	}
 
-	public void setView(MDView view) {
-		if (view == null) {
-			this.view = null;
-			return;
-		}
-		if (!(view instanceof MesoView))
-			throw new IllegalArgumentException("wrong type of view");
-		this.view = (MesoView) view;
-	}
-
-	public MDView getView() {
-		return view;
-	}
-
 	public void setModel(MDModel m) {
 		if (m == null) {
 			model = null;
-			view = null;
 			return;
 		}
 		if (!(m instanceof MesoModel))
 			throw new IllegalArgumentException("wrong type of model");
 		model = (MesoModel) m;
-		setView(model.view);
 		measuringTool.setModel(model);
 	}
 
@@ -150,7 +131,6 @@ public class GayBerneParticle extends UnitedAtom implements Rotatable {
 	public void destroy() {
 		super.destroy();
 		model = null;
-		view = null;
 	}
 
 	public void storeCurrentState() {
@@ -315,7 +295,7 @@ public class GayBerneParticle extends UnitedAtom implements Rotatable {
 		if (b) {
 			locateRects();
 			locateRotationHandles();
-			view.setSelectedComponent(this);
+			model.view.setSelectedComponent(this);
 		}
 	}
 
@@ -415,7 +395,8 @@ public class GayBerneParticle extends UnitedAtom implements Rotatable {
 		int x0 = (int) (rx - 0.5 * z) - skin;
 		int y0 = (int) (ry - 0.5 * z) - skin;
 		int d = (int) z + skin + skin;
-		return SwingUtilities.computeIntersection(0, 0, view.getWidth(), view.getHeight(), new Rectangle(x0, y0, d, d));
+		return SwingUtilities.computeIntersection(0, 0, model.view.getWidth(), model.view.getHeight(), new Rectangle(
+				x0, y0, d, d));
 	}
 
 	/** @return the ellipse of this GB particle when theta=0 */
@@ -550,7 +531,7 @@ public class GayBerneParticle extends UnitedAtom implements Rotatable {
 		theta0 = yold > 0.0 ? Math.acos(theta0) : 2.0 * Math.PI - Math.acos(theta0);
 		setTheta(theta - theta0);
 		locateRotationHandles();
-		view.repaint();
+		model.view.repaint();
 	}
 
 	/**
@@ -588,13 +569,10 @@ public class GayBerneParticle extends UnitedAtom implements Rotatable {
 			setLength(breadth + GayBerneConfigure.GB_LIMIT);
 		}
 		locateRects();
-		view.repaint();
+		model.view.repaint();
 	}
 
 	public void render(Graphics2D g, AffineTransform at, AffineTransform savedAT) {
-
-		if (view == null)
-			return;
 
 		if (isVisible()) {
 
@@ -603,13 +581,13 @@ public class GayBerneParticle extends UnitedAtom implements Rotatable {
 			ellipse.setFrame(rx - 0.5 * length, ry - 0.5 * breadth, length, breadth);
 			at.setToRotation(theta, rx, ry);
 			g.transform(at);
-			g.setColor(marked ? view.getMarkColor() : color);
+			g.setColor(marked ? model.view.getMarkColor() : color);
 			g.fill(ellipse);
-			g.setColor(view.contrastBackground());
+			g.setColor(model.view.contrastBackground());
 			g.setStroke(ViewAttribute.THIN);
 			g.draw(ellipse);
 
-			if (view.getDrawDipole() && Math.abs(dipoleMoment) > ZERO) {
+			if (model.view.getDrawDipole() && Math.abs(dipoleMoment) > ZERO) {
 				g.setStroke(ViewAttribute.MODERATE);
 				g.setColor(dipoleColor == null ? getContrastColor(color) : dipoleColor);
 				setDipLines();
@@ -624,10 +602,10 @@ public class GayBerneParticle extends UnitedAtom implements Rotatable {
 						(int) (1.2 * breadth));
 			}
 
-			if (selected && view.getShowSelectionHalo()) {
+			if (selected && model.view.getShowSelectionHalo()) {
 				if (!selectedToRotate && !selectedToResize) {
 					ellipse.setFrame(rx - 0.5 * length - 2, ry - 0.5 * breadth - 2, length + 4, breadth + 4);
-					g.setColor(view.contrastBackground());
+					g.setColor(model.view.contrastBackground());
 					g.setStroke(ViewAttribute.THIN_DASHED);
 					g.draw(ellipse);
 				}
@@ -638,7 +616,7 @@ public class GayBerneParticle extends UnitedAtom implements Rotatable {
 			if (restraint != null)
 				PointRestraint.render(g, this);
 
-			if (view.getDrawCharge()) {
+			if (model.view.getDrawCharge()) {
 				g.setColor(chargeColor);
 				g.setStroke(ViewAttribute.MODERATE);
 				if (charge > ZERO) {
@@ -650,7 +628,7 @@ public class GayBerneParticle extends UnitedAtom implements Rotatable {
 				}
 			}
 
-			if (view.getShowParticleIndex()) {
+			if (model.view.getShowParticleIndex()) {
 				g.setFont(SANSSERIF);
 				FontMetrics fm = g.getFontMetrics();
 				int sw = fm.stringWidth("" + getIndex());
@@ -662,7 +640,7 @@ public class GayBerneParticle extends UnitedAtom implements Rotatable {
 
 		}
 
-		if (selected && view.getShowSelectionHalo()) {
+		if (selected && model.view.getShowSelectionHalo()) {
 			if (selectedToRotate) {
 				g.setStroke(ViewAttribute.THIN);
 				g.setColor(Color.green);
@@ -676,8 +654,8 @@ public class GayBerneParticle extends UnitedAtom implements Rotatable {
 				g.setColor(Color.lightGray);
 				g.setStroke(ViewAttribute.THIN_DASHED);
 				g.draw(ellipse);
-				g.drawLine(0, (int) ry, view.getWidth(), (int) ry);
-				g.drawLine((int) rx, 0, (int) rx, view.getHeight());
+				g.drawLine(0, (int) ry, model.view.getWidth(), (int) ry);
+				g.drawLine((int) rx, 0, (int) rx, model.view.getHeight());
 				g.setStroke(ViewAttribute.THIN);
 				g.setColor(Color.yellow);
 				for (Rectangle i : rect)

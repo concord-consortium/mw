@@ -35,11 +35,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.swing.SwingUtilities;
+
 import org.concord.modeler.util.BooleanQueue;
 import org.concord.modeler.util.ByteQueue;
 import org.concord.molbio.engine.Aminoacid;
-import org.concord.mw2d.AtomisticView;
-import org.concord.mw2d.MDView;
 import org.concord.mw2d.UserAction;
 import org.concord.mw2d.ViewAttribute;
 import org.concord.mw2d.ui.GrowthModeDialog;
@@ -50,7 +50,6 @@ public class Atom extends Particle {
 
 	private final static double ENERGY_GAP_TOLL = 0.05;
 
-	private transient AtomisticView view;
 	private transient MolecularModel model;
 	private List<Electron> electrons;
 
@@ -107,30 +106,14 @@ public class Atom extends Particle {
 		setElement(e);
 	}
 
-	public void setView(MDView view) {
-		if (view == null) {
-			this.view = null;
-			return;
-		}
-		if (!(view instanceof AtomisticView))
-			throw new IllegalArgumentException("wrong type of view");
-		this.view = (AtomisticView) view;
-	}
-
-	public MDView getView() {
-		return view;
-	}
-
 	public void setModel(MDModel m) {
 		if (m == null) {
 			model = null;
-			view = null;
 			return;
 		}
 		if (!(m instanceof AtomicModel))
 			throw new IllegalArgumentException("wrong type of model");
 		model = (MolecularModel) m;
-		setView(model.view);
 		measuringTool.setModel(model);
 		if (electrons != null && !electrons.isEmpty()) {
 			synchronized (electrons) {
@@ -184,7 +167,6 @@ public class Atom extends Particle {
 		radicalQ = null;
 		excitationQ = null;
 		model = null;
-		view = null;
 	}
 
 	public Rectangle2D getBounds2D() {
@@ -259,19 +241,19 @@ public class Atom extends Particle {
 
 	public void translateBy(double dx, double dy) {
 		super.translateBy(dx, dy);
-		if (view.getAction() == UserAction.VELO_ID)
+		if (model.view.getAction() == UserAction.VELO_ID)
 			putVHotSpotAtVelocityTip();
 	}
 
 	public void translateTo(double x, double y) {
 		super.translateTo(x, y);
-		if (view.getAction() == UserAction.VELO_ID)
+		if (model.view.getAction() == UserAction.VELO_ID)
 			putVHotSpotAtVelocityTip();
 	}
 
 	public void translateTo(Point2D p) {
 		super.translateTo(p);
-		if (view.getAction() == UserAction.VELO_ID)
+		if (model.view.getAction() == UserAction.VELO_ID)
 			putVHotSpotAtVelocityTip();
 	}
 
@@ -800,8 +782,8 @@ public class Atom extends Particle {
 	public void setSelected(boolean b) {
 		super.setSelected(b);
 		if (b) {
-			view.setSelectedComponent(this);
-			if (view.getAction() == UserAction.VELO_ID)
+			model.view.setSelectedComponent(this);
+			if (model.view.getAction() == UserAction.VELO_ID)
 				putVHotSpotAtVelocityTip();
 		}
 	}
@@ -811,21 +793,19 @@ public class Atom extends Particle {
 		int x0 = (int) (rx - 0.5 * sigma) - skin;
 		int y0 = (int) (ry - 0.5 * sigma) - skin;
 		int d = (int) sigma + skin + skin;
-		return javax.swing.SwingUtilities.computeIntersection(0, 0, view.getWidth(), view.getHeight(), new Rectangle(
+		return SwingUtilities.computeIntersection(0, 0, model.view.getWidth(), model.view.getHeight(), new Rectangle(
 				x0, y0, d, d));
 	}
 
 	private Ellipse2D getShape() {
 		if (circle == null)
 			circle = new Ellipse2D.Double();
-		if (view != null) {
-			if (view.getVdwPercentage() == 100) {
-				circle.setFrame(rx - 0.5 * sigma, ry - 0.5 * sigma, sigma, sigma);
-			}
-			else {
-				double x = view.getVdwPercentage() * 0.01;
-				circle.setFrame(rx - 0.5 * x * sigma, ry - 0.5 * x * sigma, x * sigma, x * sigma);
-			}
+		if (model.view.getVdwPercentage() == 100) {
+			circle.setFrame(rx - 0.5 * sigma, ry - 0.5 * sigma, sigma, sigma);
+		}
+		else {
+			double x = model.view.getVdwPercentage() * 0.01;
+			circle.setFrame(rx - 0.5 * x * sigma, ry - 0.5 * x * sigma, x * sigma, x * sigma);
 		}
 		return circle;
 	}
@@ -866,7 +846,7 @@ public class Atom extends Particle {
 	 * default background color for this type of element.
 	 */
 	public Color getColor() {
-		return new Color(view.getColor(this));
+		return new Color(model.view.getColor(this));
 	}
 
 	/**
@@ -940,60 +920,60 @@ public class Atom extends Particle {
 	}
 
 	boolean outOfView() {
-		return rx + 0.5 * sigma < 0 || ry + 0.5 * sigma < 0 || rx - 0.5 * sigma > view.getWidth()
-				|| ry - 0.5 * sigma > view.getHeight();
+		return rx + 0.5 * sigma < 0 || ry + 0.5 * sigma < 0 || rx - 0.5 * sigma > model.view.getWidth()
+				|| ry - 0.5 * sigma > model.view.getHeight();
 	}
 
 	public void render(Graphics2D g) {
 
-		if (view == null || outOfView())
+		if (outOfView())
 			return;
 
-		if (!view.getShowSites() && id == Element.getMolecularObjectElement())
+		if (!model.view.getShowSites() && id == Element.getMolecularObjectElement())
 			return;
 
-		if (selected && view.getShowSelectionHalo()) {
+		if (selected && model.view.getShowSelectionHalo()) {
 			g.setStroke(ViewAttribute.THIN_DASHED);
-			g.setColor(view.contrastBackground());
+			g.setColor(model.view.contrastBackground());
 			circle.setFrame(rx - 0.5 * sigma - 2, ry - 0.5 * sigma - 2, sigma + 4, sigma + 4);
 			g.draw(circle);
 		}
 
 		if (isVisible()) {
 
-			if (!view.getUseJmol() || index >= model.numberOfAtoms) {
+			if (!model.view.getUseJmol() || index >= model.numberOfAtoms) {
 				if (circle == null)
 					circle = new Ellipse2D.Double();
 				circle.setFrame(rx - 0.5 * sigma, ry - 0.5 * sigma, sigma, sigma);
 				if (marked) {
 					g.setColor(model.view.getMarkColor());
 				}
-				else if (view.shadingShown()) {
-					g.setColor(view.getKeShadingColor((vx * vx + vy * vy) * mass));
+				else if (model.view.shadingShown()) {
+					g.setColor(model.view.getKeShadingColor((vx * vx + vy * vy) * mass));
 				}
-				else if (view.chargeShadingShown()) {
-					g.setColor(view.getChargeShadingColor(charge));
+				else if (model.view.chargeShadingShown()) {
+					g.setColor(model.view.getChargeShadingColor(charge));
 				}
 				else {
 					g.setColor(color != null ? color : getColor());
 				}
 				g.fill(circle);
-				g.setColor(view.contrastBackground());
+				g.setColor(model.view.contrastBackground());
 				g.setStroke(index < model.numberOfAtoms ? ViewAttribute.THIN : ViewAttribute.THIN_DOTTED);
 				g.draw(circle);
 			}
 
-			if (view.getShowParticleIndex() || isAminoAcid() || isNucleotide()) {
+			if (model.view.getShowParticleIndex() || isAminoAcid() || isNucleotide()) {
 				g.setFont(SANSSERIF);
 				g.setColor(Color.black);
-				String s = view.getShowParticleIndex() ? "" + getIndex() : getName();
+				String s = model.view.getShowParticleIndex() ? "" + getIndex() : getName();
 				if (!"sp".equalsIgnoreCase(s)) {
 					FontMetrics fm = g.getFontMetrics();
 					g.drawString(s, (int) (rx - 0.4 * fm.stringWidth(s)), (int) (ry + 0.4 * fm.getHeight()));
 				}
 			}
 
-			if (view.getDrawCharge() && !isAminoAcid() && !isNucleotide()) {
+			if (model.view.getDrawCharge() && !isAminoAcid() && !isNucleotide()) {
 				g.setColor(chargeColor);
 				g.setStroke(ViewAttribute.MODERATE);
 				if (charge > ZERO) {
@@ -1010,13 +990,13 @@ public class Atom extends Particle {
 			if (userField != null)
 				userField.render(g, this, model.getMovie().getCurrentFrameIndex() >= model.getTapePointer() - 1);
 
-			if (view.excitationShown() && ((AtomicModel) model).isPhotonEnabled()) {
+			if (model.view.excitationShown() && ((AtomicModel) model).isPhotonEnabled()) {
 				if (electrons != null && !electrons.isEmpty()) {
 					Electron e = electrons.get(0);
 					if (e.getEnergyLevel() != null) {
 						ElectronicStructure es = ((AtomicModel) model).getElement(id).getElectronicStructure();
 						if (es.indexOf(e.getEnergyLevel()) != 0) {
-							g.setColor(view.contrastBackground());
+							g.setColor(model.view.contrastBackground());
 							g.setStroke(ViewAttribute.DASHED);
 							g.drawOval((int) (rx - 0.7 * sigma), (int) (ry - 0.7 * sigma), (int) (1.4 * sigma),
 									(int) (1.4 * sigma));

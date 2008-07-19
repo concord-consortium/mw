@@ -100,8 +100,6 @@ public class MesoView extends MDView {
 		model = (MesoModel) mod;
 		super.setModel(mod);
 		gb = model.getParticles();
-		for (GayBerneParticle p : gb)
-			p.setView(this);
 		initEditFieldActions();
 		if (!layerBasket.isEmpty()) {
 			for (Layered l : layerBasket) {

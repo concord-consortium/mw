@@ -510,8 +510,6 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		bonds = model.getBonds();
 		bends = model.getBends();
 		molecules = model.getMolecules();
-		for (Atom a : atom)
-			a.setView(this);
 		initEditFieldActions();
 
 		if (elementEditor == null)

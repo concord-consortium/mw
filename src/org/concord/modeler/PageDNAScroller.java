@@ -615,8 +615,8 @@ public class PageDNAScroller extends DNAScroller implements Embeddable, ModelCom
 					for (int k = m.indexOfAtom(a); k < m.size(); k++) {
 						list.add(m.getAtom(k).getIndex());
 					}
-					((AtomisticView) a.getView()).removeMarkedAtoms(list);
-					a.getView().repaint();
+					((AtomisticView) a.getHostModel().getView()).removeMarkedAtoms(list);
+					a.getHostModel().getView().repaint();
 					EventQueue.invokeLater(new Runnable() {
 						public void run() {
 							fillDNA();
@@ -627,7 +627,7 @@ public class PageDNAScroller extends DNAScroller implements Embeddable, ModelCom
 					a.setElement(model.getElement(Codon.express(q).getAbbreviation()));
 					a.setCodon(new String(q));
 					adjustBondLength(a);
-					a.getView().paintImmediately(a.getBounds(10));
+					a.getHostModel().getView().paintImmediately(a.getBounds(10));
 				}
 			}
 			else {
@@ -640,8 +640,8 @@ public class PageDNAScroller extends DNAScroller implements Embeddable, ModelCom
 					for (int k = m.indexOfAtom(a); k < m.size(); k++) {
 						list.add(m.getAtom(k).getIndex());
 					}
-					((AtomisticView) a.getView()).removeMarkedAtoms(list);
-					a.getView().repaint();
+					((AtomisticView) a.getHostModel().getView()).removeMarkedAtoms(list);
+					a.getHostModel().getView().repaint();
 					EventQueue.invokeLater(new Runnable() {
 						public void run() {
 							fillDNA();
@@ -652,7 +652,7 @@ public class PageDNAScroller extends DNAScroller implements Embeddable, ModelCom
 					a.setElement(model.getElement(Codon.express(q1).getAbbreviation()));
 					a.setCodon(new String(q1));
 					adjustBondLength(a);
-					a.getView().paintImmediately(a.getBounds(10));
+					a.getHostModel().getView().paintImmediately(a.getBounds(10));
 				}
 			}
 		}
@@ -667,8 +667,8 @@ public class PageDNAScroller extends DNAScroller implements Embeddable, ModelCom
 				for (int k = iStop; k < m.size(); k++) {
 					list.add(m.getAtom(k).getIndex());
 				}
-				((AtomisticView) a.getView()).removeMarkedAtoms(list);
-				a.getView().repaint();
+				((AtomisticView) a.getHostModel().getView()).removeMarkedAtoms(list);
+				a.getHostModel().getView().repaint();
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						fillDNA();
@@ -702,8 +702,8 @@ public class PageDNAScroller extends DNAScroller implements Embeddable, ModelCom
 				for (int k = iStop; k < m.size(); k++) {
 					list.add(m.getAtom(k).getIndex());
 				}
-				((AtomisticView) a.getView()).removeMarkedAtoms(list);
-				a.getView().repaint();
+				((AtomisticView) a.getHostModel().getView()).removeMarkedAtoms(list);
+				a.getHostModel().getView().repaint();
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						fillDNA();
