@@ -103,6 +103,7 @@ public class RadialBondCollection {
 		if (b) {
 			o.getAtom1().setRadical(true);
 			o.getAtom2().setRadical(true);
+			o.removeAttachedLayeredComponents();
 		}
 		return b;
 	}
@@ -114,6 +115,7 @@ public class RadialBondCollection {
 				rb.getAtom1().setRadical(true);
 				rb.getAtom2().setRadical(true);
 				b = true;
+				rb.removeAttachedLayeredComponents();
 			}
 		}
 		return b;

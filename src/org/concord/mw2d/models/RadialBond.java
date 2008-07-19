@@ -31,6 +31,7 @@ import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.List;
 
 import javax.swing.Timer;
 
@@ -180,8 +181,19 @@ public class RadialBond implements ModelComponent {
 		b.setPeriod(period);
 		b.setTorque(torque);
 		b.setTorqueType(torqueType);
-		model.view.copyAttachedLayeredComponents(this, b);
+		if (model != null)
+			model.view.copyAttachedLayeredComponents(this, b);
 		return b;
+	}
+
+	void removeAttachedLayeredComponents() {
+		if (model == null)
+			return;
+		List<Layered> l = model.view.getLayeredComponentHostedBy(this);
+		if (l != null && !l.isEmpty()) {
+			for (Layered x : l)
+				model.view.removeLayeredComponent(x);
+		}
 	}
 
 	/** TODO: currently this is not implemented */

@@ -68,7 +68,7 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	final static double SIN240 = Math.sin(Math.toRadians(240.0));
 	final static double COS300 = Math.cos(Math.toRadians(300.0));
 	final static double SIN300 = Math.sin(Math.toRadians(300.0));
-	final static double ZERO = 0.00000000001;
+	final static double ZERO = 0.000000000000001;
 	final static Font COURIER = new Font("Courier", Font.PLAIN, 10);
 	final static Font SANSSERIF = new Font("SansSerif", Font.PLAIN, 8);
 
@@ -261,6 +261,16 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 		clone.copyRestraint(null);
 		clone.setUserField(null);
 		return clone;
+	}
+
+	void removeAttachedLayeredComponents() {
+		if (getView() == null)
+			return;
+		List<Layered> l = getView().getLayeredComponentHostedBy(this);
+		if (l != null && !l.isEmpty()) {
+			for (Layered x : l)
+				getView().removeLayeredComponent(x);
+		}
 	}
 
 	/** get the background color of this particle. */
