@@ -45,11 +45,12 @@ class PluginConnector {
 	private Map<Integer, List<ModelCommunicator>> listenerMap;
 
 	PluginConnector() {
+		pluginList = Collections.synchronizedList(new ArrayList<PagePlugin>());
 		listenerMap = new LinkedHashMap<Integer, List<ModelCommunicator>>();
 	}
 
 	boolean isEmpty() {
-		return pluginList == null || pluginList.isEmpty();
+		return pluginList.isEmpty();
 	}
 
 	void connect() {
@@ -203,8 +204,6 @@ class PluginConnector {
 	void enroll(PagePlugin p) {
 		if (p == null)
 			return;
-		if (pluginList == null)
-			pluginList = Collections.synchronizedList(new ArrayList<PagePlugin>());
 		pluginList.add(p);
 	}
 
@@ -231,8 +230,7 @@ class PluginConnector {
 	}
 
 	void clear() {
-		if (pluginList != null)
-			pluginList.clear();
+		pluginList.clear();
 		for (List l : listenerMap.values()) {
 			l.clear();
 		}

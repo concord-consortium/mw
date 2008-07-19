@@ -1066,7 +1066,8 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		if (c != null) {
 			if (c instanceof RadialBond) {
 				Molecule m = ((RadialBond) c).getMolecule();
-				m.setVisible(true);
+				if (m != null)
+					m.setVisible(true);
 			}
 			a.setHost(null);
 		}
