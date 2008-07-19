@@ -57,8 +57,8 @@ class NucleotidePopupMenu extends JPopupMenu {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
 					Element elem = ((MolecularModel) atom.getHostModel()).getElement(rmbi.getText());
 					atom.setElement(elem);
-					((AtomisticView) atom.getView()).refreshJmol();
-					atom.getView().paintImmediately(atom.getBounds(10));
+					((AtomisticView) atom.getHostModel().getView()).refreshJmol();
+					atom.getHostModel().getView().paintImmediately(atom.getBounds(10));
 				}
 			}
 		};
@@ -107,7 +107,7 @@ class NucleotidePopupMenu extends JPopupMenu {
 			return;
 		if (!atom.isNucleotide())
 			return;
-		if (!((MolecularModel) atom.getView().getModel()).changeApprovedByRecorder())
+		if (!((MolecularModel) atom.getHostModel()).changeApprovedByRecorder())
 			return;
 		String s = atom.getName();
 		if (s.equals("A"))

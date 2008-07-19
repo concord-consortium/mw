@@ -1314,7 +1314,6 @@ public class MesoModel extends MDModel {
 			gb[pointer].destroy();
 			gb[pointer] = gbp;
 			gb[pointer].setIndex(pointer);
-			gb[pointer].setView(view);
 			gb[pointer].setModel(this);
 			gb[pointer].tau = gb[pointer].alpha * gb[pointer].inertia;
 			pointer++;
@@ -1356,7 +1355,6 @@ public class MesoModel extends MDModel {
 		Component savedAncestor = view.getAncestor();
 		view.setAncestor(null);
 		for (GayBerneParticle p : gb) {
-			p.setView(null);
 			p.setSelected(false);
 			p.setSelectedToResize(false);
 			p.setSelectedToRotate(false);
@@ -1457,8 +1455,6 @@ public class MesoModel extends MDModel {
 		if (heatBath != null)
 			heatBath.setModel(this);
 		view.setAncestor(savedAncestor);
-		for (GayBerneParticle p : gb)
-			p.setView(view);
 
 	}
 

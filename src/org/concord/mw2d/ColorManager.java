@@ -82,7 +82,7 @@ class ColorManager {
 		if (i < 0 || i >= elementColors.length)
 			return WHITE_ARGB;
 		if (atom.isAminoAcid()) {
-			String s = atom.getView().getColorCoding();
+			String s = ((AtomisticView) atom.getHostModel().getView()).getColorCoding();
 			if ("Charge".equals(s)) {
 				Aminoacid a = AminoAcidAdapter.getAminoAcid((byte) atom.getID());
 				if (a.getCharge() > 0.000001)

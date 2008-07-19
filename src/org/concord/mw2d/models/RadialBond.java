@@ -35,7 +35,6 @@ import java.awt.geom.Rectangle2D;
 import javax.swing.Timer;
 
 import org.concord.modeler.util.HashCodeUtil;
-import org.concord.mw2d.AtomisticView;
 import org.concord.mw2d.ViewAttribute;
 
 import static org.concord.mw2d.models.Particle.COS45;
@@ -186,32 +185,23 @@ public class RadialBond implements ModelComponent {
 		blinkTimer.setRepeats(true);
 		blinkTimer.setInitialDelay(0);
 		blinkTimer.start();
-		if (model.getView() != null)
-			setBlinking(true);
+		setBlinking(true);
 
 		blinkTimer.addActionListener(new ActionListener() {
 
 			private int blinkIndex;
 
 			public void actionPerformed(ActionEvent e) {
-				if (model.getView() == null) {
-					blinkTimer.stop(); // view could be set null while saving the model
-					blinkIndex = 0;
-					setBlinking(false);
-				}
 				if (blinkIndex < 8) {
 					blinkIndex++;
-					if (model.getView() != null)
-						blinkColor = blinkIndex % 2 == 0 ? ((AtomisticView) model.getView()).contrastBackground()
-								: model.getView().getBackground();
+					blinkColor = blinkIndex % 2 == 0 ? model.view.contrastBackground() : model.view.getBackground();
 				}
 				else {
 					blinkTimer.stop();
 					blinkIndex = 0;
 					setBlinking(false);
 				}
-				if (model.getView() != null)
-					model.getView().repaint();
+				model.view.repaint();
 			}
 
 		});

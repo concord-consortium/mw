@@ -201,7 +201,7 @@ class GayBernePropertiesPanel extends PropertiesPanel {
 		String s = MDView.getInternationalText("ObjectTypeLabel");
 		panel.add(new JLabel(s != null ? s : "Object type & color"));
 		panel.add(createLabel("Gay-Berne"));
-		JComboBox cb = new ColorComboBox(gb.getView());
+		JComboBox cb = new ColorComboBox(gb.getHostModel().getView());
 		cb.setRenderer(new ComboBoxRenderer.ColorCell(gb.getColor()));
 		setColorComboBox(cb, gb.getColor());
 		cb.setPreferredSize(new Dimension(32, 18));
@@ -246,7 +246,7 @@ class GayBernePropertiesPanel extends PropertiesPanel {
 		s = MDView.getInternationalText("ChargeLabel");
 		panel.add(new JLabel(s != null ? s : "Charge (e)"));
 		panel.add(chargeField);
-		cb = new ColorComboBox(gb.getView());
+		cb = new ColorComboBox(gb.getHostModel().getView());
 		cb.setRenderer(new ComboBoxRenderer.ColorCell(gb.getChargeColor()));
 		setColorComboBox(cb, gb.getChargeColor());
 		cb.setPreferredSize(new Dimension(32, 18));
@@ -256,7 +256,7 @@ class GayBernePropertiesPanel extends PropertiesPanel {
 		s = MDView.getInternationalText("DipoleMomentLabel");
 		panel.add(new JLabel((s != null ? s : "Dipole Moment ") + "(e*A)"));
 		panel.add(dipoleField);
-		cb = new ColorComboBox(gb.getView());
+		cb = new ColorComboBox(gb.getHostModel().getView());
 		cb.setRenderer(new ComboBoxRenderer.ColorCell(gb.getDipoleColor()));
 		setColorComboBox(cb, gb.getDipoleColor());
 		cb.setPreferredSize(new Dimension(32, 18));

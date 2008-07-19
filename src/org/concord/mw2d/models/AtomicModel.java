@@ -3575,7 +3575,6 @@ public abstract class AtomicModel extends MDModel {
 		Component savedAncestor = view.getAncestor();
 		view.setAncestor(null);
 		for (Atom a : atom) {
-			a.setView(null);
 			a.setSelected(false);
 		}
 
@@ -3762,8 +3761,6 @@ public abstract class AtomicModel extends MDModel {
 
 		// restore non-serializable fields for serialized objects
 		view.setAncestor(savedAncestor);
-		for (Atom a : atom)
-			a.setView(view);
 		if (heatBath != null)
 			heatBath.setModel(this);
 
@@ -3948,7 +3945,6 @@ public abstract class AtomicModel extends MDModel {
 			atom[pointer].destroy();
 			atom[pointer] = at;
 			atom[pointer].setIndex(pointer);
-			atom[pointer].setView(view);
 			atom[pointer].setModel(this);
 			atom[pointer].fx = atom[pointer].ax * atom[pointer].mass;
 			atom[pointer].fy = atom[pointer].ay * atom[pointer].mass;

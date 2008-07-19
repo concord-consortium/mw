@@ -53,8 +53,8 @@ class AtomMutationPopupMenu extends JPopupMenu {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
 					Element elem = ((MolecularModel) atom.getHostModel()).getElement(rmbi.getText());
 					atom.setElement(elem);
-					((AtomisticView) atom.getView()).refreshJmol();
-					atom.getView().paintImmediately(atom.getBounds(10));
+					((AtomisticView) atom.getHostModel().getView()).refreshJmol();
+					atom.getHostModel().getView().paintImmediately(atom.getBounds(10));
 				}
 			}
 		};
@@ -90,7 +90,7 @@ class AtomMutationPopupMenu extends JPopupMenu {
 	public void show(Component invoker, int x, int y) {
 		if (atom == null)
 			return;
-		if (!((MolecularModel) atom.getView().getModel()).changeApprovedByRecorder())
+		if (!((MolecularModel) atom.getHostModel()).changeApprovedByRecorder())
 			return;
 		switch (atom.getID()) {
 		case Element.ID_NT:

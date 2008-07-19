@@ -286,12 +286,6 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 		return shape.contains(rx, ry);
 	}
 
-	/** <b>deprecated</b> do not call this method */
-	public abstract void setView(MDView c);
-
-	/** <b>deprecated</b> call <code>getModel().getView()</code> instead. */
-	public abstract MDView getView();
-
 	/** set the model this particle is associated with */
 	public abstract void setModel(MDModel m);
 
@@ -1103,6 +1097,10 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 
 	}
 
+	MDView getView() {
+		return ((MDView) getHostModel().getView());
+	}
+
 	public void setShowRMean(boolean b) {
 		showRMean = b;
 	}
@@ -1268,29 +1266,22 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 		timer.setRepeats(true);
 		timer.setInitialDelay(0);
 		timer.start();
-		if (getView() != null)
-			setBlinking(true);
+		setBlinking(true);
 		timer.addActionListener(new ActionListener() {
 			private int blinkIndex;
 
 			public void actionPerformed(ActionEvent e) {
-				if (getView() == null) {
-					timer.stop(); // view could be set null while saving the model
-					blinkIndex = 0;
-					setBlinking(false);
-				}
-				if (blinkIndex < 12) {
+				if (blinkIndex < 8) {
 					blinkIndex++;
-					if (getView() != null)
-						blinkColor = blinkIndex % 2 == 0 ? getView().contrastBackground() : getView().getBackground();
+					blinkColor = blinkIndex % 2 == 0 ? ((MDView) getHostModel().getView()).contrastBackground()
+							: getHostModel().getView().getBackground();
 				}
 				else {
 					timer.stop();
 					blinkIndex = 0;
 					setBlinking(false);
 				}
-				if (getView() != null)
-					getView().paintImmediately(getBounds(20));
+				getHostModel().getView().paintImmediately(getBounds(20));
 			}
 		});
 	}

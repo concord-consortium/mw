@@ -92,8 +92,8 @@ public final class DialogFactory {
 	/* create a dialog box for an atom */
 	private static JDialog createDialog(final Atom atom) {
 		String s = MDView.getInternationalText("ParticleProperties");
-		final JDialog dialog = new JDialog(JOptionPane.getFrameForComponent(atom.getView()), s != null ? s
-				: "Particle Properties", true);
+		final JDialog dialog = new JDialog(JOptionPane.getFrameForComponent(atom.getHostModel().getView()),
+				s != null ? s : "Particle Properties", true);
 		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		final AtomPropertiesPanel p = new AtomPropertiesPanel(atom);
 		p.setDialog(dialog);
@@ -109,7 +109,7 @@ public final class DialogFactory {
 			}
 		});
 		dialog.pack();
-		dialog.setLocationRelativeTo(atom.getView());
+		dialog.setLocationRelativeTo(atom.getHostModel().getView());
 		return dialog;
 	}
 
