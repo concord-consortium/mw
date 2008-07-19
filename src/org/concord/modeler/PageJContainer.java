@@ -526,23 +526,25 @@ public class PageJContainer extends PagePlugin {
 		});
 		popupMenu.add(mi);
 
-		JPopupMenu pp = null;
-		try {
-			pp = plugin.getPopupMenu();
-		}
-		catch (Throwable e) {
-			e.printStackTrace();
-		}
-		if (pp != null) {
-			popupMenu.addSeparator();
-			int n = pp.getComponentCount();
-			if (n > 0) {
-				Component[] c = new Component[n];
-				for (int i = 0; i < n; i++) {
-					c[i] = pp.getComponent(i);
+		if (plugin != null) {
+			JPopupMenu pp = null;
+			try {
+				pp = plugin.getPopupMenu();
+			}
+			catch (Throwable e) {
+				e.printStackTrace();
+			}
+			if (pp != null) {
+				popupMenu.addSeparator();
+				int n = pp.getComponentCount();
+				if (n > 0) {
+					Component[] c = new Component[n];
+					for (int i = 0; i < n; i++) {
+						c[i] = pp.getComponent(i);
+					}
+					for (Component x : c)
+						popupMenu.add(x);
 				}
-				for (Component x : c)
-					popupMenu.add(x);
 			}
 		}
 
