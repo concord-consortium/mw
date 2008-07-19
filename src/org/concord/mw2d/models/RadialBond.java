@@ -170,6 +170,20 @@ public class RadialBond implements ModelComponent {
 		this.chemicalEnergy = chemicalEnergy;
 	}
 
+	RadialBond getCopy(Atom atom1, Atom atom2) {
+		RadialBond b = new RadialBond(atom1, atom2, bondLength, bondStrength, smart, solid, closed, bondColor);
+		b.setChemicalEnergy(chemicalEnergy);
+		b.setVisible(visible);
+		b.setBondStyle(bondStyle);
+		b.setPhase(phase);
+		b.setAmplitude(amplitude);
+		b.setPeriod(period);
+		b.setTorque(torque);
+		b.setTorqueType(torqueType);
+		model.view.copyAttachedLayeredComponents(this, b);
+		return b;
+	}
+
 	/** TODO: currently this is not implemented */
 	public void storeCurrentState() {
 	}

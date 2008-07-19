@@ -94,6 +94,9 @@ public class ImageComponent implements ModelComponent, Layered, Rotatable {
 			init(ic.address);
 		this.model = ic.model;
 		this.loopCount = ic.loopCount;
+		this.angle = ic.angle;
+		this.offsetAngle = ic.offsetAngle;
+		this.layer = ic.layer;
 	}
 
 	public void set(Delegate d) {

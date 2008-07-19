@@ -168,7 +168,6 @@ public class AtomisticView extends MDView implements BondChangeListener {
 	private AddObjectIndicator addObjectIndicator;
 	int nAtom;
 	private int nAtomPBC;
-	private float chargeOfAtomToBeInserted;
 
 	/* obstacle */
 	private ObstacleCollection obstacles;
@@ -1081,7 +1080,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			List<Integer> list = new ArrayList<Integer>();
 			list.add(((Atom) selectedComponent).getIndex());
 			selectedComponent.setSelected(false);
-			pasteBuffer = ((Atom) selectedComponent).clone();
+			pasteBuffer = selectedComponent;
 			removeMarkedAtoms(list);
 			repaint();
 			model.setNumberOfParticles(nAtom);
@@ -1268,11 +1267,6 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				acidPopupMenu, nucleotidePopupMenu, atomMutationPopupMenu };
 	}
 
-	/** for Dan Damelin */
-	public void setChargeOfAtomToBeInserted(float f) {
-		chargeOfAtomToBeInserted = f;
-	}
-
 	private boolean insertAnAtom(int x, int y, int id) {
 		return insertAnAtom(x, y, id, false, false);
 	}
@@ -1305,7 +1299,6 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		if (boundary.contains(x, y)) {
 			int oldNOA = nAtom;
 			atom[oldNOA].translateTo(x, y);
-			atom[oldNOA].setCharge(chargeOfAtomToBeInserted);
 			atom[oldNOA].setElement(model.getElement(id));
 			if (finalizeAtomLocation(atom[oldNOA], noOverlapTolerance)) {
 				atom[oldNOA].setModel(model);
@@ -2030,7 +2023,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			pasteBuffer = ((RectangularObstacle) selectedComponent).clone();
 		}
 		else if (selectedComponent instanceof Atom) {
-			pasteBuffer = ((Atom) selectedComponent).clone();
+			pasteBuffer = selectedComponent;
 		}
 		else if (selectedComponent instanceof Molecule) {
 			restoreMolecule = false;
@@ -2269,8 +2262,9 @@ public class AtomisticView extends MDView implements BondChangeListener {
 
 	private boolean pasteMoleculeAt(int x, int y) {
 
+		Molecule oldMol = (Molecule) pasteBuffer;
 		int oldNOA = nAtom;
-		Molecule mol = ((Molecule) pasteBuffer).duplicate();
+		Molecule mol = oldMol.duplicate();
 		if (mol == null)
 			return false;
 		nAtom += mol.size();
@@ -2293,7 +2287,6 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		}
 
 		/* move the index to the latest */
-		Molecule oldMol = (Molecule) pasteBuffer;
 		if (oldMol instanceof MolecularObject) {
 			if (oldMol instanceof CurvedSurface) {
 				CurvedSurface cs = new CurvedSurface(mol);
@@ -2901,7 +2894,8 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			}
 		}
 		else if (pasteBuffer instanceof Atom) {
-			insertAnAtom(x, y, ((Atom) pasteBuffer).getID());
+			if (insertAnAtom(x, y, ((Atom) pasteBuffer).getID()))
+				copyAttachedLayeredComponents((Atom) pasteBuffer, atom[nAtom - 1]);
 		}
 		else if (pasteBuffer instanceof Molecule) {
 			if (!restoreMolecule) {
