@@ -353,10 +353,14 @@ public class PageScriptConsole extends JPanel implements Embeddable, ModelCommun
 		BasicModel m = getBasicModel();
 		if (m == null)
 			return;
-		String strErrorMessage = m instanceof PagePlugin ? ((PagePlugin) m).runNativeScript(strCommand) : m
-				.runScript(strCommand);
-		if (strErrorMessage != null)
-			console.outputError(strErrorMessage);
+		if (m instanceof PagePlugin) {
+			((PagePlugin) m).runNativeScript(strCommand);
+		}
+		else {
+			String strErrorMessage = m.runScript(strCommand);
+			if (strErrorMessage != null)
+				console.outputError(strErrorMessage);
+		}
 	}
 
 	public void enterPressed() {
