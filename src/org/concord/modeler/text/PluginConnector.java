@@ -35,6 +35,7 @@ import org.concord.modeler.PageCheckBox;
 import org.concord.modeler.PageComboBox;
 import org.concord.modeler.PagePlugin;
 import org.concord.modeler.PageRadioButton;
+import org.concord.modeler.PageScriptConsole;
 import org.concord.modeler.PageSlider;
 import org.concord.modeler.PageSpinner;
 import org.concord.modeler.event.AbstractChange;
@@ -195,6 +196,9 @@ class PluginConnector {
 					}
 				}
 
+				else if (listener instanceof PageScriptConsole) {
+					model.addModelListener(listener);
+				}
 			}
 
 		}
