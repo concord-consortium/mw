@@ -553,7 +553,7 @@ public class PageComboBox extends JComboBox implements Embeddable, ModelCommunic
 			sb.append("<action>" + a.getValue(Action.SHORT_DESCRIPTION) + "</action>\n");
 			StringBuffer script = new StringBuffer();
 			String d = (String) a.getValue(Action.SHORT_DESCRIPTION);
-			if ("Execute MW script".equals(d) || "Execute Jmol script".equals(d)) {
+			if (ComponentMaker.isScriptActionKey(d)) {
 				int n = getItemCount();
 				for (int i = 0; i < n; i++) {
 					script.append("{option=\"" + getItemAt(i) + "\", script=\"" + getClientProperty("script" + i)
