@@ -114,13 +114,23 @@ public class PageScriptConsole extends JPanel implements Embeddable, ModelCommun
 					return mv;
 				}
 			}
-			if (modelClass.equals(PageMd3d.class.getName())) {
+			else if (modelClass.equals(PageMd3d.class.getName())) {
 				Object o = page.getEmbeddedComponent(PageMd3d.class, modelID);
 				if (o instanceof PageMd3d) {
 					PageMd3d md = (PageMd3d) o;
 					// md.setScriptConsole(this);
 					return md;
 				}
+			}
+			else if (modelClass.equals(PageJContainer.class.getName())) {
+				Object o = page.getEmbeddedComponent(PageJContainer.class, modelID);
+				if (o instanceof PageJContainer)
+					return (PageJContainer) o;
+			}
+			else if (modelClass.equals(PageApplet.class.getName())) {
+				Object o = page.getEmbeddedComponent(PageApplet.class, modelID);
+				if (o instanceof PageApplet)
+					return (PageApplet) o;
 			}
 		}
 		else {
@@ -258,6 +268,12 @@ public class PageScriptConsole extends JPanel implements Embeddable, ModelCommun
 		else if (modelClass.equals(PageMd3d.class.getName())) {
 			text += "3D Molecular Dynamics";
 		}
+		else if (modelClass.equals(PageJContainer.class.getName())) {
+			text += "Plugin";
+		}
+		else if (modelClass.equals(PageApplet.class.getName())) {
+			text += "Applet";
+		}
 		else {
 			text += FileUtilities.getSuffix(modelClass);
 		}
@@ -337,7 +353,8 @@ public class PageScriptConsole extends JPanel implements Embeddable, ModelCommun
 		BasicModel m = getBasicModel();
 		if (m == null)
 			return;
-		String strErrorMessage = m.runScript(strCommand);
+		String strErrorMessage = m instanceof PagePlugin ? ((PagePlugin) m).runNativeScript(strCommand) : m
+				.runScript(strCommand);
 		if (strErrorMessage != null)
 			console.outputError(strErrorMessage);
 	}
