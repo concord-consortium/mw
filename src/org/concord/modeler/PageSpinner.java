@@ -515,7 +515,7 @@ public class PageSpinner extends JComponent implements Embeddable, ModelCommunic
 			sb.append("<disabled_at_script>true</disabled_at_script>\n");
 		if (c != null) {
 			s = (String) c.getProperty(AbstractChange.SHORT_DESCRIPTION);
-			if ("Execute MW script".equals(s) || "Execute Jmol script".equals(s)) {
+			if (ComponentMaker.isScriptActionKey(s)) {
 				s = getScript();
 				if (s != null)
 					sb.append("<script>" + XMLCharacterEncoder.encode(s) + "</script>\n");

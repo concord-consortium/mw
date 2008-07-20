@@ -682,7 +682,7 @@ public class PageSlider extends JSlider implements Embeddable, ModelCommunicator
 
 		if (c != null) {
 			t = (String) c.getProperty(AbstractChange.SHORT_DESCRIPTION);
-			if ("Execute MW script".equals(t) || "Execute Jmol script".equals(t)) {
+			if (ComponentMaker.isScriptActionKey(t)) {
 				t = (String) getClientProperty("Script");
 				if (t != null)
 					sb.append("<script>" + XMLCharacterEncoder.encode(t) + "</script>\n");
