@@ -475,7 +475,7 @@ final class PageXMLDecoder {
 		private StyleContext styleContext;
 		String resourceURL;
 		String className;
-		String mainClass, codeBase;
+		String mainClass, codeBase, cacheFiles;
 		boolean caching;
 		List<String> jarNames;
 		String parameter;
@@ -1332,6 +1332,10 @@ final class PageXMLDecoder {
 
 			else if (qName == "codebase") {
 				codeBase = str;
+			}
+
+			else if (qName == "cachefile") {
+				cacheFiles = str;
 			}
 
 			else if (qName == "appletjar") {
@@ -3662,6 +3666,10 @@ final class PageXMLDecoder {
 			if (codeBase != null) {
 				plugin.setCodeBase(codeBase);
 				codeBase = null;
+			}
+			if (cacheFiles != null) {
+				plugin.setCachedFileNames(cacheFiles);
+				cacheFiles = null;
 			}
 			if (mainClass != null) {
 				plugin.setClassName(mainClass);
