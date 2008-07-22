@@ -67,26 +67,18 @@ class UpdateManager {
 		Download download = new Download();
 		download.addDownloadListener(modeler);
 
-		String s = Modeler.getInternationalText("Yes");
-		String s2 = Modeler.getInternationalText("Later");
-
-		String[] options = { s != null ? s : "Yes", s2 != null ? s2 : "Later" };
 		String ls = System.getProperty("line.separator");
-		s = Modeler.getInternationalText("UpdateNoticeContent");
-		String msg = s != null ? s : "An update is available. Do you want to download it now? (If you click Yes, the"
-				+ ls + Modeler.NAME + " will restart shortly after downloading.)" + ls + ls
-				+ "We usually fix bugs and add new features in every update. It is highly recommended" + ls
-				+ "that you choose to update. Some new features may NOT work if you choose otherwise." + ls
-				+ "In the case that this self-update wizard does not work for you, please go to" + ls
-				+ Modeler.getContextRoot() + " to download the new version.";
+		String s = Modeler.getInternationalText("UpdateNoticeContent");
+		String msg = s != null ? s : "An update is available. " + Modeler.NAME
+				+ " will restart shortly after downloading." + ls
+				+ "If it does not, or you keep seeing this message, please go to" + ls + Modeler.getContextRoot()
+				+ " to download the new version.";
 
 		s = Modeler.getInternationalText("UpdateNotice");
-		if (JOptionPane.showOptionDialog(JOptionPane.getFrameForComponent(modeler), msg, s != null ? s
-				: "Update Notice", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, icon, options,
-				options[0]) == JOptionPane.YES_OPTION) {
-			if (!downloadUpdates(modeler, download))
-				ExternalClient.open(ExternalClient.HTML_CLIENT, Modeler.getContextRoot());
-		}
+		JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(modeler), msg, s != null ? s : "Update Notice",
+				JOptionPane.INFORMATION_MESSAGE, icon);
+		if (!downloadUpdates(modeler, download))
+			ExternalClient.open(ExternalClient.HTML_CLIENT, Modeler.getContextRoot());
 
 	}
 
