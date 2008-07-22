@@ -28,6 +28,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -56,6 +57,7 @@ public class PageJContainer extends PagePlugin {
 
 	PluginService plugin;
 	private String codeBase;
+	private String cachedFileNames;
 	private static PageJContainerMaker maker;
 	private PluginScripter scripter;
 	private List<Download> downloadJobs;
@@ -76,6 +78,14 @@ public class PageJContainer extends PagePlugin {
 
 	public String getCodeBase() {
 		return codeBase;
+	}
+
+	public void setCachedFileNames(String s) {
+		cachedFileNames = s;
+	}
+
+	public String getCachedFileNames() {
+		return cachedFileNames;
 	}
 
 	private File[] createJarFiles() {
@@ -183,6 +193,8 @@ public class PageJContainer extends PagePlugin {
 			setErrorMessage("No plugin has been set.");
 			return;
 		}
+
+		destroyPlugin();
 
 		setInitMessage();
 
@@ -336,7 +348,7 @@ public class PageJContainer extends PagePlugin {
 		SwingWorker worker = new SwingWorker("Cache plugin resources", Thread.MIN_PRIORITY + 1) {
 			public Object construct() {
 				cacheResources();
-				plugin.putParameter("codebase", codeBase);
+				plugin.putParameter("codebase", codeBase); // restore the cached code base
 				return null;
 			}
 
@@ -362,23 +374,69 @@ public class PageJContainer extends PagePlugin {
 		worker.start();
 	}
 
+	private URL createURL(String s) {
+		if (s == null)
+			return null;
+		s = s.trim();
+		if (!FileUtilities.isRemote(s)) {
+			if (FileUtilities.isRelative(s)) {
+				if (!page.isRemote())
+					return null;
+				s = page.getPathBase() + s;
+			}
+			else {
+				return null;
+			}
+		}
+		URL u = null;
+		try {
+			u = new URL(s);
+		}
+		catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		return u;
+	}
+
 	private void cacheResources() {
 		if (plugin == null)
 			return;
+		if (cachedFileNames != null) {
+			String[] t = cachedFileNames.split(",");
+			for (int i = 0; i < t.length; i++) {
+				t[i] = t[i].trim();
+				if (t[i].equals(""))
+					continue;
+				URL x = createURL(t[i]);
+				if (x != null)
+					cache(x);
+			}
+		}
 		plugin.putParameter("codebase", page.getPathBase()); // make sure the code base is remote
-		final URL[] cacheURL = plugin.getCacheResources();
+		URL[] cacheURL = plugin.getCacheResources();
 		if (cacheURL != null) {
-			try {
-				for (URL u : cacheURL) {
-					File file = ConnectionManager.sharedInstance().shouldUpdate(u);
-					if (file == null)
-						file = ConnectionManager.sharedInstance().cache(u);
-					ConnectionManager.sharedInstance().setCheckUpdate(true);
+			for (URL x : cacheURL)
+				cache(x);
+		}
+	}
+
+	private void cache(URL u) {
+		try {
+			File file = ConnectionManager.sharedInstance().shouldUpdate(u);
+			if (file == null)
+				file = ConnectionManager.sharedInstance().cache(u);
+			ConnectionManager.sharedInstance().setCheckUpdate(true);
+		}
+		catch (FileNotFoundException e) {
+			e.printStackTrace();
+			final URL u2 = u;
+			EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(PageJContainer.this), u2
+							+ " was not found. Please check your cache settings with plugin #" + index + ".",
+							"File not found", JOptionPane.ERROR_MESSAGE);
 				}
-			}
-			catch (IOException e) {
-				e.printStackTrace();
-			}
+			});
 		}
 	}
 
@@ -453,7 +511,16 @@ public class PageJContainer extends PagePlugin {
 	}
 
 	public void destroy() {
-		// page = null;
+		destroyPlugin();
+		if (downloadJobs != null) {
+			// for (Download d : downloadJobs)
+			// d.cancel();
+			downloadCancelled = true;
+			downloadJobs.clear();
+		}
+	}
+
+	private void destroyPlugin() {
 		if (plugin != null) {
 			try {
 				plugin.stop();
@@ -469,12 +536,6 @@ public class PageJContainer extends PagePlugin {
 				e.printStackTrace();
 				setErrorMessage("Errors in destroying: " + e);
 			}
-		}
-		if (downloadJobs != null) {
-			// for (Download d : downloadJobs)
-			// d.cancel();
-			downloadCancelled = true;
-			downloadJobs.clear();
 		}
 	}
 
@@ -628,6 +689,8 @@ public class PageJContainer extends PagePlugin {
 		StringBuffer sb = new StringBuffer(super.toString());
 		if (codeBase != null)
 			sb.append("<codebase>" + codeBase + "</codebase>");
+		if (cachedFileNames != null)
+			sb.append("<cachefile>" + cachedFileNames + "</cachefile>");
 		return sb.toString();
 	}
 

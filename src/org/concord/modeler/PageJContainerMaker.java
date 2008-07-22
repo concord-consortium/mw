@@ -92,6 +92,7 @@ class PageJContainerMaker extends ComponentMaker {
 	private JButton okButton;
 	private JTextArea parameterArea;
 	private IntegerTextField widthField, heightField;
+	private JTextField resourceField;
 	private JTabbedPane tabbedPane;
 	private JComboBox knownPluginComboBox;
 	private JTextField codeBaseField, jarField, mainClassField;
@@ -162,6 +163,8 @@ class PageJContainerMaker extends ComponentMaker {
 			pageJContainer.removeAllParameters();
 		}
 		pageJContainer.setPreferredSize(new Dimension((widthField.getValue()), (heightField.getValue())));
+		if (!resourceField.getText().trim().equals(""))
+			pageJContainer.setCachedFileNames(resourceField.getText());
 		pageJContainer.setBorderType((String) borderComboBox.getSelectedItem());
 		pageJContainer.setBackground(bgComboBox.getSelectedColor());
 		pageJContainer.page.getSaveReminder().setChanged(true);
@@ -203,6 +206,7 @@ class PageJContainerMaker extends ComponentMaker {
 		parameterArea.setCaretPosition(0);
 		widthField.setValue(pageJContainer.getPreferredSize().width);
 		heightField.setValue(pageJContainer.getPreferredSize().height);
+		resourceField.setText(pageJContainer.getCachedFileNames());
 		borderComboBox.setSelectedItem(pageJContainer.getBorderType());
 		bgComboBox.setColor(pageJContainer.getBackground());
 		tabbedPane.setSelectedIndex(remote ? 0 : 1);
@@ -507,7 +511,16 @@ class PageJContainerMaker extends ComponentMaker {
 		borderComboBox.setPreferredSize(new Dimension(200, 24));
 		p.add(borderComboBox);
 
-		ModelerUtilities.makeCompactGrid(p, 4, 2, 5, 5, 10, 2);
+		// row 5
+		s = Modeler.getInternationalText("CacheFiles");
+		p.add(new JLabel(s != null ? s : "Cache Files", SwingConstants.LEFT));
+		resourceField = new JTextField();
+		resourceField
+				.setToolTipText("Type in the file names of the resources needed to be cached. Leave blank if none.");
+		resourceField.addActionListener(okListener);
+		p.add(resourceField);
+
+		ModelerUtilities.makeCompactGrid(p, 5, 2, 5, 5, 10, 2);
 
 		// parameter setting area
 		p = new JPanel(new BorderLayout(4, 4));
