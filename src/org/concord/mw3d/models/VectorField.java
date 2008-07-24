@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2006  The Concord Consortium, Inc.,
+ *   Copyright (C) 2008  The Concord Consortium, Inc.,
  *   25 Love Lane, Concord, MA 01742
  *
  *   This program is free software; you can redistribute it and/or modify
@@ -20,6 +20,9 @@
 
 package org.concord.mw3d.models;
 
-class ExternalField {
+public interface VectorField {
+
+	/** return the potential of the specified atom in this field. */
+	public float compute(Atom a);
 
 }

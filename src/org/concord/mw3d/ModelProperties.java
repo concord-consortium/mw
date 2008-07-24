@@ -222,7 +222,7 @@ class ModelProperties extends JDialog {
 			}
 		});
 		p.add(label);
-		label = new JLabel(model.getExternalField("g") != null ? "On" : "Off");
+		label = new JLabel(model.getGField() != null ? "On" : "Off");
 		p.add(label);
 
 		s = MolecularContainer.getInternationalText("ElectricFieldEditor");
@@ -235,7 +235,7 @@ class ModelProperties extends JDialog {
 			}
 		});
 		p.add(label);
-		label = new JLabel(model.getExternalField("e") != null ? "On" : "Off");
+		label = new JLabel(model.getEField() != null ? "On" : "Off");
 		p.add(label);
 
 		s = MolecularContainer.getInternationalText("MagneticFieldEditor");
@@ -248,7 +248,7 @@ class ModelProperties extends JDialog {
 			}
 		});
 		p.add(label);
-		label = new JLabel(model.getExternalField("b") != null ? "On" : "Off");
+		label = new JLabel(model.getBField() != null ? "On" : "Off");
 		p.add(label);
 
 		/** script */

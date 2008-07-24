@@ -36,7 +36,7 @@ class ForceCalculator {
 	 * converts energy gradient unit into force unit: 1.6E-19 [J] / ( E-10 [m] x E-3 / 6E23 [kg] ) / ( E-10 / ( E-15 )
 	 * ^2 ) [m/s^2]
 	 */
-	private final static float GF_CONVERSION_CONSTANT = 0.0096f;
+	final static float GF_CONVERSION_CONSTANT = 0.0096f;
 	private final static float SIX_TIMES_UNIT_FORCE = 6.0f * GF_CONVERSION_CONSTANT;
 	private final static float MIN_SINTHETA = 0.001f;
 
@@ -520,6 +520,7 @@ class ForceCalculator {
 
 		for (int i = 0; i < iAtom; i++) {
 			if (atom[i].isMovable()) {
+				vsum += computeFields(atom[i]);
 				inverseMass1 = 1.0f / atom[i].mass;
 				atom[i].fx *= inverseMass1;
 				atom[i].fy *= inverseMass1;
@@ -537,6 +538,17 @@ class ForceCalculator {
 
 		return vsum / movableCount;
 
+	}
+
+	private float computeFields(Atom a) {
+		float v = 0;
+		if (model.bField != null)
+			v += model.bField.compute(a);
+		if (model.eField != null)
+			v += model.eField.compute(a);
+		if (model.gField != null)
+			v += model.gField.compute(a);
+		return v;
 	}
 
 	// v(r)=k*(r-r_0)^2/2
