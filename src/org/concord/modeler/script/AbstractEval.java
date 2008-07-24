@@ -371,7 +371,7 @@ public abstract class AbstractEval {
 			str = str.substring(1);
 		if (str.endsWith(")"))
 			str = str.substring(0, str.length() - 1);
-		String[] s = str.split(REGEX_SEPARATOR + "+");
+		String[] s = str.split(",");
 		if (s.length != n) {
 			out(ScriptEvent.FAILED, "Cannot split into " + n + " arguments: " + str);
 			return null;

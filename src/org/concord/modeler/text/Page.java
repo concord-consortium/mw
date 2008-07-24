@@ -1176,15 +1176,13 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			PageApplet applet = PageApplet.create(this);
 			if (applet != null) {
 				insertComponent(applet);
-				applet.setIndex(applet.getIndex() + 1);
+				// applet.setIndex(applet.getIndex() + 1); //Why did I add this silly code?
 			}
 		}
 		else if (type.equalsIgnoreCase("Plugin")) {
 			PageJContainer plugin = PageJContainer.create(this);
-			if (plugin != null) {
+			if (plugin != null)
 				insertComponent(plugin);
-				plugin.setIndex(plugin.getIndex() + 1);
-			}
 		}
 		else if (type.equalsIgnoreCase("Feedback Area")) {
 			PageFeedbackArea fa = PageFeedbackArea.create(this);
