@@ -137,7 +137,8 @@ public class MolecularModel {
 	List<ABond> aBonds;
 	List<TBond> tBonds;
 	List<Molecule> molecules;
-	VectorField gField, eField, bField = new BField();
+	VectorField gField, eField;
+	BField bField = new BField();
 
 	private float kin, pot, tot;
 	private FloatQueue kine, pote, tote;
@@ -1918,7 +1919,7 @@ public class MolecularModel {
 			rescaleVelocities((float) Math.sqrt(temperature / temp1));
 	}
 
-	public VectorField getBField() {
+	public BField getBField() {
 		return bField;
 	}
 

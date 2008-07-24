@@ -24,7 +24,7 @@ import javax.vecmath.Vector3f;
 
 public class BField implements VectorField {
 
-	private float intensity = 1;
+	private float intensity;
 	private Vector3f direction;
 	private boolean local;
 
@@ -48,8 +48,8 @@ public class BField implements VectorField {
 		return intensity;
 	}
 
-	public void setDirection(Vector3f direction) {
-		this.direction.set(direction);
+	public void setDirection(float x, float y, float z) {
+		direction.set(x, y, z);
 	}
 
 	public Vector3f getDirection() {
@@ -57,6 +57,10 @@ public class BField implements VectorField {
 	}
 
 	public float compute(Atom a) {
+		if (intensity < MolecularModel.ZERO)
+			return 0;
+		if (Math.abs(a.charge) < MolecularModel.ZERO)
+			return 0;
 		float temp = intensity * a.charge * ForceCalculator.GF_CONVERSION_CONSTANT / a.mass;
 		a.fx += temp * (a.vy * direction.z - a.vz * direction.y);
 		a.fy += temp * (a.vz * direction.x - a.vx * direction.z);
