@@ -138,7 +138,7 @@ public class MolecularModel {
 	List<TBond> tBonds;
 	List<Molecule> molecules;
 	VectorField gField, eField;
-	BField bField = new BField();
+	BField bField;
 
 	private float kin, pot, tot;
 	private FloatQueue kine, pote, tote;
