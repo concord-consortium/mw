@@ -1923,6 +1923,18 @@ public class MolecularModel {
 		return bField;
 	}
 
+	public void setBField(float intensity, Vector3f direction) {
+		if (intensity > ZERO) {
+			if (bField == null)
+				bField = new BField();
+			bField.setIntensity(intensity);
+			bField.setDirection(direction.x, direction.y, direction.z);
+		}
+		else {
+			bField = null;
+		}
+	}
+
 	public VectorField getEField() {
 		return eField;
 	}

@@ -21,7 +21,6 @@ package org.concord.mw3d;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Hashtable;
@@ -32,9 +31,12 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.SpringLayout;
 import javax.vecmath.Vector3f;
 
+import org.concord.modeler.ModelerUtilities;
 import org.concord.mw3d.models.BField;
+import org.concord.mw3d.models.MolecularModel;
 
 /**
  * @author Charles Xie
@@ -42,33 +44,45 @@ import org.concord.mw3d.models.BField;
  */
 class BFieldEditor extends JDialog {
 
-	private BField bField;
 	private JSlider xSlider, ySlider, zSlider;
 	private Vector3f original;
+	private MolecularModel model;
 
-	BFieldEditor(JDialog owner, BField bf) {
+	BFieldEditor(JDialog owner, MolecularModel model) {
 
 		super(owner, "Magnetic Field Properties", false);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-		bField = bf;
-		original = new Vector3f(bField.getDirection());
-		original.scale(bField.getIntensity());
+		this.model = model;
+		BField bField = model.getBField();
+		if (bField != null) {
+			original = new Vector3f(bField.getDirection());
+			original.scale(bField.getIntensity());
+		}
 
-		JPanel panel = new JPanel(new GridLayout(3, 1, 5, 5));
+		JPanel panel = new JPanel(new SpringLayout());
+		panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		getContentPane().add(panel, BorderLayout.CENTER);
 
-		xSlider = createSlider(original.x, "x-component");
+		xSlider = createSlider(original == null ? 0 : original.x, "x-component");
 		panel.add(xSlider);
-		ySlider = createSlider(original.y, "y-component");
+		panel.add(createButton(xSlider));
+
+		ySlider = createSlider(original == null ? 0 : original.y, "y-component");
 		panel.add(ySlider);
-		zSlider = createSlider(original.z, "z-component");
+		panel.add(createButton(ySlider));
+
+		zSlider = createSlider(original == null ? 0 : original.z, "z-component");
 		panel.add(zSlider);
+		panel.add(createButton(zSlider));
+
+		ModelerUtilities.makeCompactGrid(panel, 3, 2, 5, 5, 10, 2);
 
 		panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		getContentPane().add(panel, BorderLayout.SOUTH);
 
-		JButton button = new JButton("OK");
+		String s = MolecularContainer.getInternationalText("OK");
+		JButton button = new JButton(s != null ? s : "OK");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ok();
@@ -92,30 +106,55 @@ class BFieldEditor extends JDialog {
 
 	private JSlider createSlider(float value, String title) {
 		JSlider s = new JSlider(-100, 100, (int) (value * 10));
-		s.setMajorTickSpacing(5);
-		s.setMinorTickSpacing(1);
+		s.setMajorTickSpacing(10);
+		s.setMinorTickSpacing(5);
 		s.setPaintLabels(true);
 		Hashtable ht = new Hashtable();
 		ht.put(0, new JLabel("0"));
-		ht.put(-100, new JLabel("Min"));
-		ht.put(100, new JLabel("Max"));
+		ht.put(-100, new JLabel("-10"));
+		ht.put(100, new JLabel("10"));
 		s.setLabelTable(ht);
 		s.setBorder(BorderFactory.createTitledBorder(title));
 		return s;
 	}
 
+	private JButton createButton(final JSlider slider) {
+		JButton button = new JButton("Set to Zero");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				slider.setValue(0);
+			}
+		});
+		return button;
+	}
+
 	private void ok() {
-		setValues(xSlider.getValue() * 0.1f, ySlider.getValue() * 0.1f, zSlider.getValue() * 0.1f);
+		int x = xSlider.getValue();
+		int y = ySlider.getValue();
+		int z = zSlider.getValue();
+		if (x == 0 && y == 0 && z == 0) {
+			model.setBField(0, null);
+		}
+		else {
+			setValues(x * 0.1f, y * 0.1f, z * 0.1f);
+		}
 	}
 
 	private void cancel() {
-		setValues(original.x, original.y, original.z);
+		if (original != null)
+			setValues(original.x, original.y, original.z);
 	}
 
 	private void setValues(float x, float y, float z) {
 		float a = (float) Math.sqrt(x * x + y * y + z * z);
-		bField.setIntensity(a);
-		bField.setDirection(x / a, y / a, z / a);
+		BField bField = model.getBField();
+		if (bField != null) {
+			bField.setIntensity(a);
+			bField.setDirection(x / a, y / a, z / a);
+		}
+		else {
+			model.setBField(a, new Vector3f(x / a, y / a, z / a));
+		}
 	}
 
 }

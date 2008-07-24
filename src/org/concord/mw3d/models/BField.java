@@ -52,8 +52,8 @@ public class BField implements VectorField {
 		direction.set(x, y, z);
 	}
 
-	public Vector3f getDirection() {
-		return direction;
+	public float[] getDirection() {
+		return new float[] { direction.x, direction.y, direction.z };
 	}
 
 	public float compute(Atom a) {

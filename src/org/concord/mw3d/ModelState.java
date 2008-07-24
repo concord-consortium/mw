@@ -24,8 +24,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.vecmath.Vector3f;
-
 import org.concord.modeler.draw.FillMode;
 import org.concord.mw3d.models.ABond;
 import org.concord.mw3d.models.ABondState;
@@ -81,8 +79,8 @@ public class ModelState implements Serializable {
 	private List<ABondState> abonds;
 	private List<TBondState> tbonds;
 
-	//private float bFieldIntensity;
-	//private Vector3f bFieldDirection;
+	private float bFieldIntensity;
+	private float[] bFieldDirection;
 
 	public ModelState() {
 	}
@@ -406,6 +404,22 @@ public class ModelState implements Serializable {
 
 	public List getDrawList() {
 		return drawList;
+	}
+
+	public void setBFieldIntensity(float bFieldIntensity) {
+		this.bFieldIntensity = bFieldIntensity;
+	}
+
+	public float getBFieldIntensity() {
+		return bFieldIntensity;
+	}
+
+	public void setBFieldDirection(float[] bFieldDirection) {
+		this.bFieldDirection = bFieldDirection;
+	}
+
+	public float[] getBFieldDirection() {
+		return bFieldDirection;
 	}
 
 }
