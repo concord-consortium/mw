@@ -142,7 +142,6 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 	private JPanel runPanel, moviePanel;
 	private JProgressBar progressBar;
 	private JMenuItem snapshotMenuItem;
-	private ModelProperties modelProperties;
 	private Action runAction, stopAction, resetAction;
 	private boolean bottomBarShown = true;
 	private AbstractButton rotateButton;
@@ -696,6 +695,10 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 		state.setWidth(model.getWidth());
 		state.setHeight(model.getHeight());
 		state.setHeatBath(model.getHeatBath());
+		if (model.getBField() != null) {
+			state.setBFieldDirection(model.getBField().getDirection());
+			state.setBFieldIntensity(model.getBField().getIntensity());
+		}
 		int n = model.getObstacleCount();
 		if (n > 0) {
 			for (int i = 0; i < n; i++) {
@@ -814,6 +817,12 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 		}
 		else {
 			model.activateHeatBath(false);
+		}
+		if (state.getBFieldIntensity() > 0 && state.getBFieldDirection() != null) {
+			model.setBField(state.getBFieldIntensity(), new Vector3f(state.getBFieldDirection()));
+		}
+		else {
+			model.setBField(0, null);
 		}
 		view.setSimulationBox();
 		addBonds();
@@ -1118,12 +1127,9 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 			public void actionPerformed(ActionEvent e) {
 				if (ModelerUtilities.stopFiring(e))
 					return;
-				if (modelProperties == null) {
-					modelProperties = new ModelProperties(JOptionPane.getFrameForComponent(MolecularContainer.this),
-							model);
-					modelProperties.setLocationRelativeTo(MolecularContainer.this);
-				}
-				modelProperties.setValues();
+				ModelProperties modelProperties = new ModelProperties(JOptionPane
+						.getFrameForComponent(MolecularContainer.this), model);
+				modelProperties.setLocationRelativeTo(MolecularContainer.this);
 				modelProperties.setVisible(true);
 			}
 		};

@@ -245,7 +245,7 @@ class ModelProperties extends JDialog {
 		label.setIcon(new ImageIcon(MolecularContainer.class.getResource("resources/magnetic.gif")));
 		((HyperlinkLabel) label).setAction(new Runnable() {
 			public void run() {
-				BFieldEditor bFieldEditor = new BFieldEditor(ModelProperties.this, model.getBField());
+				BFieldEditor bFieldEditor = new BFieldEditor(ModelProperties.this, model);
 				bFieldEditor.setLocationRelativeTo(ModelProperties.this);
 				bFieldEditor.setVisible(true);
 			}
@@ -254,7 +254,7 @@ class ModelProperties extends JDialog {
 		label = new JLabel(model.getBField() != null ? "On" : "Off");
 		p.add(label);
 
-		/** script */
+		/* script */
 
 		panel = new JPanel(new BorderLayout(2, 2));
 		panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory
@@ -287,20 +287,7 @@ class ModelProperties extends JDialog {
 
 	}
 
-	void setValues() {
-		lengthLabel.setText("" + model.getLength());
-		widthLabel.setText("" + model.getWidth());
-		heightLabel.setText("" + model.getHeight());
-		stepField.setValue(model.getTimeStep());
-		scriptArea.setText(model.getInitializationScript());
-		atomCountLabel.setText(Integer.toString(model.getAtomCount()));
-		rbondCountLabel.setText(Integer.toString(model.getRBondCount()));
-		abondCountLabel.setText(Integer.toString(model.getABondCount()));
-		tbondCountLabel.setText(Integer.toString(model.getTBondCount()));
-		moleculeCountLabel.setText(Integer.toString(model.getMoleculeCount()));
-	}
-
-	void confirm() {
+	private void confirm() {
 
 		model.setTimeStep(stepField.getValue());
 		String s = scriptArea.getText();
