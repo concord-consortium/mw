@@ -20,6 +20,7 @@
 
 package org.concord.mw3d.models;
 
+import javax.vecmath.Matrix3f;
 import javax.vecmath.Vector3f;
 
 /**
@@ -30,9 +31,12 @@ public class GField implements VectorField {
 
 	private float g;
 	private Vector3f direction;
+	private final Vector3f down;
+	private Matrix3f inverseRotation;
 
 	public GField() {
 		direction = new Vector3f(0, 0, 1);
+		down = new Vector3f(0, -1, 0);
 	}
 
 	public void setIntensity(float intensity) {
@@ -41,6 +45,13 @@ public class GField implements VectorField {
 
 	public float getIntensity() {
 		return g;
+	}
+
+	public void setRotation(Matrix3f rotation) {
+		if (inverseRotation == null)
+			inverseRotation = new Matrix3f();
+		inverseRotation.invert(rotation);
+		inverseRotation.transform(down, direction);
 	}
 
 	public void setDirection(float x, float y, float z) {

@@ -94,6 +94,8 @@ public final class XyzWriter {
 				sb.append(a.getSymbol() + "  " + FORMAT.format(a.getRx()) + "  " + FORMAT.format(a.getRy()) + "  "
 						+ FORMAT.format(a.getRz()) + "  " + FORMAT.format(a.getVx()) + "  " + FORMAT.format(a.getVy())
 						+ "  " + FORMAT.format(a.getVz()) + "  " + FORMAT.format(a.getCharge()));
+				// MW-specific data
+				sb.append("  " + FORMAT.format(a.getDamp()));
 				sb.append(LINE_SEPARATOR);
 				if (nAtom > 20 && (i % interval == 0)) {
 					notifyProgressListeners("Writing atoms: ", (int) (inv * i + 1));

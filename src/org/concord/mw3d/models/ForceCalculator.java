@@ -520,6 +520,7 @@ class ForceCalculator {
 
 		for (int i = 0; i < iAtom; i++) {
 			if (atom[i].isMovable()) {
+				damp(atom[i]);
 				vsum += computeFields(atom[i]);
 				inverseMass1 = 1.0f / atom[i].mass;
 				atom[i].fx *= inverseMass1;
@@ -538,6 +539,15 @@ class ForceCalculator {
 
 		return vsum / movableCount;
 
+	}
+
+	private void damp(Atom a) {
+		if (a.damp > MolecularModel.ZERO) {
+			float dmp = GF_CONVERSION_CONSTANT * a.damp;
+			a.fx -= dmp * a.vx;
+			a.fy -= dmp * a.vy;
+			a.fz -= dmp * a.vz;
+		}
 	}
 
 	private float computeFields(Atom a) {
