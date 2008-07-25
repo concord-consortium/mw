@@ -1141,6 +1141,7 @@ public class MolecularModel {
 		atom[iAtom].ay = 0;
 		atom[iAtom].az = 0;
 		atom[iAtom].charge = charge;
+		atom[iAtom].damp = 0;
 		iAtom++;
 		return true;
 	}
@@ -1685,6 +1686,7 @@ public class MolecularModel {
 		for (int i = 0; i < iAtom; i++) {
 			atom[i].setMovable(true);
 			atom[i].setCharge(0);
+			atom[i].setDamp(0);
 			atom[i].zeroVelocity();
 			atom[i].zeroAcceleration();
 			atom[i].clearBondLists();
@@ -1965,6 +1967,11 @@ public class MolecularModel {
 		else {
 			gField = null;
 		}
+	}
+
+	public void setGFieldDirection(Matrix3f rotation) {
+		if (gField != null)
+			gField.setRotation(rotation);
 	}
 
 	/* show the <i>i</i>-th frame of the movie */
