@@ -133,6 +133,7 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 	/* event handling */
 	private List<PageComponentListener> pageComponentListenerList;
 	private PageComponentEvent modelChangeEvent;
+	private boolean boxRotated;
 
 	/* GUI components */
 	FileChooser fileChooser;
@@ -330,7 +331,6 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 				// view.runJmolScript("label OFF"); //Should we do this?
 				runAction.setEnabled(false);
 				stopAction.setEnabled(true);
-				resetAction.setEnabled(false);
 			}
 		});
 	}
@@ -342,7 +342,6 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 			public void run() {
 				runAction.setEnabled(true);
 				stopAction.setEnabled(false);
-				resetAction.setEnabled(true);
 			}
 		});
 	}
@@ -354,7 +353,6 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 			public void run() {
 				runAction.setEnabled(true);
 				stopAction.setEnabled(false);
-				resetAction.setEnabled(true);
 			}
 		});
 	}
@@ -382,6 +380,7 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 
 	public void reset() {
 		view.navigator.setEnabled(true);
+		model.stopImmediately();
 		stopAction.actionPerformed(null);
 		model.clear();
 		view.reset();
@@ -949,6 +948,10 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 
 	/** not implemented */
 	public void notifyScriptTermination(String statusMessage, int msWalltime) {
+		if (boxRotated) {
+			model.setGFieldDirection(view.getViewer().getRotationMatrix());
+			boxRotated = false;
+		}
 	}
 
 	/** not implemented */
@@ -1587,6 +1590,7 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				view.fitIntoWindow();
+				boxRotated = true;
 			}
 		});
 		menu.add(mi);
@@ -1793,7 +1797,7 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				int n = toolBar.getComponentCount();
-				for (int i = 0; i < n; i++)
+				for (int i = 1; i < n; i++)
 					toolBar.getComponent(i).setEnabled(b);
 			}
 		});
@@ -1843,6 +1847,7 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 			public void actionPerformed(ActionEvent e) {
 				JComboBox cb = (JComboBox) e.getSource();
 				view.setViewAngle((byte) (cb.getSelectedIndex() + MolecularView.FRONT_VIEW));
+				boxRotated = true;
 			}
 		});
 		toolBar.add(comboBox);
@@ -2274,7 +2279,6 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 	}
 
 	public int enableRecorder(final boolean b) {
-		System.out.println("************"+b);
 		if (!EventQueue.isDispatchThread())
 			throw new RuntimeException("must be called in the EDT thread.");
 		model.stopImmediately();
