@@ -848,7 +848,7 @@ abstract public class JmolViewer extends JmolSimpleViewer {
 			setCameraPosition(p.x, p.y, p.z + distance);
 		}
 		else {
-			evalStringQuiet("moveto 1.0 back;moveto 1.0 front");
+			evalStringQuiet("moveto 1.0 back;moveto 1.0 front;zoom 50;");
 		}
 	}
 
@@ -861,7 +861,7 @@ abstract public class JmolViewer extends JmolSimpleViewer {
 			evalStringQuiet("moveto 0 back");
 		}
 		else {
-			evalStringQuiet("moveto 1.0 front;moveto 1.0 back");
+			evalStringQuiet("moveto 1.0 front;moveto 1.0 back;zoom 50;");
 		}
 	}
 
@@ -874,7 +874,7 @@ abstract public class JmolViewer extends JmolSimpleViewer {
 			evalStringQuiet("moveto 0 top");
 		}
 		else {
-			evalStringQuiet("moveto 1.0 front;moveto 1.0 top");
+			evalStringQuiet("moveto 1.0 front;moveto 1.0 top;zoom 50;");
 		}
 	}
 
@@ -887,7 +887,7 @@ abstract public class JmolViewer extends JmolSimpleViewer {
 			evalStringQuiet("moveto 0 bottom");
 		}
 		else {
-			evalStringQuiet("moveto 1.0 front;moveto 1.0 bottom");
+			evalStringQuiet("moveto 1.0 front;moveto 1.0 bottom;zoom 50;");
 		}
 	}
 
@@ -900,7 +900,7 @@ abstract public class JmolViewer extends JmolSimpleViewer {
 			evalStringQuiet("moveto 0 left");
 		}
 		else {
-			evalStringQuiet("moveto 1.0 front;moveto 1.0 left");
+			evalStringQuiet("moveto 1.0 front;moveto 1.0 left;zoom 50;");
 		}
 	}
 
@@ -913,7 +913,7 @@ abstract public class JmolViewer extends JmolSimpleViewer {
 			evalStringQuiet("moveto 0 right");
 		}
 		else {
-			evalStringQuiet("moveto 1.0 front;moveto 1.0 right");
+			evalStringQuiet("moveto 1.0 front;moveto 1.0 right;zoom 50;");
 		}
 	}
 
