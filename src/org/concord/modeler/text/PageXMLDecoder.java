@@ -3834,6 +3834,8 @@ final class PageXMLDecoder {
 				rotation = null;
 			}
 			md.getMolecularModel().setRecorderDisabled(recorderless);
+			if (!recorderless)
+				md.getMolecularModel().activateEmbeddedMovie(true);
 			recorderless = false;
 			md.enableMenuBar(showMenuBar);
 			showMenuBar = true;

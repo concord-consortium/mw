@@ -1322,7 +1322,7 @@ public class MolecularModel {
 	}
 
 	/**
-	 * this method is used to "get rid of" a tape when a user action that results in frame inconsistency * has occurred,
+	 * this method is used to "get rid of" a tape when a user action that results in frame inconsistency has occurred,
 	 * and "insert a new tape".
 	 */
 	public int resetTape() {
