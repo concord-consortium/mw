@@ -137,7 +137,8 @@ public class MolecularModel {
 	List<ABond> aBonds;
 	List<TBond> tBonds;
 	List<Molecule> molecules;
-	VectorField gField, eField;
+	VectorField gField;
+	EField eField;
 	BField bField;
 
 	private float kin, pot, tot;
@@ -1935,8 +1936,20 @@ public class MolecularModel {
 		}
 	}
 
-	public VectorField getEField() {
+	public EField getEField() {
 		return eField;
+	}
+
+	public void setEField(float intensity, Vector3f direction) {
+		if (intensity > ZERO) {
+			if (eField == null)
+				eField = new EField();
+			eField.setIntensity(intensity);
+			eField.setDirection(direction.x, direction.y, direction.z);
+		}
+		else {
+			eField = null;
+		}
 	}
 
 	public VectorField getGField() {

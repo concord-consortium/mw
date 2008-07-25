@@ -26,13 +26,13 @@ import javax.vecmath.Vector3f;
  * @author Charles Xie
  * 
  */
-public class BField implements VectorField {
+public class EField implements VectorField {
 
 	private float intensity;
 	private Vector3f direction;
 	private boolean local;
 
-	public BField() {
+	public EField() {
 		direction = new Vector3f(0, 0, 1);
 	}
 
@@ -64,10 +64,11 @@ public class BField implements VectorField {
 		if (intensity < MolecularModel.ZERO || Math.abs(a.charge) < MolecularModel.ZERO)
 			return 0;
 		float temp = intensity * a.charge * ForceCalculator.GF_CONVERSION_CONSTANT;
-		a.fx += temp * (a.vy * direction.z - a.vz * direction.y);
-		a.fy += temp * (a.vz * direction.x - a.vx * direction.z);
-		a.fz += temp * (a.vx * direction.y - a.vy * direction.x);
-		return 0;
+		a.fx += temp * direction.x;
+		a.fy += temp * direction.y;
+		a.fz += temp * direction.z;
+		// assume that the center has zero electric potential
+		return -a.charge * intensity * (direction.x * a.rx + direction.y * a.ry + direction.z * a.rz);
 	}
 
 }
