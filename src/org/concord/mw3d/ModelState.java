@@ -81,6 +81,8 @@ public class ModelState implements Serializable {
 
 	private float bFieldIntensity;
 	private float[] bFieldDirection;
+	private float eFieldIntensity;
+	private float[] eFieldDirection;
 
 	public ModelState() {
 	}
@@ -192,6 +194,7 @@ public class ModelState implements Serializable {
 			s.setCenter(c.getCenter());
 			s.setCorner(c.getCorner());
 			s.setColor(c.getColor().getRGB());
+			s.setTranslucent(c.isTranslucent());
 			obstacles.add(s);
 		}
 		else if (o instanceof CylinderObstacle) {
@@ -202,6 +205,7 @@ public class ModelState implements Serializable {
 			s.setHeight(c.getHeight());
 			s.setRadius(c.getRadius());
 			s.setColor(c.getColor().getRGB());
+			s.setTranslucent(c.isTranslucent());
 			obstacles.add(s);
 		}
 	}
@@ -420,6 +424,22 @@ public class ModelState implements Serializable {
 
 	public float[] getBFieldDirection() {
 		return bFieldDirection;
+	}
+
+	public void setEFieldIntensity(float eFieldIntensity) {
+		this.eFieldIntensity = eFieldIntensity;
+	}
+
+	public float getEFieldIntensity() {
+		return eFieldIntensity;
+	}
+
+	public void setEFieldDirection(float[] eFieldDirection) {
+		this.eFieldDirection = eFieldDirection;
+	}
+
+	public float[] getEFieldDirection() {
+		return eFieldDirection;
 	}
 
 }

@@ -232,6 +232,9 @@ class ModelProperties extends JDialog {
 		label.setIcon(new ImageIcon(MolecularContainer.class.getResource("resources/electric.gif")));
 		((HyperlinkLabel) label).setAction(new Runnable() {
 			public void run() {
+				EFieldEditor eFieldEditor = new EFieldEditor(ModelProperties.this, model);
+				eFieldEditor.setLocationRelativeTo(ModelProperties.this);
+				eFieldEditor.setVisible(true);
 			}
 		});
 		p.add(label);

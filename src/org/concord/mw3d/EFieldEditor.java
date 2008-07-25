@@ -35,33 +35,33 @@ import javax.swing.SpringLayout;
 import javax.vecmath.Vector3f;
 
 import org.concord.modeler.ModelerUtilities;
-import org.concord.mw3d.models.BField;
+import org.concord.mw3d.models.EField;
 import org.concord.mw3d.models.MolecularModel;
 
 /**
  * @author Charles Xie
  * 
  */
-class BFieldEditor extends JDialog {
+class EFieldEditor extends JDialog {
 
-	private final static float SLIDER_MAGNIFIER = 10;
 	private JSlider xSlider, ySlider, zSlider;
 	private Vector3f original;
 	private MolecularModel model;
+	private final static float SLIDER_MAGNIFIER = 100;
 
-	BFieldEditor(JDialog owner, MolecularModel model) {
+	EFieldEditor(JDialog owner, MolecularModel model) {
 
-		super(owner, "Magnetic Field Properties", false);
+		super(owner, "Electric Field Properties", false);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		String s = MolecularContainer.getInternationalText("MagneticFieldProperties");
+		String s = MolecularContainer.getInternationalText("ElectricFieldProperties");
 		if (s != null)
 			setTitle(s);
 
 		this.model = model;
-		BField bField = model.getBField();
-		if (bField != null) {
-			original = new Vector3f(bField.getDirection());
-			original.scale(bField.getIntensity());
+		EField eField = model.getEField();
+		if (eField != null) {
+			original = new Vector3f(eField.getDirection());
+			original.scale(eField.getIntensity());
 		}
 
 		JPanel panel = new JPanel(new SpringLayout());
@@ -116,8 +116,8 @@ class BFieldEditor extends JDialog {
 		s.setPaintLabels(true);
 		Hashtable ht = new Hashtable();
 		ht.put(0, new JLabel("0"));
-		ht.put(-100, new JLabel("-10"));
-		ht.put(100, new JLabel("10"));
+		ht.put(-100, new JLabel("-1"));
+		ht.put(100, new JLabel("1"));
 		s.setLabelTable(ht);
 		s.setBorder(BorderFactory.createTitledBorder(title));
 		return s;
@@ -142,7 +142,7 @@ class BFieldEditor extends JDialog {
 		int y = ySlider.getValue();
 		int z = zSlider.getValue();
 		if (x == 0 && y == 0 && z == 0) {
-			model.setBField(0, null);
+			model.setEField(0, null);
 		}
 		else {
 			setValues(x / SLIDER_MAGNIFIER, y / SLIDER_MAGNIFIER, z / SLIDER_MAGNIFIER);
@@ -156,13 +156,13 @@ class BFieldEditor extends JDialog {
 
 	private void setValues(float x, float y, float z) {
 		float a = (float) Math.sqrt(x * x + y * y + z * z);
-		BField bField = model.getBField();
-		if (bField != null) {
-			bField.setIntensity(a);
-			bField.setDirection(x / a, y / a, z / a);
+		EField eField = model.getEField();
+		if (eField != null) {
+			eField.setIntensity(a);
+			eField.setDirection(x / a, y / a, z / a);
 		}
 		else {
-			model.setBField(a, new Vector3f(x / a, y / a, z / a));
+			model.setEField(a, new Vector3f(x / a, y / a, z / a));
 		}
 	}
 

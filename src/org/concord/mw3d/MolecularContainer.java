@@ -699,6 +699,10 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 			state.setBFieldDirection(model.getBField().getDirection());
 			state.setBFieldIntensity(model.getBField().getIntensity());
 		}
+		if (model.getEField() != null) {
+			state.setEFieldDirection(model.getEField().getDirection());
+			state.setEFieldIntensity(model.getEField().getIntensity());
+		}
 		int n = model.getObstacleCount();
 		if (n > 0) {
 			for (int i = 0; i < n; i++) {
@@ -823,6 +827,12 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 		}
 		else {
 			model.setBField(0, null);
+		}
+		if (state.getEFieldIntensity() > 0 && state.getEFieldDirection() != null) {
+			model.setEField(state.getEFieldIntensity(), new Vector3f(state.getEFieldDirection()));
+		}
+		else {
+			model.setEField(0, null);
 		}
 		view.setSimulationBox();
 		addBonds();
