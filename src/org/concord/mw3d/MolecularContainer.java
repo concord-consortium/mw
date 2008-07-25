@@ -105,6 +105,7 @@ import org.concord.mw3d.models.CuboidObstacle;
 import org.concord.mw3d.models.CuboidObstacleState;
 import org.concord.mw3d.models.CylinderObstacle;
 import org.concord.mw3d.models.CylinderObstacleState;
+import org.concord.mw3d.models.GField;
 import org.concord.mw3d.models.MolecularModel;
 import org.concord.mw3d.models.ObstacleState;
 import org.concord.mw3d.models.TBond;
@@ -918,6 +919,10 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 			}
 		}
 		view.setStartingSceneWhenCameraIsOnAtom();
+		GField gField = model.getGField();
+		if (gField != null) {
+			gField.setRotation(view.getViewer().getRotationMatrix());
+		}
 	}
 
 	public void notifyFileLoaded(String fullPathName, String fileName, String modelName, Object clientFile,

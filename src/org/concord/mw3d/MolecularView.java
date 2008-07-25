@@ -3398,8 +3398,13 @@ public class MolecularView extends Draw {
 					}
 				}
 			}
-			if (isKeyNavigation)
+			if (isKeyNavigation) {
 				navigator.keyPressed(e);
+				GField gField = model.getGField();
+				if (gField != null) {
+					gField.setRotation(viewer.getRotationMatrix());
+				}
+			}
 		}
 		// MUST consume in order to stop the event from propogating to the parent components
 		e.consume();
