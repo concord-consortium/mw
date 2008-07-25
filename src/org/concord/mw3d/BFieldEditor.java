@@ -141,12 +141,7 @@ class BFieldEditor extends JDialog {
 		int x = xSlider.getValue();
 		int y = ySlider.getValue();
 		int z = zSlider.getValue();
-		if (x == 0 && y == 0 && z == 0) {
-			model.setBField(0, null);
-		}
-		else {
-			setValues(x / SLIDER_MAGNIFIER, y / SLIDER_MAGNIFIER, z / SLIDER_MAGNIFIER);
-		}
+		setValues(x / SLIDER_MAGNIFIER, y / SLIDER_MAGNIFIER, z / SLIDER_MAGNIFIER);
 	}
 
 	private void cancel() {
@@ -156,14 +151,7 @@ class BFieldEditor extends JDialog {
 
 	private void setValues(float x, float y, float z) {
 		float a = (float) Math.sqrt(x * x + y * y + z * z);
-		BField bField = model.getBField();
-		if (bField != null) {
-			bField.setIntensity(a);
-			bField.setDirection(x / a, y / a, z / a);
-		}
-		else {
-			model.setBField(a, new Vector3f(x / a, y / a, z / a));
-		}
+		model.setBField(a, a == 0 ? null : new Vector3f(x / a, y / a, z / a));
 	}
 
 }
