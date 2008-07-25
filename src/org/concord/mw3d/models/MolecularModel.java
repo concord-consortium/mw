@@ -137,7 +137,7 @@ public class MolecularModel {
 	List<ABond> aBonds;
 	List<TBond> tBonds;
 	List<Molecule> molecules;
-	VectorField gField;
+	GField gField;
 	EField eField;
 	BField bField;
 
@@ -1952,8 +1952,19 @@ public class MolecularModel {
 		}
 	}
 
-	public VectorField getGField() {
+	public GField getGField() {
 		return gField;
+	}
+
+	public void setGField(float intensity) {
+		if (intensity > ZERO) {
+			if (gField == null)
+				gField = new GField();
+			gField.setIntensity(intensity);
+		}
+		else {
+			gField = null;
+		}
 	}
 
 	/* show the <i>i</i>-th frame of the movie */

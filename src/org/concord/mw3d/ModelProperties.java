@@ -219,6 +219,9 @@ class ModelProperties extends JDialog {
 		label.setIcon(new ImageIcon(MolecularContainer.class.getResource("resources/gravity.gif")));
 		((HyperlinkLabel) label).setAction(new Runnable() {
 			public void run() {
+				GFieldEditor gFieldEditor = new GFieldEditor(ModelProperties.this, model);
+				gFieldEditor.setLocationRelativeTo(ModelProperties.this);
+				gFieldEditor.setVisible(true);
 			}
 		});
 		p.add(label);
