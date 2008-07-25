@@ -2274,6 +2274,7 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 	}
 
 	public int enableRecorder(final boolean b) {
+		System.out.println("************"+b);
 		if (!EventQueue.isDispatchThread())
 			throw new RuntimeException("must be called in the EDT thread.");
 		model.stopImmediately();

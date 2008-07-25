@@ -131,7 +131,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 	static Preferences preference;
 	static List<Modeler> windowList = new ArrayList<Modeler>();
 	static boolean showToolBarText = true;
-	static boolean launchedByJWS, directMW;
+	static boolean launchedByJWS, directMW, mwLauncher;
 	static boolean restart;
 	static boolean hostIsLocal, runOnCD;
 	static String startingURL;
@@ -2390,7 +2390,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		});
 		menu.add(menuItem);
 
-		if (launchedByJWS || "yes".equals(System.getProperty("mw.launcher"))) {
+		if (launchedByJWS || mwLauncher) {
 			s = getInternationalText("ResetDesktopLauncher");
 			menuItem = new JMenuItem(s != null ? s : "Reset Desktop Launcher");
 			menuItem.addActionListener(new ActionListener() {
@@ -2845,7 +2845,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 			}
 
 			public void finished() {
-				if (!launchedByJWS && !runOnCD && !disableJarUpdate)
+				if (!launchedByJWS && !runOnCD && !disableJarUpdate && !mwLauncher)
 					UpdateManager.showUpdateReminder(Modeler.this);
 				if (!runOnCD)
 					listenToSocket();
@@ -3095,6 +3095,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 			}
 		}
 
+		mwLauncher = "yes".equals(System.getProperty("mw.launcher"));
 		runOnCD = "true".equalsIgnoreCase(System.getProperty("mw.cd.mode"));
 
 		// detect if the app is launched via webstart from its classloader. We use only two classloaders:
@@ -3184,7 +3185,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		directMW = true;
 
 		// signify the web launcher who is monitoring this process
-		if ("yes".equals(System.getProperty("mw.launcher")))
+		if (mwLauncher)
 			System.err.println("launched"); // why do we have to use the err stream?
 		if (!hostIsLocal) {
 			LogDumper.sharedInstance().redirectSystemOutput();
