@@ -52,6 +52,9 @@ class BFieldEditor extends JDialog {
 
 		super(owner, "Magnetic Field Properties", false);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		String s = MolecularContainer.getInternationalText("MagneticFieldProperties");
+		if (s != null)
+			setTitle(s);
 
 		this.model = model;
 		BField bField = model.getBField();
@@ -64,24 +67,24 @@ class BFieldEditor extends JDialog {
 		panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		getContentPane().add(panel, BorderLayout.CENTER);
 
-		xSlider = createSlider(original == null ? 0 : original.x, "x-component");
-		panel.add(xSlider);
-		panel.add(createButton(xSlider));
+		s = MolecularContainer.getInternationalText("XComponent");
+		xSlider = createSlider(original == null ? 0 : original.x, s != null ? s : "x-component");
+		panel.add(createSliderButtonPanel(xSlider));
 
-		ySlider = createSlider(original == null ? 0 : original.y, "y-component");
-		panel.add(ySlider);
-		panel.add(createButton(ySlider));
+		s = MolecularContainer.getInternationalText("YComponent");
+		ySlider = createSlider(original == null ? 0 : original.y, s != null ? s : "y-component");
+		panel.add(createSliderButtonPanel(ySlider));
 
-		zSlider = createSlider(original == null ? 0 : original.z, "z-component");
-		panel.add(zSlider);
-		panel.add(createButton(zSlider));
+		s = MolecularContainer.getInternationalText("ZComponent");
+		zSlider = createSlider(original == null ? 0 : original.z, s != null ? s : "z-component");
+		panel.add(createSliderButtonPanel(zSlider));
 
-		ModelerUtilities.makeCompactGrid(panel, 3, 2, 5, 5, 10, 2);
+		ModelerUtilities.makeCompactGrid(panel, 3, 1, 5, 5, 10, 2);
 
 		panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		getContentPane().add(panel, BorderLayout.SOUTH);
 
-		String s = MolecularContainer.getInternationalText("OK");
+		s = MolecularContainer.getInternationalText("OK");
 		JButton button = new JButton(s != null ? s : "OK");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -91,7 +94,8 @@ class BFieldEditor extends JDialog {
 		});
 		panel.add(button);
 
-		button = new JButton("Cancel");
+		s = MolecularContainer.getInternationalText("Cancel");
+		button = new JButton(s != null ? s : "Cancel");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				cancel();
@@ -118,14 +122,18 @@ class BFieldEditor extends JDialog {
 		return s;
 	}
 
-	private JButton createButton(final JSlider slider) {
-		JButton button = new JButton("Set to Zero");
+	private JPanel createSliderButtonPanel(final JSlider slider) {
+		JPanel p = new JPanel();
+		p.add(slider);
+		String s = MolecularContainer.getInternationalText("SetToZero");
+		JButton button = new JButton(s != null ? s : "Set to Zero");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				slider.setValue(0);
 			}
 		});
-		return button;
+		p.add(button);
+		return p;
 	}
 
 	private void ok() {
