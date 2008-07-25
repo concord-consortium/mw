@@ -47,15 +47,11 @@ public class GField implements VectorField {
 		return g;
 	}
 
-	public void setRotation(Matrix3f rotation) {
+	void setRotation(Matrix3f rotation) {
 		if (inverseRotation == null)
 			inverseRotation = new Matrix3f();
 		inverseRotation.invert(rotation);
 		inverseRotation.transform(down, direction);
-	}
-
-	public void setDirection(float x, float y, float z) {
-		direction.set(x, y, z);
 	}
 
 	public float compute(Atom a) {
