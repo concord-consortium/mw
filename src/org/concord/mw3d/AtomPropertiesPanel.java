@@ -52,7 +52,8 @@ class AtomPropertiesPanel extends PropertiesPanel {
 	private JLabel indexLabel;
 	private JLabel sigmaLabel;
 	private JLabel epsilonLabel;
-	private FloatNumberTextField chargeField, rxField, ryField, rzField, vxField, vyField, vzField;
+	private FloatNumberTextField rxField, ryField, rzField, vxField, vyField, vzField;
+	private FloatNumberTextField chargeField, dampField;
 	private HyperlinkLabel leftXLabel;
 	private HyperlinkLabel leftYLabel;
 	private HyperlinkLabel leftZLabel;
@@ -91,6 +92,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		vzField.setEditable(atom.isMovable());
 
 		chargeField = new FloatNumberTextField(atom.getCharge(), -5, 5, 10);
+		dampField = new FloatNumberTextField(atom.getDamp(), 0, 10, 10);
 
 		String s = MolecularContainer.getInternationalText("Movable");
 		final JCheckBox movableCheckBox = new JCheckBox(s != null ? s : "Movable");
@@ -121,6 +123,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 			public void execute() {
 
 				applyBounds(chargeField);
+				applyBounds(dampField);
 				applyBounds(vxField);
 				applyBounds(vyField);
 
@@ -130,7 +133,10 @@ class AtomPropertiesPanel extends PropertiesPanel {
 					atom.getModel().getView().setCharge(atom.getIndex(), chargeField.getValue());
 					changed = true;
 				}
-
+				if (Math.abs(atom.getDamp() - dampField.getValue()) > ZERO) {
+					atom.setDamp(dampField.getValue());
+					changed = true;
+				}
 				if (Math.abs(atom.getRx() - rxField.getValue()) > ZERO) {
 					setRx(atom, rxField.getValue());
 					changed = true;
@@ -176,6 +182,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		vyField.setAction(okAction);
 		vzField.setAction(okAction);
 		chargeField.setAction(okAction);
+		dampField.setAction(okAction);
 		okButton.setAction(okAction);
 		s = MolecularContainer.getInternationalText("OK");
 		okButton.setText(s != null ? s : "OK");
@@ -222,6 +229,12 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		panel.add(new JPanel());
 
 		// row 7
+		s = MolecularContainer.getInternationalText("Damping");
+		panel.add(new JLabel(s != null ? s : "Damping"));
+		panel.add(dampField);
+		panel.add(new JPanel());
+
+		// row 8
 		leftXLabel = new HyperlinkLabel(
 				atom.isMovable() ? "<html><font color=\"#0000ff\"><u><em>X</em></u></font></html>" : "X");
 		leftXLabel.setEnabled(atom.isMovable());
@@ -241,7 +254,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		panel.add(rxField);
 		panel.add(createSmallerFontLabel("<html>&#197;</html>"));
 
-		// row 8
+		// row 9
 		leftYLabel = new HyperlinkLabel(
 				atom.isMovable() ? "<html><font color=\"#0000ff\"><u><em>Y</em></u></font></html>" : "Y");
 		leftYLabel.setEnabled(atom.isMovable());
@@ -261,7 +274,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		panel.add(ryField);
 		panel.add(createSmallerFontLabel("<html>&#197;</html>"));
 
-		// row 9
+		// row 10
 		leftZLabel = new HyperlinkLabel(
 				atom.isMovable() ? "<html><font color=\"#0000ff\"><u><em>Z</em></u></font></html>" : "Z");
 		leftZLabel.setEnabled(atom.isMovable());
@@ -281,7 +294,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		panel.add(rzField);
 		panel.add(createSmallerFontLabel("<html>&#197;</html>"));
 
-		// row 10
+		// row 11
 		leftVxLabel = new HyperlinkLabel(
 				atom.isMovable() ? "<html><font color=\"#0000ff\"><u><em>V<sub>x</sub></em></u></font></html>" : "Vx");
 		leftVxLabel.setEnabled(atom.isMovable());
@@ -302,7 +315,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		panel.add(vxField);
 		panel.add(createSmallerFontLabel("m/s"));
 
-		// row 11
+		// row 12
 		leftVyLabel = new HyperlinkLabel(
 				atom.isMovable() ? "<html><font color=\"#0000ff\"><u><em>V<sub>y</sub></em></u></font></html>" : "Vy");
 		leftVyLabel.setEnabled(atom.isMovable());
@@ -323,7 +336,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		panel.add(vyField);
 		panel.add(createSmallerFontLabel("m/s"));
 
-		// row 12
+		// row 13
 		leftVzLabel = new HyperlinkLabel(
 				atom.isMovable() ? "<html><font color=\"#0000ff\"><u><em>V<sub>z</sub></em></u></font></html>" : "Vz");
 		leftVzLabel.setEnabled(atom.isMovable());
@@ -344,7 +357,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		panel.add(vzField);
 		panel.add(createSmallerFontLabel("m/s"));
 
-		makeCompactGrid(panel, 12, 3, 5, 5, 10, 2);
+		makeCompactGrid(panel, 13, 3, 5, 5, 10, 2);
 
 		panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		add(panel, BorderLayout.SOUTH);

@@ -72,6 +72,7 @@ import org.concord.mw3d.models.ABond;
 import org.concord.mw3d.models.Atom;
 import org.concord.mw3d.models.CuboidObstacle;
 import org.concord.mw3d.models.CylinderObstacle;
+import org.concord.mw3d.models.GField;
 import org.concord.mw3d.models.MolecularModel;
 import org.concord.mw3d.models.Molecule;
 import org.concord.mw3d.models.Obstacle;
@@ -1956,6 +1957,12 @@ public class MolecularView extends Draw {
 		int x = e.getX();
 		int y = e.getY();
 		switch (actionID) {
+		case DEFA_ID:
+			GField gField = model.getGField();
+			if (gField != null) {
+				gField.setRotation(viewer.getRotationMatrix());
+			}
+			break;
 		case PANN_ID:
 			int dx = x - dragPoint.x;
 			int dy = y - dragPoint.y;

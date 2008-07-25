@@ -48,6 +48,7 @@ public class Atom {
 	float epsilon = 0.05f;
 	float mass = 10.0f;
 	float charge;
+	float damp;
 	int index;
 	private List<RBond> rbondList;
 	private List<ABond> abondList;
@@ -81,7 +82,7 @@ public class Atom {
 			return false;
 		return model.getView().getViewer().getSelectionSet().get(index);
 	}
-	
+
 	public void setAtom(Atom a) {
 		setSymbol(a.symbol);
 		elementNumber = a.elementNumber;
@@ -469,6 +470,14 @@ public class Atom {
 
 	public void addCharge(float x) {
 		charge += x;
+	}
+
+	public void setDamp(float damp) {
+		this.damp = damp;
+	}
+
+	public float getDamp() {
+		return damp;
 	}
 
 	public Object getProperty(String name) {

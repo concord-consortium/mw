@@ -161,6 +161,8 @@ public final class XyzReader extends ColumnDataParser {
 			model.addAtom(parseToken(line), parseFloat(line, ichNextParse), parseFloat(line, ichNextParse), parseFloat(
 					line, ichNextParse), parseFloat(line, ichNextParse), parseFloat(line, ichNextParse), parseFloat(
 					line, ichNextParse), parseFloat(line, ichNextParse));
+			// MW-specific
+			model.atom[i].setDamp(parseFloat(line, ichNextParse));
 			if (atomCount > 20 && (i % interval == 0)) {
 				notifyProgressListeners("Reading atoms: ", (int) (inv * i + 1));
 			}
