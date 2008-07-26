@@ -159,7 +159,8 @@ public class CuboidObstacle extends Obstacle {
 			at = model.getAtom(i);
 			radius = at.getSigma() * 0.5f;
 			if (contains(at, radius)) {
-				switch (outcode(at, radius)) {
+				byte outcode = outcode(at, radius);
+				switch (outcode) {
 				case OUT_RIGHT:
 					at.vx = Math.abs(at.vx);
 					break;
@@ -177,6 +178,11 @@ public class CuboidObstacle extends Obstacle {
 					break;
 				case OUT_REAR:
 					at.vz = -Math.abs(at.vz);
+					break;
+				case -1:
+					at.vx = at.rx > center.x ? Math.abs(at.vx) : -Math.abs(at.vx);
+					at.vy = at.ry > center.y ? Math.abs(at.vy) : -Math.abs(at.vy);
+					at.vz = at.rz > center.z ? Math.abs(at.vz) : -Math.abs(at.vz);
 					break;
 				}
 
