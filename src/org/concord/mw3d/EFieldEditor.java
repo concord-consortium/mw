@@ -110,7 +110,12 @@ class EFieldEditor extends JDialog {
 	}
 
 	private JSlider createSlider(float value, String title) {
-		JSlider s = new JSlider(-100, 100, (int) (value * SLIDER_MAGNIFIER));
+		int x = (int) (value * SLIDER_MAGNIFIER);
+		if (x > 100)
+			x = 100;
+		else if (x < -100)
+			x = -100;
+		JSlider s = new JSlider(-100, 100, x);
 		s.setMajorTickSpacing(10);
 		s.setMinorTickSpacing(5);
 		s.setPaintLabels(true);

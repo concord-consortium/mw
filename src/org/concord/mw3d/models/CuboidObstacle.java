@@ -133,6 +133,8 @@ public class CuboidObstacle extends Obstacle {
 			return OUT_FRONT;
 		if (at.rz - at.dz + radius < zmin && at.rz + radius > zmin)
 			return OUT_REAR;
+		// the above algorithm cannot guarantee that the atom will exit the body of the obstacle
+		// after reversing the velocity. so we need to double-check, but how?
 		return -1;
 	}
 
@@ -177,6 +179,7 @@ public class CuboidObstacle extends Obstacle {
 					at.vz = -Math.abs(at.vz);
 					break;
 				}
+
 			}
 		}
 
