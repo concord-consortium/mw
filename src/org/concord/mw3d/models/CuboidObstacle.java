@@ -32,9 +32,9 @@ public class CuboidObstacle extends Obstacle {
 	private Point3f corner;
 	private float xmin, xmax, ymin, ymax, zmin, zmax;
 
-	public CuboidObstacle(float rx, float ry, float rz, float lx, float ly, float lz) {
+	public CuboidObstacle(float rx, float ry, float rz, float cx, float cy, float cz) {
 		super(rx, ry, rz);
-		corner = new Point3f(Math.max(MIN_THICKNESS, lx), Math.max(MIN_THICKNESS, ly), Math.max(MIN_THICKNESS, lz));
+		corner = new Point3f(Math.max(MIN_THICKNESS, cx), Math.max(MIN_THICKNESS, cy), Math.max(MIN_THICKNESS, cz));
 	}
 
 	public CuboidObstacle(CuboidObstacleState state) {
@@ -45,12 +45,36 @@ public class CuboidObstacle extends Obstacle {
 	}
 
 	/** corner is a vertex with its coordinates relative to the center all positive. */
-	public void setCorner(float lx, float ly, float lz) {
-		corner.set(lx, ly, lz);
+	public void setCorner(float cx, float cy, float cz) {
+		corner.set(cx, cy, cz);
 	}
 
 	public Point3f getCorner() {
 		return corner;
+	}
+
+	public float getLx() {
+		return 2 * (corner.x - center.x);
+	}
+
+	public void setLx(float lx) {
+		corner.x = center.x + 0.5f * lx;
+	}
+
+	public float getLy() {
+		return 2 * (corner.y - center.y);
+	}
+
+	public void setLy(float ly) {
+		corner.y = center.y + 0.5f * ly;
+	}
+
+	public float getLz() {
+		return 2 * (corner.z - center.z);
+	}
+
+	public void setLz(float lz) {
+		corner.z = center.z + 0.5f * lz;
 	}
 
 	public boolean isContained(char axis) {

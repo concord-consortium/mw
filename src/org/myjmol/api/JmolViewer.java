@@ -386,8 +386,9 @@ abstract public class JmolViewer extends JmolSimpleViewer {
 	/** XIE */
 	abstract public void removeObstacle(int index);
 
-	/** XIE */
 	abstract public void setObstacleLocation(int index, Point3f p);
+
+	abstract public void setObstacleGeometry(int index, float rx, float ry, float rz, float lx, float ly, float lz);
 
 	/** XIE */
 	abstract public void setObstacleColor(int index, Color color, boolean translucent);

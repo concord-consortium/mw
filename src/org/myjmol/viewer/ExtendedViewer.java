@@ -751,6 +751,17 @@ public class ExtendedViewer extends Viewer {
 		}
 	}
 
+	public void setObstacleGeometry(int index, float rx, float ry, float rz, float lx, float ly, float lz) {
+		Obstacles obstacles = ((ExtendedFrameRenderer) repaintManager.frameRenderer).obstacles;
+		Object3D o = obstacles.getObstacle(index);
+		if (o instanceof Cuboid) {
+			Cuboid c = (Cuboid) o;
+			c.center.set(rx, ry, rz);
+			c.corner.set(lx, ly, lz);
+			highlightPlane.setVertices(c.getFaceVertices((byte) obstacleIndexAndFace[1]));
+		}
+	}
+
 	public void removeObstacle(int index) {
 		Obstacles obstacles = ((ExtendedFrameRenderer) repaintManager.frameRenderer).obstacles;
 		Object3D o = obstacles.getObstacle(index);
