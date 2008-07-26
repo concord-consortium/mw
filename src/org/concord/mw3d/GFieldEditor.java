@@ -41,7 +41,7 @@ import org.concord.mw3d.models.MolecularModel;
  */
 class GFieldEditor extends JDialog {
 
-	private final static float SLIDER_MAGNIFIER = 20000;
+	private final static float SLIDER_MAGNIFIER = 100000;
 	private JSlider gSlider;
 	private float original;
 	private MolecularModel model;
@@ -70,7 +70,7 @@ class GFieldEditor extends JDialog {
 		gSlider.setPaintLabels(true);
 		Hashtable ht = new Hashtable();
 		ht.put(0, new JLabel("0"));
-		ht.put(100, new JLabel("0.005"));
+		ht.put(100, new JLabel("0.001"));
 		gSlider.setLabelTable(ht);
 		s = MolecularContainer.getInternationalText("GravitationalAcceleration");
 		gSlider.setBorder(BorderFactory.createTitledBorder(s != null ? s : "Gravitational Acceleration"));
