@@ -47,6 +47,7 @@ import org.concord.modeler.ui.FloatNumberTextField;
 import org.concord.mw3d.models.CuboidObstacle;
 import org.concord.mw3d.models.CylinderObstacle;
 import org.concord.mw3d.models.Obstacle;
+import org.myjmol.api.JmolViewer;
 
 class ObstaclePropertiesPanel extends PropertiesPanel {
 
@@ -122,6 +123,31 @@ class ObstaclePropertiesPanel extends PropertiesPanel {
 				if (Math.abs(obs.getCenter().z - rzField.getValue()) > ZERO) {
 					setRz(obs, rzField.getValue());
 					changed = true;
+				}
+				if (obs instanceof CuboidObstacle) {
+					Point3f corner = ((CuboidObstacle) obs).getCorner();
+					if (Math.abs(corner.x - lxField.getValue()) > ZERO) {
+						corner.x = lxField.getValue() * 0.5f;
+						updateObstaclePosition(obs);
+						changed = true;
+					}
+					if (Math.abs(corner.y - lyField.getValue()) > ZERO) {
+						corner.y = lyField.getValue() * 0.5f;
+						updateObstaclePosition(obs);
+						changed = true;
+					}
+					if (Math.abs(corner.z - lzField.getValue()) > ZERO) {
+						corner.z = lzField.getValue() * 0.5f;
+						updateObstaclePosition(obs);
+						changed = true;
+					}
+				}
+				else if (obs instanceof CylinderObstacle) {
+					CylinderObstacle co = (CylinderObstacle) obs;
+					if (Math.abs(co.getHeight() - lzField.getValue()) > ZERO) {
+						co.setHeight(lzField.getValue());
+						changed = true;
+					}
 				}
 
 				if (changed) {
@@ -225,10 +251,14 @@ class ObstaclePropertiesPanel extends PropertiesPanel {
 	}
 
 	private void updateObstaclePosition(Obstacle obs) {
-		// MolecularView v = obs.getModel().getView();
-		// JmolViewer viewer = v.getViewer();
-		// viewer.setAtomCoordinates(a.getModel().getAtomIndex(a), a.getRx(), a.getRy(), a.getRz());
-		// v.repaint();
+		MolecularView v = obs.getModel().getView();
+		JmolViewer viewer = v.getViewer();
+		if (obs instanceof CuboidObstacle) {
+			CuboidObstacle co = (CuboidObstacle) obs;
+			viewer.setObstacleGeometry(obs.getModel().indexOfObstacle(obs), obs.getCenter().x, obs.getCenter().y, obs
+					.getCenter().z, co.getCorner().x, co.getCorner().y, co.getCorner().z);
+		}
+		v.repaint();
 	}
 
 	void setDialog(JDialog d) {

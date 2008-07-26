@@ -200,7 +200,6 @@ public class Viewer extends JmolViewer {
 	boolean haveDisplay = true;
 	boolean mustRender = true;
 
-	/** XIE */
 	public static JmolViewer allocateExtendedViewer(Component display, JmolAdapter modelAdapter) {
 		return new ExtendedViewer(display, modelAdapter);
 	}
@@ -212,14 +211,12 @@ public class Viewer extends JmolViewer {
 		}
 	}
 
-	/** XIE */
 	public void setRoverPainted(boolean b) {
 		if (repaintManager.frameRenderer instanceof ExtendedFrameRenderer) {
 			((ExtendedFrameRenderer) repaintManager.frameRenderer).setRoverPainted(b);
 		}
 	}
 
-	/** XIE */
 	public void setRoverPosition(float x, float y, float z) {
 		if (repaintManager.frameRenderer instanceof ExtendedFrameRenderer) {
 			((ExtendedFrameRenderer) repaintManager.frameRenderer).rover.setPosition(x, y, z);
@@ -676,6 +673,10 @@ public class Viewer extends JmolViewer {
 
 	/** XIE: skeleton method */
 	public void setObstacleLocation(int index, Point3f p) {
+	}
+
+	/** skeleton method */
+	public void setObstacleGeometry(int index, float rx, float ry, float rz, float lx, float ly, float lz) {
 	}
 
 	/** XIE: skeleton method */
