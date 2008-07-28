@@ -3249,6 +3249,7 @@ final class PageXMLDecoder {
 				stepsize = 0;
 			}
 			s.setValue(value);
+			s.putClientProperty("value", value);
 			s.setName(changeName);
 			s.setChangable(page.isEditable());
 			if (titleText != null) {
@@ -3293,6 +3294,7 @@ final class PageXMLDecoder {
 			s.setDoubleValue(value);
 			s.setNumberOfSteps(nstep);
 			s.adjustScale();
+			s.putClientProperty("value", s.getValue());
 			s.setPaintTicks(drawTicks);
 			if (drawTicks)
 				drawTicks = false;
@@ -3361,6 +3363,7 @@ final class PageXMLDecoder {
 			}
 			if (selected) {
 				b.setSelected(selected);
+				b.putClientProperty("selected", Boolean.TRUE);
 				selected = false;
 			}
 			b.setName(actionName);
@@ -3423,6 +3426,7 @@ final class PageXMLDecoder {
 			}
 			if (selected) {
 				b.setSelected(selected);
+				b.putClientProperty("selected", Boolean.TRUE);
 				selected = false;
 			}
 			b.setName(actionName);
