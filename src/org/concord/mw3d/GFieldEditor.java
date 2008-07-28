@@ -48,7 +48,7 @@ class GFieldEditor extends JDialog {
 
 	GFieldEditor(JDialog owner, MolecularModel model) {
 
-		super(owner, "Gravitational Field Properties", false);
+		super(owner, "Gravitational Field Properties", true);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		String s = MolecularContainer.getInternationalText("GravitationalFieldProperties");
 		if (s != null)
