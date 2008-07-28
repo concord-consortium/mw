@@ -21,6 +21,7 @@
 package org.concord.mw3d.models;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
@@ -46,6 +47,8 @@ import org.concord.modeler.draw.FillMode;
 import org.concord.modeler.event.ScriptEvent;
 import org.concord.modeler.process.AbstractLoadable;
 import org.concord.modeler.script.AbstractEval;
+import org.concord.modeler.script.Compiler;
+import org.concord.modeler.text.XMLCharacterDecoder;
 import org.concord.modeler.util.DataQueue;
 import org.concord.modeler.util.DataQueueUtilities;
 import org.concord.modeler.util.EvaluationException;
@@ -457,6 +460,42 @@ class Eval3D extends AbstractEval {
 		if (matcher.find()) {
 			if (evaluateBuildABondClause(ci.substring(ci.startsWith("abond") ? 5 : 4).trim()))
 				return true;
+		}
+
+		// show message
+		matcher = MESSAGE.matcher(ci);
+		if (matcher.find()) {
+			String s = XMLCharacterDecoder.decode(ci.substring(matcher.end()).trim());
+			String slc = s.toLowerCase();
+			int a = slc.indexOf("<t>");
+			int b = slc.indexOf("</t>");
+			String info;
+			if (a != -1 && b != -1) {
+				info = s.substring(a, b + 4).trim();
+				slc = info.toLowerCase();
+				if (!slc.startsWith("<html>")) {
+					info = "<html>" + info;
+				}
+				if (!slc.endsWith("</html>")) {
+					info = info + "</html>";
+				}
+			}
+			else {
+				matcher = Compiler.HTML_EXTENSION.matcher(s);
+				if (matcher.find()) {
+					info = readText(s, view);
+				}
+				else {
+					info = "Unknown text";
+				}
+			}
+			final String info2 = format(info);
+			EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					showMessageDialog(info2, view.getCodeBase(), view);
+				}
+			});
+			return true;
 		}
 
 		out(ScriptEvent.FAILED, "Unrecognized command: " + ci);
@@ -1586,6 +1625,12 @@ class Eval3D extends AbstractEval {
 			break;
 		}
 		return n;
+	}
+
+	protected String readText(String address, Component parent) throws InterruptedException {
+		if (FileUtilities.isRelative(address))
+			address = view.getCodeBase() + address;
+		return super.readText(address, parent);
 	}
 
 	private static void fillActionIDMap() {

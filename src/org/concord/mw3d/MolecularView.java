@@ -147,6 +147,7 @@ public class MolecularView extends Draw {
 	private Cockpit cockpit;
 
 	private String resourceAddress; // a copy from MolecularContainer
+	private String codeBase; // different from resourceAddress, codeBase retains the remote form (not cached)
 	private Energizer energizer;
 	private Clock clock;
 	private volatile boolean paintLoadingMessage;
@@ -380,6 +381,14 @@ public class MolecularView extends Draw {
 
 	public String getResourceAddress() {
 		return resourceAddress;
+	}
+
+	void setCodeBase(String s) {
+		codeBase = s;
+	}
+
+	public String getCodeBase() {
+		return codeBase;
 	}
 
 	void setContainer(MolecularContainer mc) {

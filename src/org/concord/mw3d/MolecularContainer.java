@@ -422,6 +422,7 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 		presetSize();
 		resourceAddress = address;
 		view.setResourceAddress(resourceAddress);
+		view.setCodeBase(FileUtilities.getCodeBase(resourceAddress));
 		if (address == null)
 			return;
 		if (FileUtilities.isRemote(address)) {
