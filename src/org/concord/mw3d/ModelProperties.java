@@ -55,6 +55,7 @@ class ModelProperties extends JDialog {
 	private JLabel lengthLabel, widthLabel, heightLabel;
 	private JLabel atomCountLabel, rbondCountLabel, abondCountLabel, tbondCountLabel, moleculeCountLabel;
 	private JTabbedPane tabbedPane;
+	private JLabel gLabel, eLabel, bLabel;
 
 	public ModelProperties(Frame owner, MolecularModel m) {
 
@@ -150,7 +151,7 @@ class ModelProperties extends JDialog {
 		});
 		p.add(new JLabel(" Femtosecond"));
 
-		/** interations */
+		/* interations */
 
 		panel = new JPanel(new BorderLayout());
 		panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory
@@ -222,11 +223,12 @@ class ModelProperties extends JDialog {
 				GFieldEditor gFieldEditor = new GFieldEditor(ModelProperties.this, model);
 				gFieldEditor.setLocationRelativeTo(ModelProperties.this);
 				gFieldEditor.setVisible(true);
+				gLabel.setText(model.getGField() != null ? "On" : "Off");
 			}
 		});
 		p.add(label);
-		label = new JLabel(model.getGField() != null ? "On" : "Off");
-		p.add(label);
+		gLabel = new JLabel(model.getGField() != null ? "On" : "Off");
+		p.add(gLabel);
 
 		s = MolecularContainer.getInternationalText("ElectricFieldEditor");
 		label = new HyperlinkLabel("<html><font color=\"#0000ff\"><u>" + (s != null ? s : "Electric Field Editor")
@@ -238,11 +240,12 @@ class ModelProperties extends JDialog {
 				EFieldEditor eFieldEditor = new EFieldEditor(ModelProperties.this, model);
 				eFieldEditor.setLocationRelativeTo(ModelProperties.this);
 				eFieldEditor.setVisible(true);
+				eLabel.setText(model.getEField() != null ? "On" : "Off");
 			}
 		});
 		p.add(label);
-		label = new JLabel(model.getEField() != null ? "On" : "Off");
-		p.add(label);
+		eLabel = new JLabel(model.getEField() != null ? "On" : "Off");
+		p.add(eLabel);
 
 		s = MolecularContainer.getInternationalText("MagneticFieldEditor");
 		label = new HyperlinkLabel("<html><font color=\"#0000ff\"><u>" + (s != null ? s : "Magnetic Field Editor")
@@ -254,11 +257,12 @@ class ModelProperties extends JDialog {
 				BFieldEditor bFieldEditor = new BFieldEditor(ModelProperties.this, model);
 				bFieldEditor.setLocationRelativeTo(ModelProperties.this);
 				bFieldEditor.setVisible(true);
+				bLabel.setText(model.getBField() != null ? "On" : "Off");
 			}
 		});
 		p.add(label);
-		label = new JLabel(model.getBField() != null ? "On" : "Off");
-		p.add(label);
+		bLabel = new JLabel(model.getBField() != null ? "On" : "Off");
+		p.add(bLabel);
 
 		/* script */
 

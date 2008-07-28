@@ -51,7 +51,7 @@ class BFieldEditor extends JDialog {
 
 	BFieldEditor(JDialog owner, MolecularModel model) {
 
-		super(owner, "Magnetic Field Properties", false);
+		super(owner, "Magnetic Field Properties", true);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		String s = MolecularContainer.getInternationalText("MagneticFieldProperties");
 		if (s != null)

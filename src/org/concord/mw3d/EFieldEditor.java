@@ -47,11 +47,11 @@ class EFieldEditor extends JDialog {
 	private JSlider xSlider, ySlider, zSlider;
 	private Vector3f original;
 	private MolecularModel model;
-	private final static float SLIDER_MAGNIFIER = 100;
+	private final static float SLIDER_MAGNIFIER = 1000;
 
 	EFieldEditor(JDialog owner, MolecularModel model) {
 
-		super(owner, "Electric Field Properties", false);
+		super(owner, "Electric Field Properties", true);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		String s = MolecularContainer.getInternationalText("ElectricFieldProperties");
 		if (s != null)
@@ -121,8 +121,8 @@ class EFieldEditor extends JDialog {
 		s.setPaintLabels(true);
 		Hashtable ht = new Hashtable();
 		ht.put(0, new JLabel("0"));
-		ht.put(-100, new JLabel("-1"));
-		ht.put(100, new JLabel("1"));
+		ht.put(-100, new JLabel("-0.1"));
+		ht.put(100, new JLabel("0.1"));
 		s.setLabelTable(ht);
 		s.setBorder(BorderFactory.createTitledBorder(title));
 		return s;
