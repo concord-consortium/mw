@@ -76,7 +76,7 @@ public class PageMd3d extends MolecularContainer implements BasicModel, Embeddab
 
 	private Action snapshotAction, snapshotAction2, mwScriptAction, jmolScriptAction;
 	private Action styleChoices;
-	private AbstractChange jmolScriptChanger;
+	private AbstractChange mwScriptChanger;
 
 	public PageMd3d() {
 
@@ -110,7 +110,7 @@ public class PageMd3d extends MolecularContainer implements BasicModel, Embeddab
 		switchMap.put((String) a.getValue(SHORT_DESCRIPTION), a);
 
 		changeMap = Collections.synchronizedMap(new TreeMap<String, ChangeListener>());
-		changeMap.put((String) jmolScriptChanger.getProperty(AbstractChange.SHORT_DESCRIPTION), jmolScriptChanger);
+		changeMap.put((String) mwScriptChanger.getProperty(AbstractChange.SHORT_DESCRIPTION), mwScriptChanger);
 
 		choiceMap = Collections.synchronizedMap(new TreeMap<String, Action>());
 		choiceMap.put((String) styleChoices.getValue(SHORT_DESCRIPTION), styleChoices);
@@ -290,7 +290,7 @@ public class PageMd3d extends MolecularContainer implements BasicModel, Embeddab
 		styleChoices.putValue(SHORT_DESCRIPTION, "Molecular display style");
 		styleChoices.putValue("options", t);
 
-		jmolScriptChanger = new AbstractChange() {
+		mwScriptChanger = new AbstractChange() {
 			public void stateChanged(ChangeEvent e) {
 				Object o = e.getSource();
 				if (o instanceof JSlider) {
@@ -324,7 +324,7 @@ public class PageMd3d extends MolecularContainer implements BasicModel, Embeddab
 								lq = script.indexOf('"', rq + 1);
 								rq = script.indexOf('"', lq + 1);
 							}
-							runJmolScript(script);
+							runMwScript(script);
 						}
 					}
 				}
@@ -348,7 +348,7 @@ public class PageMd3d extends MolecularContainer implements BasicModel, Embeddab
 							lq = script.indexOf('"', rq + 1);
 							rq = script.indexOf('"', lq + 1);
 						}
-						runJmolScript(script);
+						runMwScript(script);
 					}
 				}
 			}
@@ -373,7 +373,7 @@ public class PageMd3d extends MolecularContainer implements BasicModel, Embeddab
 				return (String) getProperty(SHORT_DESCRIPTION);
 			}
 		};
-		jmolScriptChanger.putProperty(AbstractChange.SHORT_DESCRIPTION, ComponentMaker.EXECUTE_JMOL_SCRIPT);
+		mwScriptChanger.putProperty(AbstractChange.SHORT_DESCRIPTION, ComponentMaker.EXECUTE_MW_SCRIPT);
 
 	}
 
