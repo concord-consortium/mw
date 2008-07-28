@@ -57,7 +57,7 @@ class Trajectories extends FontLineShape {
 		list.remove(t);
 	}
 
-	/**
+	/*
 	 * Clients calling this method and count() to iterate through the elements must use the lock returned by getLock()
 	 * to guard their iteration code.
 	 */
