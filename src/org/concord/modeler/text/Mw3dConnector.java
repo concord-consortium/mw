@@ -102,13 +102,9 @@ class Mw3dConnector {
 					if (name != null) {
 						ChangeListener cl = model.getChanges().get(name);
 						if (cl instanceof AbstractChange) {
-							String tooltip = slider.getToolTipText();
-							AbstractChange ac = (AbstractChange) cl;
-							Double scale = (Double) slider.getClientProperty(AbstractChange.SCALE);
-							double s = scale == null ? 1.0 : scale.doubleValue();
-							slider.setValue((int) (ac.getValue() / s));
 							slider.addChangeListener(cl);
 							model.addModelListener(slider);
+							String tooltip = slider.getToolTipText();
 							if (tooltip != null && !tooltip.trim().equals("")) {
 								slider.setToolTipText(tooltip);
 							}
@@ -128,10 +124,9 @@ class Mw3dConnector {
 					if (name != null) {
 						ChangeListener cl = model.getChanges().get(name);
 						if (cl instanceof AbstractChange) {
-							String tooltip = spinner.getToolTipText();
-							spinner.setValue(((AbstractChange) cl).getValue());
 							spinner.addChangeListener(cl);
 							model.addModelListener(spinner);
+							String tooltip = spinner.getToolTipText();
 							if (tooltip != null && !tooltip.trim().equals("")) {
 								spinner.setToolTipText(tooltip);
 							}
@@ -179,6 +174,23 @@ class Mw3dConnector {
 					}
 				}
 
+				else if (listener instanceof PageRadioButton) {
+					PageRadioButton radioButton = (PageRadioButton) listener;
+					name = radioButton.getName();
+					if (name != null) {
+						Action a = model.getMultiSwitches().get(name);
+						if (a != null) {
+							String text = radioButton.getText();
+							String tooltip = radioButton.getToolTipText();
+							radioButton.setAction(a);
+							radioButton.setText(text);
+							model.addModelListener(radioButton);
+							if (tooltip != null && !tooltip.trim().equals(""))
+								radioButton.setToolTipText(tooltip);
+						}
+					}
+				}
+
 				else if (listener instanceof PageComboBox) {
 					PageComboBox comboBox = (PageComboBox) listener;
 					name = comboBox.getName();
@@ -207,23 +219,6 @@ class Mw3dConnector {
 							a.setEnabled(true);
 							if (tooltip != null && !tooltip.trim().equals(""))
 								comboBox.setToolTipText(tooltip);
-						}
-					}
-				}
-
-				else if (listener instanceof PageRadioButton) {
-					PageRadioButton radioButton = (PageRadioButton) listener;
-					name = radioButton.getName();
-					if (name != null) {
-						Action a = model.getMultiSwitches().get(name);
-						if (a != null) {
-							String text = radioButton.getText();
-							String tooltip = radioButton.getToolTipText();
-							radioButton.setAction(a);
-							radioButton.setText(text);
-							model.addModelListener(radioButton);
-							if (tooltip != null && !tooltip.trim().equals(""))
-								radioButton.setToolTipText(tooltip);
 						}
 					}
 				}

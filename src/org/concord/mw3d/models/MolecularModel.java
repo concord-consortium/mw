@@ -41,10 +41,12 @@ import org.concord.modeler.DisasterHandler;
 import org.concord.modeler.SlideMovie;
 import org.concord.modeler.event.ModelEvent;
 import org.concord.modeler.event.ModelListener;
+import org.concord.modeler.event.ScriptExecutionListener;
 import org.concord.modeler.event.ScriptListener;
 import org.concord.modeler.process.AbstractLoadable;
 import org.concord.modeler.process.Job;
 import org.concord.modeler.process.Loadable;
+import org.concord.modeler.util.FileUtilities;
 import org.concord.modeler.util.FloatQueue;
 import org.concord.modeler.util.HomoQueueGroup;
 import org.myjmol.api.Pair;
@@ -284,6 +286,11 @@ public class MolecularModel {
 		if (evalAction == null)
 			return false;
 		return !evalAction.isStopped();
+	}
+
+	public void addScriptExecutionListener(ScriptExecutionListener l) {
+		initEvalAction();
+		evalAction.addExecutionListener(l);
 	}
 
 	/**
@@ -2019,6 +2026,15 @@ public class MolecularModel {
 			view.repaint();
 		}
 
+	}
+
+	public String toString() {
+		if (view == null)
+			return super.toString();
+		String s = view.getResourceAddress();
+		if (s == null)
+			return super.toString();
+		return FileUtilities.getFileName(s);
 	}
 
 }

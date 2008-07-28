@@ -72,14 +72,18 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JSlider;
+import javax.swing.JSpinner;
 import javax.swing.LookAndFeel;
 import javax.swing.RepaintManager;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 import javax.swing.Spring;
 import javax.swing.SpringLayout;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.html.HTML;
@@ -1128,26 +1132,65 @@ public final class ModelerUtilities {
 		String text = button.getText();
 		ItemListener[] il = button.getItemListeners();
 		if (il != null) {
-			for (int i = 0; i < il.length; i++)
-				button.removeItemListener(il[i]);
+			for (ItemListener x : il)
+				button.removeItemListener(x);
 		}
 		ActionListener[] al = button.getActionListeners();
 		if (al != null) {
-			for (int i = 0; i < al.length; i++)
-				button.removeActionListener(al[i]);
+			for (ActionListener x : al)
+				button.removeActionListener(x);
 		}
 		button.setSelected(selected);
 		if (il != null) {
-			for (int i = 0; i < il.length; i++)
-				button.addItemListener(il[i]);
+			for (ItemListener x : il)
+				button.addItemListener(x);
 		}
 		if (al != null) {
-			for (int i = 0; i < al.length; i++)
-				button.addActionListener(al[i]);
+			for (ActionListener x : al)
+				button.addActionListener(x);
 		}
 		if (a != null)
 			button.setAction(a);
 		button.setText(text);
+	}
+
+	public static void selectWithoutNotifyingListeners(JComboBox comboBox, int selectedIndex) {
+		ItemListener[] il = comboBox.getItemListeners();
+		if (il != null) {
+			for (ItemListener x : il)
+				comboBox.removeItemListener(x);
+		}
+		comboBox.setSelectedIndex(selectedIndex);
+		if (il != null) {
+			for (ItemListener x : il)
+				comboBox.addItemListener(x);
+		}
+	}
+
+	public static void adjustWithoutNotifyingListeners(JSlider slider, int value) {
+		ChangeListener[] cl = slider.getChangeListeners();
+		if (cl != null) {
+			for (ChangeListener x : cl)
+				slider.removeChangeListener(x);
+		}
+		slider.setValue(value);
+		if (cl != null) {
+			for (ChangeListener x : cl)
+				slider.addChangeListener(x);
+		}
+	}
+
+	public static void adjustWithoutNotifyingListeners(JSpinner spinner, double value) {
+		ChangeListener[] cl = spinner.getChangeListeners();
+		if (cl != null) {
+			for (ChangeListener x : cl)
+				spinner.removeChangeListener(x);
+		}
+		((SpinnerNumberModel) spinner.getModel()).setValue(new Double(value));
+		if (cl != null) {
+			for (ChangeListener x : cl)
+				spinner.addChangeListener(x);
+		}
 	}
 
 }

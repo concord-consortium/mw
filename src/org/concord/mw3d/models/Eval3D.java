@@ -45,6 +45,8 @@ import javax.vecmath.Point3f;
 import org.concord.modeler.ConnectionManager;
 import org.concord.modeler.draw.FillMode;
 import org.concord.modeler.event.ScriptEvent;
+import org.concord.modeler.event.ScriptExecutionEvent;
+import org.concord.modeler.event.ScriptExecutionListener;
 import org.concord.modeler.process.AbstractLoadable;
 import org.concord.modeler.script.AbstractEval;
 import org.concord.modeler.script.Compiler;
@@ -77,12 +79,32 @@ class Eval3D extends AbstractEval {
 	private MolecularModel model;
 	private MolecularView view;
 	private Atom[] atom;
+	private List<ScriptExecutionListener> executionListeners;
 
 	public Eval3D(MolecularModel model) {
 		super();
 		this.model = model;
 		atom = model.atom;
 		view = model.getView();
+	}
+
+	void addExecutionListener(ScriptExecutionListener l) {
+		if (executionListeners == null)
+			executionListeners = new ArrayList<ScriptExecutionListener>();
+		if (!executionListeners.contains(l))
+			executionListeners.add(l);
+	}
+
+	void removeExecutionListener(ScriptExecutionListener l) {
+		if (executionListeners == null)
+			return;
+		executionListeners.remove(l);
+	}
+
+	private void notifyExecution(String description) {
+		ScriptExecutionEvent e = new ScriptExecutionEvent(this, description);
+		for (ScriptExecutionListener x : executionListeners)
+			x.scriptExecuted(e);
 	}
 
 	protected Object getModel() {
@@ -548,6 +570,7 @@ class Eval3D extends AbstractEval {
 		}
 		if ("reset".equalsIgnoreCase(str)) { // reset
 			evaluateLoadClause(view.getResourceAddress());
+			notifyExecution("reset");
 			return true;
 		}
 		if ("remove".equalsIgnoreCase(str)) { // remove selected objects

@@ -92,6 +92,8 @@ import org.concord.modeler.event.PageComponentEvent;
 import org.concord.modeler.event.PageComponentListener;
 import org.concord.modeler.event.ProgressEvent;
 import org.concord.modeler.event.ProgressListener;
+import org.concord.modeler.event.ScriptExecutionEvent;
+import org.concord.modeler.event.ScriptExecutionListener;
 import org.concord.modeler.process.Executable;
 import org.concord.modeler.process.ImageStreamGenerator;
 import org.concord.modeler.ui.ComboBoxRenderer;
@@ -115,7 +117,7 @@ import static javax.swing.Action.*;
 import static org.concord.mw3d.UserAction.*;
 
 public abstract class MolecularContainer extends JComponent implements JmolStatusListener, CommandListener,
-		ProgressListener {
+		ProgressListener, ScriptExecutionListener {
 
 	final static String REGEX_SEPARATOR = "[\\s&&[^\\r\\n]]+";
 
@@ -366,6 +368,7 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 	}
 
 	public String runMwScript(String s) {
+		model.addScriptExecutionListener(this);
 		return model.runScript(s);
 	}
 
@@ -376,6 +379,13 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 	public void haltScriptExecution() {
 		model.haltScriptExecution();
 		view.runJmolScript("exit");
+	}
+
+	public void scriptExecuted(ScriptExecutionEvent e) {
+		if ("reset".equals(e.getDescription())) {
+			// notifyModelListeners(new ModelEvent(model, ModelEvent.MODEL_RESET));
+			notifyPageComponentListeners(new PageComponentEvent(this, PageComponentEvent.COMPONENT_RESET));
+		}
 	}
 
 	public void reset() {
@@ -1092,6 +1102,9 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 				if (resourceAddress != null)
 					input(resourceAddress);
 				else reset();
+				// notifyModelListeners(new ModelEvent(model, ModelEvent.MODEL_RESET));
+				notifyPageComponentListeners(new PageComponentEvent(MolecularContainer.this,
+						PageComponentEvent.COMPONENT_RESET));
 			}
 		};
 		resetAction.putValue(NAME, "Reset");

@@ -70,6 +70,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.JSlider;
+import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
@@ -87,6 +89,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledEditorKit;
 
 import org.concord.modeler.draw.FillMode;
+import org.concord.modeler.event.ModelListener;
 import org.concord.modeler.event.PageComponentEvent;
 import org.concord.modeler.event.PageComponentListener;
 import org.concord.modeler.event.PageEvent;
@@ -1871,6 +1874,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		case PageComponentEvent.COMPONENT_RESET:
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
+					resetControllerStates(src);
 					page.getSaveReminder().setChanged(true);
 				}
 			});
@@ -1894,6 +1898,43 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 
 		}
 
+	}
+
+	private void resetControllerStates(Object src) {
+		if (!(src instanceof BasicModel))
+			return;
+		BasicModel model = (BasicModel) src;
+		List<Embeddable> list = page.getEmbeddedComponents();
+		if (list == null || list.isEmpty())
+			return;
+		List<ModelListener> listener = model.getModelListeners();
+		for (Embeddable x : list) {
+			if (listener.contains(x)) {
+				if (x instanceof JToggleButton) {
+					JToggleButton tb = (JToggleButton) x;
+					Object o = tb.getClientProperty("selected");
+					ModelerUtilities.setWithoutNotifyingListeners(tb, o == Boolean.TRUE);
+				}
+				else if (x instanceof JSlider) {
+					JSlider sl = (JSlider) x;
+					Object o = sl.getClientProperty("value");
+					if (o instanceof Integer)
+						ModelerUtilities.adjustWithoutNotifyingListeners(sl, (((Integer) o)).intValue());
+				}
+				else if (x instanceof PageSpinner) {
+					PageSpinner sp = (PageSpinner) x;
+					Object o = sp.getClientProperty("value");
+					if (o instanceof Double)
+						sp.setValue((Double) o);
+				}
+				else if (x instanceof JComboBox) {
+					JComboBox cb = (JComboBox) x;
+					Object o = cb.getClientProperty("Selected Index");
+					if (o instanceof Integer)
+						ModelerUtilities.selectWithoutNotifyingListeners(cb, (((Integer) o)).intValue());
+				}
+			}
+		}
 	}
 
 	private void setToolbarButtons() {

@@ -2107,7 +2107,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		return null;
 	}
 
-	protected List<Embeddable> getEmbeddedComponents() {
+	public List<Embeddable> getEmbeddedComponents() {
 		if (getDocument() == null)
 			return null;
 		if (getDocument().getLength() <= 0)
