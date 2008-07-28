@@ -66,7 +66,9 @@ class Eval3D extends AbstractEval {
 	private final static byte BY_TBOND = 15;
 	private final static byte BY_MOLECULE = 16;
 
+	// deprecated, replaced by set camera [index]
 	private final static Pattern CAMERA = compile("(^(?i)camera\\b){1}");
+
 	private static Map<String, Byte> actionIDMap;
 
 	private MolecularModel model;
@@ -352,6 +354,13 @@ class Eval3D extends AbstractEval {
 				return true;
 		}
 
+		// damp
+		matcher = DAMP.matcher(ci);
+		if (matcher.find()) {
+			if (evaluateDampClause(ci.substring(matcher.end()).trim()))
+				return true;
+		}
+
 		// heat
 		matcher = HEAT.matcher(ci);
 		if (matcher.find()) {
@@ -601,6 +610,26 @@ class Eval3D extends AbstractEval {
 		return true;
 	}
 
+	private boolean evaluateDampClause(String str) {
+		double x = parseMathExpression(str);
+		if (x < 0) {
+			out(ScriptEvent.FAILED, "Friction cannot be negative: " + str);
+			return false;
+		}
+		int n = model.getAtomCount();
+		if (n <= 0)
+			return true;
+		float c = (float) x;
+		for (int k = 0; k < n; k++) {
+			Atom a = model.getAtom(k);
+			if (a.isSelected())
+				a.setDamp(c);
+		}
+		view.repaint();
+		model.notifyChange();
+		return true;
+	}
+
 	private boolean evaluateHeatClause(String str) {
 		float c = 0;
 		try {
@@ -817,15 +846,29 @@ class Eval3D extends AbstractEval {
 			}
 		}
 
-		// navigation
-		String s = str.toLowerCase();
-		byte result = parseOnOff("navigation", s);
-		if (result != -1) {
-			if (result != 0) {
-				view.getViewer().setNavigationMode(result == ON);
-				view.repaint();
+		String[] s = str.trim().split(REGEX_WHITESPACE + "+");
+
+		if (s.length == 2) {
+
+			String s0 = s[0].trim().toLowerCase().intern();
+			if ("on".equalsIgnoreCase(s[1].trim()) || "off".equalsIgnoreCase(s[1].trim())) {
+				if (s0 == "navigation") {
+					boolean b = "on".equalsIgnoreCase(s[1].trim());
+					view.getViewer().setNavigationMode(b);
+					view.repaint();
+					model.notifyChange();
+					return true;
+				}
 			}
-			return result != 0;
+			double x = parseMathExpression(s[1]);
+			if (Double.isNaN(x))
+				return false;
+			if (s0 == "camera") {
+				view.setCameraAtom((int) Math.round(x));
+				view.repaint();
+				model.notifyChange();
+			}
+
 		}
 
 		out(ScriptEvent.FAILED, "Unrecognized type of parameter to set: " + str);
