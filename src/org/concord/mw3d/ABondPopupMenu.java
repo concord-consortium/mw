@@ -40,9 +40,11 @@ class ABondPopupMenu extends JPopupMenu {
 	public void show(Component invoker, int x, int y) {
 		if (view.selectedComponent instanceof ABond) {
 			ABond a = (ABond) view.selectedComponent;
-			miInfo.setText("<html><i>Angular Bond</i> #" + view.getModel().getABonds().indexOf(a) + ": ( "
-					+ a.getAtom1() + " - " + a.getAtom2() + " - " + a.getAtom3() + " ) "
-					+ MolecularView.FORMAT.format(a.getAngle() * 180 / Math.PI) + "&#176;</html>");
+			String s = MolecularContainer.getInternationalText("AngularBondHtml");
+			miInfo.setText("<html><i>" + (s != null ? s : "Angular Bond") + "</i> #"
+					+ view.getModel().getABonds().indexOf(a) + ": ( " + a.getAtom1() + " - " + a.getAtom2() + " - "
+					+ a.getAtom3() + " ) " + MolecularView.FORMAT.format(a.getAngle() * 180 / Math.PI)
+					+ "&#176;</html>");
 		}
 		super.show(invoker, x, y);
 	}

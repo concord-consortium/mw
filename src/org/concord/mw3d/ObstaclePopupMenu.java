@@ -41,7 +41,9 @@ class ObstaclePopupMenu extends JPopupMenu {
 	void setObstacle(Obstacle obs) {
 		if (obs == null)
 			return;
-		miInfo.setText("<html><i>Obstacle</i> #" + obs.getModel().indexOfObstacle(obs) + "</html>");
+		String s = MolecularContainer.getInternationalText("ObstacleHtml");
+		miInfo.setText("<html><i>" + (s != null ? s : "Obstacle") + "</i> #" + obs.getModel().indexOfObstacle(obs)
+				+ "</html>");
 		miTranslucent.setSelected(obs.isTranslucent());
 	}
 
