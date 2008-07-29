@@ -1914,12 +1914,17 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 					JToggleButton tb = (JToggleButton) x;
 					Object o = tb.getClientProperty("selected");
 					ModelerUtilities.setWithoutNotifyingListeners(tb, o == Boolean.TRUE);
+					// some scripts might run for a long time, I am not sure if we should let them
+					// tb.setSelected(o == Boolean.TRUE);
 				}
 				else if (x instanceof JSlider) {
 					JSlider sl = (JSlider) x;
 					Object o = sl.getClientProperty("value");
-					if (o instanceof Integer)
+					if (o instanceof Integer) {
 						ModelerUtilities.adjustWithoutNotifyingListeners(sl, (((Integer) o)).intValue());
+						// some scripts might run for a long time, I am not sure if we should let them
+						// sl.setValue((Integer) o);
+					}
 				}
 				else if (x instanceof PageSpinner) {
 					PageSpinner sp = (PageSpinner) x;
@@ -1930,8 +1935,11 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 				else if (x instanceof JComboBox) {
 					JComboBox cb = (JComboBox) x;
 					Object o = cb.getClientProperty("Selected Index");
-					if (o instanceof Integer)
+					if (o instanceof Integer) {
 						ModelerUtilities.selectWithoutNotifyingListeners(cb, (((Integer) o)).intValue());
+						// some scripts might run for a long time, I am not sure if we should let them
+						// cb.setSelectedIndex((Integer) o);
+					}
 				}
 			}
 		}
