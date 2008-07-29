@@ -19,20 +19,31 @@
  * END LICENSE */
 package org.concord.modeler.text;
 
+import static java.util.regex.Pattern.compile;
+
 import java.awt.EventQueue;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import javax.swing.AbstractButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
+import javax.swing.event.ChangeListener;
 
 import org.concord.modeler.ComponentScripter;
 import org.concord.modeler.ConnectionManager;
+import org.concord.modeler.Embeddable;
 import org.concord.modeler.Navigator;
 import org.concord.modeler.script.Compiler;
 import org.concord.modeler.ui.HTMLPane;
@@ -43,6 +54,10 @@ import org.concord.modeler.util.FileUtilities;
  * 
  */
 class PageScripter extends ComponentScripter {
+
+	private final static Pattern ENABLE_COMPONENT = compile("(^(?i)enablecomponent\\b){1}");
+	private final static Pattern SELECT_COMPONENT = compile("(^(?i)selectcomponent\\b){1}");
+	private final static Pattern SELECT_COMBOBOX = compile("(^(?i)selectcombobox\\b){1}");
 
 	private Page page;
 
@@ -107,6 +122,180 @@ class PageScripter extends ComponentScripter {
 			return;
 		}
 
+		// enable component
+		matcher = ENABLE_COMPONENT.matcher(ci);
+		if (matcher.find()) {
+			String[] s = ci.substring(matcher.end()).trim().split("\\s+");
+			if (s.length == 1) {
+				int i = -1;
+				try {
+					i = Integer.parseInt(s[0]);
+				}
+				catch (NumberFormatException e) {
+					e.printStackTrace();
+				}
+				if (i >= 0) {
+					final int i2 = i;
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							Object o = page.getEmbeddedComponent(Embeddable.class, i2);
+							if (o instanceof JComponent)
+								((JComponent) o).setEnabled(true);
+						}
+					});
+				}
+			}
+			else if (s.length == 2) {
+				int i = -1;
+				try {
+					i = Integer.parseInt(s[0]);
+				}
+				catch (NumberFormatException e) {
+					e.printStackTrace();
+				}
+				if (i >= 0) {
+					final int i2 = i;
+					final boolean b = "true".equalsIgnoreCase(s[1]);
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							Object o = page.getEmbeddedComponent(Embeddable.class, i2);
+							if (o instanceof JComponent)
+								((JComponent) o).setEnabled(b);
+						}
+					});
+				}
+			}
+			return;
+		}
+
+		// select component
+		matcher = SELECT_COMPONENT.matcher(ci);
+		if (matcher.find()) {
+			String[] s = ci.substring(matcher.end()).trim().split("\\s+");
+			if (s.length >= 1) {
+				int i = -1;
+				try {
+					i = Integer.parseInt(s[0]);
+				}
+				catch (NumberFormatException e) {
+					e.printStackTrace();
+				}
+				if (i >= 0) {
+					boolean a = true;
+					if (s.length >= 2)
+						a = "true".equalsIgnoreCase(s[1]);
+					boolean b = false;
+					if (s.length >= 3)
+						b = "execute".equalsIgnoreCase(s[2]);
+					final int i2 = i;
+					final boolean a2 = a;
+					final boolean b2 = b;
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							setComponentSelected(i2, a2, b2);
+						}
+					});
+				}
+			}
+			return;
+		}
+		// select index from a combo box
+		matcher = SELECT_COMBOBOX.matcher(ci);
+		if (matcher.find()) {
+			String[] s = ci.substring(matcher.end()).trim().split("\\s+");
+			if (s.length >= 2) {
+				int i = -1, j = -1;
+				try {
+					i = Integer.parseInt(s[0]);
+					j = Integer.parseInt(s[1]);
+				}
+				catch (NumberFormatException e) {
+					e.printStackTrace();
+				}
+				if (i >= 0 && j >= 0) {
+					boolean b = false;
+					if (s.length >= 3)
+						b = "execute".equalsIgnoreCase(s[2]);
+					final int i2 = i;
+					final int j2 = j;
+					final boolean b2 = b;
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							Object o = page.getEmbeddedComponent(JComboBox.class, i2);
+							if (o instanceof JComboBox) {
+								JComboBox cb = (JComboBox) o;
+								if (j2 < cb.getItemCount())
+									setSelectedIndex(cb, j2, b2);
+							}
+						}
+					});
+				}
+			}
+			return;
+		}
+
+	}
+
+	/* set the selection state of a component without or with causing the listeners on it to fire */
+	private void setComponentSelected(int i, boolean b, boolean execute) {
+		List<Embeddable> list = page.getEmbeddedComponents();
+		if (list == null || i >= list.size() || i < 0)
+			return;
+		Embeddable c = list.get(i);
+		if (c instanceof AbstractButton) {
+			AbstractButton ab = (AbstractButton) c;
+			if (execute) {
+				ab.setSelected(b);
+			}
+			else {
+				ItemListener[] il = ab.getItemListeners();
+				if (il != null)
+					for (ItemListener x : il)
+						ab.removeItemListener(x);
+				ActionListener[] al = ab.getActionListeners();
+				if (al != null)
+					for (ActionListener x : al)
+						ab.removeActionListener(x);
+				ChangeListener[] cl = ab.getChangeListeners();
+				if (cl != null)
+					for (ChangeListener x : cl)
+						ab.removeChangeListener(x);
+				ab.setSelected(b);
+				if (il != null)
+					for (ItemListener x : il)
+						ab.addItemListener(x);
+				if (al != null)
+					for (ActionListener x : al)
+						ab.addActionListener(x);
+				if (cl != null)
+					for (ChangeListener x : cl)
+						ab.addChangeListener(x);
+			}
+		}
+	}
+
+	/* set the selected index of a combo box without or with causing the listeners on it to fire */
+	private void setSelectedIndex(JComboBox cb, int iSelected, boolean execute) {
+		if (execute) {
+			cb.setSelectedIndex(iSelected);
+		}
+		else {
+			ActionListener[] al = cb.getActionListeners();
+			if (al != null)
+				for (ActionListener x : al)
+					cb.removeActionListener(x);
+			ItemListener[] il = cb.getItemListeners();
+			if (il != null)
+				for (ItemListener x : il)
+					cb.removeItemListener(x);
+			cb.setSelectedIndex(iSelected);
+			if (al != null)
+				for (ActionListener x : al)
+					cb.addActionListener(x);
+			if (il != null)
+				for (ItemListener x : il)
+					cb.addItemListener(x);
+		}
 	}
 
 	private void showMessageDialog(String message) {
