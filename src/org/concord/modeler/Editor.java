@@ -1904,10 +1904,12 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		if (!(src instanceof BasicModel))
 			return;
 		BasicModel model = (BasicModel) src;
+		List<ModelListener> listener = model.getModelListeners();
+		if (listener == null || listener.isEmpty())
+			return;
 		List<Embeddable> list = page.getEmbeddedComponents();
 		if (list == null || list.isEmpty())
 			return;
-		List<ModelListener> listener = model.getModelListeners();
 		for (Embeddable x : list) {
 			if (listener.contains(x)) {
 				if (x instanceof JToggleButton) {
