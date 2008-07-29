@@ -39,6 +39,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -63,6 +64,8 @@ import javax.swing.event.ChangeListener;
 import org.concord.modeler.event.AbstractChange;
 import org.concord.modeler.event.ModelEvent;
 import org.concord.modeler.event.ModelListener;
+import org.concord.modeler.event.PageComponentEvent;
+import org.concord.modeler.event.PageComponentListener;
 import org.concord.modeler.text.ExternalClient;
 import org.concord.modeler.text.Page;
 import org.concord.modeler.text.XMLCharacterEncoder;
@@ -119,6 +122,9 @@ abstract public class PagePlugin extends JPanel implements Embeddable, Scriptabl
 	private Map<String, Action> switchMap;
 	private Map<String, Action> multiSwitchMap;
 
+	private List<PageComponentListener> pageComponentListenerList;
+	private List<ModelListener> modelListenerList;
+
 	public PagePlugin() {
 		super();
 		init();
@@ -157,6 +163,29 @@ abstract public class PagePlugin extends JPanel implements Embeddable, Scriptabl
 		});
 		t.setPriority(Thread.MIN_PRIORITY + 1);
 		t.start();
+	}
+
+	public void addPageComponentListener(PageComponentListener pcl) {
+		if (pcl == null)
+			throw new IllegalArgumentException("null input");
+		if (pageComponentListenerList == null)
+			pageComponentListenerList = new ArrayList<PageComponentListener>();
+		if (!pageComponentListenerList.contains(pcl))
+			pageComponentListenerList.add(pcl);
+	}
+
+	public void removePageComponentListener(PageComponentListener pcl) {
+		if (pcl == null)
+			throw new IllegalArgumentException("null input");
+		if (pageComponentListenerList != null)
+			pageComponentListenerList.remove(pcl);
+	}
+
+	public void notifyPageComponentListeners(PageComponentEvent e) {
+		if (pageComponentListenerList == null || pageComponentListenerList.isEmpty())
+			return;
+		for (PageComponentListener l : pageComponentListenerList)
+			l.pageComponentChanged(e);
 	}
 
 	public abstract void destroy();
@@ -389,6 +418,17 @@ abstract public class PagePlugin extends JPanel implements Embeddable, Scriptabl
 
 	public void setPage(Page p) {
 		page = p;
+		// in case this plugin changes the page context
+		if (pageComponentListenerList != null) {
+			Object o;
+			for (Iterator it = pageComponentListenerList.iterator(); it.hasNext();) {
+				o = it.next();
+				if (o instanceof Editor) {
+					it.remove();
+				}
+			}
+		}
+		addPageComponentListener(p.getEditor());
 	}
 
 	public Page getPage() {
@@ -729,16 +769,27 @@ abstract public class PagePlugin extends JPanel implements Embeddable, Scriptabl
 	}
 
 	public void addModelListener(ModelListener ml) {
+		if (modelListenerList == null)
+			modelListenerList = new ArrayList<ModelListener>();
+		if (!modelListenerList.contains(ml))
+			modelListenerList.add(ml);
 	}
 
 	public void removeModelListener(ModelListener ml) {
+		if (modelListenerList == null)
+			return;
+		modelListenerList.remove(ml);
 	}
 
 	public List<ModelListener> getModelListeners() {
-		return null;
+		return modelListenerList;
 	}
 
 	public void notifyModelListeners(ModelEvent e) {
+		if (modelListenerList == null)
+			return;
+		for (ModelListener l : modelListenerList)
+			l.modelUpdate(e);
 	}
 
 	public Map<String, Action> getActions() {

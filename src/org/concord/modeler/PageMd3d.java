@@ -410,7 +410,8 @@ public class PageMd3d extends MolecularContainer implements BasicModel, Embeddab
 	public void addModelListener(ModelListener ml) {
 		if (modelListenerList == null)
 			modelListenerList = new ArrayList<ModelListener>();
-		modelListenerList.add(ml);
+		if (!modelListenerList.contains(ml))
+			modelListenerList.add(ml);
 	}
 
 	public void removeModelListener(ModelListener ml) {
@@ -478,6 +479,7 @@ public class PageMd3d extends MolecularContainer implements BasicModel, Embeddab
 
 	public void setPage(Page p) {
 		page = p;
+		// in case this container changes the page context
 		if (getPageComponentListeners() != null) {
 			Object o;
 			for (Iterator it = getPageComponentListeners().iterator(); it.hasNext();) {
