@@ -21,6 +21,8 @@ package org.concord.modeler;
 
 import java.awt.EventQueue;
 
+import org.concord.modeler.event.PageComponentEvent;
+
 /**
  * @author Charles Xie
  * 
@@ -50,6 +52,8 @@ class PluginScripter extends ComponentScripter {
 		// reload
 		if ("reset".equalsIgnoreCase(ci)) {
 			jContainer.loadState();
+			jContainer.notifyPageComponentListeners(new PageComponentEvent(jContainer,
+					PageComponentEvent.COMPONENT_RESET));
 			return;
 		}
 

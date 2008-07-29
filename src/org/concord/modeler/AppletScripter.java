@@ -21,6 +21,8 @@ package org.concord.modeler;
 
 import java.awt.EventQueue;
 
+import org.concord.modeler.event.PageComponentEvent;
+
 /**
  * @author Charles Xie
  * 
@@ -50,6 +52,7 @@ class AppletScripter extends ComponentScripter {
 		// reload
 		if ("reset".equalsIgnoreCase(ci)) {
 			applet.loadState();
+			applet.notifyPageComponentListeners(new PageComponentEvent(applet, PageComponentEvent.COMPONENT_RESET));
 			return;
 		}
 

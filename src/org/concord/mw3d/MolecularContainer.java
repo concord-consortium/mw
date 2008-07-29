@@ -228,29 +228,24 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 
 	}
 
-	public List<PageComponentListener> getPageComponentListeners() {
+	protected List<PageComponentListener> getPageComponentListeners() {
 		return pageComponentListenerList;
 	}
 
 	public void addPageComponentListener(PageComponentListener pcl) {
 		if (pcl == null)
 			throw new IllegalArgumentException("null input");
-		if (pageComponentListenerList == null) {
+		if (pageComponentListenerList == null)
 			pageComponentListenerList = new ArrayList<PageComponentListener>();
-		}
-		else {
-			if (pageComponentListenerList.contains(pcl))
-				return;
-		}
-		pageComponentListenerList.add(pcl);
+		if (!pageComponentListenerList.contains(pcl))
+			pageComponentListenerList.add(pcl);
 	}
 
 	public void removePageComponentListener(PageComponentListener pcl) {
 		if (pcl == null)
 			throw new IllegalArgumentException("null input");
-		if (pageComponentListenerList == null)
-			return;
-		pageComponentListenerList.remove(pcl);
+		if (pageComponentListenerList != null)
+			pageComponentListenerList.remove(pcl);
 	}
 
 	public void notifyPageComponentListeners(PageComponentEvent e) {
