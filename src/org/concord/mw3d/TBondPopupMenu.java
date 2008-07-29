@@ -40,8 +40,10 @@ class TBondPopupMenu extends JPopupMenu {
 	public void show(Component invoker, int x, int y) {
 		if (view.selectedComponent instanceof TBond) {
 			TBond t = (TBond) view.selectedComponent;
-			miInfo.setText("<html><i>Torsional Bond</i> #" + view.getModel().getTBonds().indexOf(t) + ": ( "
-					+ t.getAtom1() + " - " + t.getAtom2() + " - " + t.getAtom3() + " - " + t.getAtom4() + " ) "
+			String s = MolecularContainer.getInternationalText("TorsionalBondHtml");
+			miInfo.setText("<html><i>" + (s != null ? s : "Torsional Bond") + "</i> #"
+					+ view.getModel().getTBonds().indexOf(t) + ": ( " + t.getAtom1() + " - " + t.getAtom2() + " - "
+					+ t.getAtom3() + " - " + t.getAtom4() + " ) "
 					+ MolecularView.FORMAT.format(t.getAngle() * 180 / Math.PI) + "&#176;</html>");
 		}
 		super.show(invoker, x, y);

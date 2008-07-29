@@ -44,7 +44,9 @@ class AtomPopupMenu extends JPopupMenu {
 	public void show(Component invoker, int x, int y) {
 		if (view.selectedComponent instanceof Atom) {
 			Atom a = (Atom) view.selectedComponent;
-			miInfo.setText("<html><i>Atom</i> #" + a.getIndex() + ": " + a.getSymbol() + "</html>");
+			String s = MolecularContainer.getInternationalText("AtomHtml");
+			miInfo.setText("<html><i>" + (s != null ? s : "Atom") + "</i> #" + a.getIndex() + ": " + a.getSymbol()
+					+ "</html>");
 		}
 		super.show(invoker, x, y);
 	}

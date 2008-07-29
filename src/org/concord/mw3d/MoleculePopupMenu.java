@@ -40,8 +40,9 @@ class MoleculePopupMenu extends JPopupMenu {
 	public void show(Component invoker, int x, int y) {
 		if (view.selectedComponent instanceof Molecule) {
 			Molecule mol = (Molecule) view.selectedComponent;
-			miInfo.setText("<html><i>Molecule</i> #" + view.getModel().getMoleculeIndex(mol) + ": "
-					+ mol.getAtomCount() + " atoms</html>");
+			String s = MolecularContainer.getInternationalText("MoleculeHtml");
+			miInfo.setText("<html><i>" + (s != null ? s : "Molecule") + "</i> #"
+					+ view.getModel().getMoleculeIndex(mol) + ": " + mol.getAtomCount() + " atoms</html>");
 		}
 		super.show(invoker, x, y);
 	}

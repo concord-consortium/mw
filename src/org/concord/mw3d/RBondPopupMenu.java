@@ -40,9 +40,10 @@ class RBondPopupMenu extends JPopupMenu {
 	public void show(Component invoker, int x, int y) {
 		if (view.selectedComponent instanceof RBond) {
 			RBond r = (RBond) view.selectedComponent;
-			miInfo.setText("<html><i>Radial Bond</i> #" + view.getModel().getRBonds().indexOf(r) + ": ( "
-					+ r.getAtom1() + " - " + r.getAtom2() + " ) " + MolecularView.FORMAT.format(r.getLength())
-					+ "&#197;</html>");
+			String s = MolecularContainer.getInternationalText("RadialBondHtml");
+			miInfo.setText("<html><i>" + (s != null ? s : "Radial Bond") + "</i> #"
+					+ view.getModel().getRBonds().indexOf(r) + ": ( " + r.getAtom1() + " - " + r.getAtom2() + " ) "
+					+ MolecularView.FORMAT.format(r.getLength()) + "&#197;</html>");
 		}
 		super.show(invoker, x, y);
 	}
