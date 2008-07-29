@@ -136,6 +136,7 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 	private List<PageComponentListener> pageComponentListenerList;
 	private PageComponentEvent modelChangeEvent;
 	private boolean boxRotated;
+	private ActionReminder actionReminder;
 
 	/* GUI components */
 	FileChooser fileChooser;
@@ -225,6 +226,9 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 				notifyPageComponentListeners(new PageComponentEvent(this, PageComponentEvent.COMPONENT_RUN));
 			}
 		});
+
+		actionReminder = new ActionReminder();
+		actionReminder.setParentComponent(this);
 
 	}
 
@@ -1094,6 +1098,8 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 		// reset action
 		resetAction = new DefaultAction() {
 			public void actionPerformed(ActionEvent e) {
+				if (actionReminder.show(ActionReminder.RESET_TO_SAVED_STATE) == JOptionPane.NO_OPTION)
+					return;
 				if (resourceAddress != null)
 					input(resourceAddress);
 				else reset();
