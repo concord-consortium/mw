@@ -2943,6 +2943,7 @@ final class PageXMLDecoder {
 						.answerToString());
 				UserData.sharedInstance().putData(key, qa);
 			}
+			htmlComponentConnector.enroll(m.getQuestionTextBox());
 			indexOfComponent++;
 			iChoice = 0;
 			singleSelection = true;
