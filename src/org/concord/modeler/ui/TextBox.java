@@ -200,7 +200,7 @@ public class TextBox extends JPanel implements HtmlService, Searchable {
 					}
 				}
 			}
-			// By default, a HTML form will send a request when the submit button is pressed. We want MW
+			// By default, an HTML form will send a request when the submit button is pressed. We want MW
 			// to handle this. So we disable the ForView listener associated the button. See HTMLPane for
 			// the MW implementation (which passes the form data through a HyperlinkEvent to Page).
 			else if (comp instanceof JButton) {
@@ -379,6 +379,10 @@ public class TextBox extends JPanel implements HtmlService, Searchable {
 	}
 
 	public JTextComponent getTextComponent() {
+		return textBody;
+	}
+
+	public HTMLPane getHtmlPane() {
 		return textBody;
 	}
 

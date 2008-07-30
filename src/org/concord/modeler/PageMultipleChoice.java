@@ -116,7 +116,7 @@ public class PageMultipleChoice extends MultipleChoice implements Embeddable, Mu
 	}
 
 	public void destroy() {
-		//questionBody.removeHyperlinkListener(page);
+		questionBody.getHtmlPane().removeHyperlinkListener(page);
 		removeHotlinkListener(page);
 		if (maker != null)
 			maker.setObject(null); // make sure this object is not held by someone
@@ -244,7 +244,7 @@ public class PageMultipleChoice extends MultipleChoice implements Embeddable, Mu
 	public void setChangable(boolean b) {
 		changable = b;
 		if (b) {
-			//questionBody.removeLinkMonitor();
+			questionBody.getHtmlPane().removeLinkMonitor();
 			if (!isChangable()) {
 				if (choices != null) {
 					for (AbstractButton x : choices)
@@ -253,7 +253,7 @@ public class PageMultipleChoice extends MultipleChoice implements Embeddable, Mu
 			}
 		}
 		else {
-			//questionBody.addLinkMonitor();
+			questionBody.getHtmlPane().addLinkMonitor();
 			if (isChangable()) {
 				if (choices != null) {
 					for (AbstractButton x : choices)
@@ -276,7 +276,7 @@ public class PageMultipleChoice extends MultipleChoice implements Embeddable, Mu
 		}
 		addHotlinkListener(page);
 		/* Sun's HyperlinkListener added to make image map work */
-		//questionBody.addHyperlinkListener(page);
+		questionBody.getHtmlPane().addHyperlinkListener(page);
 		try {
 			setBase(page.getURL());
 		}

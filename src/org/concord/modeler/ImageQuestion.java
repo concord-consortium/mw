@@ -50,7 +50,7 @@ import org.concord.modeler.event.HotlinkListener;
 import org.concord.modeler.text.Page;
 import org.concord.modeler.text.XMLCharacterEncoder;
 import org.concord.modeler.ui.BorderRectangle;
-import org.concord.modeler.ui.HTMLPane;
+import org.concord.modeler.ui.TextBox;
 
 /**
  * This class is not thread-safe.
@@ -72,7 +72,7 @@ public class ImageQuestion extends JPanel implements Embeddable, TransferListene
 	private JSplitPane splitPane;
 	private ThumbnailImagePanel thumbnailPanel;
 	private ImageContainer imageContainer;
-	private HTMLPane questionArea;
+	private BasicPageTextBox questionArea;
 	private JPanel toolBarPanel;
 	private JScrollPane scroller;
 	private JPanel lowerPanel;
@@ -86,7 +86,15 @@ public class ImageQuestion extends JPanel implements Embeddable, TransferListene
 		setOpaque(false);
 		setPreferredSize(new Dimension(400, 300));
 
-		questionArea = new HTMLPane("text/html", "<html><body marginwidth=5 marginheight=5>Question</body></html>");
+		questionArea = new BasicPageTextBox() {
+			public void createPopupMenu() {
+			}
+
+			public JPopupMenu getPopupMenu() {
+				return null;
+			}
+		};
+		questionArea.setText("<html><body marginwidth=5 marginheight=5>Question</body></html>");
 		questionArea.setEditable(false);
 		add(questionArea, BorderLayout.NORTH);
 
@@ -165,7 +173,7 @@ public class ImageQuestion extends JPanel implements Embeddable, TransferListene
 	}
 
 	public boolean isTextSelected() {
-		return questionArea.getSelectedText() != null;
+		return questionArea.getTextComponent().getSelectedText() != null;
 	}
 
 	public void setOpaque(boolean b) {
@@ -242,13 +250,13 @@ public class ImageQuestion extends JPanel implements Embeddable, TransferListene
 	}
 
 	public void setBase(URL u) {
-		if (questionArea.getDocument() instanceof HTMLDocument)
-			((HTMLDocument) questionArea.getDocument()).setBase(u);
+		if (questionArea.getTextComponent().getDocument() instanceof HTMLDocument)
+			((HTMLDocument) questionArea.getTextComponent().getDocument()).setBase(u);
 	}
 
 	public URL getBase() {
-		if (questionArea.getDocument() instanceof HTMLDocument)
-			return ((HTMLDocument) questionArea.getDocument()).getBase();
+		if (questionArea.getTextComponent().getDocument() instanceof HTMLDocument)
+			return ((HTMLDocument) questionArea.getTextComponent().getDocument()).getBase();
 		return null;
 	}
 
@@ -268,8 +276,12 @@ public class ImageQuestion extends JPanel implements Embeddable, TransferListene
 		questionArea.useCachedImages(b, codeBase);
 	}
 
-	public JTextComponent getTextComponent() {
+	public TextBox getQuestionTextBox() {
 		return questionArea;
+	}
+
+	public JTextComponent getTextComponent() {
+		return questionArea.getTextComponent();
 	}
 
 	public void setPage(Page p) {
@@ -281,7 +293,7 @@ public class ImageQuestion extends JPanel implements Embeddable, TransferListene
 		}
 		questionArea.addHotlinkListener(page);
 		/* Sun's HyperlinkListener added to make image map work */
-		questionArea.addHyperlinkListener(page);
+		questionArea.getHtmlPane().addHyperlinkListener(page);
 		try {
 			setBase(page.getURL());
 		}
@@ -296,13 +308,13 @@ public class ImageQuestion extends JPanel implements Embeddable, TransferListene
 	}
 
 	public void destroy() {
+		questionArea.getHtmlPane().removeHyperlinkListener(page);
 		page = null;
 		thumbnailPanel.removeTransferListener(this);
 		thumbnailPanel.destroy();
 		imageContainer.destroy();
-		if (maker != null) {
+		if (maker != null)
 			maker.setObject(null);
-		}
 	}
 
 	public void setPreferredSize(Dimension dim) {
@@ -358,6 +370,12 @@ public class ImageQuestion extends JPanel implements Embeddable, TransferListene
 
 	public void setChangable(boolean b) {
 		changable = b;
+		if (b) {
+			questionArea.getHtmlPane().removeLinkMonitor();
+		}
+		else {
+			questionArea.getHtmlPane().addLinkMonitor();
+		}
 	}
 
 	public boolean isChangable() {
