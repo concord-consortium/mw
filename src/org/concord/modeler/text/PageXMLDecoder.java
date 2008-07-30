@@ -2998,6 +2998,7 @@ final class PageXMLDecoder {
 				if (page.isRemote())
 					iq.cacheImages(page.getPathBase());
 			}
+			htmlComponentConnector.enroll(iq.getQuestionTextBox());
 			indexOfComponent++;
 			return iq;
 		}
@@ -3069,6 +3070,7 @@ final class PageXMLDecoder {
 				if (page.isRemote())
 					t.cacheImages(page.getPathBase());
 			}
+			htmlComponentConnector.enroll(t.getQuestionTextBox());
 			indexOfComponent++;
 			return t;
 		}
@@ -3143,6 +3145,7 @@ final class PageXMLDecoder {
 				if (page.isRemote())
 					t.cacheImages(page.getPathBase());
 			}
+			htmlComponentConnector.enroll(t.getQuestionTextBox());
 			indexOfComponent++;
 			return t;
 		}

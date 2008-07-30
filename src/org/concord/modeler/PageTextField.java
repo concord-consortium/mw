@@ -49,8 +49,8 @@ import javax.swing.text.html.HTMLDocument;
 import org.concord.modeler.event.HotlinkListener;
 import org.concord.modeler.text.Page;
 import org.concord.modeler.text.XMLCharacterEncoder;
-import org.concord.modeler.ui.HTMLPane;
 import org.concord.modeler.ui.PastableTextField;
+import org.concord.modeler.ui.TextBox;
 
 public class PageTextField extends JPanel implements Embeddable, HtmlService, Searchable {
 
@@ -64,7 +64,7 @@ public class PageTextField extends JPanel implements Embeddable, HtmlService, Se
 	private static int defaultColumn = 40;
 	private static Color defaultBackground, defaultForeground;
 	private JTextField textField;
-	private HTMLPane questionArea;
+	private BasicPageTextBox questionArea;
 	private JButton clearButton;
 	private JPanel buttonPanel;
 	private JPopupMenu popupMenu;
@@ -95,7 +95,15 @@ public class PageTextField extends JPanel implements Embeddable, HtmlService, Se
 
 		buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
-		questionArea = new HTMLPane("text/html", "<html><body marginwidth=5 marginheight=5>Question</body></html>");
+		questionArea = new BasicPageTextBox() {
+			public void createPopupMenu() {
+			}
+
+			public JPopupMenu getPopupMenu() {
+				return null;
+			}
+		};
+		questionArea.setText("<html><body marginwidth=5 marginheight=5>Question</body></html>");
 		questionArea.setEditable(false);
 		add(questionArea, BorderLayout.NORTH);
 
@@ -129,6 +137,7 @@ public class PageTextField extends JPanel implements Embeddable, HtmlService, Se
 	}
 
 	public void destroy() {
+		questionArea.getHtmlPane().removeHyperlinkListener(page);
 		page = null;
 		if (maker != null)
 			maker.setObject(null);
@@ -360,14 +369,24 @@ public class PageTextField extends JPanel implements Embeddable, HtmlService, Se
 
 	public void setChangable(boolean b) {
 		changable = b;
+		if (b) {
+			questionArea.getHtmlPane().removeLinkMonitor();
+		}
+		else {
+			questionArea.getHtmlPane().addLinkMonitor();
+		}
 	}
 
 	public boolean isChangable() {
 		return changable;
 	}
 
-	public JTextComponent getTextComponent() {
+	public TextBox getQuestionTextBox() {
 		return questionArea;
+	}
+
+	public JTextComponent getTextComponent() {
+		return questionArea.getTextComponent();
 	}
 
 	public Page getPage() {
@@ -383,7 +402,7 @@ public class PageTextField extends JPanel implements Embeddable, HtmlService, Se
 		}
 		questionArea.addHotlinkListener(page);
 		/* Sun's HyperlinkListener added to make image map work */
-		questionArea.addHyperlinkListener(page);
+		questionArea.getHtmlPane().addHyperlinkListener(page);
 		try {
 			setBase(page.getURL());
 		}
@@ -394,13 +413,13 @@ public class PageTextField extends JPanel implements Embeddable, HtmlService, Se
 	}
 
 	public void setBase(URL u) {
-		if (questionArea.getDocument() instanceof HTMLDocument)
-			((HTMLDocument) questionArea.getDocument()).setBase(u);
+		if (questionArea.getTextComponent().getDocument() instanceof HTMLDocument)
+			((HTMLDocument) questionArea.getTextComponent().getDocument()).setBase(u);
 	}
 
 	public URL getBase() {
-		if (questionArea.getDocument() instanceof HTMLDocument)
-			return ((HTMLDocument) questionArea.getDocument()).getBase();
+		if (questionArea.getTextComponent().getDocument() instanceof HTMLDocument)
+			return ((HTMLDocument) questionArea.getTextComponent().getDocument()).getBase();
 		return null;
 	}
 
