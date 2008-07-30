@@ -247,8 +247,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			(byte) 6, "None" };
 
 	private final static String UNKNOWN_LOCATION = "? unknown location......";
-	private final static Pattern SCRIPT_PATTERN = Pattern.compile("(?i)script(\\s*):");
-	private final static Pattern NATIVE_SCRIPT_PATTERN = Pattern.compile("(?i)nativescript(\\s*):");
+	private final static Pattern SCRIPT_PATTERN = Pattern.compile("(?i)((native)?)script(\\s*):");
 	private final static Pattern SCRIPT_PATTERN2 = Pattern.compile("(?i)@");
 	private static String softwareVersion = "x";
 	private static boolean nativeLookAndFeelUsed;
@@ -3764,16 +3763,15 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				String s = getScript();
 				if (s != null) {
 					Matcher matcher = SCRIPT_PATTERN.matcher(s);
-					if (matcher.find()) {
-						return executeScripts(s.split(SCRIPT_PATTERN.pattern()));
-					}
+					if (matcher.find())
+						return executeScripts(s);
 					matcher = SCRIPT_PATTERN2.matcher(s);
 					if (matcher.find()) {
-						return executeScripts(s.split(SCRIPT_PATTERN2.pattern()));
-					}
-					matcher = NATIVE_SCRIPT_PATTERN.matcher(s);
-					if (matcher.find()) {
-						return executeNativeScripts(s.split(NATIVE_SCRIPT_PATTERN.pattern()));
+						String[] t = s.split(SCRIPT_PATTERN2.pattern());
+						String output = "";
+						for (String x : t)
+							output += executeMwScripts(x);
+						return output;
 					}
 				}
 				return writeErrorMessage(s);
@@ -3783,11 +3781,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 
 	private void processHyperlink(String href) {
 		href = fixLink(href.trim());
-		if (NATIVE_SCRIPT_PATTERN.matcher(href).find()) {
-			executeNativeScripts(href.split(NATIVE_SCRIPT_PATTERN.pattern()));
-		}
-		else if (SCRIPT_PATTERN.matcher(href).find()) {
-			executeScripts(href.split(SCRIPT_PATTERN.pattern()));
+		if (SCRIPT_PATTERN.matcher(href).find()) {
+			executeScripts(href);
 		}
 		else {
 			boolean valid = true;
@@ -3913,103 +3908,107 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		return Scriptable.ERROR_HEADER + s;
 	}
 
-	private String executeScripts(String[] s) {
+	private String executeScripts(String script) {
+		Matcher m = SCRIPT_PATTERN.matcher(script);
+		int start = 0, end = 0;
+		String match = null, group = null;
+		while (m.find()) {
+			group = script.substring(start, end).trim().toLowerCase();
+			start = m.start();
+			match = script.substring(end, start);
+			end = m.end();
+			executeScripts(group, match);
+		}
+		group = script.substring(start, end);
+		match = script.substring(end, script.length());
+		executeScripts(group, match);
+		return null;
+	}
+
+	private void executeScripts(String type, String script) {
+		if (type.startsWith("script")) {
+			executeMwScripts(script);
+		}
+		else if (type.startsWith("nativescript")) {
+			executeNativeScripts(script);
+		}
+	}
+
+	private String executeMwScripts(String str) {
+		str = str.trim();
+		if (str.equals(""))
+			return "";
 		String output = "";
-		String msg = "";
-		boolean commentOut = false;
 		synchronized (scriptLock) {
-			for (String str : s) {
-				msg = "";
-				str = str.trim();
-				if (str.equals(""))
-					continue;
-				if (commentOut) {
-					commentOut = str.endsWith("//");
-					continue;
+			String[] token = str.split(":");
+			if (token.length >= 3) {
+				// reconnect "http://......" and others that should not have been broken up
+				if (token.length >= 4) {
+					for (int k = 3; k < token.length; k++)
+						token[2] += ":" + token[k];
 				}
-				String[] token = str.split(":");
-				if (token.length >= 3) {
-					// reconnect "http://......" and others that should not have been broken up
-					if (token.length >= 4) {
-						for (int k = 3; k < token.length; k++)
-							token[2] += ":" + token[k];
+				String t0 = token[0].trim().intern();
+				if (t0 == "jmol")
+					output = sendScript(token, PageMolecularViewer.class);
+				else if (t0 == "mw" || t0 == "mw2d")
+					output = sendScript(token, ModelCanvas.class);
+				else if (t0 == "mw3d")
+					output = sendScript(token, PageMd3d.class);
+				else if (t0 == "textbox")
+					output = sendScript(token, PageTextBox.class);
+				else if (t0 == "colorbar")
+					output = sendScript(token, IconWrapper.class);
+				else if (t0 == "bargraph")
+					output = sendScript(token, PageBarGraph.class);
+				else if (t0 == "xygraph")
+					output = sendScript(token, PageXYGraph.class);
+				else if (t0 == "energylevel")
+					output = sendScript(token, PageElectronicStructureViewer.class);
+				else if (t0 == "spectrometer")
+					output = sendScript(token, PagePhotonSpectrometer.class);
+				else if (t0 == "applet")
+					output = sendScript(token, PageApplet.class);
+				else if (t0 == "plugin")
+					output = sendScript(token, PageJContainer.class);
+				else if (t0 == "page") {
+					int n = 0;
+					try {
+						n = Integer.valueOf(token[1].trim());
 					}
-					String t0 = token[0].trim().intern();
-					if (t0 == "jmol")
-						msg = sendScript(token, PageMolecularViewer.class);
-					else if (t0 == "mw" || t0 == "mw2d")
-						msg = sendScript(token, ModelCanvas.class);
-					else if (t0 == "mw3d")
-						msg = sendScript(token, PageMd3d.class);
-					else if (t0 == "textbox")
-						msg = sendScript(token, PageTextBox.class);
-					else if (t0 == "colorbar")
-						msg = sendScript(token, IconWrapper.class);
-					else if (t0 == "bargraph")
-						msg = sendScript(token, PageBarGraph.class);
-					else if (t0 == "xygraph")
-						msg = sendScript(token, PageXYGraph.class);
-					else if (t0 == "energylevel")
-						msg = sendScript(token, PageElectronicStructureViewer.class);
-					else if (t0 == "spectrometer")
-						msg = sendScript(token, PagePhotonSpectrometer.class);
-					else if (t0 == "applet")
-						msg = sendScript(token, PageApplet.class);
-					else if (t0 == "plugin")
-						msg = sendScript(token, PageJContainer.class);
-					else if (t0 == "page") {
-						int n = 0;
-						try {
-							n = Integer.valueOf(token[1].trim());
-						}
-						catch (NumberFormatException nfe) {
-							nfe.printStackTrace();
-							n = 0;
-							System.out.println(n);
-						}
-						if (token[2] != null && token[2].trim().length() > 0) {
-							runScript(token[2].trim());
-						}
+					catch (NumberFormatException nfe) {
+						nfe.printStackTrace();
+						n = 0;
+						System.out.println(n);
+					}
+					if (token[2] != null && token[2].trim().length() > 0) {
+						runScript(token[2].trim());
 					}
 				}
-				output += msg;
-				commentOut = str.endsWith("//");
 			}
 		}
 		return output;
 	}
 
-	private String executeNativeScripts(String[] s) {
+	private String executeNativeScripts(String str) {
+		str = str.trim();
+		if (str.equals(""))
+			return "";
 		String output = "";
-		String msg = "";
-		boolean commentOut = false;
 		synchronized (scriptLock) {
-			for (String str : s) {
-				msg = "";
-				str = str.trim();
-				if (str.equals(""))
-					continue;
-				if (commentOut) {
-					commentOut = str.endsWith("//");
-					continue;
+			String[] token = str.split(":");
+			if (token.length >= 3) {
+				// reconnect "http://......" and others that should not have been broken up
+				if (token.length >= 4) {
+					for (int k = 3; k < token.length; k++)
+						token[2] += ":" + token[k];
 				}
-				String[] token = str.split(":");
-				if (token.length >= 3) {
-					// reconnect "http://......" and others that should not have been broken up
-					if (token.length >= 4) {
-						for (int k = 3; k < token.length; k++)
-							token[2] += ":" + token[k];
-					}
-					String t0 = token[0].trim().intern();
-					if (t0 == "mw3d")
-						msg = sendNativeScript(token, PageMd3d.class);
-					else if (t0 == "applet")
-						msg = sendNativeScript(token, PageApplet.class);
-					else if (t0 == "plugin")
-						msg = sendNativeScript(token, PageJContainer.class);
-				}
-				output += msg;
-				commentOut = str.endsWith("//");
+				String t0 = token[0].trim().intern();
+				if (t0 == "mw3d")
+					output = sendNativeScript(token, PageMd3d.class);
+				else if (t0 == "applet")
+					output = sendNativeScript(token, PageApplet.class);
+				else if (t0 == "plugin")
+					output = sendNativeScript(token, PageJContainer.class);
 			}
 		}
 		return output;
