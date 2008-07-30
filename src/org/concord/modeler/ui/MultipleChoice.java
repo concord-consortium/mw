@@ -42,10 +42,12 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
 import javax.swing.JToggleButton;
 import javax.swing.text.JTextComponent;
 
+import org.concord.modeler.BasicPageTextBox;
 import org.concord.modeler.HtmlService;
 import org.concord.modeler.Modeler;
 import org.concord.modeler.ModelerUtilities;
@@ -53,14 +55,13 @@ import org.concord.modeler.Searchable;
 import org.concord.modeler.event.HotlinkListener;
 import org.concord.modeler.event.MultipleChoiceEvent;
 import org.concord.modeler.event.MultipleChoiceListener;
-import org.concord.modeler.ui.HTMLPane;
 
 public abstract class MultipleChoice extends JPanel implements HtmlService, Searchable {
 
 	protected int[] answer;
 	protected String[] scripts;
 	protected AbstractButton[] choices;
-	protected HTMLPane questionBody;
+	protected BasicPageTextBox questionBody;
 	protected JButton checkAnswerButton, clearAnswerButton;
 	private ButtonGroup buttonGroup;
 	private AbstractButton invisibleButton;
@@ -76,7 +77,7 @@ public abstract class MultipleChoice extends JPanel implements HtmlService, Sear
 			if (ModelerUtilities.isRightClick(e)) {
 				questionBody.requestFocusInWindow();
 				if (popupMenu == null)
-					popupMenu = new TextComponentPopupMenu(questionBody);
+					popupMenu = new TextComponentPopupMenu(questionBody.getTextComponent());
 				popupMenu.show(questionBody, e.getX(), e.getY());
 			}
 		}
@@ -140,7 +141,15 @@ public abstract class MultipleChoice extends JPanel implements HtmlService, Sear
 			}
 		}
 
-		questionBody = new HTMLPane("text/html", question);
+		questionBody = new BasicPageTextBox() {
+			public void createPopupMenu() {
+			}
+
+			public JPopupMenu getPopupMenu() {
+				return null;
+			}
+		};
+		questionBody.setText(question);
 		questionBody.setEditable(false);
 		questionBody.addMouseListener(popupListener);
 
@@ -351,12 +360,16 @@ public abstract class MultipleChoice extends JPanel implements HtmlService, Sear
 		questionBody.useCachedImages(b, codeBase);
 	}
 
-	public JTextComponent getTextComponent() {
+	public TextBox getQuestionTextBox() {
 		return questionBody;
 	}
 
+	public JTextComponent getTextComponent() {
+		return questionBody.getTextComponent();
+	}
+
 	public boolean isTextSelected() {
-		return questionBody.getSelectedText() != null;
+		return questionBody.getTextComponent().getSelectedText() != null;
 	}
 
 	public AbstractButton[] getChoiceButtons() {

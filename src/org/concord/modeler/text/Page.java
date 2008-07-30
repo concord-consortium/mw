@@ -3911,7 +3911,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	private String executeScripts(String script) {
 		Matcher m = SCRIPT_PATTERN.matcher(script);
 		int start = 0, end = 0;
-		String match = null, group = null;
+		String match = "", group = "";
 		while (m.find()) {
 			group = script.substring(start, end).trim().toLowerCase();
 			start = m.start();
