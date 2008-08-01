@@ -29,7 +29,7 @@ package org.concord.modeler;
  * 
  * Engines MUST be reused.
  * 
- * @see org.concord.modeler.EnginePool
+ * @see org.concord.modeler.InstancePool
  * @see org.concord.modeler.ModelCanvas
  * @see org.concord.modeler.PageMolecularViewer
  * @see org.concord.modeler.PageMd3d

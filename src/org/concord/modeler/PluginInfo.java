@@ -30,20 +30,20 @@ public class PluginInfo {
 
 	private String name;
 	private String mainClass;
-	private List<String> jarList;
+	private List<String> list;
 
 	public PluginInfo(String name) {
 		setName(name);
 	}
 
-	public void addJar(String url) {
-		if (jarList == null)
-			jarList = new ArrayList<String>();
-		jarList.add(url);
+	public void addFile(String url) {
+		if (list == null)
+			list = new ArrayList<String>();
+		list.add(url);
 	}
 
-	public List<String> getJarList() {
-		return jarList;
+	public List<String> getFileList() {
+		return list;
 	}
 
 	public void setName(String name) {
