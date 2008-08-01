@@ -193,10 +193,18 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 			Page.setSoftwareName(NAME);
 			Page.setSoftwareVersion(VERSION);
 			PluginInfo pi = new PluginInfo("Jmol");
-			pi.addJar(REMOTE_STATIC_ROOT + "plugin/JmolApplet.jar");
-			pi.addJar(REMOTE_STATIC_ROOT + "plugin/netscape.jar");
+			pi.addFile(REMOTE_STATIC_ROOT + "plugin/JmolApplet.jar");
+			pi.addFile(REMOTE_STATIC_ROOT + "plugin/netscape.jar");
 			pi.setMainClass("org.jmol.applet.MwPlugin");
 			PluginManager.addPlugInfo(pi);
+			// pi = new PluginInfo("Flash");
+			// pi.addFile(REMOTE_STATIC_ROOT + "plugin/mwflash.jar");
+			// pi.addFile(REMOTE_STATIC_ROOT + "plugin/jflashplayer.jar");
+			// pi.addFile(REMOTE_STATIC_ROOT + "plugin/atl2k.dll");
+			// pi.addFile(REMOTE_STATIC_ROOT + "plugin/atl98.dll");
+			// pi.addFile(REMOTE_STATIC_ROOT + "plugin/jflash.dll");
+			// pi.setMainClass("org.concord.jflash.MwFlashPlayer");
+			// PluginManager.addPlugInfo(pi);
 
 			// check look&feel installations
 			lf = UIManager.getInstalledLookAndFeels();

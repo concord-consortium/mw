@@ -386,7 +386,7 @@ class PageJContainerMaker extends ComponentMaker {
 					PluginInfo pi = PluginManager.getPluginInfoByName(e.getItem().toString());
 					if (pi != null) {
 						mainClassField.setText(pi.getMainClass());
-						List<String> list = pi.getJarList();
+						List<String> list = pi.getFileList();
 						codeBaseField.setText(FileUtilities.getCodeBase(list.get(0)));
 						String x = "";
 						for (String s : list) {
