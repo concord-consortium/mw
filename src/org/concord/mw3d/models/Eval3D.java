@@ -75,6 +75,9 @@ class Eval3D extends AbstractEval {
 	// deprecated, replaced by set camera [index]
 	private final static Pattern CAMERA = compile("(^(?i)camera\\b){1}");
 
+	private final static float V_CONVERTER = 100000;
+	private final static float IV_CONVERTER = 1.0f / V_CONVERTER;
+
 	private static Map<String, Byte> actionIDMap;
 
 	private MolecularModel model;
@@ -922,6 +925,28 @@ class Eval3D extends AbstractEval {
 					model.notifyChange();
 					return true;
 				}
+				else if (s0 == "movable") {
+					boolean b = "on".equalsIgnoreCase(s[1].trim());
+					int n = model.getAtomCount();
+					for (int i = 0; i < n; i++) {
+						Atom a = model.getAtom(i);
+						if (a.isSelected())
+							a.setMovable(b);
+					}
+					model.notifyChange();
+					return true;
+				}
+				else if (s0 == "visible") {
+					boolean b = "on".equalsIgnoreCase(s[1].trim());
+					int n = model.getAtomCount();
+					for (int i = 0; i < n; i++) {
+						Atom a = model.getAtom(i);
+						if (a.isSelected())
+							a.setVisible(b);
+					}
+					model.notifyChange();
+					return true;
+				}
 			}
 			double x = parseMathExpression(s[1]);
 			if (Double.isNaN(x))
@@ -941,7 +966,46 @@ class Eval3D extends AbstractEval {
 				model.setRotationMatrix(view.getViewer().getRotationMatrix());
 				return true;
 			}
-
+			else if (s0 == "vx") {
+				int n = model.getAtomCount();
+				for (int i = 0; i < n; i++) {
+					Atom a = model.getAtom(i);
+					if (a.isSelected())
+						a.setVx((float) x * IV_CONVERTER);
+				}
+				model.notifyChange();
+				return true;
+			}
+			else if (s0 == "vy") {
+				int n = model.getAtomCount();
+				for (int i = 0; i < n; i++) {
+					Atom a = model.getAtom(i);
+					if (a.isSelected())
+						a.setVy((float) x * IV_CONVERTER);
+				}
+				model.notifyChange();
+				return true;
+			}
+			else if (s0 == "vz") {
+				int n = model.getAtomCount();
+				for (int i = 0; i < n; i++) {
+					Atom a = model.getAtom(i);
+					if (a.isSelected())
+						a.setVz((float) x * IV_CONVERTER);
+				}
+				model.notifyChange();
+				return true;
+			}
+			else if (s0 == "charge") {
+				int n = model.getAtomCount();
+				for (int i = 0; i < n; i++) {
+					Atom a = model.getAtom(i);
+					if (a.isSelected())
+						a.setCharge((float) x);
+				}
+				model.notifyChange();
+				return true;
+			}
 		}
 
 		else if (s.length == 4) {

@@ -39,6 +39,7 @@ public class Atom {
 	private byte elementNumber;
 	private String symbol;
 	private boolean movable = true;
+	private boolean visible = true;
 	float rx, ry, rz;
 	float dx, dy, dz;
 	float vx, vy, vz;
@@ -240,6 +241,14 @@ public class Atom {
 
 	public String getSymbol() {
 		return symbol;
+	}
+
+	public void setVisible(boolean b) {
+		visible = b;
+	}
+
+	public boolean isVisible() {
+		return visible;
 	}
 
 	public void setMovable(boolean b) {
