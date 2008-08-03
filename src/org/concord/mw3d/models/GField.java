@@ -29,6 +29,7 @@ import javax.vecmath.Vector3f;
  */
 public class GField implements VectorField {
 
+	private boolean alwaysDown = true;
 	private float g;
 	private Vector3f direction;
 	private final Vector3f down;
@@ -39,12 +40,28 @@ public class GField implements VectorField {
 		down = new Vector3f(0, -1, 0);
 	}
 
+	public void setAlwaysDown(boolean b) {
+		alwaysDown = b;
+	}
+
+	public boolean isAlwaysDown() {
+		return alwaysDown;
+	}
+
 	public void setIntensity(float intensity) {
 		this.g = intensity;
 	}
 
 	public float getIntensity() {
 		return g;
+	}
+
+	public void setDirection(float x, float y, float z) {
+		direction.set(x, y, z);
+	}
+
+	public float[] getDirection() {
+		return new float[] { direction.x, direction.y, direction.z };
 	}
 
 	void setRotation(Matrix3f rotation) {

@@ -1966,7 +1966,7 @@ public class MolecularView extends Draw {
 		int y = e.getY();
 		switch (actionID) {
 		case DEFA_ID:
-			model.setGFieldDirection(viewer.getRotationMatrix());
+			model.setRotationMatrix(viewer.getRotationMatrix());
 			break;
 		case PANN_ID:
 			int dx = x - dragPoint.x;
@@ -3405,7 +3405,7 @@ public class MolecularView extends Draw {
 			}
 			if (isKeyNavigation) {
 				navigator.keyPressed(e);
-				model.setGFieldDirection(viewer.getRotationMatrix());
+				model.setRotationMatrix(viewer.getRotationMatrix());
 			}
 		}
 		// MUST consume in order to stop the event from propogating to the parent components

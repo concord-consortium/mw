@@ -704,8 +704,11 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 		state.setWidth(model.getWidth());
 		state.setHeight(model.getHeight());
 		state.setHeatBath(model.getHeatBath());
-		if (model.getGField() != null)
+		if (model.getGField() != null) {
+			if (!model.getGField().isAlwaysDown())
+				state.setGFieldDirection(model.getGField().getDirection());
 			state.setGravitationalAcceleration(model.getGField().getIntensity());
+		}
 		if (model.getBField() != null) {
 			state.setBFieldDirection(model.getBField().getDirection());
 			state.setBFieldIntensity(model.getBField().getIntensity());
@@ -833,7 +836,13 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 		else {
 			model.activateHeatBath(false);
 		}
-		model.setGField(state.getGravitationalAcceleration());
+		if (state.getGravitationalAcceleration() > 0) {
+			model.setGField(state.getGravitationalAcceleration(), state.getGFieldDirection() == null ? null
+					: new Vector3f(state.getGFieldDirection()));
+		}
+		else {
+			model.setGField(0, null);
+		}
 		if (state.getBFieldIntensity() > 0 && state.getBFieldDirection() != null) {
 			model.setBField(state.getBFieldIntensity(), new Vector3f(state.getBFieldDirection()));
 		}
@@ -927,7 +936,7 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 			}
 		}
 		view.setStartingSceneWhenCameraIsOnAtom();
-		model.setGFieldDirection(view.getViewer().getRotationMatrix());
+		model.setRotationMatrix(view.getViewer().getRotationMatrix());
 	}
 
 	public void notifyFileLoaded(String fullPathName, String fileName, String modelName, Object clientFile,
@@ -959,7 +968,7 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 	/** not implemented */
 	public void notifyScriptTermination(String statusMessage, int msWalltime) {
 		if (boxRotated) {
-			model.setGFieldDirection(view.getViewer().getRotationMatrix());
+			model.setRotationMatrix(view.getViewer().getRotationMatrix());
 			boxRotated = false;
 		}
 	}

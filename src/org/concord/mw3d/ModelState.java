@@ -80,6 +80,7 @@ public class ModelState implements Serializable {
 	private List<TBondState> tbonds;
 
 	private float gravitationalAcceleration;
+	private float[] gFieldDirection;
 	private float bFieldIntensity;
 	private float[] bFieldDirection;
 	private float eFieldIntensity;
@@ -417,6 +418,14 @@ public class ModelState implements Serializable {
 
 	public float getGravitationalAcceleration() {
 		return gravitationalAcceleration;
+	}
+
+	public void setGFieldDirection(float[] gFieldDirection) {
+		this.gFieldDirection = gFieldDirection;
+	}
+
+	public float[] getGFieldDirection() {
+		return gFieldDirection;
 	}
 
 	public void setBFieldIntensity(float bFieldIntensity) {

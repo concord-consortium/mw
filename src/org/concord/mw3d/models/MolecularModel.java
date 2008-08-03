@@ -1938,7 +1938,8 @@ public class MolecularModel {
 			if (bField == null)
 				bField = new BField();
 			bField.setIntensity(intensity);
-			bField.setDirection(direction.x, direction.y, direction.z);
+			if (direction != null)
+				bField.setDirection(direction.x, direction.y, direction.z);
 		}
 		else {
 			bField = null;
@@ -1954,7 +1955,8 @@ public class MolecularModel {
 			if (eField == null)
 				eField = new EField();
 			eField.setIntensity(intensity);
-			eField.setDirection(direction.x, direction.y, direction.z);
+			if (direction != null)
+				eField.setDirection(direction.x, direction.y, direction.z);
 		}
 		else {
 			eField = null;
@@ -1965,19 +1967,27 @@ public class MolecularModel {
 		return gField;
 	}
 
-	public void setGField(float intensity) {
+	public void setGField(float intensity, Vector3f direction) {
 		if (intensity > ZERO) {
 			if (gField == null)
 				gField = new GField();
 			gField.setIntensity(intensity);
+			if (direction != null) {
+				gField.setDirection(direction.x, direction.y, direction.z);
+				gField.setAlwaysDown(false);
+			}
+			else {
+				gField.setAlwaysDown(true);
+			}
 		}
 		else {
 			gField = null;
 		}
 	}
 
-	public void setGFieldDirection(Matrix3f rotation) {
-		if (gField != null)
+	/** notify anyone interested in knowing the rotation matrix of the view. */
+	public void setRotationMatrix(Matrix3f rotation) {
+		if (gField != null && gField.isAlwaysDown())
 			gField.setRotation(rotation);
 	}
 
