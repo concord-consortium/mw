@@ -41,6 +41,7 @@ import java.util.regex.Pattern;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.vecmath.Point3f;
+import javax.vecmath.Vector3f;
 
 import org.concord.modeler.ConnectionManager;
 import org.concord.modeler.draw.FillMode;
@@ -908,7 +909,7 @@ class Eval3D extends AbstractEval {
 			}
 		}
 
-		String[] s = str.trim().split(REGEX_WHITESPACE + "+");
+		String[] s = str.trim().split(REGEX_SEPARATOR + "+");
 
 		if (s.length == 2) {
 
@@ -929,6 +930,82 @@ class Eval3D extends AbstractEval {
 				view.setCameraAtom((int) Math.round(x));
 				view.repaint();
 				model.notifyChange();
+				return true;
+			}
+			else if (s0 == "gfield") {
+				if (x < 0) {
+					out(ScriptEvent.FAILED, "Illegal parameter: gravitational acceleration cannot be negative: " + x);
+					return false;
+				}
+				model.setGField((float) x, null);
+				model.setRotationMatrix(view.getViewer().getRotationMatrix());
+				return true;
+			}
+
+		}
+
+		else if (s.length == 4) {
+
+			String s0 = s[0].trim().toLowerCase().intern();
+
+			if (s0 == "gfield") {
+				double x = parseMathExpression(s[1]);
+				if (Double.isNaN(x))
+					return false;
+				double y = parseMathExpression(s[2]);
+				if (Double.isNaN(y))
+					return false;
+				double z = parseMathExpression(s[3]);
+				if (Double.isNaN(z))
+					return false;
+				float r = (float) Math.sqrt(x * x + y * y + z * z);
+				if (r < ZERO) {
+					model.setGField(0, null);
+				}
+				else {
+					model.setGField(r, new Vector3f((float) x / r, (float) y / r, (float) z / r));
+				}
+				return true;
+			}
+
+			if (s0 == "efield") {
+				double x = parseMathExpression(s[1]);
+				if (Double.isNaN(x))
+					return false;
+				double y = parseMathExpression(s[2]);
+				if (Double.isNaN(y))
+					return false;
+				double z = parseMathExpression(s[3]);
+				if (Double.isNaN(z))
+					return false;
+				float r = (float) Math.sqrt(x * x + y * y + z * z);
+				if (r < ZERO) {
+					model.setEField(0, null);
+				}
+				else {
+					model.setEField(r, new Vector3f((float) x / r, (float) y / r, (float) z / r));
+				}
+				return true;
+			}
+
+			if (s0 == "bfield") {
+				double x = parseMathExpression(s[1]);
+				if (Double.isNaN(x))
+					return false;
+				double y = parseMathExpression(s[2]);
+				if (Double.isNaN(y))
+					return false;
+				double z = parseMathExpression(s[3]);
+				if (Double.isNaN(z))
+					return false;
+				float r = (float) Math.sqrt(x * x + y * y + z * z);
+				if (r < ZERO) {
+					model.setBField(0, null);
+				}
+				else {
+					model.setBField(r, new Vector3f((float) x / r, (float) y / r, (float) z / r));
+				}
+				return true;
 			}
 
 		}
