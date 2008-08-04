@@ -99,42 +99,7 @@ import org.concord.mw2d.models.ModelComponent;
 import org.concord.mw2d.models.Particle;
 
 /**
- * <p>
- * This abstract class defines the specifications of a MVC container needed for a molecular dynamics activity. Ideally,
- * all activities related to molecular dynamics simulation should be derived from this base classs.
- * </p>
- * 
- * <p>
- * <b>Note for Pedagogica scripters:</b> To obtain the UI component of an action, call
- * <code>getActionUIDelegate(String actionName)</code>. Action name must be one of the following:
- * </p>
- * 
- * <ul>
- * Components associated with the recorder:
- * <ul>
- * <li><code>movie slider</code>
- * <li><code>reload</code>
- * <li><code>rewind</code>
- * <li><code>step back</code>
- * <li><code>step forward</code>
- * <li><code>pause</code>
- * <li><code>play/run</code>
- * </ul>
- * 
- * Components associated with the "run/stop/reset" control panel:
- * <ul>
- * <li><code>run</code>
- * <li><code>stop</code>
- * <li><code>reload2</code>
- * </ul>
- * 
- * </ul>
- * 
- * <p>
- * You can query a UI delegate component, but it may not be showing. Call <code>component.isShowing()
- </code> to check
- * if it is showing on the screen.
- * </p>
+ * This abstract class defines the specifications of a MVC container needed for a molecular dynamics simulation.
  * 
  * @author Charles Xie
  */
@@ -160,7 +125,6 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 
 	Map<String, List> actionCategory;
 	Map<Object, Runnable> customizationAction = new HashMap<Object, Runnable>();
-	Map<String, Component> actionRegistry = new HashMap<String, Component>();
 
 	private JButton expandButton;
 	private JPopupMenu expandMenu;
@@ -225,7 +189,6 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 		getInputMap().clear();
 		getView().getActionMap().clear();
 		getView().getInputMap().clear();
-		actionRegistry.clear();
 		actionCategory.clear();
 		customizationAction.clear();
 		EventQueue.invokeLater(new Runnable() {
@@ -528,20 +491,17 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 		if (s != null)
 			button.setText(s);
 		runPanel.add(button);
-		actionRegistry.put("run", button);
 		button = new JButton(getView().getActionMap().get("Stop"));
 		s = getInternationalText("StopButton");
 		if (s != null)
 			button.setText(s);
 		runPanel.add(button);
-		actionRegistry.put("stop", button);
 		button = new JButton(getView().getActionMap().get("Reload"));
 		button.setText("Reset");
 		s = getInternationalText("ResetButton");
 		if (s != null)
 			button.setText(s);
 		runPanel.add(button);
-		actionRegistry.put("reload2", button);
 		runPanel.addMouseListener(new MouseAdapter() {
 			private boolean popupTrigger;
 
@@ -578,7 +538,6 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 		ms.setBorder(BorderFactory.createEmptyBorder());
 		moviePanel.add(ms);
 		moviePanel.add(new JLabel(toolBarHeaderIcon));
-		actionRegistry.put("movie slider", ms);
 
 		int m = System.getProperty("os.name").startsWith("Mac") ? 2 : 0;
 		Insets margin = new Insets(m, m, m, m);
@@ -589,7 +548,6 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 		button.setMargin(margin);
 		button.setFocusPainted(false);
 		moviePanel.add(button);
-		actionRegistry.put("reload", button);
 
 		button = new JButton(((SlideMovie) getModel().getMovie()).rewindMovie);
 		button.setText(null);
@@ -597,7 +555,6 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 		button.setMargin(margin);
 		button.setFocusPainted(false);
 		moviePanel.add(button);
-		actionRegistry.put("rewind", button);
 
 		button = new JButton(((SlideMovie) getModel().getMovie()).stepBackMovie);
 		button.setText(null);
@@ -605,7 +562,6 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 		button.setMargin(margin);
 		button.setFocusPainted(false);
 		moviePanel.add(button);
-		actionRegistry.put("step back", button);
 
 		button = new JButton(getView().getActionMap().get("Stop"));
 		button.setText(null);
@@ -613,7 +569,6 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 		button.setMargin(margin);
 		button.setFocusPainted(false);
 		moviePanel.add(button);
-		actionRegistry.put("pause", button);
 
 		button = new JButton(((SlideMovie) getModel().getMovie()).stepForwardMovie);
 		button.setText(null);
@@ -621,7 +576,6 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 		button.setMargin(margin);
 		button.setFocusPainted(false);
 		moviePanel.add(button);
-		actionRegistry.put("step forward", button);
 
 		button = new JButton(getView().getActionMap().get("Play"));
 		button.setText(null);
@@ -629,17 +583,7 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 		button.setMargin(margin);
 		button.setFocusPainted(false);
 		moviePanel.add(button);
-		actionRegistry.put("play/run", button);
 
-	}
-
-	public Component getActionUIDelegate(String actionName) {
-		if (actionName == null)
-			return null;
-		Object o = actionRegistry.get(actionName.toLowerCase());
-		if (o instanceof Component)
-			return (Component) o;
-		return null;
 	}
 
 	public abstract MDView getView();
@@ -727,9 +671,7 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 	}
 
 	private void createDefaultPopupMenu() {
-
 		defaultPopupMenu = new JPopupMenu();
-
 		JMenuItem mi = new JMenuItem("Customize Tool Bar");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -737,29 +679,6 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 			}
 		});
 		defaultPopupMenu.add(mi);
-
-		final JMenuItem recorderMI = new JMenuItem("Change Recording Interval");
-		recorderMI.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				showTaskManager("Recording the simulation");
-			}
-		});
-		defaultPopupMenu.add(recorderMI);
-
-		defaultPopupMenu.pack();
-
-		defaultPopupMenu.addPopupMenuListener(new PopupMenuListener() {
-			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-				recorderMI.setEnabled(!getModel().getRecorderDisabled());
-			}
-
-			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-			}
-
-			public void popupMenuCanceled(PopupMenuEvent e) {
-			}
-		});
-
 	}
 
 	private AbstractButton getToolBarButton(String name) {

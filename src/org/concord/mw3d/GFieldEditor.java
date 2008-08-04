@@ -87,10 +87,12 @@ class GFieldEditor extends JDialog {
 		panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		getContentPane().add(panel, BorderLayout.CENTER);
 
-		defaultButton = new JRadioButton("Default");
+		s = MolecularContainer.getInternationalText("DefaultDirection");
+		defaultButton = new JRadioButton(s != null ? s : "Default Direction");
 		topPanel.add(defaultButton);
 
-		customButton = new JRadioButton("Custom");
+		s = MolecularContainer.getInternationalText("CustomDirection");
+		customButton = new JRadioButton(s != null ? s : "Custom Direction");
 		topPanel.add(customButton);
 
 		ButtonGroup bg = new ButtonGroup();
@@ -225,8 +227,10 @@ class GFieldEditor extends JDialog {
 		oneSliderPanel = new JPanel(new BorderLayout(5, 5));
 		oneSliderPanel.setPreferredSize(new Dimension(400, 300));
 		oneSliderPanel.add(gSlider, BorderLayout.NORTH);
-		JLabel label = new JLabel("Always pointing downward on the screen.");
-		label.setBorder(BorderFactory.createTitledBorder("Direction"));
+		s = MolecularContainer.getInternationalText("AlwaysPointDownward");
+		JLabel label = new JLabel(s != null ? s : "Always pointing downward on the screen.");
+		s = MolecularContainer.getInternationalText("Direction");
+		label.setBorder(BorderFactory.createTitledBorder(s != null ? s : "Direction"));
 		oneSliderPanel.add(label, BorderLayout.SOUTH);
 	}
 

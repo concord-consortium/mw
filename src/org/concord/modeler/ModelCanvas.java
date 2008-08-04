@@ -95,9 +95,9 @@ public class ModelCanvas extends JComponent implements Embeddable, Scriptable, E
 			pm.addSeparator();
 
 			String s = Modeler.getInternationalText("ShowMenuBar");
-			final JCheckBoxMenuItem mi = new JCheckBoxMenuItem(s != null ? s : "Show Menu Bar");
-			mi.setSelected(true);
-			mi.addItemListener(new ItemListener() {
+			final JCheckBoxMenuItem miMenuBar = new JCheckBoxMenuItem(s != null ? s : "Show Menu Bar");
+			miMenuBar.setSelected(true);
+			miMenuBar.addItemListener(new ItemListener() {
 				public void itemStateChanged(ItemEvent e) {
 					switch (e.getStateChange()) {
 					case ItemEvent.SELECTED:
@@ -110,12 +110,12 @@ public class ModelCanvas extends JComponent implements Embeddable, Scriptable, E
 					page.getSaveReminder().setChanged(true);
 				}
 			});
-			pm.add(mi);
+			pm.add(miMenuBar);
 
 			s = Modeler.getInternationalText("ShowBottomBar");
-			final JCheckBoxMenuItem miBottom = new JCheckBoxMenuItem(s != null ? s : "Show Bottom Bar");
-			miBottom.setSelected(true);
-			miBottom.addItemListener(new ItemListener() {
+			final JCheckBoxMenuItem miBottomBar = new JCheckBoxMenuItem(s != null ? s : "Show Bottom Bar");
+			miBottomBar.setSelected(true);
+			miBottomBar.addItemListener(new ItemListener() {
 				public void itemStateChanged(ItemEvent e) {
 					switch (e.getStateChange()) {
 					case ItemEvent.SELECTED:
@@ -128,11 +128,11 @@ public class ModelCanvas extends JComponent implements Embeddable, Scriptable, E
 					page.getSaveReminder().setChanged(true);
 				}
 			});
-			pm.add(miBottom);
+			pm.add(miBottomBar);
 
 			s = Modeler.getInternationalText("RemoveToolBar");
-			final JMenuItem mi1 = new JMenuItem(s != null ? s : "Remove Tool Bar");
-			mi1.addActionListener(new ActionListener() {
+			final JMenuItem miToolBar = new JMenuItem(s != null ? s : "Remove Tool Bar");
+			miToolBar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					if (container.hasToolbar()) {
 						if (JOptionPane.showConfirmDialog(JOptionPane.getFrameForComponent(ModelCanvas.this),
@@ -144,7 +144,7 @@ public class ModelCanvas extends JComponent implements Embeddable, Scriptable, E
 					}
 				}
 			});
-			pm.add(mi1);
+			pm.add(miToolBar);
 
 			s = Modeler.getInternationalText("ShowBorder");
 			final JMenuItem miBorder = new JCheckBoxMenuItem(s != null ? s : "Show Border");
@@ -157,23 +157,23 @@ public class ModelCanvas extends JComponent implements Embeddable, Scriptable, E
 			pm.add(miBorder);
 
 			s = Modeler.getInternationalText("RemoveThisModel");
-			final JMenuItem mi2 = new JMenuItem(s != null ? s : "Remove This Component");
-			mi2.addActionListener(new ActionListener() {
+			final JMenuItem miRemoveComponent = new JMenuItem(s != null ? s : "Remove This Component");
+			miRemoveComponent.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					page.removeComponent(ModelCanvas.this);
 				}
 			});
-			pm.add(mi2);
+			pm.add(miRemoveComponent);
 
 			pm.addPopupMenuListener(new PopupMenuListener() {
 				public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
 					boolean b = page.isEditable();
-					mi.setSelected(hasMenuBar());
-					mi.setEnabled(b);
-					mi1.setEnabled(b);
-					mi2.setEnabled(b);
-					miBottom.setEnabled(b);
-					miBottom.setSelected(container.hasBottomBar());
+					miMenuBar.setSelected(hasMenuBar());
+					miMenuBar.setEnabled(b);
+					miToolBar.setEnabled(b);
+					miRemoveComponent.setEnabled(b);
+					miBottomBar.setEnabled(b);
+					miBottomBar.setSelected(container.hasBottomBar());
 					miBorder.setEnabled(b);
 					miBorder.setSelected(getBorder().equals(defaultBorder));
 				}
@@ -189,10 +189,27 @@ public class ModelCanvas extends JComponent implements Embeddable, Scriptable, E
 
 		pm = container.getDefaultPopupMenu();
 		if (pm != null) {
-			pm.addSeparator();
-			final JCheckBoxMenuItem mi = new JCheckBoxMenuItem("Show Menu Bar");
-			mi.setSelected(true);
-			mi.addItemListener(new ItemListener() {
+
+			String s = Modeler.getInternationalText("RemoveToolBar");
+			final JMenuItem miToolBar = new JMenuItem(s != null ? s : "Remove Tool Bar");
+			miToolBar.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if (container.hasToolbar()) {
+						if (JOptionPane.showConfirmDialog(JOptionPane.getFrameForComponent(ModelCanvas.this),
+								"Do you really want to remove the toolbar?", "Remove Toolbar",
+								JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+							container.removeToolbar();
+							page.getSaveReminder().setChanged(true);
+						}
+					}
+				}
+			});
+			pm.add(miToolBar);
+
+			s = Modeler.getInternationalText("ShowMenuBar");
+			final JCheckBoxMenuItem miMenuBar = new JCheckBoxMenuItem(s != null ? s : "Show Menu Bar");
+			miMenuBar.setSelected(true);
+			miMenuBar.addItemListener(new ItemListener() {
 				public void itemStateChanged(ItemEvent e) {
 					switch (e.getStateChange()) {
 					case ItemEvent.SELECTED:
@@ -205,10 +222,12 @@ public class ModelCanvas extends JComponent implements Embeddable, Scriptable, E
 					page.getSaveReminder().setChanged(true);
 				}
 			});
-			pm.add(mi);
+			pm.add(miMenuBar);
+
 			pm.addPopupMenuListener(new PopupMenuListener() {
 				public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-					mi.setSelected(hasMenuBar());
+					miMenuBar.setSelected(hasMenuBar());
+					miToolBar.setSelected(hasToolBar());
 				}
 
 				public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
@@ -383,6 +402,15 @@ public class ModelCanvas extends JComponent implements Embeddable, Scriptable, E
 		int n = getComponentCount();
 		for (int i = 0; i < n; i++) {
 			if (getComponent(i) == container.getMenuBar())
+				return true;
+		}
+		return false;
+	}
+
+	private boolean hasToolBar() {
+		int n = getComponentCount();
+		for (int i = 0; i < n; i++) {
+			if (getComponent(i) == container.getToolBar())
 				return true;
 		}
 		return false;
