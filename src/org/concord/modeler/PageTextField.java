@@ -34,6 +34,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.MouseListener;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -47,6 +48,8 @@ import javax.swing.text.JTextComponent;
 import javax.swing.text.html.HTMLDocument;
 
 import org.concord.modeler.event.HotlinkListener;
+import org.concord.modeler.event.TextInputEvent;
+import org.concord.modeler.event.TextInputListener;
 import org.concord.modeler.text.Page;
 import org.concord.modeler.text.XMLCharacterEncoder;
 import org.concord.modeler.ui.PastableTextField;
@@ -68,6 +71,7 @@ public class PageTextField extends JPanel implements Embeddable, HtmlService, Se
 	private JButton clearButton;
 	private JPanel buttonPanel;
 	private JPopupMenu popupMenu;
+	private List<TextInputListener> inputListeners;
 	private static PageTextFieldMaker maker;
 
 	public PageTextField() {
@@ -143,6 +147,26 @@ public class PageTextField extends JPanel implements Embeddable, HtmlService, Se
 			maker.setObject(null);
 	}
 
+	public void addTextInputListener(TextInputListener l) {
+		if (inputListeners == null)
+			inputListeners = new ArrayList<TextInputListener>();
+		if (!inputListeners.contains(l))
+			inputListeners.add(l);
+	}
+
+	public void removeTextInputListener(TextInputListener l) {
+		if (inputListeners != null)
+			inputListeners.remove(l);
+	}
+
+	private void notifyTextInputListeners(TextInputEvent e) {
+		if (inputListeners == null || inputListeners.isEmpty())
+			return;
+		for (TextInputListener x : inputListeners) {
+			x.textInput(e);
+		}
+	}
+
 	private void storeAnswer() {
 		if (page == null)
 			return;
@@ -162,6 +186,8 @@ public class PageTextField extends JPanel implements Embeddable, HtmlService, Se
 			UserData.sharedInstance().putData(key, q);
 		}
 		q.setTimestamp(System.currentTimeMillis());
+		TextInputEvent e = new TextInputEvent(this, textField.getText());
+		notifyTextInputListeners(e);
 	}
 
 	public JPopupMenu getPopupMenu() {
