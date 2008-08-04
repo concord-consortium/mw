@@ -24,6 +24,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -31,6 +32,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -47,6 +49,8 @@ import javax.swing.text.JTextComponent;
 import javax.swing.text.html.HTMLDocument;
 
 import org.concord.modeler.event.HotlinkListener;
+import org.concord.modeler.event.ImageInputEvent;
+import org.concord.modeler.event.ImageInputListener;
 import org.concord.modeler.text.Page;
 import org.concord.modeler.text.XMLCharacterEncoder;
 import org.concord.modeler.ui.BorderRectangle;
@@ -78,6 +82,7 @@ public class ImageQuestion extends JPanel implements Embeddable, TransferListene
 	private JPanel lowerPanel;
 	private JButton openButton;
 	private JPopupMenu popupMenu;
+	private List<ImageInputListener> inputListeners;
 	private static ImageQuestionMaker maker;
 
 	public ImageQuestion() {
@@ -172,6 +177,25 @@ public class ImageQuestion extends JPanel implements Embeddable, TransferListene
 		setId(iq.id);
 	}
 
+	public void addImageInputListener(ImageInputListener l) {
+		if (inputListeners == null)
+			inputListeners = new ArrayList<ImageInputListener>();
+		if (!inputListeners.contains(l))
+			inputListeners.add(l);
+	}
+
+	public void removeImageInputListener(ImageInputListener l) {
+		if (inputListeners != null)
+			inputListeners.remove(l);
+	}
+
+	private void notifyImageInputListeners(ImageInputEvent e) {
+		if (inputListeners == null || inputListeners.isEmpty())
+			return;
+		for (ImageInputListener x : inputListeners)
+			x.imageInput(e);
+	}
+
 	public boolean isTextSelected() {
 		return questionArea.getTextComponent().getSelectedText() != null;
 	}
@@ -234,6 +258,9 @@ public class ImageQuestion extends JPanel implements Embeddable, TransferListene
 			UserData.sharedInstance().putData(key, q);
 		}
 		q.setTimestamp(System.currentTimeMillis());
+		Image image = SnapshotGallery.sharedInstance().loadAnnotatedImage(name).getImage();
+		ImageInputEvent e = new ImageInputEvent(this, image);
+		notifyImageInputListeners(e);
 	}
 
 	private void setInstruction(boolean b) {
