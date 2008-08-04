@@ -557,7 +557,7 @@ public final class ModelerUtilities {
 	}
 
 	/** create a BufferedImage from a plain Image */
-	public BufferedImage getBufferedImage(Image image) {
+	public static BufferedImage getBufferedImage(Image image) {
 		if (image == null)
 			return null;
 		if (image instanceof BufferedImage)
@@ -569,7 +569,7 @@ public final class ModelerUtilities {
 	}
 
 	/** convert an image into a byte array */
-	public byte[] getImageArray(Image image, String formatName) {
+	public static byte[] getImageArray(Image image, String formatName) {
 		BufferedImage bi = getBufferedImage(image);
 		if (bi == null)
 			return null;
