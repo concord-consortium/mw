@@ -3015,13 +3015,6 @@ final class PageXMLDecoder {
 				t.setReferenceAnswer(description);
 				description = null;
 			}
-			if (clear) {
-				t.addClearButton();
-				clear = false;
-			}
-			else {
-				t.removeClearButton();
-			}
 			t.setChangable(page.isEditable());
 			String key = page.getAddress() + "#" + ModelerUtilities.getSortableString(indexOfComponent, 3) + "%"
 					+ t.getClass().getName();
@@ -3086,13 +3079,6 @@ final class PageXMLDecoder {
 			if (description != null) {
 				t.setReferenceAnswer(description);
 				description = null;
-			}
-			if (clear) {
-				t.addClearButton();
-				clear = false;
-			}
-			else {
-				t.removeClearButton();
 			}
 			t.setChangable(page.isEditable());
 			String key = page.getAddress() + "#" + ModelerUtilities.getSortableString(indexOfComponent, 3) + "%"

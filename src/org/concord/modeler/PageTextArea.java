@@ -22,7 +22,6 @@ package org.concord.modeler;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -36,7 +35,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JButton;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -67,7 +65,6 @@ public class PageTextArea extends JPanel implements Embeddable, HtmlService, Sea
 	private static Color defaultBackground, defaultForeground;
 	private JTextArea textArea;
 	private BasicPageTextBox questionArea;
-	private JButton clearButton;
 	private JPanel buttonPanel;
 	private JScrollPane scrollPane;
 	private JPopupMenu popupMenu;
@@ -124,12 +121,6 @@ public class PageTextArea extends JPanel implements Embeddable, HtmlService, Sea
 		setTitle(t.getTitle());
 		setRows(t.getRows());
 		setColumns(t.getColumns());
-		if (t.hasClearButton()) {
-			addClearButton();
-		}
-		else {
-			removeClearButton();
-		}
 		setPreferredSize(t.getPreferredSize());
 		setOpaque(t.isOpaque());
 		setBackground(t.getBackground());
@@ -260,40 +251,6 @@ public class PageTextArea extends JPanel implements Embeddable, HtmlService, Sea
 		return id;
 	}
 
-	public void addClearButton() {
-		if (hasClearButton())
-			return;
-		if (clearButton == null) {
-			clearButton = new JButton("Clear");
-			clearButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					textArea.setText(null);
-					String key = page.getAddress() + "#" + ModelerUtilities.getSortableString(index, 3) + "%"
-							+ PageTextArea.class.getName();
-					UserData.sharedInstance().removeData(key);
-				}
-			});
-		}
-		buttonPanel.add(clearButton);
-		add(buttonPanel, BorderLayout.SOUTH);
-	}
-
-	public void removeClearButton() {
-		if (hasClearButton())
-			buttonPanel.remove(clearButton);
-		if (buttonPanel.getComponentCount() == 0)
-			remove(buttonPanel);
-	}
-
-	public boolean hasClearButton() {
-		Component[] c = buttonPanel.getComponents();
-		for (Component i : c) {
-			if (i == clearButton)
-				return true;
-		}
-		return false;
-	}
-
 	public void setOpaque(boolean b) {
 		super.setOpaque(b);
 		if (questionArea != null)
@@ -347,13 +304,7 @@ public class PageTextArea extends JPanel implements Embeddable, HtmlService, Sea
 	}
 
 	int getDesirableHeight() {
-		int h1 = getRowHeight() * getRows();
-		int h2 = questionArea.getPreferredSize().height;
-		if (hasClearButton()) {
-			int h3 = buttonPanel.getPreferredSize().height;
-			return h1 + h2 + h3;
-		}
-		return h1 + h2;
+		return getRowHeight() * getRows() + questionArea.getPreferredSize().height;
 	}
 
 	public void setBackground(Color c) {
@@ -516,8 +467,6 @@ public class PageTextArea extends JPanel implements Embeddable, HtmlService, Sea
 		sb.append("<height>" + getHeight() + "</height>\n");
 		if (getTitle() != null)
 			sb.append("<title>" + XMLCharacterEncoder.encode(getTitle()) + "</title>\n");
-		if (hasClearButton())
-			sb.append("<clear>true</clear>\n");
 		if (referenceAnswer != null && !referenceAnswer.trim().equals(""))
 			sb.append("<description>" + XMLCharacterEncoder.encode(referenceAnswer) + "</description>\n");
 		if (isOpaque()) {

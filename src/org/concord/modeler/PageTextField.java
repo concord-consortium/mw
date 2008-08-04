@@ -22,7 +22,6 @@ package org.concord.modeler;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
@@ -37,7 +36,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JButton;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -68,7 +66,6 @@ public class PageTextField extends JPanel implements Embeddable, HtmlService, Se
 	private static Color defaultBackground, defaultForeground;
 	private JTextField textField;
 	private BasicPageTextBox questionArea;
-	private JButton clearButton;
 	private JPanel buttonPanel;
 	private JPopupMenu popupMenu;
 	private List<TextInputListener> inputListeners;
@@ -123,19 +120,13 @@ public class PageTextField extends JPanel implements Embeddable, HtmlService, Se
 		this();
 		setPage(parent);
 		setTitle(t.getTitle());
+		setQuestionPosition(t.getQuestionPosition());
 		setColumns(t.getColumns());
-		if (t.hasClearButton()) {
-			addClearButton();
-		}
-		else {
-			removeClearButton();
-		}
+		setPreferredSize(t.getPreferredSize());
 		setOpaque(t.isOpaque());
 		setBackground(t.getBackground());
 		setBorderType(t.getBorderType());
 		setChangable(page.isEditable());
-		setQuestionPosition(t.getQuestionPosition());
-		setPreferredSize(t.getPreferredSize());
 		referenceAnswer = t.referenceAnswer;
 		setId(t.id);
 	}
@@ -261,40 +252,6 @@ public class PageTextField extends JPanel implements Embeddable, HtmlService, Se
 		return id;
 	}
 
-	public void addClearButton() {
-		if (hasClearButton())
-			return;
-		if (clearButton == null) {
-			clearButton = new JButton("Clear");
-			clearButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					textField.setText(null);
-					String key = page.getAddress() + "#" + ModelerUtilities.getSortableString(index, 3) + "%"
-							+ PageTextField.class.getName();
-					UserData.sharedInstance().removeData(key);
-				}
-			});
-		}
-		buttonPanel.add(clearButton);
-		add(buttonPanel, BorderLayout.SOUTH);
-	}
-
-	public void removeClearButton() {
-		if (hasClearButton())
-			buttonPanel.remove(clearButton);
-		if (buttonPanel.getComponentCount() == 0)
-			remove(buttonPanel);
-	}
-
-	public boolean hasClearButton() {
-		Component[] c = buttonPanel.getComponents();
-		for (Component i : c) {
-			if (i == clearButton)
-				return true;
-		}
-		return false;
-	}
-
 	public void setPreferredSize(Dimension dim) {
 		super.setPreferredSize(dim);
 		super.setMaximumSize(dim);
@@ -311,17 +268,9 @@ public class PageTextField extends JPanel implements Embeddable, HtmlService, Se
 			else {
 				h2 += questionArea.getFontMetrics(questionArea.getFont()).getHeight();
 			}
-			if (hasClearButton()) {
-				int h3 = buttonPanel.getPreferredSize().height;
-				return h1 + h2 + h3;
-			}
 			return h1 + h2;
 		}
 		int h1 = textField.getFontMetrics(textField.getFont()).getHeight();
-		if (hasClearButton()) {
-			int h3 = buttonPanel.getPreferredSize().height;
-			return h1 + h3;
-		}
 		return h1;
 	}
 
@@ -530,8 +479,6 @@ public class PageTextField extends JPanel implements Embeddable, HtmlService, Se
 		sb.append("<height>" + getHeight() + "</height>\n");
 		if (getTitle() != null)
 			sb.append("<title>" + XMLCharacterEncoder.encode(getTitle()) + "</title>\n");
-		if (hasClearButton())
-			sb.append("<clear>true</clear>\n");
 		if (referenceAnswer != null && !referenceAnswer.trim().equals(""))
 			sb.append("<description>" + XMLCharacterEncoder.encode(referenceAnswer) + "</description>\n");
 		if (isOpaque()) {
