@@ -466,6 +466,10 @@ public class PageTextArea extends JPanel implements Embeddable, HtmlService, Sea
 		textArea.setText(s);
 	}
 
+	public JTextArea getInputArea() {
+		return textArea;
+	}
+
 	public static PageTextArea create(Page page) {
 		if (page == null)
 			return null;
