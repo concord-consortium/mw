@@ -29,6 +29,7 @@ import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Frame;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
@@ -45,6 +46,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -529,6 +531,17 @@ public final class ModelerUtilities {
 	}
 
 	/**
+	 * Re-enables double buffering globally.
+	 * 
+	 * @param c
+	 *            processed component
+	 */
+	public static void enableDoubleBuffering(Component c) {
+		RepaintManager currentManager = RepaintManager.currentManager(c);
+		currentManager.setDoubleBufferingEnabled(true);
+	}
+
+	/**
 	 * ImageIcon's constructors use MediaTracker to load an image, which is cached. As a result, subsequent changes on
 	 * the content of the image do not show up. This method uses ImageIO class to remove the caching effect. Caution:
 	 * You should NOT use this method to create ImageIcon's whose content will NOT change.
@@ -543,23 +556,43 @@ public final class ModelerUtilities {
 		}
 	}
 
+	/** create a BufferedImage from a plain Image */
+	public BufferedImage getBufferedImage(Image image) {
+		if (image == null)
+			return null;
+		if (image instanceof BufferedImage)
+			return (BufferedImage) image;
+		BufferedImage bi = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+		Graphics g = bi.createGraphics();
+		g.drawImage(image, 0, 0, null);
+		return bi;
+	}
+
+	/** convert an image into a byte array */
+	public byte[] getImageArray(Image image, String formatName) {
+		BufferedImage bi = getBufferedImage(image);
+		if (bi == null)
+			return null;
+		ByteArrayOutputStream baos = new ByteArrayOutputStream(1000);
+		try {
+			ImageIO.write(bi, formatName, baos);
+			baos.flush();
+			byte[] result = baos.toByteArray();
+			baos.close();
+			return result;
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 	/** scale an image. This is an alternative to Image.getScaledInstance() */
 	public static BufferedImage scale(BufferedImage src, float sx, float sy) {
 		AffineTransform t = new AffineTransform();
 		t.scale(sx, sy);
 		AffineTransformOp op = new AffineTransformOp(t, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
 		return op.filter(src, null);
-	}
-
-	/**
-	 * Re-enables double buffering globally.
-	 * 
-	 * @param c
-	 *            processed component
-	 */
-	public static void enableDoubleBuffering(Component c) {
-		RepaintManager currentManager = RepaintManager.currentManager(c);
-		currentManager.setDoubleBufferingEnabled(true);
 	}
 
 	/** copy a resource represented by a path to a file */
