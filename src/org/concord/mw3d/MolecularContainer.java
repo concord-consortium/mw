@@ -64,6 +64,7 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 import javax.swing.JProgressBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -151,6 +152,7 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 	private AbstractButton rotateButton;
 	private ButtonGroup toolBarButtonGroup;
 
+	private JPopupMenu defaultPopupMenu;
 	private SelectToolPopupMenu selectToolPopupMenu;
 	private DropToolPopupMenu dropToolPopupMenu;
 	private DropObstaclePopupMenu dropObstaclePopupMenu;
@@ -2270,6 +2272,22 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 		button.setFocusPainted(false);
 		moviePanel.add(button);
 
+		moviePanel.addMouseListener(new MouseAdapter() {
+			private boolean popupTrigger;
+
+			public void mousePressed(MouseEvent e) {
+				popupTrigger = e.isPopupTrigger();
+			}
+
+			public void mouseReleased(MouseEvent e) {
+				if (popupTrigger || e.isPopupTrigger()) {
+					if (defaultPopupMenu == null)
+						createDefaultPopupMenu();
+					defaultPopupMenu.show(moviePanel, e.getX(), e.getY());
+				}
+			}
+		});
+
 	}
 
 	private void createRunPanel() {
@@ -2299,6 +2317,63 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 			button.setToolTipText(s);
 		}
 		runPanel.add(button);
+
+		runPanel.addMouseListener(new MouseAdapter() {
+			private boolean popupTrigger;
+
+			public void mousePressed(MouseEvent e) {
+				popupTrigger = e.isPopupTrigger();
+			}
+
+			public void mouseReleased(MouseEvent e) {
+				if (popupTrigger || e.isPopupTrigger()) {
+					if (defaultPopupMenu == null)
+						createDefaultPopupMenu();
+					defaultPopupMenu.show(runPanel, e.getX(), e.getY());
+				}
+			}
+		});
+
+	}
+
+	private void createDefaultPopupMenu() {
+
+		defaultPopupMenu = new JPopupMenu();
+
+		String s = MolecularContainer.getInternationalText("ShowMenuBar");
+		final JMenuItem miMenuBar = new JCheckBoxMenuItem(s != null ? s : "Show Menu Bar");
+		miMenuBar.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				enableMenuBar(e.getStateChange() == ItemEvent.SELECTED);
+				notifyChange();
+			}
+		});
+		defaultPopupMenu.add(miMenuBar);
+
+		s = MolecularContainer.getInternationalText("ShowToolBar");
+		final JMenuItem miToolBar = new JCheckBoxMenuItem(s != null ? s : "Show Tool Bar");
+		miToolBar.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				enableToolBar(e.getStateChange() == ItemEvent.SELECTED);
+				notifyChange();
+			}
+		});
+		defaultPopupMenu.add(miToolBar);
+
+		defaultPopupMenu.pack();
+
+		defaultPopupMenu.addPopupMenuListener(new PopupMenuListener() {
+			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+				Util.setWithoutNotifyingListeners(miMenuBar, isMenuBarEnabled());
+				Util.setWithoutNotifyingListeners(miToolBar, isToolBarEnabled());
+			}
+
+			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+			}
+
+			public void popupMenuCanceled(PopupMenuEvent e) {
+			}
+		});
 
 	}
 
