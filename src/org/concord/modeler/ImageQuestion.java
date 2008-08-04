@@ -242,6 +242,7 @@ public class ImageQuestion extends JPanel implements Embeddable, TransferListene
 		if (imageContainer.getImage() == null) {
 			if (q != null)
 				q.setAnswer(null);
+			notifyImageInputListeners(new ImageInputEvent(this, null));
 			return;
 		}
 		name = SnapshotGallery.sharedInstance().getSelectedImageName();
