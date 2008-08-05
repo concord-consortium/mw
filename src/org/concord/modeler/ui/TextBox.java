@@ -144,8 +144,12 @@ public class TextBox extends JPanel implements HtmlService, Searchable {
 			scroller.addMouseWheelListener(mouseWheelListener);
 	}
 
+	public String getAttribute(String tag, String name) {
+		return textBody.getAttribute(tag, name);
+	}
+
 	public String getBackgroundImage() {
-		return textBody.getBackgroundImage();
+		return textBody.getAttribute("body", "background");
 	}
 
 	public List<String> getImageNames() {
@@ -398,8 +402,8 @@ public class TextBox extends JPanel implements HtmlService, Searchable {
 		textBody.useCachedImages(b, codeBase);
 	}
 
-	public void cacheImages(String codeBase) {
-		textBody.cacheImages(codeBase);
+	public void cacheLinkedFiles(String codeBase) {
+		textBody.cacheLinkedFiles(codeBase);
 	}
 
 	/** encode the HTML text so that it can be embedded into XML */

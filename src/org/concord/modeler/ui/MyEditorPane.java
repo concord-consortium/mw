@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.JEditorPane;
@@ -58,21 +59,23 @@ public class MyEditorPane extends JEditorPane {
 		setContentType("text/html");
 	}
 
-	/** get the background image name from the HTML document */
-	public String getBackgroundImage() {
+	public String getAttribute(String tag, String name) {
 		ElementIterator ei = new ElementIterator(getDocument());
 		Element e = ei.next();
 		AttributeSet as;
-		Object name;
+		Object o;
 		Enumeration en;
+		HashMap<String, String> map = new HashMap<String, String>();
 		while (e != null) {
 			as = e.getAttributes();
 			en = as.getAttributeNames();
+			map.clear();
 			while (en.hasMoreElements()) {
-				name = en.nextElement();
-				if (name.toString().equalsIgnoreCase("background"))
-					return (String) as.getAttribute(name);
+				o = en.nextElement();
+				map.put(o.toString(), as.getAttribute(o).toString());
 			}
+			if (map.containsValue(tag))
+				return map.get(name);
 			e = ei.next();
 		}
 		return null;

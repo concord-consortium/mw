@@ -496,7 +496,7 @@ final class PageXMLEncoder {
 									+ ".mdd"));
 						}
 						else if (attr instanceof HtmlService) {
-							saveImagesInHTML((HtmlService) attr, file.getParentFile());
+							saveLinkedFilesInHTML((HtmlService) attr, file.getParentFile());
 						}
 						else if (attr instanceof AudioPlayer) {
 							AudioPlayer ap = (AudioPlayer) attr;
@@ -627,8 +627,12 @@ final class PageXMLEncoder {
 	}
 
 	/* save the images embedded in html body of these text components * */
-	private void saveImagesInHTML(HtmlService c, File parentFile) {
-		String bgImage = c.getBackgroundImage();
+	private void saveLinkedFilesInHTML(HtmlService c, File parentFile) {
+		String href = c.getAttribute("link", "href");
+		if (href != null) {
+			saveResource(page, page.getPathBase() + href, parentFile);
+		}
+		String bgImage = c.getAttribute("body", "background");
 		if (bgImage != null) {
 			saveResource(page, page.getPathBase() + bgImage, parentFile);
 		}

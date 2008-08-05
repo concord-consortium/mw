@@ -34,8 +34,8 @@ public interface HtmlService {
 	/** get the base URL for the HTML document */
 	public URL getBase();
 
-	/** get the background image name from the HTML document */
-	public String getBackgroundImage();
+	/** get the name of the attribute in the specified tag from the HTML document */
+	public String getAttribute(String tag, String name);
 
 	/** return a list of the names of all the embedded images in the HTML document */
 	public List<String> getImageNames();
@@ -46,7 +46,7 @@ public interface HtmlService {
 	 * @param codeBase
 	 *            the current parent directory
 	 */
-	public void cacheImages(String codeBase);
+	public void cacheLinkedFiles(String codeBase);
 
 	/**
 	 * If b is true, it is used to modify the HTML document so that the images point to the cached ones. Otherwise, it

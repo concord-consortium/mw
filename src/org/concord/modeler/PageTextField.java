@@ -402,12 +402,16 @@ public class PageTextField extends JPanel implements Embeddable, HtmlService, Se
 		return questionArea.getImageNames();
 	}
 
+	public String getAttribute(String tag, String name) {
+		return questionArea.getAttribute(tag, name);
+	}
+
 	public String getBackgroundImage() {
 		return questionArea.getBackgroundImage();
 	}
 
-	public void cacheImages(String codeBase) {
-		questionArea.cacheImages(codeBase);
+	public void cacheLinkedFiles(String codeBase) {
+		questionArea.cacheLinkedFiles(codeBase);
 	}
 
 	public void useCachedImages(boolean b, String codeBase) {

@@ -1012,14 +1012,27 @@ public class HTMLPane extends MyEditorPane {
 
 	}
 
-	public void cacheImages(String codeBase) {
+	public void cacheLinkedFiles(String codeBase) {
 
 		if (!ConnectionManager.sharedInstance().isCachingAllowed())
 			return;
 		if (!FileUtilities.isRemote(codeBase))
 			return;
 
-		String bgImage = getBackgroundImage();
+		String href = getAttribute("link", "href");
+		if (href != null) {
+			String pb = codeBase + FileUtilities.getFileName(href);
+			try {
+				File file = ConnectionManager.sharedInstance().shouldUpdate(pb);
+				if (file == null)
+					file = ConnectionManager.sharedInstance().cache(pb);
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		String bgImage = getAttribute("body", "background");
 		if (bgImage != null) {
 			String pb = codeBase + FileUtilities.getFileName(bgImage);
 			try {
