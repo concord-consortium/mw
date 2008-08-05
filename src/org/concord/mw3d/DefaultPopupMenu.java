@@ -200,6 +200,12 @@ class DefaultPopupMenu extends JPopupMenu {
 		if (s != null)
 			mi.setText(s);
 		add(mi);
+
+		mi = new JMenuItem(container.view.getActionMap().get("task manager"));
+		s = MolecularContainer.getInternationalText("TaskManager");
+		if (s != null)
+			mi.setText(s);
+		add(mi);
 		addSeparator();
 
 		s = MolecularContainer.getInternationalText("ShowMenuBar");

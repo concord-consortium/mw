@@ -97,6 +97,7 @@ import org.concord.modeler.event.ScriptExecutionEvent;
 import org.concord.modeler.event.ScriptExecutionListener;
 import org.concord.modeler.process.Executable;
 import org.concord.modeler.process.ImageStreamGenerator;
+import org.concord.modeler.process.Job;
 import org.concord.modeler.ui.ComboBoxRenderer;
 import org.concord.modeler.ui.IconPool;
 import org.concord.modeler.util.FileChooser;
@@ -1186,6 +1187,18 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 		view.getInputMap().put((KeyStroke) a.getValue(ACCELERATOR_KEY), "properties");
 		view.getActionMap().put("properties", a);
 
+		a = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				if (ModelerUtilities.stopFiring(e))
+					return;
+				showTaskManager();
+			}
+		};
+		a.putValue(NAME, "Task Manager");
+		a.putValue(SHORT_DESCRIPTION, "Task manager");
+		a.putValue(SMALL_ICON, IconPool.getIcon("taskmanager"));
+		view.getActionMap().put("task manager", a);
+
 		view.getActionMap().put("show energy", new ShowEnergyAction(this));
 
 	}
@@ -1713,6 +1726,12 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 
 		mi = new JMenuItem(view.getActionMap().get("view options"));
 		s = getInternationalText("ViewOption");
+		mi.setText((s != null ? s : mi.getText()) + "...");
+		mi.setIcon(null);
+		menu.add(mi);
+
+		mi = new JMenuItem(view.getActionMap().get("task manager"));
+		s = getInternationalText("TaskManager");
 		mi.setText((s != null ? s : mi.getText()) + "...");
 		mi.setIcon(null);
 		menu.add(mi);
@@ -2416,6 +2435,19 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 			}
 		}
 		return JOptionPane.YES_OPTION;
+	}
+
+	private void showTaskManager() {
+		if (!EventQueue.isDispatchThread())
+			throw new RuntimeException("must be called in event thread.");
+		Job job = model.getJob();
+		if (job != null) {
+			job.show(getView());
+		}
+		else {
+			JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(MolecularContainer.this),
+					"There is no task yet. Please run the model.", "No task assigned", JOptionPane.WARNING_MESSAGE);
+		}
 	}
 
 	private abstract class DefaultAction extends AbstractAction {

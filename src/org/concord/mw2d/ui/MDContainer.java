@@ -81,7 +81,6 @@ import org.concord.modeler.PageBarGraph;
 import org.concord.modeler.PageXYGraph;
 import org.concord.modeler.SlideMovie;
 import org.concord.modeler.event.ModelListener;
-import org.concord.modeler.process.Job;
 import org.concord.modeler.ui.ColorArrayEvent;
 import org.concord.modeler.ui.ColorArrayListener;
 import org.concord.modeler.ui.ColorArrayPane;
@@ -1082,20 +1081,6 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 				return true;
 		}
 		return false;
-	}
-
-	/* Caution: This method must be called in the event thread. */
-	void showTaskManager(String selectedTask) {
-		if (!EventQueue.isDispatchThread())
-			throw new RuntimeException("must be called in event thread.");
-		Job job = getModel().getJob();
-		if (job != null) {
-			job.show(getView());
-		}
-		else {
-			JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(MDContainer.this),
-					"There is no task yet. Please run the model.", "No task assigned", JOptionPane.WARNING_MESSAGE);
-		}
 	}
 
 	void showMessageWithPopupMenu(Component parent, String message) {

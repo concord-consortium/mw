@@ -28,6 +28,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
+import org.concord.modeler.ui.IconPool;
+
 class DefaultPopupMenu extends JPopupMenu {
 
 	private AtomisticView view;
@@ -85,10 +87,9 @@ class DefaultPopupMenu extends JPopupMenu {
 		add(mi);
 
 		s = MDView.getInternationalText("TaskManager");
-		mi = new JMenuItem(s != null ? s : "Task Manager", new ImageIcon(getClass().getResource(
-				"images/TaskManager.gif")));
+		mi = new JMenuItem(s != null ? s : "Task Manager", IconPool.getIcon("taskmanager"));
 		mi.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent e) {
 				view.showTaskManager();
 			}
 		});

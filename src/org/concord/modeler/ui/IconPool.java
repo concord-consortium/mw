@@ -166,6 +166,9 @@ public final class IconPool {
 		icon = new ImageIcon(c.getResource("images/view.gif"));
 		map.put("view", icon);
 
+		icon = new ImageIcon(c.getResource("images/taskmanager.gif"));
+		map.put("taskmanager", icon);
+
 		icon = new ImageIcon(c.getResource("images/restrain.gif"));
 		map.put("restrain", icon);
 
