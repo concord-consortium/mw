@@ -448,7 +448,7 @@ final class PageXMLDecoder {
 	private void setWrappedIcon(Style style, Icon icon) {
 		if (Page.wrapIconWithComponent(icon)) {
 			IconWrapper iconWrapper = new IconWrapper(icon, page);
-			iconWrapper.cacheImages(page.getPathBase());
+			iconWrapper.cacheLinkedFiles(page.getPathBase());
 			StyleConstants.setComponent(style, iconWrapper);
 			htmlComponentConnector.enroll(iconWrapper);
 			if (icon instanceof LineIcon) {
@@ -2181,7 +2181,7 @@ final class PageXMLDecoder {
 			}
 			if (ConnectionManager.sharedInstance().isCachingAllowed()) {
 				if (page.isRemote())
-					t.cacheImages(page.getPathBase());
+					t.cacheLinkedFiles(page.getPathBase());
 			}
 			htmlComponentConnector.enroll(t);
 			indexOfComponent++;
@@ -2914,7 +2914,7 @@ final class PageXMLDecoder {
 			}
 			if (ConnectionManager.sharedInstance().isCachingAllowed()) {
 				if (page.isRemote())
-					m.cacheImages(page.getPathBase());
+					m.cacheLinkedFiles(page.getPathBase());
 			}
 			m.clearSelection();
 			String key = page.getAddress() + "#" + ModelerUtilities.getSortableString(indexOfComponent, 3) + "%"
@@ -2996,7 +2996,7 @@ final class PageXMLDecoder {
 			}
 			if (ConnectionManager.sharedInstance().isCachingAllowed()) {
 				if (page.isRemote())
-					iq.cacheImages(page.getPathBase());
+					iq.cacheLinkedFiles(page.getPathBase());
 			}
 			htmlComponentConnector.enroll(iq.getQuestionTextBox());
 			indexOfComponent++;
@@ -3061,7 +3061,7 @@ final class PageXMLDecoder {
 			}
 			if (ConnectionManager.sharedInstance().isCachingAllowed()) {
 				if (page.isRemote())
-					t.cacheImages(page.getPathBase());
+					t.cacheLinkedFiles(page.getPathBase());
 			}
 			htmlComponentConnector.enroll(t.getQuestionTextBox());
 			indexOfComponent++;
@@ -3129,7 +3129,7 @@ final class PageXMLDecoder {
 			}
 			if (ConnectionManager.sharedInstance().isCachingAllowed()) {
 				if (page.isRemote())
-					t.cacheImages(page.getPathBase());
+					t.cacheLinkedFiles(page.getPathBase());
 			}
 			htmlComponentConnector.enroll(t.getQuestionTextBox());
 			indexOfComponent++;

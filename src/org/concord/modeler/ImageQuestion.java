@@ -292,12 +292,16 @@ public class ImageQuestion extends JPanel implements Embeddable, TransferListene
 		return questionArea.getImageNames();
 	}
 
+	public String getAttribute(String tag, String name) {
+		return questionArea.getAttribute(tag, name);
+	}
+
 	public String getBackgroundImage() {
 		return questionArea.getBackgroundImage();
 	}
 
-	public void cacheImages(String codeBase) {
-		questionArea.cacheImages(codeBase);
+	public void cacheLinkedFiles(String codeBase) {
+		questionArea.cacheLinkedFiles(codeBase);
 	}
 
 	public void useCachedImages(boolean b, String codeBase) {

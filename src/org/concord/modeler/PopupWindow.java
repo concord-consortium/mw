@@ -70,7 +70,7 @@ class PopupWindow extends BasicPageTextBox implements CallOut {
 
 	public void setPage(Page p) {
 		super.setPage(p);
-		cacheImages(p.getPathBase());
+		cacheLinkedFiles(p.getPathBase());
 	}
 
 	public void setCallOut(int xCallOut, int yCallOut) {

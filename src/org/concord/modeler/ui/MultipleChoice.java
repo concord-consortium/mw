@@ -344,6 +344,10 @@ public abstract class MultipleChoice extends JPanel implements HtmlService, Sear
 		return questionBody.getImageNames();
 	}
 
+	public String getAttribute(String tag, String name) {
+		return questionBody.getAttribute(tag, name);
+	}
+
 	public void setBase(URL u) {
 		questionBody.setBase(u);
 	}
@@ -352,8 +356,8 @@ public abstract class MultipleChoice extends JPanel implements HtmlService, Sear
 		return questionBody.getBase();
 	}
 
-	public void cacheImages(String codeBase) {
-		questionBody.cacheImages(codeBase);
+	public void cacheLinkedFiles(String codeBase) {
+		questionBody.cacheLinkedFiles(codeBase);
 	}
 
 	public void useCachedImages(boolean b, String codeBase) {

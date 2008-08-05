@@ -257,7 +257,7 @@ public class PageTextBox extends BasicPageTextBox {
 					setText(s.trim());
 					setEmbeddedComponentAttributes();
 					if (imageCached)
-						cacheImages(page.getPathBase());
+						cacheLinkedFiles(page.getPathBase());
 					EventQueue.invokeLater(new Runnable() {
 						public void run() {
 							setViewPosition(0, 0);

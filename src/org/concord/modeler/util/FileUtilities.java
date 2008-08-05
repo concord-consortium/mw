@@ -289,6 +289,18 @@ public class FileUtilities {
 		if (s.length() == 0)
 			return FILE_ACCESS_ERROR;
 		long lastModified = s.lastModified();
+		File dest = null;
+		if (s.equals(d)) {
+			if (d.exists()) {
+				if (d.lastModified() == lastModified && d.length() == s.length()) {
+					return COPY_SUCCESS; // same file, return with success
+				}
+			}
+			dest = new File(d.getAbsolutePath() + ".tmp");
+		}
+		else {
+			dest = d;
+		}
 		FileInputStream is = null;
 		try {
 			is = new FileInputStream(s);
@@ -296,13 +308,6 @@ public class FileUtilities {
 		catch (FileNotFoundException e) {
 			e.printStackTrace();
 			return SOURCE_NOT_FOUND;
-		}
-		File dest = null;
-		if (s.equals(d)) {
-			dest = new File(d.getAbsolutePath() + ".tmp");
-		}
-		else {
-			dest = d;
 		}
 		FileOutputStream fos = null;
 		try {

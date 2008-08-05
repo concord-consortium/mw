@@ -348,8 +348,12 @@ public class PageTextArea extends JPanel implements Embeddable, HtmlService, Sea
 		return questionArea.getBackgroundImage();
 	}
 
-	public void cacheImages(String codeBase) {
-		questionArea.cacheImages(codeBase);
+	public String getAttribute(String tag, String name) {
+		return questionArea.getAttribute(tag, name);
+	}
+
+	public void cacheLinkedFiles(String codeBase) {
+		questionArea.cacheLinkedFiles(codeBase);
 	}
 
 	public void useCachedImages(boolean b, String codeBase) {
