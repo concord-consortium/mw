@@ -308,6 +308,12 @@ public class GBContainer extends MDContainer {
 			});
 			menu.add(menuItem);
 
+			menuItem = new JMenuItem(view.getActionMap().get("Properties"));
+			s = getInternationalText("Properties");
+			menuItem.setText((s != null ? s : menuItem.getText()) + "...");
+			menuItem.setIcon(null);
+			menu.add(menuItem);
+
 			menuItem = new JMenuItem(view.getActionMap().get("View Options"));
 			s = getInternationalText("ViewOption");
 			menuItem.setText((s != null ? s : menuItem.getText()) + "...");
