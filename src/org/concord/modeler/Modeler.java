@@ -500,22 +500,6 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		homeMenuItem.setAction(null);
 		homeButton.setAction(null);
 		colorMenu.destroy();
-		preinstallMenu = null;
-		colorMenu = null;
-		bookmarkMenu = null;
-		createReportAction = null;
-		createReportForPageGroupAction = null;
-		statusBar = null;
-		editor = null;
-		navigator = null;
-		reloadMenuItem = null;
-		reloadButton = null;
-		backMenuItem = null;
-		backButton = null;
-		forwardMenuItem = null;
-		forwardButton = null;
-		homeMenuItem = null;
-		homeButton = null;
 
 		KeyboardFocusManager.getCurrentKeyboardFocusManager().clearGlobalFocusOwner();
 
@@ -727,7 +711,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 	}
 
 	private void decideCloseOperation() {
-		if (editor.getPage().isReading() || editor.getPage().isWriting()) // reject closing request
+		if (editor.getPage().isWriting()) // reject closing request
 			return;
 		xOffset -= offset;
 		yOffset -= offset;
@@ -994,8 +978,6 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		});
 		menu.setMnemonic(KeyEvent.VK_F);
 		menuBar.add(menu);
-		if (windowCount == 0)
-			menu.setEnabled(false);
 		editor.addDisabledComponentWhileLoading(menu);
 
 		JMenuItem menuItem = new JMenuItem(page.getAction(Page.NEW_PAGE));
@@ -1233,8 +1215,6 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 			}
 		});
 		menuBar.add(menu);
-		if (windowCount == 0)
-			menu.setEnabled(false);
 		editor.addDisabledComponentWhileLoading(menu);
 
 		menuItem = new JMenuItem(page.getAction(Page.UNDO));
@@ -1475,8 +1455,6 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 			}
 		});
 		menuBar.add(menu);
-		if (windowCount == 0)
-			menu.setEnabled(false);
 		editor.addDisabledComponentWhileLoading(menu);
 
 		// FIXME: insert file doesn't work right. editor.addEnabledComponentWhenEditable(menuItem);
@@ -1920,8 +1898,6 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		menu = new JMenu(s != null ? s : "View");
 		menu.setMnemonic(KeyEvent.VK_V);
 		menuBar.add(menu);
-		if (windowCount == 0)
-			menu.setEnabled(false);
 		editor.addDisabledComponentWhileLoading(menu);
 
 		menuItem = menu.add(page.getActionMap().get("Full Screen"));
@@ -2040,8 +2016,6 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		menu = new JMenu(s != null ? s : "Options");
 		menu.setMnemonic(KeyEvent.VK_O);
 		menuBar.add(menu);
-		if (windowCount == 0)
-			menu.setEnabled(false);
 		editor.addDisabledComponentWhileLoading(menu);
 
 		menuItem = new JMenuItem(page.getAction("Font"));
@@ -2204,8 +2178,6 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 
 		menuBar.add(bookmarkMenu);
 		editor.addEnabledComponentWhenNotEditable(bookmarkMenu);
-		if (windowCount == 0)
-			bookmarkMenu.setEnabled(false);
 		editor.addDisabledComponentWhileLoading(bookmarkMenu);
 
 		// create the remote menu
@@ -2239,8 +2211,6 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 			}
 		});
 		menuBar.add(menu);
-		if (windowCount == 0)
-			menu.setEnabled(false);
 		editor.addDisabledComponentWhileLoading(menu);
 
 		uploadMI.setMnemonic(KeyEvent.VK_P);
@@ -2314,8 +2284,6 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		menu = new JMenu(s != null ? s : "Help");
 		menu.setMnemonic(KeyEvent.VK_H);
 		menuBar.add(menu);
-		if (windowCount == 0)
-			menu.setEnabled(false);
 		editor.addDisabledComponentWhileLoading(menu);
 
 		s = getInternationalText("UserManual");
@@ -2584,8 +2552,6 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 			homeButton.setMargin(Editor.ZERO_INSETS);
 		toolBar.add(homeButton);
 		editor.addEnabledComponentWhenNotEditable(homeButton);
-		if (windowCount == 0)
-			homeButton.setEnabled(false);
 		editor.addDisabledComponentWhileLoading(homeButton);
 
 		reloadButton = new JButton(editor.getPage().getAction(Page.REFRESH));
@@ -2612,16 +2578,12 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		}
 		toolBar.add(reloadButton);
 		editor.addEnabledComponentWhenNotEditable(reloadButton);
-		if (windowCount == 0)
-			reloadButton.setEnabled(false);
 		editor.addDisabledComponentWhileLoading(reloadButton);
 
 		navigator.getComboBox().setRequestFocusEnabled(false);
 		int fontSize = navigator.getComboBox().getFont().getSize();
 		navigator.getComboBox().setPreferredSize(new Dimension(400, fontSize * 2));
 		toolBar.add(navigator.getComboBox());
-		if (windowCount == 0)
-			navigator.getComboBox().setEnabled(false);
 		editor.addDisabledComponentWhileLoading(navigator.getComboBox());
 
 	}

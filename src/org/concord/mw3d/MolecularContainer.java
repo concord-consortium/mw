@@ -719,6 +719,10 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 		state.setX2Epsilon(model.getElementEpsilon("X2"));
 		state.setX3Epsilon(model.getElementEpsilon("X3"));
 		state.setX4Epsilon(model.getElementEpsilon("X4"));
+		state.setX1Argb(view.getElementArgb("X1"));
+		state.setX2Argb(view.getElementArgb("X2"));
+		state.setX3Argb(view.getElementArgb("X3"));
+		state.setX4Argb(view.getElementArgb("X4"));
 		if (model.getGField() != null) {
 			if (!model.getGField().isAlwaysDown())
 				state.setGFieldDirection(model.getGField().getDirection());
@@ -809,6 +813,10 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 		model.setElementEpsilon("X2", state.getX2Epsilon());
 		model.setElementEpsilon("X3", state.getX3Epsilon());
 		model.setElementEpsilon("X4", state.getX4Epsilon());
+		view.setElementArgb("X1", state.getX1Argb());
+		view.setElementArgb("X2", state.getX2Argb());
+		view.setElementArgb("X3", state.getX3Argb());
+		view.setElementArgb("X4", state.getX4Argb());
 		view.getViewer().setNavigationMode(state.getNavigationMode());
 		if (state.getCameraAtom() < 0) {
 			if (state.getCameraPosition() != null) {
@@ -973,13 +981,16 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 			Atom a = model.getAtom(i);
 			if (!a.isGenericParticle())
 				continue;
-			float mass = model.getElementMass(a.getSymbol());
+			String symbol = a.getSymbol();
+			float mass = model.getElementMass(symbol);
 			a.setMass(mass);
-			float epsilon = model.getElementEpsilon(a.getSymbol());
+			float epsilon = model.getElementEpsilon(symbol);
 			a.setEpsilon(epsilon);
-			float sigma = model.getElementSigma(a.getSymbol());
+			float sigma = model.getElementSigma(symbol);
 			a.setSigma(sigma);
 			view.getViewer().setAtomSize(i, a.getSigma() * 1000);
+			Color color = new Color(view.getElementArgb(symbol));
+			view.setAtomColor(a.getElementNumber(), color);
 		}
 	}
 
