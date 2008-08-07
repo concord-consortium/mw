@@ -221,7 +221,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		JPanel panel = new JPanel(new SpringLayout());
 		panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory
 				.createEmptyBorder(10, 10, 10, 10)));
-		add(panel, BorderLayout.CENTER);
+		add(panel, BorderLayout.NORTH);
 
 		// row 1
 		s = MolecularContainer.getInternationalText("Name");
@@ -239,17 +239,17 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		s = MolecularContainer.getInternationalText("Mass");
 		panel.add(new JLabel(s != null ? s : "Mass"));
 		panel.add(massField);
-		panel.add(createSmallerFontLabel("g/mol"));
+		panel.add(new JLabel("<html>g/mol, <font color=gray>&#10014;</font></html>"));
 
 		// row 4
-		panel.add(new JLabel("<html><i>&#963;</i> (&#197;)</html>", SwingConstants.LEFT));
+		panel.add(new JLabel("<html><i>&#963;</i></html>", SwingConstants.LEFT));
 		panel.add(sigmaField);
-		panel.add(new JPanel());
+		panel.add(new JLabel("<html>&#197; <font color=gray>&#10014;</font></html>"));
 
 		// row 5
-		panel.add(new JLabel("<html><i>&#949;</i> (eV)</html>", SwingConstants.LEFT));
+		panel.add(new JLabel("<html><i>&#949;</i></html>", SwingConstants.LEFT));
 		panel.add(epsilonField);
-		panel.add(new JPanel());
+		panel.add(new JLabel("<html>eV <font color=gray>&#10014;</font></html>"));
 
 		// row 6
 		s = MolecularContainer.getInternationalText("Charge");
@@ -281,7 +281,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		});
 		panel.add(leftXLabel);
 		panel.add(rxField);
-		panel.add(createSmallerFontLabel("<html>&#197;</html>"));
+		panel.add(new JLabel("<html>&#197;</html>"));
 
 		// row 9
 		leftYLabel = new HyperlinkLabel(
@@ -301,7 +301,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		});
 		panel.add(leftYLabel);
 		panel.add(ryField);
-		panel.add(createSmallerFontLabel("<html>&#197;</html>"));
+		panel.add(new JLabel("<html>&#197;</html>"));
 
 		// row 10
 		leftZLabel = new HyperlinkLabel(
@@ -321,7 +321,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		});
 		panel.add(leftZLabel);
 		panel.add(rzField);
-		panel.add(createSmallerFontLabel("<html>&#197;</html>"));
+		panel.add(new JLabel("<html>&#197;</html>"));
 
 		// row 11
 		leftVxLabel = new HyperlinkLabel(
@@ -342,7 +342,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		});
 		panel.add(leftVxLabel);
 		panel.add(vxField);
-		panel.add(createSmallerFontLabel("m/s"));
+		panel.add(new JLabel("m/s"));
 
 		// row 12
 		leftVyLabel = new HyperlinkLabel(
@@ -363,7 +363,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		});
 		panel.add(leftVyLabel);
 		panel.add(vyField);
-		panel.add(createSmallerFontLabel("m/s"));
+		panel.add(new JLabel("m/s"));
 
 		// row 13
 		leftVzLabel = new HyperlinkLabel(
@@ -384,9 +384,16 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		});
 		panel.add(leftVzLabel);
 		panel.add(vzField);
-		panel.add(createSmallerFontLabel("m/s"));
+		panel.add(new JLabel("m/s"));
 
 		makeCompactGrid(panel, 13, 3, 5, 5, 10, 2);
+
+		panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		add(panel, BorderLayout.CENTER);
+
+		s = MolecularContainer.getInternationalText("AppliedToAllParticlesOfThisType");
+		panel.add(new JLabel("<html><font color=gray>&#10014; "
+				+ (s != null ? s : "Applied to all particles of this type") + ".</font></html>"));
 
 		panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		add(panel, BorderLayout.SOUTH);

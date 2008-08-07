@@ -3050,6 +3050,7 @@ public class MolecularView extends Draw {
 		if (id == null)
 			return false;
 		viewer.addAtom(a, id.byteValue(), a.getSymbol(), 0, a.getCharge(), a.getRx(), a.getRy(), a.getRz(), 0, 0, 0, a);
+		viewer.setAtomSize(count - 1, model.getElementSigma(currentElementToAdd) * 1000);
 		if (fullSizeUnbondedAtoms)
 			viewer.setCpkPercent(count - 1, 100);
 		if (count <= 1) {
