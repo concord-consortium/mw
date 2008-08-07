@@ -74,6 +74,7 @@ public class Atom {
 	}
 
 	public void setAtom(Atom a) {
+		setModel(a.model);
 		setSymbol(a.symbol);
 		elementNumber = a.elementNumber;
 		movable = a.movable;
