@@ -91,6 +91,7 @@ public final class XyzReader extends ColumnDataParser {
 			reset();
 		}
 		catch (Exception e) {
+			e.printStackTrace();
 			throw new Exception(e.getMessage());
 		}
 		finally {

@@ -41,6 +41,7 @@ import org.concord.modeler.ui.FloatNumberTextField;
 import org.concord.modeler.ui.HyperlinkLabel;
 import org.concord.modeler.util.DataQueueUtilities;
 import org.concord.mw3d.models.Atom;
+import org.concord.mw3d.models.MolecularModel;
 import org.myjmol.api.JmolViewer;
 
 class AtomPropertiesPanel extends PropertiesPanel {
@@ -178,16 +179,15 @@ class AtomPropertiesPanel extends PropertiesPanel {
 
 				if (isGenericParticle) {
 					if (Math.abs(atom.getMass() - massField.getValue()) > ZERO) {
-						atom.setMass(massField.getValue());
+						setMass(atom, massField.getValue());
 						changed = true;
 					}
 					if (Math.abs(atom.getSigma() - sigmaField.getValue()) > ZERO) {
-						atom.setSigma(sigmaField.getValue());
-						updateAtomSize(atom);
+						setSigma(atom, sigmaField.getValue());
 						changed = true;
 					}
 					if (Math.abs(atom.getEpsilon() - epsilonField.getValue()) > ZERO) {
-						atom.setEpsilon(epsilonField.getValue());
+						setEpsilon(atom, epsilonField.getValue());
 						changed = true;
 					}
 				}
@@ -424,33 +424,66 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		vzField.setEditable(b);
 	}
 
-	private void setRx(Atom a, float x) {
+	private static void setRx(Atom a, float x) {
 		a.setRx(x);
 		updateAtomPosition(a);
 	}
 
-	private void setRy(Atom a, float y) {
+	private static void setRy(Atom a, float y) {
 		a.setRy(y);
 		updateAtomPosition(a);
 	}
 
-	private void setRz(Atom a, float z) {
+	private static void setRz(Atom a, float z) {
 		a.setRz(z);
 		updateAtomPosition(a);
+	}
+
+	private static void setMass(Atom atom, float value) {
+		MolecularModel model = atom.getModel();
+		int n = model.getAtomCount();
+		for (int i = 0; i < n; i++) {
+			Atom a = model.getAtom(i);
+			if (a.getElementNumber() == atom.getElementNumber())
+				a.setMass(value);
+		}
+		if (atom.isGenericParticle())
+			model.setElementMass(atom.getSymbol(), value);
+	}
+
+	private static void setSigma(Atom atom, float value) {
+		MolecularModel m = atom.getModel();
+		MolecularView v = m.getView();
+		JmolViewer viewer = v.getViewer();
+		int n = m.getAtomCount();
+		for (int i = 0; i < n; i++) {
+			Atom a = m.getAtom(i);
+			if (a.getElementNumber() == atom.getElementNumber()) {
+				a.setSigma(value);
+				viewer.setAtomSize(i, value * 1000);
+			}
+		}
+		if (atom.isGenericParticle())
+			m.setElementSigma(atom.getSymbol(), value);
+		v.repaint();
+	}
+
+	private static void setEpsilon(Atom atom, float value) {
+		MolecularModel m = atom.getModel();
+		int n = m.getAtomCount();
+		for (int i = 0; i < n; i++) {
+			Atom a = m.getAtom(i);
+			if (a.getElementNumber() == atom.getElementNumber())
+				a.setEpsilon(value);
+		}
+		if (atom.isGenericParticle())
+			m.setElementEpsilon(atom.getSymbol(), value);
 	}
 
 	private static void updateAtomPosition(Atom a) {
 		MolecularView v = a.getModel().getView();
 		JmolViewer viewer = v.getViewer();
 		viewer.setAtomCoordinates(a.getModel().getAtomIndex(a), a.getRx(), a.getRy(), a.getRz());
-		v.repaint();
-	}
-
-	private static void updateAtomSize(Atom a) {
-		MolecularView v = a.getModel().getView();
-		JmolViewer viewer = v.getViewer();
-		viewer.setAtomSize(a.getModel().getAtomIndex(a), a.getSigma() * 1000);
-		v.repaint();
 	}
 
 	void setDialog(JDialog d) {

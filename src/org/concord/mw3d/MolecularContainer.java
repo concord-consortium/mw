@@ -707,6 +707,18 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 		state.setWidth(model.getWidth());
 		state.setHeight(model.getHeight());
 		state.setHeatBath(model.getHeatBath());
+		state.setX1Mass(model.getElementMass("X1"));
+		state.setX2Mass(model.getElementMass("X2"));
+		state.setX3Mass(model.getElementMass("X3"));
+		state.setX4Mass(model.getElementMass("X4"));
+		state.setX1Sigma(model.getElementSigma("X1"));
+		state.setX2Sigma(model.getElementSigma("X2"));
+		state.setX3Sigma(model.getElementSigma("X3"));
+		state.setX4Sigma(model.getElementSigma("X4"));
+		state.setX1Epsilon(model.getElementEpsilon("X1"));
+		state.setX2Epsilon(model.getElementEpsilon("X2"));
+		state.setX3Epsilon(model.getElementEpsilon("X3"));
+		state.setX4Epsilon(model.getElementEpsilon("X4"));
 		if (model.getGField() != null) {
 			if (!model.getGField().isAlwaysDown())
 				state.setGFieldDirection(model.getGField().getDirection());
@@ -785,6 +797,18 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 	private void decode(XMLDecoder in) throws Exception {
 		setProgressMessage("Reading states ......");
 		ModelState state = (ModelState) in.readObject();
+		model.setElementMass("X1", state.getX1Mass());
+		model.setElementMass("X2", state.getX2Mass());
+		model.setElementMass("X3", state.getX3Mass());
+		model.setElementMass("X4", state.getX4Mass());
+		model.setElementSigma("X1", state.getX1Sigma());
+		model.setElementSigma("X2", state.getX2Sigma());
+		model.setElementSigma("X3", state.getX3Sigma());
+		model.setElementSigma("X4", state.getX4Sigma());
+		model.setElementEpsilon("X1", state.getX1Epsilon());
+		model.setElementEpsilon("X2", state.getX2Epsilon());
+		model.setElementEpsilon("X3", state.getX3Epsilon());
+		model.setElementEpsilon("X4", state.getX4Epsilon());
 		view.getViewer().setNavigationMode(state.getNavigationMode());
 		if (state.getCameraAtom() < 0) {
 			if (state.getCameraPosition() != null) {
@@ -863,6 +887,7 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 		model.formMolecules();
 		setProgressMessage("Building model ......");
 		view.renderModel(true); // must render the model so that the following settings can take effect
+		setGenericParticles();
 		view.getViewer().setPerspectiveDepth(state.getPerspectiveDepth());
 		view.getViewer().setZDepthMagnification(state.getZDepthMagnification());
 		view.setCameraAtom(state.getCameraAtom());
@@ -940,6 +965,22 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 		}
 		view.setStartingSceneWhenCameraIsOnAtom();
 		model.setRotationMatrix(view.getViewer().getRotationMatrix());
+	}
+
+	private void setGenericParticles() {
+		int n = model.getAtomCount();
+		for (int i = 0; i < n; i++) {
+			Atom a = model.getAtom(i);
+			if (!a.isGenericParticle())
+				continue;
+			float mass = model.getElementMass(a.getSymbol());
+			a.setMass(mass);
+			float epsilon = model.getElementEpsilon(a.getSymbol());
+			a.setEpsilon(epsilon);
+			float sigma = model.getElementSigma(a.getSymbol());
+			a.setSigma(sigma);
+			view.getViewer().setAtomSize(i, a.getSigma() * 1000);
+		}
 	}
 
 	public void notifyFileLoaded(String fullPathName, String fileName, String modelName, Object clientFile,

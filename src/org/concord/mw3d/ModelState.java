@@ -86,7 +86,155 @@ public class ModelState implements Serializable {
 	private float eFieldIntensity;
 	private float[] eFieldDirection;
 
+	private float x1Mass = 20.0f;
+	private float x2Mass = 40.0f;
+	private float x3Mass = 60.0f;
+	private float x4Mass = 80.0f;
+
+	private float x1Sigma = 2.0f;
+	private float x2Sigma = 4.0f;
+	private float x3Sigma = 6.0f;
+	private float x4Sigma = 8.0f;
+
+	private float x1Epsilon = 0.01f;
+	private float x2Epsilon = 0.01f;
+	private float x3Epsilon = 0.01f;
+	private float x4Epsilon = 0.01f;
+
+	private int x1Argb = 0xffffffff;
+	private int x2Argb = 0xff00ff00;
+	private int x3Argb = 0xff0000ff;
+	private int x4Argb = 0xffff00ff;
+
 	public ModelState() {
+	}
+
+	public void setX1Mass(float x1Mass) {
+		this.x1Mass = x1Mass;
+	}
+
+	public float getX1Mass() {
+		return x1Mass;
+	}
+
+	public void setX2Mass(float x2Mass) {
+		this.x2Mass = x2Mass;
+	}
+
+	public float getX2Mass() {
+		return x2Mass;
+	}
+
+	public void setX3Mass(float x3Mass) {
+		this.x3Mass = x3Mass;
+	}
+
+	public float getX3Mass() {
+		return x3Mass;
+	}
+
+	public void setX4Mass(float x4Mass) {
+		this.x4Mass = x4Mass;
+	}
+
+	public float getX4Mass() {
+		return x4Mass;
+	}
+
+	public void setX1Sigma(float x1Sigma) {
+		this.x1Sigma = x1Sigma;
+	}
+
+	public float getX1Sigma() {
+		return x1Sigma;
+	}
+
+	public void setX2Sigma(float x2Sigma) {
+		this.x2Sigma = x2Sigma;
+	}
+
+	public float getX2Sigma() {
+		return x2Sigma;
+	}
+
+	public void setX3Sigma(float x3Sigma) {
+		this.x3Sigma = x3Sigma;
+	}
+
+	public float getX3Sigma() {
+		return x3Sigma;
+	}
+
+	public void setX4Sigma(float x4Sigma) {
+		this.x4Sigma = x4Sigma;
+	}
+
+	public float getX4Sigma() {
+		return x4Sigma;
+	}
+
+	public void setX1Epsilon(float x1Epsilon) {
+		this.x1Epsilon = x1Epsilon;
+	}
+
+	public float getX1Epsilon() {
+		return x1Epsilon;
+	}
+
+	public void setX2Epsilon(float x2Epsilon) {
+		this.x2Epsilon = x2Epsilon;
+	}
+
+	public float getX2Epsilon() {
+		return x2Epsilon;
+	}
+
+	public void setX3Epsilon(float x3Epsilon) {
+		this.x3Epsilon = x3Epsilon;
+	}
+
+	public float getX3Epsilon() {
+		return x3Epsilon;
+	}
+
+	public void setX4Epsilon(float x4Epsilon) {
+		this.x4Epsilon = x4Epsilon;
+	}
+
+	public float getX4Epsilon() {
+		return x4Epsilon;
+	}
+
+	public void setX1Argb(int x1Argb) {
+		this.x1Argb = x1Argb;
+	}
+
+	public int getX1Argb() {
+		return x1Argb;
+	}
+
+	public void setX2Argb(int x2Argb) {
+		this.x2Argb = x2Argb;
+	}
+
+	public int getX2Argb() {
+		return x2Argb;
+	}
+
+	public void setX3Argb(int x3Argb) {
+		this.x3Argb = x3Argb;
+	}
+
+	public int getX3Argb() {
+		return x3Argb;
+	}
+
+	public void setX4Argb(int x4Argb) {
+		this.x4Argb = x4Argb;
+	}
+
+	public int getX4Argb() {
+		return x4Argb;
 	}
 
 	public void setInitScript(String s) {
