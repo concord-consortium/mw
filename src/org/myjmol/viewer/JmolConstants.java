@@ -350,6 +350,10 @@ final public class JmolConstants {
 			"Bh", // 107
 			"Hs", // 108
 			"Mt", // 109
+			"X1", // 201
+			"X2", // 202
+			"X3", // 203
+			"X4" // 204
 	/*
 	 * "Ds", // 110 "Uuu",// 111 "Uub",// 112 "Uut",// 113 "Uuq",// 114 "Uup",// 115 "Uuh",// 116 "Uus",// 117 "Uuo",//
 	 * 118
@@ -542,7 +546,11 @@ final public class JmolConstants {
 			"seaborgium", // 106
 			"bohrium", // 107
 			"hassium", // 108
-			"meitnerium" // 109
+			"meitnerium", // 109
+			"X1", // 201
+			"X2", // 202
+			"X3", // 203
+			"X4" // 204
 	};
 
 	/**
@@ -750,6 +758,10 @@ final public class JmolConstants {
 			1700, // 107 Bh
 			1700, // 108 Hs
 			1700, // 109 Mt
+			1000, // 201 X1
+			2000, // 202 X2
+			3000, // 203 X3
+			4000, // 204 X4
 	};
 
 	/**
@@ -867,6 +879,10 @@ final public class JmolConstants {
 			1600, // 107 Bh
 			1600, // 108 Hs
 			1600, // 109 Mt
+			2000, // 201 X1
+			4000, // 202 X2
+			6000, // 203 X3
+			8000 // 204 X4
 	};
 
 	/*******************************************************************************************************************
@@ -1310,6 +1326,10 @@ final public class JmolConstants {
 			0xFFE00038, // Bh 107
 			0xFFE6002E, // Hs 108
 			0xFFEB0026, // Mt 109
+			0xFFFFFFFF, // X1 201
+			0xFF00FF00, // X2 202
+			0xFF0000FF, // X3 203
+			0xFFFF00FF, // X4 204
 	};
 
 	public final static int[] argbsCpkRasmol = { 0x00FF1493 + (0 << 24), // Xx 0
@@ -1895,7 +1915,7 @@ final public class JmolConstants {
 
 			"ALA", // 1
 			"ARG", "ASN", "ASP", "CYS", "GLN", "GLU", "GLY", "HIS", "ILE", "LEU", "LYS", "MET", "PHE", "PRO", // 15
-																												// Proline
+			// Proline
 			"SER", "THR", "TRP", "TYR", "VAL", "ASX", // 21 ASP/ASN ambiguous
 			"GLX", // 22 GLU/GLN ambiguous
 			"UNK", // 23 unknown -- 23

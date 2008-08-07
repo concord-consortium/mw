@@ -26,6 +26,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import javax.vecmath.Point3f;
 
@@ -35,6 +36,7 @@ import org.concord.modeler.util.FloatQueueTriplet;
 public class Atom {
 
 	public final static byte UNMOVABLE = 0x00;
+	private final static Pattern GENERIC_PARTICLE = Pattern.compile("X\\d");
 
 	private byte elementNumber;
 	private String symbol;
@@ -225,6 +227,10 @@ public class Atom {
 		return elementNumber;
 	}
 
+	public boolean isGenericParticle() {
+		return GENERIC_PARTICLE.matcher(symbol).matches();
+	}
+
 	public void setSymbol(String symbol) {
 		if (symbol == null)
 			throw new IllegalArgumentException("symbol cannot be null.");
@@ -270,12 +276,27 @@ public class Atom {
 		return movable;
 	}
 
+	/** only for the generic particles */
+	public void setMass(float mass) {
+		this.mass = mass;
+	}
+
 	public float getMass() {
 		return mass;
 	}
 
+	/** only for the generic particles */
+	public void setSigma(float sigma) {
+		this.sigma = sigma;
+	}
+
 	public float getSigma() {
 		return sigma;
+	}
+
+	/** only for the generic particles */
+	public void setEpsilon(float epsilon) {
+		this.epsilon = epsilon;
 	}
 
 	public float getEpsilon() {

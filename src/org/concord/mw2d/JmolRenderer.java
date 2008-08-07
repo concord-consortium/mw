@@ -189,7 +189,7 @@ class JmolRenderer {
 			if (at.isVisible()) {
 				sigma = getCurrentSigma(at);
 				if (view.model instanceof ReactionModel) {
-					sigma *= 2;
+					sigma *= 2; // special treatment to deal with covalent bond is much shorter than vdw bond
 				}
 			}
 			else {

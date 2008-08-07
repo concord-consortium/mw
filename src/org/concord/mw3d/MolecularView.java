@@ -159,7 +159,7 @@ public class MolecularView extends Draw {
 	private final Object updateLock = new Object();
 	private FillMode fillMode = FillMode.getNoFillMode();
 	private Point3f clickedAtomPosition;
-	private String currentElementToAdd = "He";
+	private String currentElementToAdd = "X1";
 	private int currentMoleculeToAdd;
 	private byte molecularStyle = SPACE_FILLING;
 	private ImageIcon backgroundImage;

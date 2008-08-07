@@ -707,8 +707,8 @@ class ElementEditor {
 			}
 		});
 		ActionListener[] al = closeButton.getActionListeners();
-		for (int i = 0; i < al.length; i++)
-			closeButton.removeActionListener(al[i]);
+		for (ActionListener i : al)
+			closeButton.removeActionListener(i);
 		closeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				d.getContentPane().removeAll();
