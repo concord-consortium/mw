@@ -22,10 +22,7 @@ package org.concord.mw3d.models;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import javax.vecmath.Point3f;
@@ -60,23 +57,13 @@ public class Atom {
 	MolecularModel model;
 	FloatQueueTriplet rQ, vQ, aQ;
 
-	private static Map<String, float[]> paramMap = new LinkedHashMap<String, float[]>();
-
-	static {
-		try {
-			new ParameterReader().read(Atom.class.getResource("resources/elements.dat"), paramMap);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	/** create an abstract atom: for using its data structure only. */
 	public Atom() {
 	}
 
-	public Atom(String symbol) {
+	Atom(String symbol, MolecularModel model) {
 		this();
+		setModel(model);
 		setSymbol(symbol);
 	}
 
@@ -97,10 +84,6 @@ public class Atom {
 		vx = a.vx;
 		vy = a.vy;
 		vz = a.vz;
-	}
-
-	public static Set getSupportedElements() {
-		return paramMap.keySet();
 	}
 
 	public void setModel(MolecularModel model) {
@@ -228,6 +211,10 @@ public class Atom {
 	}
 
 	public boolean isGenericParticle() {
+		return isGenericParticle(symbol);
+	}
+
+	private static boolean isGenericParticle(String symbol) {
 		return GENERIC_PARTICLE.matcher(symbol).matches();
 	}
 
@@ -236,7 +223,7 @@ public class Atom {
 			throw new IllegalArgumentException("symbol cannot be null.");
 		this.symbol = symbol;
 		charge = 0.0f;
-		float[] par = paramMap.get(symbol);
+		float[] par = model.paramMap.get(symbol);
 		if (par != null) {
 			elementNumber = (byte) Math.round(par[0]);
 			mass = par[1];

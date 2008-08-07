@@ -25,8 +25,11 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import javax.swing.Action;
 import javax.swing.JOptionPane;
@@ -158,6 +161,8 @@ public class MolecularModel {
 	private List<Atom> bondedAtomList;
 	private List<Atom> atomList1, atomList2;
 
+	Map<String, float[]> paramMap = new LinkedHashMap<String, float[]>();
+
 	/* the subtask of painting the view at a given frequency */
 	private Loadable paintView = new AbstractLoadable(50) {
 		public void execute() {
@@ -222,7 +227,18 @@ public class MolecularModel {
 		}
 	};
 
+	private MolecularModel() {
+		try {
+			new ParameterReader().read(MolecularModel.class.getResource("resources/elements.dat"), paramMap);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public MolecularModel(int tapeLength) {
+
+		this();
 
 		atom = new Atom[SIZE];
 		forceCalculator = new ForceCalculator(this);
@@ -268,6 +284,55 @@ public class MolecularModel {
 		aBonds = Collections.synchronizedList(new ArrayList<ABond>());
 		tBonds = Collections.synchronizedList(new ArrayList<TBond>());
 
+	}
+
+	/** set the mass of the specified generic particle */
+	public void setElementMass(String symbol, float mass) {
+		float[] x = paramMap.get(symbol);
+		if (x == null)
+			throw new IllegalArgumentException("Cannot find the element: " + symbol);
+		x[1] = mass;
+	}
+
+	public float getElementMass(String symbol) {
+		float[] x = paramMap.get(symbol);
+		if (x == null)
+			throw new IllegalArgumentException("Cannot find the element: " + symbol);
+		return x[1];
+	}
+
+	/** set the sigma of the specified generic particle */
+	public void setElementSigma(String symbol, float sigma) {
+		float[] x = paramMap.get(symbol);
+		if (x == null)
+			throw new IllegalArgumentException("Cannot find the element: " + symbol);
+		x[2] = sigma;
+	}
+
+	public float getElementSigma(String symbol) {
+		float[] x = paramMap.get(symbol);
+		if (x == null)
+			throw new IllegalArgumentException("Cannot find the element: " + symbol);
+		return x[2];
+	}
+
+	/** set the epsilon of the specified generic particle */
+	public void setElementEpsilon(String symbol, float epsilon) {
+		float[] x = paramMap.get(symbol);
+		if (x == null)
+			throw new IllegalArgumentException("Cannot find the element: " + symbol);
+		x[3] = epsilon;
+	}
+
+	public float getElementEpsilon(String symbol) {
+		float[] x = paramMap.get(symbol);
+		if (x == null)
+			throw new IllegalArgumentException("Cannot find the element: " + symbol);
+		return x[3];
+	}
+
+	public Set getSupportedElements() {
+		return paramMap.keySet();
 	}
 
 	public void setInitializationScript(String s) {
@@ -1131,7 +1196,7 @@ public class MolecularModel {
 		if (iAtom == atom.length)
 			return false;
 		if (atom[iAtom] == null) {
-			atom[iAtom] = new Atom(element);
+			atom[iAtom] = new Atom(element, this);
 			atom[iAtom].setModel(this);
 		}
 		else {

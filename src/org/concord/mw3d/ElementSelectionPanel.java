@@ -43,7 +43,7 @@ import javax.swing.JPanel;
 import javax.swing.Popup;
 import javax.swing.PopupFactory;
 
-import org.concord.mw3d.models.Atom;
+import org.concord.mw3d.models.MolecularModel;
 
 /**
  * @author Charles Xie
@@ -67,7 +67,7 @@ class ElementSelectionPanel extends JPanel {
 				}
 			}
 		});
-		fillComboBox();
+		fillComboBox(view.model);
 		comboBox.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent e) {
 				hidePopup();
@@ -114,12 +114,12 @@ class ElementSelectionPanel extends JPanel {
 
 	}
 
-	private void fillComboBox() {
+	private void fillComboBox(MolecularModel model) {
 		if (elements == null)
-			elements = Atom.getSupportedElements().toArray();
+			elements = model.getSupportedElements().toArray();
 		for (Object o : elements)
 			comboBox.addItem(o);
-		comboBox.setSelectedIndex(elements.length - 4);
+		comboBox.setSelectedItem("X1");
 	}
 
 	void showPopup(Component owner) {
