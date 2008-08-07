@@ -18,9 +18,15 @@
  *
  * END LICENSE */
 
+/**
+ * @author Charles Xie
+ *
+ */
 package org.concord.mw3d;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,6 +35,8 @@ import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JColorChooser;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -36,7 +44,11 @@ import javax.swing.JPanel;
 import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 
+import org.concord.modeler.ModelerUtilities;
 import org.concord.modeler.process.Executable;
+import org.concord.modeler.ui.ColorComboBox;
+import org.concord.modeler.ui.ColorRectangle;
+import org.concord.modeler.ui.ComboBoxRenderer;
 import org.concord.modeler.ui.FloatNumberTextField;
 import org.concord.modeler.ui.HyperlinkLabel;
 import org.concord.modeler.util.DataQueueUtilities;
@@ -74,6 +86,13 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		nameLabel = createLabel(atom.getSymbol());
 		indexLabel = createLabel(atom.getIndex());
 
+		MolecularView view = atom.getModel().getView();
+		ColorComboBox ballColorComboBox = new ColorComboBox(view);
+		ballColorComboBox.setRenderer(new ComboBoxRenderer.ColorCell(view.getAtomColor(atom)));
+		ballColorComboBox.setPreferredSize(new Dimension(32, 20));
+		setColorComboBox(ballColorComboBox, view.getAtomColor(atom));
+		ballColorComboBox.addActionListener(new ElementColorListener(atom));
+
 		massField = new FloatNumberTextField(atom.getMass(), 1, 10000, 10);
 		sigmaField = new FloatNumberTextField(atom.getSigma(), 1, 100, 10);
 		epsilonField = new FloatNumberTextField(atom.getEpsilon(), 0, 10, 10);
@@ -81,6 +100,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 			massField.setEnabled(false);
 			sigmaField.setEnabled(false);
 			epsilonField.setEnabled(false);
+			ballColorComboBox.setEnabled(false);
 		}
 
 		rxField = new FloatNumberTextField(atom.getRx(), -100, 100, 10);
@@ -236,34 +256,40 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		panel.add(new JPanel());
 
 		// row 3
+		s = MolecularContainer.getInternationalText("Color");
+		panel.add(new JLabel(s != null ? s : "Color"));
+		panel.add(ballColorComboBox);
+		panel.add(new JPanel());
+
+		// row 4
 		s = MolecularContainer.getInternationalText("Mass");
 		panel.add(new JLabel(s != null ? s : "Mass"));
 		panel.add(massField);
 		panel.add(new JLabel("<html>g/mol, <font color=gray>&#10014;</font></html>"));
 
-		// row 4
+		// row 5
 		panel.add(new JLabel("<html><i>&#963;</i></html>", SwingConstants.LEFT));
 		panel.add(sigmaField);
 		panel.add(new JLabel("<html>&#197; <font color=gray>&#10014;</font></html>"));
 
-		// row 5
+		// row 6
 		panel.add(new JLabel("<html><i>&#949;</i></html>", SwingConstants.LEFT));
 		panel.add(epsilonField);
 		panel.add(new JLabel("<html>eV <font color=gray>&#10014;</font></html>"));
 
-		// row 6
+		// row 7
 		s = MolecularContainer.getInternationalText("Charge");
 		panel.add(new JLabel((s != null ? s : "Charge") + " (e)"));
 		panel.add(chargeField);
 		panel.add(new JPanel());
 
-		// row 7
+		// row 8
 		s = MolecularContainer.getInternationalText("Damping");
 		panel.add(new JLabel(s != null ? s : "Damping"));
 		panel.add(dampField);
 		panel.add(new JPanel());
 
-		// row 8
+		// row 9
 		leftXLabel = new HyperlinkLabel(
 				atom.isMovable() ? "<html><font color=\"#0000ff\"><u><em>X</em></u></font></html>" : "X");
 		leftXLabel.setEnabled(atom.isMovable());
@@ -283,7 +309,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		panel.add(rxField);
 		panel.add(new JLabel("<html>&#197;</html>"));
 
-		// row 9
+		// row 10
 		leftYLabel = new HyperlinkLabel(
 				atom.isMovable() ? "<html><font color=\"#0000ff\"><u><em>Y</em></u></font></html>" : "Y");
 		leftYLabel.setEnabled(atom.isMovable());
@@ -303,7 +329,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		panel.add(ryField);
 		panel.add(new JLabel("<html>&#197;</html>"));
 
-		// row 10
+		// row 11
 		leftZLabel = new HyperlinkLabel(
 				atom.isMovable() ? "<html><font color=\"#0000ff\"><u><em>Z</em></u></font></html>" : "Z");
 		leftZLabel.setEnabled(atom.isMovable());
@@ -323,7 +349,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		panel.add(rzField);
 		panel.add(new JLabel("<html>&#197;</html>"));
 
-		// row 11
+		// row 12
 		leftVxLabel = new HyperlinkLabel(
 				atom.isMovable() ? "<html><font color=\"#0000ff\"><u><em>V<sub>x</sub></em></u></font></html>" : "Vx");
 		leftVxLabel.setEnabled(atom.isMovable());
@@ -344,7 +370,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		panel.add(vxField);
 		panel.add(new JLabel("m/s"));
 
-		// row 12
+		// row 13
 		leftVyLabel = new HyperlinkLabel(
 				atom.isMovable() ? "<html><font color=\"#0000ff\"><u><em>V<sub>y</sub></em></u></font></html>" : "Vy");
 		leftVyLabel.setEnabled(atom.isMovable());
@@ -365,7 +391,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		panel.add(vyField);
 		panel.add(new JLabel("m/s"));
 
-		// row 13
+		// row 14
 		leftVzLabel = new HyperlinkLabel(
 				atom.isMovable() ? "<html><font color=\"#0000ff\"><u><em>V<sub>z</sub></em></u></font></html>" : "Vz");
 		leftVzLabel.setEnabled(atom.isMovable());
@@ -386,7 +412,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		panel.add(vzField);
 		panel.add(new JLabel("m/s"));
 
-		makeCompactGrid(panel, 13, 3, 5, 5, 10, 2);
+		makeCompactGrid(panel, 14, 3, 5, 5, 10, 2);
 
 		panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		add(panel, BorderLayout.CENTER);
@@ -498,6 +524,55 @@ class AtomPropertiesPanel extends PropertiesPanel {
 	}
 
 	void windowActivated() {
+	}
+
+	static class ElementColorListener implements ActionListener {
+
+		private Color color6 = Color.white;
+		private Atom atom;
+		private MolecularView view;
+
+		ElementColorListener(Atom atom) {
+			this.atom = atom;
+			view = atom.getModel().getView();
+		}
+
+		public void actionPerformed(ActionEvent e) {
+			final JComboBox cb = (JComboBox) e.getSource();
+			int id = (Integer) cb.getSelectedItem();
+			if (id == ColorComboBox.INDEX_COLOR_CHOOSER) {
+				String s = MolecularContainer.getInternationalText("MoreColors");
+				JColorChooser.createDialog(view, s != null ? s : "More Colors", true, ModelerUtilities.colorChooser,
+						new ActionListener() {
+							public void actionPerformed(ActionEvent ae) {
+								color6 = ModelerUtilities.colorChooser.getColor();
+								view.setAtomColor(atom.getElementNumber(), color6);
+								cb.setSelectedIndex(6);
+								ColorRectangle cr = (ColorRectangle) cb.getRenderer();
+								cr.setMoreColor(color6);
+							}
+						}, null).setVisible(true);
+			}
+			else if (id == ColorComboBox.INDEX_HEX_INPUTTER) {
+				if (cb instanceof ColorComboBox) {
+					final ColorComboBox colorComboBox = (ColorComboBox) cb;
+					colorComboBox.updateColor(new Runnable() {
+						public void run() {
+							view.setAtomColor(atom.getElementNumber(), colorComboBox.getMoreColor());
+							view.repaint();
+						}
+					});
+				}
+			}
+			else if (id == ColorComboBox.INDEX_MORE_COLOR) {
+				view.setAtomColor(atom.getElementNumber(), color6);
+			}
+			else {
+				view.setAtomColor(atom.getElementNumber(), ColorRectangle.COLORS[id]);
+			}
+			view.repaint();
+		}
+
 	}
 
 }

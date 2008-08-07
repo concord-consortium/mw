@@ -379,13 +379,13 @@ class AtomPropertiesPanel extends PropertiesPanel {
 
 		s = MDView.getInternationalText("Color");
 		panel.add(new JLabel(s != null ? s : "Element color"));
-		panel.add(new JPanel());
 		ColorComboBox ballColorComboBox = new ColorComboBox(atom.getHostModel().getView());
 		ballColorComboBox.setRenderer(new ComboBoxRenderer.ColorCell(atom.getColor()));
-		ballColorComboBox.setPreferredSize(new Dimension(32, 18));
+		ballColorComboBox.setPreferredSize(new Dimension(32, 20));
 		setColorComboBox(ballColorComboBox, atom.getColor());
 		ballColorComboBox.addActionListener(new ElementColorListener(atom));
 		panel.add(ballColorComboBox);
+		panel.add(new JPanel());
 
 		if (atom.isAminoAcid()) {
 			s = MDView.getInternationalText("Codon");

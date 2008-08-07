@@ -145,6 +145,7 @@ public class MolecularView extends Draw {
 	Navigator navigator;
 	private boolean isKeyNavigation;
 	private Cockpit cockpit;
+	private Map<String, Integer> genericElementColors;
 
 	private String resourceAddress; // a copy from MolecularContainer
 	private String codeBase; // different from resourceAddress, codeBase retains the remote form (not cached)
@@ -346,6 +347,12 @@ public class MolecularView extends Draw {
 		cockpit = new Cockpit(viewer);
 		cockpit.setBackground(Color.black);
 
+		genericElementColors = new HashMap<String, Integer>();
+		genericElementColors.put("X1", 0xffffffff);
+		genericElementColors.put("X2", 0xff00ff00);
+		genericElementColors.put("X3", 0xff0000ff);
+		genericElementColors.put("X4", 0xff00ffff);
+
 	}
 
 	private void home() {
@@ -437,6 +444,42 @@ public class MolecularView extends Draw {
 
 	BitSet getTranslucentBitSet() {
 		return translucentBitSet;
+	}
+
+	int getElementArgb(String element) {
+		return genericElementColors.get(element);
+	}
+
+	void setElementArgb(String element, int argb) {
+		genericElementColors.put(element, argb);
+	}
+
+	Color getAtomColor(Atom a) {
+		return new Color(viewer.getAtomArgb(a.getIndex()));
+	}
+
+	void setAtomColor(byte id, Color color) {
+		int n = viewer.getAtomCount();
+		String element = null;
+		for (int i = 0; i < n; i++) {
+			if (model.getAtom(i).getElementNumber() == id) {
+				viewer.setAtomColor(i, color.getRGB());
+				if (element == null)
+					element = model.getAtom(i).getSymbol();
+			}
+		}
+		if (element != null)
+			genericElementColors.put(element, color.getRGB());
+	}
+
+	void setAtomColor(String element, Color color) {
+		int n = viewer.getAtomCount();
+		for (int i = 0; i < n; i++) {
+			if (model.getAtom(i).getSymbol().equals(element)) {
+				viewer.setAtomColor(i, color.getRGB());
+			}
+		}
+		genericElementColors.put(element, color.getRGB());
 	}
 
 	void setObstacleColor(Obstacle obs, Color color, boolean translucent) {
