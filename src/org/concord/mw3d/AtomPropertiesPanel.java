@@ -47,11 +47,8 @@ class AtomPropertiesPanel extends PropertiesPanel {
 
 	private JDialog dialog;
 
-	private JLabel nameLabel;
-	private JLabel massLabel;
-	private JLabel indexLabel;
-	private JLabel sigmaLabel;
-	private JLabel epsilonLabel;
+	private JLabel nameLabel, indexLabel;
+	private FloatNumberTextField massField, sigmaField, epsilonField;
 	private FloatNumberTextField rxField, ryField, rzField, vxField, vyField, vzField;
 	private FloatNumberTextField chargeField, dampField;
 	private HyperlinkLabel leftXLabel;
@@ -60,6 +57,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 	private HyperlinkLabel leftVxLabel;
 	private HyperlinkLabel leftVyLabel;
 	private HyperlinkLabel leftVzLabel;
+	private boolean isGenericParticle;
 
 	void destroy() {
 		if (dialog != null)
@@ -70,11 +68,20 @@ class AtomPropertiesPanel extends PropertiesPanel {
 
 		super(new BorderLayout(5, 5));
 
-		massLabel = createLabel(atom.getMass());
-		sigmaLabel = createLabel(atom.getSigma());
-		epsilonLabel = createLabel(atom.getEpsilon());
+		isGenericParticle = atom.isGenericParticle();
+
 		nameLabel = createLabel(atom.getSymbol());
 		indexLabel = createLabel(atom.getIndex());
+
+		massField = new FloatNumberTextField(atom.getMass(), 1, 10000, 10);
+		sigmaField = new FloatNumberTextField(atom.getSigma(), 1, 100, 10);
+		epsilonField = new FloatNumberTextField(atom.getEpsilon(), 0, 10, 10);
+		if (!isGenericParticle) {
+			massField.setEnabled(false);
+			sigmaField.setEnabled(false);
+			epsilonField.setEnabled(false);
+		}
+
 		rxField = new FloatNumberTextField(atom.getRx(), -100, 100, 10);
 		ryField = new FloatNumberTextField(atom.getRy(), -100, 100, 10);
 		rzField = new FloatNumberTextField(atom.getRz(), -100, 100, 10);
@@ -127,6 +134,12 @@ class AtomPropertiesPanel extends PropertiesPanel {
 				applyBounds(vxField);
 				applyBounds(vyField);
 
+				if (isGenericParticle) {
+					applyBounds(massField);
+					applyBounds(sigmaField);
+					applyBounds(epsilonField);
+				}
+
 				boolean changed = false;
 
 				if (Math.abs(atom.getCharge() - chargeField.getValue()) > ZERO) {
@@ -161,6 +174,22 @@ class AtomPropertiesPanel extends PropertiesPanel {
 				if (Math.abs(atom.getVz() * 100000 - vzField.getValue()) > ZERO) {
 					atom.setVz(vzField.getValue() * 0.00001f);
 					changed = true;
+				}
+
+				if (isGenericParticle) {
+					if (Math.abs(atom.getMass() - massField.getValue()) > ZERO) {
+						atom.setMass(massField.getValue());
+						changed = true;
+					}
+					if (Math.abs(atom.getSigma() - sigmaField.getValue()) > ZERO) {
+						atom.setSigma(sigmaField.getValue());
+						updateAtomSize(atom);
+						changed = true;
+					}
+					if (Math.abs(atom.getEpsilon() - epsilonField.getValue()) > ZERO) {
+						atom.setEpsilon(epsilonField.getValue());
+						changed = true;
+					}
 				}
 
 				if (changed) {
@@ -209,17 +238,17 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		// row 3
 		s = MolecularContainer.getInternationalText("Mass");
 		panel.add(new JLabel(s != null ? s : "Mass"));
-		panel.add(massLabel);
+		panel.add(massField);
 		panel.add(createSmallerFontLabel("g/mol"));
 
 		// row 4
 		panel.add(new JLabel("<html><i>&#963;</i> (&#197;)</html>", SwingConstants.LEFT));
-		panel.add(sigmaLabel);
+		panel.add(sigmaField);
 		panel.add(new JPanel());
 
 		// row 5
 		panel.add(new JLabel("<html><i>&#949;</i> (eV)</html>", SwingConstants.LEFT));
-		panel.add(epsilonLabel);
+		panel.add(epsilonField);
 		panel.add(new JPanel());
 
 		// row 6
@@ -410,10 +439,17 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		updateAtomPosition(a);
 	}
 
-	private void updateAtomPosition(Atom a) {
+	private static void updateAtomPosition(Atom a) {
 		MolecularView v = a.getModel().getView();
 		JmolViewer viewer = v.getViewer();
 		viewer.setAtomCoordinates(a.getModel().getAtomIndex(a), a.getRx(), a.getRy(), a.getRz());
+		v.repaint();
+	}
+
+	private static void updateAtomSize(Atom a) {
+		MolecularView v = a.getModel().getView();
+		JmolViewer viewer = v.getViewer();
+		viewer.setAtomSize(a.getModel().getAtomIndex(a), a.getSigma() * 1000);
 		v.repaint();
 	}
 

@@ -975,7 +975,7 @@ public class Viewer extends JmolViewer {
 	public void setAtomVelocities(int index, float vx, float vy, float vz) {
 	}
 
-	/** XIE */
+	/** set the specified atom's coordinate and color (used for, e.g. kinetic energy shading) */
 	public void setAtomCoordinates(int index, float x, float y, float z, int argb) {
 		Frame frame = modelManager.frame;
 		if (frame == null)
@@ -987,7 +987,6 @@ public class Viewer extends JmolViewer {
 		atom.colixAtom = Graphics3D.getColix(argb);
 	}
 
-	/** XIE */
 	public void setAtomCoordinates(int index, float x, float y, float z) {
 		Frame frame = modelManager.frame;
 		if (frame == null)
@@ -1000,7 +999,6 @@ public class Viewer extends JmolViewer {
 		}
 	}
 
-	/** XIE */
 	public void setAtomCoordinates(int index, Point3f p) {
 		Frame frame = modelManager.frame;
 		if (frame == null)
@@ -1010,7 +1008,7 @@ public class Viewer extends JmolViewer {
 			atom.set(p);
 	}
 
-	/** XIE: for customizing atom size and color */
+	/** set the specified atom's coordinates, size and color */
 	public void setAtomCoordinates(int index, float x, float y, float z, float d, int argb) {
 		Frame frame = modelManager.frame;
 		if (frame == null)
@@ -1023,6 +1021,26 @@ public class Viewer extends JmolViewer {
 			atom.sigma = (short) d;
 			atom.colixAtom = Graphics3D.getColix(argb);
 		}
+	}
+
+	/** set the specified atom's size */
+	public void setAtomSize(int index, float d) {
+		Frame frame = modelManager.frame;
+		if (frame == null)
+			return;
+		Atom atom = frame.getAtomAt(index);
+		if (atom != null)
+			atom.sigma = (short) d;
+	}
+
+	/** set the specified atom's color */
+	public void setAtomColor(int index, int argb) {
+		Frame frame = modelManager.frame;
+		if (frame == null)
+			return;
+		Atom atom = frame.getAtomAt(index);
+		if (atom != null)
+			atom.colixAtom = Graphics3D.getColix(argb);
 	}
 
 	/**

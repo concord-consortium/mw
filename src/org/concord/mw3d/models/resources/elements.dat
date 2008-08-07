@@ -1,4 +1,4 @@
-//    index   mass     sigma   epsilon
+//    index   mass    sigma   epsilon
 H       1    1.0079   1.32    0.000954       // HA - Charmm (eps = 0.022 kcal/mol)
 He      2    4.0026   2.8     0.00088
 Li      3    6.941    2.4     0.04
@@ -39,3 +39,7 @@ Ta     73  180.9479   2.86    0.81           //xie
 W      74  183.84     2.74    0.89           //xie
 Pt     78  195.078    2.5     0.42           //xie
 Au     79  196.96655  2.65    0.1            //xie (?)
+X1    201   20.0000   2.00    0.01           // adjustable generic particle
+X2    202   40.0000   4.00    0.01           // adjustable generic particle
+X3    203   60.0000   6.00    0.01           // adjustable generic particle
+X4    204   80.0000   8.00    0.01           // adjustable generic particle

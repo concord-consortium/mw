@@ -169,17 +169,16 @@ class BallsRenderer extends ShapeRenderer {
 	}
 
 	private void render(Atom atom) {
+
 		if (atom.screenZ <= 1)
 			return;
-		// XIE
-		if (atom.getElementNumber() <= 0 || (!showHydrogens && atom.getElementNumber() == 1)) {
+		if (atom.getElementNumber() <= 0 || (!showHydrogens && atom.getElementNumber() == 1))
 			return;
-		}
-		// XIE
-		if (viewer.getMw2dFlag() && atom.sigma != -1)
+
+		if (atom.sigma != -1) { // if size is customized
 			atom.screenDiameter = viewer.scaleToScreen(atom.screenZ, atom.sigma);
+		}
 		int diameter = atom.screenDiameter;
-		// XIE
 		if (viewer instanceof ExtendedViewer) {
 			drawBall = true;
 			ExtendedViewer viewer2 = (ExtendedViewer) viewer;
@@ -273,14 +272,12 @@ class BallsRenderer extends ShapeRenderer {
 
 	}
 
-	// XIE
 	private void drawArrow(Atom atom) {
 		g3d.fillTriangle(atom.interactionKeyColix, screen1, screen2, screen3);
 		g3d.drawDottedLine(atom.interactionKeyColix, screen1.x, screen1.y, screen1.z, atom.screenX, atom.screenY,
 				atom.screenZ);
 	}
 
-	// XIE
 	private void drawInteractionCenter(Atom atom) {
 		int a = atom.screenDiameter;
 		int r = a / 6;

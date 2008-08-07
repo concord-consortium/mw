@@ -292,20 +292,19 @@ abstract public class JmolViewer extends JmolSimpleViewer {
 	abstract public void addAtom(Object atomUid, byte atomicNumber, String atomName, int formalCharge,
 			float partialCharge, float x, float y, float z, float vx, float vy, float vz, Object clientAtomReference);
 
-	/** XIE */
 	abstract public void setAtomCoordinates(int index, float x, float y, float z);
 
-	/** XIE */
 	abstract public void setAtomVelocities(int index, float vx, float vy, float vz);
 
-	/** XIE */
 	abstract public void setAtomCoordinates(int index, Point3f p);
 
-	/** XIE */
 	abstract public void setAtomCoordinates(int index, float x, float y, float z, int argb);
 
-	/** XIE */
 	abstract public void setAtomCoordinates(int index, float x, float y, float z, float d, int argb);
+
+	abstract public void setAtomSize(int index, float d);
+
+	abstract public void setAtomColor(int index, int argb);
 
 	/** XIE */
 	abstract public Point3i getAtomScreen(int atomIndex);
@@ -517,15 +516,12 @@ abstract public class JmolViewer extends JmolSimpleViewer {
 	/** XIE */
 	abstract public void clearSelection();
 
-	/** XIE */
 	private boolean mw2dFlag;
 
-	/** XIE */
 	public void setMw2dFlag(boolean b) {
 		mw2dFlag = b;
 	}
 
-	/** XIE */
 	public boolean getMw2dFlag() {
 		return mw2dFlag;
 	}

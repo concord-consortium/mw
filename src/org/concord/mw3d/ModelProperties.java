@@ -162,10 +162,9 @@ class ModelProperties extends JDialog {
 		p = new JPanel(new GridLayout(7, 2, 2, 2));
 		panel.add(p, BorderLayout.NORTH);
 
-		JLabel label = new HyperlinkLabel(
-				"<html><font color=\"#0000ff\"><u>Van der Waals Parameter Editor</u></font></html>",
+		JLabel label = new HyperlinkLabel("<html><font color=\"#0000ff\"><u>Generic Particle Editor</u></font></html>",
 				SwingConstants.LEFT);
-		label.setToolTipText("Click to open the van del Waals Parameter Editor");
+		label.setToolTipText("Click to open the editor for customizing the generic particles");
 		label.setIcon(new ImageIcon(MolecularContainer.class.getResource("resources/vdw.gif")));
 		((HyperlinkLabel) label).setAction(new Runnable() {
 			public void run() {

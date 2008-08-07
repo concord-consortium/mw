@@ -117,10 +117,9 @@ class ElementSelectionPanel extends JPanel {
 	private void fillComboBox() {
 		if (elements == null)
 			elements = Atom.getSupportedElements().toArray();
-		for (int i = 0; i < elements.length; i++) {
-			comboBox.addItem(elements[i]);
-		}
-		comboBox.setSelectedIndex(1);
+		for (Object o : elements)
+			comboBox.addItem(o);
+		comboBox.setSelectedIndex(elements.length - 4);
 	}
 
 	void showPopup(Component owner) {
