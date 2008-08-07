@@ -454,11 +454,11 @@ public class MolecularView extends Draw {
 		genericElementColors.put(element, argb);
 	}
 
-	Color getAtomColor(Atom a) {
+	Color getElementColor(Atom a) {
 		return new Color(viewer.getAtomArgb(a.getIndex()));
 	}
 
-	void setAtomColor(byte id, Color color) {
+	void setElementColor(byte id, Color color) {
 		int n = viewer.getAtomCount();
 		String element = null;
 		for (int i = 0; i < n; i++) {
@@ -470,16 +470,6 @@ public class MolecularView extends Draw {
 		}
 		if (element != null)
 			genericElementColors.put(element, color.getRGB());
-	}
-
-	void setAtomColor(String element, Color color) {
-		int n = viewer.getAtomCount();
-		for (int i = 0; i < n; i++) {
-			if (model.getAtom(i).getSymbol().equals(element)) {
-				viewer.setAtomColor(i, color.getRGB());
-			}
-		}
-		genericElementColors.put(element, color.getRGB());
 	}
 
 	void setObstacleColor(Obstacle obs, Color color, boolean translucent) {
@@ -3093,9 +3083,11 @@ public class MolecularView extends Draw {
 		if (id == null)
 			return false;
 		viewer.addAtom(a, id.byteValue(), a.getSymbol(), 0, a.getCharge(), a.getRx(), a.getRy(), a.getRz(), 0, 0, 0, a);
-		viewer.setAtomSize(count - 1, model.getElementSigma(currentElementToAdd) * 1000);
+		int currentIndex = count - 1;
+		viewer.setAtomSize(currentIndex, model.getElementSigma(currentElementToAdd) * 1000);
+		viewer.setAtomColor(currentIndex, getElementArgb(currentElementToAdd));
 		if (fullSizeUnbondedAtoms)
-			viewer.setCpkPercent(count - 1, 100);
+			viewer.setCpkPercent(currentIndex, 100);
 		if (count <= 1) {
 			storeCurrentOrientation();
 			renderModel(false);
