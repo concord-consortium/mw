@@ -88,9 +88,9 @@ class AtomPropertiesPanel extends PropertiesPanel {
 
 		MolecularView view = atom.getModel().getView();
 		ColorComboBox ballColorComboBox = new ColorComboBox(view);
-		ballColorComboBox.setRenderer(new ComboBoxRenderer.ColorCell(view.getAtomColor(atom)));
+		ballColorComboBox.setRenderer(new ComboBoxRenderer.ColorCell(view.getElementColor(atom)));
 		ballColorComboBox.setPreferredSize(new Dimension(32, 20));
-		setColorComboBox(ballColorComboBox, view.getAtomColor(atom));
+		setColorComboBox(ballColorComboBox, view.getElementColor(atom));
 		ballColorComboBox.addActionListener(new ElementColorListener(atom));
 
 		massField = new FloatNumberTextField(atom.getMass(), 1, 10000, 10);
@@ -546,7 +546,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 						new ActionListener() {
 							public void actionPerformed(ActionEvent ae) {
 								color6 = ModelerUtilities.colorChooser.getColor();
-								view.setAtomColor(atom.getElementNumber(), color6);
+								view.setElementColor(atom.getElementNumber(), color6);
 								cb.setSelectedIndex(6);
 								ColorRectangle cr = (ColorRectangle) cb.getRenderer();
 								cr.setMoreColor(color6);
@@ -558,17 +558,17 @@ class AtomPropertiesPanel extends PropertiesPanel {
 					final ColorComboBox colorComboBox = (ColorComboBox) cb;
 					colorComboBox.updateColor(new Runnable() {
 						public void run() {
-							view.setAtomColor(atom.getElementNumber(), colorComboBox.getMoreColor());
+							view.setElementColor(atom.getElementNumber(), colorComboBox.getMoreColor());
 							view.repaint();
 						}
 					});
 				}
 			}
 			else if (id == ColorComboBox.INDEX_MORE_COLOR) {
-				view.setAtomColor(atom.getElementNumber(), color6);
+				view.setElementColor(atom.getElementNumber(), color6);
 			}
 			else {
-				view.setAtomColor(atom.getElementNumber(), ColorRectangle.COLORS[id]);
+				view.setElementColor(atom.getElementNumber(), ColorRectangle.COLORS[id]);
 			}
 			view.repaint();
 		}

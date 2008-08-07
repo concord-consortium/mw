@@ -895,7 +895,6 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 		model.formMolecules();
 		setProgressMessage("Building model ......");
 		view.renderModel(true); // must render the model so that the following settings can take effect
-		setGenericParticles();
 		view.getViewer().setPerspectiveDepth(state.getPerspectiveDepth());
 		view.getViewer().setZDepthMagnification(state.getZDepthMagnification());
 		view.setCameraAtom(state.getCameraAtom());
@@ -989,14 +988,14 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 			float sigma = model.getElementSigma(symbol);
 			a.setSigma(sigma);
 			view.getViewer().setAtomSize(i, a.getSigma() * 1000);
-			Color color = new Color(view.getElementArgb(symbol));
-			view.setAtomColor(a.getElementNumber(), color);
+			view.getViewer().setAtomColor(i, view.getElementArgb(symbol));
 		}
 	}
 
 	public void notifyFileLoaded(String fullPathName, String fileName, String modelName, Object clientFile,
 			String errorMessage) {
 		view.setLoadingMessagePainted(false);
+		setGenericParticles();
 		view.refresh();
 		if (view.isRenderingCallTriggeredByLoading()) {
 			notifyPageComponentListeners(new PageComponentEvent(this, PageComponentEvent.COMPONENT_LOADED));
