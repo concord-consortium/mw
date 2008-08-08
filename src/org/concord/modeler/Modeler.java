@@ -3003,6 +3003,10 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		String userDir = System.getProperty("user.dir");
 		if (System.getProperty("os.name").startsWith("Windows"))
 			userDir = userDir.replace('\\', '/');
+		// if mw.jar is in the root directory, userDir="C:/"; otherwise, userDir="C:/folder"
+		// note the former has an extra '/' that the latter does not have.
+		if (userDir.endsWith("/"))
+			userDir = userDir.substring(0, userDir.length() - 1);
 		userDir = FileUtilities.httpEncode(userDir);
 		ClassLoader cl = Thread.currentThread().getContextClassLoader();
 		String resourceURL = cl.getResource("org").toString();

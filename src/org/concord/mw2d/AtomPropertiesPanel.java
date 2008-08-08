@@ -73,6 +73,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 	private JLabel typeLabel;
 	private JLabel nameLabel;
 	private JLabel nameLabel2;
+	private JLabel sigmaLabel, epsilonLabel;
 	private RealNumberTextField massField;
 	private RealNumberTextField chargeField;
 	private RealNumberTextField frictionField;
@@ -88,15 +89,18 @@ class AtomPropertiesPanel extends PropertiesPanel {
 	private HyperlinkLabel leftVxLabel;
 	private HyperlinkLabel leftVyLabel;
 	private JTextField codonField;
+	private Atom atom;
 
 	void destroy() {
 		if (dialog != null)
 			dialog.dispose();
 	}
 
-	AtomPropertiesPanel(final Atom atom) {
+	AtomPropertiesPanel(Atom a) {
 
 		super(new BorderLayout(5, 5));
+
+		atom = a;
 
 		char[] codon = null;
 		if (atom.isAminoAcid()) {
@@ -400,7 +404,8 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		panel.add(createSmallerFontLabel("g/mol"));
 
 		panel.add(new JLabel("<html><i>&#963;</i> (&#197;)</html>", SwingConstants.LEFT));
-		panel.add(createLabel(0.1 * atom.getSigma()));
+		sigmaLabel = createLabel(0.1 * atom.getSigma());
+		panel.add(sigmaLabel);
 		JButton button = new JButton(((AtomisticView) atom.getHostModel().getView()).editElements(atom.getID()));
 		s = MDView.getInternationalText("ChangeButton");
 		if (s != null)
@@ -409,7 +414,8 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		panel.add(button);
 
 		panel.add(new JLabel("<html><i>&#949;</i> (eV)</html>", SwingConstants.LEFT));
-		panel.add(createLabel(atom.getEpsilon()));
+		epsilonLabel = createLabel(atom.getEpsilon());
+		panel.add(epsilonLabel);
 		button = new JButton(((AtomisticView) atom.getHostModel().getView()).editElements(atom.getID()));
 		if (s != null)
 			button.setText(s);
@@ -611,6 +617,8 @@ class AtomPropertiesPanel extends PropertiesPanel {
 	}
 
 	void windowActivated() {
+		sigmaLabel.setText(DECIMAL_FORMAT.format(atom.getSigma() * 0.1));
+		epsilonLabel.setText(DECIMAL_FORMAT.format(atom.getEpsilon()));
 	}
 
 	static class ElementColorListener implements ActionListener {
