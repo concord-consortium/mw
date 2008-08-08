@@ -153,7 +153,8 @@ public class Polypeptide extends Molecule {
 					|| model.view.insertAnAtom(terminus.rx + d
 							* (costheta * Particle.COS240 - sintheta * Particle.SIN240), terminus.ry + d
 							* (sintheta * Particle.COS240 + costheta * Particle.SIN240), id, true)) {
-				model.bonds.add(new RadialBond(terminus, model.atom[model.getNumberOfAtoms() - 1], d));
+				model.bonds.add(new RadialBond.Builder(terminus, model.atom[model.getNumberOfAtoms() - 1])
+						.bondLength(d).build());
 				addAtom(model.atom[model.getNumberOfAtoms() - 1]);
 				MoleculeCollection.sort(model);
 				return true;
@@ -171,7 +172,8 @@ public class Polypeptide extends Molecule {
 					|| model.view.insertAnAtom(terminus.rx + d
 							* (costheta * Particle.COS300 - sintheta * Particle.SIN300), terminus.ry + d
 							* (sintheta * Particle.COS300 + costheta * Particle.SIN300), id, true)) {
-				model.bonds.add(new RadialBond(terminus, model.atom[model.getNumberOfAtoms() - 1], d));
+				model.bonds.add(new RadialBond.Builder(terminus, model.atom[model.getNumberOfAtoms() - 1])
+						.bondLength(d).build());
 				addAtom(model.atom[model.getNumberOfAtoms() - 1]);
 				MoleculeCollection.sort(model);
 				return true;

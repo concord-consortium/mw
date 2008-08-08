@@ -85,18 +85,30 @@ public final class Benzene extends Molecule {
 
 		int num = model.numberOfAtoms - getNumberOfAtoms();
 
-		bonds.add(new RadialBond(model.atom[1 + num], model.atom[num], bondLengthCH, bondStrength));
-		bonds.add(new RadialBond(model.atom[1 + num], model.atom[3 + num], bondLengthCC, bondStrength * 2));
-		bonds.add(new RadialBond(model.atom[3 + num], model.atom[2 + num], bondLengthCH, bondStrength));
-		bonds.add(new RadialBond(model.atom[3 + num], model.atom[5 + num], bondLengthCC, bondStrength * 2));
-		bonds.add(new RadialBond(model.atom[5 + num], model.atom[4 + num], bondLengthCH, bondStrength));
-		bonds.add(new RadialBond(model.atom[5 + num], model.atom[7 + num], bondLengthCC, bondStrength * 2));
-		bonds.add(new RadialBond(model.atom[7 + num], model.atom[6 + num], bondLengthCH, bondStrength));
-		bonds.add(new RadialBond(model.atom[7 + num], model.atom[9 + num], bondLengthCC, bondStrength * 2));
-		bonds.add(new RadialBond(model.atom[9 + num], model.atom[8 + num], bondLengthCH, bondStrength));
-		bonds.add(new RadialBond(model.atom[9 + num], model.atom[11 + num], bondLengthCC, bondStrength * 2));
-		bonds.add(new RadialBond(model.atom[11 + num], model.atom[10 + num], bondLengthCH, bondStrength));
-		bonds.add(new RadialBond(model.atom[11 + num], model.atom[1 + num], bondLengthCC, bondStrength * 2));
+		bonds.add(new RadialBond.Builder(model.atom[1 + num], model.atom[num]).bondLength(bondLengthCH).bondStrength(
+				bondStrength).build());
+		bonds.add(new RadialBond.Builder(model.atom[1 + num], model.atom[3 + num]).bondLength(bondLengthCC)
+				.bondStrength(bondStrength * 2).build());
+		bonds.add(new RadialBond.Builder(model.atom[3 + num], model.atom[2 + num]).bondLength(bondLengthCH)
+				.bondStrength(bondStrength).build());
+		bonds.add(new RadialBond.Builder(model.atom[3 + num], model.atom[5 + num]).bondLength(bondLengthCC)
+				.bondStrength(bondStrength * 2).build());
+		bonds.add(new RadialBond.Builder(model.atom[5 + num], model.atom[4 + num]).bondLength(bondLengthCH)
+				.bondStrength(bondStrength).build());
+		bonds.add(new RadialBond.Builder(model.atom[5 + num], model.atom[7 + num]).bondLength(bondLengthCC)
+				.bondStrength(bondStrength * 2).build());
+		bonds.add(new RadialBond.Builder(model.atom[7 + num], model.atom[6 + num]).bondLength(bondLengthCH)
+				.bondStrength(bondStrength).build());
+		bonds.add(new RadialBond.Builder(model.atom[7 + num], model.atom[9 + num]).bondLength(bondLengthCC)
+				.bondStrength(bondStrength * 2).build());
+		bonds.add(new RadialBond.Builder(model.atom[9 + num], model.atom[8 + num]).bondLength(bondLengthCH)
+				.bondStrength(bondStrength).build());
+		bonds.add(new RadialBond.Builder(model.atom[9 + num], model.atom[11 + num]).bondLength(bondLengthCC)
+				.bondStrength(bondStrength * 2).build());
+		bonds.add(new RadialBond.Builder(model.atom[11 + num], model.atom[10 + num]).bondLength(bondLengthCH)
+				.bondStrength(bondStrength).build());
+		bonds.add(new RadialBond.Builder(model.atom[11 + num], model.atom[1 + num]).bondLength(bondLengthCC)
+				.bondStrength(bondStrength * 2).build());
 
 		return bonds;
 

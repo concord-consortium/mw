@@ -877,7 +877,8 @@ public class Atom extends Particle {
 		if (GrowthModeDialog.getMode() == GrowthModeDialog.ZIGZAG) {
 			if (model.view.insertAnAtom(rx + d * COS120, ry + d * SIN120, id, true)
 					|| model.view.insertAnAtom(rx + d * COS240, ry + d * SIN240, id, true)) {
-				model.bonds.add(new RadialBond(this, model.atom[model.getNumberOfAtoms() - 1], d));
+				model.bonds.add(new RadialBond.Builder(this, model.atom[model.getNumberOfAtoms() - 1]).bondLength(d)
+						.build());
 				MoleculeCollection.sort(model);
 				return true;
 			}
@@ -888,7 +889,8 @@ public class Atom extends Particle {
 					|| model.view.insertAnAtom(rx + d * COS60, ry + d * SIN60, id, true)
 					|| model.view.insertAnAtom(rx + d * COS240, ry + d * SIN240, id, true)
 					|| model.view.insertAnAtom(rx + d * COS300, ry + d * SIN300, id, true)) {
-				model.bonds.add(new RadialBond(this, model.atom[model.getNumberOfAtoms() - 1], d));
+				model.bonds.add(new RadialBond.Builder(this, model.atom[model.getNumberOfAtoms() - 1]).bondLength(d)
+						.build());
 				MoleculeCollection.sort(model);
 				return true;
 			}

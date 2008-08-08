@@ -204,8 +204,10 @@ public class DNAStrand extends Molecule {
 				if (model.view.insertAnAtom(x + d2 * costheta, y + d2 * sintheta, id2, false)) {
 					int k = model.getNumberOfAtoms();
 					int m = getAtom(n - 2).getIndex();
-					model.getBonds().add(new RadialBond(model.getAtom(k - 2), model.getAtom(k - 1), d2));
-					model.getBonds().add(new RadialBond(model.getAtom(k - 2), model.getAtom(m), d1));
+					model.getBonds().add(
+							new RadialBond.Builder(model.getAtom(k - 2), model.getAtom(k - 1)).bondLength(d2).build());
+					model.getBonds().add(
+							new RadialBond.Builder(model.getAtom(k - 2), model.getAtom(m)).bondLength(d1).build());
 					model.getBends().add(
 							new AngularBond(model.getAtom(k - 2), model.getAtom(m + 1), model.getAtom(m), Math.PI / 2));
 					model.getBends().add(
@@ -251,8 +253,10 @@ public class DNAStrand extends Molecule {
 				y1 = y2 + d1 * sintheta;
 				if (model.view.insertAnAtom(x1, y1, id2, false)) {
 					int k = model.getNumberOfAtoms();
-					model.getBonds().add(new RadialBond(model.getAtom(k - 2), model.getAtom(k - 1), d2));
-					model.getBonds().add(new RadialBond(model.getAtom(k - 2), endToAttach, d1));
+					model.getBonds().add(
+							new RadialBond.Builder(model.getAtom(k - 2), model.getAtom(k - 1)).bondLength(d2).build());
+					model.getBonds().add(
+							new RadialBond.Builder(model.getAtom(k - 2), endToAttach).bondLength(d1).build());
 					model.getBends().add(new AngularBond(model.getAtom(k - 2), nc, endToAttach, Math.PI / 2));
 					model.getBends().add(
 							new AngularBond(model.getAtom(k - 1), endToAttach, model.getAtom(k - 2), Math.PI / 2));
