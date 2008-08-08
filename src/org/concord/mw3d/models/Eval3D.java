@@ -1013,12 +1013,18 @@ class Eval3D extends AbstractEval {
 			String s0 = s[0].trim().toLowerCase().intern();
 
 			if (s0 == "gfield") {
+				s[1] = s[1].trim();
+				if (s[1].startsWith("("))
+					s[1] = s[1].substring(1);
 				double x = parseMathExpression(s[1]);
 				if (Double.isNaN(x))
 					return false;
 				double y = parseMathExpression(s[2]);
 				if (Double.isNaN(y))
 					return false;
+				s[3] = s[3].trim();
+				if (s[3].endsWith(")"))
+					s[3] = s[3].substring(0, s[3].length() - 1);
 				double z = parseMathExpression(s[3]);
 				if (Double.isNaN(z))
 					return false;
@@ -1033,12 +1039,18 @@ class Eval3D extends AbstractEval {
 			}
 
 			if (s0 == "efield") {
+				s[1] = s[1].trim();
+				if (s[1].startsWith("("))
+					s[1] = s[1].substring(1);
 				double x = parseMathExpression(s[1]);
 				if (Double.isNaN(x))
 					return false;
 				double y = parseMathExpression(s[2]);
 				if (Double.isNaN(y))
 					return false;
+				s[3] = s[3].trim();
+				if (s[3].endsWith(")"))
+					s[3] = s[3].substring(0, s[3].length() - 1);
 				double z = parseMathExpression(s[3]);
 				if (Double.isNaN(z))
 					return false;
@@ -1053,12 +1065,18 @@ class Eval3D extends AbstractEval {
 			}
 
 			if (s0 == "bfield") {
+				s[1] = s[1].trim();
+				if (s[1].startsWith("("))
+					s[1] = s[1].substring(1);
 				double x = parseMathExpression(s[1]);
 				if (Double.isNaN(x))
 					return false;
 				double y = parseMathExpression(s[2]);
 				if (Double.isNaN(y))
 					return false;
+				s[3] = s[3].trim();
+				if (s[3].endsWith(")"))
+					s[3] = s[3].substring(0, s[3].length() - 1);
 				double z = parseMathExpression(s[3]);
 				if (Double.isNaN(z))
 					return false;
