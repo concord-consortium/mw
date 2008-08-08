@@ -132,7 +132,8 @@ public class CurvedRibbon extends MolecularObject {
 			xij = model.getAtom(i).rx - model.getAtom(i + 1).rx;
 			yij = model.getAtom(i).ry - model.getAtom(i + 1).ry;
 			dij = Math.hypot(xij, yij);
-			rb = new RadialBond(model.getAtom(i), model.getAtom(i + 1), dij, bondStrength);
+			rb = new RadialBond.Builder(model.getAtom(i), model.getAtom(i + 1)).bondLength(dij).bondStrength(
+					bondStrength).build();
 			rb.setSmart(true);
 			rb.setClosed(closed);
 			if (this instanceof CurvedSurface)
@@ -144,7 +145,8 @@ public class CurvedRibbon extends MolecularObject {
 			xij = model.getAtom(n).rx - model.getAtom(n + m - 1).rx;
 			yij = model.getAtom(n).ry - model.getAtom(n + m - 1).ry;
 			dij = Math.hypot(xij, yij);
-			rb = new RadialBond(model.getAtom(n), model.getAtom(n + m - 1), dij, bondStrength);
+			rb = new RadialBond.Builder(model.getAtom(n), model.getAtom(n + m - 1)).bondLength(dij).bondStrength(
+					bondStrength).build();
 			rb.setSmart(true);
 			rb.setClosed(closed);
 			if (this instanceof CurvedSurface)

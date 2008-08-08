@@ -1031,7 +1031,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			double d = RadialBond.PEPTIDE_BOND_LENGTH_PARAMETER * (a.getSigma() + e.getSigma());
 			a.translateBy(d * Math.cos(angle), -d * Math.sin(angle));
 			if (insertAnAtom(x, y, id, true, false)) {
-				m.getBonds().add(new RadialBond(a, m.getAtom(n), d));
+				m.getBonds().add(new RadialBond.Builder(a, m.getAtom(n)).bondLength(d).build());
 				MoleculeCollection.sort(m);
 				PointRestraint.releaseParticle(a);
 				PointRestraint.tetherParticle(m.getAtom(n), 100);
@@ -1048,7 +1048,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			if (mol != null)
 				mol.translateBy(d * Math.cos(angle), -d * Math.sin(angle));
 			if (insertAminoAcid(x, y, id)) {
-				m.getBonds().add(new RadialBond(a, m.getAtom(n), d * 2));
+				m.getBonds().add(new RadialBond.Builder(a, m.getAtom(n)).bondLength(d * 2).build());
 				MoleculeCollection.sort(m);
 				PointRestraint.releaseParticle(a);
 				PointRestraint.tetherParticle(m.getAtom(n), 100);
@@ -1645,7 +1645,9 @@ public class AtomisticView extends MDView implements BondChangeListener {
 
 	private RadialBond.Delegate addDeadBond(int i, int j, RadialBond r) {
 		RadialBond.Delegate d = new RadialBond.Delegate(i, j, r.getBondLength(), r.getBondStrength(), r.isSmart(), r
-				.isSolid(), r.isClosed(), r.getBondColor(), r.getBondStyle());
+				.isSolid(), r.isClosed());
+		d.setColor(r.getBondColor());
+		d.setStyle(r.getBondStyle());
 		d.setVisible(r.isVisible());
 		if (r.getAmplitude() > 0) {
 			d.setAmplitude(r.getAmplitude());
@@ -1659,8 +1661,9 @@ public class AtomisticView extends MDView implements BondChangeListener {
 	}
 
 	private RadialBond restoreDeadBond(int i, int j, RadialBond.Delegate d) {
-		RadialBond rb = new RadialBond(atom[i], atom[j], d.getBondLength(), d.getBondStrength(), d.isSmart(), d
-				.isSolid(), d.isClosed(), d.getColor());
+		RadialBond rb = new RadialBond.Builder(atom[i], atom[j]).bondLength(d.getBondLength()).bondStrength(
+				d.getBondStrength()).smart(d.isSmart()).solid(d.isSolid()).closed(d.isClosed()).build();
+		rb.setBondColor(d.getColor());
 		rb.setVisible(d.isVisible());
 		if (d.getAmplitude() > 0) {
 			rb.setAmplitude(d.getAmplitude());
@@ -1913,7 +1916,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		}
 		double xij = at.getRx() - at0.getRx();
 		double yij = at.getRy() - at0.getRy();
-		bonds.add(new RadialBond(at0, at, Math.hypot(xij, yij)));
+		bonds.add(new RadialBond.Builder(at0, at).bondLength(Math.hypot(xij, yij)).build());
 		MoleculeCollection.sort(model);
 		model.notifyChange();
 		if (!doNotFireUndoEvent) {
@@ -4426,7 +4429,9 @@ public class AtomisticView extends MDView implements BondChangeListener {
 						b = insertAnAtom(x, y + d, id2);
 						int noa = model.getNumberOfAtoms();
 						if (b) {
-							(model).getBonds().add(new RadialBond(model.getAtom(noa - 2), model.getAtom(noa - 1), d));
+							(model).getBonds().add(
+									new RadialBond.Builder(model.getAtom(noa - 2), model.getAtom(noa - 1))
+											.bondLength(d).build());
 							MoleculeCollection.sort(model);
 							if (!doNotFireUndoEvent) {
 								molecules.getMolecule(model.getAtom(noa - 1)).setSelected(true);

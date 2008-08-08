@@ -887,8 +887,8 @@ public class MolecularModel extends AtomicModel {
 		for (i = 0; i < n; i++) {
 			rbd = (RadialBond.Delegate) in.readObject();
 			monitor.setProgressMessage("Reading " + rbd + "...");
-			rBond = new RadialBond(atom[rbd.getAtom1()], atom[rbd.getAtom2()], rbd.getBondLength(), rbd
-					.getBondStrength(), rbd.getChemicalEnergy());
+			rBond = new RadialBond.Builder(atom[rbd.getAtom1()], atom[rbd.getAtom2()]).bondLength(rbd.getBondLength())
+					.bondStrength(rbd.getBondStrength()).chemicalEnergy(rbd.getChemicalEnergy()).build();
 			rBond.setTorque(rbd.getTorque());
 			rBond.setTorqueType(rbd.getTorqueType());
 			rBond.setAmplitude(rbd.getAmplitude());

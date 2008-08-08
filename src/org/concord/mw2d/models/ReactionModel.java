@@ -169,8 +169,8 @@ public class ReactionModel extends MolecularModel {
 		RadialBond rBond = null;
 		for (Iterator it = list.iterator(); it.hasNext();) {
 			rbd = (RadialBond.Delegate) it.next();
-			rBond = new RadialBond(atom[rbd.getAtom1()], atom[rbd.getAtom2()], rbd.getBondLength(), rbd
-					.getBondStrength(), rbd.getChemicalEnergy());
+			rBond = new RadialBond.Builder(atom[rbd.getAtom1()], atom[rbd.getAtom2()]).bondLength(rbd.getBondLength())
+					.bondStrength(rbd.getBondStrength()).chemicalEnergy(rbd.getChemicalEnergy()).build();
 			rBond.setModel(this);
 			bonds.add(rBond);
 		}
@@ -778,7 +778,8 @@ public class ReactionModel extends MolecularModel {
 		double xOH = atomO.rx - atomH.rx;
 		double yOH = atomO.ry - atomH.ry;
 		double rOH = Math.hypot(xOH, yOH);
-		RadialBond rBond = new RadialBond(atomO, atomH, bondLength, bondStrength, bondEnergy);
+		RadialBond rBond = new RadialBond.Builder(atomO, atomH).bondLength(bondLength).bondStrength(bondStrength)
+				.chemicalEnergy(bondEnergy).build();
 		AngularBond aBond = new AngularBond(atomH, atomH2, atomO, H2O_ANGLE);
 		double pot = bondEnergy - 0.5 * bondStrength * (rOH - bondLength) * (rOH - bondLength) - 0.5
 				* aBond.getBondStrength() * (angle - H2O_ANGLE) * (angle - H2O_ANGLE);
@@ -808,7 +809,8 @@ public class ReactionModel extends MolecularModel {
 		double bondStrength = getBondStrength(atomO, atomH1);
 		double bondEnergy = type.getParameter(Reaction.O2_2H2__2H2O.VHO).doubleValue();
 		RadialBond rBond = bonds.getBond(atomH1, atomH2);
-		RadialBond newRBond = new RadialBond(atomO, atomH1, bondLength, bondStrength, bondEnergy);
+		RadialBond newRBond = new RadialBond.Builder(atomO, atomH1).bondLength(bondLength).bondStrength(bondStrength)
+				.chemicalEnergy(bondEnergy).build();
 		AngularBond aBond = new AngularBond(atomH, atomH1, atomO, H2O_ANGLE);
 		double x12 = atomH1.rx - atomH2.rx;
 		double y12 = atomH1.ry - atomH2.ry;
@@ -880,7 +882,8 @@ public class ReactionModel extends MolecularModel {
 		atom[j].storeCurrentVelocity();
 		if (conserve(i, j, dpot)) {
 
-			bonds.add(new RadialBond(atom[i], atom[j], bondLength, bondStrength, bondEnergy));
+			bonds.add(new RadialBond.Builder(atom[i], atom[j]).bondLength(bondLength).bondStrength(bondStrength)
+					.chemicalEnergy(bondEnergy).build());
 
 			if ((type instanceof Reaction.A2_B2__2AB) || (type instanceof Reaction.A2_B2_C__2AB_C)) {
 				// atoms of A2, B2 and AB should not be treated as free radicals any more
@@ -1258,7 +1261,8 @@ public class ReactionModel extends MolecularModel {
 						bonds.remove(rBond);
 						rBond.destroy();
 						removeAssociatedAngularBonds();
-						bonds.add(new RadialBond(atom[i], atom[j], bondLength, bondStrength, bondEnergy));
+						bonds.add(new RadialBond.Builder(atom[i], atom[j]).bondLength(bondLength).bondStrength(
+								bondStrength).chemicalEnergy(bondEnergy).build());
 						/*
 						 * temporarily indicate that the atoms should not be treated as a free radical. CHECK!!! In H2O
 						 * reaction, this is not true any more, but in order for the OH fragments not to react with
@@ -1824,8 +1828,9 @@ public class ReactionModel extends MolecularModel {
 				RadialBond rBond = null;
 				for (Iterator it = list.iterator(); it.hasNext();) {
 					rbd = (RadialBond.Delegate) it.next();
-					rBond = new RadialBond(atom[rbd.getAtom1()], atom[rbd.getAtom2()], rbd.getBondLength(), rbd
-							.getBondStrength(), rbd.getChemicalEnergy());
+					rBond = new RadialBond.Builder(atom[rbd.getAtom1()], atom[rbd.getAtom2()]).bondLength(
+							rbd.getBondLength()).bondStrength(rbd.getBondStrength()).chemicalEnergy(
+							rbd.getChemicalEnergy()).build();
 					rBond.setModel(this);
 					bonds.add(rBond);
 				}

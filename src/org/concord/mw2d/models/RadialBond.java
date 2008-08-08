@@ -92,88 +92,77 @@ public class RadialBond implements ModelComponent {
 	private static Rectangle[] rects;
 	private static Color blinkColor;
 
-	/**
-	 * @param atom1
-	 *            the first participant
-	 * @param atom2
-	 *            the second participant
-	 * @param bondLength
-	 *            the equilibrium length
-	 * @throws java.lang.IllegalArgumentException
-	 *             if the two input atoms are identical.
-	 */
-	public RadialBond(Atom atom1, Atom atom2, double bondLength) throws IllegalArgumentException {
-		if (atom1 == atom2)
-			throw new IllegalArgumentException("The two participants of a radial bond must not be identical!");
-		this.atom1 = atom1;
-		this.atom2 = atom2;
-		this.bondLength = bondLength;
-		axis = new Line2D.Double();
-		setAxis();
+	public static class Builder {
+
+		private Atom atom1;
+		private Atom atom2;
+		private double bondLength = 20;
+		private double bondStrength = 0.2;
+		private boolean smart;
+		private boolean solid;
+		private boolean closed;
+		private double chemicalEnergy;
+
+		public Builder(Atom atom1, Atom atom2) {
+			if (atom1 == atom2)
+				throw new IllegalArgumentException("The two participants of a radial bond must not be identical!");
+			this.atom1 = atom1;
+			this.atom2 = atom2;
+		}
+
+		public Builder bondLength(double bondLength) {
+			this.bondLength = bondLength;
+			return this;
+		}
+
+		public Builder bondStrength(double bondStrength) {
+			this.bondStrength = bondStrength;
+			return this;
+		}
+
+		public Builder smart(boolean smart) {
+			this.smart = smart;
+			return this;
+		}
+
+		public Builder solid(boolean solid) {
+			this.solid = solid;
+			return this;
+		}
+
+		public Builder closed(boolean closed) {
+			this.closed = closed;
+			return this;
+		}
+
+		public Builder chemicalEnergy(double chemicalEnergy) {
+			this.chemicalEnergy = chemicalEnergy;
+			return this;
+		}
+
+		public RadialBond build() {
+			return new RadialBond(this);
+		}
+
 	}
 
-	/**
-	 * @param atom1
-	 *            the first participant
-	 * @param atom2
-	 *            the second participant
-	 * @param bondLength
-	 *            the equilibrium length
-	 * @param bondStrength
-	 *            the strength of the harmonical potential
-	 * @throws java.lang.IllegalArgumentException
-	 *             if the two input atoms are identical.
-	 */
-	public RadialBond(Atom atom1, Atom atom2, double bondLength, double bondStrength) throws IllegalArgumentException {
-		if (atom1 == atom2)
-			throw new IllegalArgumentException("The two participants of a radial bond must not be identical!");
-		this.atom1 = atom1;
-		this.atom2 = atom2;
-		this.bondLength = bondLength;
-		this.bondStrength = bondStrength;
+	public RadialBond(Builder builder) {
+		atom1 = builder.atom1;
+		atom2 = builder.atom2;
+		bondStrength = builder.bondStrength;
+		bondLength = builder.bondLength;
+		smart = builder.smart;
+		solid = builder.solid;
+		closed = builder.closed;
+		chemicalEnergy = builder.chemicalEnergy;
 		axis = new Line2D.Double();
 		setAxis();
-	}
-
-	public RadialBond(Atom atom1, Atom atom2, double bondLength, double bondStrength, boolean smart, boolean solid,
-			boolean closed, Color color) throws IllegalArgumentException {
-		if (atom1 == atom2)
-			throw new IllegalArgumentException("The two participants of a radial bond must not be identical!");
-		this.atom1 = atom1;
-		this.atom2 = atom2;
-		this.bondLength = bondLength;
-		this.bondStrength = bondStrength;
-		this.smart = smart;
-		this.solid = solid;
-		this.closed = closed;
-		this.bondColor = color;
-		axis = new Line2D.Double();
-		setAxis();
-	}
-
-	/**
-	 * @param atom1
-	 *            the first participant
-	 * @param atom2
-	 *            the second participant
-	 * @param bondLength
-	 *            the equilibrium length
-	 * @param bondStrength
-	 *            the strength of the harmonical potential
-	 * @param chemicalEnergy
-	 *            the chemical energy stored in this bond
-	 * @throws java.lang.IllegalArgumentException
-	 *             if the two input atoms are identical.
-	 */
-	public RadialBond(Atom atom1, Atom atom2, double bondLength, double bondStrength, double chemicalEnergy)
-			throws IllegalArgumentException {
-		this(atom1, atom2, bondLength, bondStrength);
-		this.chemicalEnergy = chemicalEnergy;
 	}
 
 	RadialBond getCopy(Atom atom1, Atom atom2) {
-		RadialBond b = new RadialBond(atom1, atom2, bondLength, bondStrength, smart, solid, closed, bondColor);
-		b.setChemicalEnergy(chemicalEnergy);
+		RadialBond b = new Builder(atom1, atom2).bondLength(bondLength).bondStrength(bondStrength).smart(smart).solid(
+				solid).closed(closed).chemicalEnergy(chemicalEnergy).build();
+		b.setBondColor(bondColor);
 		b.setVisible(visible);
 		b.setBondStyle(bondStyle);
 		b.setPhase(phase);
@@ -1014,7 +1003,7 @@ public class RadialBond implements ModelComponent {
 		}
 
 		public Delegate(int atom1, int atom2, double bondLength, double bondStrength, boolean smart, boolean solid,
-				boolean closed, Color color, byte style) {
+				boolean closed) {
 			if (atom1 == atom2)
 				throw new IllegalArgumentException("The two participants of a radial bond must not be identical!");
 			this.atom1 = atom1;
@@ -1024,8 +1013,6 @@ public class RadialBond implements ModelComponent {
 			this.smart = smart;
 			this.solid = solid;
 			this.closed = closed;
-			this.color = color;
-			this.style = style;
 		}
 
 		public void setVisible(boolean b) {

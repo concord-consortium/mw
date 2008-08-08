@@ -99,8 +99,10 @@ public final class TriatomicMolecule extends Molecule {
 
 	public List<RadialBond> buildBonds(MolecularModel model) {
 		List<RadialBond> x = new ArrayList<RadialBond>();
-		x.add(new RadialBond(model.atom[model.numberOfAtoms - 3], model.atom[model.numberOfAtoms - 2], d12, s12));
-		x.add(new RadialBond(model.atom[model.numberOfAtoms - 1], model.atom[model.numberOfAtoms - 2], d23, s23));
+		x.add(new RadialBond.Builder(model.atom[model.numberOfAtoms - 3], model.atom[model.numberOfAtoms - 2])
+				.bondLength(d12).bondStrength(s12).build());
+		x.add(new RadialBond.Builder(model.atom[model.numberOfAtoms - 1], model.atom[model.numberOfAtoms - 2])
+				.bondLength(d23).bondStrength(s23).build());
 		return x;
 	}
 

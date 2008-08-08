@@ -101,7 +101,8 @@ public final class ChainMolecule extends Molecule {
 			noa++;
 
 			if (k > 0) {
-				bonds.add(new RadialBond(model.atom[noa - 1], model.atom[noa - 2], bondLength, bondStrength));
+				bonds.add(new RadialBond.Builder(model.atom[noa - 1], model.atom[noa - 2]).bondLength(bondLength)
+						.bondStrength(bondStrength).build());
 			}
 
 			if (k > 1) {

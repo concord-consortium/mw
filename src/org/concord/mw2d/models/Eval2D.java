@@ -1654,7 +1654,8 @@ class Eval2D extends AbstractEval {
 		RadialBond rb = mm.bonds.getBond(at1, at2);
 		if (rb == null) {
 			if (x > ZERO) {
-				rb = new RadialBond(at1, at2, Math.sqrt(at1.distanceSquare(at2)), x);
+				rb = new RadialBond.Builder(at1, at2).bondLength(Math.sqrt(at1.distanceSquare(at2))).bondStrength(x)
+						.build();
 				mm.bonds.add(rb);
 				MoleculeCollection.sort(mm);
 				view.repaint();

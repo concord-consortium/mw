@@ -75,8 +75,8 @@ public final class DiatomicMolecule extends Molecule {
 
 	public List<RadialBond> buildBonds(MolecularModel model) {
 		List<RadialBond> bonds = new ArrayList<RadialBond>();
-		bonds.add(new RadialBond(model.atom[model.numberOfAtoms - 2], model.atom[model.numberOfAtoms - 1], bondLength,
-				bondStrength));
+		bonds.add(new RadialBond.Builder(model.atom[model.numberOfAtoms - 2], model.atom[model.numberOfAtoms - 1])
+				.bondLength(bondLength).bondStrength(bondStrength).build());
 		return bonds;
 	}
 
