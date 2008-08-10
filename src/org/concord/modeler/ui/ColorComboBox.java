@@ -95,7 +95,9 @@ public class ColorComboBox extends JComboBox {
 						color6 = ModelerUtilities.convertToColor(hex);
 					}
 					catch (NumberFormatException ex) {
-						JOptionPane.showMessageDialog(parent, "Input color (hex) is not valid.");
+						s2 = ColorMenu.getInternationalText("InvalidHexColorCode");
+						JOptionPane.showMessageDialog(parent, s2 != null ? s2 : "Input color (hex) is not valid.");
+						cb.setSelectedIndex(INDEX_MORE_COLOR);
 						return;
 					}
 					cb.setSelectedIndex(INDEX_MORE_COLOR);
