@@ -69,8 +69,8 @@ abstract class PropertiesPanel extends JPanel {
 			return;
 		MouseListener[] ml = b.getMouseListeners();
 		if (ml != null) {
-			for (int i = 0; i < ml.length; i++)
-				b.removeMouseListener(ml[i]);
+			for (MouseListener i : ml)
+				b.removeMouseListener(i);
 		}
 		if (b instanceof HyperlinkLabel) {
 			((HyperlinkLabel) b).setAction(null);
@@ -83,13 +83,13 @@ abstract class PropertiesPanel extends JPanel {
 		b.setAction(null);
 		ActionListener[] al = b.getActionListeners();
 		if (al != null) {
-			for (int i = 0; i < al.length; i++)
-				b.removeActionListener(al[i]);
+			for (ActionListener i : al)
+				b.removeActionListener(i);
 		}
 		MouseListener[] ml = b.getMouseListeners();
 		if (ml != null) {
-			for (int i = 0; i < ml.length; i++)
-				b.removeMouseListener(ml[i]);
+			for (MouseListener i : ml)
+				b.removeMouseListener(i);
 		}
 	}
 
@@ -99,13 +99,13 @@ abstract class PropertiesPanel extends JPanel {
 		b.setAction(null);
 		ActionListener[] al = b.getActionListeners();
 		if (al != null) {
-			for (int i = 0; i < al.length; i++)
-				b.removeActionListener(al[i]);
+			for (ActionListener i : al)
+				b.removeActionListener(i);
 		}
 		ItemListener[] il = b.getItemListeners();
 		if (il != null) {
-			for (int i = 0; i < il.length; i++)
-				b.removeItemListener(il[i]);
+			for (ItemListener i : il)
+				b.removeItemListener(i);
 		}
 	}
 
@@ -115,13 +115,13 @@ abstract class PropertiesPanel extends JPanel {
 		t.setAction(null);
 		ActionListener[] al = t.getActionListeners();
 		if (al != null) {
-			for (int i = 0; i < al.length; i++)
-				t.removeActionListener(al[i]);
+			for (ActionListener i : al)
+				t.removeActionListener(i);
 		}
 		MouseListener[] ml = t.getMouseListeners();
 		if (ml != null) {
-			for (int i = 0; i < ml.length; i++)
-				t.removeMouseListener(ml[i]);
+			for (MouseListener i : ml)
+				t.removeMouseListener(i);
 		}
 	}
 
@@ -150,22 +150,22 @@ abstract class PropertiesPanel extends JPanel {
 	static void setComboBox(JComboBox cb, int k) {
 		ActionListener[] al = cb.getActionListeners();
 		if (al != null) {
-			for (int i = 0; i < al.length; i++)
-				cb.removeActionListener(al[i]);
+			for (ActionListener i : al)
+				cb.removeActionListener(i);
 		}
 		ItemListener[] il = cb.getItemListeners();
 		if (il != null) {
-			for (int i = 0; i < il.length; i++)
-				cb.removeItemListener(il[i]);
+			for (ItemListener i : il)
+				cb.removeItemListener(i);
 		}
 		cb.setSelectedIndex(k);
 		if (al != null) {
-			for (int i = 0; i < al.length; i++)
-				cb.addActionListener(al[i]);
+			for (ActionListener i : al)
+				cb.addActionListener(i);
 		}
 		if (il != null) {
-			for (int i = 0; i < il.length; i++)
-				cb.addItemListener(il[i]);
+			for (ItemListener i : il)
+				cb.addItemListener(i);
 		}
 	}
 

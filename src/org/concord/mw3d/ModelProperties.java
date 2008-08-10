@@ -28,12 +28,15 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -165,9 +168,29 @@ class ModelProperties extends JDialog {
 		JLabel label = new HyperlinkLabel("<html><font color=\"#0000ff\"><u>Generic Particle Editor</u></font></html>",
 				SwingConstants.LEFT);
 		label.setToolTipText("Click to open the editor for customizing the generic particles");
-		label.setIcon(new ImageIcon(MolecularContainer.class.getResource("resources/vdw.gif")));
+		label.setIcon(new ImageIcon(MolecularContainer.class.getResource("resources/GenericParticle.gif")));
 		((HyperlinkLabel) label).setAction(new Runnable() {
 			public void run() {
+				String s = MolecularContainer.getInternationalText("GenericParticleProperties");
+				final JDialog dialog = new JDialog(JOptionPane.getFrameForComponent(model.getView()), s != null ? s
+						: "Generic Particle Properties", true);
+				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				final GenericParticlePropertiesPanel p = new GenericParticlePropertiesPanel(model);
+				p.setDialog(dialog);
+				dialog.setContentPane(p);
+				dialog.addWindowListener(new WindowAdapter() {
+					public void windowClosing(WindowEvent e) {
+						p.destroy();
+						dialog.dispose();
+					}
+
+					public void windowActivated(WindowEvent e) {
+						p.windowActivated();
+					}
+				});
+				dialog.pack();
+				dialog.setLocationRelativeTo(model.getView());
+				dialog.setVisible(true);
 			}
 		});
 		p.add(label);

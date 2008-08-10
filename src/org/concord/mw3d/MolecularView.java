@@ -458,18 +458,14 @@ public class MolecularView extends Draw {
 		return new Color(viewer.getAtomArgb(a.getIndex()));
 	}
 
-	void setElementColor(byte id, Color color) {
+	void setElementColor(String symbol, Color color) {
 		int n = viewer.getAtomCount();
-		String element = null;
 		for (int i = 0; i < n; i++) {
-			if (model.getAtom(i).getElementNumber() == id) {
+			if (model.getAtom(i).getSymbol().equals(symbol)) {
 				viewer.setAtomColor(i, color.getRGB());
-				if (element == null)
-					element = model.getAtom(i).getSymbol();
 			}
 		}
-		if (element != null)
-			genericElementColors.put(element, color.getRGB());
+		genericElementColors.put(symbol, color.getRGB());
 	}
 
 	void setObstacleColor(Obstacle obs, Color color, boolean translucent) {

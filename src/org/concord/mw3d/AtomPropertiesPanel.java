@@ -25,7 +25,6 @@
 package org.concord.mw3d;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -35,8 +34,6 @@ import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JColorChooser;
-import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -44,10 +41,8 @@ import javax.swing.JPanel;
 import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 
-import org.concord.modeler.ModelerUtilities;
 import org.concord.modeler.process.Executable;
 import org.concord.modeler.ui.ColorComboBox;
-import org.concord.modeler.ui.ColorRectangle;
 import org.concord.modeler.ui.ComboBoxRenderer;
 import org.concord.modeler.ui.FloatNumberTextField;
 import org.concord.modeler.ui.HyperlinkLabel;
@@ -91,7 +86,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		ballColorComboBox.setRenderer(new ComboBoxRenderer.ColorCell(view.getElementColor(atom)));
 		ballColorComboBox.setPreferredSize(new Dimension(32, 20));
 		setColorComboBox(ballColorComboBox, view.getElementColor(atom));
-		ballColorComboBox.addActionListener(new ElementColorListener(atom));
+		ballColorComboBox.addActionListener(new ElementColorListener(atom.getSymbol(), atom.getModel()));
 
 		massField = new FloatNumberTextField(atom.getMass(), 1, 10000, 10);
 		sigmaField = new FloatNumberTextField(atom.getSigma(), 1, 100, 10);
@@ -524,55 +519,6 @@ class AtomPropertiesPanel extends PropertiesPanel {
 	}
 
 	void windowActivated() {
-	}
-
-	static class ElementColorListener implements ActionListener {
-
-		private Color color6 = Color.white;
-		private Atom atom;
-		private MolecularView view;
-
-		ElementColorListener(Atom atom) {
-			this.atom = atom;
-			view = atom.getModel().getView();
-		}
-
-		public void actionPerformed(ActionEvent e) {
-			final JComboBox cb = (JComboBox) e.getSource();
-			int id = (Integer) cb.getSelectedItem();
-			if (id == ColorComboBox.INDEX_COLOR_CHOOSER) {
-				String s = MolecularContainer.getInternationalText("MoreColors");
-				JColorChooser.createDialog(view, s != null ? s : "More Colors", true, ModelerUtilities.colorChooser,
-						new ActionListener() {
-							public void actionPerformed(ActionEvent ae) {
-								color6 = ModelerUtilities.colorChooser.getColor();
-								view.setElementColor(atom.getElementNumber(), color6);
-								cb.setSelectedIndex(6);
-								ColorRectangle cr = (ColorRectangle) cb.getRenderer();
-								cr.setMoreColor(color6);
-							}
-						}, null).setVisible(true);
-			}
-			else if (id == ColorComboBox.INDEX_HEX_INPUTTER) {
-				if (cb instanceof ColorComboBox) {
-					final ColorComboBox colorComboBox = (ColorComboBox) cb;
-					colorComboBox.updateColor(new Runnable() {
-						public void run() {
-							view.setElementColor(atom.getElementNumber(), colorComboBox.getMoreColor());
-							view.repaint();
-						}
-					});
-				}
-			}
-			else if (id == ColorComboBox.INDEX_MORE_COLOR) {
-				view.setElementColor(atom.getElementNumber(), color6);
-			}
-			else {
-				view.setElementColor(atom.getElementNumber(), ColorRectangle.COLORS[id]);
-			}
-			view.repaint();
-		}
-
 	}
 
 }

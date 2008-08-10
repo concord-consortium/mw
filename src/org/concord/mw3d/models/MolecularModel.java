@@ -78,6 +78,7 @@ public class MolecularModel {
 	public final static short SIZE = 1000;
 	final static byte REFLECTING_BOUNDARY = 0;
 	final static byte PERIODIC_BOUNDARY = 1;
+	private final static byte GENERIC_PARTICLE_TYPES = 4;
 
 	/*
 	 * convert m*v*v into eV: ( E-3 / 6E23 ) [kg] x ( E-10 / E-15 )^2 [m^2/s^2] / 1.6E-19 [J] divided by 2 (save the
@@ -284,6 +285,10 @@ public class MolecularModel {
 		aBonds = Collections.synchronizedList(new ArrayList<ABond>());
 		tBonds = Collections.synchronizedList(new ArrayList<TBond>());
 
+	}
+
+	public static byte getGenericParticleTypes() {
+		return GENERIC_PARTICLE_TYPES;
 	}
 
 	/** set the mass of the specified generic particle */
