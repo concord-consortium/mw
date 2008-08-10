@@ -197,45 +197,6 @@ class ModelProperties extends JDialog {
 		p.add(label);
 		p.add(new JPanel());
 
-		s = MolecularContainer.getInternationalText("RadialBondEditor");
-		label = new HyperlinkLabel("<html><font color=\"#0000ff\"><u>" + (s != null ? s : "Radial Bond Editor")
-				+ "</u></font></html>", SwingConstants.LEFT);
-		label.setToolTipText("Click to open the Radial Bond Editor");
-		label.setIcon(IconPool.getIcon("radial bond"));
-		((HyperlinkLabel) label).setAction(new Runnable() {
-			public void run() {
-			}
-		});
-		p.add(label);
-		rbondCountLabel = new JLabel(Integer.toString(model.getRBondCount()));
-		p.add(rbondCountLabel);
-
-		s = MolecularContainer.getInternationalText("AngularBondEditor");
-		label = new HyperlinkLabel("<html><font color=\"#0000ff\"><u>" + (s != null ? s : "Angular Bond Editor")
-				+ "</u></font></html>", SwingConstants.LEFT);
-		label.setToolTipText("Click to open the Angular Bond Editor");
-		label.setIcon(IconPool.getIcon("angular bond"));
-		((HyperlinkLabel) label).setAction(new Runnable() {
-			public void run() {
-			}
-		});
-		p.add(label);
-		abondCountLabel = new JLabel(Integer.toString(model.getABondCount()));
-		p.add(abondCountLabel);
-
-		s = MolecularContainer.getInternationalText("TorsionalBondEditor");
-		label = new HyperlinkLabel("<html><font color=\"#0000ff\"><u>" + (s != null ? s : "Torsional Bond Editor")
-				+ "</u></font></html>", SwingConstants.LEFT);
-		label.setToolTipText("Click to open the Torsional Bond Editor");
-		label.setIcon(new ImageIcon(MolecularContainer.class.getResource("resources/torsionbond.gif")));
-		((HyperlinkLabel) label).setAction(new Runnable() {
-			public void run() {
-			}
-		});
-		p.add(label);
-		tbondCountLabel = new JLabel(Integer.toString(model.getTBondCount()));
-		p.add(tbondCountLabel);
-
 		s = MolecularContainer.getInternationalText("GravitationalFieldEditor");
 		label = new HyperlinkLabel("<html><font color=\"#0000ff\"><u>" + (s != null ? s : "Gravitational Field Editor")
 				+ "</u></font></html>", SwingConstants.LEFT);
@@ -286,6 +247,45 @@ class ModelProperties extends JDialog {
 		p.add(label);
 		bLabel = new JLabel(model.getBField() != null ? "On" : "Off");
 		p.add(bLabel);
+
+		s = MolecularContainer.getInternationalText("RadialBondEditor");
+		label = new HyperlinkLabel("<html><font color=\"#0000ff\"><u>" + (s != null ? s : "Radial Bond Editor")
+				+ "</u></font></html>", SwingConstants.LEFT);
+		label.setToolTipText("Click to open the Radial Bond Editor");
+		label.setIcon(IconPool.getIcon("radial bond"));
+		((HyperlinkLabel) label).setAction(new Runnable() {
+			public void run() {
+			}
+		});
+		p.add(label);
+		rbondCountLabel = new JLabel(Integer.toString(model.getRBondCount()));
+		p.add(rbondCountLabel);
+
+		s = MolecularContainer.getInternationalText("AngularBondEditor");
+		label = new HyperlinkLabel("<html><font color=\"#0000ff\"><u>" + (s != null ? s : "Angular Bond Editor")
+				+ "</u></font></html>", SwingConstants.LEFT);
+		label.setToolTipText("Click to open the Angular Bond Editor");
+		label.setIcon(IconPool.getIcon("angular bond"));
+		((HyperlinkLabel) label).setAction(new Runnable() {
+			public void run() {
+			}
+		});
+		p.add(label);
+		abondCountLabel = new JLabel(Integer.toString(model.getABondCount()));
+		p.add(abondCountLabel);
+
+		s = MolecularContainer.getInternationalText("TorsionalBondEditor");
+		label = new HyperlinkLabel("<html><font color=\"#0000ff\"><u>" + (s != null ? s : "Torsional Bond Editor")
+				+ "</u></font></html>", SwingConstants.LEFT);
+		label.setToolTipText("Click to open the Torsional Bond Editor");
+		label.setIcon(new ImageIcon(MolecularContainer.class.getResource("resources/torsionbond.gif")));
+		((HyperlinkLabel) label).setAction(new Runnable() {
+			public void run() {
+			}
+		});
+		p.add(label);
+		tbondCountLabel = new JLabel(Integer.toString(model.getTBondCount()));
+		p.add(tbondCountLabel);
 
 		/* script */
 
