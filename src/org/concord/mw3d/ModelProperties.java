@@ -165,9 +165,10 @@ class ModelProperties extends JDialog {
 		p = new JPanel(new GridLayout(7, 2, 2, 2));
 		panel.add(p, BorderLayout.NORTH);
 
-		JLabel label = new HyperlinkLabel("<html><font color=\"#0000ff\"><u>Generic Particle Editor</u></font></html>",
-				SwingConstants.LEFT);
-		label.setToolTipText("Click to open the editor for customizing the generic particles");
+		s = MolecularContainer.getInternationalText("GenericParticleProperties");
+		JLabel label = new HyperlinkLabel("<html><font color=\"#0000ff\"><u>"
+				+ (s != null ? s : "Generic Particle Properties") + "</u></font></html>", SwingConstants.LEFT);
+		label.setToolTipText("Click to customize the properties of the generic particles");
 		label.setIcon(new ImageIcon(MolecularContainer.class.getResource("resources/GenericParticle.gif")));
 		((HyperlinkLabel) label).setAction(new Runnable() {
 			public void run() {

@@ -87,7 +87,8 @@ public class ColorComboBox extends JComboBox {
 						for (int k = 0; k < m; k++)
 							s = "0" + s;
 					}
-					String hex = JOptionPane.showInputDialog(parent, "Input a hex color number:", s);
+					String s2 = ColorMenu.getInternationalText("HexColor");
+					String hex = JOptionPane.showInputDialog(parent, s2 != null ? s2 : "Input a hex color number:", s);
 					if (hex == null)
 						return;
 					try {
