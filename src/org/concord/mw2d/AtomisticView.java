@@ -528,6 +528,9 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		editElementAction.putValue(Action.SHORT_DESCRIPTION, "Change the van der Waals parameters");
 		model.getActions().put(editElementAction.toString(), editElementAction);
 
+		EngineAction ea = new EngineAction(model);
+		getActionMap().put(ea.toString(), ea);
+
 		Action a = new ModelAction(model, new Executable() {
 			public void execute() {
 				final LightSource light = model.getLightSource();

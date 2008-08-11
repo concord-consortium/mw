@@ -459,8 +459,6 @@ public abstract class AtomicModel extends MDModel {
 			throw new IllegalArgumentException("must be AtomisticView");
 		super.setView(v);
 		view = (AtomisticView) v;
-		EngineAction a = new EngineAction(this);
-		view.getActionMap().put(a.toString(), a);
 	}
 
 	public JComponent getView() {

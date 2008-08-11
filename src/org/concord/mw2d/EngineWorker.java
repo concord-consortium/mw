@@ -18,7 +18,7 @@
  *
  * END LICENSE */
 
-package org.concord.mw2d.models;
+package org.concord.mw2d;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -40,6 +40,7 @@ import javax.swing.JRadioButton;
 
 import org.concord.modeler.event.PageComponentEvent;
 import org.concord.mw2d.MDView;
+import org.concord.mw2d.models.AtomicModel;
 
 class EngineWorker extends JDialog {
 

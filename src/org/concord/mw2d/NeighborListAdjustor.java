@@ -18,7 +18,7 @@
  *
  * END LICENSE */
 
-package org.concord.mw2d.models;
+package org.concord.mw2d;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -37,6 +37,8 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
 
 import javax.swing.JComponent;
+
+import org.concord.mw2d.models.AtomicModel;
 
 class NeighborListAdjustor extends JComponent implements MouseListener, MouseMotionListener {
 
