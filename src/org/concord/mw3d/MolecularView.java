@@ -447,7 +447,10 @@ public class MolecularView extends Draw {
 	}
 
 	int getElementArgb(String element) {
-		return genericElementColors.get(element);
+		Integer i = genericElementColors.get(element);
+		if (i == null)
+			throw new IllegalArgumentException("custom color not supported for " + element);
+		return i.intValue();
 	}
 
 	void setElementArgb(String element, int argb) {
@@ -3084,8 +3087,10 @@ public class MolecularView extends Draw {
 			return false;
 		viewer.addAtom(a, id.byteValue(), a.getSymbol(), 0, a.getCharge(), a.getRx(), a.getRy(), a.getRz(), 0, 0, 0, a);
 		int currentIndex = count - 1;
-		viewer.setAtomSize(currentIndex, model.getElementSigma(currentElementToAdd) * 1000);
-		viewer.setAtomColor(currentIndex, getElementArgb(currentElementToAdd));
+		if (Atom.isGenericParticle(currentElementToAdd)) {
+			viewer.setAtomSize(currentIndex, model.getElementSigma(currentElementToAdd) * 1000);
+			viewer.setAtomColor(currentIndex, getElementArgb(currentElementToAdd));
+		}
 		if (fullSizeUnbondedAtoms)
 			viewer.setCpkPercent(currentIndex, 100);
 		if (count <= 1) {
