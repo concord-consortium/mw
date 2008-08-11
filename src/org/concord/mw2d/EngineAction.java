@@ -18,12 +18,12 @@
  *
  * END LICENSE */
 
-package org.concord.mw2d.models;
+package org.concord.mw2d;
 
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
-import org.concord.modeler.ModelerUtilities;
+import org.concord.mw2d.models.AtomicModel;
 
 class EngineAction extends AbstractAction {
 
@@ -32,24 +32,11 @@ class EngineAction extends AbstractAction {
 
 	EngineAction(AtomicModel model) {
 		this.model = model;
-	}
-
-	public Object getValue(String key) {
-		if (key == null)
-			return null;
-		Object o = super.getValue(key);
-		if (o != null)
-			return o;
-		if (key.equals(NAME))
-			return "Cut-off Parameters";
-		if (key.equals(SHORT_DESCRIPTION))
-			return "Set cut-off parameters";
-		return null;
+		putValue(NAME, "Cut-off Parameters");
+		putValue(SHORT_DESCRIPTION, "Set cut-off parameters");
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		if (ModelerUtilities.stopFiring(e))
-			return;
 		if (engineWorker == null) {
 			engineWorker = new EngineWorker(model);
 			engineWorker.setLocationRelativeTo(model.getView());
