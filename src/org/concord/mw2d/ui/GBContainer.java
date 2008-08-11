@@ -41,8 +41,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 
 import org.concord.modeler.ModelerUtilities;
 import org.concord.modeler.ui.SimulatorMenuBar;
@@ -237,16 +237,17 @@ public class GBContainer extends MDContainer {
 			String s = getInternationalText("Option");
 			JMenu menu = new JMenu(s != null ? s : "Options");
 			menu.setMnemonic(KeyEvent.VK_O);
-			menu.getPopupMenu().addPopupMenuListener(new PopupMenuListener() {
-				public void popupMenuCanceled(PopupMenuEvent e) {
-				}
-
-				public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+			menu.addMenuListener(new MenuListener() {
+				public void menuSelected(MenuEvent e) {
 					disableRecorderItem.setEnabled(!model.hasGraphs());
-					setMenuItemWithoutNotifyingListeners(dragOnlyWhenEditingMenuItem, view.getDragObjectOnlyWhenEditing());
+					setMenuItemWithoutNotifyingListeners(dragOnlyWhenEditingMenuItem, view
+							.getDragObjectOnlyWhenEditing());
 				}
 
-				public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+				public void menuCanceled(MenuEvent e) {
+				}
+
+				public void menuDeselected(MenuEvent e) {
 				}
 			});
 			add(menu);

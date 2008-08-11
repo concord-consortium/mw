@@ -72,8 +72,8 @@ import javax.swing.JToggleButton;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 
 import org.concord.modeler.ModelerUtilities;
 import org.concord.modeler.MovieSlider;
@@ -1274,11 +1274,8 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 		if (s != null)
 			menu.setText(s);
 		menu.setMnemonic(KeyEvent.VK_E);
-		menu.getPopupMenu().addPopupMenuListener(new PopupMenuListener() {
-			public void popupMenuCanceled(PopupMenuEvent e) {
-			}
-
-			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+		menu.addMenuListener(new MenuListener() {
+			public void menuSelected(MenuEvent e) {
 				boolean b = Math.abs(getModel().getMovie().getCurrentFrameIndex() - getModel().getMovie().length()) <= 1;
 				if (!b) {
 					undoMI.setEnabled(false);
@@ -1296,7 +1293,10 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 				}
 			}
 
-			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+			public void menuCanceled(MenuEvent e) {
+			}
+
+			public void menuDeselected(MenuEvent e) {
 			}
 		});
 
@@ -1374,15 +1374,15 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 		String s = getInternationalText("ToolBar");
 		JMenu menu = new JMenu(s != null ? s : "Toolbar");
 		menu.setMnemonic(KeyEvent.VK_T);
-		menu.getPopupMenu().addPopupMenuListener(new PopupMenuListener() {
-			public void popupMenuCanceled(PopupMenuEvent e) {
-			}
-
-			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+		menu.addMenuListener(new MenuListener() {
+			public void menuSelected(MenuEvent e) {
 				removeToolBarItem.setEnabled(hasToolbar() && isAuthorable());
 			}
 
-			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+			public void menuCanceled(MenuEvent e) {
+			}
+
+			public void menuDeselected(MenuEvent e) {
 			}
 		});
 

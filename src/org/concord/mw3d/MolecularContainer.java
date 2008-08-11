@@ -74,6 +74,8 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JToggleButton;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.vecmath.Point3f;
@@ -1721,11 +1723,8 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 		});
 		menu.add(mi);
 
-		menu.getPopupMenu().addPopupMenuListener(new PopupMenuListener() {
-			public void popupMenuCanceled(PopupMenuEvent e) {
-			}
-
-			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+		menu.addMenuListener(new MenuListener() {
+			public void menuSelected(MenuEvent e) {
 				miDetach.setEnabled(view.getCameraAtom() >= 0);
 				Util.setWithoutNotifyingListeners(miGlassBox, view.getShowGlassSimulationBox());
 				Util.setWithoutNotifyingListeners(miSpin, view.isSpinOn());
@@ -1747,7 +1746,10 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 				}
 			}
 
-			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+			public void menuCanceled(MenuEvent e) {
+			}
+
+			public void menuDeselected(MenuEvent e) {
 			}
 		});
 
@@ -1762,15 +1764,15 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 
 		s = getInternationalText("Option");
 		JMenu menu = new JMenu(s != null ? s : "Options");
-		menu.getPopupMenu().addPopupMenuListener(new PopupMenuListener() {
-			public void popupMenuCanceled(PopupMenuEvent arg0) {
-			}
-
-			public void popupMenuWillBecomeInvisible(PopupMenuEvent arg0) {
-			}
-
-			public void popupMenuWillBecomeVisible(PopupMenuEvent arg0) {
+		menu.addMenuListener(new MenuListener() {
+			public void menuSelected(MenuEvent e) {
 				ModelerUtilities.setWithoutNotifyingListeners(disableRecorderItem, model.getRecorderDisabled());
+			}
+
+			public void menuCanceled(MenuEvent e) {
+			}
+
+			public void menuDeselected(MenuEvent e) {
 			}
 		});
 
@@ -1886,18 +1888,18 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 		mi.setText((s != null ? s : mi.getText()) + "...");
 		subMenu.add(mi);
 
-		menu.getPopupMenu().addPopupMenuListener(new PopupMenuListener() {
-			public void popupMenuCanceled(PopupMenuEvent e) {
-			}
-
-			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+		menu.addMenuListener(new MenuListener() {
+			public void menuSelected(MenuEvent e) {
 				Util.setWithoutNotifyingListeners(miEnergizer, view.getShowEnergizer());
 				minimizationMenu.setEnabled(!view.getModel().isRunning());
 				miMinimizeSelected.setEnabled(view.getSelectionSet().cardinality() > 0);
 				miMinimizeUnselected.setEnabled(view.getSelectionSet().cardinality() < view.getModel().getAtomCount());
 			}
 
-			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+			public void menuCanceled(MenuEvent e) {
+			}
+
+			public void menuDeselected(MenuEvent e) {
 			}
 		});
 
