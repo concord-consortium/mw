@@ -68,6 +68,7 @@ public class ModelState implements Serializable {
 	private String velocitySelection;
 	private String trajectorySelection;
 	private String unmovableSelection;
+	private String invisibleSelection;
 	private String translucentSelection;
 	private String initScript;
 
@@ -542,6 +543,14 @@ public class ModelState implements Serializable {
 
 	public String getUnmovableSelection() {
 		return unmovableSelection;
+	}
+
+	public void setInvisibleSelection(String s) {
+		invisibleSelection = s;
+	}
+
+	public String getInvisibleSelection() {
+		return invisibleSelection;
 	}
 
 	public void setTrajectorySelection(String s) {

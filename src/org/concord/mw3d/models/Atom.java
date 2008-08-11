@@ -33,6 +33,7 @@ import org.concord.modeler.util.FloatQueueTriplet;
 public class Atom {
 
 	public final static byte UNMOVABLE = 0x00;
+	public final static byte INVISIBLE = 0x01;
 	private final static Pattern GENERIC_PARTICLE = Pattern.compile("X\\d");
 
 	private byte elementNumber;

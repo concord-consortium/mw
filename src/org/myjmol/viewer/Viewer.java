@@ -1043,6 +1043,16 @@ public class Viewer extends JmolViewer {
 			atom.colixAtom = Graphics3D.getColix(argb);
 	}
 
+	/** set the specified atom's visibility */
+	public void setAtomVisibility(int index, boolean b) {
+		Frame frame = modelManager.frame;
+		if (frame == null)
+			return;
+		Atom atom = frame.getAtomAt(index);
+		if (atom != null)
+			atom.visible = b;
+	}
+
 	/**
 	 * XIE: This method is used when the data is read from a client object, instead of a file on disk. Since this
 	 * involves no job from Eval, Eval should not be used at all. This fixes the bugs with Compiler.

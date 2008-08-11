@@ -141,6 +141,8 @@ class BallsRenderer extends ShapeRenderer {
 	}
 
 	private void renderVelocity(Atom atom, Vector3f velocity) {
+		if (!atom.visible)
+			return;
 		ExtendedViewer viewer2 = (ExtendedViewer) viewer;
 		if (velocity.lengthSquared() > ZERO)
 			drawAtomVector(atom.colixAtom, atom, velocity, viewer2.getVelocityVectorScalingFactor(), 400);
@@ -215,34 +217,38 @@ class BallsRenderer extends ShapeRenderer {
 						atom.screenY + (font3d.fontSize >> 1), atom.screenZ);
 			}
 			else {
-				if (drawBall) {
-					if (atom.screenZ * 2 < atom.screenDiameter) {
-						short colix = Graphics3D.getTranslucentColix(atom.colixAtom);
-						g3d.fillSphereCentered(colix, atom.screenDiameter, atom.screenX, atom.screenY, atom.screenZ);
-					}
-					else {
-						if (viewer2.hidenBitSet == null || !viewer2.hidenBitSet.get(atom.atomIndex)) {
-							if (viewer2.translucentBitSet == null) {
-								g3d.fillSphereCentered(atom.colixAtom, atom.screenDiameter, atom.screenX, atom.screenY,
-										atom.screenZ);
-							}
-							else {
-								if (viewer2.translucentBitSet.get(atom.atomIndex)) {
-									short colix = Graphics3D.getTranslucentColix(atom.colixAtom);
-									g3d.fillSphereCentered(colix, atom.screenDiameter, atom.screenX, atom.screenY,
+				if (atom.visible) {
+					if (drawBall) {
+						if (atom.screenZ * 2 < atom.screenDiameter) {
+							short colix = Graphics3D.getTranslucentColix(atom.colixAtom);
+							g3d
+									.fillSphereCentered(colix, atom.screenDiameter, atom.screenX, atom.screenY,
 											atom.screenZ);
-								}
-								else {
+						}
+						else {
+							if (viewer2.hidenBitSet == null || !viewer2.hidenBitSet.get(atom.atomIndex)) {
+								if (viewer2.translucentBitSet == null) {
 									g3d.fillSphereCentered(atom.colixAtom, atom.screenDiameter, atom.screenX,
 											atom.screenY, atom.screenZ);
+								}
+								else {
+									if (viewer2.translucentBitSet.get(atom.atomIndex)) {
+										short colix = Graphics3D.getTranslucentColix(atom.colixAtom);
+										g3d.fillSphereCentered(colix, atom.screenDiameter, atom.screenX, atom.screenY,
+												atom.screenZ);
+									}
+									else {
+										g3d.fillSphereCentered(atom.colixAtom, atom.screenDiameter, atom.screenX,
+												atom.screenY, atom.screenZ);
+									}
 								}
 							}
 						}
 					}
-				}
-				else {
-					short colix = Graphics3D.getTranslucentColix(atom.colixAtom);
-					g3d.fillSphereCentered(colix, atom.screenDiameter, atom.screenX, atom.screenY, atom.screenZ);
+					else {
+						short colix = Graphics3D.getTranslucentColix(atom.colixAtom);
+						g3d.fillSphereCentered(colix, atom.screenDiameter, atom.screenX, atom.screenY, atom.screenZ);
+					}
 				}
 			}
 		}

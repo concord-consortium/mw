@@ -778,6 +778,10 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 		if (s != null && !s.equals("")) {
 			state.setUnmovableSelection(s);
 		}
+		s = model.getAtomPropertySelection(Atom.INVISIBLE);
+		if (s != null && !s.equals("")) {
+			state.setInvisibleSelection(s);
+		}
 
 		out.writeObject(state);
 
@@ -946,6 +950,18 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 			if (n > 0) {
 				for (int i = 0; i < n; i++) {
 					model.getAtom(Integer.parseInt(t[i])).setMovable(false);
+				}
+			}
+		}
+		s = state.getInvisibleSelection();
+		if (s != null) {
+			String[] t = s.split(REGEX_SEPARATOR);
+			int n = t.length;
+			if (n > 0) {
+				for (int i = 0; i < n; i++) {
+					Atom a = model.getAtom(Integer.parseInt(t[i]));
+					a.setVisible(false);
+					view.setVisible(a, false);
 				}
 			}
 		}

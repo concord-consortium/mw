@@ -305,6 +305,8 @@ abstract public class JmolViewer extends JmolSimpleViewer {
 
 	abstract public void setAtomColor(int index, int argb);
 
+	abstract public void setAtomVisibility(int index, boolean b);
+
 	/** XIE */
 	abstract public Point3i getAtomScreen(int atomIndex);
 

@@ -475,6 +475,10 @@ public class MolecularView extends Draw {
 		repaint();
 	}
 
+	public void setVisible(Atom a, boolean b) {
+		viewer.setAtomVisibility(a.getIndex(), b);
+	}
+
 	void createPopupMenusRelatedToContainer(MolecularContainer c) {
 		if (defaultPopupMenu == null)
 			defaultPopupMenu = new DefaultPopupMenu(c);

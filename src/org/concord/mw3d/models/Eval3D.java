@@ -941,8 +941,10 @@ class Eval3D extends AbstractEval {
 					int n = model.getAtomCount();
 					for (int i = 0; i < n; i++) {
 						Atom a = model.getAtom(i);
-						if (a.isSelected())
+						if (a.isSelected()) {
 							a.setVisible(b);
+							view.setVisible(a, b);
+						}
 					}
 					model.notifyChange();
 					return true;
