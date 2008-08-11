@@ -23,6 +23,7 @@ package org.concord.mw2d.models;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
+import javax.swing.JMenuItem;
 
 import org.concord.modeler.ModelerUtilities;
 import org.concord.modeler.event.PageComponentEvent;
@@ -43,7 +44,7 @@ class SnapshotAction extends AbstractAction {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		if (ModelerUtilities.stopFiring(e))
+		if (!(e.getSource() instanceof JMenuItem) && ModelerUtilities.stopFiring(e))
 			return;
 		model.notifyPageComponentListeners(new PageComponentEvent(model.getView(),
 				withDescription ? PageComponentEvent.SNAPSHOT_TAKEN : PageComponentEvent.SNAPSHOT_TAKEN2));

@@ -37,6 +37,7 @@ import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JSlider;
 import javax.swing.JSpinner;
@@ -146,7 +147,7 @@ public class PageMd3d extends MolecularContainer implements BasicModel, Embeddab
 
 		snapshotAction = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
-				if (ModelerUtilities.stopFiring(e))
+				if (!(e.getSource() instanceof JMenuItem) && ModelerUtilities.stopFiring(e))
 					return;
 				SnapshotGallery.sharedInstance().takeSnapshot(page.getAddress(), getMolecularView());
 			}
@@ -162,7 +163,7 @@ public class PageMd3d extends MolecularContainer implements BasicModel, Embeddab
 
 		snapshotAction2 = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
-				if (ModelerUtilities.stopFiring(e))
+				if (!(e.getSource() instanceof JMenuItem) && ModelerUtilities.stopFiring(e))
 					return;
 				SnapshotGallery.sharedInstance().takeSnapshot(page.getAddress(), getMolecularView(), false);
 			}
