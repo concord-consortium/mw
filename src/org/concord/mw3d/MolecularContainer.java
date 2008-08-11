@@ -1221,8 +1221,6 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 
 		a = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
-				if (ModelerUtilities.stopFiring(e))
-					return;
 				view.showViewProperties();
 			}
 		};
@@ -1238,8 +1236,6 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 
 		a = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
-				if (ModelerUtilities.stopFiring(e))
-					return;
 				ModelProperties modelProperties = new ModelProperties(JOptionPane
 						.getFrameForComponent(MolecularContainer.this), model);
 				modelProperties.setLocationRelativeTo(MolecularContainer.this);

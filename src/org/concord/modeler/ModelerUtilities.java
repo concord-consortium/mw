@@ -1190,6 +1190,28 @@ public final class ModelerUtilities {
 		}
 	}
 
+	public static void selectWithoutNotifyingListeners(AbstractButton ab, boolean selected) {
+		ItemListener[] il = ab.getItemListeners();
+		if (il != null) {
+			for (ItemListener i : il)
+				ab.removeItemListener(i);
+		}
+		ActionListener[] al = ab.getActionListeners();
+		if (al != null) {
+			for (ActionListener i : al)
+				ab.removeActionListener(i);
+		}
+		ab.setSelected(selected);
+		if (il != null) {
+			for (ItemListener i : il)
+				ab.addItemListener(i);
+		}
+		if (al != null) {
+			for (ActionListener i : al)
+				ab.addActionListener(i);
+		}
+	}
+
 	public static void adjustWithoutNotifyingListeners(JSlider slider, int value) {
 		ChangeListener[] cl = slider.getChangeListeners();
 		if (cl != null) {

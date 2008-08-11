@@ -56,7 +56,7 @@ import org.concord.mw2d.models.MesoModel;
 import org.concord.mw2d.models.RectangularBoundary;
 import org.concord.mw2d.ui.MDContainer;
 
-public class MesoModelProperties extends ModelProperties {
+class MesoModelProperties extends ModelProperties {
 
 	private MesoModel model;
 	private JTextArea scriptArea;
