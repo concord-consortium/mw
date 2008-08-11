@@ -59,8 +59,8 @@ import javax.swing.JProgressBar;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 
 import org.concord.modeler.ModelerUtilities;
 import org.concord.modeler.process.AbstractLoadable;
@@ -1184,16 +1184,16 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			s = getInternationalText("Compute");
 			menu = new JMenu(s != null ? s : "Compute");
 			menu.setMnemonic(KeyEvent.VK_C);
-			menu.getPopupMenu().addPopupMenuListener(new PopupMenuListener() {
-				public void popupMenuCanceled(PopupMenuEvent e) {
-				}
-
-				public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+			menu.addMenuListener(new MenuListener() {
+				public void menuSelected(MenuEvent e) {
 					setMenuItemWithoutNotifyingListeners(computeMSDMenuItem, model.isComputed(MDModel.COMPUTE_MSD));
 					setMenuItemWithoutNotifyingListeners(computePhotonMenuItem, model.isPhotonEnabled());
 				}
 
-				public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+				public void menuCanceled(MenuEvent e) {
+				}
+
+				public void menuDeselected(MenuEvent e) {
 				}
 			});
 			add(menu);
@@ -1435,15 +1435,15 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			s = getInternationalText("ForceFieldVisualization");
 			subMenu = new JMenu(s != null ? s : "Force Field Visualization");
 			subMenu.setMnemonic(KeyEvent.VK_F);
-			subMenu.getPopupMenu().addPopupMenuListener(new PopupMenuListener() {
-				public void popupMenuCanceled(PopupMenuEvent e) {
-				}
-
-				public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+			subMenu.addMenuListener(new MenuListener() {
+				public void menuSelected(MenuEvent e) {
 					setMenuItemWithoutNotifyingListeners(eFieldLineMenuItem, view.eFieldLinesShown());
 				}
 
-				public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+				public void menuCanceled(MenuEvent e) {
+				}
+
+				public void menuDeselected(MenuEvent e) {
 				}
 			});
 			menu.add(subMenu);
@@ -1552,11 +1552,8 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			s = getInternationalText("Option");
 			menu = new JMenu(s != null ? s : "Options");
 			menu.setMnemonic(KeyEvent.VK_O);
-			menu.getPopupMenu().addPopupMenuListener(new PopupMenuListener() {
-				public void popupMenuCanceled(PopupMenuEvent e) {
-				}
-
-				public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+			menu.addMenuListener(new MenuListener() {
+				public void menuSelected(MenuEvent e) {
 					setMenuItemWithoutNotifyingListeners(enableFlowMenuItem, model.isAtomFlowEnabled());
 					setMenuItemWithoutNotifyingListeners(dragOnlyWhenEditingMenuItem, view
 							.getDragObjectOnlyWhenEditing());
@@ -1566,7 +1563,10 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 							&& !model.isAtomFlowEnabled());
 				}
 
-				public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+				public void menuCanceled(MenuEvent e) {
+				}
+
+				public void menuDeselected(MenuEvent e) {
 				}
 			});
 			add(menu);

@@ -43,8 +43,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JRadioButtonMenuItem;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 
 import org.concord.modeler.ModelerUtilities;
 import org.concord.modeler.ui.SimulatorMenuBar;
@@ -264,11 +264,8 @@ public class ChemContainer extends MDContainer {
 			String s = getInternationalText("Reaction");
 			JMenu menu = new JMenu(s != null ? s : "Reaction");
 			menu.setMnemonic(KeyEvent.VK_R);
-			menu.getPopupMenu().addPopupMenuListener(new PopupMenuListener() {
-				public void popupMenuCanceled(PopupMenuEvent e) {
-				}
-
-				public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+			menu.addMenuListener(new MenuListener() {
+				public void menuSelected(MenuEvent e) {
 					if (model.getType() instanceof Reaction.A2_B2__2AB) {
 						directionMenu.setEnabled(true);
 					}
@@ -283,7 +280,10 @@ public class ChemContainer extends MDContainer {
 					}
 				}
 
-				public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+				public void menuCanceled(MenuEvent e) {
+				}
+
+				public void menuDeselected(MenuEvent e) {
 				}
 			});
 			add(menu);
@@ -299,11 +299,8 @@ public class ChemContainer extends MDContainer {
 
 			JMenu subMenu = new JMenu("Choose a Reaction");
 			subMenu.setMnemonic(KeyEvent.VK_C);
-			subMenu.getPopupMenu().addPopupMenuListener(new PopupMenuListener() {
-				public void popupMenuCanceled(PopupMenuEvent e) {
-				}
-
-				public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+			subMenu.addMenuListener(new MenuListener() {
+				public void menuSelected(MenuEvent e) {
 					if (model.getType() instanceof Reaction.A2_B2__2AB)
 						rmi1.setSelected(true);
 					else if (model.getType() instanceof Reaction.A2_B2_C__2AB_C)
@@ -314,7 +311,10 @@ public class ChemContainer extends MDContainer {
 						rmi4.setSelected(true);
 				}
 
-				public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+				public void menuCanceled(MenuEvent e) {
+				}
+
+				public void menuDeselected(MenuEvent e) {
 				}
 			});
 			menu.add(subMenu);
@@ -392,16 +392,17 @@ public class ChemContainer extends MDContainer {
 			s = getInternationalText("Option");
 			menu = new JMenu(s != null ? s : "Options");
 			menu.setMnemonic(KeyEvent.VK_O);
-			menu.getPopupMenu().addPopupMenuListener(new PopupMenuListener() {
-				public void popupMenuCanceled(PopupMenuEvent e) {
-				}
-
-				public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+			menu.addMenuListener(new MenuListener() {
+				public void menuSelected(MenuEvent e) {
 					disableRecorderItem.setEnabled(!model.hasGraphs());
-					setMenuItemWithoutNotifyingListeners(dragOnlyWhenEditingMenuItem, view.getDragObjectOnlyWhenEditing());
+					setMenuItemWithoutNotifyingListeners(dragOnlyWhenEditingMenuItem, view
+							.getDragObjectOnlyWhenEditing());
 				}
 
-				public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+				public void menuCanceled(MenuEvent e) {
+				}
+
+				public void menuDeselected(MenuEvent e) {
 				}
 			});
 			add(menu);
