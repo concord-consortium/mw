@@ -601,6 +601,19 @@ class Eval3D extends AbstractEval {
 			out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0) + " atoms are selected.");
 			return true;
 		}
+		matcher = ELEMENT.matcher(clause); // select by element
+		if (matcher.find()) {
+			String str = clause.substring(matcher.end()).trim();
+			BitSet selection = null;
+			if (LOGICAL_OPERATOR.matcher(str).find()) {// logical expressions
+				selection = parseLogicalExpression(str, BY_ELEMENT);
+			}
+			else {
+				selection = selectElements(str);
+			}
+			out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0) + " atoms are selected.");
+			return true;
+		}
 		out(ScriptEvent.FAILED, "Unrecognized keyword in: " + clause);
 		return false;
 	}
@@ -1549,131 +1562,26 @@ class Eval3D extends AbstractEval {
 		if (bs != null)
 			return bs;
 
-		boolean found = false;
 		int noa = model.getAtomCount();
 		bs = new BitSet(noa);
 
-		Matcher matcher = RANGE.matcher(str);
-		if (matcher.find()) {
-			found = true;
-			String[] s = str.split("-");
-			int start = Integer.valueOf(s[0].trim()).intValue();
-			int end = Integer.valueOf(s[1].trim()).intValue();
-			for (int k = 0; k < noa; k++) {
-				int id = model.atom[k].getElementNumber();
-				if (id >= start && id <= end)
-					bs.set(k);
-			}
-		}
+		String[] s = str.split(",");
+		for (int i = 0; i < s.length; i++)
+			s[i] = s[i].trim();
 
-		if (!found) {
-			matcher = INTEGER_GROUP.matcher(str);
-			if (matcher.find()) {
-				found = true;
-				String[] s = str.split(REGEX_SEPARATOR + "+");
-				int index;
-				for (int m = 0; m < s.length; m++) {
-					index = Integer.valueOf(s[m]).intValue();
-					for (int k = 0; k < noa; k++) {
-						if (model.atom[k].getElementNumber() == index)
-							bs.set(k);
-					}
+		for (int i = 0; i < noa; i++) {
+			Atom a = model.getAtom(i);
+			for (String x : s) {
+				if (a.getSymbol().equalsIgnoreCase(x)) {
+					bs.set(i);
+					break;
 				}
 			}
 		}
 
-		if (!found) {
-			matcher = INDEX.matcher(str);
-			if (matcher.find() && str.indexOf("within") == -1) {
-				int index = 0;
-				found = true;
-				try {
-					index = Integer.valueOf(str.trim()).intValue();
-				}
-				catch (NumberFormatException nfe) {
-					nfe.printStackTrace();
-					out(ScriptEvent.FAILED, "Element index cannot be parsed as an integer: " + str);
-					found = false;
-				}
-				if (found) {
-					for (int k = 0; k < noa; k++) {
-						if (model.atom[k].getElementNumber() == index)
-							bs.set(k);
-					}
-				}
-			}
-		}
+		model.setSelectionSet(bs);
 
-		if (!found) {
-			matcher = WITHIN_RADIUS.matcher(str);
-			if (matcher.find()) {
-				found = true;
-				String s = str.substring(matcher.end()).trim();
-				s = s.substring(0, s.indexOf(")"));
-				if (RANGE.matcher(s).find()) {
-					int lp = str.indexOf("(");
-					int rp = str.indexOf(")");
-					s = str.substring(lp + 1, rp).trim();
-					float r = Float.valueOf(s.substring(0, s.indexOf(",")).trim()).floatValue();
-					r *= r * 100;
-					s = s.substring(s.indexOf(",") + 1);
-					int i0 = Integer.valueOf(s.substring(0, s.indexOf("-")).trim()).intValue();
-					int i1 = Integer.valueOf(s.substring(s.indexOf("-") + 1).trim()).intValue();
-					if (i1 >= i0) {
-						Atom at;
-						for (int k = 0; k < noa; k++) {
-							at = model.atom[k];
-							if (at.getElementNumber() >= i0 && at.getElementNumber() <= i1) {
-								bs.set(k);
-								for (int m = 0; m < noa; m++) {
-									if (m == k || bs.get(m))
-										continue;
-									if (model.atom[m].distanceSquare(at) < r)
-										bs.set(m);
-								}
-							}
-						}
-					}
-				}
-				else {
-					int lp = str.indexOf("(");
-					int rp = str.indexOf(")");
-					s = str.substring(lp + 1, rp).trim();
-					float r = Float.valueOf(s.substring(0, s.indexOf(",")).trim()).floatValue();
-					r *= r * 100;
-					int center = 0;
-					try {
-						center = Integer.valueOf(s.substring(s.indexOf(",") + 1).trim()).intValue();
-					}
-					catch (NumberFormatException nfe) {
-						out(ScriptEvent.FAILED, str + " is not an integer number.");
-						return null;
-					}
-					Atom at;
-					for (int m = 0; m < noa; m++) {
-						at = model.atom[m];
-						if (at.getElementNumber() == center) {
-							bs.set(m);
-							for (int k = 0; k < noa; k++) {
-								if (k == m || bs.get(k))
-									continue;
-								if (model.atom[k].distanceSquare(at) < r)
-									bs.set(k);
-							}
-						}
-					}
-				}
-			}
-		}
-
-		if (found) {
-			model.setSelectionSet(bs);
-		}
-		else {
-			out(ScriptEvent.FAILED, "Unrecognized expression: " + str);
-		}
-
-		return found ? bs : null;
+		return bs;
 
 	}
 
