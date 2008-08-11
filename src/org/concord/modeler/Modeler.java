@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2006  The Concord Consortium, Inc.,
+ *   Copyright (C) 2008  The Concord Consortium, Inc.,
  *   25 Love Lane, Concord, MA 01742
  *
  *   This program is free software; you can redistribute it and/or modify
@@ -84,7 +84,8 @@ import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
-import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.text.DefaultEditorKit;
 
@@ -165,7 +166,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 	private static UIManager.LookAndFeelInfo[] lf;
 	private StatusBar statusBar;
 	private JMenu preinstallMenu;
-	private JMenu bookmarkMenu;
+	private JMenu bookmarkMenu, windowMenu;
 	private ColorMenu colorMenu;
 	private JMenuBar menuBar;
 	private JToolBar toolBar;
@@ -510,8 +511,13 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 			return;
 		PopupMenuListener[] pml = menu.getPopupMenu().getPopupMenuListeners();
 		if (pml != null) {
-			for (PopupMenuListener listener : pml)
-				menu.getPopupMenu().removePopupMenuListener(listener);
+			for (PopupMenuListener x : pml)
+				menu.getPopupMenu().removePopupMenuListener(x);
+		}
+		MenuListener[] ml = menu.getMenuListeners();
+		if (ml != null) {
+			for (MenuListener x : ml)
+				menu.removeMenuListener(x);
 		}
 		Component c;
 		for (int i = 0, n = menu.getComponentCount(); i < n; i++) {
@@ -524,13 +530,13 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 				menuItem.setAction(null);
 				ActionListener[] al = menuItem.getActionListeners();
 				if (al != null) {
-					for (ActionListener listener : al)
-						menuItem.removeActionListener(listener);
+					for (ActionListener x : al)
+						menuItem.removeActionListener(x);
 				}
 				ItemListener[] il = menuItem.getItemListeners();
 				if (il != null) {
-					for (ItemListener listener : il)
-						menuItem.removeItemListener(listener);
+					for (ItemListener x : il)
+						menuItem.removeItemListener(x);
 				}
 			}
 		}
@@ -953,27 +959,25 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 
 		s = getInternationalText("File");
 		JMenu menu = new JMenu(s != null ? s : "File");
-		menu.getPopupMenu().addPopupMenuListener(new PopupMenuListener() {
-			public void popupMenuCanceled(PopupMenuEvent e) {
+		menu.addMenuListener(new MenuListener() {
+			public void menuCanceled(MenuEvent e) {
 			}
 
-			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-				if (!IS_MAC) {
-					boolean isRemote = page.isRemote();
-					jnlpMI.setEnabled(isRemote);
-					jnlpUrlMI.setEnabled(isRemote);
-					compressPageMI.setEnabled(!isRemote);
-					compressFolderMI.setEnabled(!isRemote);
-				}
+			public void menuDeselected(MenuEvent e) {
+			}
+
+			public void menuSelected(MenuEvent e) {
+				boolean isRemote = page.isRemote();
+				jnlpMI.setEnabled(isRemote);
+				jnlpUrlMI.setEnabled(isRemote);
+				compressPageMI.setEnabled(!isRemote);
+				compressFolderMI.setEnabled(!isRemote);
 				if (page.getAddress().equals("Untitled.cml")) {
 					reportMI.setEnabled(false);
 				}
 				else {
 					reportMI.setEnabled(!page.isEditable());
 				}
-			}
-
-			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
 			}
 		});
 		menu.setMnemonic(KeyEvent.VK_F);
@@ -1044,8 +1048,6 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 				page.writePageToZipFile();
 			}
 		});
-		if (IS_MAC)
-			navigator.addEnabledComponentWhenLocal(compressPageMI);
 		menu.add(compressPageMI);
 
 		compressFolderMI.setToolTipText("Compress all the files of the current activity folder in a ZIP file");
@@ -1074,8 +1076,6 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 			}
 		});
 		menu.add(compressFolderMI);
-		if (IS_MAC)
-			navigator.addEnabledComponentWhenLocal(compressFolderMI);
 		menu.addSeparator();
 
 		jnlpUrlMI.addActionListener(new ActionListener() {
@@ -1095,10 +1095,6 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 			}
 		});
 		menu.add(jnlpMI);
-		if (IS_MAC) {
-			navigator.addEnabledComponentWhenRemote(jnlpMI);
-			navigator.addEnabledComponentWhenRemote(jnlpUrlMI);
-		}
 
 		s = getInternationalText("CreateReport");
 		if (s != null)
@@ -1199,14 +1195,14 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		s = getInternationalText("Edit");
 		menu = new JMenu(s != null ? s : "Edit");
 		menu.setMnemonic(KeyEvent.VK_E);
-		menu.getPopupMenu().addPopupMenuListener(new PopupMenuListener() {
-			public void popupMenuCanceled(PopupMenuEvent e) {
+		menu.addMenuListener(new MenuListener() {
+			public void menuCanceled(MenuEvent e) {
 			}
 
-			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+			public void menuDeselected(MenuEvent e) {
 			}
 
-			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+			public void menuSelected(MenuEvent e) {
 				boolean b = page.getSelectedText() != null;
 				copyMI.setEnabled(b);
 				if (!page.isEditable())
@@ -1298,14 +1294,8 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		s = getInternationalText("CharacterEncoding");
 		JMenu subMenu = new JMenu(s != null ? s : "Character Encoding");
 		subMenu.setMnemonic(KeyEvent.VK_E);
-		subMenu.getPopupMenu().addPopupMenuListener(new PopupMenuListener() {
-			public void popupMenuCanceled(PopupMenuEvent e) {
-			}
-
-			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-			}
-
-			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+		subMenu.addMenuListener(new MenuListener() {
+			public void menuSelected(MenuEvent e) {
 				JMenuItem mi;
 				Enumeration en = encodingGroup.getElements();
 				while (en.hasMoreElements()) {
@@ -1317,6 +1307,12 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 						break;
 					}
 				}
+			}
+
+			public void menuCanceled(MenuEvent e) {
+			}
+
+			public void menuDeselected(MenuEvent e) {
 			}
 		});
 		menu.add(subMenu);
@@ -1441,17 +1437,17 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		s = getInternationalText("Insert");
 		menu = new JMenu(s != null ? s : "Insert");
 		menu.setMnemonic(KeyEvent.VK_I);
-		menu.getPopupMenu().addPopupMenuListener(new PopupMenuListener() {
-			public void popupMenuCanceled(PopupMenuEvent e) {
-			}
-
-			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-			}
-
-			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+		menu.addMenuListener(new MenuListener() {
+			public void menuSelected(MenuEvent e) {
 				if (!editor.isEditable())
 					return;
 				insertSymbolMenuItem.setEnabled(page.getCharacterEncoding().equals("UTF-8"));
+			}
+
+			public void menuCanceled(MenuEvent e) {
+			}
+
+			public void menuDeselected(MenuEvent e) {
 			}
 		});
 		menuBar.add(menu);
@@ -2046,15 +2042,15 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		s = getInternationalText("Background");
 		colorMenu = new ColorMenu(editor, s != null ? s : "Background", ModelerUtilities.colorChooser,
 				ModelerUtilities.fillEffectChooser);
-		colorMenu.getPopupMenu().addPopupMenuListener(new PopupMenuListener() {
-			public void popupMenuCanceled(PopupMenuEvent e) {
-			}
-
-			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-			}
-
-			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+		colorMenu.addMenuListener(new MenuListener() {
+			public void menuSelected(MenuEvent e) {
 				colorMenu.setColor(page.getBackground());
+			}
+
+			public void menuCanceled(MenuEvent e) {
+			}
+
+			public void menuDeselected(MenuEvent e) {
 			}
 		});
 		colorMenu.addNoFillListener(new ActionListener() {
@@ -2193,21 +2189,19 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		s = getInternationalText("Webspace");
 		menu = new JMenu(s != null ? s : "Webspace");
 		menu.setMnemonic(KeyEvent.VK_C);
-		menu.getPopupMenu().addPopupMenuListener(new PopupMenuListener() {
-			public void popupMenuCanceled(PopupMenuEvent e) {
-			}
-
-			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-			}
-
-			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-				if (IS_MAC)
-					return;
+		menu.addMenuListener(new MenuListener() {
+			public void menuSelected(MenuEvent e) {
 				boolean isRemote = page.isRemote();
 				uploadMI.setEnabled(!isRemote);
 				uploadCurrentFolderMI.setEnabled(!isRemote);
 				commentMI.setEnabled(isRemote);
 				viewCommentMI.setEnabled(isRemote);
+			}
+
+			public void menuCanceled(MenuEvent e) {
+			}
+
+			public void menuDeselected(MenuEvent e) {
 			}
 		});
 		menuBar.add(menu);
@@ -2216,14 +2210,10 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		uploadMI.setMnemonic(KeyEvent.VK_P);
 		uploadMI.addActionListener(serverGate.uploadAction);
 		menu.add(uploadMI);
-		if (IS_MAC)
-			navigator.addEnabledComponentWhenLocal(uploadMI);
 
 		uploadCurrentFolderMI.setMnemonic(KeyEvent.VK_F);
 		uploadCurrentFolderMI.addActionListener(serverGate.uploadCurrentFolderAction);
 		menu.add(uploadCurrentFolderMI);
-		if (IS_MAC)
-			navigator.addEnabledComponentWhenLocal(uploadCurrentFolderMI);
 		menu.addSeparator();
 
 		s = getInternationalText("MyMwSpace");
@@ -2268,15 +2258,61 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		s = getInternationalText("MakeComments");
 		commentMI.setText((s != null ? s : "Make Comments") + "...");
 		menu.add(commentMI);
-		if (IS_MAC)
-			navigator.addEnabledComponentWhenRemote(commentMI);
 
 		viewCommentMI.setAction(serverGate.viewCommentAction);
 		s = getInternationalText("ViewComments");
 		viewCommentMI.setText((s != null ? s : "View Discussion about Current Page") + "...");
 		menu.add(viewCommentMI);
-		if (IS_MAC)
-			navigator.addEnabledComponentWhenRemote(viewCommentMI);
+
+		// create the Window Menu
+
+		s = getInternationalText("Window");
+		windowMenu = new JMenu(s != null ? s : "Window");
+		windowMenu.setMnemonic(KeyEvent.VK_W);
+		windowMenu.addMenuListener(new MenuListener() {
+			public void menuCanceled(MenuEvent e) {
+			}
+
+			public void menuDeselected(MenuEvent e) {
+			}
+
+			public void menuSelected(MenuEvent e) {
+				updateWindowMenu();
+			}
+		});
+		menuBar.add(windowMenu);
+		editor.addDisabledComponentWhileLoading(windowMenu);
+
+		s = getInternationalText("Minimize");
+		menuItem = new JMenuItem(s != null ? s : "Minimize");
+		menuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Modeler.this.setState(ICONIFIED);
+			}
+		});
+		windowMenu.add(menuItem);
+
+		s = getInternationalText("Maximize");
+		menuItem = new JMenuItem(s != null ? s : "Maximize");
+		menuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Modeler.this.setExtendedState(MAXIMIZED_BOTH);
+			}
+		});
+		windowMenu.add(menuItem);
+
+		s = getInternationalText("BringAllToFront");
+		menuItem = new JMenuItem(s != null ? s : "Bring All to Front");
+		menuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				for (Modeler x : windowList) {
+					x.setState(NORMAL);
+					x.toFront();
+				}
+			}
+		});
+		windowMenu.add(menuItem);
+		windowMenu.addSeparator();
 
 		// create the Help Menu
 
@@ -2469,6 +2505,34 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 
 		updateBookmarks();
 
+	}
+
+	private void updateWindowMenu() {
+		int n = windowMenu.getItemCount();
+		Component c = null;
+		ArrayList<JCheckBoxMenuItem> old = new ArrayList<JCheckBoxMenuItem>();
+		for (int i = 0; i < n; i++) {
+			c = windowMenu.getItem(i);
+			if (c instanceof JCheckBoxMenuItem) {
+				old.add((JCheckBoxMenuItem) c);
+			}
+		}
+		for (JCheckBoxMenuItem x : old)
+			windowMenu.remove(x);
+		for (final Modeler x : windowList) {
+			JCheckBoxMenuItem mi = new JCheckBoxMenuItem(x.editor.getPage().getTitle());
+			if (x == Modeler.this)
+				mi.setSelected(true);
+			mi.addItemListener(new ItemListener() {
+				public void itemStateChanged(ItemEvent e) {
+					if (e.getStateChange() == ItemEvent.SELECTED) {
+						x.toFront();
+						x.getEditor().getPage().requestFocusInWindow();
+					}
+				}
+			});
+			windowMenu.add(mi);
+		}
 	}
 
 	void updateBookmarks() {

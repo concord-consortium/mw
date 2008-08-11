@@ -60,7 +60,6 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
 import org.concord.modeler.ui.TextComponentPopupMenu;
-import org.concord.modeler.util.FileUtilities;
 
 /**
  * This class supports general navigation functionality.
@@ -352,31 +351,6 @@ public class Navigator {
 		return navigable;
 	}
 
-	void addEnabledComponentWhenRemote(Component c) {
-		if (Modeler.isMac())
-			enabledComponentsWhenRemote.add(c);
-	}
-
-	void addEnabledComponentWhenLocal(Component c) {
-		if (Modeler.isMac())
-			enabledComponentsWhenLocal.add(c);
-	}
-
-	private void enableComponents(boolean b) {
-		if (Modeler.isMac()) {
-			if (!enabledComponentsWhenRemote.isEmpty()) {
-				for (Component c : enabledComponentsWhenRemote) {
-					c.setEnabled(b);
-				}
-			}
-			if (!enabledComponentsWhenLocal.isEmpty()) {
-				for (Component c : enabledComponentsWhenLocal) {
-					c.setEnabled(!b);
-				}
-			}
-		}
-	}
-
 	public JComboBox getComboBox() {
 		return comboBox;
 	}
@@ -400,7 +374,6 @@ public class Navigator {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				pushLocation(uri);
-				enableComponents(FileUtilities.isRemote(uri));
 			}
 		});
 	}
@@ -415,7 +388,6 @@ public class Navigator {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				pushLocation(uri);
-				enableComponents(FileUtilities.isRemote(uri));
 			}
 		});
 	}
