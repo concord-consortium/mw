@@ -197,7 +197,6 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	Map<String, Action> switchMap;
 	Map<String, Action> choiceMap;
 	Map<String, Action> multiSwitchMap;
-	TimeSeriesRepository timeSeriesRepository;
 	ImageStreamGenerator imageStreamGenerator;
 	StateHolder stateHolder;
 
@@ -519,11 +518,6 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		if (job != null) {
 			job.clear();
 			job = null;
-		}
-
-		if (timeSeriesRepository != null) {
-			timeSeriesRepository.clear();
-			timeSeriesRepository.dispose();
 		}
 
 		if (obstacles != null && !obstacles.isEmpty()) {
@@ -1920,20 +1914,6 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		return tot;
 	}
 
-	public void showTimeSeries() {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				if (timeSeriesRepository == null)
-					timeSeriesRepository = new TimeSeriesRepository(JOptionPane.getFrameForComponent(getView()));
-				timeSeriesRepository.clear();
-				timeSeriesRepository.addQueueGroup(movieQueueGroup);
-				timeSeriesRepository.pack();
-				timeSeriesRepository.setLocationRelativeTo(getView());
-				timeSeriesRepository.setVisible(true);
-			}
-		});
-	}
-
 	public void clearTimeSeries() {
 		movieQueueGroup.clear();
 		if (movieQueueGroup.getTable() != null)
@@ -1943,9 +1923,6 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		movieQueueGroup.add(tote);
 		for (FloatQueue q : channelTs)
 			movieQueueGroup.add(q);
-		if (timeSeriesRepository == null)
-			return;
-		timeSeriesRepository.clear();
 	}
 
 	/** this method can be used to empty a model. */

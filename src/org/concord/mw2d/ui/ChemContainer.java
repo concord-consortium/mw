@@ -234,10 +234,9 @@ public class ChemContainer extends MDContainer {
 
 	private class MB extends SimulatorMenuBar {
 
-		JMenuItem movieTSItem, energyTSItem, disableRecorderItem, removeToolBarItem, dragOnlyWhenEditingMenuItem;
+		JMenuItem energyTSItem, disableRecorderItem, removeToolBarItem, dragOnlyWhenEditingMenuItem;
 
 		private void enableMovieMenuItems(boolean b) {
-			movieTSItem.setEnabled(b);
 			energyTSItem.setEnabled(b);
 		}
 
@@ -486,16 +485,6 @@ public class ChemContainer extends MDContainer {
 				}
 			});
 			menu.add(menuItem);
-
-			s = getInternationalText("TimeSeries");
-			movieTSItem = new JMenuItem((s != null ? s : "Access Time Series") + "...");
-			movieTSItem.setMnemonic(KeyEvent.VK_T);
-			movieTSItem.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					model.showTimeSeries();
-				}
-			});
-			menu.add(movieTSItem);
 			menu.addSeparator();
 
 			s = getInternationalText("ToolBox");
