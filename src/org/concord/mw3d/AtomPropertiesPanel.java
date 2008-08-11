@@ -114,7 +114,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		vzField = new FloatNumberTextField(velo, -10000, 10000, 10);
 		vzField.setEditable(atom.isMovable());
 
-		chargeField = new FloatNumberTextField(atom.getCharge(), -5, 5, 10);
+		chargeField = new FloatNumberTextField(atom.getCharge(), -50, 50, 10);
 		dampField = new FloatNumberTextField(atom.getDamp(), 0, 10, 10);
 
 		String s = MolecularContainer.getInternationalText("Movable");
