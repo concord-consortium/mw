@@ -1128,7 +1128,6 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 
 		JRadioButtonMenuItem rbMenuItem0;
 		JMenu gridMenu;
-		JMenuItem movieTSItem;
 		JMenuItem energyTSItem;
 		JMenuItem disableRecorderItem;
 		JMenuItem removeToolBarItem;
@@ -1140,7 +1139,6 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 		JMenuItem dragOnlyWhenEditingMenuItem;
 
 		private void enableMovieMenuItems(boolean b) {
-			movieTSItem.setEnabled(b);
 			energyTSItem.setEnabled(b);
 		}
 
@@ -1670,18 +1668,6 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 				}
 			});
 			menu.add(menuItem);
-
-			s = getInternationalText("TimeSeries");
-			movieTSItem = new JMenuItem((s != null ? s : "Access Time Series") + "...");
-			movieTSItem.setMnemonic(KeyEvent.VK_T);
-			movieTSItem.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					if (model == null)
-						return;
-					model.showTimeSeries();
-				}
-			});
-			menu.add(movieTSItem);
 			menu.addSeparator();
 
 			s = getInternationalText("ToolBox");

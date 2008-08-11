@@ -76,7 +76,7 @@ public class HeatBath extends AbstractLoadable {
 		return getName();
 	}
 
-	/** release dependence on other objects to allow garbage collection */
+	/* release dependence on other objects to allow garbage collection */
 	void destroy() {
 		model = null;
 	}
