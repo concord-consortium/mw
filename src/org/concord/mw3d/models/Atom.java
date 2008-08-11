@@ -216,7 +216,7 @@ public class Atom {
 		return isGenericParticle(symbol);
 	}
 
-	private static boolean isGenericParticle(String symbol) {
+	public static boolean isGenericParticle(String symbol) {
 		return GENERIC_PARTICLE.matcher(symbol).matches();
 	}
 
