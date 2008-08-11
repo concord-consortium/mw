@@ -129,6 +129,18 @@ class AtomPropertiesPanel extends PropertiesPanel {
 			}
 		});
 
+		s = MolecularContainer.getInternationalText("Visible");
+		final JCheckBox visibleCheckBox = new JCheckBox(s != null ? s : "Visible");
+		visibleCheckBox.setToolTipText("Set whether or not this atom will be visible.");
+		visibleCheckBox.setSelected(atom.isVisible());
+		visibleCheckBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				boolean b = visibleCheckBox.isSelected();
+				atom.setVisible(b);
+				atom.getModel().getView().setVisible(atom, b);
+			}
+		});
+
 		JButton okButton = new JButton();
 
 		s = MolecularContainer.getInternationalText("Cancel");
@@ -420,6 +432,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		add(panel, BorderLayout.SOUTH);
 
 		panel.add(movableCheckBox);
+		panel.add(visibleCheckBox);
 		panel.add(okButton);
 		panel.add(cancelButton);
 

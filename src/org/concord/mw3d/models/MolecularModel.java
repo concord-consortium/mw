@@ -1352,6 +1352,12 @@ public class MolecularModel {
 					s += i + " ";
 			}
 			break;
+		case Atom.INVISIBLE:
+			for (int i = 0; i < iAtom; i++) {
+				if (!atom[i].isVisible())
+					s += i + " ";
+			}
+			break;
 		}
 		return s.trim();
 	}

@@ -62,6 +62,7 @@ final public class Atom extends Point3fi implements Tuple {
 	AtomPin pin; // XIE
 	short annotationKeyColix = Graphics3D.GOLD; // XIE: annotation key color
 	short interactionKeyColix = Graphics3D.OLIVE; // XIE: interaction key color
+	boolean visible = true;
 
 	Bond[] bonds;
 	int nBondsDisplayed = 0;
