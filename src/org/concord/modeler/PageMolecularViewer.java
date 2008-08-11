@@ -223,7 +223,7 @@ public class PageMolecularViewer extends JmolContainer implements BasicModel, Em
 		snapshotAction = new AbstractAction() {
 
 			public void actionPerformed(ActionEvent e) {
-				if (ModelerUtilities.stopFiring(e))
+				if (!(e.getSource() instanceof JMenuItem) && ModelerUtilities.stopFiring(e))
 					return;
 				SnapshotGallery.sharedInstance().takeSnapshot(page.getAddress(), getView());
 			}
@@ -239,7 +239,7 @@ public class PageMolecularViewer extends JmolContainer implements BasicModel, Em
 
 		snapshotAction2 = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
-				if (ModelerUtilities.stopFiring(e))
+				if (!(e.getSource() instanceof JMenuItem) && ModelerUtilities.stopFiring(e))
 					return;
 				SnapshotGallery.sharedInstance().takeSnapshot(page.getAddress(), getView(), false);
 			}

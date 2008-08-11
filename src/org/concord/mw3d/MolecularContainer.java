@@ -1254,8 +1254,6 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 
 		a = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
-				if (ModelerUtilities.stopFiring(e))
-					return;
 				showTaskManager();
 			}
 		};
