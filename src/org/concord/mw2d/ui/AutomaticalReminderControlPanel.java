@@ -18,7 +18,7 @@
  *
  * END LICENSE */
 
-package org.concord.mw2d.models;
+package org.concord.mw2d.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -26,14 +26,12 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.swing.AbstractAction;
-import javax.swing.AbstractButton;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -45,6 +43,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
+import org.concord.modeler.ModelerUtilities;
 import org.concord.modeler.process.Loadable;
 import org.concord.modeler.ui.IntegerTextField;
 import org.concord.modeler.ui.PastableTextArea;
@@ -132,16 +131,17 @@ class AutomaticalReminderControlPanel extends JPanel {
 
 	private void setup(MDModel model) {
 		if (model.isReminderEnabled()) {
-			selectWithoutNotifyingListeners(pauseSwitch, true);
+			ModelerUtilities.selectWithoutNotifyingListeners(pauseSwitch, true);
 			enableEditor(true);
 		}
 		else {
-			selectWithoutNotifyingListeners(pauseSwitch, false);
+			ModelerUtilities.selectWithoutNotifyingListeners(pauseSwitch, false);
 			enableEditor(false);
 		}
-		intervalField.setValue((int) (model.reminder.getInterval() * model.getTimeStep()));
-		selectWithoutNotifyingListeners(repeatButton, model.reminder.getLifetime() == Loadable.ETERNAL);
-		reminderArea.setText(model.reminderMessage);
+		intervalField.setValue((int) (model.getReminder().getInterval() * model.getTimeStep()));
+		ModelerUtilities.selectWithoutNotifyingListeners(repeatButton,
+				model.getReminder().getLifetime() == Loadable.ETERNAL);
+		reminderArea.setText(model.getReminderMessage());
 	}
 
 	public JDialog createDialog(Component parent, MDModel model) {
@@ -197,35 +197,6 @@ class AutomaticalReminderControlPanel extends JPanel {
 		});
 
 		return d;
-
-	}
-
-	static void selectWithoutNotifyingListeners(AbstractButton ab, boolean selected) {
-
-		if (ab == null)
-			return;
-
-		ItemListener[] il = ab.getItemListeners();
-		if (il != null) {
-			for (int i = 0; i < il.length; i++)
-				ab.removeItemListener(il[i]);
-		}
-		ActionListener[] al = ab.getActionListeners();
-		if (al != null) {
-			for (int i = 0; i < al.length; i++)
-				ab.removeActionListener(al[i]);
-		}
-
-		ab.setSelected(selected);
-
-		if (il != null) {
-			for (int i = 0; i < il.length; i++)
-				ab.addItemListener(il[i]);
-		}
-		if (al != null) {
-			for (int i = 0; i < al.length; i++)
-				ab.addActionListener(al[i]);
-		}
 
 	}
 

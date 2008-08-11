@@ -98,6 +98,7 @@ public class GBContainer extends MDContainer {
 		view.addActionStateListener(this);
 		Action a = new ShowEnergyAction(model);
 		model.getActions().put((String) a.getValue(Action.SHORT_DESCRIPTION), a);
+		model.setReminder(reminder);
 
 		setFileChooser(ModelerUtilities.fileChooser);
 		createMenuBar();
@@ -304,7 +305,7 @@ public class GBContainer extends MDContainer {
 			menuItem = new JMenuItem((s != null ? s : "Set Up Automatic Reminder") + "...");
 			menuItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					model.setupAutomaticReminder();
+					setupAutomaticReminder();
 				}
 			});
 			menu.add(menuItem);

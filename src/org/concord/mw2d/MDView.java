@@ -106,6 +106,7 @@ import org.concord.mw2d.models.ImageComponent;
 import org.concord.mw2d.models.Layered;
 import org.concord.mw2d.models.LineComponent;
 import org.concord.mw2d.models.MDModel;
+import org.concord.mw2d.models.MesoModel;
 import org.concord.mw2d.models.ModelComponent;
 import org.concord.mw2d.models.ObstacleCollection;
 import org.concord.mw2d.models.Particle;
@@ -154,6 +155,7 @@ public abstract class MDView extends PrintableComponent {
 	SelectedArea selectedArea = new SelectedArea();
 
 	ViewProperties viewProp;
+	ModelProperties modelProp;
 	Energizer energizer;
 	SteeringForceController steeringForceController;
 	boolean energizerButtonPressed;
@@ -463,8 +465,6 @@ public abstract class MDView extends PrintableComponent {
 
 		a = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
-				if (ModelerUtilities.stopFiring(e))
-					return;
 				new HeatBathPanel(getModel()).createDialog().setVisible(true);
 			}
 		};
@@ -480,8 +480,6 @@ public abstract class MDView extends PrintableComponent {
 
 		a = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
-				if (ModelerUtilities.stopFiring(e))
-					return;
 				showViewProperties();
 			}
 		};
@@ -496,6 +494,31 @@ public abstract class MDView extends PrintableComponent {
 		getActionMap().put("View Options", a);
 
 		a = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				if (modelProp == null) {
+					if (getModel() instanceof MesoModel) {
+						modelProp = new MesoModelProperties(JOptionPane.getFrameForComponent(MDView.this));
+					}
+					else {
+						modelProp = new MolecularModelProperties(JOptionPane.getFrameForComponent(MDView.this));
+					}
+				}
+				modelProp.setModel(getModel());
+				modelProp.setLocationRelativeTo(MDView.this);
+				modelProp.setVisible(true);
+			}
+		};
+		a.putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_P));
+		a.putValue(Action.SMALL_ICON, IconPool.getIcon("properties"));
+		a.putValue(Action.NAME, "Access Model Properties");
+		a.putValue(Action.SHORT_DESCRIPTION, "Access model properties");
+		a.putValue(Action.ACCELERATOR_KEY, System.getProperty("os.name").startsWith("Mac") ? KeyStroke.getKeyStroke(
+				KeyEvent.VK_M, KeyEvent.ALT_MASK | KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_M,
+				KeyEvent.ALT_MASK | KeyEvent.CTRL_MASK, true));
+		getInputMap().put((KeyStroke) a.getValue(Action.ACCELERATOR_KEY), "Properties");
+		getActionMap().put("Properties", a);
+
+		a = new AbstractAction() {
 			public Object getValue(String key) {
 				if (key.equalsIgnoreCase("state"))
 					return showClock ? Boolean.TRUE : Boolean.FALSE;
@@ -503,8 +526,6 @@ public abstract class MDView extends PrintableComponent {
 			}
 
 			public void actionPerformed(ActionEvent e) {
-				if (ModelerUtilities.stopFiring(e))
-					return;
 				Object o = e.getSource();
 				if (o instanceof JToggleButton)
 					setShowClock(((JToggleButton) o).isSelected());
@@ -543,8 +564,14 @@ public abstract class MDView extends PrintableComponent {
 		getActionMap().clear();
 		booleanSwitches.clear();
 		multipleChoices.clear();
-		if (viewProp != null)
+		if (viewProp != null) {
 			viewProp.destroy();
+			viewProp = null;
+		}
+		if (modelProp != null) {
+			modelProp.destroy();
+			modelProp = null;
+		}
 		energizer = null;
 		steeringForceController = null;
 		undoUIComponent = null;

@@ -64,7 +64,7 @@ import org.concord.mw2d.models.ReactionModel;
 import org.concord.mw2d.models.RectangularBoundary;
 import org.concord.mw2d.ui.MDContainer;
 
-public class MolecularModelProperties extends ModelProperties {
+class MolecularModelProperties extends ModelProperties {
 
 	private MolecularModel model;
 	private JTextArea scriptArea;

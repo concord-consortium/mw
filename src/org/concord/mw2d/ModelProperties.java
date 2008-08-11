@@ -41,7 +41,7 @@ import javax.swing.plaf.basic.BasicBorders;
 import org.concord.modeler.Modeler;
 import org.concord.mw2d.models.MDModel;
 
-public abstract class ModelProperties extends JDialog {
+abstract class ModelProperties extends JDialog {
 
 	final static BasicBorders.ButtonBorder BUTTON_BORDER = new BasicBorders.ButtonBorder(Color.lightGray, Color.white,
 			Color.black, Color.gray);

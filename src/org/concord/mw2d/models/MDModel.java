@@ -90,9 +90,6 @@ import org.concord.modeler.util.SwingWorker;
 import org.concord.mw2d.AtomisticView;
 import org.concord.mw2d.MDState;
 import org.concord.mw2d.MDView;
-import org.concord.mw2d.MesoModelProperties;
-import org.concord.mw2d.ModelProperties;
-import org.concord.mw2d.MolecularModelProperties;
 import org.concord.mw2d.event.ParameterChangeListener;
 import org.concord.mw2d.event.UpdateEvent;
 import org.concord.mw2d.event.UpdateListener;
@@ -161,8 +158,6 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 
 	final static Random RANDOM = new Random();
 
-	private final static String[] REMINDER_OPTIONS = { "Close", "Snapshot", "Continue" };
-
 	/*
 	 * In reality, Planck's constant = 6.626E-34 m^2kg/s. Here it is an adjustable parameter. The greater it is, the
 	 * more significant the quantum effect will be.
@@ -197,7 +192,6 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	List<String> computeList;
 	Map<Object, Object> properties;
 	JProgressBar ioProgressBar;
-	ModelProperties modelProp;
 	Map<String, Action> actionMap;
 	Map<String, ChangeListener> changeMap;
 	Map<String, Action> switchMap;
@@ -237,8 +231,6 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	/* Store the real model time in a queue for reconstructing time series later. */
 	volatile FloatQueue modelTimeQueue;
 
-	String reminderMessage;
-
 	private static byte jobIndex;
 	private volatile boolean stopAtNextRecordingStep;
 	private long systemTimeOfLastStepEnd;
@@ -259,61 +251,8 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	/* heat bath (off by default) */
 	HeatBath heatBath;
 
-	/* the subtask of automatically popup a reminder at a given frequency. */
-	final Loadable reminder = new AbstractLoadable(5000) {
-		public void execute() {
-			if (job.getIndexOfStep() == 0) {
-				reminder.setCompleted(false);
-			}
-			else if (job.getIndexOfStep() >= reminder.getLifetime()) {
-				reminder.setCompleted(true);
-			}
-			if (modelTime > 0) {
-				stopImmediately();
-				if (movie != null)
-					movie.enableMovieActions(true);
-				if (reminderMessage != null && !reminderMessage.trim().equals("")) {
-					EventQueue.invokeLater(new Runnable() {
-						public void run() {
-							String s = MDView.getInternationalText("CloseButton");
-							if (s != null)
-								REMINDER_OPTIONS[0] = s;
-							s = MDView.getInternationalText("Snapshot");
-							if (s != null)
-								REMINDER_OPTIONS[1] = s;
-							s = MDView.getInternationalText("Continue");
-							if (s != null)
-								REMINDER_OPTIONS[2] = s;
-							s = MDView.getInternationalText("AutomaticReminder");
-							int i = JOptionPane.showOptionDialog(JOptionPane.getFrameForComponent(getView()),
-									reminderMessage, s != null ? s : "Automatical Reminder",
-									JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null,
-									REMINDER_OPTIONS, REMINDER_OPTIONS[0]);
-							if (i == JOptionPane.NO_OPTION) {
-								notifyPageComponentListeners(new PageComponentEvent(getView(),
-										PageComponentEvent.SNAPSHOT_TAKEN));
-							}
-							else if (i == JOptionPane.CANCEL_OPTION) {
-								play.actionPerformed(null);
-							}
-						}
-					});
-				}
-			}
-		}
-
-		public int getPriority() {
-			return Thread.NORM_PRIORITY - 1;
-		}
-
-		public String getName() {
-			return "Automatic reminder";
-		}
-
-		public String getDescription() {
-			return "This task automatically pauses the simulation and invokes a reminder\n at a given frquency.";
-		}
-	};
+	Loadable reminder;
+	String reminderMessage;
 
 	/* the subtask of updating the movie queues */
 	Loadable movieUpdater = new AbstractLoadable(100) {
@@ -478,7 +417,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	private ModelWriter modelWriter;
 
 	private Action play, stop, revert, reload, scriptAction, importModel, snapshot, snapshot2, heat, cool;
-	private Action accessProp, removeLastParticle;
+	private Action removeLastParticle;
 	private Action toggleAField, toggleGField, toggleEField, toggleBField, eFieldDirection, bFieldDirection;
 
 	private AbstractChange scriptChanger, temperatureChanger;
@@ -502,7 +441,6 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		snapshot2 = new SnapshotAction(this, false);
 		heat = new HeatAction(this, true);
 		cool = new HeatAction(this, false);
-		accessProp = new AccessPropAction(this);
 		removeLastParticle = new RemoveLastParticleAction(this);
 		toggleAField = new ToggleFieldAction(this, ToggleFieldAction.A_FIELD);
 		toggleGField = new ToggleFieldAction(this, ToggleFieldAction.G_FIELD);
@@ -603,10 +541,6 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		((MDView) getView()).destroy();
 		if (boundary.getQueue() != null)
 			boundary.getQueue().setLength(-1);
-		if (modelProp != null) {
-			modelProp.destroy();
-			modelProp = null;
-		}
 		if (stateHolder != null) {
 			stateHolder.destroy();
 			stateHolder = null;
@@ -636,7 +570,6 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		snapshot = null;
 		snapshot2 = null;
 		importModel = null;
-		accessProp = null;
 		aFieldChanger = null;
 		gFieldChanger = null;
 		eFieldChanger = null;
@@ -651,6 +584,22 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		eFieldDirection = null;
 		bFieldDirection = null;
 
+	}
+
+	public String getReminderMessage() {
+		return reminderMessage;
+	}
+
+	public void setReminderMessage(String s) {
+		reminderMessage = s;
+	}
+
+	public Loadable getReminder() {
+		return reminder;
+	}
+
+	public void setReminder(Loadable reminder) {
+		this.reminder = reminder;
 	}
 
 	private void handleFailure(String msg) {
@@ -1489,27 +1438,6 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		});
 	}
 
-	public void setupAutomaticReminder() {
-		AutomaticalReminderControlPanel a = new AutomaticalReminderControlPanel();
-		a.createDialog(getView(), this).setVisible(true);
-		if (reminderEnabled) {
-			int interval = (int) (a.getIntervalTime() / getTimeStep());
-			reminder.setInterval(interval);
-			reminder.setLifetime(a.isRepeatable() ? Loadable.ETERNAL : interval);
-			reminderMessage = a.getMessage();
-			boolean b = job.getIndexOfStep() > reminder.getLifetime();
-			reminder.setCompleted(b);
-			if (!b) {
-				if (!job.contains(reminder))
-					job.add(reminder);
-			}
-			else {
-				if (job.contains(reminder))
-					job.remove(reminder);
-			}
-		}
-	}
-
 	/** @see org.concord.mw2d.models.MDModel#modelTimeQueue */
 	public void setModelTimeQueue(FloatQueue q) {
 		modelTimeQueue = q;
@@ -2077,21 +2005,6 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			job.removeAllCustomTasks();
 	}
 
-	public void setModelProperties() {
-		if (modelProp == null) {
-			if (this instanceof MesoModel) {
-				modelProp = new MesoModelProperties(JOptionPane.getFrameForComponent(getView()));
-			}
-			else {
-				modelProp = new MolecularModelProperties(JOptionPane.getFrameForComponent(getView()));
-			}
-		}
-	}
-
-	public ModelProperties getModelProperties() {
-		return modelProp;
-	}
-
 	public void setView(MDView v) {
 
 		if (v == null)
@@ -2114,8 +2027,6 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		v.getActionMap().put("Snapshot", snapshot);
 		v.getInputMap().put((KeyStroke) revert.getValue(Action.ACCELERATOR_KEY), "Revert");
 		v.getActionMap().put("Revert", revert);
-		v.getInputMap().put((KeyStroke) accessProp.getValue(Action.ACCELERATOR_KEY), "Properties");
-		v.getActionMap().put("Properties", accessProp);
 
 		// actions without key bindings
 		v.getActionMap().put("Play", play);

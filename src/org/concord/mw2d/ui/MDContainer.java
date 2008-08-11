@@ -81,6 +81,9 @@ import org.concord.modeler.PageBarGraph;
 import org.concord.modeler.PageXYGraph;
 import org.concord.modeler.SlideMovie;
 import org.concord.modeler.event.ModelListener;
+import org.concord.modeler.event.PageComponentEvent;
+import org.concord.modeler.process.AbstractLoadable;
+import org.concord.modeler.process.Loadable;
 import org.concord.modeler.ui.ColorArrayEvent;
 import org.concord.modeler.ui.ColorArrayListener;
 import org.concord.modeler.ui.ColorArrayPane;
@@ -108,6 +111,7 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 	private static final byte FORWARD = 101;
 	private static final byte BACK = 102;
 	private static final byte BEGIN = 103;
+	private final static String[] REMINDER_OPTIONS = { "Close", "Snapshot", "Continue" };
 
 	static Preferences prefs;
 	static ResourceBundle bundle;
@@ -133,6 +137,65 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 	static Icon toolBarHeaderIcon, beginIcon, leftIcon, rightIcon, removeTBIcon, expandArrowIcon, pageSetupIcon;
 
 	Action resizeModelAction;
+
+	/* the subtask of automatically popup a reminder at a given frequency. */
+	final Loadable reminder = new AbstractLoadable(5000) {
+		public void execute() {
+			final MDModel model = getModel();
+			if (model.getJob().getIndexOfStep() == 0) {
+				reminder.setCompleted(false);
+			}
+			else if (model.getJob().getIndexOfStep() >= reminder.getLifetime()) {
+				reminder.setCompleted(true);
+			}
+			if (model.getModelTime() > 0) {
+				model.stopImmediately();
+				if (model.getMovie() instanceof SlideMovie)
+					((SlideMovie) model.getMovie()).enableMovieActions(true);
+				final String message = model.getReminderMessage();
+				if (message != null && !message.trim().equals("")) {
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							String s = MDView.getInternationalText("CloseButton");
+							if (s != null)
+								REMINDER_OPTIONS[0] = s;
+							s = MDView.getInternationalText("Snapshot");
+							if (s != null)
+								REMINDER_OPTIONS[1] = s;
+							s = MDView.getInternationalText("Continue");
+							if (s != null)
+								REMINDER_OPTIONS[2] = s;
+							s = MDView.getInternationalText("AutomaticReminder");
+							int i = JOptionPane.showOptionDialog(JOptionPane.getFrameForComponent(getView()), message,
+									s != null ? s : "Automatical Reminder", JOptionPane.YES_NO_CANCEL_OPTION,
+									JOptionPane.INFORMATION_MESSAGE, null, REMINDER_OPTIONS, REMINDER_OPTIONS[0]);
+							if (i == JOptionPane.NO_OPTION) {
+								model.notifyPageComponentListeners(new PageComponentEvent(getView(),
+										PageComponentEvent.SNAPSHOT_TAKEN));
+							}
+							else if (i == JOptionPane.CANCEL_OPTION) {
+								Action play = model.getView().getActionMap().get("Play");
+								if (play != null)
+									play.actionPerformed(null);
+							}
+						}
+					});
+				}
+			}
+		}
+
+		public int getPriority() {
+			return Thread.NORM_PRIORITY - 1;
+		}
+
+		public String getName() {
+			return "Automatic reminder";
+		}
+
+		public String getDescription() {
+			return "This task automatically pauses the simulation and invokes a reminder\n at a given frquency.";
+		}
+	};
 
 	public MDContainer() {
 		if (bundle == null && !isUSLocale) {
@@ -227,6 +290,27 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 					for (MouseListener l : ml)
 						b.removeMouseListener(l);
 				}
+			}
+		}
+	}
+
+	void setupAutomaticReminder() {
+		AutomaticalReminderControlPanel a = new AutomaticalReminderControlPanel();
+		a.createDialog(getView(), getModel()).setVisible(true);
+		if (getModel().isReminderEnabled()) {
+			int interval = (int) (a.getIntervalTime() / getModel().getTimeStep());
+			reminder.setInterval(interval);
+			reminder.setLifetime(a.isRepeatable() ? Loadable.ETERNAL : interval);
+			getModel().setReminderMessage(a.getMessage());
+			boolean b = getModel().getJob().getIndexOfStep() > reminder.getLifetime();
+			reminder.setCompleted(b);
+			if (!b) {
+				if (!getModel().getJob().contains(reminder))
+					getModel().getJob().add(reminder);
+			}
+			else {
+				if (getModel().getJob().contains(reminder))
+					getModel().getJob().remove(reminder);
 			}
 		}
 	}
@@ -1219,26 +1303,6 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 			}
 		});
 		menu.add(menuItem);
-		menu.addSeparator();
-
-		menuItem = new JMenuItem(getView().getActionMap().get("Input Image"));
-		s = getInternationalText("InputImage");
-		if (s != null)
-			menuItem.getAction().putValue("i18n", s);
-		menuItem.setText((s != null ? s : "Input Image") + "...");
-		menu.add(menuItem);
-		enabledComponentsWhenEditable.add(menuItem);
-
-		menuItem = new JMenuItem(getView().getActionMap().get("Input Text Box"));
-		s = getInternationalText("InputTextBox");
-		menuItem.setText((s != null ? s : "Input Text Box") + "...");
-		menu.add(menuItem);
-		enabledComponentsWhenEditable.add(menuItem);
-
-		menuItem = new JMenuItem(getView().getActionMap().get("Properties"));
-		s = getInternationalText("Properties");
-		menuItem.setText((s != null ? s : "Properties") + "...");
-		menu.add(menuItem);
 
 		return menu;
 
@@ -1315,6 +1379,21 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 		menu.add(copyMI);
 		menu.add(pasteMI);
 		menu.add(clearMI);
+		menu.addSeparator();
+
+		menuItem = new JMenuItem(getView().getActionMap().get("Input Image"));
+		s = getInternationalText("InputImage");
+		if (s != null)
+			menuItem.getAction().putValue("i18n", s);
+		menuItem.setText((s != null ? s : "Input Image") + "...");
+		menu.add(menuItem);
+		enabledComponentsWhenEditable.add(menuItem);
+
+		menuItem = new JMenuItem(getView().getActionMap().get("Input Text Box"));
+		s = getInternationalText("InputTextBox");
+		menuItem.setText((s != null ? s : "Input Text Box") + "...");
+		menu.add(menuItem);
+		enabledComponentsWhenEditable.add(menuItem);
 		menu.addSeparator();
 
 		menuItem = new JMenuItem(resizeModelAction);
