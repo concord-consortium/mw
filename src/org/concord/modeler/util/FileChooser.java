@@ -44,8 +44,7 @@ import javax.swing.filechooser.FileFilter;
 import org.concord.modeler.FileFilterFactory;
 
 /**
- * This is a file chooser that is able to remember its last-visited path and files (4), provided that a
- * <code>Preferences</code> be set to store these information.
+ * This is a file chooser that is able to remember its last-visited path and files (4).
  * 
  * @author Charles Xie
  */

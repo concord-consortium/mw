@@ -59,12 +59,12 @@ public class Atom {
 	FloatQueueTriplet rQ, vQ, aQ;
 
 	/** create an abstract atom: for using its data structure only. */
-	public Atom() {
+	public Atom(MolecularModel model) {
+		setModel(model);
 	}
 
 	Atom(String symbol, MolecularModel model) {
-		this();
-		setModel(model);
+		this(model);
 		setSymbol(symbol);
 	}
 

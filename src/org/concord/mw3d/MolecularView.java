@@ -224,7 +224,7 @@ public class MolecularView extends Draw {
 
 		jmolMouseMotionListener = getMouseMotionListeners()[1];
 
-		atomCopy = new Atom();
+		atomCopy = new Atom(model);
 		errorReminder = new ErrorReminder(this);
 		velocityBitSet = new BitSet(MolecularModel.SIZE);
 		viewer.setVelocityBitSet(velocityBitSet);
