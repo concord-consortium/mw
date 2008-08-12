@@ -182,13 +182,14 @@ class PreferencesDialog extends JDialog {
 		JPanel total = new JPanel(new BorderLayout());
 		total.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
 
+		String s = Modeler.getInternationalText("ScalingFactors");
 		JPanel p = new JPanel(new GridLayout(4, 2, 5, 5));
 		p.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(10, 20, 5, 20), BorderFactory
-				.createTitledBorder("Scaling Factors")));
+				.createTitledBorder(s != null ? s : "Scaling Factors")));
 
 		final PrintParameters pp = Page.getPrintParameters();
 
-		String s = Modeler.getInternationalText("ScaleCharacter");
+		s = Modeler.getInternationalText("ScaleCharacter");
 		p.add(new JLabel("  " + (s != null ? s : "Scale characters") + " (%):"));
 		IntegerTextField tf = new IntegerTextField(Math.round(pp.getCharacterScale() * 100), 50, 100, 10);
 		tf.addActionListener(new ActionListener() {
@@ -275,12 +276,14 @@ class PreferencesDialog extends JDialog {
 		label.setBorder(BorderFactory.createEmptyBorder(5, 25, 5, 20));
 		total.add(label, BorderLayout.CENTER);
 
+		s = Modeler.getInternationalText("PaperMargins");
 		p = new JPanel(new GridLayout(2, 4, 5, 5));
 		p.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(5, 20, 10, 20), BorderFactory
-				.createTitledBorder("Paper Margins")));
+				.createTitledBorder(s != null ? s : "Paper Margins")));
 		total.add(p, BorderLayout.SOUTH);
 
-		p.add(new JLabel("  Top :"));
+		s = Modeler.getInternationalText("TopMargin");
+		p.add(new JLabel("  " + (s != null ? s : "Top") + ":"));
 		tf = new IntegerTextField(pp.getTopMargin(), 10, 100, 5);
 		tf.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -294,7 +297,8 @@ class PreferencesDialog extends JDialog {
 		});
 		p.add(tf);
 
-		p.add(new JLabel("  Bottom :"));
+		s = Modeler.getInternationalText("BottomMargin");
+		p.add(new JLabel("  " + (s != null ? s : "Bottom") + " :"));
 		tf = new IntegerTextField(pp.getBottomMargin(), 10, 100, 5);
 		tf.setPreferredSize(new Dimension(100, 25));
 		tf.addActionListener(new ActionListener() {
@@ -309,7 +313,8 @@ class PreferencesDialog extends JDialog {
 		});
 		p.add(tf);
 
-		p.add(new JLabel("  Left :"));
+		s = Modeler.getInternationalText("LeftMargin");
+		p.add(new JLabel("  " + (s != null ? s : "Left") + " :"));
 		tf = new IntegerTextField(pp.getLeftMargin(), 10, 100, 5);
 		tf.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -323,7 +328,8 @@ class PreferencesDialog extends JDialog {
 		});
 		p.add(tf);
 
-		p.add(new JLabel("  Right :"));
+		s = Modeler.getInternationalText("RightMargin");
+		p.add(new JLabel("  " + (s != null ? s : "Right") + " :"));
 		tf = new IntegerTextField(pp.getRightMargin(), 10, 100, 5);
 		tf.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -366,10 +372,13 @@ class PreferencesDialog extends JDialog {
 
 		JPanel p = new JPanel(new GridLayout(2, 1, 5, 5));
 		p.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		String s2 = Modeler.getInternationalText("TimeSecond");
 		s = Modeler.getInternationalText("ConnectTimeOut");
-		p.add(new JLabel((s != null ? s : "Connection opening timeout") + " (in seconds)", SwingConstants.LEFT));
+		p.add(new JLabel((s != null ? s : "Connection opening timeout") + " (" + (s2 != null ? s2 : "seconds") + ")",
+				SwingConstants.LEFT));
 		s = Modeler.getInternationalText("ReadTimeOut");
-		p.add(new JLabel((s != null ? s : "Read timeout") + " (in seconds)", SwingConstants.LEFT));
+		p.add(new JLabel((s != null ? s : "Read timeout") + " (" + (s2 != null ? s2 : "seconds") + ")",
+				SwingConstants.LEFT));
 		panel.add(p, BorderLayout.WEST);
 
 		p = new JPanel(new GridLayout(2, 1, 5, 5));
@@ -756,7 +765,8 @@ class PreferencesDialog extends JDialog {
 		s = Modeler.getInternationalText("SimplifiedChinese");
 		String s1 = Modeler.getInternationalText("TraditionalChinese");
 		final JComboBox languageComboBox = new JComboBox(new String[] { "English (United States)",
-				s != null ? s : "Simplied Chinese (PRC)", s1 != null ? s1 : "Traditional Chinese (Taiwan)", "Russian" });
+				s != null ? s : "Simplied Chinese (PRC)", s1 != null ? s1 : "Traditional Chinese (Taiwan)", "Russian",
+				"Hebrew" });
 		languageComboBox.setToolTipText("This sets character encoding for saving page too.");
 		setLanguageComboBox(languageComboBox);
 		languageComboBox.addItemListener(new ItemListener() {
@@ -774,6 +784,9 @@ class PreferencesDialog extends JDialog {
 						break;
 					case 3:
 						Modeler.preference.put("Locale", "ru");
+						break;
+					case 4:
+						Modeler.preference.put("Locale", "iw");
 						break;
 					}
 					if (okToRestart())
