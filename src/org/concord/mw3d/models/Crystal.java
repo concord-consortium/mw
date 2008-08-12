@@ -84,7 +84,7 @@ public class Crystal {
 		case SIMPLE_CUBIC:
 			nSeed = 1;
 			seed = new Atom[nSeed];
-			seed[0] = new Atom();
+			seed[0] = new Atom(model);
 			seed[0].setSymbol(element[0]);
 			break;
 
@@ -93,7 +93,7 @@ public class Crystal {
 			nSeed = 4;
 			seed = new Atom[nSeed];
 			for (byte i = 0; i < nSeed; i++)
-				seed[i] = new Atom();
+				seed[i] = new Atom(model);
 			seed[0].rx = 0.0f;
 			seed[0].ry = 0.0f;
 			seed[0].rz = 0.0f;
@@ -115,7 +115,7 @@ public class Crystal {
 			nSeed = 2;
 			seed = new Atom[nSeed];
 			for (byte i = 0; i < nSeed; i++)
-				seed[i] = new Atom();
+				seed[i] = new Atom(model);
 			seed[0].rx = 0.0f;
 			seed[0].ry = 0.0f;
 			seed[0].rz = 0.0f;
@@ -131,7 +131,7 @@ public class Crystal {
 			nSeed = 2;
 			seed = new Atom[nSeed];
 			for (byte i = 0; i < nSeed; i++)
-				seed[i] = new Atom();
+				seed[i] = new Atom(model);
 			seed[0].rx = 0.0f;
 			seed[0].ry = 0.0f;
 			seed[0].rz = 0.0f;
@@ -148,7 +148,7 @@ public class Crystal {
 			nSeed = 8;
 			seed = new Atom[nSeed];
 			for (byte i = 0; i < nSeed; i++)
-				seed[i] = new Atom();
+				seed[i] = new Atom(model);
 			seed[0].rx = 0.0f;
 			seed[0].ry = 0.0f;
 			seed[0].rz = 0.0f;
@@ -177,7 +177,7 @@ public class Crystal {
 			nSeed = 4;
 			seed = new Atom[nSeed];
 			for (byte i = 0; i < nSeed; i++)
-				seed[i] = new Atom();
+				seed[i] = new Atom(model);
 			seed[0].rx = 0.0f;
 			seed[0].ry = 0.0f;
 			seed[0].rz = 0.0f;
@@ -201,7 +201,7 @@ public class Crystal {
 			nSeed = 2;
 			seed = new Atom[nSeed];
 			for (byte i = 0; i < nSeed; i++)
-				seed[i] = new Atom();
+				seed[i] = new Atom(model);
 			seed[0].rx = 0.0f;
 			seed[0].ry = 0.0f;
 			seed[0].rz = 0.0f;
@@ -219,7 +219,7 @@ public class Crystal {
 			nSeed = 8;
 			seed = new Atom[nSeed];
 			for (byte i = 0; i < nSeed; i++)
-				seed[i] = new Atom();
+				seed[i] = new Atom(model);
 
 			seed[0].rx = 0.0f;
 			seed[0].ry = 0.0f;
@@ -262,7 +262,7 @@ public class Crystal {
 			nSeed = 8;
 			seed = new Atom[nSeed];
 			for (byte i = 0; i < nSeed; i++)
-				seed[i] = new Atom();
+				seed[i] = new Atom(model);
 			seed[0].rx = 0.0f;
 			seed[0].ry = 0.0f;
 			seed[0].rz = 0.0f;
@@ -298,7 +298,7 @@ public class Crystal {
 			nSeed = 12;
 			seed = new Atom[nSeed];
 			for (byte i = 0; i < nSeed; i++)
-				seed[i] = new Atom();
+				seed[i] = new Atom(model);
 			seed[0].rx = 0.0f;
 			seed[0].ry = 0.0f;
 			seed[0].rz = 0.0f;
@@ -347,7 +347,7 @@ public class Crystal {
 			nSeed = 5;
 			seed = new Atom[nSeed];
 			for (byte i = 0; i < nSeed; i++)
-				seed[i] = new Atom();
+				seed[i] = new Atom(model);
 			seed[0].rx = 0.0f;
 			seed[0].ry = 0.0f;
 			seed[0].rz = 0.0f;

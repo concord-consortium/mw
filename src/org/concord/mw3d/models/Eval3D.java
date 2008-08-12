@@ -1421,59 +1421,56 @@ class Eval3D extends AbstractEval {
 		int noa = model.getAtomCount();
 		bs = new BitSet(noa);
 
-		Matcher matcher = null;
-		if (!found) {
-			matcher = WITHIN_RADIUS.matcher(str);
-			if (matcher.find()) {
-				found = true;
-				String s = str.substring(matcher.end()).trim();
-				s = s.substring(0, s.indexOf(")"));
-				if (RANGE.matcher(s).find()) {
-					int lp = str.lastIndexOf("(");
-					int rp = str.indexOf(")");
-					s = str.substring(lp + 1, rp).trim();
-					float r = Float.valueOf(s.substring(0, s.indexOf(",")).trim()).floatValue();
-					r *= r * 100;
-					s = s.substring(s.indexOf(",") + 1);
-					int i0 = Math.round(Float.valueOf(s.substring(0, s.indexOf("-")).trim()).floatValue());
-					int i1 = Math.round(Float.valueOf(s.substring(s.indexOf("-") + 1).trim()).floatValue());
-					if (i0 < noa && i0 >= 0 && i1 < noa && i1 >= 0 && i1 >= i0) {
-						Atom c;
-						for (int k = i0; k <= i1; k++) {
-							bs.set(k);
-							c = model.getAtom(k);
-							for (int m = 0; m < i0; m++) {
-								if (bs.get(m))
-									continue;
-								if (model.getAtom(m).distanceSquare(c) < r)
-									bs.set(m);
-							}
-							for (int m = i1 + 1; m < noa; m++) {
-								if (bs.get(m))
-									continue;
-								if (model.getAtom(m).distanceSquare(c) < r)
-									bs.set(m);
-							}
+		Matcher matcher = WITHIN_RADIUS.matcher(str);
+		if (matcher.find()) {
+			found = true;
+			String s = str.substring(matcher.end()).trim();
+			s = s.substring(0, s.indexOf(")"));
+			if (RANGE.matcher(s).find()) {
+				int lp = str.lastIndexOf("(");
+				int rp = str.indexOf(")");
+				s = str.substring(lp + 1, rp).trim();
+				float r = Float.valueOf(s.substring(0, s.indexOf(",")).trim()).floatValue();
+				r *= r;
+				s = s.substring(s.indexOf(",") + 1);
+				int i0 = Math.round(Float.valueOf(s.substring(0, s.indexOf("-")).trim()).floatValue());
+				int i1 = Math.round(Float.valueOf(s.substring(s.indexOf("-") + 1).trim()).floatValue());
+				if (i0 < noa && i0 >= 0 && i1 < noa && i1 >= 0 && i1 >= i0) {
+					Atom c;
+					for (int k = i0; k <= i1; k++) {
+						bs.set(k);
+						c = model.getAtom(k);
+						for (int m = 0; m < i0; m++) {
+							if (bs.get(m))
+								continue;
+							if (model.getAtom(m).distanceSquare(c) < r)
+								bs.set(m);
+						}
+						for (int m = i1 + 1; m < noa; m++) {
+							if (bs.get(m))
+								continue;
+							if (model.getAtom(m).distanceSquare(c) < r)
+								bs.set(m);
 						}
 					}
 				}
-				else {
-					int lp = str.indexOf("(");
-					int rp = str.indexOf(")");
-					s = str.substring(lp + 1, rp).trim();
-					float r = Float.valueOf(s.substring(0, s.indexOf(",")).trim()).floatValue();
-					r *= r * 100;
-					int center = Math.round(Float.valueOf(s.substring(s.indexOf(",") + 1).trim()).floatValue());
-					if (center < noa && center >= 0) {
-						Atom c = model.getAtom(center);
-						for (int k = 0; k < noa; k++) {
-							if (k == center) {
+			}
+			else {
+				int lp = str.indexOf("(");
+				int rp = str.indexOf(")");
+				s = str.substring(lp + 1, rp).trim();
+				float r = Float.valueOf(s.substring(0, s.indexOf(",")).trim()).floatValue();
+				r *= r;
+				int center = Math.round(Float.valueOf(s.substring(s.indexOf(",") + 1).trim()).floatValue());
+				if (center < noa && center >= 0) {
+					Atom c = model.getAtom(center);
+					for (int k = 0; k < noa; k++) {
+						if (k == center) {
+							bs.set(k);
+						}
+						else {
+							if (model.getAtom(k).distanceSquare(c) < r)
 								bs.set(k);
-							}
-							else {
-								if (model.getAtom(k).distanceSquare(c) < r)
-									bs.set(k);
-							}
 						}
 					}
 				}
