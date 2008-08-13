@@ -562,14 +562,17 @@ class Eval3D extends AbstractEval {
 			}
 			model.run();
 			model.notifyChange();
+			notifyExecution("run");
 			return true;
 		}
 		if ("stop".equalsIgnoreCase(str)) { // stop
 			model.stop();
+			notifyExecution("stop");
 			return true;
 		}
 		if ("stop immediately".equalsIgnoreCase(str)) { // stop immediately
 			model.stopImmediately();
+			notifyExecution("stop");
 			return true;
 		}
 		if ("reset".equalsIgnoreCase(str)) { // reset
@@ -612,6 +615,20 @@ class Eval3D extends AbstractEval {
 				selection = selectElements(str);
 			}
 			out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0) + " atoms are selected.");
+			return true;
+		}
+		matcher = RBOND.matcher(clause); // select by radial bond
+		if (matcher.find()) {
+			String str = clause.substring(matcher.end()).trim();
+			BitSet selection = null;
+			if (LOGICAL_OPERATOR.matcher(str).find()) {// logical expressions
+				selection = parseLogicalExpression(str, BY_RBOND);
+			}
+			else {
+				selection = selectRBonds(str);
+			}
+			out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0)
+					+ " radial bonds are selected.");
 			return true;
 		}
 		out(ScriptEvent.FAILED, "Unrecognized keyword in: " + clause);
@@ -682,7 +699,7 @@ class Eval3D extends AbstractEval {
 			return true;
 		for (int k = 0; k < nop; k++) {
 			if (atom[k].isSelected())
-				atom[k].setCharge(c);
+				view.setCharge(k, c);
 		}
 		view.repaint();
 		model.notifyChange();
@@ -1377,12 +1394,48 @@ class Eval3D extends AbstractEval {
 	}
 
 	private void removeSelectedObjects() {
+		List<TBond> deletedTBond = new ArrayList<TBond>();
+		synchronized (model.tBonds) {
+			for (TBond tb : model.tBonds) {
+				if (tb.isSelected())
+					deletedTBond.add(tb);
+			}
+		}
+		if (!deletedTBond.isEmpty()) {
+			for (TBond tb : deletedTBond)
+				view.removeTBond(tb);
+		}
+		List<ABond> deletedABond = new ArrayList<ABond>();
+		synchronized (model.aBonds) {
+			for (ABond ab : model.aBonds) {
+				if (ab.isSelected())
+					deletedABond.add(ab);
+			}
+		}
+		if (!deletedABond.isEmpty()) {
+			for (ABond ab : deletedABond)
+				view.removeABond(ab);
+		}
+		List<RBond> deletedRBond = new ArrayList<RBond>();
+		synchronized (model.rBonds) {
+			for (RBond rb : model.rBonds) {
+				if (rb.isSelected()) {
+					deletedRBond.add(rb);
+				}
+			}
+		}
+		if (!deletedRBond.isEmpty()) {
+			for (RBond rb : deletedRBond)
+				view.removeRBond(rb);
+		}
 		int n = model.getAtomCount();
-		List<Integer> list = new ArrayList<Integer>();
+		BitSet bs = new BitSet(n);
 		for (int k = 0; k < n; k++) {
 			if (atom[k].isSelected())
-				list.add(k);
+				bs.set(k);
 		}
+		if (bs.cardinality() > 0)
+			view.removeAtoms(bs);
 		view.repaint();
 	}
 
@@ -1403,14 +1456,14 @@ class Eval3D extends AbstractEval {
 			}
 		}
 		if (found)
-			model.setSelectionSet(bs);
+			model.setAtomSelectionSet(bs);
 		return found ? bs : null;
 	}
 
 	private BitSet selectAtoms(String str) {
 
 		if ("selected".equalsIgnoreCase(str)) {
-			return model.getSelectionSet();
+			return model.getAtomSelectionSet();
 		}
 
 		BitSet bs = genericSelect(str);
@@ -1540,7 +1593,7 @@ class Eval3D extends AbstractEval {
 		}
 
 		if (found) {
-			model.setSelectionSet(bs);
+			model.setAtomSelectionSet(bs);
 		}
 		else {
 			out(ScriptEvent.FAILED, "Unrecognized expression: " + str);
@@ -1553,7 +1606,7 @@ class Eval3D extends AbstractEval {
 	private BitSet selectElements(String str) {
 
 		if ("selected".equalsIgnoreCase(str))
-			return model.getSelectionSet();
+			return model.getAtomSelectionSet();
 
 		BitSet bs = genericSelect(str);
 		if (bs != null)
@@ -1576,10 +1629,88 @@ class Eval3D extends AbstractEval {
 			}
 		}
 
-		model.setSelectionSet(bs);
+		model.setAtomSelectionSet(bs);
 
 		return bs;
 
+	}
+
+	private BitSet selectRBonds(String str) {
+		int n = model.rBonds.size();
+		if (n == 0)
+			return null;
+		BitSet bs = new BitSet(n);
+		if ("selected".equalsIgnoreCase(str)) {
+			synchronized (model.rBonds) {
+				for (int i = 0; i < n; i++) {
+					if (model.getRBond(i).isSelected())
+						bs.set(i);
+				}
+			}
+			return bs;
+		}
+		String strLC = str.toLowerCase();
+		if (strLC.indexOf("involve") != -1) {
+			str = str.substring(7).trim();
+			strLC = str.toLowerCase();
+			if (strLC.indexOf("atom") != -1) {
+				str = str.substring(4).trim();
+				if (selectRbondsInvolving(str, bs)) {
+					model.setRBondSelectionSet(bs);
+					return bs;
+				}
+			}
+		}
+		if (selectFromCollection(str, n, bs)) {
+			model.setRBondSelectionSet(bs);
+			return bs;
+		}
+		out(ScriptEvent.FAILED, "Unrecognized expression: " + str);
+		return null;
+	}
+
+	private boolean selectRbondsInvolving(String str, BitSet bs) {
+		if (RANGE_LEADING.matcher(str).find()) {
+			String[] s = str.split("-");
+			int beg = Float.valueOf(s[0].trim()).intValue();
+			int end = Float.valueOf(s[1].trim()).intValue();
+			synchronized (model.rBonds) {
+				for (RBond rb : model.rBonds) {
+					if ((rb.getAtom1().getIndex() <= end && rb.getAtom1().getIndex() >= beg)
+							|| (rb.getAtom2().getIndex() <= end && rb.getAtom2().getIndex() >= beg)) {
+						bs.set(model.rBonds.indexOf(rb));
+					}
+				}
+			}
+			return true;
+		}
+		if (INTEGER_GROUP.matcher(str).find()) {
+			String[] s = str.split(REGEX_SEPARATOR + "+");
+			int index;
+			for (int m = 0; m < s.length; m++) {
+				index = Float.valueOf(s[m]).intValue();
+				synchronized (model.rBonds) {
+					for (RBond rb : model.rBonds) {
+						if (rb.getAtom1().getIndex() == index || rb.getAtom2().getIndex() == index) {
+							bs.set(model.rBonds.indexOf(rb));
+						}
+					}
+				}
+			}
+			return true;
+		}
+		if (INDEX.matcher(str).find()) {
+			int index = Float.valueOf(str.trim()).intValue();
+			synchronized (model.rBonds) {
+				for (RBond rb : model.rBonds) {
+					if (rb.getAtom1().getIndex() == index || rb.getAtom2().getIndex() == index) {
+						bs.set(model.rBonds.indexOf(rb));
+					}
+				}
+			}
+			return true;
+		}
+		return false;
 	}
 
 	/*
@@ -1677,7 +1808,7 @@ class Eval3D extends AbstractEval {
 		switch (type) {
 		case BY_ATOM:
 		case BY_ELEMENT:
-			model.setSelectionSet(bs);
+			model.setAtomSelectionSet(bs);
 			break;
 		case BY_RBOND:
 			break;

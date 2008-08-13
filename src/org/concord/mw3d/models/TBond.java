@@ -41,6 +41,7 @@ public class TBond {
 	private byte periodicity = 1; // n
 	private float strength = DEFAULT_STRENGTH;
 	private float angle; // gamma
+	private boolean selected;
 
 	/** We tend to use this constructor in deserialization. */
 	public TBond(Atom atom1, Atom atom2, Atom atom3, Atom atom4) {
@@ -97,6 +98,14 @@ public class TBond {
 		float yy = z21 * x34 - x21 * z34;
 		float zz = x21 * y34 - y21 * x34;
 		return Math.abs(Math.atan2(Math.sqrt(xx * xx + yy * yy + zz * zz), x21 * x34 + y21 * y34 + z21 * z34));
+	}
+
+	public void setSelected(boolean b) {
+		selected = b;
+	}
+
+	public boolean isSelected() {
+		return selected;
 	}
 
 	// avoid trigonometric calculations

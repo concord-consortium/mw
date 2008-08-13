@@ -472,47 +472,54 @@ public class PageButton extends JButton implements Embeddable, ModelCommunicator
 		autoSize = b;
 	}
 
-	private void enableButton(final boolean b, Object source) {
-		if (modelID == -1)
-			return;
-		ModelCanvas mc = page.getComponentPool().get(modelID);
-		if (mc == null)
-			return;
-		if (mc.getContainer().getModel() != source)
-			return;
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				setEnabled(b);
+	private void enableButton(boolean b, Object source) {
+		boolean yes = false;
+		if (modelID != -1) {
+			if (isTargetClass()) {
+				try {
+					Object o = page.getEmbeddedComponent(Class.forName(modelClass), modelID);
+					if (o instanceof PageMd3d) {
+						if (((PageMd3d) o).getMolecularModel() == source)
+							yes = true;
+					}
+				}
+				catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
 			}
-		});
+			else {
+				ModelCanvas mc = page.getComponentPool().get(modelID);
+				if (mc != null && mc.getContainer().getModel() == source)
+					yes = true;
+			}
+		}
+		if (yes)
+			setEnabled(b);
 	}
 
-	public void modelUpdate(ModelEvent e) {
-
-		if (isTargetClass()) {
-			//
-		}
-		else {
-			switch (e.getID()) {
-			case ModelEvent.SCRIPT_START:
-				if (disabledAtScript)
-					enableButton(false, e.getSource());
-				break;
-			case ModelEvent.SCRIPT_END:
-				if (disabledAtScript)
-					enableButton(true, e.getSource());
-				break;
-			case ModelEvent.MODEL_RUN:
-				if (disabledAtRun)
-					enableButton(false, e.getSource());
-				break;
-			case ModelEvent.MODEL_STOP:
-				if (disabledAtRun)
-					enableButton(true, e.getSource());
-				break;
+	public void modelUpdate(final ModelEvent e) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				switch (e.getID()) {
+				case ModelEvent.SCRIPT_START:
+					if (disabledAtScript)
+						enableButton(false, e.getSource());
+					break;
+				case ModelEvent.SCRIPT_END:
+					if (disabledAtScript)
+						enableButton(true, e.getSource());
+					break;
+				case ModelEvent.MODEL_RUN:
+					if (disabledAtRun)
+						enableButton(false, e.getSource());
+					break;
+				case ModelEvent.MODEL_STOP:
+					if (disabledAtRun)
+						enableButton(true, e.getSource());
+					break;
+				}
 			}
-		}
-
+		});
 	}
 
 	public String toString() {

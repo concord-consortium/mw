@@ -428,46 +428,53 @@ public class PageRadioButton extends JRadioButton implements Embeddable, ModelCo
 	}
 
 	private void enableRadioButton(final boolean b, Object source) {
-		if (modelID == -1)
-			return;
-		ModelCanvas mc = page.getComponentPool().get(modelID);
-		if (mc == null)
-			return;
-		if (mc.getContainer().getModel() != source)
-			return;
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				setEnabled(b);
+		boolean yes = false;
+		if (modelID != -1) {
+			if (isTargetClass()) {
+				try {
+					Object o = page.getEmbeddedComponent(Class.forName(modelClass), modelID);
+					if (o instanceof PageMd3d) {
+						if (((PageMd3d) o).getMolecularModel() == source)
+							yes = true;
+					}
+				}
+				catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
 			}
-		});
+			else {
+				ModelCanvas mc = page.getComponentPool().get(modelID);
+				if (mc != null && mc.getContainer().getModel() == source)
+					yes = true;
+			}
+		}
+		if (yes)
+			setEnabled(b);
 	}
 
-	public void modelUpdate(ModelEvent e) {
-
-		if (isTargetClass()) {
-			//
-		}
-		else {
-			switch (e.getID()) {
-			case ModelEvent.SCRIPT_START:
-				if (disabledAtScript)
-					enableRadioButton(false, e.getSource());
-				break;
-			case ModelEvent.SCRIPT_END:
-				if (disabledAtScript)
-					enableRadioButton(true, e.getSource());
-				break;
-			case ModelEvent.MODEL_RUN:
-				if (disabledAtRun)
-					enableRadioButton(false, e.getSource());
-				break;
-			case ModelEvent.MODEL_STOP:
-				if (disabledAtRun)
-					enableRadioButton(true, e.getSource());
-				break;
+	public void modelUpdate(final ModelEvent e) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				switch (e.getID()) {
+				case ModelEvent.SCRIPT_START:
+					if (disabledAtScript)
+						enableRadioButton(false, e.getSource());
+					break;
+				case ModelEvent.SCRIPT_END:
+					if (disabledAtScript)
+						enableRadioButton(true, e.getSource());
+					break;
+				case ModelEvent.MODEL_RUN:
+					if (disabledAtRun)
+						enableRadioButton(false, e.getSource());
+					break;
+				case ModelEvent.MODEL_STOP:
+					if (disabledAtRun)
+						enableRadioButton(true, e.getSource());
+					break;
+				}
 			}
-		}
-
+		});
 	}
 
 	public String toString() {

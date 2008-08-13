@@ -575,54 +575,68 @@ public class PageSlider extends JSlider implements Embeddable, ModelCommunicator
 		return null;
 	}
 
-	private void enableSlider(final boolean b, Object source) {
-		if (modelID == -1)
-			return;
-		ModelCanvas mc = page.getComponentPool().get(modelID);
-		if (mc == null)
-			return;
-		if (mc.getContainer().getModel() != source)
-			return;
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				setEnabled(b);
-			}
-		});
-	}
-
-	public void modelUpdate(ModelEvent e) {
-		Object src = e.getSource();
-		switch (e.getID()) {
-		case ModelEvent.MODEL_INPUT:
-			if (src instanceof Model) {
-				AbstractChange c = getChange();
-				if (c != null) {
-					ChangeListener[] cl = getChangeListeners();
-					for (ChangeListener i : cl)
-						removeChangeListener(i);
-					setValue((int) (value * scaleFactor));
-					for (ChangeListener i : cl)
-						addChangeListener(i);
+	private void enableSlider(boolean b, Object source) {
+		boolean yes = false;
+		if (modelID != -1) {
+			if (isTargetClass()) {
+				try {
+					Object o = page.getEmbeddedComponent(Class.forName(modelClass), modelID);
+					if (o instanceof PageMd3d) {
+						if (((PageMd3d) o).getMolecularModel() == source)
+							yes = true;
+					}
+				}
+				catch (ClassNotFoundException e) {
+					e.printStackTrace();
 				}
 			}
-			break;
-		case ModelEvent.SCRIPT_START:
-			if (disabledAtScript)
-				enableSlider(false, src);
-			break;
-		case ModelEvent.SCRIPT_END:
-			if (disabledAtScript)
-				enableSlider(true, src);
-			break;
-		case ModelEvent.MODEL_RUN:
-			if (disabledAtRun)
-				enableSlider(false, src);
-			break;
-		case ModelEvent.MODEL_STOP:
-			if (disabledAtRun)
-				enableSlider(true, src);
-			break;
+			else {
+				ModelCanvas mc = page.getComponentPool().get(modelID);
+				if (mc != null && mc.getContainer().getModel() == source)
+					yes = true;
+			}
 		}
+		if (yes)
+			setEnabled(b);
+	}
+
+	public void modelUpdate(final ModelEvent e) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				Object src = e.getSource();
+				switch (e.getID()) {
+				case ModelEvent.MODEL_INPUT:
+					if (src instanceof Model) {
+						AbstractChange c = getChange();
+						if (c != null) {
+							ChangeListener[] cl = getChangeListeners();
+							for (ChangeListener i : cl)
+								removeChangeListener(i);
+							setValue((int) (value * scaleFactor));
+							for (ChangeListener i : cl)
+								addChangeListener(i);
+						}
+					}
+					break;
+				case ModelEvent.SCRIPT_START:
+					if (disabledAtScript)
+						enableSlider(false, src);
+					break;
+				case ModelEvent.SCRIPT_END:
+					if (disabledAtScript)
+						enableSlider(true, src);
+					break;
+				case ModelEvent.MODEL_RUN:
+					if (disabledAtRun)
+						enableSlider(false, src);
+					break;
+				case ModelEvent.MODEL_STOP:
+					if (disabledAtRun)
+						enableSlider(true, src);
+					break;
+				}
+			}
+		});
 	}
 
 	public String toString() {

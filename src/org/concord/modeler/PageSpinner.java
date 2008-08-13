@@ -445,50 +445,63 @@ public class PageSpinner extends JComponent implements Embeddable, ModelCommunic
 		return null;
 	}
 
-	private void enableSpinner(final boolean b, Object source) {
-		if (modelID == -1)
-			return;
-		ModelCanvas mc = page.getComponentPool().get(modelID);
-		if (mc == null)
-			return;
-		if (mc.getContainer().getModel() != source)
-			return;
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				label.setEnabled(b);
-				spinner.setEnabled(b);
-			}
-		});
-	}
-
-	public void modelUpdate(ModelEvent e) {
-		Object src = e.getSource();
-		switch (e.getID()) {
-		case ModelEvent.MODEL_INPUT:
-			if (src instanceof Model) {
-				AbstractChange c = getChange();
-				if (c != null) {
-					spinner.setValue(new Double(c.getValue()));
+	private void enableSpinner(boolean b, Object source) {
+		boolean yes = false;
+		if (modelID != -1) {
+			if (isTargetClass()) {
+				try {
+					Object o = page.getEmbeddedComponent(Class.forName(modelClass), modelID);
+					if (o instanceof PageMd3d) {
+						if (((PageMd3d) o).getMolecularModel() == source)
+							yes = true;
+					}
+				}
+				catch (ClassNotFoundException e) {
+					e.printStackTrace();
 				}
 			}
-			break;
-		case ModelEvent.SCRIPT_START:
-			if (disabledAtScript)
-				enableSpinner(false, src);
-			break;
-		case ModelEvent.SCRIPT_END:
-			if (disabledAtScript)
-				enableSpinner(true, src);
-			break;
-		case ModelEvent.MODEL_RUN:
-			if (disabledAtRun)
-				enableSpinner(false, src);
-			break;
-		case ModelEvent.MODEL_STOP:
-			if (disabledAtRun)
-				enableSpinner(true, src);
-			break;
+			else {
+				ModelCanvas mc = page.getComponentPool().get(modelID);
+				if (mc != null && mc.getContainer().getModel() == source)
+					yes = true;
+			}
 		}
+		if (yes)
+			setEnabled(b);
+	}
+
+	public void modelUpdate(final ModelEvent e) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				Object src = e.getSource();
+				switch (e.getID()) {
+				case ModelEvent.MODEL_INPUT:
+					if (src instanceof Model) {
+						AbstractChange c = getChange();
+						if (c != null) {
+							spinner.setValue(new Double(c.getValue()));
+						}
+					}
+					break;
+				case ModelEvent.SCRIPT_START:
+					if (disabledAtScript)
+						enableSpinner(false, src);
+					break;
+				case ModelEvent.SCRIPT_END:
+					if (disabledAtScript)
+						enableSpinner(true, src);
+					break;
+				case ModelEvent.MODEL_RUN:
+					if (disabledAtRun)
+						enableSpinner(false, src);
+					break;
+				case ModelEvent.MODEL_STOP:
+					if (disabledAtRun)
+						enableSpinner(true, src);
+					break;
+				}
+			}
+		});
 	}
 
 	public String toString() {

@@ -37,6 +37,7 @@ public class ABond {
 	private Atom atom3; // end atom
 	private float strength = DEFAULT_STRENGTH;
 	private float angle = (float) Math.PI;
+	private boolean selected;
 
 	/** We tend to use this constructor in deserialization. */
 	public ABond(Atom atom1, Atom atom2, Atom atom3) {
@@ -110,6 +111,14 @@ public class ABond {
 		float yy = z21 * x23 - x21 * z23;
 		float zz = x21 * y23 - y21 * x23;
 		return Math.abs(Math.atan2(Math.sqrt(xx * xx + yy * yy + zz * zz), x21 * x23 + y21 * y23 + z21 * z23));
+	}
+
+	public void setSelected(boolean b) {
+		selected = b;
+	}
+
+	public boolean isSelected() {
+		return selected;
 	}
 
 	public void setAngle(float angle) {
