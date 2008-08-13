@@ -37,6 +37,7 @@ public class RBond {
 	private byte order = 1;
 	private float strength = DEFAULT_STRENGTH;
 	private float length = 2.0f;
+	private boolean selected;
 
 	public RBond(Atom atom1, Atom atom2) {
 		if (atom1 == null || atom2 == null)
@@ -55,6 +56,14 @@ public class RBond {
 		if (r1.atom2 == r2.atom1 || r1.atom2 == r2.atom2)
 			return r1.atom2;
 		return null;
+	}
+
+	public void setSelected(boolean b) {
+		selected = b;
+	}
+
+	public boolean isSelected() {
+		return selected;
 	}
 
 	public void setLength(float length) {

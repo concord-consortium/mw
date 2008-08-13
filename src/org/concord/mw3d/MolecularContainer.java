@@ -91,6 +91,8 @@ import org.concord.modeler.MovieSlider;
 import org.concord.modeler.draw.DrawingElement;
 import org.concord.modeler.draw.DrawingElementStateFactory;
 import org.concord.modeler.draw.FillMode;
+import org.concord.modeler.event.ModelEvent;
+import org.concord.modeler.event.ModelListener;
 import org.concord.modeler.event.PageComponentEvent;
 import org.concord.modeler.event.PageComponentListener;
 import org.concord.modeler.event.ProgressEvent;
@@ -137,6 +139,7 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 	private ImageStreamGenerator imageStreamGenerator;
 
 	/* event handling */
+	private List<ModelListener> modelListenerList;
 	private List<PageComponentListener> pageComponentListenerList;
 	private PageComponentEvent modelChangeEvent;
 	private boolean boxRotated;
@@ -235,6 +238,30 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 		actionReminder = new ActionReminder();
 		actionReminder.setParentComponent(this);
 
+	}
+
+	public void addModelListener(ModelListener ml) {
+		if (modelListenerList == null)
+			modelListenerList = new ArrayList<ModelListener>();
+		if (!modelListenerList.contains(ml))
+			modelListenerList.add(ml);
+	}
+
+	public void removeModelListener(ModelListener ml) {
+		if (modelListenerList == null)
+			return;
+		modelListenerList.remove(ml);
+	}
+
+	public List<ModelListener> getModelListeners() {
+		return modelListenerList;
+	}
+
+	public void notifyModelListeners(ModelEvent e) {
+		if (modelListenerList == null)
+			return;
+		for (ModelListener l : modelListenerList)
+			l.modelUpdate(e);
 	}
 
 	protected List<PageComponentListener> getPageComponentListeners() {
@@ -387,8 +414,15 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 
 	public void scriptExecuted(ScriptExecutionEvent e) {
 		if ("reset".equals(e.getDescription())) {
-			// notifyModelListeners(new ModelEvent(model, ModelEvent.MODEL_RESET));
+			notifyModelListeners(new ModelEvent(model, ModelEvent.MODEL_RESET));
 			notifyPageComponentListeners(new PageComponentEvent(this, PageComponentEvent.COMPONENT_RESET));
+		}
+		else if ("run".equals(e.getDescription())) {
+			notifyModelListeners(new ModelEvent(model, ModelEvent.MODEL_RUN));
+			notifyPageComponentListeners(new PageComponentEvent(this, PageComponentEvent.COMPONENT_RUN));
+		}
+		else if ("stop".equals(e.getDescription())) {
+			notifyModelListeners(new ModelEvent(model, ModelEvent.MODEL_STOP));
 		}
 	}
 
@@ -1149,6 +1183,7 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 				else {
 					run();
 				}
+				notifyModelListeners(new ModelEvent(model, ModelEvent.MODEL_RUN));
 			}
 		};
 		runAction.putValue(NAME, "Run");
@@ -1166,6 +1201,7 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 				model.getMovie().pause();
 				model.getMovie().enableMovieActions(true);
 				setToolBarEnabled(true);
+				notifyModelListeners(new ModelEvent(model, ModelEvent.MODEL_STOP));
 			}
 		};
 		stopAction.putValue(NAME, "Stop");
@@ -1184,7 +1220,7 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 				if (resourceAddress != null)
 					input(resourceAddress);
 				else reset();
-				// notifyModelListeners(new ModelEvent(model, ModelEvent.MODEL_RESET));
+				notifyModelListeners(new ModelEvent(model, ModelEvent.MODEL_RESET));
 				notifyPageComponentListeners(new PageComponentEvent(MolecularContainer.this,
 						PageComponentEvent.COMPONENT_RESET));
 			}

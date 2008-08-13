@@ -42,8 +42,6 @@ import javax.vecmath.Vector3f;
 import org.concord.mw3d.MolecularView;
 import org.concord.modeler.DisasterHandler;
 import org.concord.modeler.SlideMovie;
-import org.concord.modeler.event.ModelEvent;
-import org.concord.modeler.event.ModelListener;
 import org.concord.modeler.event.ScriptExecutionListener;
 import org.concord.modeler.event.ScriptListener;
 import org.concord.modeler.process.AbstractLoadable;
@@ -134,7 +132,6 @@ public class MolecularModel {
 	private String initializationScript;
 	private boolean exclusiveSelection = true;
 
-	private List modelListeners;
 	private Runnable changeNotifier, runNotifier;
 
 	Job job;
@@ -530,7 +527,7 @@ public class MolecularModel {
 	}
 
 	/** select a set of particles according to the instruction BitSet. */
-	public void setSelectionSet(BitSet set) {
+	public void setAtomSelectionSet(BitSet set) {
 		view.setAtomSelected(-1);
 		if (set != null) {
 			setExclusiveSelection(false);
@@ -543,11 +540,40 @@ public class MolecularModel {
 	}
 
 	/** return the selected set of particles in BitSet. */
-	public BitSet getSelectionSet() {
+	public BitSet getAtomSelectionSet() {
 		BitSet bs = new BitSet(iAtom);
 		for (int i = 0; i < iAtom; i++) {
 			if (atom[i].isSelected())
 				bs.set(i);
+		}
+		return bs;
+	}
+
+	/** select a set of radial bonds according to the instruction BitSet. */
+	public void setRBondSelectionSet(BitSet set) {
+		view.selectRBond(-1);
+		if (set != null) {
+			setExclusiveSelection(false);
+			for (RBond rb : rBonds) {
+				int i = rBonds.indexOf(rb);
+				if (set.get(i)) {
+					rb.setSelected(true);
+					view.selectRBond(i);
+				}
+				else {
+					rb.setSelected(false);
+				}
+			}
+		}
+		view.repaint();
+	}
+
+	/** return the selected set of radial bonds in BitSet. */
+	public BitSet getRBondSelectionSet() {
+		BitSet bs = new BitSet(rBonds.size());
+		for (RBond rb : rBonds) {
+			if (rb.isSelected())
+				bs.set(rBonds.indexOf(rb));
 		}
 		return bs;
 	}
@@ -1588,7 +1614,6 @@ public class MolecularModel {
 				a = view.getActionMap().get("stop");
 				if (a != null)
 					a.setEnabled(true);
-				notifyModelListeners(new ModelEvent(MolecularModel.this, ModelEvent.MODEL_RUN));
 				notifyRun();
 			}
 		});
@@ -1739,13 +1764,6 @@ public class MolecularModel {
 			}
 		}
 		return true;
-	}
-
-	private void notifyModelListeners(ModelEvent e) {
-		if (modelListeners == null || modelListeners.isEmpty())
-			return;
-		for (Iterator it = modelListeners.iterator(); it.hasNext();)
-			((ModelListener) it.next()).modelUpdate(e);
 	}
 
 	public void clear() {

@@ -1282,7 +1282,7 @@ public class MolecularView extends Draw {
 		}
 	}
 
-	private void selectRBond(int i) {
+	public void selectRBond(int i) {
 		if (i >= 0) {
 			selectedComponent = model.getRBond(i);
 		}
@@ -1292,7 +1292,7 @@ public class MolecularView extends Draw {
 		}
 	}
 
-	private void selectABond(int i) {
+	public void selectABond(int i) {
 		if (i >= 0) {
 			selectedComponent = model.getABond(i);
 		}
@@ -1302,7 +1302,7 @@ public class MolecularView extends Draw {
 		}
 	}
 
-	private void selectTBond(int i) {
+	public void selectTBond(int i) {
 		if (i >= 0) {
 			selectedComponent = model.getTBond(i);
 		}
@@ -2880,7 +2880,7 @@ public class MolecularView extends Draw {
 		return currentMoleculeToAdd;
 	}
 
-	private void removeAtoms(BitSet bs) {
+	public void removeAtoms(BitSet bs) {
 		if (bs.cardinality() <= 0)
 			return;
 		handleBitSet(translucentBitSet, sharedBitSet, bs);
@@ -2952,7 +2952,7 @@ public class MolecularView extends Draw {
 		repaint();
 	}
 
-	void setCharge(int index, float charge) {
+	public void setCharge(int index, float charge) {
 		if (index < 0 || index >= model.getAtomCount())
 			return;
 		model.getAtom(index).setCharge(charge);
@@ -3059,7 +3059,7 @@ public class MolecularView extends Draw {
 		return true;
 	}
 
-	private boolean addAtom(Point3f p) {
+	public boolean addAtom(Point3f p) {
 		if (!model.contains(p))
 			return false;
 		int n = model.getAtomCount();
@@ -3104,7 +3104,7 @@ public class MolecularView extends Draw {
 		return true;
 	}
 
-	private void removeRBond(RBond rbond) {
+	public void removeRBond(RBond rbond) {
 		viewer.removeRBond(model.getRBonds().indexOf(rbond));
 		model.removeRBond(rbond);
 		if (selectedComponent == rbond) {
@@ -3115,7 +3115,7 @@ public class MolecularView extends Draw {
 		model.notifyChange();
 	}
 
-	private void addRBond(Atom a1, Atom a2) {
+	public void addRBond(Atom a1, Atom a2) {
 		RBond rbond = new RBond(a1, a2);
 		rbond.setLength(a1.distance(a2));
 		model.addRBond(rbond);
@@ -3124,7 +3124,7 @@ public class MolecularView extends Draw {
 		model.notifyChange();
 	}
 
-	private void removeABond(ABond abond) {
+	public void removeABond(ABond abond) {
 		viewer.removeABond(model.getABonds().indexOf(abond));
 		model.removeABond(abond);
 		if (selectedComponent == abond) {
@@ -3134,7 +3134,7 @@ public class MolecularView extends Draw {
 		model.notifyChange();
 	}
 
-	private void addABond(RBond r1, RBond r2) {
+	public void addABond(RBond r1, RBond r2) {
 		if (r1.equals(r2))
 			return;
 		ABond abond = new ABond(r1, r2); // angle already set in the constructor
@@ -3148,7 +3148,7 @@ public class MolecularView extends Draw {
 		model.notifyChange();
 	}
 
-	private void removeTBond(TBond tbond) {
+	public void removeTBond(TBond tbond) {
 		viewer.removeTBond(model.getTBonds().indexOf(tbond));
 		model.removeTBond(tbond);
 		if (selectedComponent == tbond) {
@@ -3158,7 +3158,7 @@ public class MolecularView extends Draw {
 		model.notifyChange();
 	}
 
-	private void addTBond(ABond a1, ABond a2) {
+	public void addTBond(ABond a1, ABond a2) {
 		if (a1.equals(a2))
 			return;
 		if (a1.getAtom2() == a2.getAtom2())

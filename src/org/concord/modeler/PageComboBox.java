@@ -446,51 +446,91 @@ public class PageComboBox extends JComboBox implements Embeddable, ModelCommunic
 		});
 	}
 
-	private void enableComboBox(final boolean b, Object source) {
-		if (modelID == -1)
-			return;
-		ModelCanvas mc = page.getComponentPool().get(modelID);
-		if (mc == null)
-			return;
-		if (mc.getContainer().getModel() != source)
-			return;
+	private void enableComboBox(boolean b, Object source) {
+		boolean yes = false;
+		if (modelID != -1) {
+			if (isTargetClass()) {
+				try {
+					Object o = page.getEmbeddedComponent(Class.forName(modelClass), modelID);
+					if (o instanceof PageMd3d) {
+						if (((PageMd3d) o).getMolecularModel() == source)
+							yes = true;
+					}
+				}
+				catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+			}
+			else {
+				ModelCanvas mc = page.getComponentPool().get(modelID);
+				if (mc != null && mc.getContainer().getModel() == source)
+					yes = true;
+			}
+		}
+		if (yes)
+			setEnabled(b);
+	}
+
+	public void modelUpdate(final ModelEvent e) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				setEnabled(b);
+				modelUpdate2(e);
 			}
 		});
 	}
 
-	public void modelUpdate(ModelEvent e) {
+	private void modelUpdate2(ModelEvent e) {
 		Object src = e.getSource();
-		if (src instanceof BasicModel) {
-			switch (e.getID()) {
-			case ModelEvent.SCRIPT_START:
-				if (disabledAtScript)
-					enableComboBox(false, src);
-				break;
-			case ModelEvent.SCRIPT_END:
-				if (disabledAtScript)
-					enableComboBox(true, src);
-				break;
-			case ModelEvent.MODEL_RUN:
-				if (disabledAtRun)
-					enableComboBox(false, src);
-				break;
-			case ModelEvent.MODEL_STOP:
-				if (disabledAtRun)
-					enableComboBox(true, src);
-				break;
-			case ModelEvent.MODEL_INPUT:
-				Action a = getAction();
-				if (a != null) {
-					Object o = a.getValue("state");
-					if (o != null)
-						setSelectedItem(o);
-					String s = (String) a.getValue(Action.SHORT_DESCRIPTION);
-					if (s != null && s.equals("Import a model")) {
-						if (src instanceof PageMolecularViewer) {
-							String fn = FileUtilities.getFileName(((PageMolecularViewer) src).getResourceAddress());
+		switch (e.getID()) {
+		case ModelEvent.SCRIPT_START:
+			if (disabledAtScript)
+				enableComboBox(false, src);
+			break;
+		case ModelEvent.SCRIPT_END:
+			if (disabledAtScript)
+				enableComboBox(true, src);
+			break;
+		case ModelEvent.MODEL_RUN:
+			if (disabledAtRun)
+				enableComboBox(false, src);
+			break;
+		case ModelEvent.MODEL_STOP:
+			if (disabledAtRun)
+				enableComboBox(true, src);
+			break;
+		case ModelEvent.MODEL_INPUT:
+			Action a = getAction();
+			if (a != null) {
+				Object o = a.getValue("state");
+				if (o != null)
+					setSelectedItem(o);
+				String s = (String) a.getValue(Action.SHORT_DESCRIPTION);
+				if (s != null && s.equals("Import a model")) {
+					if (src instanceof PageMolecularViewer) {
+						String fn = FileUtilities.getFileName(((PageMolecularViewer) src).getResourceAddress());
+						String[] option = (String[]) a.getValue("options");
+						if (option != null) {
+							boolean b = false;
+							for (int i = 0; i < option.length; i++) {
+								if (option[i].equals(fn)) {
+									b = true;
+									break;
+								}
+							}
+							super.setAction(null);
+							if (!b) {
+								setSelectedIndex(0);
+							}
+							else {
+								setSelectedItem(fn);
+							}
+							super.setAction(a);
+						}
+					}
+					else if (src instanceof Model) {
+						o = ((Model) src).getProperty("url");
+						if (o instanceof String) {
+							String fn = FileUtilities.getFileName((String) o);
 							String[] option = (String[]) a.getValue("options");
 							if (option != null) {
 								boolean b = false;
@@ -508,30 +548,6 @@ public class PageComboBox extends JComboBox implements Embeddable, ModelCommunic
 									setSelectedItem(fn);
 								}
 								super.setAction(a);
-							}
-						}
-						else if (src instanceof Model) {
-							o = ((Model) src).getProperty("url");
-							if (o instanceof String) {
-								String fn = FileUtilities.getFileName((String) o);
-								String[] option = (String[]) a.getValue("options");
-								if (option != null) {
-									boolean b = false;
-									for (int i = 0; i < option.length; i++) {
-										if (option[i].equals(fn)) {
-											b = true;
-											break;
-										}
-									}
-									super.setAction(null);
-									if (!b) {
-										setSelectedIndex(0);
-									}
-									else {
-										setSelectedItem(fn);
-									}
-									super.setAction(a);
-								}
 							}
 						}
 					}

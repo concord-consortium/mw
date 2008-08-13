@@ -24,10 +24,8 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -46,7 +44,6 @@ import javax.swing.event.ChangeListener;
 
 import org.concord.modeler.event.AbstractChange;
 import org.concord.modeler.event.ModelEvent;
-import org.concord.modeler.event.ModelListener;
 import org.concord.modeler.text.Page;
 import org.concord.modeler.text.SaveReminder;
 import org.concord.modeler.text.XMLCharacterEncoder;
@@ -72,7 +69,6 @@ public class PageMd3d extends MolecularContainer implements BasicModel, Embeddab
 	private Map<String, Action> actionMap;
 	private Map<String, Action> switchMap;
 	private Map<String, Action> multiSwitchMap;
-	private List<ModelListener> modelListenerList;
 	private static PageMd3dMaker maker;
 
 	private Action snapshotAction, snapshotAction2, mwScriptAction, jmolScriptAction;
@@ -406,30 +402,6 @@ public class PageMd3d extends MolecularContainer implements BasicModel, Embeddab
 	/** runs Jmol scripts. */
 	public String runNativeScript(String script) {
 		return runJmolScript(script);
-	}
-
-	public void addModelListener(ModelListener ml) {
-		if (modelListenerList == null)
-			modelListenerList = new ArrayList<ModelListener>();
-		if (!modelListenerList.contains(ml))
-			modelListenerList.add(ml);
-	}
-
-	public void removeModelListener(ModelListener ml) {
-		if (modelListenerList == null)
-			return;
-		modelListenerList.remove(ml);
-	}
-
-	public List<ModelListener> getModelListeners() {
-		return modelListenerList;
-	}
-
-	public void notifyModelListeners(ModelEvent e) {
-		if (modelListenerList == null)
-			return;
-		for (ModelListener l : modelListenerList)
-			l.modelUpdate(e);
 	}
 
 	public void destroy() {
