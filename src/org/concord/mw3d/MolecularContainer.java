@@ -1046,6 +1046,7 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 
 	public void notifyFileLoaded(String fullPathName, String fileName, String modelName, Object clientFile,
 			String errorMessage) {
+		view.getViewer().setSelectionHaloEnabled(true);
 		view.setLoadingMessagePainted(false);
 		setGenericParticles();
 		view.refresh();

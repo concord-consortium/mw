@@ -217,7 +217,6 @@ public class MolecularView extends Draw {
 		viewer.setAxisDiameter(200);
 		viewer.setAutoBond(false);
 		viewer.setShowRebondTime(false);
-		viewer.setSelectionHaloEnabled(true);
 		viewer.setDisablePopupMenu(true);
 		viewer.setColorBackground(Color.black);
 		setMolecularStyle(SPACE_FILLING);

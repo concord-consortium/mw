@@ -78,7 +78,6 @@ class SticksRenderer extends ShapeRenderer {
 
 	}
 
-	// XIE
 	void render(Bond bond, int index) {
 		if (viewer.getMw2dFlag()) {
 			render2d(bond, index);
@@ -122,26 +121,25 @@ class SticksRenderer extends ShapeRenderer {
 			}
 		}
 		render(bond, atomA, atomB);
-		// XIE: begin
 		if (bond.annotationKey) {
 			drawPin(bond, index);
 		}
 		if (bond.interactionKey) {
 			drawInteractionCenter(bond);
 		}
-		if (index == viewer.clickedBond) {
-			fillScreenedClickedSign(bond, Graphics3D.CYAN);
+		if (viewer.getSelectionHaloEnabled() && bond.selected) {
+			fillScreenedStick(bond, viewer.colorManager.getColixSelection());
 		}
-		// XIE: end
+		if (index == viewer.clickedBond) {
+			fillScreenedStick(bond, Graphics3D.CYAN);
+		}
 	}
 
-	// XIE
 	private void drawArrow(Bond bond, int x, int y, int z) {
 		g3d.fillTriangle(bond.interactionKeyColix, p1, p2, p3);
 		g3d.drawDottedLine(bond.interactionKeyColix, p1.x, p1.y, p1.z, x, y, z);
 	}
 
-	// XIE:
 	private void drawInteractionCenter(Bond bond) {
 		int a = (bond.atom1.screenDiameter + bond.atom2.screenDiameter) >> 1;
 		int r = a / 6;
@@ -173,8 +171,8 @@ class SticksRenderer extends ShapeRenderer {
 		drawArrow(bond, x, y, z);
 	}
 
-	// XIE: render selection halos for bonds
-	private void fillScreenedClickedSign(Bond bond, short colix) {
+	// render selection halos for bonds
+	private void fillScreenedStick(Bond bond, short colix) {
 		int dx = bond.atom2.screenX - bond.atom1.screenX;
 		int dy = bond.atom2.screenY - bond.atom1.screenY;
 		float inv = width / (float) Math.sqrt(dx * dx + dy * dy);
@@ -251,7 +249,6 @@ class SticksRenderer extends ShapeRenderer {
 
 	}
 
-	// XIE
 	private void render2d(Bond bond, int index) {
 		madBond = bond.mad;
 		Atom atomA = bond.atom1;
@@ -541,7 +538,6 @@ class SticksRenderer extends ShapeRenderer {
 		}
 	}
 
-	// XIE
 	private void setColixNearClip() {
 		if (zA * 2 < atomA.screenDiameter) {
 			colixA = Graphics3D.getTranslucentColix(colixA);

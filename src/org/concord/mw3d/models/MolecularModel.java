@@ -556,13 +556,9 @@ public class MolecularModel {
 			setExclusiveSelection(false);
 			for (RBond rb : rBonds) {
 				int i = rBonds.indexOf(rb);
-				if (set.get(i)) {
-					rb.setSelected(true);
-					view.selectRBond(i);
-				}
-				else {
-					rb.setSelected(false);
-				}
+				boolean b = set.get(i);
+				rb.setSelected(b);
+				view.getViewer().setBondSelected(i, b);
 			}
 		}
 		view.repaint();
