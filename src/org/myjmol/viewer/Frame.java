@@ -3371,9 +3371,7 @@ public final class Frame {
 	boolean selectionHaloEnabled = false;
 
 	public void setSelectionHaloEnabled(boolean selectionHaloEnabled) {
-		if (this.selectionHaloEnabled != selectionHaloEnabled) {
-			this.selectionHaloEnabled = selectionHaloEnabled;
-		}
+		this.selectionHaloEnabled = selectionHaloEnabled;
 	}
 
 	boolean getSelectionHaloEnabled() {

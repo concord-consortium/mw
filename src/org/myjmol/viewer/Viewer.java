@@ -480,6 +480,17 @@ public class Viewer extends JmolViewer {
 		clickedBond = i;
 	}
 
+	public void setBondSelected(int i, boolean b) {
+		if (modelManager.frame.bondCount <= 0)
+			return;
+		Bond[] bond = modelManager.frame.bonds;
+		if (bond == null)
+			return;
+		if (i < 0 || i >= bond.length)
+			return;
+		bond[i].selected = b;
+	}
+
 	/** XIE */
 	public void setZDepthMagnification(int i) {
 		transformManager.setZDepthMagnification(i);

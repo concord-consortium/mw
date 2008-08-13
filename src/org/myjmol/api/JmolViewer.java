@@ -86,6 +86,8 @@ abstract public class JmolViewer extends JmolSimpleViewer {
 	/** XIE: indicate that the bond is clicked */
 	abstract public void setClickedBond(int i);
 
+	abstract public void setBondSelected(int i, boolean b);
+
 	/** XIE */
 	abstract public int getAttachmentHost(byte type, int x, int y, Class c);
 

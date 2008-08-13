@@ -24,7 +24,6 @@
  */
 package org.myjmol.viewer;
 
-
 import org.myjmol.api.JmolAdapter;
 import org.myjmol.symmetry.SpaceGroup;
 import org.myjmol.symmetry.UnitCell;
