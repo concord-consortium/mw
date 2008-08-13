@@ -58,6 +58,11 @@ public class RBond {
 		return null;
 	}
 
+	/** return true if the atom of the specified type is involved in this radial bond. */
+	public boolean containsElement(String symbol) {
+		return atom1.getSymbol().equalsIgnoreCase(symbol) || atom2.getSymbol().equalsIgnoreCase(symbol);
+	}
+
 	/** return true if the atom of the specified index is involved in this radial bond. */
 	public boolean contains(int index) {
 		return atom1.index == index || atom2.index == index;

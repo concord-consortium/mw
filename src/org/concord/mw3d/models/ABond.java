@@ -137,6 +137,12 @@ public class ABond {
 		return strength;
 	}
 
+	/** return true if the atom of the specified type is involved in this angular bond. */
+	public boolean containsElement(String symbol) {
+		return atom1.getSymbol().equalsIgnoreCase(symbol) || atom2.getSymbol().equalsIgnoreCase(symbol)
+				|| atom3.getSymbol().equalsIgnoreCase(symbol);
+	}
+
 	/** return true if the atom of the specified index is involved in this angular bond. */
 	public boolean contains(int index) {
 		return atom1.index == index || atom2.index == index || atom3.index == index;
