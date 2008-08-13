@@ -2046,10 +2046,13 @@ class Eval3D extends AbstractEval {
 					bs = selectElements(s);
 					break;
 				case BY_RBOND:
+					bs = selectRBonds(s);
 					break;
 				case BY_ABOND:
+					bs = selectABonds(s);
 					break;
 				case BY_TBOND:
+					bs = selectTBonds(s);
 					break;
 				case BY_MOLECULE:
 					break;
@@ -2070,10 +2073,13 @@ class Eval3D extends AbstractEval {
 			model.setAtomSelectionSet(bs);
 			break;
 		case BY_RBOND:
+			model.setRBondSelectionSet(bs);
 			break;
 		case BY_ABOND:
+			model.setABondSelectionSet(bs);
 			break;
 		case BY_TBOND:
+			model.setTBondSelectionSet(bs);
 			break;
 		case BY_MOLECULE:
 			break;
