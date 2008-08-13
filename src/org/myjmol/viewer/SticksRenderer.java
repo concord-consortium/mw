@@ -120,7 +120,8 @@ class SticksRenderer extends ShapeRenderer {
 				atomB = getBackboneAtom(atomB);
 			}
 		}
-		render(bond, atomA, atomB);
+		if (bond.visible)
+			render(bond, atomA, atomB);
 		if (bond.annotationKey) {
 			drawPin(bond, index);
 		}

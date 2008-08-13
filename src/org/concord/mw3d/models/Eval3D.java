@@ -1004,6 +1004,14 @@ class Eval3D extends AbstractEval {
 							view.setVisible(a, b);
 						}
 					}
+					n = model.getRBondCount();
+					for (int i = 0; i < n; i++) {
+						RBond rb = model.getRBond(i);
+						if (rb.isSelected()) {
+							rb.setVisible(b);
+							view.setVisible(rb, b);
+						}
+					}
 					model.notifyChange();
 					return true;
 				}

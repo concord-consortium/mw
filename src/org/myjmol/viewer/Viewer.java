@@ -1082,6 +1082,16 @@ public class Viewer extends JmolViewer {
 			atom.visible = b;
 	}
 
+	/** set the specified radial bond's visibility */
+	public void setBondVisibility(int index, boolean b) {
+		Frame frame = modelManager.frame;
+		if (frame == null)
+			return;
+		Bond bond = frame.getBondAt(index);
+		if (bond != null)
+			bond.visible = b;
+	}
+
 	/**
 	 * XIE: This method is used when the data is read from a client object, instead of a file on disk. Since this
 	 * involves no job from Eval, Eval should not be used at all. This fixes the bugs with Compiler.

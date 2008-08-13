@@ -38,6 +38,7 @@ public class RBond {
 	private float strength = DEFAULT_STRENGTH;
 	private float length = 2.0f;
 	private boolean selected;
+	private boolean visible = true;
 
 	public RBond(Atom atom1, Atom atom2) {
 		if (atom1 == null || atom2 == null)
@@ -74,6 +75,14 @@ public class RBond {
 
 	public boolean isSelected() {
 		return selected;
+	}
+
+	public void setVisible(boolean b) {
+		visible = b;
+	}
+
+	public boolean isVisible() {
+		return visible;
 	}
 
 	public void setLength(float length) {
