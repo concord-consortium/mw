@@ -1688,6 +1688,10 @@ class Eval3D extends AbstractEval {
 					return bs;
 				}
 			}
+			else {
+				out(ScriptEvent.FAILED, "Unrecognized expression: " + str);
+				return null;
+			}
 		}
 		if (selectFromCollection(str, n, bs)) {
 			model.setRBondSelectionSet(bs);
@@ -1736,6 +1740,24 @@ class Eval3D extends AbstractEval {
 			}
 			return true;
 		}
+		str = str.trim();
+		if (str.length() > 0) {
+			String[] s = str.split(REGEX_SEPARATOR + "+");
+			for (int i = 0; i < s.length; i++) {
+				s[i] = standardizeElementName(s[i]);
+				Object o = model.paramMap.get(s[i]);
+				if (o != null) {
+					synchronized (model.rBonds) {
+						for (RBond rb : model.rBonds) {
+							if (rb.containsElement(s[i])) {
+								bs.set(model.rBonds.indexOf(rb));
+							}
+						}
+					}
+				}
+			}
+			return true;
+		}
 		return false;
 	}
 
@@ -1763,6 +1785,10 @@ class Eval3D extends AbstractEval {
 					model.setABondSelectionSet(bs);
 					return bs;
 				}
+			}
+			else {
+				out(ScriptEvent.FAILED, "Unrecognized expression: " + str);
+				return null;
 			}
 		}
 		if (selectFromCollection(str, n, bs)) {
@@ -1813,6 +1839,24 @@ class Eval3D extends AbstractEval {
 			}
 			return true;
 		}
+		str = str.trim();
+		if (str.length() > 0) {
+			String[] s = str.split(REGEX_SEPARATOR + "+");
+			for (int i = 0; i < s.length; i++) {
+				s[i] = standardizeElementName(s[i]);
+				Object o = model.paramMap.get(s[i]);
+				if (o != null) {
+					synchronized (model.aBonds) {
+						for (ABond ab : model.aBonds) {
+							if (ab.containsElement(s[i])) {
+								bs.set(model.aBonds.indexOf(ab));
+							}
+						}
+					}
+				}
+			}
+			return true;
+		}
 		return false;
 	}
 
@@ -1840,6 +1884,10 @@ class Eval3D extends AbstractEval {
 					model.setTBondSelectionSet(bs);
 					return bs;
 				}
+			}
+			else {
+				out(ScriptEvent.FAILED, "Unrecognized expression: " + str);
+				return null;
 			}
 		}
 		if (selectFromCollection(str, n, bs)) {
@@ -1891,7 +1939,33 @@ class Eval3D extends AbstractEval {
 			}
 			return true;
 		}
+		str = str.trim();
+		if (str.length() > 0) {
+			String[] s = str.split(REGEX_SEPARATOR + "+");
+			for (int i = 0; i < s.length; i++) {
+				s[i] = standardizeElementName(s[i]);
+				Object o = model.paramMap.get(s[i]);
+				if (o != null) {
+					synchronized (model.tBonds) {
+						for (TBond tb : model.tBonds) {
+							if (tb.containsElement(s[i])) {
+								bs.set(model.tBonds.indexOf(tb));
+							}
+						}
+					}
+				}
+			}
+			return true;
+		}
 		return false;
+	}
+
+	private static String standardizeElementName(String str) {
+		str = str.toLowerCase();
+		char[] array = str.toCharArray();
+		array[0] = Character.toUpperCase(array[0]);
+		str = new String(array);
+		return str;
 	}
 
 	private static boolean inRangeInclusive(int x, int beg, int end) {
