@@ -44,6 +44,7 @@ class Bond {
 	short annotationKeyColix = Graphics3D.GOLD; // XIE: annotation key color
 	short interactionKeyColix = Graphics3D.GRAY; // XIE: interaction key color
 	boolean selected;
+	boolean visible = true;
 
 	Bond(Atom atom1, Atom atom2, short order, short mad, short colix) {
 		if (atom1 == null)
