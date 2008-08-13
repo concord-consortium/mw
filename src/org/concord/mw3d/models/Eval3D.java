@@ -1015,6 +1015,24 @@ class Eval3D extends AbstractEval {
 					model.notifyChange();
 					return true;
 				}
+				else if (s0 == "translucent") {
+					boolean b = "on".equalsIgnoreCase(s[1].trim());
+					int n = model.getAtomCount();
+					for (int i = 0; i < n; i++) {
+						Atom a = model.getAtom(i);
+						if (a.isSelected()) {
+							view.setTranslucent(a, b);
+						}
+					}
+					n = model.getRBondCount();
+					for (int i = 0; i < n; i++) {
+						RBond rb = model.getRBond(i);
+						if (rb.isSelected()) {
+						}
+					}
+					model.notifyChange();
+					return true;
+				}
 			}
 			double x = parseMathExpression(s[1]);
 			if (Double.isNaN(x))
