@@ -88,6 +88,10 @@ abstract public class JmolViewer extends JmolSimpleViewer {
 
 	abstract public void setBondSelected(int i, boolean b);
 
+	abstract public void setABondSelected(int i, boolean b);
+
+	abstract public void setTBondSelected(int i, boolean b);
+
 	/** XIE */
 	abstract public int getAttachmentHost(byte type, int x, int y, Class c);
 

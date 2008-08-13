@@ -137,6 +137,11 @@ public class ABond {
 		return strength;
 	}
 
+	/** return true if the atom of the specified index is involved in this angular bond. */
+	public boolean contains(int index) {
+		return atom1.index == index || atom2.index == index || atom3.index == index;
+	}
+
 	public boolean contains(Atom a1, Atom a2) {
 		if (a1 != atom1 && a1 != atom2 && a1 != atom3)
 			return false;

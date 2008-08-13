@@ -69,7 +69,7 @@ class ABonds extends Shape {
 		return list;
 	}
 
-	/** Clients acquiring an iterator must use the lock returned by getLock() to guard their iteration code. */
+	/* Clients acquiring an iterator must use the lock returned by getLock() to guard their iteration code. */
 	Iterator iterator() {
 		return list.iterator();
 	}
@@ -82,7 +82,7 @@ class ABonds extends Shape {
 		return list.size();
 	}
 
-	/**
+	/*
 	 * Clients calling this method and count() to iterate through the elements must use the lock returned by getLock()
 	 * to guard their iteration code.
 	 */

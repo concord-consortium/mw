@@ -58,6 +58,11 @@ public class RBond {
 		return null;
 	}
 
+	/** return true if the atom of the specified index is involved in this radial bond. */
+	public boolean contains(int index) {
+		return atom1.index == index || atom2.index == index;
+	}
+
 	public void setSelected(boolean b) {
 		selected = b;
 	}

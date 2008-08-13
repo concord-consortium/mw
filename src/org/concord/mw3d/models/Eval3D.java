@@ -631,6 +631,34 @@ class Eval3D extends AbstractEval {
 					+ " radial bonds are selected.");
 			return true;
 		}
+		matcher = ABOND.matcher(clause); // select by angular bond
+		if (matcher.find()) {
+			String str = clause.substring(matcher.end()).trim();
+			BitSet selection = null;
+			if (LOGICAL_OPERATOR.matcher(str).find()) {// logical expressions
+				selection = parseLogicalExpression(str, BY_ABOND);
+			}
+			else {
+				selection = selectABonds(str);
+			}
+			out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0)
+					+ " angular bonds are selected.");
+			return true;
+		}
+		matcher = TBOND.matcher(clause); // select by torsional bond
+		if (matcher.find()) {
+			String str = clause.substring(matcher.end()).trim();
+			BitSet selection = null;
+			if (LOGICAL_OPERATOR.matcher(str).find()) {// logical expressions
+				selection = parseLogicalExpression(str, BY_TBOND);
+			}
+			else {
+				selection = selectTBonds(str);
+			}
+			out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0)
+					+ " torsional bonds are selected.");
+			return true;
+		}
 		out(ScriptEvent.FAILED, "Unrecognized keyword in: " + clause);
 		return false;
 	}
@@ -1676,8 +1704,8 @@ class Eval3D extends AbstractEval {
 			int end = Float.valueOf(s[1].trim()).intValue();
 			synchronized (model.rBonds) {
 				for (RBond rb : model.rBonds) {
-					if ((rb.getAtom1().getIndex() <= end && rb.getAtom1().getIndex() >= beg)
-							|| (rb.getAtom2().getIndex() <= end && rb.getAtom2().getIndex() >= beg)) {
+					if (inRangeInclusive(rb.getAtom1().getIndex(), beg, end)
+							&& inRangeInclusive(rb.getAtom2().getIndex(), beg, end)) {
 						bs.set(model.rBonds.indexOf(rb));
 					}
 				}
@@ -1691,9 +1719,8 @@ class Eval3D extends AbstractEval {
 				index = Float.valueOf(s[m]).intValue();
 				synchronized (model.rBonds) {
 					for (RBond rb : model.rBonds) {
-						if (rb.getAtom1().getIndex() == index || rb.getAtom2().getIndex() == index) {
+						if (rb.contains(index))
 							bs.set(model.rBonds.indexOf(rb));
-						}
 					}
 				}
 			}
@@ -1703,14 +1730,172 @@ class Eval3D extends AbstractEval {
 			int index = Float.valueOf(str.trim()).intValue();
 			synchronized (model.rBonds) {
 				for (RBond rb : model.rBonds) {
-					if (rb.getAtom1().getIndex() == index || rb.getAtom2().getIndex() == index) {
+					if (rb.contains(index))
 						bs.set(model.rBonds.indexOf(rb));
-					}
 				}
 			}
 			return true;
 		}
 		return false;
+	}
+
+	private BitSet selectABonds(String str) {
+		int n = model.aBonds.size();
+		if (n == 0)
+			return null;
+		BitSet bs = new BitSet(n);
+		if ("selected".equalsIgnoreCase(str)) {
+			synchronized (model.aBonds) {
+				for (int i = 0; i < n; i++) {
+					if (model.getABond(i).isSelected())
+						bs.set(i);
+				}
+			}
+			return bs;
+		}
+		String strLC = str.toLowerCase();
+		if (strLC.indexOf("involve") != -1) {
+			str = str.substring(7).trim();
+			strLC = str.toLowerCase();
+			if (strLC.indexOf("atom") != -1) {
+				str = str.substring(4).trim();
+				if (selectAbondsInvolving(str, bs)) {
+					model.setABondSelectionSet(bs);
+					return bs;
+				}
+			}
+		}
+		if (selectFromCollection(str, n, bs)) {
+			model.setABondSelectionSet(bs);
+			return bs;
+		}
+		out(ScriptEvent.FAILED, "Unrecognized expression: " + str);
+		return null;
+	}
+
+	private boolean selectAbondsInvolving(String str, BitSet bs) {
+		if (RANGE_LEADING.matcher(str).find()) {
+			String[] s = str.split("-");
+			int beg = Float.valueOf(s[0].trim()).intValue();
+			int end = Float.valueOf(s[1].trim()).intValue();
+			synchronized (model.aBonds) {
+				for (ABond ab : model.aBonds) {
+					if (inRangeInclusive(ab.getAtom1().getIndex(), beg, end)
+							&& inRangeInclusive(ab.getAtom2().getIndex(), beg, end)
+							&& inRangeInclusive(ab.getAtom3().getIndex(), beg, end)) {
+						bs.set(model.aBonds.indexOf(ab));
+					}
+				}
+			}
+			return true;
+		}
+		if (INTEGER_GROUP.matcher(str).find()) {
+			String[] s = str.split(REGEX_SEPARATOR + "+");
+			int index;
+			for (int m = 0; m < s.length; m++) {
+				index = Float.valueOf(s[m]).intValue();
+				synchronized (model.aBonds) {
+					for (ABond ab : model.aBonds) {
+						if (ab.contains(index))
+							bs.set(model.aBonds.indexOf(ab));
+					}
+				}
+			}
+			return true;
+		}
+		if (INDEX.matcher(str).find()) {
+			int index = Float.valueOf(str.trim()).intValue();
+			synchronized (model.aBonds) {
+				for (ABond ab : model.aBonds) {
+					if (ab.contains(index))
+						bs.set(model.aBonds.indexOf(ab));
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+
+	private BitSet selectTBonds(String str) {
+		int n = model.tBonds.size();
+		if (n == 0)
+			return null;
+		BitSet bs = new BitSet(n);
+		if ("selected".equalsIgnoreCase(str)) {
+			synchronized (model.tBonds) {
+				for (int i = 0; i < n; i++) {
+					if (model.getTBond(i).isSelected())
+						bs.set(i);
+				}
+			}
+			return bs;
+		}
+		String strLC = str.toLowerCase();
+		if (strLC.indexOf("involve") != -1) {
+			str = str.substring(7).trim();
+			strLC = str.toLowerCase();
+			if (strLC.indexOf("atom") != -1) {
+				str = str.substring(4).trim();
+				if (selectTbondsInvolving(str, bs)) {
+					model.setTBondSelectionSet(bs);
+					return bs;
+				}
+			}
+		}
+		if (selectFromCollection(str, n, bs)) {
+			model.setTBondSelectionSet(bs);
+			return bs;
+		}
+		out(ScriptEvent.FAILED, "Unrecognized expression: " + str);
+		return null;
+	}
+
+	private boolean selectTbondsInvolving(String str, BitSet bs) {
+		if (RANGE_LEADING.matcher(str).find()) {
+			String[] s = str.split("-");
+			int beg = Float.valueOf(s[0].trim()).intValue();
+			int end = Float.valueOf(s[1].trim()).intValue();
+			synchronized (model.tBonds) {
+				for (TBond tb : model.tBonds) {
+					if (inRangeInclusive(tb.getAtom1().getIndex(), beg, end)
+							&& inRangeInclusive(tb.getAtom2().getIndex(), beg, end)
+							&& inRangeInclusive(tb.getAtom3().getIndex(), beg, end)
+							&& inRangeInclusive(tb.getAtom4().getIndex(), beg, end)) {
+						bs.set(model.tBonds.indexOf(tb));
+					}
+				}
+			}
+			return true;
+		}
+		if (INTEGER_GROUP.matcher(str).find()) {
+			String[] s = str.split(REGEX_SEPARATOR + "+");
+			int index;
+			for (int m = 0; m < s.length; m++) {
+				index = Float.valueOf(s[m]).intValue();
+				synchronized (model.tBonds) {
+					for (TBond tb : model.tBonds) {
+						if (tb.contains(index))
+							bs.set(model.tBonds.indexOf(tb));
+					}
+				}
+			}
+			return true;
+		}
+		if (INDEX.matcher(str).find()) {
+			int index = Float.valueOf(str.trim()).intValue();
+			synchronized (model.tBonds) {
+				for (TBond tb : model.tBonds) {
+					if (tb.contains(index))
+						bs.set(model.tBonds.indexOf(tb));
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+
+	private static boolean inRangeInclusive(int x, int beg, int end) {
+		return x <= end && x >= beg;
 	}
 
 	/*
