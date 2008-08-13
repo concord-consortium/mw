@@ -162,13 +162,7 @@ public class PageButton extends JButton implements Embeddable, ModelCommunicator
 	}
 
 	boolean isTargetClass() {
-		if (modelClass == null)
-			return false;
-		for (Class c : targetClass) {
-			if (modelClass.equals(c.getName()))
-				return true;
-		}
-		return false;
+		return ComponentMaker.isTargetClass(modelClass);
 	}
 
 	public void destroy() {
@@ -473,28 +467,7 @@ public class PageButton extends JButton implements Embeddable, ModelCommunicator
 	}
 
 	private void enableButton(boolean b, Object source) {
-		boolean yes = false;
-		if (modelID != -1) {
-			if (isTargetClass()) {
-				try {
-					Object o = page.getEmbeddedComponent(Class.forName(modelClass), modelID);
-					if (o instanceof PageMd3d) {
-						if (((PageMd3d) o).getMolecularModel() == source)
-							yes = true;
-					}
-				}
-				catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
-			}
-			else {
-				ModelCanvas mc = page.getComponentPool().get(modelID);
-				if (mc != null && mc.getContainer().getModel() == source)
-					yes = true;
-			}
-		}
-		if (yes)
-			setEnabled(b);
+		ComponentMaker.enable(this, b, source, modelID, modelClass, page);
 	}
 
 	public void modelUpdate(final ModelEvent e) {
