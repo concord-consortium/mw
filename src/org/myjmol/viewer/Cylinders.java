@@ -55,7 +55,7 @@ class Cylinders extends Shape {
 		list.remove(c);
 	}
 
-	/**
+	/*
 	 * Clients calling this method and count() to iterate through the elements must use the lock returned by getLock()
 	 * to guard their iteration code.
 	 */

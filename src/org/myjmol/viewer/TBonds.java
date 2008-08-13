@@ -86,4 +86,18 @@ class TBonds extends Shape {
 		return list.indexOf(t);
 	}
 
+	/*
+	 * Clients calling this method and count() to iterate through the elements must use the lock returned by getLock()
+	 * to guard their iteration code.
+	 */
+	TBond getTBond(int i) {
+		if (i < 0)
+			return null;
+		synchronized (list) {
+			if (i >= list.size())
+				return null;
+			return list.get(i);
+		}
+	}
+
 }

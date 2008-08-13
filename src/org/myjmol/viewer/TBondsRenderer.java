@@ -50,42 +50,50 @@ class TBondsRenderer extends ShapeRenderer {
 		if (n <= 0)
 			return;
 		TBond tbond;
-		float r = 0;
 		int mad = (viewer.getMadBond() * 3) >> 2;
 		if (mad < 100)
 			mad = 100;
-		int screenZCenter;
 		int atomCount = viewer.getAtomCount();
+		short colix = Graphics3D.getTranslucentColix(viewer.colorManager.getColixSelection());
 		synchronized (tbonds.getLock()) {
 			for (Iterator it = tbonds.iterator(); it.hasNext();) {
 				tbond = (TBond) it.next();
-				if (tbond.highlight) {
-					mad = viewer.getMadBond();
-					if (mad < 100)
-						mad = 100;
-				}
-				else {
-					if (!toRender)
-						continue;
-				}
 				if (tbond.atom1 >= atomCount || tbond.atom2 >= atomCount || tbond.atom3 >= atomCount
 						|| tbond.atom4 >= atomCount)
 					continue;
-				viewer.transformPoint(viewer.getAtomPoint3f(tbond.atom1), screenP1);
-				viewer.transformPoint(viewer.getAtomPoint3f(tbond.atom2), screenP2);
-				viewer.transformPoint(viewer.getAtomPoint3f(tbond.atom3), screenP3);
-				viewer.transformPoint(viewer.getAtomPoint3f(tbond.atom4), screenP4);
-				screenZCenter = (int) ((screenP1.z + screenP2.z) * 0.5f);
-				r = viewer.scaleToScreen(screenZCenter, mad);
-				g3d.fillEllipticalCylinder(tbond.colix, Graphics3D.ENDCAPS_FLAT, (int) r, (int) r, screenP1, screenP2);
-				screenZCenter = (int) ((screenP2.z + screenP3.z) * 0.5f);
-				r = viewer.scaleToScreen(screenZCenter, mad);
-				g3d.fillEllipticalCylinder(tbond.colix, Graphics3D.ENDCAPS_FLAT, (int) r, (int) r, screenP2, screenP3);
-				screenZCenter = (int) ((screenP3.z + screenP4.z) * 0.5f);
-				r = viewer.scaleToScreen(screenZCenter, mad);
-				g3d.fillEllipticalCylinder(tbond.colix, Graphics3D.ENDCAPS_FLAT, (int) r, (int) r, screenP3, screenP4);
+				if (tbond.selected) {
+					drawTBond(tbond, colix, mad);
+				}
+				else {
+					if (tbond.highlight) {
+						mad = viewer.getMadBond();
+						if (mad < 100)
+							mad = 100;
+					}
+					else {
+						if (!toRender)
+							continue;
+					}
+					drawTBond(tbond, tbond.colix, mad);
+				}
 			}
 		}
+	}
+
+	private void drawTBond(TBond tbond, short colix, int mad) {
+		viewer.transformPoint(viewer.getAtomPoint3f(tbond.atom1), screenP1);
+		viewer.transformPoint(viewer.getAtomPoint3f(tbond.atom2), screenP2);
+		viewer.transformPoint(viewer.getAtomPoint3f(tbond.atom3), screenP3);
+		viewer.transformPoint(viewer.getAtomPoint3f(tbond.atom4), screenP4);
+		int screenZCenter = (int) ((screenP1.z + screenP2.z) * 0.5f);
+		short r = viewer.scaleToScreen(screenZCenter, mad);
+		g3d.fillEllipticalCylinder(colix, Graphics3D.ENDCAPS_FLAT, r, r, screenP1, screenP2);
+		screenZCenter = (int) ((screenP2.z + screenP3.z) * 0.5f);
+		r = viewer.scaleToScreen(screenZCenter, mad);
+		g3d.fillEllipticalCylinder(colix, Graphics3D.ENDCAPS_FLAT, r, r, screenP2, screenP3);
+		screenZCenter = (int) ((screenP3.z + screenP4.z) * 0.5f);
+		r = viewer.scaleToScreen(screenZCenter, mad);
+		g3d.fillEllipticalCylinder(colix, Graphics3D.ENDCAPS_FLAT, r, r, screenP3, screenP4);
 	}
 
 }

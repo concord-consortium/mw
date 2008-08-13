@@ -792,7 +792,6 @@ final public class Graphics3D {
 				pointB.y, pointB.z, false);
 	}
 
-	/** XIE */
 	public void fillEllipticalCylinder(short colix, byte endcaps, int a, int b, Point3f top, Point3f bot) {
 		if (ellipticalCylinder3D == null)
 			ellipticalCylinder3D = new EllipticalCylinder3D(this);

@@ -70,6 +70,7 @@ public class Compiler {
 	public final static Pattern ATOM = compile("(^(?i)(atom)|(particle)\\b){1}");
 	public final static Pattern RBOND = compile("(^(?i)rbond\\b){1}");
 	public final static Pattern ABOND = compile("(^(?i)abond\\b){1}");
+	public final static Pattern TBOND = compile("(^(?i)tbond\\b){1}");
 	public final static Pattern MOLECULE = compile("(^(?i)molecule\\b){1}");
 	public final static Pattern OBSTACLE = compile("(^(?i)obstacle\\b){1}");
 	public final static Pattern IMAGE = compile("(^(?i)image\\b){1}");

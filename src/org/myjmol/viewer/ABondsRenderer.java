@@ -38,10 +38,25 @@ class ABondsRenderer extends ShapeRenderer {
 	}
 
 	void render() {
-		if (!((ExtendedViewer) viewer).aBondRendered)
-			return;
 		ABonds abonds = (ABonds) shape;
 		if (abonds.isEmpty())
+			return;
+		if (viewer.getSelectionHaloEnabled()) {
+			synchronized (abonds.getLock()) {
+				ABond abond;
+				int atomCount = viewer.getAtomCount();
+				short colix = viewer.colorManager.getColixSelection();
+				for (Iterator it = abonds.iterator(); it.hasNext();) {
+					abond = (ABond) it.next();
+					if (!abond.selected)
+						continue;
+					if (abond.atom1 >= atomCount || abond.atom2 >= atomCount || abond.atom3 >= atomCount)
+						continue;
+					drawABond(abond, colix, true);
+				}
+			}
+		}
+		if (!((ExtendedViewer) viewer).aBondRendered)
 			return;
 		synchronized (abonds.getLock()) {
 			ABond abond;
@@ -50,11 +65,18 @@ class ABondsRenderer extends ShapeRenderer {
 				abond = (ABond) it.next();
 				if (abond.atom1 >= atomCount || abond.atom2 >= atomCount || abond.atom3 >= atomCount)
 					continue;
-				viewer.transformPoint(viewer.getAtomPoint3f(abond.atom1), screenP1);
-				viewer.transformPoint(viewer.getAtomPoint3f(abond.atom2), screenP2);
-				viewer.transformPoint(viewer.getAtomPoint3f(abond.atom3), screenP3);
-				g3d.fillTriangle(abond.colix, screenP1, screenP2, screenP3);
+				drawABond(abond, abond.colix, false);
 			}
 		}
 	}
+
+	private void drawABond(ABond abond, short colix, boolean screened) {
+		viewer.transformPoint(viewer.getAtomPoint3f(abond.atom1), screenP1);
+		viewer.transformPoint(viewer.getAtomPoint3f(abond.atom2), screenP2);
+		viewer.transformPoint(viewer.getAtomPoint3f(abond.atom3), screenP3);
+		if (screened)
+			g3d.fillScreenedTriangle(colix, screenP1, screenP2, screenP3);
+		else g3d.fillTriangle(colix, screenP1, screenP2, screenP3);
+	}
+
 }

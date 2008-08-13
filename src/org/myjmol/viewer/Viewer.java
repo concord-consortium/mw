@@ -491,6 +491,24 @@ public class Viewer extends JmolViewer {
 		bond[i].selected = b;
 	}
 
+	public void setABondSelected(int i, boolean b) {
+		if (modelManager.frame.frameRenderer instanceof ExtendedFrameRenderer) {
+			ExtendedFrameRenderer fr = (ExtendedFrameRenderer) modelManager.frame.frameRenderer;
+			ABond x = fr.abonds.getABond(i);
+			if (x != null)
+				x.selected = b;
+		}
+	}
+
+	public void setTBondSelected(int i, boolean b) {
+		if (modelManager.frame.frameRenderer instanceof ExtendedFrameRenderer) {
+			ExtendedFrameRenderer fr = (ExtendedFrameRenderer) modelManager.frame.frameRenderer;
+			TBond x = fr.tbonds.getTBond(i);
+			if (x != null)
+				x.selected = b;
+		}
+	}
+
 	/** XIE */
 	public void setZDepthMagnification(int i) {
 		transformManager.setZDepthMagnification(i);

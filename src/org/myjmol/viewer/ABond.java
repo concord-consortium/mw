@@ -31,6 +31,7 @@ class ABond {
 	int atom2 = -1;
 	int atom3 = -1;
 	short colix = Graphics3D.GRAY;
+	boolean selected;
 
 	ABond(int i, int j, int k) {
 		atom1 = i;

@@ -33,6 +33,7 @@ class TBond {
 	int atom4 = -1;
 	short colix = Graphics3D.MAGENTA;
 	boolean highlight;
+	boolean selected;
 
 	TBond() {
 	}

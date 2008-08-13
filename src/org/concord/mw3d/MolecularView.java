@@ -1288,6 +1288,8 @@ public class MolecularView extends Draw {
 		else {
 			selectedComponent = null;
 			viewer.setHighlightCylinderVisible(false);
+			for (int k = 0; k < model.getRBondCount(); k++)
+				viewer.setBondSelected(k, false);
 		}
 	}
 
@@ -1298,6 +1300,8 @@ public class MolecularView extends Draw {
 		else {
 			selectedComponent = null;
 			viewer.setHighlightTriangleVisible(false);
+			for (int k = 0; k < model.getABondCount(); k++)
+				viewer.setABondSelected(k, false);
 		}
 	}
 
@@ -1308,6 +1312,8 @@ public class MolecularView extends Draw {
 		else {
 			selectedComponent = null;
 			viewer.setHighlightTBondVisible(false);
+			for (int k = 0; k < model.getTBondCount(); k++)
+				viewer.setTBondSelected(k, false);
 		}
 	}
 
@@ -1536,13 +1542,14 @@ public class MolecularView extends Draw {
 
 		if (ModelerUtilities.isRightClick(e)) {
 			if (getSelectedElement() == null || e.isShiftDown()) {
+				selectAtom(-1);
+				selectRBond(-1);
+				selectABond(-1);
+				selectTBond(-1);
 				if (obstacleIndexAndFace != null)
 					obstacleIndexAndFace[0] = obstacleIndexAndFace[1] = -1;
 				int i = viewer.findNearestAtomIndex(x, y);
 				if (i >= 0) {
-					selectRBond(-1);
-					selectABond(-1);
-					selectTBond(-1);
 					viewer.setHighlightPlaneVisible(false);
 					Atom at = model.getAtom(i);
 					Molecule mol = model.getMolecule(at);
@@ -1569,27 +1576,18 @@ public class MolecularView extends Draw {
 					}
 				}
 				else if ((i = viewer.findNearestBondIndex(x, y)) >= 0) {
-					selectAtom(-1);
-					selectABond(-1);
-					selectTBond(-1);
 					selectRBond(i);
 					if (rbondPopupMenu == null)
 						rbondPopupMenu = new RBondPopupMenu(this);
 					rbondPopupMenu.show(this, x, y);
 				}
 				else if ((i = viewer.findNearestABondIndex(x, y)) >= 0) {
-					selectAtom(-1);
-					selectRBond(-1);
-					selectTBond(-1);
 					selectABond(i);
 					if (abondPopupMenu == null)
 						abondPopupMenu = new ABondPopupMenu(this);
 					abondPopupMenu.show(this, x, y);
 				}
 				else if ((i = viewer.findNearestTBondIndex(x, y)) >= 0) {
-					selectAtom(-1);
-					selectRBond(-1);
-					selectABond(-1);
 					selectTBond(i);
 					if (tbondPopupMenu == null)
 						tbondPopupMenu = new TBondPopupMenu(this);

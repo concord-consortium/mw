@@ -574,6 +574,56 @@ public class MolecularModel {
 		return bs;
 	}
 
+	/** select a set of angular bonds according to the instruction BitSet. */
+	public void setABondSelectionSet(BitSet set) {
+		view.selectABond(-1);
+		if (set != null) {
+			setExclusiveSelection(false);
+			for (ABond ab : aBonds) {
+				int i = aBonds.indexOf(ab);
+				boolean b = set.get(i);
+				ab.setSelected(b);
+				view.getViewer().setABondSelected(i, b);
+			}
+		}
+		view.repaint();
+	}
+
+	/** return the selected set of angular bonds in BitSet. */
+	public BitSet getABondSelectionSet() {
+		BitSet bs = new BitSet(aBonds.size());
+		for (ABond ab : aBonds) {
+			if (ab.isSelected())
+				bs.set(aBonds.indexOf(ab));
+		}
+		return bs;
+	}
+
+	/** select a set of torsional bonds according to the instruction BitSet. */
+	public void setTBondSelectionSet(BitSet set) {
+		view.selectTBond(-1);
+		if (set != null) {
+			setExclusiveSelection(false);
+			for (TBond tb : tBonds) {
+				int i = tBonds.indexOf(tb);
+				boolean b = set.get(i);
+				tb.setSelected(b);
+				view.getViewer().setTBondSelected(i, b);
+			}
+		}
+		view.repaint();
+	}
+
+	/** return the selected set of torsional bonds in BitSet. */
+	public BitSet getTBondSelectionSet() {
+		BitSet bs = new BitSet(tBonds.size());
+		for (TBond tb : tBonds) {
+			if (tb.isSelected())
+				bs.set(tBonds.indexOf(tb));
+		}
+		return bs;
+	}
+
 	public float getLength() {
 		return forceCalculator.xbox * 2;
 	}
