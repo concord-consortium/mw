@@ -1735,7 +1735,7 @@ class Eval3D extends AbstractEval {
 			synchronized (model.rBonds) {
 				for (RBond rb : model.rBonds) {
 					if (inRangeInclusive(rb.getAtom1().getIndex(), beg, end)
-							&& inRangeInclusive(rb.getAtom2().getIndex(), beg, end)) {
+							|| inRangeInclusive(rb.getAtom2().getIndex(), beg, end)) {
 						bs.set(model.rBonds.indexOf(rb));
 					}
 				}
@@ -1833,8 +1833,8 @@ class Eval3D extends AbstractEval {
 			synchronized (model.aBonds) {
 				for (ABond ab : model.aBonds) {
 					if (inRangeInclusive(ab.getAtom1().getIndex(), beg, end)
-							&& inRangeInclusive(ab.getAtom2().getIndex(), beg, end)
-							&& inRangeInclusive(ab.getAtom3().getIndex(), beg, end)) {
+							|| inRangeInclusive(ab.getAtom2().getIndex(), beg, end)
+							|| inRangeInclusive(ab.getAtom3().getIndex(), beg, end)) {
 						bs.set(model.aBonds.indexOf(ab));
 					}
 				}
@@ -1932,9 +1932,9 @@ class Eval3D extends AbstractEval {
 			synchronized (model.tBonds) {
 				for (TBond tb : model.tBonds) {
 					if (inRangeInclusive(tb.getAtom1().getIndex(), beg, end)
-							&& inRangeInclusive(tb.getAtom2().getIndex(), beg, end)
-							&& inRangeInclusive(tb.getAtom3().getIndex(), beg, end)
-							&& inRangeInclusive(tb.getAtom4().getIndex(), beg, end)) {
+							|| inRangeInclusive(tb.getAtom2().getIndex(), beg, end)
+							|| inRangeInclusive(tb.getAtom3().getIndex(), beg, end)
+							|| inRangeInclusive(tb.getAtom4().getIndex(), beg, end)) {
 						bs.set(model.tBonds.indexOf(tb));
 					}
 				}
@@ -1992,10 +1992,6 @@ class Eval3D extends AbstractEval {
 		array[0] = Character.toUpperCase(array[0]);
 		str = new String(array);
 		return str;
-	}
-
-	private static boolean inRangeInclusive(int x, int beg, int end) {
-		return x <= end && x >= beg;
 	}
 
 	/*

@@ -5644,8 +5644,8 @@ class Eval2D extends AbstractEval {
 			synchronized (mm.bonds.getSynchronizationLock()) {
 				for (Iterator it = mm.bonds.iterator(); it.hasNext();) {
 					rb = (RadialBond) it.next();
-					if ((rb.atom1.getIndex() <= end && rb.atom1.getIndex() >= beg)
-							|| (rb.atom2.getIndex() <= end && rb.atom2.getIndex() >= beg)) {
+					if (inRangeInclusive(rb.atom1.getIndex(), beg, end)
+							|| inRangeInclusive(rb.atom1.getIndex(), beg, end)) {
 						bs.set(rb.getIndex());
 					}
 				}
@@ -5662,9 +5662,8 @@ class Eval2D extends AbstractEval {
 				synchronized (mm.bonds.getSynchronizationLock()) {
 					for (Iterator it = mm.bonds.iterator(); it.hasNext();) {
 						rb = (RadialBond) it.next();
-						if (rb.atom1.getIndex() == index || rb.atom2.getIndex() == index) {
+						if (rb.contains(mm.getAtom(index)))
 							bs.set(rb.getIndex());
-						}
 					}
 				}
 			}
@@ -5677,9 +5676,8 @@ class Eval2D extends AbstractEval {
 			synchronized (mm.bonds.getSynchronizationLock()) {
 				for (Iterator it = mm.bonds.iterator(); it.hasNext();) {
 					rb = (RadialBond) it.next();
-					if (rb.atom1.getIndex() == index || rb.atom2.getIndex() == index) {
+					if (rb.contains(mm.getAtom(index)))
 						bs.set(rb.getIndex());
-					}
 				}
 			}
 			return true;
@@ -5732,9 +5730,9 @@ class Eval2D extends AbstractEval {
 			synchronized (mm.bends.getSynchronizationLock()) {
 				for (Iterator it = mm.bends.iterator(); it.hasNext();) {
 					ab = (AngularBond) it.next();
-					if ((ab.atom1.getIndex() <= end && ab.atom1.getIndex() >= beg)
-							|| (ab.atom2.getIndex() <= end && ab.atom2.getIndex() >= beg)
-							|| (ab.atom3.getIndex() <= end && ab.atom3.getIndex() >= beg)) {
+					if (inRangeInclusive(ab.atom1.getIndex(), beg, end)
+							|| inRangeInclusive(ab.atom2.getIndex(), beg, end)
+							|| inRangeInclusive(ab.atom3.getIndex(), beg, end)) {
 						bs.set(ab.getIndex());
 					}
 				}
@@ -5751,10 +5749,8 @@ class Eval2D extends AbstractEval {
 				synchronized (mm.bends.getSynchronizationLock()) {
 					for (Iterator it = mm.bends.iterator(); it.hasNext();) {
 						ab = (AngularBond) it.next();
-						if (ab.atom1.getIndex() == index || ab.atom2.getIndex() == index
-								|| ab.atom3.getIndex() == index) {
+						if (ab.contains(mm.getAtom(index)))
 							bs.set(ab.getIndex());
-						}
 					}
 				}
 			}
@@ -5767,9 +5763,8 @@ class Eval2D extends AbstractEval {
 			synchronized (mm.bends.getSynchronizationLock()) {
 				for (Iterator it = mm.bends.iterator(); it.hasNext();) {
 					ab = (AngularBond) it.next();
-					if (ab.atom1.getIndex() == index || ab.atom2.getIndex() == index || ab.atom3.getIndex() == index) {
+					if (ab.contains(mm.getAtom(index)))
 						bs.set(ab.getIndex());
-					}
 				}
 			}
 			return true;

@@ -299,6 +299,10 @@ public abstract class AbstractEval {
 		}
 	}
 
+	protected static boolean inRangeInclusive(int x, int beg, int end) {
+		return x <= end && x >= beg;
+	}
+
 	protected static byte parseOnOff(String keyword, String s) {
 		if (!s.startsWith(keyword))
 			return (byte) -1;
