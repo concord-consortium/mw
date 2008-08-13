@@ -73,7 +73,7 @@ public class PageMd3d extends MolecularContainer implements BasicModel, Embeddab
 
 	private Action snapshotAction, snapshotAction2, mwScriptAction, jmolScriptAction;
 	private Action styleChoices;
-	private AbstractChange mwScriptChanger;
+	private AbstractChange mwScriptChanger, jmolScriptChanger;
 
 	public PageMd3d() {
 
@@ -108,9 +108,12 @@ public class PageMd3d extends MolecularContainer implements BasicModel, Embeddab
 
 		changeMap = Collections.synchronizedMap(new TreeMap<String, ChangeListener>());
 		changeMap.put((String) mwScriptChanger.getProperty(AbstractChange.SHORT_DESCRIPTION), mwScriptChanger);
+		changeMap.put((String) jmolScriptChanger.getProperty(AbstractChange.SHORT_DESCRIPTION), jmolScriptChanger);
 
 		choiceMap = Collections.synchronizedMap(new TreeMap<String, Action>());
 		choiceMap.put((String) styleChoices.getValue(SHORT_DESCRIPTION), styleChoices);
+		choiceMap.put((String) mwScriptAction.getValue(SHORT_DESCRIPTION), mwScriptAction);
+		choiceMap.put((String) jmolScriptAction.getValue(SHORT_DESCRIPTION), jmolScriptAction);
 
 		multiSwitchMap = Collections.synchronizedMap(new TreeMap<String, Action>());
 		multiSwitchMap.put((String) jmolScriptAction.getValue(SHORT_DESCRIPTION), jmolScriptAction);
@@ -205,6 +208,12 @@ public class PageMd3d extends MolecularContainer implements BasicModel, Embeddab
 							getMolecularView().runJmolScript(s);
 					}
 				}
+				else if (o instanceof JComboBox) {
+					JComboBox cb = (JComboBox) o;
+					Object s = cb.getClientProperty("script" + cb.getSelectedIndex());
+					if (s instanceof String)
+						getMolecularView().runJmolScript((String) s);
+				}
 			}
 
 			public String toString() {
@@ -246,6 +255,12 @@ public class PageMd3d extends MolecularContainer implements BasicModel, Embeddab
 						if (!s.trim().equals(""))
 							runMwScript(s);
 					}
+				}
+				else if (o instanceof JComboBox) {
+					JComboBox cb = (JComboBox) o;
+					Object s = cb.getClientProperty("script" + cb.getSelectedIndex());
+					if (s instanceof String)
+						runMwScript((String) s);
 				}
 			}
 
@@ -371,6 +386,91 @@ public class PageMd3d extends MolecularContainer implements BasicModel, Embeddab
 			}
 		};
 		mwScriptChanger.putProperty(AbstractChange.SHORT_DESCRIPTION, ComponentMaker.EXECUTE_MW_SCRIPT);
+
+		jmolScriptChanger = new AbstractChange() {
+			public void stateChanged(ChangeEvent e) {
+				Object o = e.getSource();
+				if (o instanceof JSlider) {
+					JSlider source = (JSlider) o;
+					Double scale = (Double) source.getClientProperty(SCALE);
+					double s = scale == null ? 1.0 : 1.0 / scale.doubleValue();
+					if (!source.getValueIsAdjusting()) {
+						String script = (String) source.getClientProperty("Script");
+						if (script != null) {
+							String result = source.getValue() * s + "";
+							if (result.endsWith(".0"))
+								result = result.substring(0, result.length() - 2);
+							script = script.replaceAll("(?i)%val", result);
+							result = source.getMaximum() * s + "";
+							if (result.endsWith(".0"))
+								result = result.substring(0, result.length() - 2);
+							script = script.replaceAll("(?i)%max", result);
+							result = source.getMinimum() * s + "";
+							if (result.endsWith(".0"))
+								result = result.substring(0, result.length() - 2);
+							script = script.replaceAll("(?i)%min", result);
+							int lq = script.indexOf('"');
+							int rq = script.indexOf('"', lq + 1);
+							while (lq != -1 && rq != -1 && lq != rq) {
+								String expression = script.substring(lq + 1, rq);
+								Evaluator mathEval = new Evaluator(expression.trim());
+								result = "" + mathEval.eval();
+								if (result.endsWith(".0"))
+									result = result.substring(0, result.length() - 2);
+								script = script.substring(0, lq) + result + script.substring(rq + 1);
+								lq = script.indexOf('"', rq + 1);
+								rq = script.indexOf('"', lq + 1);
+							}
+							getMolecularView().runJmolScript(script);
+						}
+					}
+				}
+				else if (o instanceof JSpinner) {
+					JSpinner source = (JSpinner) o;
+					String script = (String) source.getClientProperty("Script");
+					if (script != null) {
+						String result = source.getValue() + "";
+						if (result.endsWith(".0"))
+							result = result.substring(0, result.length() - 2);
+						script = script.replaceAll("(?i)%val", result);
+						int lq = script.indexOf('"');
+						int rq = script.indexOf('"', lq + 1);
+						while (lq != -1 && rq != -1 && lq != rq) {
+							String expression = script.substring(lq + 1, rq);
+							Evaluator mathEval = new Evaluator(expression.trim());
+							result = "" + mathEval.eval();
+							if (result.endsWith(".0"))
+								result = result.substring(0, result.length() - 2);
+							script = script.substring(0, lq) + result + script.substring(rq + 1);
+							lq = script.indexOf('"', rq + 1);
+							rq = script.indexOf('"', lq + 1);
+						}
+						getMolecularView().runJmolScript(script);
+					}
+				}
+			}
+
+			public double getMinimum() {
+				return 0.0;
+			}
+
+			public double getMaximum() {
+				return 100.0;
+			}
+
+			public double getStepSize() {
+				return 1.0;
+			}
+
+			public double getValue() {
+				return 0.0;
+			}
+
+			public String toString() {
+				return (String) getProperty(SHORT_DESCRIPTION);
+			}
+		};
+		jmolScriptChanger.putProperty(AbstractChange.SHORT_DESCRIPTION, ComponentMaker.EXECUTE_JMOL_SCRIPT);
 
 	}
 
