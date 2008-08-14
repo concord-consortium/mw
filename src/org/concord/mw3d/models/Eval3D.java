@@ -156,14 +156,15 @@ class Eval3D extends AbstractEval {
 			if (Double.isNaN(x))
 				break;
 			i = (int) Math.round(x);
-			if (i < 0 || i >= 4) {
-				out(ScriptEvent.FAILED, i + " is an invalid index: must be between 0 and 3 (inclusive).");
+			String symbol = model.getSymbol(i);
+			if (symbol == null) {
+				out(ScriptEvent.FAILED, i + " is an invalid element id.");
 				break;
 			}
 			v = escapeMetaCharacters(v);
-			// s = s.replaceAll("(?i)%element\\[" + v + "\\]\\.mass", "" + model.getElement(i).getMass());
-			// s = s.replaceAll("(?i)%element\\[" + v + "\\]\\.sigma", "" + model.getElement(i).getSigma());
-			// s = s.replaceAll("(?i)%element\\[" + v + "\\]\\.epsilon", "" + model.getElement(i).getEpsilon());
+			s = s.replaceAll("(?i)%element\\[" + v + "\\]\\.mass", "" + model.getElementMass(symbol));
+			s = s.replaceAll("(?i)%element\\[" + v + "\\]\\.sigma", "" + model.getElementSigma(symbol));
+			s = s.replaceAll("(?i)%element\\[" + v + "\\]\\.epsilon", "" + model.getElementEpsilon(symbol));
 			lb = s.indexOf("%element[");
 			rb = s.indexOf("].", lb);
 		}
@@ -1112,7 +1113,41 @@ class Eval3D extends AbstractEval {
 			}
 		}
 
-		String[] s = str.trim().split(REGEX_SEPARATOR + "+");
+		String[] s = null;
+
+		// atom field
+		matcher = ATOM_FIELD.matcher(str);
+		if (matcher.find()) {
+			int end = matcher.end();
+			String s2 = str.substring(end).trim();
+			int i = s2.indexOf(" ");
+			if (i < 0) {
+				out(ScriptEvent.FAILED, "Argument error: " + str);
+				return false;
+			}
+			s = new String[] { s2.substring(0, i).trim(), s2.substring(i + 1).trim() };
+			s2 = str.substring(0, end - 1);
+			if (s2.startsWith("%")) {
+				s2 = s2.substring(1);
+			}
+			if ("on".equalsIgnoreCase(s[1]) || "off".equalsIgnoreCase(s[1])) {
+				if ("visible".equalsIgnoreCase(s[0])) {
+					setAtomField(s2, s[0], "on".equalsIgnoreCase(s[1]));
+				}
+				else if ("movable".equalsIgnoreCase(s[0])) {
+					setAtomField(s2, s[0], "on".equalsIgnoreCase(s[1]));
+				}
+			}
+			else {
+				double x = parseMathExpression(s[1]);
+				if (Double.isNaN(x))
+					return false;
+				setAtomField(s2, s[0], (float) x);
+			}
+			return true;
+		}
+
+		s = str.trim().split(REGEX_SEPARATOR + "+");
 
 		if (s.length == 2) {
 
@@ -1548,14 +1583,43 @@ class Eval3D extends AbstractEval {
 		return q;
 	}
 
-	void setAtomField(String str1, String str2, float x) {
+	private void setAtomField(String str1, String str2, boolean x) {
 		int lb = str1.indexOf("[");
 		int rb = str1.indexOf("]");
 		double z = parseMathExpression(str1.substring(lb + 1, rb));
 		if (Double.isNaN(z))
 			return;
 		int i = (int) Math.round(z);
-		if (i >= model.getAtomCount()) {
+		if (i < 0 || i >= model.getAtomCount()) {
+			out(ScriptEvent.FAILED, "Atom " + i + " doesn't exisit.");
+			return;
+		}
+		String s = str2.toLowerCase().intern();
+		boolean b = true;
+		if (s == "visible") {
+			model.atom[i].setVisible(x);
+			view.setVisible(model.atom[i], x);
+		}
+		else if (s == "movable")
+			model.atom[i].setMovable(x);
+		else {
+			out(ScriptEvent.FAILED, "Cannot set propery: " + str2);
+			b = false;
+		}
+		if (b) {
+			view.repaint();
+			model.notifyChange();
+		}
+	}
+
+	private void setAtomField(String str1, String str2, float x) {
+		int lb = str1.indexOf("[");
+		int rb = str1.indexOf("]");
+		double z = parseMathExpression(str1.substring(lb + 1, rb));
+		if (Double.isNaN(z))
+			return;
+		int i = (int) Math.round(z);
+		if (i < 0 || i >= model.getAtomCount()) {
 			out(ScriptEvent.FAILED, "Atom " + i + " doesn't exisit.");
 			return;
 		}
@@ -1581,6 +1645,8 @@ class Eval3D extends AbstractEval {
 			atom[i].az = x;
 		else if (s == "charge")
 			atom[i].charge = x;
+		else if (s == "friction")
+			atom[i].damp = x;
 		else {
 			out(ScriptEvent.FAILED, "Cannot set propery: " + str2);
 			b = false;
