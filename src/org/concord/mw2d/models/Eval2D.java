@@ -4332,7 +4332,7 @@ class Eval2D extends AbstractEval {
 		if (Double.isNaN(z))
 			return;
 		int i = (int) Math.round(z);
-		if (i >= m.numberOfParticles) {
+		if (i < 0 || i >= m.numberOfParticles) {
 			out(ScriptEvent.FAILED, "Particle " + i + " doesn't exisit.");
 			return;
 		}
@@ -4411,7 +4411,7 @@ class Eval2D extends AbstractEval {
 		if (Double.isNaN(z))
 			return;
 		int i = (int) Math.round(z);
-		if (i >= m.numberOfAtoms) {
+		if (i < 0 || i >= m.numberOfAtoms) {
 			out(ScriptEvent.FAILED, "Atom " + i + " doesn't exisit.");
 			return;
 		}
@@ -4475,7 +4475,7 @@ class Eval2D extends AbstractEval {
 		if (Double.isNaN(z))
 			return;
 		int i = (int) Math.round(z);
-		if (i >= m.numberOfAtoms) {
+		if (i < 0 || i >= m.numberOfAtoms) {
 			out(ScriptEvent.FAILED, "Atom " + i + " doesn't exisit.");
 			return;
 		}
@@ -4560,7 +4560,7 @@ class Eval2D extends AbstractEval {
 		if (Double.isNaN(z))
 			return;
 		int i = (int) Math.round(z);
-		if (i >= m.bonds.size()) {
+		if (i >= m.bonds.size() || i < 0) {
 			out(ScriptEvent.FAILED, "Radial bond " + i + " doesn't exisit.");
 			return;
 		}
@@ -4651,7 +4651,7 @@ class Eval2D extends AbstractEval {
 		if (Double.isNaN(z))
 			return;
 		int i = (int) Math.round(z);
-		if (i >= Element.NMAX) {
+		if (i >= Element.NMAX || i < 0) {
 			out(ScriptEvent.FAILED, "Element " + i + " doesn't exisit.");
 			return;
 		}
@@ -5083,7 +5083,7 @@ class Eval2D extends AbstractEval {
 			return;
 		int i = (int) Math.round(z);
 		TextBoxComponent[] t = view.getTextBoxes();
-		if (i >= t.length) {
+		if (i >= t.length || i < 0) {
 			out(ScriptEvent.FAILED, "Text box " + i + " doesn't exisit.");
 			return;
 		}
