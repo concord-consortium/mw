@@ -31,6 +31,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 
@@ -51,18 +52,19 @@ class ABondPropertiesPanel extends PropertiesPanel {
 
 		super(new BorderLayout(5, 5));
 
-		final JLabel nameLabel = createLabel("Angular Bond");
+		String s = MolecularContainer.getInternationalText("AngularBond");
+		final JLabel nameLabel = createLabel(s != null ? s : "Angular Bond");
 		final JLabel indexLabel = createLabel(abond.getAtom1().getModel().getABonds().indexOf(abond));
 		final JLabel atom1Label = createLabel("" + abond.getAtom1());
 		final JLabel atom2Label = createLabel("" + abond.getAtom2());
 		final JLabel atom3Label = createLabel("" + abond.getAtom3());
 		final FloatNumberTextField strengthField = new FloatNumberTextField(abond.getStrength(), 0.1f, 100);
 		final FloatNumberTextField angleField = new FloatNumberTextField(10, 180);
-		angleField.setText(MolecularView.FORMAT.format(abond.getAngle() * 180 / Math.PI));
+		angleField.setText(MolecularView.FORMAT.format(Math.toDegrees(abond.getAngle())));
 
 		JButton okButton = new JButton();
 
-		String s = MolecularContainer.getInternationalText("CancelButton");
+		s = MolecularContainer.getInternationalText("Cancel");
 		JButton cancelButton = new JButton(s != null ? s : "Cancel");
 		cancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -122,7 +124,7 @@ class ABondPropertiesPanel extends PropertiesPanel {
 		panel.add(new JPanel());
 
 		// row 2
-		s = MolecularContainer.getInternationalText("IndexLabel");
+		s = MolecularContainer.getInternationalText("Index");
 		panel.add(new JLabel(s != null ? s : "Index"));
 		panel.add(indexLabel);
 		panel.add(new JPanel());
@@ -145,17 +147,25 @@ class ABondPropertiesPanel extends PropertiesPanel {
 
 		// row 6
 		s = MolecularContainer.getInternationalText("Strength");
-		panel.add(new JLabel("Strength", SwingConstants.LEFT));
+		panel.add(new JLabel(s != null ? s : "Strength", SwingConstants.LEFT));
 		panel.add(strengthField);
 		panel.add(createSmallerFontLabel("<html>eV/Radian<sup>2</sup></html>"));
 
 		// row 7
-		s = MolecularContainer.getInternationalText("BondAngle");
-		panel.add(new JLabel(s != null ? s : "Bond Angle"));
+		s = MolecularContainer.getInternationalText("EquilibriumBondAngle");
+		panel.add(new JLabel(s != null ? s : "Equilibrium Bond Angle"));
 		panel.add(angleField);
 		panel.add(createSmallerFontLabel("<html>&#176;</html>"));
 
-		makeCompactGrid(panel, 7, 3, 5, 5, 10, 2);
+		// row 8
+		s = MolecularContainer.getInternationalText("CurrentBondAngle");
+		panel.add(new JLabel(s != null ? s : "Current Bond Angle"));
+		JTextField tf = new JTextField(MolecularView.FORMAT.format(Math.toDegrees(abond.getAngle(-1))));
+		tf.setEnabled(false);
+		panel.add(tf);
+		panel.add(createSmallerFontLabel("<html>&#176;</html>"));
+
+		makeCompactGrid(panel, 8, 3, 5, 5, 10, 2);
 
 		panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		add(panel, BorderLayout.SOUTH);

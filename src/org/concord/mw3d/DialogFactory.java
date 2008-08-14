@@ -63,7 +63,7 @@ public final class DialogFactory {
 		});
 	}
 
-	/** create a dialog box for an atom */
+	/* create a dialog box for an atom */
 	private static JDialog createDialog(final Atom atom) {
 		String s = MolecularContainer.getInternationalText("AtomProperties");
 		final JDialog dialog = new JDialog(JOptionPane.getFrameForComponent(atom.getModel().getView()), s != null ? s
@@ -87,7 +87,7 @@ public final class DialogFactory {
 		return dialog;
 	}
 
-	/** create a dialog box for a radial bond */
+	/* create a dialog box for a radial bond */
 	private static JDialog createDialog(final RBond rbond) {
 		String s = MolecularContainer.getInternationalText("RadialBondProperties");
 		final JDialog dialog = new JDialog(JOptionPane.getFrameForComponent(rbond.getAtom1().getModel().getView()),
@@ -111,7 +111,7 @@ public final class DialogFactory {
 		return dialog;
 	}
 
-	/** create a dialog box for an angular bond */
+	/* create a dialog box for an angular bond */
 	private static JDialog createDialog(final ABond abond) {
 		String s = MolecularContainer.getInternationalText("AngularBondProperties");
 		final JDialog dialog = new JDialog(JOptionPane.getFrameForComponent(abond.getAtom1().getModel().getView()),
@@ -135,7 +135,7 @@ public final class DialogFactory {
 		return dialog;
 	}
 
-	/** create a dialog box for a torsional bond */
+	/* create a dialog box for a torsional bond */
 	private static JDialog createDialog(final TBond tbond) {
 		String s = MolecularContainer.getInternationalText("TorsionalBondProperties");
 		final JDialog dialog = new JDialog(JOptionPane.getFrameForComponent(tbond.getAtom1().getModel().getView()),
@@ -159,7 +159,7 @@ public final class DialogFactory {
 		return dialog;
 	}
 
-	/** create a dialog box for a molecule */
+	/* create a dialog box for a molecule */
 	private static JDialog createDialog(final Molecule molecule) {
 		String s = MolecularContainer.getInternationalText("MoleculeProperties");
 		final JDialog dialog = new JDialog(JOptionPane.getFrameForComponent(molecule.getAtom(0).getModel().getView()),
@@ -183,7 +183,7 @@ public final class DialogFactory {
 		return dialog;
 	}
 
-	/** create a dialog box for an obstacle */
+	/* create a dialog box for an obstacle */
 	private static JDialog createDialog(final Obstacle obs) {
 		String s = MolecularContainer.getInternationalText("ObstacleProperties");
 		final JDialog dialog = new JDialog(JOptionPane.getFrameForComponent(obs.getModel().getView()), s != null ? s
