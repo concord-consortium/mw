@@ -28,203 +28,208 @@ import java.awt.Graphics;
 import java.awt.Image;
 
 /**
- *<p>
- * Specifies the API to an underlying int[] buffer of ARGB values that
- * can be converted into an Image object and a short[] for z-buffer depth.
- *</p>
- *
+ * <p>
+ * Specifies the API to an underlying int[] buffer of ARGB values that can be converted into an Image object and a
+ * short[] for z-buffer depth.
+ * </p>
+ * 
  * @author Miguel, miguel@jmol.org
- */ 
+ */
 abstract class Platform3D {
 
-  int windowWidth, windowHeight, windowSize;
-  int bufferWidth, bufferHeight, bufferSize;
+	int windowWidth, windowHeight, windowSize;
+	int bufferWidth, bufferHeight, bufferSize;
 
-  Image imagePixelBuffer;
-  int[] pBuffer;
-  int[] zBuffer;
-  int argbBackground;
+	Image imagePixelBuffer;
+	int[] pBuffer;
+	int[] zBuffer;
+	int argbBackground;
 
-  int widthOffscreen, heightOffscreen;
-  Image imageOffscreen;
-  Graphics gOffscreen;
+	int widthOffscreen, heightOffscreen;
+	Image imageOffscreen;
+	Graphics gOffscreen;
 
-  final static boolean forcePlatformAWT = false;
-  final static boolean desireClearingThread = false;
-  boolean useClearingThread = true;
+	final static boolean forcePlatformAWT = false;
+	final static boolean desireClearingThread = false;
+	boolean useClearingThread = true;
 
-  ClearingThread clearingThread;
+	ClearingThread clearingThread;
 
-  static Platform3D createInstance(Component awtComponent) {
-    boolean jvm12orGreater =
-      System.getProperty("java.version").compareTo("1.2") >= 0;
-    boolean useSwing = jvm12orGreater && !forcePlatformAWT;
-    Platform3D platform =(useSwing
-                          ? allocateSwing3D() : new Awt3D(awtComponent));
-    platform.initialize(desireClearingThread & useSwing);
-    return platform;
-  }
+	static Platform3D createInstance(Component awtComponent) {
+		Platform3D platform = (forcePlatformAWT ? new Awt3D(awtComponent) : allocateSwing3D());
+		platform.initialize(desireClearingThread & !forcePlatformAWT);
+		return platform;
+	}
 
-  private static Platform3D allocateSwing3D() {
-    // this method is necessary in order to prevent Swing-related
-    // classes from getting touched on the MacOS9 platform
-    // otherwise the Mac crashes *badly* when the classes are not found
-    return new Swing3D();
-  }
+	private static Platform3D allocateSwing3D() {
+		// this method is necessary in order to prevent Swing-related
+		// classes from getting touched on the MacOS9 platform
+		// otherwise the Mac crashes *badly* when the classes are not found
+		return new Swing3D();
+	}
 
-  final void initialize(boolean useClearingThread) {
-    this.useClearingThread = useClearingThread;
-    if (useClearingThread) {
-      //Logger.debug("using ClearingThread");
-      clearingThread = new ClearingThread();
-      clearingThread.start();
-    }
-  }
+	final void initialize(boolean useClearingThread) {
+		this.useClearingThread = useClearingThread;
+		if (useClearingThread) {
+			// Logger.debug("using ClearingThread");
+			clearingThread = new ClearingThread();
+			clearingThread.start();
+		}
+	}
 
-  final static int ZBUFFER_BACKGROUND = Integer.MAX_VALUE;
+	final static int ZBUFFER_BACKGROUND = Integer.MAX_VALUE;
 
-  abstract Image allocateImage();
+	abstract Image allocateImage();
 
-  void allocateBuffers(int width, int height, boolean tFsaa4) {
-    windowWidth = width;
-    windowHeight = height;
-    windowSize = width * height;
-    if (tFsaa4) {
-      bufferWidth = width * 2;
-      bufferHeight = height * 2;
-    } else {
-      bufferWidth = width;
-      bufferHeight = height;
-    }
-    bufferSize = bufferWidth * bufferHeight;
-    zBuffer = new int[bufferSize];
-    pBuffer = new int[bufferSize];
-    imagePixelBuffer = allocateImage();
-    /*
-    Logger.debug("  width:" + width + " bufferWidth=" + bufferWidth +
-                       "\nheight:" + height + " bufferHeight=" + bufferHeight);
-    */
-  }
+	void allocateBuffers(int width, int height, boolean tFsaa4) {
+		windowWidth = width;
+		windowHeight = height;
+		windowSize = width * height;
+		if (tFsaa4) {
+			bufferWidth = width * 2;
+			bufferHeight = height * 2;
+		}
+		else {
+			bufferWidth = width;
+			bufferHeight = height;
+		}
+		bufferSize = bufferWidth * bufferHeight;
+		zBuffer = new int[bufferSize];
+		pBuffer = new int[bufferSize];
+		imagePixelBuffer = allocateImage();
+		/*
+		 * Logger.debug(" width:" + width + " bufferWidth=" + bufferWidth + "\nheight:" + height + " bufferHeight=" +
+		 * bufferHeight);
+		 */
+	}
 
-  void releaseBuffers() {
-    windowWidth = windowHeight = bufferWidth = bufferHeight = bufferSize = -1;
-    if (imagePixelBuffer != null) {
-      imagePixelBuffer.flush();
-      imagePixelBuffer = null;
-    }
-    pBuffer = null;
-    zBuffer = null;
-  }
+	void releaseBuffers() {
+		windowWidth = windowHeight = bufferWidth = bufferHeight = bufferSize = -1;
+		if (imagePixelBuffer != null) {
+			imagePixelBuffer.flush();
+			imagePixelBuffer = null;
+		}
+		pBuffer = null;
+		zBuffer = null;
+	}
 
-  void setBackground(int argbBackground) {
-    if (this.argbBackground != argbBackground) {
-      this.argbBackground = argbBackground;
-      if (useClearingThread)
-        clearingThread.notifyBackgroundChange(argbBackground);
-    }
-  }
+	void setBackground(int argbBackground) {
+		if (this.argbBackground != argbBackground) {
+			this.argbBackground = argbBackground;
+			if (useClearingThread)
+				clearingThread.notifyBackgroundChange(argbBackground);
+		}
+	}
 
-  boolean hasContent() {
-    for (int i = bufferSize; --i >= 0; )
-      if (zBuffer[i] != ZBUFFER_BACKGROUND)
-        return true;
-    return false;
-  }
+	boolean hasContent() {
+		for (int i = bufferSize; --i >= 0;)
+			if (zBuffer[i] != ZBUFFER_BACKGROUND)
+				return true;
+		return false;
+	}
 
-  void clearScreenBuffer(int argbBackground) {
-    for (int i = bufferSize; --i >= 0; ) {
-      zBuffer[i] = ZBUFFER_BACKGROUND;
-      pBuffer[i] = argbBackground;
-    }
-  }
-  
-  final void obtainScreenBuffer() {
-    if (useClearingThread) {
-      clearingThread.obtainBufferForClient();
-    } else {
-      clearScreenBuffer(argbBackground);
-    }
-  }
+	void clearScreenBuffer(int argbBackground) {
+		for (int i = bufferSize; --i >= 0;) {
+			zBuffer[i] = ZBUFFER_BACKGROUND;
+			pBuffer[i] = argbBackground;
+		}
+	}
 
-  final void clearScreenBufferThreaded() {
-    if (useClearingThread)
-      clearingThread.releaseBufferForClearing();
-  }
-  
-  void notifyEndOfRendering() {
-  }
+	final void obtainScreenBuffer() {
+		if (useClearingThread) {
+			clearingThread.obtainBufferForClient();
+		}
+		else {
+			clearScreenBuffer(argbBackground);
+		}
+	}
 
-  abstract Image allocateOffscreenImage(int width, int height);
-  abstract Graphics getGraphics(Image imageOffscreen);
-  
-  void checkOffscreenSize(int width, int height) {
-    if (width <= widthOffscreen && height <= heightOffscreen)
-      return;
-    if (imageOffscreen != null) {
-      gOffscreen.dispose();
-      imageOffscreen.flush();
-    }
-    if (width > widthOffscreen)
-      widthOffscreen = (width + 63) & ~63;
-    if (height > heightOffscreen)
-      heightOffscreen = (height + 15) & ~15;
-    imageOffscreen = allocateOffscreenImage(widthOffscreen, heightOffscreen);
-    gOffscreen = getGraphics(imageOffscreen);
-  }
+	final void clearScreenBufferThreaded() {
+		if (useClearingThread)
+			clearingThread.releaseBufferForClearing();
+	}
 
-  class ClearingThread extends Thread implements Runnable {
+	void notifyEndOfRendering() {
+	}
 
+	abstract Image allocateOffscreenImage(int width, int height);
 
-    boolean bufferHasBeenCleared = false;
-    boolean clientHasBuffer = false;
+	abstract Graphics getGraphics(Image imageOffscreen);
 
-    synchronized void notifyBackgroundChange(int argbBackground) {
-      //Logger.debug("notifyBackgroundChange");
-      bufferHasBeenCleared = false;
-      notify();
-      // for now do nothing
-    }
+	void checkOffscreenSize(int width, int height) {
+		if (width <= widthOffscreen && height <= heightOffscreen)
+			return;
+		if (imageOffscreen != null) {
+			gOffscreen.dispose();
+			imageOffscreen.flush();
+		}
+		if (width > widthOffscreen)
+			widthOffscreen = (width + 63) & ~63;
+		if (height > heightOffscreen)
+			heightOffscreen = (height + 15) & ~15;
+		imageOffscreen = allocateOffscreenImage(widthOffscreen, heightOffscreen);
+		gOffscreen = getGraphics(imageOffscreen);
+	}
 
-    synchronized void obtainBufferForClient() {
-      //Logger.debug("obtainBufferForClient()");
-      while (! bufferHasBeenCleared)
-        try { wait(); } catch (InterruptedException ie) {}
-      clientHasBuffer = true;
-    }
+	class ClearingThread extends Thread implements Runnable {
 
-    synchronized void releaseBufferForClearing() {
-      //Logger.debug("releaseBufferForClearing()");
-      clientHasBuffer = false;
-      bufferHasBeenCleared = false;
-      notify();
-    }
+		boolean bufferHasBeenCleared = false;
+		boolean clientHasBuffer = false;
 
-    synchronized void waitForClientRelease() {
-      //Logger.debug("waitForClientRelease()");
-      while (clientHasBuffer || bufferHasBeenCleared)
-        try { wait(); } catch (InterruptedException ie) {}
-    }
+		synchronized void notifyBackgroundChange(int argbBackground) {
+			// Logger.debug("notifyBackgroundChange");
+			bufferHasBeenCleared = false;
+			notify();
+			// for now do nothing
+		}
 
-    synchronized void notifyBufferReady() {
-      //Logger.debug("notifyBufferReady()");
-      bufferHasBeenCleared = true;
-      notify();
-    }
+		synchronized void obtainBufferForClient() {
+			// Logger.debug("obtainBufferForClient()");
+			while (!bufferHasBeenCleared)
+				try {
+					wait();
+				}
+				catch (InterruptedException ie) {
+				}
+			clientHasBuffer = true;
+		}
 
-    public void run() {
-      /*
-      Logger.debug("running clearing thread:" +
-                         Thread.currentThread().getPriority());
-      */
-      while (true) {
-        waitForClientRelease();
-        int bg;
-        do {
-          bg = argbBackground;
-          clearScreenBuffer(bg);
-        } while (bg != argbBackground); // color changed underneath us
-        notifyBufferReady();
-      }
-    }
-  }
+		synchronized void releaseBufferForClearing() {
+			// Logger.debug("releaseBufferForClearing()");
+			clientHasBuffer = false;
+			bufferHasBeenCleared = false;
+			notify();
+		}
+
+		synchronized void waitForClientRelease() {
+			// Logger.debug("waitForClientRelease()");
+			while (clientHasBuffer || bufferHasBeenCleared)
+				try {
+					wait();
+				}
+				catch (InterruptedException ie) {
+				}
+		}
+
+		synchronized void notifyBufferReady() {
+			// Logger.debug("notifyBufferReady()");
+			bufferHasBeenCleared = true;
+			notify();
+		}
+
+		public void run() {
+			/*
+			 * Logger.debug("running clearing thread:" + Thread.currentThread().getPriority());
+			 */
+			while (true) {
+				waitForClientRelease();
+				int bg;
+				do {
+					bg = argbBackground;
+					clearScreenBuffer(bg);
+				} while (bg != argbBackground); // color changed underneath us
+				notifyBufferReady();
+			}
+		}
+	}
 }
