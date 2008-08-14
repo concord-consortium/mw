@@ -32,7 +32,7 @@ import org.concord.modeler.event.ProgressListener;
 
 public final class XyzWriter {
 
-	final static DecimalFormat FORMAT = new DecimalFormat("#####.#####");
+	final static DecimalFormat FORMAT = new DecimalFormat("#####.#######");
 	private final static String LINE_SEPARATOR = System.getProperty("line.separator");
 	private MolecularModel model;
 	private List<ProgressListener> progressListeners;
@@ -79,9 +79,7 @@ public final class XyzWriter {
 		sb.append(LINE_SEPARATOR);
 
 		if (nAtom >= 0) {
-			sb.append("#forces [" + model.getRBondCount() + " " + model.getABondCount() + " " + model.getTBondCount()
-					+ "]");
-			sb.append(" --- created by Molecular Workbench, http://mw.concord.org");
+			sb.append("#symbol   rx   ry   rz   vx   vy   vz   charge   damp   ---  Molecular Workbench");
 		}
 		sb.append(LINE_SEPARATOR);
 
