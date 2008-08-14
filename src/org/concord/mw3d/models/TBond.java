@@ -34,10 +34,10 @@ public class TBond {
 	// torsional bonds are believed to be quite gentle. So let's use a small number.
 	final static float DEFAULT_STRENGTH = 1.0f;
 
-	private Atom atom1; // end atom
-	private Atom atom2; // middle atom
-	private Atom atom3; // middel atom
-	private Atom atom4; // end atom
+	Atom atom1; // end atom
+	Atom atom2; // middle atom
+	Atom atom3; // middle atom
+	Atom atom4; // end atom
 	private byte periodicity = 1; // n
 	private float strength = DEFAULT_STRENGTH;
 	private float angle; // gamma
@@ -86,6 +86,10 @@ public class TBond {
 		angle = (float) getAngle(atom1, atom2, atom3, atom4) * periodicity;
 	}
 
+	public double getAngle(int frame) {
+		return getAngle(atom1, atom2, atom3, atom4, frame);
+	}
+
 	/** return the angle between a2-a1 vector and a3-a4 vector (a2 and a3 are in the middle) */
 	public static double getAngle(Atom a1, Atom a2, Atom a3, Atom a4) {
 		float x21 = a2.rx - a1.rx;
@@ -94,6 +98,22 @@ public class TBond {
 		float x34 = a3.rx - a4.rx;
 		float y34 = a3.ry - a4.ry;
 		float z34 = a3.rz - a4.rz;
+		float xx = y21 * z34 - z21 * y34;
+		float yy = z21 * x34 - x21 * z34;
+		float zz = x21 * y34 - y21 * x34;
+		return Math.abs(Math.atan2(Math.sqrt(xx * xx + yy * yy + zz * zz), x21 * x34 + y21 * y34 + z21 * z34));
+	}
+
+	/** return the angle between a2-a1 vector and a3-a4 vector (a2 and a3 are in the middle) at the specified frame. */
+	public static double getAngle(Atom a1, Atom a2, Atom a3, Atom a4, int frame) {
+		if (frame < 0)
+			return getAngle(a1, a2, a3, a4);
+		float x21 = a2.rQ.getQueue1().getData(frame) - a1.rQ.getQueue1().getData(frame);
+		float y21 = a2.rQ.getQueue2().getData(frame) - a1.rQ.getQueue2().getData(frame);
+		float z21 = a2.rQ.getQueue3().getData(frame) - a1.rQ.getQueue3().getData(frame);
+		float x34 = a3.rQ.getQueue1().getData(frame) - a4.rQ.getQueue1().getData(frame);
+		float y34 = a3.rQ.getQueue2().getData(frame) - a4.rQ.getQueue2().getData(frame);
+		float z34 = a3.rQ.getQueue3().getData(frame) - a4.rQ.getQueue3().getData(frame);
 		float xx = y21 * z34 - z21 * y34;
 		float yy = z21 * x34 - x21 * z34;
 		float zz = x21 * y34 - y21 * x34;
