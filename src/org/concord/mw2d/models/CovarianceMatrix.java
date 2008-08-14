@@ -90,8 +90,8 @@ public class CovarianceMatrix {
 
 	for(int i=0; i<n; i++){
 	    atom=model.getAtom(i);
-	    q[i+i]=new FloatQueue(atom.rxryQ.getQueue1());
-	    q[i+i+1]=new FloatQueue(atom.rxryQ.getQueue2());
+	    q[i+i]=new FloatQueue(atom.rQ.getQueue1());
+	    q[i+i+1]=new FloatQueue(atom.rQ.getQueue2());
 	}
 
 	int m=q[0].getPointer();

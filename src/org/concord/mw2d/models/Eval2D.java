@@ -256,12 +256,12 @@ class Eval2D extends AbstractEval {
 					s = replaceAll(s, "%particle\\[" + v + "\\]\\.alpha", p.alpha);
 				}
 				else {
-					s = replaceAll(s, "%particle\\[" + v + "\\]\\.rx", p.rxryQ.getQueue1().getData(frame) * R_CONVERTER);
-					s = replaceAll(s, "%particle\\[" + v + "\\]\\.ry", p.rxryQ.getQueue2().getData(frame) * R_CONVERTER);
-					s = replaceAll(s, "%particle\\[" + v + "\\]\\.vx", p.vxvyQ.getQueue1().getData(frame) * V_CONVERTER);
-					s = replaceAll(s, "%particle\\[" + v + "\\]\\.vy", p.vxvyQ.getQueue2().getData(frame) * V_CONVERTER);
-					s = replaceAll(s, "%particle\\[" + v + "\\]\\.ax", p.axayQ.getQueue1().getData(frame) * A_CONVERTER);
-					s = replaceAll(s, "%particle\\[" + v + "\\]\\.ay", p.axayQ.getQueue2().getData(frame) * A_CONVERTER);
+					s = replaceAll(s, "%particle\\[" + v + "\\]\\.rx", p.rQ.getQueue1().getData(frame) * R_CONVERTER);
+					s = replaceAll(s, "%particle\\[" + v + "\\]\\.ry", p.rQ.getQueue2().getData(frame) * R_CONVERTER);
+					s = replaceAll(s, "%particle\\[" + v + "\\]\\.vx", p.vQ.getQueue1().getData(frame) * V_CONVERTER);
+					s = replaceAll(s, "%particle\\[" + v + "\\]\\.vy", p.vQ.getQueue2().getData(frame) * V_CONVERTER);
+					s = replaceAll(s, "%particle\\[" + v + "\\]\\.ax", p.aQ.getQueue1().getData(frame) * A_CONVERTER);
+					s = replaceAll(s, "%particle\\[" + v + "\\]\\.ay", p.aQ.getQueue2().getData(frame) * A_CONVERTER);
 					s = replaceAll(s, "%particle\\[" + v + "\\]\\.theta", p.thetaQ.getData(frame));
 					s = replaceAll(s, "%particle\\[" + v + "\\]\\.omega", p.omegaQ.getData(frame));
 					s = replaceAll(s, "%particle\\[" + v + "\\]\\.alpha", p.alphaQ.getData(frame));
@@ -283,12 +283,12 @@ class Eval2D extends AbstractEval {
 					s = replaceAll(s, "%particle\\[" + v + "\\]\\.ay", a.ay * A_CONVERTER);
 				}
 				else {
-					s = replaceAll(s, "%particle\\[" + v + "\\]\\.rx", a.rxryQ.getQueue1().getData(frame) * R_CONVERTER);
-					s = replaceAll(s, "%particle\\[" + v + "\\]\\.ry", a.rxryQ.getQueue2().getData(frame) * R_CONVERTER);
-					s = replaceAll(s, "%particle\\[" + v + "\\]\\.vx", a.vxvyQ.getQueue1().getData(frame) * V_CONVERTER);
-					s = replaceAll(s, "%particle\\[" + v + "\\]\\.vy", a.vxvyQ.getQueue2().getData(frame) * V_CONVERTER);
-					s = replaceAll(s, "%particle\\[" + v + "\\]\\.ax", a.axayQ.getQueue1().getData(frame) * A_CONVERTER);
-					s = replaceAll(s, "%particle\\[" + v + "\\]\\.ay", a.axayQ.getQueue2().getData(frame) * A_CONVERTER);
+					s = replaceAll(s, "%particle\\[" + v + "\\]\\.rx", a.rQ.getQueue1().getData(frame) * R_CONVERTER);
+					s = replaceAll(s, "%particle\\[" + v + "\\]\\.ry", a.rQ.getQueue2().getData(frame) * R_CONVERTER);
+					s = replaceAll(s, "%particle\\[" + v + "\\]\\.vx", a.vQ.getQueue1().getData(frame) * V_CONVERTER);
+					s = replaceAll(s, "%particle\\[" + v + "\\]\\.vy", a.vQ.getQueue2().getData(frame) * V_CONVERTER);
+					s = replaceAll(s, "%particle\\[" + v + "\\]\\.ax", a.aQ.getQueue1().getData(frame) * A_CONVERTER);
+					s = replaceAll(s, "%particle\\[" + v + "\\]\\.ay", a.aQ.getQueue2().getData(frame) * A_CONVERTER);
 				}
 			}
 			lb0 = lb;
@@ -330,12 +330,12 @@ class Eval2D extends AbstractEval {
 					s = replaceAll(s, "%atom\\[" + v + "\\]\\.ay", a.ay * A_CONVERTER);
 				}
 				else {
-					s = replaceAll(s, "%atom\\[" + v + "\\]\\.rx", a.rxryQ.getQueue1().getData(frame) * R_CONVERTER);
-					s = replaceAll(s, "%atom\\[" + v + "\\]\\.ry", a.rxryQ.getQueue2().getData(frame) * R_CONVERTER);
-					s = replaceAll(s, "%atom\\[" + v + "\\]\\.vx", a.vxvyQ.getQueue1().getData(frame) * V_CONVERTER);
-					s = replaceAll(s, "%atom\\[" + v + "\\]\\.vy", a.vxvyQ.getQueue2().getData(frame) * V_CONVERTER);
-					s = replaceAll(s, "%atom\\[" + v + "\\]\\.ax", a.axayQ.getQueue1().getData(frame) * A_CONVERTER);
-					s = replaceAll(s, "%atom\\[" + v + "\\]\\.ay", a.axayQ.getQueue2().getData(frame) * A_CONVERTER);
+					s = replaceAll(s, "%atom\\[" + v + "\\]\\.rx", a.rQ.getQueue1().getData(frame) * R_CONVERTER);
+					s = replaceAll(s, "%atom\\[" + v + "\\]\\.ry", a.rQ.getQueue2().getData(frame) * R_CONVERTER);
+					s = replaceAll(s, "%atom\\[" + v + "\\]\\.vx", a.vQ.getQueue1().getData(frame) * V_CONVERTER);
+					s = replaceAll(s, "%atom\\[" + v + "\\]\\.vy", a.vQ.getQueue2().getData(frame) * V_CONVERTER);
+					s = replaceAll(s, "%atom\\[" + v + "\\]\\.ax", a.aQ.getQueue1().getData(frame) * A_CONVERTER);
+					s = replaceAll(s, "%atom\\[" + v + "\\]\\.ay", a.aQ.getQueue2().getData(frame) * A_CONVERTER);
 				}
 				lb0 = lb;
 				lb = s.indexOf("%atom[");
@@ -520,8 +520,8 @@ class Eval2D extends AbstractEval {
 				Atom at = null;
 				for (int k = 0; k < nmol; k++) {
 					at = mol.getAtom(k);
-					xc += at.rxryQ.getQueue1().getData(frame);
-					yc += at.rxryQ.getQueue2().getData(frame);
+					xc += at.rQ.getQueue1().getData(frame);
+					yc += at.rQ.getQueue2().getData(frame);
 				}
 				xc /= nmol;
 				yc /= nmol;

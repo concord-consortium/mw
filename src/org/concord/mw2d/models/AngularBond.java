@@ -440,9 +440,9 @@ public class AngularBond implements ModelComponent {
 	double getAngle(int frame) {
 		if (frame < 0)
 			return getAngle(atom1, atom3, atom2);
-		return getAngle(atom1.rxryQ.getQueue1().getData(frame), atom1.rxryQ.getQueue2().getData(frame), atom3.rxryQ
-				.getQueue1().getData(frame), atom3.rxryQ.getQueue2().getData(frame), atom2.rxryQ.getQueue1().getData(
-				frame), atom2.rxryQ.getQueue2().getData(frame));
+		return getAngle(atom1.rQ.getQueue1().getData(frame), atom1.rQ.getQueue2().getData(frame), atom3.rQ
+				.getQueue1().getData(frame), atom3.rQ.getQueue2().getData(frame), atom2.rQ.getQueue1().getData(
+				frame), atom2.rQ.getQueue2().getData(frame));
 	}
 
 	public int indexOf(Atom atom) {

@@ -154,16 +154,16 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	UserField userField;
 
 	/* store <tt>rx, ry</tt> queues */
-	transient FloatQueueTwin rxryQ;
+	transient FloatQueueTwin rQ;
 
 	/* store <tt>vx, vy</tt> queues */
-	transient FloatQueueTwin vxvyQ;
+	transient FloatQueueTwin vQ;
 
 	/* store <tt>ax, ay</tt> queues */
-	transient FloatQueueTwin axayQ;
+	transient FloatQueueTwin aQ;
 
 	/* store the x,y displacements over the period of a recording interval */
-	transient FloatQueueTwin dxdyQ;
+	transient FloatQueueTwin dQ;
 
 	/* true if this particle is selected */
 	transient boolean selected;
@@ -232,10 +232,10 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	}
 
 	public void destroy() {
-		rxryQ = null;
-		vxvyQ = null;
-		axayQ = null;
-		dxdyQ = null;
+		rQ = null;
+		vQ = null;
+		aQ = null;
+		dQ = null;
 		restraint = null;
 		userField = null;
 	}
@@ -813,23 +813,23 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	 * initialize coordinate queue twin. If the passed integer is less than 1, nullify the queues.
 	 */
 	public void initializeRQ(int n) {
-		if (rxryQ == null) {
+		if (rQ == null) {
 			if (n < 1)
 				return; // already null
-			rxryQ = new FloatQueueTwin(new FloatQueue("Rx: " + toString(), n), new FloatQueue("Ry: " + toString(), n));
-			rxryQ.setInterval(getMovieInterval());
-			rxryQ.setPointer(0);
-			rxryQ.setCoordinateQueue(getHostModel().getModelTimeQueue());
-			getHostModel().getMovieQueueGroup().add(rxryQ);
+			rQ = new FloatQueueTwin(new FloatQueue("Rx: " + toString(), n), new FloatQueue("Ry: " + toString(), n));
+			rQ.setInterval(getMovieInterval());
+			rQ.setPointer(0);
+			rQ.setCoordinateQueue(getHostModel().getModelTimeQueue());
+			getHostModel().getMovieQueueGroup().add(rQ);
 		}
 		else {
-			rxryQ.setLength(n);
+			rQ.setLength(n);
 			if (n < 1) {
-				getHostModel().getMovieQueueGroup().remove(rxryQ);
-				rxryQ = null;
+				getHostModel().getMovieQueueGroup().remove(rQ);
+				rQ = null;
 			}
 			else {
-				rxryQ.setPointer(0);
+				rQ.setPointer(0);
 			}
 		}
 	}
@@ -838,23 +838,23 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	 * initialize velocity queue twin. If the passed integer is less than 1, nullify the array.
 	 */
 	public void initializeVQ(int n) {
-		if (vxvyQ == null) {
+		if (vQ == null) {
 			if (n < 1)
 				return; // already null
-			vxvyQ = new FloatQueueTwin(new FloatQueue("Vx: " + toString(), n), new FloatQueue("Vy: " + toString(), n));
-			vxvyQ.setInterval(getMovieInterval());
-			vxvyQ.setPointer(0);
-			vxvyQ.setCoordinateQueue(getHostModel().getModelTimeQueue());
-			getHostModel().getMovieQueueGroup().add(vxvyQ);
+			vQ = new FloatQueueTwin(new FloatQueue("Vx: " + toString(), n), new FloatQueue("Vy: " + toString(), n));
+			vQ.setInterval(getMovieInterval());
+			vQ.setPointer(0);
+			vQ.setCoordinateQueue(getHostModel().getModelTimeQueue());
+			getHostModel().getMovieQueueGroup().add(vQ);
 		}
 		else {
-			vxvyQ.setLength(n);
+			vQ.setLength(n);
 			if (n < 1) {
-				getHostModel().getMovieQueueGroup().remove(vxvyQ);
-				vxvyQ = null;
+				getHostModel().getMovieQueueGroup().remove(vQ);
+				vQ = null;
 			}
 			else {
-				vxvyQ.setPointer(0);
+				vQ.setPointer(0);
 			}
 		}
 	}
@@ -863,23 +863,23 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	 * initialize acceleration queue twin. If the passed integer is less than 1, nullify the array.
 	 */
 	public void initializeAQ(int n) {
-		if (axayQ == null) {
+		if (aQ == null) {
 			if (n < 1)
 				return; // already null
-			axayQ = new FloatQueueTwin(new FloatQueue("Ax: " + toString(), n), new FloatQueue("Ay: " + toString(), n));
-			axayQ.setInterval(getMovieInterval());
-			axayQ.setPointer(0);
-			axayQ.setCoordinateQueue(getHostModel().getModelTimeQueue());
-			getHostModel().getMovieQueueGroup().add(axayQ);
+			aQ = new FloatQueueTwin(new FloatQueue("Ax: " + toString(), n), new FloatQueue("Ay: " + toString(), n));
+			aQ.setInterval(getMovieInterval());
+			aQ.setPointer(0);
+			aQ.setCoordinateQueue(getHostModel().getModelTimeQueue());
+			getHostModel().getMovieQueueGroup().add(aQ);
 		}
 		else {
-			axayQ.setLength(n);
+			aQ.setLength(n);
 			if (n < 1) {
-				getHostModel().getMovieQueueGroup().remove(axayQ);
-				axayQ = null;
+				getHostModel().getMovieQueueGroup().remove(aQ);
+				aQ = null;
 			}
 			else {
-				axayQ.setPointer(0);
+				aQ.setPointer(0);
 			}
 		}
 	}
@@ -888,53 +888,53 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	 * initialize displacement queue twin. If the passed integer is less than 1, nullify the queues.
 	 */
 	public void initializeDQ(int n) {
-		if (dxdyQ == null) {
+		if (dQ == null) {
 			if (n < 1)
 				return; // already null
-			dxdyQ = new FloatQueueTwin(new FloatQueue("Dx: " + toString(), n), new FloatQueue("Dy: " + toString(), n));
-			dxdyQ.setInterval(getMovieInterval());
-			dxdyQ.setPointer(0);
-			dxdyQ.setCoordinateQueue(getHostModel().getModelTimeQueue());
+			dQ = new FloatQueueTwin(new FloatQueue("Dx: " + toString(), n), new FloatQueue("Dy: " + toString(), n));
+			dQ.setInterval(getMovieInterval());
+			dQ.setPointer(0);
+			dQ.setCoordinateQueue(getHostModel().getModelTimeQueue());
 			// getHostModel().getMovieQueueGroup().add(dxdyQ);
 		}
 		else {
-			dxdyQ.setLength(n);
+			dQ.setLength(n);
 			if (n < 1) {
 				// getHostModel().getMovieQueueGroup().remove(dxdyQ);
-				dxdyQ = null;
+				dQ = null;
 			}
 			else {
-				dxdyQ.setPointer(0);
+				dQ.setPointer(0);
 			}
 		}
 	}
 
 	/** push current coordinate into the coordinate queue */
 	public synchronized void updateRQ() {
-		if (rxryQ == null || rxryQ.isEmpty())
+		if (rQ == null || rQ.isEmpty())
 			throw new RuntimeException("Attempt to write to the empty queue");
-		rxryQ.update(rx, ry);
+		rQ.update(rx, ry);
 	}
 
 	/** push current velocity into the velocity queue */
 	public synchronized void updateVQ() {
-		if (vxvyQ == null || vxvyQ.isEmpty())
+		if (vQ == null || vQ.isEmpty())
 			throw new RuntimeException("Attempt to write to the empty queue");
-		vxvyQ.update(vx, vy);
+		vQ.update(vx, vy);
 	}
 
 	/** push current acceleration into the acceleration queue */
 	public synchronized void updateAQ() {
-		if (axayQ == null || axayQ.isEmpty())
+		if (aQ == null || aQ.isEmpty())
 			throw new RuntimeException("Attempt to write to the empty queue");
-		axayQ.update(ax, ay);
+		aQ.update(ax, ay);
 	}
 
 	/** store the displacements since last recording into the displacement queue. */
 	public synchronized void updateDQ() {
-		if (dxdyQ == null || dxdyQ.isEmpty())
+		if (dQ == null || dQ.isEmpty())
 			throw new RuntimeException("Attempt to write to the empty queue");
-		dxdyQ.update(tx, ty);
+		dQ.update(tx, ty);
 		tx = ty = 0;
 	}
 
@@ -944,77 +944,77 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	 * the last index of the array once the whole array is filled up.
 	 */
 	public synchronized int getRPointer() {
-		if (rxryQ == null || rxryQ.isEmpty())
+		if (rQ == null || rQ.isEmpty())
 			return -1;
-		return rxryQ.getPointer();
+		return rQ.getPointer();
 	}
 
 	/** @see org.concord.mw2d.models.Particle#getRPointer */
 	public synchronized void moveRPointer(int i) {
-		if (rxryQ == null || rxryQ.isEmpty())
+		if (rQ == null || rQ.isEmpty())
 			return;
-		rxryQ.setPointer(i);
+		rQ.setPointer(i);
 	}
 
 	/** @see org.concord.mw2d.models.Particle#getRPointer */
 	public synchronized int getVPointer() {
-		if (vxvyQ == null || vxvyQ.isEmpty())
+		if (vQ == null || vQ.isEmpty())
 			return -1;
-		return vxvyQ.getPointer();
+		return vQ.getPointer();
 	}
 
 	/** @see org.concord.mw2d.models.Particle#getRPointer */
 	public synchronized void moveVPointer(int i) {
-		if (vxvyQ == null || vxvyQ.isEmpty())
+		if (vQ == null || vQ.isEmpty())
 			return;
-		vxvyQ.setPointer(i);
+		vQ.setPointer(i);
 	}
 
 	/** @see org.concord.mw2d.models.Particle#getRPointer */
 	public synchronized int getAPointer() {
-		if (axayQ == null || axayQ.isEmpty())
+		if (aQ == null || aQ.isEmpty())
 			return -1;
-		return axayQ.getPointer();
+		return aQ.getPointer();
 	}
 
 	/** @see org.concord.mw2d.models.Particle#getRPointer */
 	public synchronized void moveAPointer(int i) {
-		if (axayQ == null || axayQ.isEmpty())
+		if (aQ == null || aQ.isEmpty())
 			return;
-		axayQ.setPointer(i);
+		aQ.setPointer(i);
 	}
 
 	/** @see org.concord.mw2d.models.Particle#getRPointer */
 	public synchronized int getDPointer() {
-		if (dxdyQ == null || dxdyQ.isEmpty())
+		if (dQ == null || dQ.isEmpty())
 			return -1;
-		return dxdyQ.getPointer();
+		return dQ.getPointer();
 	}
 
 	/** @see org.concord.mw2d.models.Particle#getRPointer */
 	public synchronized void moveDPointer(int i) {
-		if (dxdyQ == null || dxdyQ.isEmpty())
+		if (dQ == null || dQ.isEmpty())
 			return;
 		if (i <= 0) {
 			tx = ty = 0;
 		}
-		dxdyQ.setPointer(i);
+		dQ.setPointer(i);
 	}
 
 	public FloatQueueTwin getRxRyQueue() {
-		return rxryQ;
+		return rQ;
 	}
 
 	public FloatQueueTwin getVxVyQueue() {
-		return vxvyQ;
+		return vQ;
 	}
 
 	public FloatQueueTwin getAxAyQueue() {
-		return axayQ;
+		return aQ;
 	}
 
 	public FloatQueueTwin getDxDyQueue() {
-		return dxdyQ;
+		return dQ;
 	}
 
 	public void setShowRTraj(boolean b) {
@@ -1030,7 +1030,7 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	void renderRTraj(Graphics2D g) {
 		if (!movable)
 			return;
-		if (rxryQ == null || rxryQ.isEmpty())
+		if (rQ == null || rQ.isEmpty())
 			return;
 
 		Stroke oldStroke = g.getStroke();
@@ -1056,12 +1056,12 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 		}
 
 		int ibeg = 0;
-		int iend = rxryQ.getPointer();
-		while (ibeg < iend - 1 && Math.abs(rxryQ.getQueue1().getData(ibeg) + rxryQ.getQueue2().getData(ibeg)) < ZERO)
+		int iend = rQ.getPointer();
+		while (ibeg < iend - 1 && Math.abs(rQ.getQueue1().getData(ibeg) + rQ.getQueue2().getData(ibeg)) < ZERO)
 			ibeg++;
 		if (iend > ibeg) {
-			float x = rxryQ.getQueue1().getData(ibeg);
-			float y = rxryQ.getQueue2().getData(ibeg);
+			float x = rQ.getQueue1().getData(ibeg);
+			float y = rQ.getQueue2().getData(ibeg);
 			switch (getView().getTrajectoryStyle()) {
 			case StyleConstant.TRAJECTORY_LINE_STYLE:
 				lineUp.moveTo(x, y);
@@ -1077,8 +1077,8 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 				break;
 			}
 			for (int n = ibeg; n < iend; n++) {
-				x = rxryQ.getQueue1().getData(n);
-				y = rxryQ.getQueue2().getData(n);
+				x = rQ.getQueue1().getData(n);
+				y = rQ.getQueue2().getData(n);
 				switch (getView().getTrajectoryStyle()) {
 				case StyleConstant.TRAJECTORY_LINE_STYLE:
 					if (lineUp != null) // in case lineUp has been nullified in the middle of this loop
@@ -1124,12 +1124,12 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 			return;
 		if (!showRMean)
 			return;
-		if (rxryQ == null || rxryQ.isEmpty())
+		if (rQ == null || rQ.isEmpty())
 			return;
 		if (outOfView())
 			return;
-		int x = (int) rxryQ.getQueue1().getAverage();
-		int y = (int) rxryQ.getQueue2().getAverage();
+		int x = (int) rQ.getQueue1().getAverage();
+		int y = (int) rQ.getQueue2().getAverage();
 		if (x <= 0 && y <= 0)
 			return;
 		Stroke oldStroke = g.getStroke();
@@ -1158,12 +1158,12 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	public void renderMeanForce(Graphics2D g) {
 		if (!showFMean)
 			return;
-		if (axayQ == null || axayQ.isEmpty())
+		if (aQ == null || aQ.isEmpty())
 			return;
 		if (outOfView())
 			return;
-		float x = axayQ.getQueue1().getAverage();
-		float y = axayQ.getQueue2().getAverage();
+		float x = aQ.getQueue1().getAverage();
+		float y = aQ.getQueue2().getAverage();
 		if (Math.abs(x) <= ZERO && Math.abs(y) <= ZERO)
 			return;
 		g.setColor(getView().getBackground());
