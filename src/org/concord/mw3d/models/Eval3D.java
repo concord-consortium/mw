@@ -169,8 +169,9 @@ class Eval3D extends AbstractEval {
 		int n = model.getAtomCount();
 		int lb = s.indexOf("%atom[");
 		int rb = s.indexOf("].", lb);
-		int i;
+		int lb0 = -1;
 		String v;
+		int i;
 		while (lb != -1 && rb != -1) {
 			v = s.substring(lb + 6, rb);
 			double x = parseMathExpression(v);
@@ -182,24 +183,152 @@ class Eval3D extends AbstractEval {
 				break;
 			}
 			v = escapeMetaCharacters(v);
-			s = replaceAll(s, "%atom\\[" + v + "\\]\\.mass", atom[i].mass);
+			Atom a = model.atom[i];
+			s = replaceAll(s, "%atom\\[" + v + "\\]\\.id", a.getElementNumber());
+			s = replaceAll(s, "%atom\\[" + v + "\\]\\.mass", a.mass);
+			s = replaceAll(s, "%atom\\[" + v + "\\]\\.charge", a.charge);
+			s = replaceAll(s, "%atom\\[" + v + "\\]\\.sigma", a.sigma * 0.1);
+			s = replaceAll(s, "%atom\\[" + v + "\\]\\.epsilon", a.epsilon);
+			s = replaceAll(s, "%atom\\[" + v + "\\]\\.friction", a.damp);
+			// s = replaceAll(s, "%atom\\[" + v + "\\]\\.hx", a.hx);
+			// s = replaceAll(s, "%atom\\[" + v + "\\]\\.hy", a.hy);
 			if (frame < 0) {
-				s = replaceAll(s, "%atom\\[" + v + "\\]\\.rx", atom[i].rx);
-				s = replaceAll(s, "%atom\\[" + v + "\\]\\.ry", atom[i].ry);
-				s = replaceAll(s, "%atom\\[" + v + "\\]\\.vx", atom[i].vx);
-				s = replaceAll(s, "%atom\\[" + v + "\\]\\.vy", atom[i].vy);
-				s = replaceAll(s, "%atom\\[" + v + "\\]\\.ax", atom[i].ax);
-				s = replaceAll(s, "%atom\\[" + v + "\\]\\.ay", atom[i].ay);
+				s = replaceAll(s, "%atom\\[" + v + "\\]\\.rx", a.rx);
+				s = replaceAll(s, "%atom\\[" + v + "\\]\\.ry", a.ry);
+				s = replaceAll(s, "%atom\\[" + v + "\\]\\.rz", a.rz);
+				s = replaceAll(s, "%atom\\[" + v + "\\]\\.vx", a.vx * V_CONVERTER);
+				s = replaceAll(s, "%atom\\[" + v + "\\]\\.vy", a.vy * V_CONVERTER);
+				s = replaceAll(s, "%atom\\[" + v + "\\]\\.vz", a.vz * V_CONVERTER);
+				s = replaceAll(s, "%atom\\[" + v + "\\]\\.ax", a.ax);
+				s = replaceAll(s, "%atom\\[" + v + "\\]\\.ay", a.ay);
+				s = replaceAll(s, "%atom\\[" + v + "\\]\\.az", a.az);
 			}
 			else {
-				s = replaceAll(s, "%atom\\[" + v + "\\]\\.rx", atom[i].rQ.getQueue1().getData(frame));
-				s = replaceAll(s, "%atom\\[" + v + "\\]\\.ry", atom[i].rQ.getQueue2().getData(frame));
-				s = replaceAll(s, "%atom\\[" + v + "\\]\\.vx", atom[i].vQ.getQueue1().getData(frame));
-				s = replaceAll(s, "%atom\\[" + v + "\\]\\.vy", atom[i].vQ.getQueue2().getData(frame));
-				s = replaceAll(s, "%atom\\[" + v + "\\]\\.ax", atom[i].aQ.getQueue1().getData(frame));
-				s = replaceAll(s, "%atom\\[" + v + "\\]\\.ay", atom[i].aQ.getQueue2().getData(frame));
+				s = replaceAll(s, "%atom\\[" + v + "\\]\\.rx", a.rQ.getQueue1().getData(frame));
+				s = replaceAll(s, "%atom\\[" + v + "\\]\\.ry", a.rQ.getQueue2().getData(frame));
+				s = replaceAll(s, "%atom\\[" + v + "\\]\\.rz", a.rQ.getQueue3().getData(frame));
+				s = replaceAll(s, "%atom\\[" + v + "\\]\\.vx", a.vQ.getQueue1().getData(frame) * V_CONVERTER);
+				s = replaceAll(s, "%atom\\[" + v + "\\]\\.vy", a.vQ.getQueue2().getData(frame) * V_CONVERTER);
+				s = replaceAll(s, "%atom\\[" + v + "\\]\\.vz", a.vQ.getQueue3().getData(frame) * V_CONVERTER);
+				s = replaceAll(s, "%atom\\[" + v + "\\]\\.ax", a.aQ.getQueue1().getData(frame));
+				s = replaceAll(s, "%atom\\[" + v + "\\]\\.ay", a.aQ.getQueue2().getData(frame));
+				s = replaceAll(s, "%atom\\[" + v + "\\]\\.az", a.aQ.getQueue3().getData(frame));
 			}
+			lb0 = lb;
 			lb = s.indexOf("%atom[");
+			if (lb0 == lb) // infinite loop
+				break;
+			rb = s.indexOf("].", lb);
+		}
+		return s;
+	}
+
+	private String useRbondVariables(String s, int frame) {
+		int n = model.getRBondCount();
+		if (n <= 0)
+			return s;
+		int lb = s.indexOf("%rbond[");
+		int rb = s.indexOf("].", lb);
+		int lb0 = -1;
+		String v;
+		int i;
+		RBond bond;
+		while (lb != -1 && rb != -1) {
+			v = s.substring(lb + 7, rb);
+			double x = parseMathExpression(v);
+			if (Double.isNaN(x))
+				break;
+			i = (int) Math.round(x);
+			if (i < 0 || i >= n) {
+				out(ScriptEvent.FAILED, "Radial bond " + i + " does not exist.");
+				break;
+			}
+			v = escapeMetaCharacters(v);
+			bond = model.getRBond(i);
+			s = replaceAll(s, "%rbond\\[" + v + "\\]\\.length", bond.getLength(frame));
+			s = replaceAll(s, "%rbond\\[" + v + "\\]\\.strength", bond.getStrength());
+			s = replaceAll(s, "%rbond\\[" + v + "\\]\\.bondlength", bond.getLength());
+			s = replaceAll(s, "%rbond\\[" + v + "\\]\\.atom1", bond.atom1.getIndex());
+			s = replaceAll(s, "%rbond\\[" + v + "\\]\\.atom2", bond.atom2.getIndex());
+			lb0 = lb;
+			lb = s.indexOf("%rbond[");
+			if (lb0 == lb) // infinite loop
+				break;
+			rb = s.indexOf("].", lb);
+		}
+		return s;
+	}
+
+	private String useAbondVariables(String s, int frame) {
+		int n = model.getABondCount();
+		if (n <= 0)
+			return s;
+		int lb = s.indexOf("%abond[");
+		int rb = s.indexOf("].", lb);
+		int lb0 = -1;
+		String v;
+		int i;
+		ABond bond;
+		while (lb != -1 && rb != -1) {
+			v = s.substring(lb + 7, rb);
+			double x = parseMathExpression(v);
+			if (Double.isNaN(x))
+				break;
+			i = (int) Math.round(x);
+			if (i < 0 || i >= n) {
+				out(ScriptEvent.FAILED, "Angular bond " + i + " does not exist.");
+				break;
+			}
+			v = escapeMetaCharacters(v);
+			bond = model.getABond(i);
+			s = replaceAll(s, "%abond\\[" + v + "\\]\\.angle", bond.getAngle(frame));
+			s = replaceAll(s, "%abond\\[" + v + "\\]\\.strength", bond.getStrength());
+			s = replaceAll(s, "%abond\\[" + v + "\\]\\.bondangle", bond.getAngle());
+			s = replaceAll(s, "%abond\\[" + v + "\\]\\.atom1", bond.atom1.getIndex());
+			s = replaceAll(s, "%abond\\[" + v + "\\]\\.atom2", bond.atom2.getIndex());
+			s = replaceAll(s, "%abond\\[" + v + "\\]\\.atom3", bond.atom3.getIndex());
+			lb0 = lb;
+			lb = s.indexOf("%abond[");
+			if (lb0 == lb) // infinite loop
+				break;
+			rb = s.indexOf("].", lb);
+		}
+		return s;
+	}
+
+	private String useTbondVariables(String s, int frame) {
+		int n = model.getTBondCount();
+		if (n <= 0)
+			return s;
+		int lb = s.indexOf("%tbond[");
+		int rb = s.indexOf("].", lb);
+		int lb0 = -1;
+		String v;
+		int i;
+		TBond bond;
+		while (lb != -1 && rb != -1) {
+			v = s.substring(lb + 7, rb);
+			double x = parseMathExpression(v);
+			if (Double.isNaN(x))
+				break;
+			i = (int) Math.round(x);
+			if (i < 0 || i >= n) {
+				out(ScriptEvent.FAILED, "Torsional bond " + i + " does not exist.");
+				break;
+			}
+			v = escapeMetaCharacters(v);
+			bond = model.getTBond(i);
+			s = replaceAll(s, "%tbond\\[" + v + "\\]\\.angle", bond.getAngle(frame));
+			s = replaceAll(s, "%tbond\\[" + v + "\\]\\.strength", bond.getStrength());
+			s = replaceAll(s, "%tbond\\[" + v + "\\]\\.bondangle", bond.getAngle());
+			s = replaceAll(s, "%tbond\\[" + v + "\\]\\.atom1", bond.atom1.getIndex());
+			s = replaceAll(s, "%tbond\\[" + v + "\\]\\.atom2", bond.atom2.getIndex());
+			s = replaceAll(s, "%tbond\\[" + v + "\\]\\.atom3", bond.atom3.getIndex());
+			s = replaceAll(s, "%tbond\\[" + v + "\\]\\.atom4", bond.atom4.getIndex());
+			lb0 = lb;
+			lb = s.indexOf("%tbond[");
+			if (lb0 == lb) // infinite loop
+				break;
 			rb = s.indexOf("].", lb);
 		}
 		return s;
@@ -267,6 +396,9 @@ class Eval3D extends AbstractEval {
 		s = useSystemVariables(s);
 		s = useElementVariables(s);
 		s = useAtomVariables(s, -1);
+		s = useRbondVariables(s, -1);
+		s = useAbondVariables(s, -1);
+		s = useTbondVariables(s, -1);
 		s = useObstacleVariables(s, -1);
 		s = useMoleculeVariables(s, -1);
 		s = super.useDefinitions(s);

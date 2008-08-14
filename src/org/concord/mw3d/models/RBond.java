@@ -32,8 +32,8 @@ public class RBond {
 
 	final static float DEFAULT_STRENGTH = 4.5f;
 
-	private Atom atom1;
-	private Atom atom2;
+	Atom atom1;
+	Atom atom2;
 	private byte order = 1;
 	private float strength = DEFAULT_STRENGTH;
 	private float length = 2.0f;
@@ -91,6 +91,15 @@ public class RBond {
 
 	public float getLength() {
 		return length;
+	}
+
+	public float getLength(int frame) {
+		if (frame < 0)
+			return (float) Math.sqrt(atom1.distanceSquare(atom2));
+		float dx = atom1.rQ.getQueue1().getData(frame) - atom2.rQ.getQueue1().getData(frame);
+		float dy = atom1.rQ.getQueue2().getData(frame) - atom2.rQ.getQueue2().getData(frame);
+		float dz = atom1.rQ.getQueue3().getData(frame) - atom2.rQ.getQueue3().getData(frame);
+		return (float) Math.sqrt(dx * dx + dy * dy + dz * dz);
 	}
 
 	public void setStrength(float strength) {

@@ -32,9 +32,9 @@ public class ABond {
 
 	final static float DEFAULT_STRENGTH = 50.0f;
 
-	private Atom atom1; // end atom
-	private Atom atom2; // middle atom (shared by two flanking radial bonds)
-	private Atom atom3; // end atom
+	Atom atom1; // end atom
+	Atom atom2; // middle atom (shared by two flanking radial bonds)
+	Atom atom3; // end atom
 	private float strength = DEFAULT_STRENGTH;
 	private float angle = (float) Math.PI;
 	private boolean selected;
@@ -99,6 +99,10 @@ public class ABond {
 		return at;
 	}
 
+	public double getAngle(int frame) {
+		return getAngle(atom1, atom2, atom3, frame);
+	}
+
 	/** return the angle a1-a2-a3 (a2 is in the middle) */
 	public static double getAngle(Atom a1, Atom a2, Atom a3) {
 		float x21 = a2.rx - a1.rx;
@@ -107,6 +111,22 @@ public class ABond {
 		float x23 = a2.rx - a3.rx;
 		float y23 = a2.ry - a3.ry;
 		float z23 = a2.rz - a3.rz;
+		float xx = y21 * z23 - z21 * y23;
+		float yy = z21 * x23 - x21 * z23;
+		float zz = x21 * y23 - y21 * x23;
+		return Math.abs(Math.atan2(Math.sqrt(xx * xx + yy * yy + zz * zz), x21 * x23 + y21 * y23 + z21 * z23));
+	}
+
+	/** return the angle a1-a2-a3 (a2 is in the middle) at the specified frame */
+	public static double getAngle(Atom a1, Atom a2, Atom a3, int frame) {
+		if (frame < 0)
+			return getAngle(a1, a2, a3);
+		float x21 = a2.rQ.getQueue1().getData(frame) - a1.rQ.getQueue1().getData(frame);
+		float y21 = a2.rQ.getQueue2().getData(frame) - a1.rQ.getQueue2().getData(frame);
+		float z21 = a2.rQ.getQueue3().getData(frame) - a1.rQ.getQueue3().getData(frame);
+		float x23 = a2.rQ.getQueue1().getData(frame) - a3.rQ.getQueue1().getData(frame);
+		float y23 = a2.rQ.getQueue2().getData(frame) - a3.rQ.getQueue2().getData(frame);
+		float z23 = a2.rQ.getQueue3().getData(frame) - a3.rQ.getQueue3().getData(frame);
 		float xx = y21 * z23 - z21 * y23;
 		float yy = z21 * x23 - x21 * z23;
 		float zz = x21 * y23 - y21 * x23;
