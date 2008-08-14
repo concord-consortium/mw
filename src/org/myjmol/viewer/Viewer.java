@@ -1052,6 +1052,18 @@ public class Viewer extends JmolViewer {
 		}
 	}
 
+	// FIXME: doesn't work yet
+	public void setAtomType(int index, short element, String symbol) {
+		Frame frame = modelManager.frame;
+		if (frame == null)
+			return;
+		Atom atom = frame.getAtomAt(index);
+		if (atom != null) {
+			atom.setAtomicAndIsotopeNumber(element);
+			frame.atomNames[index] = symbol.intern();
+		}
+	}
+
 	/** set the specified atom's size */
 	public void setAtomSize(int index, float d) {
 		Frame frame = modelManager.frame;
@@ -1110,7 +1122,6 @@ public class Viewer extends JmolViewer {
 		// System.out.println("Viewer:openClientObject - "+Thread.currentThread());
 	}
 
-	/** XIE */
 	public void addAtom(Object atomUid, byte atomicNumber, String atomName, int formalCharge, float partialCharge,
 			float x, float y, float z, float vx, float vy, float vz, Object clientObject) {
 		if (modelManager.frame == null)
@@ -1119,7 +1130,6 @@ public class Viewer extends JmolViewer {
 				clientObject);
 	}
 
-	/** XIE */
 	public void addRBond(Object atomUid1, Object atomUid2) {
 		if (modelManager.frame != null)
 			modelManager.frame.bondAtoms(atomUid1, atomUid2, (short) 1);
