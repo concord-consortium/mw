@@ -307,6 +307,8 @@ abstract public class JmolViewer extends JmolSimpleViewer {
 
 	abstract public void setAtomCoordinates(int index, float x, float y, float z, float d, int argb);
 
+	abstract public void setAtomType(int index, short element, String symbol);
+
 	abstract public void setAtomSize(int index, float d);
 
 	abstract public void setAtomColor(int index, int argb);

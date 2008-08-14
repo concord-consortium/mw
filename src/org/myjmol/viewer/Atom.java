@@ -375,6 +375,10 @@ final public class Atom extends Point3fi implements Tuple {
 		return atomicAndIsotopeNumber;
 	}
 
+	void setAtomicAndIsotopeNumber(short i) {
+		atomicAndIsotopeNumber = i;
+	}
+
 	String getElementSymbol() {
 		return JmolConstants.elementSymbolFromNumber(atomicAndIsotopeNumber);
 	}

@@ -98,20 +98,20 @@ class AtomPropertiesPanel extends PropertiesPanel {
 			ballColorComboBox.setEnabled(false);
 		}
 
-		rxField = new FloatNumberTextField(atom.getRx(), -100, 100, 10);
-		ryField = new FloatNumberTextField(atom.getRy(), -100, 100, 10);
-		rzField = new FloatNumberTextField(atom.getRz(), -100, 100, 10);
+		rxField = new FloatNumberTextField(atom.getRx(), -1000, 1000, 10);
+		ryField = new FloatNumberTextField(atom.getRy(), -1000, 1000, 10);
+		rzField = new FloatNumberTextField(atom.getRz(), -1000, 1000, 10);
 
 		float velo = atom.isMovable() ? 100000 * atom.getVx() : 0;
-		vxField = new FloatNumberTextField(velo, -10000, 10000, 10);
+		vxField = new FloatNumberTextField(velo, -100000, 100000, 10);
 		vxField.setEditable(atom.isMovable());
 
 		velo = atom.isMovable() ? 100000 * atom.getVy() : 0;
-		vyField = new FloatNumberTextField(velo, -10000, 10000, 10);
+		vyField = new FloatNumberTextField(velo, -100000, 100000, 10);
 		vyField.setEditable(atom.isMovable());
 
 		velo = atom.isMovable() ? 100000 * atom.getVz() : 0;
-		vzField = new FloatNumberTextField(velo, -10000, 10000, 10);
+		vzField = new FloatNumberTextField(velo, -100000, 100000, 10);
 		vzField.setEditable(atom.isMovable());
 
 		chargeField = new FloatNumberTextField(atom.getCharge(), -50, 50, 10);

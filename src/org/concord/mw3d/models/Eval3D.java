@@ -1625,18 +1625,24 @@ class Eval3D extends AbstractEval {
 		}
 		String s = str2.toLowerCase().intern();
 		boolean b = true;
-		if (s == "rx")
+		if (s == "id") {
+			String symbol = model.getSymbol((int) x);
+			atom[i].setSymbol(symbol);
+			view.getViewer().setAtomType(i, (short) x, symbol);
+			// FIXME: this doesn't change the view
+		}
+		else if (s == "rx")
 			atom[i].rx = x;
 		else if (s == "ry")
 			atom[i].ry = x;
 		else if (s == "rz")
 			atom[i].rz = x;
 		else if (s == "vx")
-			atom[i].vx = x;
+			atom[i].vx = x * IV_CONVERTER;
 		else if (s == "vy")
-			atom[i].vy = x;
+			atom[i].vy = x * IV_CONVERTER;
 		else if (s == "vz")
-			atom[i].vz = x;
+			atom[i].vz = x * IV_CONVERTER;
 		else if (s == "ax")
 			atom[i].ax = x;
 		else if (s == "ay")
