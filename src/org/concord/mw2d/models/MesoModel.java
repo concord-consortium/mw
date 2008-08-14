@@ -457,7 +457,7 @@ public class MesoModel extends MDModel {
 	public boolean hasEmbeddedMovie() {
 		if (numberOfParticles <= 0 || getTapePointer() <= 0)
 			return false;
-		if (gb[0].rxryQ == null || gb[0].rxryQ.isEmpty())
+		if (gb[0].rQ == null || gb[0].rQ.isEmpty())
 			return false;
 		return true;
 	}
@@ -1468,12 +1468,12 @@ public class MesoModel extends MDModel {
 		modelTime = modelTimeQueue.getData(frame);
 		for (int i = 0; i < numberOfParticles; i++) {
 			GayBerneParticle p = gb[i];
-			p.rx = p.rxryQ.getQueue1().getData(frame);
-			p.ry = p.rxryQ.getQueue2().getData(frame);
-			p.vx = p.vxvyQ.getQueue1().getData(frame);
-			p.vy = p.vxvyQ.getQueue2().getData(frame);
-			p.ax = p.axayQ.getQueue1().getData(frame);
-			p.ay = p.axayQ.getQueue2().getData(frame);
+			p.rx = p.rQ.getQueue1().getData(frame);
+			p.ry = p.rQ.getQueue2().getData(frame);
+			p.vx = p.vQ.getQueue1().getData(frame);
+			p.vy = p.vQ.getQueue2().getData(frame);
+			p.ax = p.aQ.getQueue1().getData(frame);
+			p.ay = p.aQ.getQueue2().getData(frame);
 			p.fx = p.ax * p.mass;
 			p.fy = p.ay * p.mass;
 			p.theta = p.thetaQ.getData(frame);

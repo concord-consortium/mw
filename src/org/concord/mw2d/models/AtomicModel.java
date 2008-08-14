@@ -1054,8 +1054,8 @@ public abstract class AtomicModel extends MDModel {
 			Arrays.fill(c, 0f);
 			for (int i = 0; i < numberOfAtoms; i++) {
 				if (atom[i].id >= 0 && atom[i].id < 4) {
-					sx = atom[i].dxdyQ.getQueue1().sum(0, k);
-					sy = atom[i].dxdyQ.getQueue2().sum(0, k);
+					sx = atom[i].dQ.getQueue1().sum(0, k);
+					sy = atom[i].dQ.getQueue2().sum(0, k);
 					c[atom[i].id] += sx * sx + sy * sy;
 				}
 			}
@@ -1413,7 +1413,7 @@ public abstract class AtomicModel extends MDModel {
 		if (isEmpty() || getTapePointer() <= 0)
 			return false;
 		if (numberOfAtoms > 0) {
-			if (atom[0].rxryQ == null || atom[0].rxryQ.isEmpty())
+			if (atom[0].rQ == null || atom[0].rQ.isEmpty())
 				return false;
 		}
 		if (obstacles != null && !obstacles.isEmpty()) {
@@ -4125,14 +4125,14 @@ public abstract class AtomicModel extends MDModel {
 		modelTime = modelTimeQueue.getData(frame);
 		for (int i = 0; i < numberOfAtoms; i++) {
 			Atom a = atom[i];
-			a.rx = a.rxryQ.getQueue1().getData(frame);
-			a.ry = a.rxryQ.getQueue2().getData(frame);
-			a.vx = a.vxvyQ.getQueue1().getData(frame);
-			a.vy = a.vxvyQ.getQueue2().getData(frame);
-			a.ax = a.axayQ.getQueue1().getData(frame);
-			a.ay = a.axayQ.getQueue2().getData(frame);
-			a.tx = a.dxdyQ.getQueue1().getData(frame);
-			a.ty = a.dxdyQ.getQueue2().getData(frame);
+			a.rx = a.rQ.getQueue1().getData(frame);
+			a.ry = a.rQ.getQueue2().getData(frame);
+			a.vx = a.vQ.getQueue1().getData(frame);
+			a.vy = a.vQ.getQueue2().getData(frame);
+			a.ax = a.aQ.getQueue1().getData(frame);
+			a.ay = a.aQ.getQueue2().getData(frame);
+			a.tx = a.dQ.getQueue1().getData(frame);
+			a.ty = a.dQ.getQueue2().getData(frame);
 			a.fx = a.ax * a.mass;
 			a.fy = a.ay * a.mass;
 		}

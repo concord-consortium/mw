@@ -647,8 +647,8 @@ public class RadialBond implements ModelComponent {
 	public double getLength(int frame) {
 		if (frame < 0)
 			return Math.sqrt(atom1.distanceSquare(atom2));
-		double dx = atom1.rxryQ.getQueue1().getData(frame) - atom2.rxryQ.getQueue1().getData(frame);
-		double dy = atom1.rxryQ.getQueue2().getData(frame) - atom2.rxryQ.getQueue2().getData(frame);
+		double dx = atom1.rQ.getQueue1().getData(frame) - atom2.rQ.getQueue1().getData(frame);
+		double dy = atom1.rQ.getQueue2().getData(frame) - atom2.rQ.getQueue2().getData(frame);
 		return Math.hypot(dx, dy);
 	}
 

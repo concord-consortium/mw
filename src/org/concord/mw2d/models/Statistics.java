@@ -39,11 +39,11 @@ final class Statistics {
 			int count = 0;
 			for (int i = fromIndex; i < toIndex; i++) {
 				if (p[i].isSelected()) {
-					if (p[i].rxryQ == null || p[i].rxryQ.getPointer() <= 0) {
+					if (p[i].rQ == null || p[i].rQ.getPointer() <= 0) {
 						average += p[i].rx;
 					}
 					else {
-						average += p[i].rxryQ.getQueue1().getAverage();
+						average += p[i].rQ.getQueue1().getAverage();
 					}
 					count++;
 				}
