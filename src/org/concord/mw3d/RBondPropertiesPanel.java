@@ -31,6 +31,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 
@@ -51,7 +52,8 @@ class RBondPropertiesPanel extends PropertiesPanel {
 
 		super(new BorderLayout(5, 5));
 
-		final JLabel nameLabel = createLabel("Radial Bond");
+		String s = MolecularContainer.getInternationalText("RadialBond");
+		final JLabel nameLabel = createLabel(s != null ? s : "Radial Bond");
 		final JLabel indexLabel = createLabel(rbond.getAtom1().getModel().getRBonds().indexOf(rbond));
 		final JLabel atom1Label = createLabel("" + rbond.getAtom1());
 		final JLabel atom2Label = createLabel("" + rbond.getAtom2());
@@ -61,7 +63,7 @@ class RBondPropertiesPanel extends PropertiesPanel {
 
 		JButton okButton = new JButton();
 
-		String s = MolecularContainer.getInternationalText("CancelButton");
+		s = MolecularContainer.getInternationalText("Cancel");
 		JButton cancelButton = new JButton(s != null ? s : "Cancel");
 		cancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -121,7 +123,7 @@ class RBondPropertiesPanel extends PropertiesPanel {
 		panel.add(new JPanel());
 
 		// row 2
-		s = MolecularContainer.getInternationalText("IndexLabel");
+		s = MolecularContainer.getInternationalText("Index");
 		panel.add(new JLabel(s != null ? s : "Index"));
 		panel.add(indexLabel);
 		panel.add(new JPanel());
@@ -139,17 +141,25 @@ class RBondPropertiesPanel extends PropertiesPanel {
 
 		// row 5
 		s = MolecularContainer.getInternationalText("Strength");
-		panel.add(new JLabel("Strength", SwingConstants.LEFT));
+		panel.add(new JLabel(s != null ? s : "Strength", SwingConstants.LEFT));
 		panel.add(strengthField);
 		panel.add(createSmallerFontLabel("<html>eV/&#197;<sup>2</sup></html>"));
 
 		// row 6
-		s = MolecularContainer.getInternationalText("BondLength");
-		panel.add(new JLabel(s != null ? s : "Bond Length"));
+		s = MolecularContainer.getInternationalText("EquilibriumBondLength");
+		panel.add(new JLabel(s != null ? s : "Equilibrium Bond Length"));
 		panel.add(lengthField);
 		panel.add(createSmallerFontLabel("<html>&#197;</html>"));
 
-		makeCompactGrid(panel, 6, 3, 5, 5, 10, 2);
+		// row 7
+		s = MolecularContainer.getInternationalText("CurrentBondLength");
+		panel.add(new JLabel(s != null ? s : "Current Bond Length"));
+		JTextField tf = new JTextField(MolecularView.FORMAT.format(rbond.getLength(-1)));
+		tf.setEnabled(false);
+		panel.add(tf);
+		panel.add(createSmallerFontLabel("<html>&#197;</html>"));
+
+		makeCompactGrid(panel, 7, 3, 5, 5, 10, 2);
 
 		panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		add(panel, BorderLayout.SOUTH);

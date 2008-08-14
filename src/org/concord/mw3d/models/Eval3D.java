@@ -126,12 +126,22 @@ class Eval3D extends AbstractEval {
 	}
 
 	private String useSystemVariables(String s) {
+		s = replaceAll(s, "%model_time", model.modelTime);
 		s = replaceAll(s, "%number_of_atoms", model.getAtomCount());
-		s = replaceAll(s, "%length", model.getLength());
-		s = replaceAll(s, "%width", model.getWidth());
-		s = replaceAll(s, "%height", model.getHeight());
+		s = replaceAll(s, "%number_of_rbonds", model.getRBondCount());
+		s = replaceAll(s, "%number_of_abonds", model.getABondCount());
+		s = replaceAll(s, "%number_of_tbonds", model.getTBondCount());
+		s = replaceAll(s, "%number_of_molecules", model.getMoleculeCount());
+		s = replaceAll(s, "%number_of_obstacles", model.getObstacleCount());
+		s = replaceAll(s, "%width", model.view.getWidth());
+		s = replaceAll(s, "%height", model.view.getHeight());
+		s = replaceAll(s, "%cell_length", model.getLength());
+		s = replaceAll(s, "%cell_width", model.getWidth());
+		s = replaceAll(s, "%cell_height", model.getHeight());
 		s = replaceAll(s, "%loop_count", iLoop);
 		s = replaceAll(s, "%loop_times", nLoop);
+		s = replaceAll(s, "%index_of_selected_atom", model.view.getIndexOfSelectedAtom());
+		s = replaceAll(s, "%temperature", model.getTemperature());
 		return s;
 	}
 

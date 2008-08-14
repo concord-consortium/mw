@@ -489,6 +489,16 @@ public class MolecularView extends Draw {
 		translucentBitSet.set(a.getIndex(), b);
 	}
 
+	/** return the lowest index of the selected particles. */
+	public int getIndexOfSelectedAtom() {
+		int n = model.getAtomCount();
+		for (int i = 0; i < n; i++) {
+			if (model.getAtom(i).isSelected())
+				return i;
+		}
+		return -1;
+	}
+
 	void createPopupMenusRelatedToContainer(MolecularContainer c) {
 		if (defaultPopupMenu == null)
 			defaultPopupMenu = new DefaultPopupMenu(c);

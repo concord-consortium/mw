@@ -31,6 +31,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 
@@ -51,7 +52,8 @@ class TBondPropertiesPanel extends PropertiesPanel {
 
 		super(new BorderLayout(5, 5));
 
-		final JLabel nameLabel = createLabel("Torsional Bond");
+		String s = MolecularContainer.getInternationalText("TorsionalBond");
+		final JLabel nameLabel = createLabel(s != null ? s : "Torsional Bond");
 		final JLabel indexLabel = createLabel(tbond.getAtom1().getModel().getTBonds().indexOf(tbond));
 		final JLabel atom1Label = createLabel("" + tbond.getAtom1());
 		final JLabel atom2Label = createLabel("" + tbond.getAtom2());
@@ -59,11 +61,11 @@ class TBondPropertiesPanel extends PropertiesPanel {
 		final JLabel atom4Label = createLabel("" + tbond.getAtom4());
 		final FloatNumberTextField strengthField = new FloatNumberTextField(tbond.getStrength(), 0.1f, 100);
 		final FloatNumberTextField angleField = new FloatNumberTextField(0, 180);
-		angleField.setText(MolecularView.FORMAT.format(tbond.getAngle() * 180 / Math.PI));
+		angleField.setText(MolecularView.FORMAT.format(Math.toDegrees(tbond.getAngle())));
 
 		JButton okButton = new JButton();
 
-		String s = MolecularContainer.getInternationalText("CancelButton");
+		s = MolecularContainer.getInternationalText("Cancel");
 		JButton cancelButton = new JButton(s != null ? s : "Cancel");
 		cancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -123,7 +125,7 @@ class TBondPropertiesPanel extends PropertiesPanel {
 		panel.add(new JPanel());
 
 		// row 2
-		s = MolecularContainer.getInternationalText("IndexLabel");
+		s = MolecularContainer.getInternationalText("Index");
 		panel.add(new JLabel(s != null ? s : "Index"));
 		panel.add(indexLabel);
 		panel.add(new JPanel());
@@ -151,17 +153,25 @@ class TBondPropertiesPanel extends PropertiesPanel {
 
 		// row 7
 		s = MolecularContainer.getInternationalText("Strength");
-		panel.add(new JLabel("Strength", SwingConstants.LEFT));
+		panel.add(new JLabel(s != null ? s : "Strength", SwingConstants.LEFT));
 		panel.add(strengthField);
 		panel.add(createSmallerFontLabel("<html>eV/Radian<sup>2</sup></html>"));
 
 		// row 8
-		s = MolecularContainer.getInternationalText("TorsionalAngle");
-		panel.add(new JLabel(s != null ? s : "Torsional Angle"));
+		s = MolecularContainer.getInternationalText("EquilibriumTorsionalAngle");
+		panel.add(new JLabel(s != null ? s : "Equilibrium Torsional Angle"));
 		panel.add(angleField);
 		panel.add(createSmallerFontLabel("<html>&#176;</html>"));
 
-		makeCompactGrid(panel, 8, 3, 5, 5, 10, 2);
+		// row 9
+		s = MolecularContainer.getInternationalText("CurrentTorsionalAngle");
+		panel.add(new JLabel(s != null ? s : "Current Torsional Angle"));
+		JTextField tf = new JTextField(MolecularView.FORMAT.format(Math.toDegrees(tbond.getAngle(-1))));
+		tf.setEnabled(false);
+		panel.add(tf);
+		panel.add(createSmallerFontLabel("<html>&#176;</html>"));
+
+		makeCompactGrid(panel, 9, 3, 5, 5, 10, 2);
 
 		panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		add(panel, BorderLayout.SOUTH);
