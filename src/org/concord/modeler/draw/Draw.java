@@ -129,6 +129,14 @@ public abstract class Draw extends PrintableComponent {
 			public void mouseReleased(MouseEvent e) {
 				processMouseReleased(e);
 			}
+
+			public void mouseEntered(MouseEvent e) {
+				processMouseEntered(e);
+			}
+
+			public void mouseExited(MouseEvent e) {
+				processMouseExited(e);
+			}
 		});
 
 		addMouseMotionListener(new MouseMotionAdapter() {
@@ -484,6 +492,12 @@ public abstract class Draw extends PrintableComponent {
 			anchorPoint.setLocation(x + w, y);
 			break;
 		}
+	}
+
+	protected void processMouseEntered(MouseEvent e) {
+	}
+
+	protected void processMouseExited(MouseEvent e) {
 	}
 
 	protected void processMousePressed(MouseEvent e) {

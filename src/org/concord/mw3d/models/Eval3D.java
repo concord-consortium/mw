@@ -140,6 +140,8 @@ class Eval3D extends AbstractEval {
 		s = replaceAll(s, "%loop_times", nLoop);
 		s = replaceAll(s, "%index_of_selected_atom", model.view.getIndexOfSelectedAtom());
 		s = replaceAll(s, "%temperature", model.getTemperature());
+		s = replaceAll(s, "%mouse_x", mouseLocation.x);
+		s = replaceAll(s, "%mouse_y", mouseLocation.y);
 		return s;
 	}
 
@@ -442,6 +444,7 @@ class Eval3D extends AbstractEval {
 		}
 		script = removeCommentedOutScripts(script);
 		script = separateExternalScripts(script);
+		script = storeMouseScripts(script);
 		String[] command = COMMAND_BREAK.split(script);
 		if (command.length < 1) {
 			out(ScriptEvent.FAILED, "No script.");

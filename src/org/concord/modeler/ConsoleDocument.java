@@ -33,37 +33,40 @@ class ConsoleDocument extends DefaultStyledDocument {
 
 	private ConsoleTextPane consoleTextPane;
 
-	private SimpleAttributeSet attError;
-	private SimpleAttributeSet attEcho;
-	private SimpleAttributeSet attPrompt;
-	private SimpleAttributeSet attUserInput;
-	private SimpleAttributeSet attStatus;
+	private static SimpleAttributeSet attError;
+	private static SimpleAttributeSet attEcho;
+	private static SimpleAttributeSet attPrompt;
+	private static SimpleAttributeSet attUserInput;
+	private static SimpleAttributeSet attStatus;
 
 	private Position positionBeforePrompt; // starts at 0, so first time isn't tracked (at least on Mac OS X)
 	private Position positionAfterPrompt; // immediately after $, so this will track
 	private int offsetAfterPrompt; // only still needed for the insertString override and replaceCommand
 
 	ConsoleDocument() {
-
 		super();
-
-		attError = new SimpleAttributeSet();
-		StyleConstants.setForeground(attError, Color.red);
-
-		attPrompt = new SimpleAttributeSet();
-		StyleConstants.setForeground(attPrompt, Color.magenta);
-
-		attUserInput = new SimpleAttributeSet();
-		StyleConstants.setForeground(attUserInput, Color.black);
-
-		attEcho = new SimpleAttributeSet();
-		StyleConstants.setForeground(attEcho, Color.blue);
-		StyleConstants.setBold(attEcho, true);
-
-		attStatus = new SimpleAttributeSet();
-		StyleConstants.setForeground(attStatus, Color.black);
-		StyleConstants.setItalic(attStatus, true);
-
+		if (attError == null) {
+			attError = new SimpleAttributeSet();
+			StyleConstants.setForeground(attError, Color.red);
+		}
+		if (attPrompt == null) {
+			attPrompt = new SimpleAttributeSet();
+			StyleConstants.setForeground(attPrompt, Color.magenta);
+		}
+		if (attUserInput == null) {
+			attUserInput = new SimpleAttributeSet();
+			StyleConstants.setForeground(attUserInput, Color.black);
+		}
+		if (attEcho == null) {
+			attEcho = new SimpleAttributeSet();
+			StyleConstants.setForeground(attEcho, Color.blue);
+			StyleConstants.setBold(attEcho, true);
+		}
+		if (attStatus == null) {
+			attStatus = new SimpleAttributeSet();
+			StyleConstants.setForeground(attStatus, Color.black);
+			StyleConstants.setItalic(attStatus, true);
+		}
 	}
 
 	void setConsoleTextPane(ConsoleTextPane consoleTextPane) {
@@ -75,8 +78,8 @@ class ConsoleDocument extends DefaultStyledDocument {
 		try {
 			super.remove(0, getLength());
 		}
-		catch (BadLocationException exception) {
-			System.out.println("Could not clear script window content: " + exception.getMessage());
+		catch (BadLocationException e) {
+			e.printStackTrace();
 		}
 		setPrompt();
 	}
@@ -92,6 +95,7 @@ class ConsoleDocument extends DefaultStyledDocument {
 			consoleTextPane.setCaretPosition(offsetAfterPrompt);
 		}
 		catch (BadLocationException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -122,6 +126,7 @@ class ConsoleDocument extends DefaultStyledDocument {
 			consoleTextPane.setCaretPosition(getLength());
 		}
 		catch (BadLocationException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -139,6 +144,7 @@ class ConsoleDocument extends DefaultStyledDocument {
 			consoleTextPane.setCaretPosition(getLength());
 		}
 		catch (BadLocationException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -147,7 +153,6 @@ class ConsoleDocument extends DefaultStyledDocument {
 	 * proper font, and the newline is processed.
 	 */
 	public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
-		// System.out.println("insertString("+offs+","+str+",attr)");
 		int ichNewline = str.indexOf('\n');
 		if (ichNewline > 0)
 			str = str.substring(0, ichNewline);
@@ -171,12 +176,12 @@ class ConsoleDocument extends DefaultStyledDocument {
 			strCommand = getText(cmdStart, getLength() - cmdStart).trim();
 		}
 		catch (BadLocationException e) {
+			e.printStackTrace();
 		}
 		return strCommand;
 	}
 
 	public void remove(int offs, int len) throws BadLocationException {
-		// System.out.println("remove("+offs+","+len+")");
 		if (offs < offsetAfterPrompt) {
 			len -= offsetAfterPrompt - offs;
 			if (len <= 0)
@@ -188,7 +193,6 @@ class ConsoleDocument extends DefaultStyledDocument {
 	}
 
 	public void replace(int offs, int length, String str, AttributeSet attrs) throws BadLocationException {
-		// System.out.println("replace("+offs+","+length+","+str+",attr)");
 		if (offs < offsetAfterPrompt) {
 			if (offs + length < offsetAfterPrompt) {
 				offs = getLength();
@@ -206,9 +210,7 @@ class ConsoleDocument extends DefaultStyledDocument {
 	/*
 	 * Replaces current command on script.
 	 * 
-	 * @param newCommand
-	 *            new command value
-	 * @throws BadLocationException
+	 * @param newCommand new command value @throws BadLocationException
 	 */
 	void replaceCommand(String newCommand) throws BadLocationException {
 		replace(offsetAfterPrompt, getLength() - offsetAfterPrompt, newCommand, attUserInput);

@@ -383,6 +383,21 @@ public class MolecularModel {
 		return runScript2(script);
 	}
 
+	public void runMouseScript(int eventType, int x, int y) {
+		initEvalAction();
+		String s = evalAction.getMouseScript(eventType);
+		if (s == null)
+			return;
+		evalAction.setNotifySaver(false);
+		evalAction.setMouseLocation(x, y);
+		runScript2(s);
+	}
+
+	public void clearMouseScripts() {
+		if (evalAction != null)
+			evalAction.clearMouseScripts();
+	}
+
 	private void initEvalAction() {
 		if (evalAction == null)
 			evalAction = new Eval3D(this);

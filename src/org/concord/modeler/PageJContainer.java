@@ -154,12 +154,8 @@ public class PageJContainer extends PagePlugin {
 			long utime = conn.getLastModified();
 			long usize = conn.getContentLength();
 			long fsize = f.length();
-			if (utime == 0 && ftime == 0) {
+			if (utime == 0 && (ftime == 0 && fsize == 0)) {
 				setErrorMessage("Cannot connect to the Internet to download the plugin at: " + codeBase);
-				return false;
-			}
-			else if (usize <= 0) {
-				setErrorMessage("Remote plugin file: " + u + " may be corrupted.");
 				return false;
 			}
 			else if (utime > ftime || fsize != usize) {

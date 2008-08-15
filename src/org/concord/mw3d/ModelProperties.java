@@ -71,8 +71,6 @@ class ModelProperties extends JDialog {
 
 		model = m;
 
-		// getContentPane().setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
-
 		JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
 		s = MolecularContainer.getInternationalText("OK");
