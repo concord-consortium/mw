@@ -1757,10 +1757,10 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 		menu.addMenuListener(new MenuListener() {
 			public void menuSelected(MenuEvent e) {
 				miDetach.setEnabled(view.getCameraAtom() >= 0);
-				Util.setWithoutNotifyingListeners(miGlassBox, view.getShowGlassSimulationBox());
-				Util.setWithoutNotifyingListeners(miSpin, view.isSpinOn());
+				ModelerUtilities.setWithoutNotifyingListeners(miGlassBox, view.getShowGlassSimulationBox());
+				ModelerUtilities.setWithoutNotifyingListeners(miSpin, view.isSpinOn());
 				boolean b = view.getViewer().getNavigationMode();
-				Util.setWithoutNotifyingListeners(miNavigation, b);
+				ModelerUtilities.setWithoutNotifyingListeners(miNavigation, b);
 				zDepthMenu.setEnabled(b);
 				if (b) {
 					switch (view.getViewer().getZDepthMagnification()) {
@@ -1921,7 +1921,7 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 
 		menu.addMenuListener(new MenuListener() {
 			public void menuSelected(MenuEvent e) {
-				Util.setWithoutNotifyingListeners(miEnergizer, view.getShowEnergizer());
+				ModelerUtilities.setWithoutNotifyingListeners(miEnergizer, view.getShowEnergizer());
 				minimizationMenu.setEnabled(!view.getModel().isRunning());
 				miMinimizeSelected.setEnabled(view.getSelectionSet().cardinality() > 0);
 				miMinimizeUnselected.setEnabled(view.getSelectionSet().cardinality() < view.getModel().getAtomCount());
@@ -2483,8 +2483,8 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 
 		defaultPopupMenu.addPopupMenuListener(new PopupMenuListener() {
 			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-				Util.setWithoutNotifyingListeners(miMenuBar, isMenuBarEnabled());
-				Util.setWithoutNotifyingListeners(miToolBar, isToolBarEnabled());
+				ModelerUtilities.setWithoutNotifyingListeners(miMenuBar, isMenuBarEnabled());
+				ModelerUtilities.setWithoutNotifyingListeners(miToolBar, isToolBarEnabled());
 			}
 
 			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
