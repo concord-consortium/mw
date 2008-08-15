@@ -35,6 +35,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
+import org.concord.modeler.ModelerUtilities;
 import org.concord.modeler.ui.IconPool;
 
 class DefaultPopupMenu extends JPopupMenu {
@@ -243,11 +244,11 @@ class DefaultPopupMenu extends JPopupMenu {
 			}
 
 			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-				Util.setWithoutNotifyingListeners(miRove, container.view.getViewer().getNavigationMode());
-				Util.setWithoutNotifyingListeners(miSpin, container.view.isSpinOn());
-				Util.setWithoutNotifyingListeners(miMenuBar, container.isMenuBarEnabled());
-				Util.setWithoutNotifyingListeners(miToolBar, container.isToolBarEnabled());
-				Util.setWithoutNotifyingListeners(miBottomBar, container.isBottomBarEnabled());
+				ModelerUtilities.setWithoutNotifyingListeners(miRove, container.view.getViewer().getNavigationMode());
+				ModelerUtilities.setWithoutNotifyingListeners(miSpin, container.view.isSpinOn());
+				ModelerUtilities.setWithoutNotifyingListeners(miMenuBar, container.isMenuBarEnabled());
+				ModelerUtilities.setWithoutNotifyingListeners(miToolBar, container.isToolBarEnabled());
+				ModelerUtilities.setWithoutNotifyingListeners(miBottomBar, container.isBottomBarEnabled());
 			}
 
 			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {

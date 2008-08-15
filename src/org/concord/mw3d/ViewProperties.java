@@ -451,24 +451,24 @@ class ViewProperties extends JDialog {
 
 		cb.setAction(null);
 		if (al != null) {
-			for (int i = 0; i < al.length; i++)
-				cb.removeActionListener(al[i]);
+			for (ActionListener i : al)
+				cb.removeActionListener(i);
 		}
 		if (il != null) {
-			for (int i = 0; i < il.length; i++)
-				cb.removeItemListener(il[i]);
+			for (ItemListener i : il)
+				cb.removeItemListener(i);
 		}
 
 		cb.setSelected(b);
 
 		cb.setAction(a);
 		if (al != null) {
-			for (int i = 0; i < al.length; i++)
-				cb.addActionListener(al[i]);
+			for (ActionListener i : al)
+				cb.addActionListener(i);
 		}
 		if (il != null) {
-			for (int i = 0; i < il.length; i++)
-				cb.addItemListener(il[i]);
+			for (ItemListener i : il)
+				cb.addItemListener(i);
 		}
 
 		if (noText)
@@ -485,24 +485,24 @@ class ViewProperties extends JDialog {
 
 		cb.setAction(null);
 		if (al != null) {
-			for (int i = 0; i < al.length; i++)
-				cb.removeActionListener(al[i]);
+			for (ActionListener i : al)
+				cb.removeActionListener(i);
 		}
 		if (il != null) {
-			for (int i = 0; i < il.length; i++)
-				cb.removeItemListener(il[i]);
+			for (ItemListener i : il)
+				cb.removeItemListener(i);
 		}
 
 		cb.setSelectedIndex(index);
 
 		cb.setAction(a);
 		if (al != null) {
-			for (int i = 0; i < al.length; i++)
-				cb.addActionListener(al[i]);
+			for (ActionListener i : al)
+				cb.addActionListener(i);
 		}
 		if (il != null) {
-			for (int i = 0; i < il.length; i++)
-				cb.addItemListener(il[i]);
+			for (ItemListener i : il)
+				cb.addItemListener(i);
 		}
 
 	}

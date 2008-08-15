@@ -24,7 +24,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.EventQueue;
-import java.awt.Toolkit;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
@@ -38,7 +37,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
@@ -829,27 +827,7 @@ class Eval3D extends AbstractEval {
 					if (System.getProperty("os.name").startsWith("Windows"))
 						address = address.replace('\\', '/');
 				}
-				ImageIcon icon = null;
-				if (FileUtilities.isRemote(address)) {
-					try {
-						icon = ConnectionManager.sharedInstance().loadImage(new URL(FileUtilities.httpEncode(address)));
-					}
-					catch (MalformedURLException e) {
-						e.printStackTrace(System.err);
-						view.setBackgroundImage(null);
-						return false;
-					}
-				}
-				else {
-					File file = new File(address);
-					if (!file.exists())
-						return false;
-					icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(address));
-				}
-				if (icon != null) {
-					icon.setDescription(FileUtilities.getFileName(s));
-					view.setBackgroundImage(icon);
-				}
+				view.setFillMode(new FillMode.ImageFill(address));
 			}
 		}
 		model.notifyChange();
