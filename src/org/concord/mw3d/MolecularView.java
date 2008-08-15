@@ -1550,9 +1550,18 @@ public class MolecularView extends Draw {
 		return updateLock;
 	}
 
+	protected void processMouseEntered(MouseEvent e) {
+		model.runMouseScript(MouseEvent.MOUSE_ENTERED, e.getX(), e.getY());
+	}
+
+	protected void processMouseExited(MouseEvent e) {
+		model.runMouseScript(MouseEvent.MOUSE_EXITED, e.getX(), e.getY());
+	}
+
 	protected void processMousePressed(MouseEvent e) {
 
 		super.processMousePressed(e);
+		model.runMouseScript(MouseEvent.MOUSE_PRESSED, e.getX(), e.getY());
 
 		int x = e.getX();
 		int y = e.getY();
@@ -2013,6 +2022,7 @@ public class MolecularView extends Draw {
 
 	protected void processMouseDragged(MouseEvent e) {
 		super.processMouseDragged(e);
+		model.runMouseScript(MouseEvent.MOUSE_DRAGGED, e.getX(), e.getY());
 		int x = e.getX();
 		int y = e.getY();
 		switch (actionID) {
@@ -2180,6 +2190,7 @@ public class MolecularView extends Draw {
 
 	protected void processMouseReleased(MouseEvent e) {
 		super.processMouseReleased(e);
+		model.runMouseScript(MouseEvent.MOUSE_RELEASED, e.getX(), e.getY());
 		int x = e.getX();
 		int y = e.getY();
 		int clickCount = e.getClickCount();
@@ -3197,6 +3208,7 @@ public class MolecularView extends Draw {
 	protected void processMouseMoved(MouseEvent e) {
 		// WHY? if (!hasFocus()) return;
 		super.processMouseMoved(e);
+		model.runMouseScript(MouseEvent.MOUSE_MOVED, e.getX(), e.getY());
 		int x = e.getX();
 		int y = e.getY();
 		if (viewer.getNavigationMode()) {

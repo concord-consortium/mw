@@ -93,14 +93,7 @@ public class PageScriptConsole extends JPanel implements Embeddable, ModelCommun
 	}
 
 	boolean isTargetClass() {
-		if (modelClass == null)
-			return true;
-		// historical reason: script console used to work only for Jmol
-		for (Class c : targetClass) {
-			if (modelClass.equals(c.getName()))
-				return true;
-		}
-		return false;
+		return ComponentMaker.isTargetClass(modelClass);
 	}
 
 	private BasicModel getBasicModel() {
