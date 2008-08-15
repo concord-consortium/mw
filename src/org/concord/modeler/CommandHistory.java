@@ -25,10 +25,6 @@ import java.util.LinkedList;
 /**
  * Implements a queue for a bash-like command history.
  * 
- * 
- * @author Agust\u00ED S\u00E1nchez Furrasola
- * @version $Revision: 1.10 $ 2003-07-28
- * 
  */
 
 final class CommandHistory {
@@ -37,17 +33,16 @@ final class CommandHistory {
 	private int maxSize;
 	private int pos = 0;
 
-	/**
+	/*
 	 * Creates a new instance.
 	 * 
-	 * @param maxSize
-	 *            maximum size for the command queue
+	 * @param maxSize maximum size for the command queue
 	 */
 	CommandHistory(int maxSize) {
 		this.maxSize = maxSize;
 	}
 
-	/**
+	/*
 	 * Retrieves the following command from the bottom of the list, updates list position.
 	 * 
 	 * @return the String value of a command
@@ -58,7 +53,7 @@ final class CommandHistory {
 		return getCommand();
 	}
 
-	/**
+	/*
 	 * Retrieves the following command from the top of the list, updates list position.
 	 * 
 	 * @return the String value of a command
@@ -69,7 +64,7 @@ final class CommandHistory {
 		return getCommand();
 	}
 
-	/**
+	/*
 	 * Calculates the command to return.
 	 * 
 	 * @return the String value of a command
@@ -93,13 +88,14 @@ final class CommandHistory {
 		return "";
 	}
 
-	/**
+	/*
 	 * Adds a new command to the bottom of the list, resets list position.
 	 * 
-	 * @param command
-	 *            the String value of a command
+	 * @param command the String value of a command
 	 */
 	void addCommand(String command) {
+		if (commandList.contains(command))
+			commandList.remove(command);
 		pos = 0;
 		commandList.addLast(command);
 		if (commandList.size() > maxSize) {
@@ -107,11 +103,10 @@ final class CommandHistory {
 		}
 	}
 
-	/**
+	/*
 	 * Resets maximum size of command queue. Cuts off extra commands.
 	 * 
-	 * @param maxSize
-	 *            maximum size for the command queue
+	 * @param maxSize maximum size for the command queue
 	 */
 	void setMaxSize(int maxSize) {
 		this.maxSize = maxSize;
@@ -120,11 +115,10 @@ final class CommandHistory {
 		}
 	}
 
-	/**
+	/*
 	 * Resets instance.
 	 * 
-	 * @param maxSize
-	 *            maximum size for the command queue
+	 * @param maxSize maximum size for the command queue
 	 */
 	void reset(int maxSize) {
 		this.maxSize = maxSize;
