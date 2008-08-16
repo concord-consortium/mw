@@ -64,7 +64,7 @@ class Mw3dConnector {
 		synchronized (mdList) {
 			for (PageMd3d md : mdList) {
 				address = FileUtilities.removeSuffix(page.getAddress()) + "$" + md.getIndex() + ".mdd";
-				md.input(address);
+				md.input(address, false);
 			}
 		}
 	}

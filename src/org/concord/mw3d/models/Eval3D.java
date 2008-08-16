@@ -593,7 +593,7 @@ class Eval3D extends AbstractEval {
 		// load
 		matcher = LOAD.matcher(ci);
 		if (matcher.find()) {
-			if (evaluateLoadClause(ci.substring(matcher.end()).trim()))
+			if (evaluateLoadClause(ci.substring(matcher.end()).trim(), false))
 				return true;
 		}
 
@@ -720,7 +720,7 @@ class Eval3D extends AbstractEval {
 			return true;
 		}
 		if ("reset".equalsIgnoreCase(str)) { // reset
-			evaluateLoadClause(view.getResourceAddress());
+			evaluateLoadClause(view.getResourceAddress(), true);
 			notifyExecution("reset");
 			return true;
 		}
@@ -1408,7 +1408,7 @@ class Eval3D extends AbstractEval {
 	 * It is important to synchronized this method so that we do not have two loading processes running at the same
 	 * time, which causes the corruption of the model's states.
 	 */
-	private synchronized boolean evaluateLoadClause(String address) throws InterruptedException {
+	private synchronized boolean evaluateLoadClause(String address, boolean reset) throws InterruptedException {
 		if (address == null || address.equals("")) {
 			out(ScriptEvent.FAILED, "Missing an address to load.");
 			return false;
@@ -1440,11 +1440,11 @@ class Eval3D extends AbstractEval {
 			}
 			if (url != null) {
 				ConnectionManager.sharedInstance().setCheckUpdate(true);
-				view.getContainer().input(url);
+				view.getContainer().input(url, reset);
 			}
 		}
 		else {
-			view.getContainer().input(new File(address));
+			view.getContainer().input(new File(address), reset);
 		}
 		/* Do we really need to sleep in the following? */
 		try {

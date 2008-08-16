@@ -466,7 +466,7 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 		view.getViewer().setScreenDimension(getPreferredSize());
 	}
 
-	public void input(String address) {
+	public void input(String address, boolean reset) {
 		presetSize();
 		resourceAddress = address;
 		view.setResourceAddress(resourceAddress);
@@ -482,14 +482,18 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 				e.printStackTrace();
 				return;
 			}
-			input(url);
+			input(url, reset);
 		}
 		else {
-			input(new File(address));
+			input(new File(address), reset);
 		}
 	}
 
 	public void input(File file) {
+		input(file, false);
+	}
+
+	public void input(File file, boolean reset) {
 		if (file == null)
 			return;
 		resourceAddress = file.getAbsolutePath();
@@ -498,6 +502,9 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 		inputMdd(file);
 		view.setLoadingMessagePainted(false);
 		view.refresh();
+		if (!reset) {
+			model.clearMouseScripts();
+		}
 	}
 
 	private void inputMdd(File file) {
@@ -550,6 +557,10 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 	}
 
 	public void input(URL url) {
+		input(url, false);
+	}
+
+	public void input(URL url, boolean reset) {
 		if (url == null)
 			return;
 		resourceAddress = url.toString();
@@ -569,7 +580,7 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 				}
 			}
 			if (file != null) {
-				input(file);
+				input(file, reset);
 			}
 			else {
 				try {
@@ -585,6 +596,9 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 		}
 		catch (IOException e) {
 			e.printStackTrace();
+		}
+		if (!reset) {
+			model.clearMouseScripts();
 		}
 	}
 
@@ -1219,7 +1233,7 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 				if (actionReminder.show(ActionReminder.RESET_TO_SAVED_STATE) == JOptionPane.NO_OPTION)
 					return;
 				if (resourceAddress != null)
-					input(resourceAddress);
+					input(resourceAddress, true);
 				else reset();
 				notifyModelListeners(new ModelEvent(model, ModelEvent.MODEL_RESET));
 				notifyPageComponentListeners(new PageComponentEvent(MolecularContainer.this,
