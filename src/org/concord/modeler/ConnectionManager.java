@@ -171,12 +171,16 @@ public class ConnectionManager {
 	public URL getRemoteCopy(String t) {
 		if (t == null)
 			return null;
+		boolean isWindows = System.getProperty("os.name").startsWith("Windows");
+		if (isWindows && !FileUtilities.isRemote(t)) {
+			t = t.replace('/', '\\');
+		}
 		String s = getCacheDirectory().toString();
 		if (!t.startsWith(s))
 			return null;
 		s = t.substring(s.length());
 		s = s.replace('@', ':');
-		if (System.getProperty("os.name").startsWith("Windows")) {
+		if (isWindows) {
 			s = s.replace(System.getProperty("file.separator").charAt(0), '/');
 		}
 		URL u = null;
