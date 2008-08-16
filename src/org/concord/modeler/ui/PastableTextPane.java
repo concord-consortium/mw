@@ -26,24 +26,15 @@ import java.awt.event.MouseEvent;
 import javax.swing.JTextPane;
 import javax.swing.text.StyledDocument;
 
-public class PastableTextPane extends JTextPane {
+import org.concord.modeler.ModelerUtilities;
 
-	/* platform-independent action of Windows' equivalent of mouse right click */
-	static boolean isRightClick(MouseEvent e) {
-		if ((e.getModifiers() & MouseEvent.BUTTON3_MASK) != 0)
-			return true;
-		if (System.getProperty("os.name").startsWith("Mac")) {
-			if (e.isControlDown())
-				return true;
-		}
-		return false;
-	}
+public class PastableTextPane extends JTextPane {
 
 	protected TextComponentPopupMenu popupMenu;
 
 	protected MouseAdapter mouseAdapter = new MouseAdapter() {
 		public void mousePressed(MouseEvent e) {
-			if (isRightClick(e)) {
+			if (ModelerUtilities.isRightClick(e)) {
 				PastableTextPane.this.requestFocus();
 				if (popupMenu == null)
 					popupMenu = new TextComponentPopupMenu(PastableTextPane.this);

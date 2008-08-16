@@ -61,7 +61,7 @@ class OpenModelAction extends AbstractAction {
 		container.fileChooser.setAccessory(null);
 		if (container.fileChooser.showOpenDialog(JOptionPane.getFrameForComponent(container)) == JFileChooser.APPROVE_OPTION) {
 			File file = container.fileChooser.getSelectedFile();
-			container.input(file);
+			container.input(file, false);
 			container.fileChooser.rememberPath(container.fileChooser.getCurrentDirectory().toString());
 		}
 		container.fileChooser.resetChoosableFileFilters();

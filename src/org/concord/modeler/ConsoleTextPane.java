@@ -100,24 +100,24 @@ class ConsoleTextPane extends PastableTextPane {
 	 * Custom key event processing for command history implementation. Captures key up and key down * strokes to call
 	 * command history and redefines the same events with control down to allow caret * vertical shift.
 	 */
-	protected void processKeyEvent(KeyEvent ke) {
+	protected void processKeyEvent(KeyEvent e) {
 		// Id Control key is down, captures events does command history recall and inhibits caret vertical shift.
-		if (ke.getKeyCode() == KeyEvent.VK_UP && ke.getID() == KeyEvent.KEY_PRESSED && !ke.isControlDown()) {
+		if (e.getKeyCode() == KeyEvent.VK_UP && e.getID() == KeyEvent.KEY_PRESSED && !e.isControlDown()) {
 			recallCommand(true);
 		}
-		else if (ke.getKeyCode() == KeyEvent.VK_DOWN && ke.getID() == KeyEvent.KEY_PRESSED && !ke.isControlDown()) {
+		else if (e.getKeyCode() == KeyEvent.VK_DOWN && e.getID() == KeyEvent.KEY_PRESSED && !e.isControlDown()) {
 			recallCommand(false);
 		}
 		// If Control key is down, redefines the event as if it where a key up or key down stroke without
 		// modifiers. This allows to move the caret up and down with no command history recall.
-		else if ((ke.getKeyCode() == KeyEvent.VK_DOWN || ke.getKeyCode() == KeyEvent.VK_UP)
-				&& ke.getID() == KeyEvent.KEY_PRESSED && ke.isControlDown()) {
-			super.processKeyEvent(new KeyEvent((Component) ke.getSource(), ke.getID(), ke.getWhen(), 0, // No modifiers
-					ke.getKeyCode(), ke.getKeyChar(), ke.getKeyLocation()));
+		else if ((e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_UP)
+				&& e.getID() == KeyEvent.KEY_PRESSED && e.isControlDown()) {
+			super.processKeyEvent(new KeyEvent((Component) e.getSource(), e.getID(), e.getWhen(), 0, // No modifiers
+					e.getKeyCode(), e.getKeyChar(), e.getKeyLocation()));
 		}
 		// Standard processing for other events.
 		else {
-			super.processKeyEvent(ke);
+			super.processKeyEvent(e);
 		}
 	}
 
