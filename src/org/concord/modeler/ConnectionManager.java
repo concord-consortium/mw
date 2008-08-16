@@ -288,11 +288,11 @@ public class ConnectionManager {
 		return update ? null : file;
 	}
 
-	public void clear() {
-		FileUtilities.deleteAllFiles(Initializer.sharedInstance().getCacheDirectory());
+	public static void clearCache() {
+		FileUtilities.deleteAllFiles(getCacheDirectory());
 	}
 
-	public File getCacheDirectory() {
+	public static File getCacheDirectory() {
 		return Initializer.sharedInstance().getCacheDirectory();
 	}
 
@@ -492,4 +492,5 @@ public class ConnectionManager {
 			return true;
 		return url.getQuery() != null;
 	}
+
 }

@@ -2567,7 +2567,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 				// cache the model files if necessary
 				if (ConnectionManager.sharedInstance().isCachingAllowed()) {
 					String cachedFile = ConnectionManager.convertURLToFileName(url);
-					File cache = new File(ConnectionManager.sharedInstance().getCacheDirectory(), cachedFile);
+					File cache = new File(ConnectionManager.getCacheDirectory(), cachedFile);
 					cache.getParentFile().mkdirs();
 					try {
 						fos = new FileOutputStream(cache);

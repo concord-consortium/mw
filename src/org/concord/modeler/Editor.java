@@ -1713,8 +1713,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 			me.printStackTrace();
 			return;
 		}
-		File dir = new File(ConnectionManager.sharedInstance().getCacheDirectory(), ConnectionManager
-				.convertURLToFileName(url));
+		File dir = new File(ConnectionManager.getCacheDirectory(), ConnectionManager.convertURLToFileName(url));
 		Zipper.sharedInstance().unzipInAThread(Modeler.getStaticRoot() + stuff, dir);
 	}
 
@@ -1736,8 +1735,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 			me.printStackTrace();
 			return;
 		}
-		File dir = new File(ConnectionManager.sharedInstance().getCacheDirectory(), ConnectionManager
-				.convertURLToFileName(url));
+		File dir = new File(ConnectionManager.getCacheDirectory(), ConnectionManager.convertURLToFileName(url));
 		for (int i = 0; i < address.length; i++)
 			address[i] = Modeler.getStaticRoot() + address[i];
 		Zipper.sharedInstance().unzipInAThread(address, message, dir);
