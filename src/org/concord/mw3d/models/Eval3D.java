@@ -1465,6 +1465,44 @@ class Eval3D extends AbstractEval {
 
 	// synchronization prevents two minimizers to run at the same time.
 	private synchronized boolean evaluateMinimizeClause(String str) {
+		if (str == null || str.trim().equals(""))
+			return false;
+		String[] s = str.split(REGEX_WHITESPACE);
+		List<String> list = new ArrayList<String>();
+		for (String si : s) {
+			if (si.trim().equals(""))
+				continue;
+			list.add(si.trim());
+		}
+		float steplength = 0;
+		int nstep = 0;
+		switch (list.size()) {
+		case 2:
+			try {
+				steplength = Float.parseFloat(list.get(0)) * 10;
+				nstep = (int) Float.parseFloat(list.get(1));
+			}
+			catch (NumberFormatException e) {
+				out(ScriptEvent.FAILED, "Unable to parse number: " + str);
+				return false;
+			}
+			break;
+		case 3:
+			try {
+				steplength = Float.parseFloat(list.get(1)) * 10;
+				nstep = (int) Float.parseFloat(list.get(2));
+			}
+			catch (NumberFormatException e) {
+				out(ScriptEvent.FAILED, "Unable to parse number: " + str);
+				return false;
+			}
+			break;
+		}
+		if (steplength > 0 && nstep > 0) {
+			model.minimize(nstep, steplength);
+			model.notifyChange();
+			return true;
+		}
 		out(ScriptEvent.FAILED, "Syntax error: " + str);
 		return false;
 	}

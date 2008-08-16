@@ -588,7 +588,7 @@ class PreferencesDialog extends JDialog {
 		panel.setBorder(BorderFactory.createTitledBorder((s != null ? s : "Caching Web files") + ":"));
 		total.add(panel, BorderLayout.NORTH);
 
-		String s2 = ConnectionManager.sharedInstance().getCacheDirectory().toString();
+		String s2 = ConnectionManager.getCacheDirectory().toString();
 		s = Modeler.getInternationalText("CacheInfo");
 		String s3 = Modeler.getInternationalText("CacheDirectory");
 		int n = s2.length() / 3 * 2;
@@ -610,7 +610,7 @@ class PreferencesDialog extends JDialog {
 				if (JOptionPane.showConfirmDialog(PreferencesDialog.this,
 						"Do you really want to remove all cached files?\n(you normally should not do this)",
 						"Clear cache?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
-					ConnectionManager.sharedInstance().clear();
+					ConnectionManager.clearCache();
 				}
 			}
 		});

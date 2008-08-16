@@ -1623,7 +1623,7 @@ public class MolecularModel {
 		return false;
 	}
 
-	public void minimize(int nstep, float delta) {
+	public float minimize(int nstep, float delta) {
 		float oldPot = compute(0);
 		for (int i = 0; i <= nstep; i++) {
 			pot = SteepestDescentMinimizer.minimize(this, delta);
@@ -1636,6 +1636,7 @@ public class MolecularModel {
 		}
 		view.setInfoString(null);
 		view.repaint();
+		return pot;
 	}
 
 	public void minimize(int nstep, float delta, BitSet selectionSet) {
