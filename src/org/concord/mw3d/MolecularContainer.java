@@ -663,7 +663,7 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 		}
 	}
 
-	public void output(File file) {
+	public void output(final File file) {
 		MyImageSaver.saveImages(view, file.getParentFile()); // save images first before resourceAddress changes
 		resourceAddress = file.toString();
 		outputXyz(new File(FileUtilities.changeExtension(resourceAddress, "xyz")));
@@ -716,6 +716,7 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 					progressBar.setIndeterminate(false);
 					runAction.setEnabled(true);
 					stopAction.setEnabled(false);
+					setProgressMessage("Model saved to " + file);
 				}
 			});
 		}

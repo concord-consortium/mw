@@ -159,6 +159,7 @@ public final class XyzWriter {
 			catch (IOException e) {
 				e.printStackTrace(System.err);
 			}
+			notifyProgressListeners("Structure exported to " + file, 0);
 		}
 
 	}

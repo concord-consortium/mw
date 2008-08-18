@@ -2058,7 +2058,6 @@ public class MolecularView extends Draw {
 			}
 			break;
 		case TRAN_ID:
-			System.out.println("*****" + selectedComponent);
 			if (selectedComponent != null) {
 				BitSet bs = getSelectionSet();
 				if (bs.cardinality() > 0) {
