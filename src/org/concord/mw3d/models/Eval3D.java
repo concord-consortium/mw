@@ -1499,7 +1499,7 @@ class Eval3D extends AbstractEval {
 			break;
 		}
 		if (steplength > 0 && nstep > 0) {
-			model.minimize(nstep, steplength);
+			model.minimize(nstep, steplength, 10);
 			model.notifyChange();
 			return true;
 		}

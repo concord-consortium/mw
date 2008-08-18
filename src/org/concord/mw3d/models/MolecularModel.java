@@ -1623,7 +1623,7 @@ public class MolecularModel {
 		return false;
 	}
 
-	public float minimize(int nstep, float delta) {
+	public float minimize(int nstep, float delta, int delay) {
 		float oldPot = compute(0);
 		for (int i = 0; i <= nstep; i++) {
 			pot = SteepestDescentMinimizer.minimize(this, delta);
@@ -1632,6 +1632,13 @@ public class MolecularModel {
 				view.refresh();
 				view.repaint();
 				// System.out.println(i + "=" + pot);
+				if (delay > 0) {
+					try {
+						Thread.sleep(delay);
+					}
+					catch (InterruptedException e) {
+					}
+				}
 			}
 		}
 		view.setInfoString(null);
@@ -1639,7 +1646,7 @@ public class MolecularModel {
 		return pot;
 	}
 
-	public void minimize(int nstep, float delta, BitSet selectionSet) {
+	public void minimize(int nstep, float delta, BitSet selectionSet, int delay) {
 		float oldPot = compute(0);
 		for (int i = 0; i <= nstep; i++) {
 			pot = SteepestDescentMinimizer.minimize(this, delta, selectionSet);
@@ -1648,6 +1655,13 @@ public class MolecularModel {
 				view.refresh();
 				view.repaint();
 				// System.out.println(i + "=" + pot);
+				if (delay > 0) {
+					try {
+						Thread.sleep(delay);
+					}
+					catch (InterruptedException e) {
+					}
+				}
 			}
 		}
 		view.setInfoString(null);
@@ -1660,7 +1674,7 @@ public class MolecularModel {
 		if (needMinimization()) {
 			Runnable r = new Runnable() {
 				public void run() {
-					minimize(50, 1.0f);
+					minimize(50, 1.0f, -1);
 					run2();
 				}
 			};

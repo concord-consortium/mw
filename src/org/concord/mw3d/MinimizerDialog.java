@@ -151,7 +151,7 @@ class MinimizerDialog extends JDialog {
 	void runMinimizer() {
 		Thread t = new Thread(new Runnable() {
 			public void run() {
-				model.minimize(nstep, stepLength);
+				model.minimize(nstep, stepLength, 10);
 				model.notifyChange();
 			}
 		});
@@ -163,7 +163,7 @@ class MinimizerDialog extends JDialog {
 	void runMinimizer(final BitSet bs) {
 		Thread t = new Thread(new Runnable() {
 			public void run() {
-				model.minimize(nstep, stepLength, bs);
+				model.minimize(nstep, stepLength, bs, 10);
 				model.notifyChange();
 			}
 		});
