@@ -1273,7 +1273,8 @@ public class MolecularView extends Draw {
 		viewer.setSelectionSet(multiselectionBitSet);
 	}
 
-	private void selectMolecule(int x, int y) {
+	private void selectMoleculeOrNot(int x, int y) {
+		Object copy = selectedComponent;
 		int i = viewer.findNearestAtomIndex(x, y);
 		if (i >= 0) {
 			selectRBond(-1);
@@ -1297,6 +1298,9 @@ public class MolecularView extends Draw {
 			selectedComponent = null;
 			setRotationEnabled(true);
 		}
+		// in the case no molecule is selected, keep the atomic selection
+		if (selectedComponent == null && copy instanceof Atom)
+			selectedComponent = copy;
 	}
 
 	public void selectRBond(int i) {
@@ -1693,7 +1697,7 @@ public class MolecularView extends Draw {
 		case TRAN_ID:
 		case DUPL_ID:
 			dragPoint.setLocation(x, y);
-			selectMolecule(x, y);
+			selectMoleculeOrNot(x, y);
 			break;
 		case SBOX_ID:
 			clickPoint.setLocation(x, y);
@@ -2054,6 +2058,7 @@ public class MolecularView extends Draw {
 			}
 			break;
 		case TRAN_ID:
+			System.out.println("*****" + selectedComponent);
 			if (selectedComponent != null) {
 				BitSet bs = getSelectionSet();
 				if (bs.cardinality() > 0) {
@@ -2205,6 +2210,7 @@ public class MolecularView extends Draw {
 				selectedArea.setSize(0, 0);
 				if (bs.cardinality() == 0)
 					selectedComponent = null;
+				else selectedComponent = model.getAtom(bs.nextSetBit(0));
 			}
 			break;
 		case SLOV_ID:
