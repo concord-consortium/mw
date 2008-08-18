@@ -3086,6 +3086,14 @@ public class MolecularView extends Draw {
 	}
 
 	public boolean addAtom(Point3f p) {
+		return addAtom(p, currentElementToAdd);
+	}
+
+	public boolean addAtom(Point3f p, int id) {
+		return addAtom(p, model.getSymbol(id));
+	}
+
+	public boolean addAtom(Point3f p, String symbol) {
 		if (!model.contains(p))
 			return false;
 		int n = model.getAtomCount();
@@ -3104,18 +3112,18 @@ public class MolecularView extends Draw {
 				}
 			}
 		}
-		if (!model.addAtom(currentElementToAdd, p.x, p.y, p.z, 0, 0, 0, 0))
+		if (!model.addAtom(symbol, p.x, p.y, p.z, 0, 0, 0, 0))
 			return false;
 		int count = model.getAtomCount();
 		Atom a = model.getAtom(count - 1);
-		Byte id = nameIdMap.get(currentElementToAdd);
+		Byte id = nameIdMap.get(symbol);
 		if (id == null)
 			return false;
 		viewer.addAtom(a, id.byteValue(), a.getSymbol(), 0, a.getCharge(), a.getRx(), a.getRy(), a.getRz(), 0, 0, 0, a);
 		int currentIndex = count - 1;
-		if (Atom.isGenericParticle(currentElementToAdd)) {
-			viewer.setAtomSize(currentIndex, model.getElementSigma(currentElementToAdd) * 1000);
-			viewer.setAtomColor(currentIndex, getElementArgb(currentElementToAdd));
+		if (Atom.isGenericParticle(symbol)) {
+			viewer.setAtomSize(currentIndex, model.getElementSigma(symbol) * 1000);
+			viewer.setAtomColor(currentIndex, getElementArgb(symbol));
 		}
 		if (fullSizeUnbondedAtoms)
 			viewer.setCpkPercent(currentIndex, 100);

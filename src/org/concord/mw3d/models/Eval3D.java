@@ -1342,6 +1342,57 @@ class Eval3D extends AbstractEval {
 	}
 
 	private boolean evaluateAddClause(String str) {
+		Matcher matcher = ATOM.matcher(str);
+		if (matcher.find()) {
+			str = str.substring(matcher.end()).trim();
+			Point3f p = new Point3f();
+			String s1 = null;
+			int space = str.indexOf(" ");
+			if (space < 0) {
+				s1 = str.substring(0).trim();
+				p.x = (float) (Math.random() - 0.5f) * model.getLength();
+				p.y = (float) (Math.random() - 0.5f) * model.getWidth();
+				p.z = (float) (Math.random() - 0.5f) * model.getHeight();
+			}
+			else {
+				s1 = str.substring(0, space).trim();
+				String s2 = str.substring(space + 1).trim();
+				float[] r = parseCoordinates(s2);
+				if (r != null) {
+					p.x = r[0];
+					p.y = r[1];
+					p.z = r[2];
+				}
+				else {
+					out(ScriptEvent.FAILED, "Error: Cannot parse " + str);
+					return false;
+				}
+			}
+			String symbol = null;
+			for (String s : model.paramMap.keySet()) {
+				if (s.equalsIgnoreCase(s1)) {
+					symbol = s;
+					break;
+				}
+			}
+			if (symbol == null) {
+				double a = parseMathExpression(s1);
+				if (!Double.isNaN(a)) {
+					symbol = model.getSymbol((int) Math.round(a));
+				}
+			}
+			if (symbol == null) {
+				out(ScriptEvent.FAILED, "Unrecognized element to add: " + str);
+				return false;
+			}
+			if (view.addAtom(p, symbol)) {
+				view.repaint();
+			}
+			else {
+				out(ScriptEvent.HARMLESS, "Cannot insert an atom to the specified location: " + str);
+			}
+			return true;
+		}
 		out(ScriptEvent.FAILED, "Unrecognized type of object to add: " + str);
 		return false;
 	}
@@ -2384,6 +2435,10 @@ class Eval3D extends AbstractEval {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private float[] parseCoordinates(String str) {
+		return parseArray(3, str);
 	}
 
 }
