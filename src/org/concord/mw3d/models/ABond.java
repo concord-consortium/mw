@@ -168,6 +168,10 @@ public class ABond {
 		return atom1.index == index || atom2.index == index || atom3.index == index;
 	}
 
+	public boolean contains(Atom a) {
+		return atom1 == a || atom2 == a || atom3 == a;
+	}
+
 	public boolean contains(Atom a1, Atom a2) {
 		if (a1 != atom1 && a1 != atom2 && a1 != atom3)
 			return false;

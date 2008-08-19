@@ -394,13 +394,9 @@ public class MoleculeCollection {
 		if (isEmpty())
 			return;
 		model.setExclusiveSelection(false);
-		Molecule m = null;
 		int n = size();
-		boolean b;
 		for (int i = 0; i < n; i++) {
-			b = bs == null ? false : bs.get(i);
-			m = get(i);
-			m.setSelected(b);
+			get(i).setSelected(bs == null ? false : bs.get(i));
 		}
 	}
 

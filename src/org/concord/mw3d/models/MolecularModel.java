@@ -648,6 +648,19 @@ public class MolecularModel {
 		return bs;
 	}
 
+	public void setMoleculeSelectionSet(BitSet set) {
+		view.setAtomSelected(-1);
+		int n = molecules.size();
+		if (n <= 0)
+			return;
+		setExclusiveSelection(false);
+		synchronized (molecules) {
+			for (int i = 0; i < n; i++) {
+				molecules.get(i).setSelected(set.get(i));
+			}
+		}
+	}
+
 	public float getLength() {
 		return forceCalculator.xbox * 2;
 	}
@@ -1195,6 +1208,16 @@ public class MolecularModel {
 		}
 	}
 
+	public RBond getRBond(Atom a1, Atom a2) {
+		synchronized (rBonds) {
+			for (RBond rb : rBonds) {
+				if (rb.contains(a1) && rb.contains(a2))
+					return rb;
+			}
+		}
+		return null;
+	}
+
 	public boolean addRBond(RBond rbond) {
 		synchronized (rBonds) {
 			if (rBonds.contains(rbond))
@@ -1236,6 +1259,16 @@ public class MolecularModel {
 				return null;
 			return aBonds.get(index);
 		}
+	}
+
+	public ABond getABond(Atom a1, Atom a2, Atom a3) {
+		synchronized (aBonds) {
+			for (ABond ab : aBonds) {
+				if (ab.contains(a1) && ab.atom2 == a2 && ab.contains(a3))
+					return ab;
+			}
+		}
+		return null;
 	}
 
 	public boolean addABond(ABond abond) {

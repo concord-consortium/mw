@@ -69,6 +69,10 @@ public class RBond {
 		return atom1.index == index || atom2.index == index;
 	}
 
+	public boolean contains(Atom a) {
+		return atom1 == a || atom2 == a;
+	}
+
 	public void setSelected(boolean b) {
 		selected = b;
 	}
