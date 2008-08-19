@@ -1155,14 +1155,14 @@ class Eval2D extends AbstractEval {
 			}
 
 			// build radial bond
-			matcher = BUILD_BOND.matcher(ci);
+			matcher = BUILD_RBOND.matcher(ci);
 			if (matcher.find()) {
 				if (evaluateBuildBondClause(ci.substring(ci.startsWith("rbond") ? 5 : 4).trim()))
 					return true;
 			}
 
 			// build angular bond
-			matcher = BUILD_BEND.matcher(ci);
+			matcher = BUILD_ABOND.matcher(ci);
 			if (matcher.find()) {
 				if (evaluateBuildBendClause(ci.substring(ci.startsWith("abond") ? 5 : 4).trim()))
 					return true;

@@ -139,12 +139,16 @@ public class Compiler {
 	public final static Pattern SET_EPSILON = compile("^(?i)epsilon" + REGEX_WHITESPACE + "+"
 			+ REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+" + REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+"
 			+ REGEX_NONNEGATIVE_DECIMAL + "\\z");
-	public final static Pattern BUILD_BOND = compile("^(?i)(bond|rbond)" + REGEX_WHITESPACE + "+"
+	public final static Pattern BUILD_RBOND = compile("^(?i)(bond|rbond)" + REGEX_WHITESPACE + "+"
 			+ REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+" + REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+"
 			+ REGEX_NONNEGATIVE_DECIMAL + "\\z");
-	public final static Pattern BUILD_BEND = compile("^(?i)(bond|abond)" + REGEX_WHITESPACE + "+"
+	public final static Pattern BUILD_ABOND = compile("^(?i)(bond|abond)" + REGEX_WHITESPACE + "+"
 			+ REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+" + REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+"
 			+ REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+" + REGEX_NONNEGATIVE_DECIMAL + "\\z");
+	public final static Pattern BUILD_TBOND = compile("^(?i)(bond|tbond)" + REGEX_WHITESPACE + "+"
+			+ REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+" + REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+"
+			+ REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+" + REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+"
+			+ REGEX_NONNEGATIVE_DECIMAL + "\\z");
 
 	public final static Pattern ADD = compile("(^(?i)add\\b){1}");
 	public final static Pattern MOVE = compile("(^(?i)move\\b){1}");

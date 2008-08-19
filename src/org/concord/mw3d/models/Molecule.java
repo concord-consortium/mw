@@ -20,6 +20,7 @@
 package org.concord.mw3d.models;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,12 +34,13 @@ import javax.vecmath.Point3f;
 public class Molecule {
 
 	private List<Atom> list;
-	private static Map<Atom, Integer> indexAtomMap; // used for duplicate() method, supposed to be accessed by a single
+	private boolean selected;
 
-	// thread
+	// used for duplicate() method, supposed to be accessed by a single thread
+	private static Map<Atom, Integer> indexAtomMap;
 
 	Molecule() {
-		list = new ArrayList<Atom>();
+		list = Collections.synchronizedList(new ArrayList<Atom>());
 	}
 
 	Molecule(List<Atom> a) {
@@ -52,6 +54,26 @@ public class Molecule {
 	 */
 	public Molecule(Molecule m) {
 		this(m.list);
+	}
+
+	public Object getSynchronizationLock() {
+		return list;
+	}
+
+	public void setSelected(boolean b) {
+		selected = b;
+		if (b) {
+			MolecularModel model = list.get(0).model;
+			synchronized (list) {
+				for (Atom a : list) {
+					model.view.setAtomSelected(a.index);
+				}
+			}
+		}
+	}
+
+	public boolean isSelected() {
+		return selected;
 	}
 
 	public void addAtom(Atom a) {
@@ -87,10 +109,12 @@ public class Molecule {
 
 	public Point3f getCenterOfMass() {
 		Point3f p = new Point3f();
-		for (Atom a : list) {
-			p.x += a.rx;
-			p.y += a.ry;
-			p.z += a.rz;
+		synchronized (list) {
+			for (Atom a : list) {
+				p.x += a.rx;
+				p.y += a.ry;
+				p.z += a.rz;
+			}
 		}
 		p.scale(1.0f / list.size());
 		return p;
@@ -106,61 +130,70 @@ public class Molecule {
 		}
 		Molecule newMol = new Molecule();
 		// duplicate atoms
-		for (Atom a1 : list) {
-			int i = model.getAtomCount();
-			indexAtomMap.put(a1, i);
-			model.addAtom(a1.getSymbol(), a1.rx, a1.ry, a1.rz, a1.vx, a1.vy, a1.vz, a1.charge);
-			newMol.addAtom(model.getAtom(i));
+		synchronized (list) {
+			for (Atom a1 : list) {
+				int i = model.getAtomCount();
+				indexAtomMap.put(a1, i);
+				model.addAtom(a1.getSymbol(), a1.rx, a1.ry, a1.rz, a1.vx, a1.vy, a1.vz, a1.charge);
+				newMol.addAtom(model.getAtom(i));
+			}
 		}
 		model.addMolecule(newMol);
 		// duplicate r-bonds
 		List newbies = new ArrayList(); // we want to reuse this list, so do not set type
-		for (RBond rbond : model.rBonds) {
-			Atom a1 = rbond.getAtom1();
-			Atom a2 = rbond.getAtom2();
-			if (contains(a1) && contains(a2)) {
-				int i1 = indexAtomMap.get(a1);
-				int i2 = indexAtomMap.get(a2);
-				RBond newRBond = new RBond(model.getAtom(i1), model.getAtom(i2));
-				newRBond.setStrength(rbond.getStrength());
-				newRBond.setLength(rbond.getLength());
-				newbies.add(newRBond);
+		synchronized (model.rBonds) {
+			for (RBond rbond : model.rBonds) {
+				Atom a1 = rbond.getAtom1();
+				Atom a2 = rbond.getAtom2();
+				if (contains(a1) && contains(a2)) {
+					int i1 = indexAtomMap.get(a1);
+					int i2 = indexAtomMap.get(a2);
+					RBond newRBond = new RBond(model.getAtom(i1), model.getAtom(i2));
+					newRBond.setStrength(rbond.getStrength());
+					newRBond.setLength(rbond.getLength());
+					newbies.add(newRBond);
+				}
 			}
 		}
 		model.rBonds.addAll(newbies);
 		// duplicate a-bonds
 		newbies.clear();
-		for (ABond abond : model.aBonds) {
-			Atom a1 = abond.getAtom1();
-			Atom a2 = abond.getAtom2();
-			Atom a3 = abond.getAtom3();
-			if (contains(a1) && contains(a2) && contains(a3)) {
-				int i1 = indexAtomMap.get(a1);
-				int i2 = indexAtomMap.get(a2);
-				int i3 = indexAtomMap.get(a3);
-				ABond newABond = new ABond(model.getAtom(i1), model.getAtom(i2), model.getAtom(i3));
-				newABond.setStrength(abond.getStrength());
-				newABond.setAngle(abond.getAngle());
-				newbies.add(newABond);
+		synchronized (model.aBonds) {
+			for (ABond abond : model.aBonds) {
+				Atom a1 = abond.getAtom1();
+				Atom a2 = abond.getAtom2();
+				Atom a3 = abond.getAtom3();
+				if (contains(a1) && contains(a2) && contains(a3)) {
+					int i1 = indexAtomMap.get(a1);
+					int i2 = indexAtomMap.get(a2);
+					int i3 = indexAtomMap.get(a3);
+					ABond newABond = new ABond(model.getAtom(i1), model.getAtom(i2), model.getAtom(i3));
+					newABond.setStrength(abond.getStrength());
+					newABond.setAngle(abond.getAngle());
+					newbies.add(newABond);
+				}
 			}
 		}
 		model.aBonds.addAll(newbies);
 		// duplicate t-bonds
 		newbies.clear();
-		for (TBond tbond : model.tBonds) {
-			Atom a1 = tbond.getAtom1();
-			Atom a2 = tbond.getAtom2();
-			Atom a3 = tbond.getAtom3();
-			Atom a4 = tbond.getAtom4();
-			if (contains(a1) && contains(a2) && contains(a3) && contains(a4)) {
-				int i1 = indexAtomMap.get(a1);
-				int i2 = indexAtomMap.get(a2);
-				int i3 = indexAtomMap.get(a3);
-				int i4 = indexAtomMap.get(a4);
-				TBond newTBond = new TBond(model.getAtom(i1), model.getAtom(i2), model.getAtom(i3), model.getAtom(i4));
-				newTBond.setStrength(tbond.getStrength());
-				newTBond.setAngle(tbond.getAngle());
-				newbies.add(newTBond);
+		synchronized (model.tBonds) {
+			for (TBond tbond : model.tBonds) {
+				Atom a1 = tbond.getAtom1();
+				Atom a2 = tbond.getAtom2();
+				Atom a3 = tbond.getAtom3();
+				Atom a4 = tbond.getAtom4();
+				if (contains(a1) && contains(a2) && contains(a3) && contains(a4)) {
+					int i1 = indexAtomMap.get(a1);
+					int i2 = indexAtomMap.get(a2);
+					int i3 = indexAtomMap.get(a3);
+					int i4 = indexAtomMap.get(a4);
+					TBond newTBond = new TBond(model.getAtom(i1), model.getAtom(i2), model.getAtom(i3), model
+							.getAtom(i4));
+					newTBond.setStrength(tbond.getStrength());
+					newTBond.setAngle(tbond.getAngle());
+					newbies.add(newTBond);
+				}
 			}
 		}
 		model.tBonds.addAll(newbies);

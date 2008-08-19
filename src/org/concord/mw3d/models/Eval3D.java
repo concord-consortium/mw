@@ -619,16 +619,23 @@ class Eval3D extends AbstractEval {
 		}
 
 		// build radial bond
-		matcher = BUILD_BOND.matcher(ci);
+		matcher = BUILD_RBOND.matcher(ci);
 		if (matcher.find()) {
 			if (evaluateBuildRBondClause(ci.substring(ci.startsWith("rbond") ? 5 : 4).trim()))
 				return true;
 		}
 
 		// build angular bond
-		matcher = BUILD_BEND.matcher(ci);
+		matcher = BUILD_ABOND.matcher(ci);
 		if (matcher.find()) {
 			if (evaluateBuildABondClause(ci.substring(ci.startsWith("abond") ? 5 : 4).trim()))
+				return true;
+		}
+
+		// build torsional bond
+		matcher = BUILD_TBOND.matcher(ci);
+		if (matcher.find()) {
+			if (evaluateBuildTBondClause(ci.substring(ci.startsWith("tbond") ? 5 : 4).trim()))
 				return true;
 		}
 
@@ -801,6 +808,19 @@ class Eval3D extends AbstractEval {
 			}
 			out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0)
 					+ " torsional bonds are selected.");
+			return true;
+		}
+		matcher = MOLECULE.matcher(clause); // select by molecule
+		if (matcher.find()) {
+			String str = clause.substring(matcher.end()).trim();
+			BitSet selection = null;
+			if (LOGICAL_OPERATOR.matcher(str).find()) { // logical expressions
+				selection = parseLogicalExpression(str, BY_MOLECULE);
+			}
+			else {
+				selection = selectMolecules(str);
+			}
+			out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0) + " molecules are selected.");
 			return true;
 		}
 		out(ScriptEvent.FAILED, "Unrecognized keyword in: " + clause);
@@ -977,45 +997,62 @@ class Eval3D extends AbstractEval {
 		return true;
 	}
 
-	// TODO
 	private boolean evaluateBuildRBondClause(String str) {
 		String[] s = str.split(REGEX_SEPARATOR);
 		if (s.length != 3)
 			return false;
 		int n = model.getAtomCount();
-		int i = Math.round(Float.parseFloat(s[0]));
+		double x = parseMathExpression(s[0]); // index of atom 1
+		if (Double.isNaN(x))
+			return false;
+		int i = (int) x;
 		if (i >= n) {
 			out(ScriptEvent.FAILED, "Atom index out of limit: i=" + i + ">=" + n);
 			return false;
 		}
-		int j = Math.round(Float.parseFloat(s[1]));
+		x = parseMathExpression(s[1]); // index of atom 2
+		if (Double.isNaN(x))
+			return false;
+		int j = (int) x;
 		if (j >= n) {
 			out(ScriptEvent.FAILED, "Atom index out of limit: j=" + j + ">=" + n);
 			return false;
 		}
 		if (j == i) {
-			out(ScriptEvent.FAILED, "Cannot build a bond between a pair of identical atoms: i=j=" + i);
+			out(ScriptEvent.FAILED, "Cannot build a radial bond between a pair of identical atoms: i=j=" + i);
 			return false;
 		}
-		// float k = Float.parseFloat(s[2]);
-		// Atom at1 = atom[i];
-		// Atom at2 = atom[j];
-		model.notifyChange();
+		x = parseMathExpression(s[2]); // strength
+		if (Double.isNaN(x))
+			return false;
+		Atom a1 = model.getAtom(i);
+		Atom a2 = model.getAtom(j);
+		if (x > ZERO) {
+			RBond rb = view.addRBond(a1, a2);
+			rb.setStrength((float) x);
+			view.repaint();
+			model.notifyChange();
+		}
 		return true;
 	}
 
-	// TODO
 	private boolean evaluateBuildABondClause(String str) {
 		String[] s = str.split(REGEX_SEPARATOR);
 		if (s.length != 4)
 			return false;
 		int n = model.getAtomCount();
-		int i = Math.round(Float.parseFloat(s[0]));
+		double x = parseMathExpression(s[0]); // index of atom 1
+		if (Double.isNaN(x))
+			return false;
+		int i = (int) x;
 		if (i >= n) {
 			out(ScriptEvent.FAILED, "Atom index out of limit: i=" + i + ">=" + n);
 			return false;
 		}
-		int j = Math.round(Float.parseFloat(s[1]));
+		x = parseMathExpression(s[1]); // index of atom 2
+		if (Double.isNaN(x))
+			return false;
+		int j = (int) x;
 		if (j >= n) {
 			out(ScriptEvent.FAILED, "Atom index out of limit: j=" + j + ">=" + n);
 			return false;
@@ -1024,7 +1061,10 @@ class Eval3D extends AbstractEval {
 			out(ScriptEvent.FAILED, "Cannot build an angular bond for identical atoms: i=j=" + i);
 			return false;
 		}
-		int k = Math.round(Float.parseFloat(s[2]));
+		x = parseMathExpression(s[2]); // index of atom 3
+		if (Double.isNaN(x))
+			return false;
+		int k = (int) x;
 		if (k >= n) {
 			out(ScriptEvent.FAILED, "Atom index out of limit: k=" + k + ">=" + n);
 			return false;
@@ -1033,12 +1073,106 @@ class Eval3D extends AbstractEval {
 			out(ScriptEvent.FAILED, "Cannot build an angular bond for identical atoms: " + i + "," + j + "," + k);
 			return false;
 		}
-		// float p = Float.parseFloat(s[3]);
-		// Atom at1 = atom[i];
-		// Atom at2 = atom[j];
-		// Atom at3 = atom[k];
-		view.repaint();
-		model.notifyChange();
+		x = parseMathExpression(s[3]); // strength
+		if (Double.isNaN(x))
+			return false;
+		Atom a1 = model.getAtom(i);
+		Atom a2 = model.getAtom(j);
+		Atom a3 = model.getAtom(k);
+		if (x > ZERO) {
+			RBond r1 = model.getRBond(a1, a2);
+			if (r1 == null) {
+				out(ScriptEvent.FAILED, "There must be a radial bond between " + i + " and " + j);
+				return false;
+			}
+			RBond r2 = model.getRBond(a2, a3);
+			if (r2 == null) {
+				out(ScriptEvent.FAILED, "There must be a radial bond between " + j + " and " + k);
+				return false;
+			}
+			ABond ab = view.addABond(r1, r2);
+			ab.setStrength((float) x);
+			view.repaint();
+			model.notifyChange();
+		}
+		return true;
+	}
+
+	private boolean evaluateBuildTBondClause(String str) {
+		String[] s = str.split(REGEX_SEPARATOR);
+		if (s.length != 5)
+			return false;
+		int n = model.getAtomCount();
+		double x = parseMathExpression(s[0]); // index of atom 1
+		if (Double.isNaN(x))
+			return false;
+		int i = (int) x;
+		if (i >= n) {
+			out(ScriptEvent.FAILED, "Atom index out of limit: i=" + i + ">=" + n);
+			return false;
+		}
+		x = parseMathExpression(s[1]); // index of atom 2
+		if (Double.isNaN(x))
+			return false;
+		int j = (int) x;
+		if (j >= n) {
+			out(ScriptEvent.FAILED, "Atom index out of limit: j=" + j + ">=" + n);
+			return false;
+		}
+		if (j == i) {
+			out(ScriptEvent.FAILED, "Cannot build a torsional bond for identical atoms: i=j=" + i);
+			return false;
+		}
+		x = parseMathExpression(s[2]); // index of atom 3
+		if (Double.isNaN(x))
+			return false;
+		int k = (int) x;
+		if (k >= n) {
+			out(ScriptEvent.FAILED, "Atom index out of limit: k=" + k + ">=" + n);
+			return false;
+		}
+		if (k == i || k == j) {
+			out(ScriptEvent.FAILED, "Cannot build a torsional bond for identical atoms: " + i + "," + j + "," + k);
+			return false;
+		}
+		x = parseMathExpression(s[3]); // index of atom 4
+		if (Double.isNaN(x))
+			return false;
+		int l = (int) x;
+		if (l >= n) {
+			out(ScriptEvent.FAILED, "Atom index out of limit: l=" + l + ">=" + n);
+			return false;
+		}
+		if (l == i || l == j || l == k) {
+			out(ScriptEvent.FAILED, "Cannot build a torsional bond for identical atoms: " + i + "," + j + "," + k + ","
+					+ l);
+			return false;
+		}
+		x = parseMathExpression(s[4]); // strength
+		if (Double.isNaN(x))
+			return false;
+		Atom a1 = model.getAtom(i);
+		Atom a2 = model.getAtom(j);
+		Atom a3 = model.getAtom(k);
+		Atom a4 = model.getAtom(l);
+		if (x > ZERO) {
+			ABond b1 = model.getABond(a1, a2, a3);
+			if (b1 == null) {
+				out(ScriptEvent.FAILED, "There must be an angular bond among " + a1 + ", " + a2 + " and " + a3);
+				return false;
+			}
+			ABond b2 = model.getABond(a2, a3, a4);
+			if (b2 == null) {
+				out(ScriptEvent.FAILED, "There must be an angular bond among " + a2 + ", " + a3 + " and " + a4);
+				return false;
+			}
+			TBond tb = view.addTBond(b1, b2);
+			if (tb != null) {
+				tb.setStrength((float) x);
+				view.repaint();
+				model.notifyChange();
+			}
+		}
 		return true;
 	}
 
@@ -2270,12 +2404,28 @@ class Eval3D extends AbstractEval {
 		return false;
 	}
 
-	private static String standardizeElementName(String str) {
-		str = str.toLowerCase();
-		char[] array = str.toCharArray();
-		array[0] = Character.toUpperCase(array[0]);
-		str = new String(array);
-		return str;
+	private BitSet selectMolecules(String str) {
+		if (model.molecules == null)
+			return null;
+		int n = model.molecules.size();
+		if (n <= 0)
+			return null;
+		BitSet bs = new BitSet(n);
+		if ("selected".equalsIgnoreCase(str)) {
+			synchronized (model.molecules) {
+				for (int i = 0; i < n; i++) {
+					if (model.molecules.get(i).isSelected())
+						bs.set(i);
+				}
+			}
+			return bs;
+		}
+		if (selectFromCollection(str, n, bs)) {
+			model.setMoleculeSelectionSet(bs);
+			return bs;
+		}
+		out(ScriptEvent.FAILED, "Unrecognized expression: " + str);
+		return null;
 	}
 
 	/*
@@ -2439,6 +2589,14 @@ class Eval3D extends AbstractEval {
 
 	private float[] parseCoordinates(String str) {
 		return parseArray(3, str);
+	}
+
+	private static String standardizeElementName(String str) {
+		str = str.toLowerCase();
+		char[] array = str.toCharArray();
+		array[0] = Character.toUpperCase(array[0]);
+		str = new String(array);
+		return str;
 	}
 
 }

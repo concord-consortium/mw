@@ -3154,13 +3154,15 @@ public class MolecularView extends Draw {
 		model.notifyChange();
 	}
 
-	public void addRBond(Atom a1, Atom a2) {
+	public RBond addRBond(Atom a1, Atom a2) {
 		RBond rbond = new RBond(a1, a2);
 		rbond.setLength(a1.distance(a2));
-		model.addRBond(rbond);
-		viewer.addRBond(a1, a2);
-		model.formMolecules();
-		model.notifyChange();
+		if (model.addRBond(rbond)) {
+			viewer.addRBond(a1, a2);
+			model.formMolecules();
+			model.notifyChange();
+		}
+		return rbond;
 	}
 
 	public void removeABond(ABond abond) {
@@ -3173,18 +3175,20 @@ public class MolecularView extends Draw {
 		model.notifyChange();
 	}
 
-	public void addABond(RBond r1, RBond r2) {
+	public ABond addABond(RBond r1, RBond r2) {
 		if (r1.equals(r2))
-			return;
+			return null;
 		ABond abond = new ABond(r1, r2); // angle already set in the constructor
-		model.addABond(abond);
-		viewer.addABond(abond.getAtom1().getIndex(), abond.getAtom2().getIndex(), abond.getAtom3().getIndex());
-		Point3f p1 = new Point3f(abond.getAtom1().getRx(), abond.getAtom1().getRy(), abond.getAtom1().getRz());
-		Point3f p2 = new Point3f(abond.getAtom2().getRx(), abond.getAtom2().getRy(), abond.getAtom2().getRz());
-		Point3f p3 = new Point3f(abond.getAtom3().getRx(), abond.getAtom3().getRy(), abond.getAtom3().getRz());
-		viewer.setHighlightTriangleVertices(p1, p2, p3);
-		viewer.setHighlightTriangleVisible(true);
-		model.notifyChange();
+		if (model.addABond(abond)) {
+			viewer.addABond(abond.getAtom1().getIndex(), abond.getAtom2().getIndex(), abond.getAtom3().getIndex());
+			Point3f p1 = new Point3f(abond.getAtom1().getRx(), abond.getAtom1().getRy(), abond.getAtom1().getRz());
+			Point3f p2 = new Point3f(abond.getAtom2().getRx(), abond.getAtom2().getRy(), abond.getAtom2().getRz());
+			Point3f p3 = new Point3f(abond.getAtom3().getRx(), abond.getAtom3().getRy(), abond.getAtom3().getRz());
+			viewer.setHighlightTriangleVertices(p1, p2, p3);
+			viewer.setHighlightTriangleVisible(true);
+			model.notifyChange();
+		}
+		return abond;
 	}
 
 	public void removeTBond(TBond tbond) {
@@ -3197,14 +3201,14 @@ public class MolecularView extends Draw {
 		model.notifyChange();
 	}
 
-	public void addTBond(ABond a1, ABond a2) {
+	public TBond addTBond(ABond a1, ABond a2) {
 		if (a1.equals(a2))
-			return;
+			return null;
 		if (a1.getAtom2() == a2.getAtom2())
-			return;
+			return null;
 		Atom[] at = ABond.getSharedAtom(a1, a2);
 		if (at == null || at[0] == null || at[1] == null)
-			return;
+			return null;
 		TBond tbond = new TBond(a1, a2); // angle already set in the constructor
 		if (model.addTBond(tbond)) {
 			int i = tbond.getAtom1().getIndex();
@@ -3216,6 +3220,7 @@ public class MolecularView extends Draw {
 			viewer.setHighlightTBondVisible(true);
 		}
 		model.notifyChange();
+		return tbond;
 	}
 
 	protected void processMouseMoved(MouseEvent e) {
