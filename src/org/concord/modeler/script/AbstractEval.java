@@ -1285,11 +1285,12 @@ public abstract class AbstractEval {
 	}
 
 	/** read text from the specified address that must be a valid absolute path. */
-	protected String readText(String address, final Component parent) throws InterruptedException {
+	protected synchronized String readText(String address, final Component parent) throws InterruptedException {
 		if (address == null || address.equals("") || FileUtilities.isRelative(address)) {
 			out(ScriptEvent.FAILED, "Need a valid address to import the text source.");
 			return null;
 		}
+		System.out.println(address);
 		InputStream is = null;
 		if (FileUtilities.isRemote(address)) {
 			URL url = null;
