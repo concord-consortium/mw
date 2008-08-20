@@ -476,6 +476,27 @@ class Eval3D extends AbstractEval {
 		if (ciLC.startsWith("define ") || ciLC.startsWith("static ") || ciLC.startsWith("cancel"))
 			return true;
 
+		// call external scripts
+		if (ciLC.startsWith("external")) {
+			String address = ci.substring(8).trim();
+			if (address != null && !address.equals("")) {
+				Matcher matcher = NNI.matcher(address);
+				if (matcher.find()) {
+					byte i = Byte.parseByte(address);
+					String s = externalScripts.get(i);
+					if (s == null) {
+						out(ScriptEvent.FAILED, "External command error: " + ci);
+						return false;
+					}
+					evaluateExternalClause(s);
+				}
+				else {
+					evaluateExternalClause(readText(address, view));
+				}
+			}
+			return true;
+		}
+
 		logicalStack.clear();
 
 		if (!checkParenthesisBalance(ci))
@@ -1381,6 +1402,28 @@ class Eval3D extends AbstractEval {
 					if (a.isSelected())
 						a.setCharge((float) x);
 				}
+				model.notifyChange();
+				return true;
+			}
+			else if (s0 == "timestep") {
+				model.setTimeStep((float) x);
+				model.notifyChange();
+				return true;
+			}
+			else if (s0 == "heatbath") {
+				model.activateHeatBath(x > 0);
+				if (model.heatBathActivated())
+					model.getHeatBath().setExpectedTemperature((float) x);
+				model.notifyChange();
+				return true;
+			}
+			else if (s0 == "model_time") {
+				model.setModelTime((float) x);
+				model.notifyChange();
+				return true;
+			}
+			else if (s0 == "temperature") {
+				model.setTemperature((float) x);
 				model.notifyChange();
 				return true;
 			}

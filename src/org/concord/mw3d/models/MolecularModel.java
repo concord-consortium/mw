@@ -41,6 +41,7 @@ import javax.vecmath.Vector3f;
 
 import org.concord.mw3d.MolecularView;
 import org.concord.modeler.DisasterHandler;
+import org.concord.modeler.ScriptCallback;
 import org.concord.modeler.SlideMovie;
 import org.concord.modeler.event.ScriptExecutionListener;
 import org.concord.modeler.event.ScriptListener;
@@ -99,6 +100,7 @@ public class MolecularModel {
 	private final static short DEFAULT_MINIMUM_JOB_CYCLE_TIME = 20;
 
 	MolecularView view;
+	private ScriptCallback externalScriptCallback;
 	private Eval3D evalAction;
 	private Thread evalThread;
 	float modelTime;
@@ -398,9 +400,15 @@ public class MolecularModel {
 			evalAction.clearMouseScripts();
 	}
 
+	public void setExternalScriptCallback(ScriptCallback c) {
+		externalScriptCallback = c;
+	}
+
 	private void initEvalAction() {
-		if (evalAction == null)
+		if (evalAction == null) {
 			evalAction = new Eval3D(this);
+			evalAction.setExternalScriptCallback(externalScriptCallback);
+		}
 	}
 
 	public String runScript2(final String script) {
@@ -443,8 +451,7 @@ public class MolecularModel {
 	}
 
 	public void addScriptListener(ScriptListener listener) {
-		if (evalAction == null)
-			evalAction = new Eval3D(this);
+		initEvalAction();
 		evalAction.addScriptListener(listener);
 	}
 

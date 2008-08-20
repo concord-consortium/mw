@@ -31,9 +31,6 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -842,7 +839,7 @@ class Eval2D extends AbstractEval {
 					evaluateExternalClause(s);
 				}
 				else {
-					evaluateExternalClause(readFrom(address));
+					evaluateExternalClause(readText(address, view));
 				}
 			}
 			return true;
@@ -3984,103 +3981,9 @@ class Eval2D extends AbstractEval {
 		return true;
 	}
 
-	private synchronized String readFrom(String address) throws InterruptedException {
-		if (address.equals("")) {
-			out(ScriptEvent.FAILED, "Missing an address to import the source.");
-			return null;
-		}
-		if (FileUtilities.isRelative(address)) {
-			address = FileUtilities.getCodeBase((String) model.getProperty("url")) + address;
-		}
-		InputStream is = null;
-		if (FileUtilities.isRemote(address)) {
-			URL url = null;
-			try {
-				url = new URL(address);
-			}
-			catch (MalformedURLException e) {
-				e.printStackTrace();
-			}
-			if (url != null) {
-				File file = null;
-				if (ConnectionManager.sharedInstance().isCachingAllowed()) {
-					ConnectionManager.sharedInstance().setCheckUpdate(true);
-					try {
-						file = ConnectionManager.sharedInstance().shouldUpdate(url);
-						if (file == null)
-							file = ConnectionManager.sharedInstance().cache(url);
-					}
-					catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-				if (file == null) {
-					try {
-						is = url.openStream();
-					}
-					catch (IOException ioe) {
-						ioe.printStackTrace();
-					}
-				}
-				else {
-					try {
-						is = new FileInputStream(file);
-					}
-					catch (IOException ioe) {
-						ioe.printStackTrace();
-					}
-				}
-			}
-		}
-		else {
-			try {
-				is = new FileInputStream(new File(address));
-			}
-			catch (IOException ioe) {
-				ioe.printStackTrace();
-			}
-		}
-		if (is != null) {
-			StringBuffer buffer = new StringBuffer();
-			byte[] b = new byte[1024];
-			int n = -1;
-			try {
-				while ((n = is.read(b)) != -1) {
-					buffer.append(new String(b, 0, n));
-				}
-			}
-			catch (IOException ioe) {
-				ioe.printStackTrace();
-			}
-			finally {
-				try {
-					is.close();
-				}
-				catch (IOException e) {
-				}
-			}
-			try {
-				Thread.sleep(100);
-			}
-			catch (InterruptedException e) {
-				throw new InterruptedException();
-			}
-			return buffer.toString();
-		}
-		out(ScriptEvent.FAILED, "Script source not found: " + address);
-		final String errorAddress = address;
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view), "Script source " + errorAddress
-						+ " was not found.", "Script source not found", JOptionPane.ERROR_MESSAGE);
-			}
-		});
-		return null;
-	}
-
 	// synchronization
 	private synchronized boolean evaluateSourceClause(String address) throws InterruptedException {
-		String s = readFrom(address);
+		String s = readText(address, view);
 		if (s != null) {
 			stop = true;
 			appendScript(s);

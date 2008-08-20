@@ -568,6 +568,7 @@ public class PageMd3d extends MolecularContainer implements BasicModel, Embeddab
 		addPageComponentListener(p.getSaveReminder());
 		addPageComponentListener(p.getEditor());
 		setProgressBar(page.getProgressBar());
+		getMolecularModel().setExternalScriptCallback(page.getScriptCallback());
 	}
 
 	public Page getPage() {
