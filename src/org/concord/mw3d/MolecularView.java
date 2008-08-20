@@ -3003,10 +3003,16 @@ public class MolecularView extends Draw {
 		int nTbond0 = model.getTBondCount();
 		newMolecule = ((Molecule) selectedComponent).duplicate(model);
 		Atom a;
+		String symbol;
 		for (int i = 0; i < newMolecule.getAtomCount(); i++) {
 			a = newMolecule.getAtom(i);
-			viewer.addAtom(a, a.getElementNumber(), a.getSymbol(), 0, a.getCharge(), a.getRx(), a.getRy(), a.getRz(),
-					0, 0, 0, a);
+			symbol = a.getSymbol();
+			viewer.addAtom(a, a.getElementNumber(), symbol, 0, a.getCharge(), a.getRx(), a.getRy(), a.getRz(), 0, 0, 0,
+					a);
+			if (a.isGenericParticle()) {
+				viewer.setAtomSize(a.getIndex(), model.getElementSigma(symbol) * 1000);
+				viewer.setAtomColor(a.getIndex(), getElementArgb(symbol));
+			}
 		}
 		int nRbond1 = model.getRBondCount();
 		if (nRbond1 > nRbond0) {

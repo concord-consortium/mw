@@ -1122,7 +1122,7 @@ public class Viewer extends JmolViewer {
 		// System.out.println("Viewer:openClientObject - "+Thread.currentThread());
 	}
 
-	public void addAtom(Object atomUid, byte atomicNumber, String atomName, int formalCharge, float partialCharge,
+	public void addAtom(Object atomUid, short atomicNumber, String atomName, int formalCharge, float partialCharge,
 			float x, float y, float z, float vx, float vy, float vz, Object clientObject) {
 		if (modelManager.frame == null)
 			modelManager.frame = new Frame(this, modelAdapter, clientObject);

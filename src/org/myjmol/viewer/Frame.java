@@ -417,7 +417,7 @@ public final class Frame {
 
 	// XIE
 	@SuppressWarnings("unchecked")
-	void addAtom(Object atomUid, byte element, String atomName, int formalCharge, float partialCharge, float x,
+	void addAtom(Object atomUid, short element, String atomName, int formalCharge, float partialCharge, float x,
 			float y, float z, float vx, float vy, float vz, Object clientAtomReference) {
 		if (atomCount == atoms.length)
 			growAtomArrays();
