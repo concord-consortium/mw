@@ -969,7 +969,7 @@ public class MolecularView extends Draw {
 		}
 	}
 
-	void setSimulationBox() {
+	public void setSimulationBox() {
 		viewer.setSimulationBox(model.getLength(), model.getWidth(), model.getHeight());
 	}
 
