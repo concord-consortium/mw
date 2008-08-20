@@ -294,7 +294,7 @@ abstract public class JmolViewer extends JmolSimpleViewer {
 	/** XIE */
 	abstract public void removeTBond(int index);
 
-	abstract public void addAtom(Object atomUid, byte atomicNumber, String atomName, int formalCharge,
+	abstract public void addAtom(Object atomUid, short atomicNumber, String atomName, int formalCharge,
 			float partialCharge, float x, float y, float z, float vx, float vy, float vz, Object clientAtomReference);
 
 	abstract public void setAtomCoordinates(int index, float x, float y, float z);

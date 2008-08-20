@@ -36,7 +36,7 @@ public class Atom {
 	public final static byte INVISIBLE = 0x01;
 	private final static Pattern GENERIC_PARTICLE = Pattern.compile("X\\d");
 
-	private byte elementNumber;
+	private short elementNumber;
 	private String symbol;
 	private boolean movable = true;
 	private boolean visible = true;
@@ -204,11 +204,11 @@ public class Atom {
 		}
 	}
 
-	public void setElementNumber(byte i) {
+	public void setElementNumber(short i) {
 		elementNumber = i;
 	}
 
-	public byte getElementNumber() {
+	public short getElementNumber() {
 		return elementNumber;
 	}
 
@@ -227,7 +227,7 @@ public class Atom {
 		charge = 0.0f;
 		float[] par = model.paramMap.get(symbol);
 		if (par != null) {
-			elementNumber = (byte) Math.round(par[0]);
+			elementNumber = (short) Math.round(par[0]);
 			mass = par[1];
 			sigma = par[2];
 			epsilon = par[3];
