@@ -1427,6 +1427,24 @@ class Eval3D extends AbstractEval {
 				model.notifyChange();
 				return true;
 			}
+			else if (s0 == "cell_length") {
+				model.setLength((float) x);
+				view.setSimulationBox();
+				model.notifyChange();
+				return true;
+			}
+			else if (s0 == "cell_width") {
+				model.setWidth((float) x);
+				view.setSimulationBox();
+				model.notifyChange();
+				return true;
+			}
+			else if (s0 == "cell_height") {
+				model.setHeight((float) x);
+				view.setSimulationBox();
+				model.notifyChange();
+				return true;
+			}
 		}
 
 		else if (s.length == 4) {
