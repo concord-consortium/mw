@@ -54,8 +54,8 @@ public final class ViewAttribute {
 	public final static Stroke DASHED = new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1.0f,
 			new float[] { 2.0f }, 0.0f);
 
-	public final static Stroke THICKER_DASHED = new BasicStroke(3.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1.0f,
-			new float[] { 2.0f }, 0.0f);
+	public final static Stroke THICKER_DASHED = new BasicStroke(3.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER,
+			1.0f, new float[] { 2.0f }, 0.0f);
 
 	private ViewAttribute() {
 	}

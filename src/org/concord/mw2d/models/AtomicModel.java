@@ -3606,6 +3606,7 @@ public abstract class AtomicModel extends MDModel {
 		vs.setVDWCircleStyle(view.getVDWCircleStyle());
 		vs.setShowVDWLines(view.vdwLinesShown());
 		vs.setVDWLinesRatio(view.getVDWLinesRatio());
+		vs.setVDWLineThickness(view.getVdwLineThickness());
 		vs.setShowChargeLines(view.chargeLinesShown());
 		vs.setShowSSLines(view.ssLinesShown());
 		vs.setShowBPLines(view.bpLinesShown());
@@ -3903,6 +3904,7 @@ public abstract class AtomicModel extends MDModel {
 		view.setVDWCircleStyle(vs.getVDWCircleStyle());
 		view.showVDWLines(vs.getShowVDWLines());
 		view.setVDWLinesRatio(vs.getVDWLinesRatio());
+		view.setVdwLineThickness(vs.getVDWLineThickness());
 		view.showChargeLines(vs.getShowChargeLines());
 		view.showSSLines(vs.getShowSSLines());
 		view.showBPLines(vs.getShowBPLines());

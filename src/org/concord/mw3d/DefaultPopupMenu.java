@@ -27,11 +27,13 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.BitSet;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
@@ -42,7 +44,7 @@ class DefaultPopupMenu extends JPopupMenu {
 
 	private MolecularContainer container;
 	private JMenu minimizationMenu;
-	private JMenuItem miPaste, miSpin, miRove, miMenuBar, miToolBar, miBottomBar;
+	private JMenuItem miPaste, miSpin, miRove, miMenuBar, miToolBar, miBottomBar, miBorder;
 	private JMenuItem miMinimizeSelected;
 	private JMenuItem miMinimizeUnselected;
 
@@ -239,6 +241,23 @@ class DefaultPopupMenu extends JPopupMenu {
 		});
 		add(miBottomBar);
 
+		s = MolecularContainer.getInternationalText("ShowBorder");
+		miBorder = new JCheckBoxMenuItem(s != null ? s : "Show Border");
+		miBorder.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+					container.setBorder(BorderFactory.createRaisedBevelBorder());
+					container.view.setBorder(BorderFactory.createLoweredBevelBorder());
+				}
+				else {
+					container.setBorder(BorderFactory.createEmptyBorder());
+					container.view.setBorder(BorderFactory.createEmptyBorder());
+				}
+				container.notifyChange();
+			}
+		});
+		add(miBorder);
+
 		addPopupMenuListener(new PopupMenuListener() {
 			public void popupMenuCanceled(PopupMenuEvent e) {
 			}
@@ -249,6 +268,8 @@ class DefaultPopupMenu extends JPopupMenu {
 				ModelerUtilities.setWithoutNotifyingListeners(miMenuBar, container.isMenuBarEnabled());
 				ModelerUtilities.setWithoutNotifyingListeners(miToolBar, container.isToolBarEnabled());
 				ModelerUtilities.setWithoutNotifyingListeners(miBottomBar, container.isBottomBarEnabled());
+				ModelerUtilities
+						.setWithoutNotifyingListeners(miBorder, !(container.getBorder() instanceof EmptyBorder));
 			}
 
 			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
@@ -258,5 +279,4 @@ class DefaultPopupMenu extends JPopupMenu {
 		pack();
 
 	}
-
 }
