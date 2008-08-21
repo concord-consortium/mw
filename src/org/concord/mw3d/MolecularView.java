@@ -830,6 +830,10 @@ public class MolecularView extends Draw {
 				}
 				if (velocityBitSet.get(i))
 					viewer.setAtomVelocities(i, at.getVx(), at.getVy(), at.getVz());
+				if (at.isGenericParticle()) {
+					int vdw = viewer.getPercentVdwAtom();
+					viewer.setAtomSize(i, vdw == 100 ? 1000 * at.getSigma() : at.getSigma() * vdw * 10);
+				}
 			}
 			if (showVdwLines) {
 				viewer.setVdwForceLines(model.getVdwPairs());
@@ -1122,6 +1126,13 @@ public class MolecularView extends Draw {
 				else {
 					for (int i = 0; i < n; i++) {
 						viewer.setCpkPercent(i, percent);
+					}
+				}
+				for (int i = 0; i < n; i++) {
+					Atom at = model.getAtom(i);
+					if (at.isGenericParticle()) {
+						int vdw = viewer.getPercentVdwAtom();
+						viewer.setAtomSize(i, vdw == 100 ? 1000 * at.getSigma() : at.getSigma() * vdw * 10);
 					}
 				}
 			}
