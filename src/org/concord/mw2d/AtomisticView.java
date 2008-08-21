@@ -20,6 +20,7 @@
 
 package org.concord.mw2d;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -67,6 +68,7 @@ import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.AbstractUndoableEdit;
 
 import org.concord.modeler.ModelerUtilities;
+import org.concord.modeler.draw.StrokeFactory;
 import org.concord.modeler.event.ModelEvent;
 import org.concord.modeler.g2d.ContourMap;
 import org.concord.modeler.math.Vector2D;
@@ -185,6 +187,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 	private boolean shading, chargeShading, showVDWCircles, showVDWLines, showChargeLines, showSSLines, showBPLines,
 			velocityVector, momentumVector, accelerationVector, forceVector, showExcitation = true;
 	private float vdwLinesRatio = 2;
+	private BasicStroke vdwLineStroke = (BasicStroke) ViewAttribute.THIN_DASHED;
 	private boolean contourPlot, eFieldLines, showSites;
 	private Atom probe;
 	private Vector[] isoCurves;
@@ -685,6 +688,14 @@ public class AtomisticView extends MDView implements BondChangeListener {
 
 	public Color getChargeShadingColor(double charge) {
 		return styleManager.getChargeShadingColor(charge);
+	}
+
+	public void setVdwLineThickness(float thickness) {
+		vdwLineStroke = StrokeFactory.changeThickness(vdwLineStroke, thickness);
+	}
+
+	public float getVdwLineThickness() {
+		return vdwLineStroke.getLineWidth();
 	}
 
 	public Action editElements(int i) {
@@ -3435,7 +3446,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			}
 
 			if (showVDWLines)
-				drawForceLines(g2, model.getVDWLines(), ViewAttribute.THIN_DASHED);
+				drawForceLines(g2, model.getVDWLines(), vdwLineStroke);
 			if (showChargeLines)
 				drawForceLines(g2, model.getChargeLines(), ViewAttribute.THICKER_DASHED);
 			if (showSSLines)
@@ -6412,7 +6423,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		private double probeCharge;
 		private int[] elementColors; // an array to store the colors of the four adjustable elements
 		private Color[] moColors; // an array to store the colors of the molecular surface objects
-		private float vdwLinesRatio = 2.0f;
+		private float vdwLinesRatio = 2.0f, vdwLineThickness = 1;
 		private byte vdwCircleStyle = StyleConstant.VDW_DOTTED_CIRCLE;
 
 		public State() {
@@ -6469,6 +6480,14 @@ public class AtomisticView extends MDView implements BondChangeListener {
 
 		public float getVDWLinesRatio() {
 			return vdwLinesRatio;
+		}
+
+		public void setVDWLineThickness(float thickness) {
+			vdwLineThickness = thickness;
+		}
+
+		public float getVDWLineThickness() {
+			return vdwLineThickness;
 		}
 
 		public void setShowVDWCircles(boolean b) {

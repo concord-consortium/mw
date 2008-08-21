@@ -50,8 +50,8 @@ import javax.swing.SwingConstants;
 import org.concord.modeler.ModelerUtilities;
 import org.concord.modeler.draw.FillMode;
 import org.concord.modeler.ui.BackgroundComboBox;
+import org.concord.modeler.ui.CheckBoxLinkPanel;
 import org.concord.modeler.ui.ColorMenu;
-import org.concord.modeler.ui.HyperlinkLabel;
 
 class ViewProperties extends JDialog {
 
@@ -203,7 +203,7 @@ class ViewProperties extends JDialog {
 		panel.add(p, BorderLayout.NORTH);
 
 		String s = MDView.getInternationalText("GeneralOptions");
-		JPanel p2 = new JPanel(new GridLayout(5, 2, 5, 5));
+		JPanel p2 = new JPanel(new GridLayout(5, 2, 2, 2));
 		p2.setBorder(BorderFactory.createTitledBorder(s != null ? s : "General Options"));
 		p.add(p2, BorderLayout.NORTH);
 
@@ -290,16 +290,26 @@ class ViewProperties extends JDialog {
 		});
 		p2.add(vdwCirclesStyleComboBox);
 
-		vdwLinesCheckBox = new JCheckBox(view.getSwitches().get("Show van der Waals interactions"));
+		CheckBoxLinkPanel px = new CheckBoxLinkPanel();
+		vdwLinesCheckBox = px.getCheckBox();
+		px.setCheckBoxAction(view.getSwitches().get("Show van der Waals interactions"));
 		vdwLinesCheckBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				vdwLinesRatioComboBox.setEnabled(e.getStateChange() == ItemEvent.SELECTED);
 			}
 		});
 		s = MDView.getInternationalText("ShowVanderWaalsLines");
-		if (s != null)
-			vdwLinesCheckBox.setText(s);
-		p2.add(vdwLinesCheckBox);
+		px.setLinkText(s != null ? s : "Show VDW Force Lines");
+		px.setLinkAction(new Runnable() {
+			public void run() {
+				LineOption lo = new LineOption(JOptionPane.getFrameForComponent(view));
+				lo.setView(view);
+				lo.setType("vdw");
+				lo.setLocationRelativeTo(ViewProperties.this);
+				lo.setVisible(true);
+			}
+		});
+		p2.add(px);
 
 		o = new String[] { "Cutoff at long distance", "Cutoff at medium distance", "Cutoff at short distance" };
 		s = MDView.getInternationalText("CutoffAtLongDistance");
@@ -451,17 +461,14 @@ class ViewProperties extends JDialog {
 		p.setBorder(BorderFactory.createTitledBorder(s != null ? s : "Vector Mode"));
 		p2.add(p, BorderLayout.CENTER);
 
-		JPanel p1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		p.add(p1);
-
-		velocityCheckBox = new JCheckBox(view.getSwitches().get("Velocity Vector"));
-		velocityCheckBox.setText(null);
-		p1.add(velocityCheckBox);
+		px = new CheckBoxLinkPanel();
+		p.add(px);
+		velocityCheckBox = px.getCheckBox();
+		px.setCheckBoxAction(view.getSwitches().get("Velocity Vector"));
 		s = MDView.getInternationalText("VelocityVector");
-		JLabel label = new HyperlinkLabel("<html><u><font color=\"#0000ff\">" + (s != null ? s : "Velocity Vector")
-				+ "</font></u></html>", SwingConstants.LEFT);
-		label.setToolTipText("Customize velocity vector display");
-		((HyperlinkLabel) label).setAction(new Runnable() {
+		px.setLinkText(s != null ? s : "Velocity Vector");
+		px.setLinkToolTip("Customize velocity vector display");
+		px.setLinkAction(new Runnable() {
 			public void run() {
 				if (vd == null)
 					vd = new VectorDisplay(JOptionPane.getFrameForComponent(view));
@@ -471,19 +478,15 @@ class ViewProperties extends JDialog {
 				vd.setVisible(true);
 			}
 		});
-		p1.add(label);
 
-		p1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		p.add(p1);
-
-		momentumCheckBox = new JCheckBox(view.getSwitches().get("Momentum Vector"));
-		momentumCheckBox.setText(null);
-		p1.add(momentumCheckBox);
+		px = new CheckBoxLinkPanel();
+		p.add(px);
+		momentumCheckBox = px.getCheckBox();
+		px.setCheckBoxAction(view.getSwitches().get("Momentum Vector"));
 		s = MDView.getInternationalText("MomentumVector");
-		label = new HyperlinkLabel("<html><u><font color=\"#0000ff\">" + (s != null ? s : "Momentum Vector")
-				+ "</font></u></html>", SwingConstants.LEFT);
-		label.setToolTipText("Customize momentum vector display");
-		((HyperlinkLabel) label).setAction(new Runnable() {
+		px.setLinkText(s != null ? s : "Momentum Vector");
+		px.setLinkToolTip("Customize momentum vector display");
+		px.setLinkAction(new Runnable() {
 			public void run() {
 				if (vd == null)
 					vd = new VectorDisplay(JOptionPane.getFrameForComponent(view));
@@ -493,19 +496,15 @@ class ViewProperties extends JDialog {
 				vd.setVisible(true);
 			}
 		});
-		p1.add(label);
 
-		p1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		p.add(p1);
-
-		accelerationCheckBox = new JCheckBox(view.getSwitches().get("Acceleration Vector"));
-		accelerationCheckBox.setText(null);
-		p1.add(accelerationCheckBox);
+		px = new CheckBoxLinkPanel();
+		p.add(px);
+		accelerationCheckBox = px.getCheckBox();
+		px.setCheckBoxAction(view.getSwitches().get("Acceleration Vector"));
 		s = MDView.getInternationalText("AccelerationVector");
-		label = new HyperlinkLabel("<html><u><font color=\"#0000ff\">" + (s != null ? s : "Acceleration Vector")
-				+ "</font></u></html>", SwingConstants.LEFT);
-		label.setToolTipText("Customize acceleration vector display");
-		((HyperlinkLabel) label).setAction(new Runnable() {
+		px.setLinkText(s != null ? s : "Acceleration Vector");
+		px.setLinkToolTip("Customize acceleration vector display");
+		px.setLinkAction(new Runnable() {
 			public void run() {
 				if (vd == null)
 					vd = new VectorDisplay(JOptionPane.getFrameForComponent(view));
@@ -515,19 +514,15 @@ class ViewProperties extends JDialog {
 				vd.setVisible(true);
 			}
 		});
-		p1.add(label);
 
-		p1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		p.add(p1);
-
-		forceCheckBox = new JCheckBox(view.getSwitches().get("Force Vector"));
-		forceCheckBox.setText(null);
-		p1.add(forceCheckBox);
+		px = new CheckBoxLinkPanel();
+		p.add(px);
+		forceCheckBox = px.getCheckBox();
+		px.setCheckBoxAction(view.getSwitches().get("Force Vector"));
 		s = MDView.getInternationalText("ForceVector");
-		label = new HyperlinkLabel("<html><u><font color=\"#0000ff\">" + (s != null ? s : "Force Vector")
-				+ "</font></u></html>", SwingConstants.LEFT);
-		label.setToolTipText("Customize force vector display");
-		((HyperlinkLabel) label).setAction(new Runnable() {
+		px.setLinkText(s != null ? s : "Force Vector");
+		px.setLinkToolTip("Customize force vector display");
+		px.setLinkAction(new Runnable() {
 			public void run() {
 				if (vd == null)
 					vd = new VectorDisplay(JOptionPane.getFrameForComponent(view));
@@ -537,7 +532,6 @@ class ViewProperties extends JDialog {
 				vd.setVisible(true);
 			}
 		});
-		p1.add(label);
 
 		p = new JPanel(new GridLayout(1, 2, 5, 5));
 		s = MDView.getInternationalText("GraphicsOptions");
