@@ -241,7 +241,6 @@ public class Molecule implements ModelComponent, Rotatable {
 	}
 
 	public void setSelected(boolean b) {
-		selected = b;
 		for (Atom x : atoms)
 			x.setSelected(b);
 		List<RadialBond> bonds = getBonds();
@@ -251,6 +250,7 @@ public class Molecule implements ModelComponent, Rotatable {
 			locateRotationHandles();
 			model.view.setSelectedComponent(this);
 		}
+		selected = b;
 	}
 
 	public boolean isSelected() {
@@ -293,7 +293,7 @@ public class Molecule implements ModelComponent, Rotatable {
 		return torque;
 	}
 
-	/** count the bonded partners for a given atom of this molecule. */
+	/* count the bonded partners for a given atom of this molecule. */
 	int getBondedPartnerCount(List<RadialBond> bond, Atom atom) {
 		int count = 0;
 		for (RadialBond rb : bond) {
@@ -303,7 +303,7 @@ public class Molecule implements ModelComponent, Rotatable {
 		return count;
 	}
 
-	/** return the atoms that are bonded to the specified atom */
+	/* return the atoms that are bonded to the specified atom */
 	@SuppressWarnings("unchecked")
 	Atom[] getBondedPartners(List<RadialBond> bond, Atom atom) {
 		List<Atom> list = new ArrayList<Atom>();

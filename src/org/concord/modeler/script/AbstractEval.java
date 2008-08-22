@@ -1290,7 +1290,6 @@ public abstract class AbstractEval {
 			out(ScriptEvent.FAILED, "Need a valid address to import the text source.");
 			return null;
 		}
-		System.out.println(address);
 		InputStream is = null;
 		if (FileUtilities.isRemote(address)) {
 			URL url = null;
