@@ -1664,6 +1664,8 @@ public abstract class AtomicModel extends MDModel {
 		int n = sig.length;
 		for (int i = 0; i < n - 1; i++) {
 			for (int j = i + 1; j < n; j++) {
+				// the following is used to extend the interaction range between A-T and C-G so that they
+				// can attract slightly more strongly
 				if (((i == ID_A && j == ID_T) || (i == ID_T && j == ID_A))
 						|| ((i == ID_C && j == ID_G) || (i == ID_G && j == ID_C))
 						|| ((i == ID_A && j == ID_U) || (i == ID_U && j == ID_A))) {
@@ -1780,7 +1782,16 @@ public abstract class AtomicModel extends MDModel {
 		int n = sig.length;
 		for (int i = 0; i < n - 1; i++) {
 			for (int j = i + 1; j < n; j++) {
-				listSquareMatrix[j][i] = listSquareMatrix[i][j] = sig[j] * sig[i] * rList * rList;
+				// Christie Williams@colostate.edu pointed out that the listSquareMatrix elements for A-T and C-G pairs
+				// should be doubled as those of cutOffSquareMatrix
+				if (((i == ID_A && j == ID_T) || (i == ID_T && j == ID_A))
+						|| ((i == ID_C && j == ID_G) || (i == ID_G && j == ID_C))
+						|| ((i == ID_A && j == ID_U) || (i == ID_U && j == ID_A))) {
+					listSquareMatrix[j][i] = listSquareMatrix[i][j] = sig[j] * sig[i] * rList * rList * 4;
+				}
+				else {
+					listSquareMatrix[j][i] = listSquareMatrix[i][j] = sig[j] * sig[i] * rList * rList;
+				}
 			}
 		}
 		for (int i = 0; i < n; i++) {
