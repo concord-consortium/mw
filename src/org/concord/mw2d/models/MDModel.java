@@ -828,7 +828,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		externalScriptCallback = c;
 	}
 
-	private void createTaskEvaluator() {
+	private void initEvalTask() {
 		if (evalTask == null) {
 			evalTask = new Eval2D(this, true);
 			evalTask.setExternalScriptCallback(externalScriptCallback);
@@ -838,7 +838,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	}
 
 	private void runTaskScript(String script) {
-		createTaskEvaluator();
+		initEvalTask();
 		evalTask.appendScript(script);
 		try {
 			evalTask.evaluate2();
@@ -921,7 +921,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	public void addScriptListener(ScriptListener listener) {
 		initEvalAction();
 		evalAction.addScriptListener(listener);
-		createTaskEvaluator();
+		initEvalTask();
 		evalTask.addScriptListener(listener);
 	}
 
@@ -1509,7 +1509,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 
 				public void runScript(String script) {
 					if (script != null)
-						MDModel.this.runTaskScript(script);
+						runTaskScript(script);
 				}
 
 				public void notifyChange() {

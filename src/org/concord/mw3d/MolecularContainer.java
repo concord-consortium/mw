@@ -424,6 +424,12 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 		else if ("stop".equals(e.getDescription())) {
 			notifyModelListeners(new ModelEvent(model, ModelEvent.MODEL_STOP));
 		}
+		else if ("script end".equals(e.getDescription())) {
+			notifyModelListeners(new ModelEvent(model, ModelEvent.SCRIPT_END));
+		}
+		else if ("script start".equals(e.getDescription())) {
+			notifyModelListeners(new ModelEvent(model, ModelEvent.SCRIPT_START));
+		}
 	}
 
 	public void reset() {
@@ -664,6 +670,7 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 	}
 
 	public void output(final File file) {
+		model.clearScriptQueue();
 		MyImageSaver.saveImages(view, file.getParentFile()); // save images first before resourceAddress changes
 		resourceAddress = file.toString();
 		outputXyz(new File(FileUtilities.changeExtension(resourceAddress, "xyz")));

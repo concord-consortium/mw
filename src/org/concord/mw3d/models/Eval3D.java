@@ -83,11 +83,12 @@ class Eval3D extends AbstractEval {
 	private Atom[] atom;
 	private List<ScriptExecutionListener> executionListeners;
 
-	public Eval3D(MolecularModel model) {
+	public Eval3D(MolecularModel model, boolean asTask) {
 		super();
 		this.model = model;
 		atom = model.atom;
 		view = model.getView();
+		setAsTask(asTask);
 	}
 
 	void addExecutionListener(ScriptExecutionListener l) {
@@ -111,6 +112,23 @@ class Eval3D extends AbstractEval {
 
 	protected Object getModel() {
 		return model;
+	}
+
+	public void stop() {
+		super.stop();
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				view.repaint();
+				if (!getAsTask())
+					notifyExecution("script end");
+				if (model.initializationScriptToRun) {
+					model.setInitializationScriptToRun(false);
+				}
+				else {
+					model.notifyChange();
+				}
+			}
+		});
 	}
 
 	protected synchronized void out(byte status, String description) {
@@ -430,7 +448,14 @@ class Eval3D extends AbstractEval {
 	 * script. If you want to do a different script, pass in through the script setter. The "stop" flag indicates the
 	 * end of executing the current script.
 	 */
-	private void evaluate2() throws InterruptedException {
+	void evaluate2() throws InterruptedException {
+		if (!getAsTask()) {
+			EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					notifyExecution("script start");
+				}
+			});
+		}
 		stop = false;
 		interrupted = false;
 		if (script == null) {
