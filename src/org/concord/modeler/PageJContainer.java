@@ -445,22 +445,32 @@ public class PageJContainer extends PagePlugin {
 		if (plugin == null)
 			return;
 		String[] resources = plugin.getResources();
-		if (resources == null)
-			return;
-		File file = null;
-		for (String s : resources) {
-			if (FileUtilities.isRemote(s))
-				continue;
-			s = page.getPathBase() + FileUtilities.getFileName(s);
-			if (page.isRemote()) {
-				file = ConnectionManager.sharedInstance().getLocalCopy(s);
+		if (resources != null) {
+			for (String s : resources) {
+				if (!FileUtilities.isRemote(s))
+					copyResource(page.getPathBase() + FileUtilities.getFileName(s), parent);
 			}
-			else {
-				file = new File(s);
+		}
+		if (cachedFileNames != null) {
+			String[] t = cachedFileNames.split(",");
+			for (String s : t) {
+				s = s.trim();
+				if (!s.equals(""))
+					copyResource(page.getPathBase() + s, parent);
 			}
-			if (file.exists()) {
-				FileUtilities.copy(file, new File(parent, FileUtilities.getFileName(s)));
-			}
+		}
+	}
+
+	private void copyResource(String s, File parent) {
+		File file;
+		if (page.isRemote()) {
+			file = ConnectionManager.sharedInstance().getLocalCopy(s);
+		}
+		else {
+			file = new File(s);
+		}
+		if (file.exists()) {
+			FileUtilities.copy(file, new File(parent, FileUtilities.getFileName(s)));
 		}
 	}
 
