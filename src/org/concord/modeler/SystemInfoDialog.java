@@ -200,7 +200,8 @@ class SystemInfoDialog extends JDialog {
 		table.getColumnModel().getColumn(0).setPreferredWidth(150);
 		table.getColumnModel().getColumn(1).setPreferredWidth(250);
 		JPanel p = new JPanel(new BorderLayout());
-		p.setBorder(BorderFactory.createTitledBorder("General Information:"));
+		s = Modeler.getInternationalText("GeneralInformation");
+		p.setBorder(BorderFactory.createTitledBorder(s != null ? s : "General Information:"));
 		p.add(table, BorderLayout.CENTER);
 		panel.add(p, BorderLayout.NORTH);
 
