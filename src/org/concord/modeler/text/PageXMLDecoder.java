@@ -79,6 +79,7 @@ import org.concord.modeler.ImageQuestion;
 import org.concord.modeler.InstancePool;
 import org.concord.modeler.ModelCanvas;
 import org.concord.modeler.ModelCommunicator;
+import org.concord.modeler.Modeler;
 import org.concord.modeler.ModelerUtilities;
 import org.concord.modeler.PageApplet;
 import org.concord.modeler.PageBarGraph;
@@ -381,9 +382,10 @@ final class PageXMLDecoder {
 			page.playSound(page.getBackgroundSound());
 		}
 		if (progressBar != null) {
+			String sec = Modeler.getInternationalText("TimeSecond");
 			progressBar.setValue(0);
 			progressBar.setString(elementCounter + " XML elements read in " + formatter.format(loadingTime * 0.001)
-					+ " seconds.");
+					+ " " + (sec != null ? sec : "seconds") + ".");
 			progressBar.setIndeterminate(false);
 		}
 		// notify Editor to update buttons accordingly

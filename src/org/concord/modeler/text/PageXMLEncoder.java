@@ -44,6 +44,7 @@ import javax.swing.text.html.HTML;
 import org.concord.modeler.AudioPlayer;
 import org.concord.modeler.HtmlService;
 import org.concord.modeler.ModelCanvas;
+import org.concord.modeler.Modeler;
 import org.concord.modeler.ModelerUtilities;
 import org.concord.modeler.PageApplet;
 import org.concord.modeler.PageJContainer;
@@ -80,6 +81,16 @@ final class PageXMLEncoder {
 
 	public JProgressBar getProgressBar() {
 		return progressBar;
+	}
+
+	private void setProgressMessage(final String message) {
+		if (progressBar != null) {
+			EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					progressBar.setString(message);
+				}
+			});
+		}
 	}
 
 	static void saveResource(final Component owner, final String name, final File parent) {
@@ -133,13 +144,8 @@ final class PageXMLEncoder {
 		/* initially give the buffer a capacity of 10000 characters */
 		StringBuffer sb = new StringBuffer(10000);
 
-		if (progressBar != null) {
-			EventQueue.invokeLater(new Runnable() {
-				public void run() {
-					progressBar.setString("Writing......");
-				}
-			});
-		}
+		String s = Modeler.getInternationalText("WritingTo");
+		setProgressMessage((s != null ? s : "Writing to") + " " + file + "......");
 
 		XMLCharacterEncoder.setCharacterEncoding(page.getCharacterEncoding());
 		sb.append("<?xml version=\"1.0\" encoding=\"" + page.getCharacterEncoding() + "\"?>");
@@ -151,7 +157,7 @@ final class PageXMLEncoder {
 		sb.append("<language>" + page.getCharacterEncoding() + "</language>");
 		sb.append(LINE_SEPARATOR);
 
-		String s = page.getBackgroundSound();
+		s = page.getBackgroundSound();
 		if (s != null) {
 			saveResource(page, page.getPathBase() + FileUtilities.getFileName(s), file.getParentFile());
 		}
@@ -589,12 +595,8 @@ final class PageXMLEncoder {
 			}
 		}
 
-		if (progressBar != null)
-			EventQueue.invokeLater(new Runnable() {
-				public void run() {
-					progressBar.setString("Done");
-				}
-			});
+		s = Modeler.getInternationalText("SavedTo");
+		setProgressMessage((s != null ? s : "Saved to") + " " + file);
 
 		return true;
 
