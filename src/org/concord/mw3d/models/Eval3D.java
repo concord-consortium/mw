@@ -1308,6 +1308,30 @@ class Eval3D extends AbstractEval {
 			return true;
 		}
 
+		if (str.trim().startsWith("%")) { // change the value of a defined variable
+			int whitespace = str.indexOf(" ");
+			String var = str.substring(0, whitespace).trim().toLowerCase();
+			String exp = str.substring(whitespace).trim().toLowerCase();
+			boolean isStatic = false;
+			if (!sharedDefinition.isEmpty()) {
+				Map<String, String> map = sharedDefinition.get(model.getClass());
+				if (map != null && !map.isEmpty()) {
+					if (map.containsKey(var)) {
+						isStatic = true;
+					}
+				}
+			}
+			if (exp.startsWith("temperature(")) {
+				// exp = evaluateTemperatureFunction(exp);
+				// if (exp != null)
+				// storeDefinition(isStatic, var, exp);
+			}
+			else {
+				evaluateDefineMathexClause(isStatic, var, exp);
+			}
+			return true;
+		}
+
 		s = str.trim().split(REGEX_SEPARATOR + "+");
 
 		if (s.length == 2) {
