@@ -54,7 +54,7 @@ final public class Atom extends Point3fi implements Tuple {
 	byte formalChargeAndFlags;
 	byte alternateLocationID;
 	short madAtom;
-	short colixAtom;
+	short colixAtom, colixCustom;
 	byte paletteID = JmolConstants.PALETTE_CPK;
 	short sigma = -1; // XIE in the unit of MAD
 	boolean annotationKey; // XIE: this indicates that there is an annotation key on this atom
@@ -186,6 +186,10 @@ final public class Atom extends Point3fi implements Tuple {
 		if (starIndex < 0)
 			return starredAtomName;
 		return starredAtomName.replace('*', '\'');
+	}
+
+	boolean isGenericAtom() {
+		return atomicAndIsotopeNumber >= 110;
 	}
 
 	byte lookupSpecialAtomID(String atomName) {

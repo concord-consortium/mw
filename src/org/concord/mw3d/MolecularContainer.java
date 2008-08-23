@@ -1070,12 +1070,12 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 			String errorMessage) {
 		view.getViewer().setSelectionHaloEnabled(true);
 		view.setLoadingMessagePainted(false);
-		setGenericParticles();
-		view.refresh();
 		if (view.isRenderingCallTriggeredByLoading()) {
 			notifyPageComponentListeners(new PageComponentEvent(this, PageComponentEvent.COMPONENT_LOADED));
 			progressReported(new ProgressEvent(this, resourceAddress + " loaded to 3D Simulator."));
 		}
+		setGenericParticles();
+		view.refresh();
 	}
 
 	/** not implemented */

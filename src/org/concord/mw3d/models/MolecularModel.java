@@ -299,6 +299,16 @@ public class MolecularModel {
 		return null;
 	}
 
+	public int getId(String symbol) {
+		for (String s : paramMap.keySet()) {
+			if (s.equals(symbol)) {
+				float[] x = paramMap.get(s);
+				return Math.round(x[0]);
+			}
+		}
+		return 0;
+	}
+
 	/** set the mass of the specified generic particle */
 	public void setElementMass(String symbol, float mass) {
 		float[] x = paramMap.get(symbol);
