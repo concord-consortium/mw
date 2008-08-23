@@ -846,7 +846,7 @@ public class Atom extends Particle {
 	 * default background color for this type of element.
 	 */
 	public Color getColor() {
-		return new Color(model.view.getColor(this));
+		return color != null ? color : new Color(model.view.getColor(this));
 	}
 
 	/**
