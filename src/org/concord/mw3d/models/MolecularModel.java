@@ -1388,6 +1388,8 @@ public class MolecularModel {
 		atom[iAtom].az = 0;
 		atom[iAtom].charge = charge;
 		atom[iAtom].damp = 0;
+		atom[iAtom].setVisible(true);
+		atom[iAtom].setMovable(true);
 		iAtom++;
 		return true;
 	}
