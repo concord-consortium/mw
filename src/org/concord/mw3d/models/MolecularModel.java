@@ -101,7 +101,7 @@ public class MolecularModel {
 
 	MolecularView view;
 	private ScriptCallback externalScriptCallback;
-	private Eval3D evalAction;
+	private Eval3D evalAction, evalTask;
 	private Thread evalThread;
 	float modelTime;
 	float timeStep = 0.5f;
@@ -360,6 +360,27 @@ public class MolecularModel {
 		initializationScriptToRun = b;
 	}
 
+	private void initEvalTask() {
+		if (evalTask == null) {
+			evalTask = new Eval3D(this, true);
+			evalTask.setExternalScriptCallback(externalScriptCallback);
+		}
+		initEvalAction();
+		evalTask.setDefinition(evalAction.getDefinition()); // share the same definitions with the action scripts
+	}
+
+	private void runTaskScript(String script) {
+		initEvalTask();
+		evalTask.appendScript(script);
+		try {
+			evalTask.evaluate2();
+		}
+		catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		view.repaint();
+	}
+
 	public boolean isActionScriptRunning() {
 		if (evalAction == null)
 			return false;
@@ -369,6 +390,8 @@ public class MolecularModel {
 	public void addScriptExecutionListener(ScriptExecutionListener l) {
 		initEvalAction();
 		evalAction.addExecutionListener(l);
+		initEvalTask();
+		evalTask.addExecutionListener(l);
 	}
 
 	/**
@@ -406,7 +429,7 @@ public class MolecularModel {
 
 	private void initEvalAction() {
 		if (evalAction == null) {
-			evalAction = new Eval3D(this);
+			evalAction = new Eval3D(this, false);
 			evalAction.setExternalScriptCallback(externalScriptCallback);
 		}
 	}
@@ -429,7 +452,7 @@ public class MolecularModel {
 			evalThread.setUncaughtExceptionHandler(new DisasterHandler(DisasterHandler.SCRIPT_ERROR, new Runnable() {
 				public void run() {
 					evalThread = null;
-					evalAction.clearScriptQueue();
+					clearScriptQueue();
 					evalAction.halt();
 				}
 			}, null, getView()));
@@ -450,15 +473,25 @@ public class MolecularModel {
 		return null;
 	}
 
+	public void clearScriptQueue() {
+		if (evalAction != null)
+			evalAction.clearScriptQueue();
+		if (evalTask != null)
+			evalTask.clearScriptQueue();
+	}
+
 	public void addScriptListener(ScriptListener listener) {
 		initEvalAction();
 		evalAction.addScriptListener(listener);
+		initEvalTask();
+		evalTask.addScriptListener(listener);
 	}
 
 	public void removeScriptListener(ScriptListener listener) {
-		if (evalAction == null)
-			return;
-		evalAction.removeScriptListener(listener);
+		if (evalAction != null)
+			evalAction.removeScriptListener(listener);
+		if (evalTask != null)
+			evalTask.removeScriptListener(listener);
 	}
 
 	public void setChangeNotifier(Runnable notifier) {
@@ -1623,7 +1656,7 @@ public class MolecularModel {
 
 				public void runScript(String script) {
 					if (script != null)
-						MolecularModel.this.runScript(script);
+						runTaskScript(script);
 				}
 
 				public void notifyChange() {
@@ -1926,6 +1959,7 @@ public class MolecularModel {
 		tBonds.clear();
 		molecules.clear();
 		activateHeatBath(false);
+		clearScriptQueue();
 	}
 
 	public void transferKE(float amount) {
