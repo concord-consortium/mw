@@ -182,6 +182,11 @@ class BallsRenderer extends ShapeRenderer {
 		}
 		int diameter = atom.screenDiameter;
 		if (viewer instanceof ExtendedViewer) {
+			if (atom.isGenericAtom()) {
+				if (atom.colixAtom != atom.colixCustom) {
+					atom.colixAtom = atom.colixCustom;
+				}
+			}
 			drawBall = true;
 			ExtendedViewer viewer2 = (ExtendedViewer) viewer;
 			Frame frame = viewer.modelManager.frame;

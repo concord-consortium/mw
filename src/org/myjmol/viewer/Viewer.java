@@ -1081,7 +1081,7 @@ public class Viewer extends JmolViewer {
 			return;
 		Atom atom = frame.getAtomAt(index);
 		if (atom != null)
-			atom.colixAtom = Graphics3D.getColix(argb);
+			atom.colixCustom = Graphics3D.getColix(argb);
 	}
 
 	/** set the specified atom's visibility */
