@@ -207,7 +207,8 @@ class JmolRenderer {
 					argb = view.getChargeShadingColor(at.getCharge()).getRGB();
 				}
 				else {
-					argb = view.getColor(at);
+					// argb = view.getColor(at);
+					argb = at.getColor().getRGB();
 				}
 			}
 			viewer.setAtomCoordinates(i, 0.1f * (float) (at.getRx() - view.getWidth() * 0.5),
