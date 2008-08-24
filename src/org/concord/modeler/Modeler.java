@@ -1832,6 +1832,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		menuItem.setName("Plugin");
 		s = getInternationalText("Plugin");
 		menuItem.setText((s != null ? s : "Plugin") + "...");
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, KeyEvent.ALT_MASK | KeyEvent.SHIFT_MASK, true));
 		menu.add(menuItem);
 		editor.addEnabledComponentWhenEditable(menuItem);
 

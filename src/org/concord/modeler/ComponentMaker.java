@@ -55,6 +55,8 @@ abstract class ComponentMaker {
 	}
 
 	static void enable(JComponent c, boolean b, Object source, int modelID, String modelClass, Page page) {
+		if (page == null)
+			return;
 		boolean yes = false;
 		if (modelID != -1) {
 			if (isTargetClass(modelClass)) {
