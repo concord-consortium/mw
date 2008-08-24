@@ -1355,6 +1355,21 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		button.setRequestFocusEnabled(false);
 		tb.add(button);
 
+		button = new JButton(page.getAction(Page.INSERT_COMPONENT));
+		button.setText(null);
+		button.setName("Plugin");
+		button.setToolTipText("Insert a plugin");
+		button.setIcon(new ImageIcon(getClass().getResource("text/images/plugin.gif")));
+		button.setHorizontalAlignment(SwingConstants.CENTER);
+		button.setPreferredSize(BUTTON_DIMENSION);
+		button.setMargin(ZERO_INSETS);
+		if (!Modeler.isMac()) {
+			button.setBorderPainted(false);
+			button.setFocusPainted(false);
+		}
+		button.setRequestFocusEnabled(false);
+		tb.add(button);
+
 		return tb;
 
 	}

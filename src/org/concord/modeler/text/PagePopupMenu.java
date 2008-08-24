@@ -105,24 +105,28 @@ class PagePopupMenu extends TextComponentPopupMenu {
 		s = Modeler.getInternationalText("InsertBasic2DContainer");
 		if (s != null)
 			menuItem.setText(s);
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1, KeyEvent.ALT_MASK | KeyEvent.SHIFT_MASK, true));
 		insertModelMenu.add(menuItem);
 
 		menuItem = new JMenuItem(page.getAction(Page.INSERT_CHEM_CONTAINER));
 		s = Modeler.getInternationalText("InsertReaction2DContainer");
 		if (s != null)
 			menuItem.setText(s);
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_2, KeyEvent.ALT_MASK | KeyEvent.SHIFT_MASK, true));
 		insertModelMenu.add(menuItem);
 
 		menuItem = new JMenuItem(page.getAction(Page.INSERT_PROSYN_CONTAINER));
 		s = Modeler.getInternationalText("InsertProteinSynthesisContainer");
 		if (s != null)
 			menuItem.setText(s);
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_3, KeyEvent.ALT_MASK | KeyEvent.SHIFT_MASK, true));
 		insertModelMenu.add(menuItem);
 
 		menuItem = new JMenuItem(page.getAction(Page.INSERT_GB_CONTAINER));
 		s = Modeler.getInternationalText("InsertMesoscaleContainer");
 		if (s != null)
 			menuItem.setText(s);
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_4, KeyEvent.ALT_MASK | KeyEvent.SHIFT_MASK, true));
 		insertModelMenu.add(menuItem);
 
 		menuItem = new JMenuItem(page.getAction(Page.INSERT_COMPONENT));
@@ -130,6 +134,7 @@ class PagePopupMenu extends TextComponentPopupMenu {
 		s = Modeler.getInternationalText("InsertJmolContainer");
 		menuItem.setText((s != null ? s : Page.INSERT_JMOL) + "...");
 		menuItem.setIcon(new ImageIcon(Page.class.getResource("images/MV.gif")));
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_5, KeyEvent.ALT_MASK | KeyEvent.SHIFT_MASK, true));
 		insertModelMenu.add(menuItem);
 
 		menuItem = new JMenuItem(page.getAction(Page.INSERT_COMPONENT));
@@ -137,6 +142,7 @@ class PagePopupMenu extends TextComponentPopupMenu {
 		s = Modeler.getInternationalText("InsertBasic3DContainer");
 		menuItem.setText((s != null ? s : Page.INSERT_MW3D) + "...");
 		menuItem.setIcon(new ImageIcon(Page.class.getResource("images/MD3D.gif")));
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_6, KeyEvent.ALT_MASK | KeyEvent.SHIFT_MASK, true));
 		insertModelMenu.add(menuItem);
 
 		s = Modeler.getInternationalText("InsertModelOutput");
@@ -193,12 +199,14 @@ class PagePopupMenu extends TextComponentPopupMenu {
 		menuItem.setName("Diffraction Device");
 		s = Modeler.getInternationalText("InsertDiffractionDevice");
 		menuItem.setText((s != null ? s : "Diffraction Device") + "...");
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.ALT_MASK | KeyEvent.SHIFT_MASK, true));
 		insertInstrumentMenu.add(menuItem);
 
 		menuItem = new JMenuItem(page.getAction(Page.INSERT_COMPONENT));
 		menuItem.setName("Emission and Absorption Spectrometer");
 		s = Modeler.getInternationalText("InsertSpectrometer");
 		menuItem.setText((s != null ? s : "Emission and Absorption Spectrometer") + "...");
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, KeyEvent.ALT_MASK | KeyEvent.SHIFT_MASK, true));
 		insertInstrumentMenu.add(menuItem);
 
 		s = Modeler.getInternationalText("InsertStandardController");
@@ -383,6 +391,7 @@ class PagePopupMenu extends TextComponentPopupMenu {
 		menuItem.setName("Plugin");
 		s = Modeler.getInternationalText("Plugin");
 		menuItem.setText((s != null ? s : "Plugin") + "...");
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, KeyEvent.ALT_MASK | KeyEvent.SHIFT_MASK, true));
 		menuItem.setIcon(new ImageIcon(getClass().getResource("images/plugin.gif")));
 		insertComponentMenu.add(menuItem);
 
