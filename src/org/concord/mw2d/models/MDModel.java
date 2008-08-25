@@ -1257,7 +1257,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		if (pcl == null)
 			throw new IllegalArgumentException("null input");
 		if (pageComponentListenerList == null) {
-			pageComponentListenerList = new ArrayList<PageComponentListener>();
+			pageComponentListenerList = Collections.synchronizedList(new ArrayList<PageComponentListener>());
 		}
 		else {
 			if (pageComponentListenerList.contains(pcl))
@@ -1277,8 +1277,10 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	public void notifyPageComponentListeners(PageComponentEvent e) {
 		if (pageComponentListenerList == null || pageComponentListenerList.isEmpty())
 			return;
-		for (PageComponentListener l : pageComponentListenerList)
-			l.pageComponentChanged(e);
+		synchronized (pageComponentListenerList) {
+			for (PageComponentListener l : pageComponentListenerList)
+				l.pageComponentChanged(e);
+		}
 	}
 
 	public boolean hasGraphs() {
