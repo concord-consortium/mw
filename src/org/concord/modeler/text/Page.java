@@ -288,6 +288,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	private volatile String pageAddress = "Untitled.cml";
 	private URI pageURI;
 	private String pageTitle;
+	private String referencedFiles;
 	private String backgroundSound;
 	private boolean loopBackgroundSound;
 	private FillMode fillMode;
@@ -1394,6 +1395,14 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		return pageTitle;
 	}
 
+	public void setReferencedFiles(String s) {
+		referencedFiles = s;
+	}
+
+	public String getReferencedFiles() {
+		return referencedFiles;
+	}
+
 	public void setSaveReminder(SaveReminder s) {
 		saveReminder = s;
 	}
@@ -2276,6 +2285,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			return;
 		stopSound();
 		stopImageAnimators();
+		referencedFiles = null;
 		backgroundSound = null;
 		loopBackgroundSound = false;
 		if (componentPool != null)
@@ -5194,6 +5204,10 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 
 	public void inputBackgroundSound() {
 		new SoundInputDialog(this).setVisible(true);
+	}
+
+	public void inputReferencedFiles() {
+		new ReferencedFilesInputDialog(this).setVisible(true);
 	}
 
 	private void createActions() {

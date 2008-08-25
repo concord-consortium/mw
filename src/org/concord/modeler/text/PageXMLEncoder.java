@@ -157,24 +157,30 @@ final class PageXMLEncoder {
 		sb.append("<language>" + page.getCharacterEncoding() + "</language>");
 		sb.append(LINE_SEPARATOR);
 
+		/* write background sound */
 		s = page.getBackgroundSound();
 		if (s != null) {
 			saveResource(page, page.getPathBase() + FileUtilities.getFileName(s), file.getParentFile());
+			if (page.getLoopBackgroundSound()) {
+				sb.append("<bgsound loop=\"true\">" + XMLCharacterEncoder.encode(s) + "</bgsound>");
+			}
+			else {
+				sb.append("<bgsound>" + XMLCharacterEncoder.encode(s) + "</bgsound>");
+			}
+			sb.append(LINE_SEPARATOR);
 		}
 
 		/* write the title of this document */
-		if (page.getTitle() != null && !page.getTitle().trim().equals("")) {
-			sb.append("<page_title>" + XMLCharacterEncoder.encode(page.getTitle()) + "</page_title>");
+		s = page.getTitle();
+		if (s != null && !s.trim().equals("")) {
+			sb.append("<page_title>" + XMLCharacterEncoder.encode(s) + "</page_title>");
 			sb.append(LINE_SEPARATOR);
 		}
-		if (page.getBackgroundSound() != null) {
-			if (page.getLoopBackgroundSound()) {
-				sb.append("<bgsound loop=\"true\">" + XMLCharacterEncoder.encode(page.getBackgroundSound())
-						+ "</bgsound>");
-			}
-			else {
-				sb.append("<bgsound>" + XMLCharacterEncoder.encode(page.getBackgroundSound()) + "</bgsound>");
-			}
+
+		/* write the names of the files linked indirectly to this page (e.g. those refered in scripts) */
+		s = page.getReferencedFiles();
+		if (s != null && !s.trim().equals("")) {
+			sb.append("<referenced_files>" + XMLCharacterEncoder.encode(s) + "</referenced_files>");
 			sb.append(LINE_SEPARATOR);
 		}
 

@@ -569,6 +569,7 @@ final class PageXMLDecoder {
 		long groupID;
 		String hintText, gradeURI;
 		String pageTitle;
+		String referencedFiles;
 		boolean mute = true;
 		float width, height;
 		String expression;
@@ -609,6 +610,7 @@ final class PageXMLDecoder {
 			elementCounter = 0;
 			page.setBackgroundSound(null);
 			pageTitle = null;
+			referencedFiles = null;
 			if (progressBar != null) {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
@@ -621,7 +623,7 @@ final class PageXMLDecoder {
 		}
 
 		public synchronized void endDocument() throws SAXException {
-			// Important: the following code fixes the missed notification problem in Mac OS X
+			// Is this right? the following code fixes the missed notification problem in Mac OS X
 			// when there is a mw3d container on the page with many atoms and bonds to load.
 			try {
 				Thread.sleep(100);
@@ -631,6 +633,8 @@ final class PageXMLDecoder {
 			synchronized (lock) {
 				lock.notify();
 			}
+			if (referencedFiles != null)
+				page.setReferencedFiles(referencedFiles);
 			if (resourceLoadingThread == null) {
 				resourceLoadingThread = new Thread("Resource Loader #" + threadIndex) {
 					public void run() {
@@ -879,6 +883,10 @@ final class PageXMLDecoder {
 
 			else if (qName == "page_title") {
 				pageTitle = str;
+			}
+
+			else if (qName == "referenced_files") {
+				referencedFiles = str;
 			}
 
 			else if (qName == "bgsound") {

@@ -123,9 +123,8 @@ class AudioPlayerMaker extends ComponentMaker {
 		File[] files = parent.listFiles(AudioPlayer.fileFilter);
 		if (files == null || files.length == 0)
 			return;
-		for (File f : files) {
+		for (File f : files)
 			clipNameComboBox.addItem(FileUtilities.getFileName(f.toString()));
-		}
 		for (int i = 0; i < files.length; i++) {
 			if (clipNameComboBox.getItemAt(i).equals(audioPlayer.clipName)) {
 				clipNameComboBox.setSelectedIndex(i);
