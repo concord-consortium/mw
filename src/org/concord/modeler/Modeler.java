@@ -1282,6 +1282,17 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		menu.add(menuItem);
 		editor.addEnabledComponentWhenEditable(menuItem);
 
+		s = getInternationalText("ReferencedFiles");
+		menuItem = new JMenuItem((s != null ? s : "Referenced Files") + "...");
+		menuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				page.inputReferencedFiles();
+			}
+		});
+		menu.add(menuItem);
+		editor.addEnabledComponentWhenEditable(menuItem);
+		menu.addSeparator();
+
 		final ButtonGroup encodingGroup = new ButtonGroup();
 		final ActionListener encodingListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

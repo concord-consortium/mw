@@ -49,6 +49,7 @@ class SoundInputDialog extends JDialog {
 	SoundInputDialog(Page page0) {
 
 		super(JOptionPane.getFrameForComponent(page0), "Background Sound", true);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		String s = Modeler.getInternationalText("BackgroundSound");
 		if (s != null)
 			setTitle(s);
@@ -129,9 +130,8 @@ class SoundInputDialog extends JDialog {
 		if (files == null || files.length == 0)
 			return;
 		clipNameComboBox.addItem("None");
-		for (int i = 0; i < files.length; i++) {
-			clipNameComboBox.addItem(FileUtilities.getFileName(files[i].toString()));
-		}
+		for (File i : files)
+			clipNameComboBox.addItem(FileUtilities.getFileName(i.toString()));
 		for (int i = 0; i < clipNameComboBox.getItemCount(); i++) {
 			if (clipNameComboBox.getItemAt(i).equals(page.getBackgroundSound())) {
 				clipNameComboBox.setSelectedIndex(i);

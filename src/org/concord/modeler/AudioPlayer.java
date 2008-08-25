@@ -57,7 +57,16 @@ import org.concord.modeler.util.FileUtilities;
 
 public class AudioPlayer extends JPanel implements Embeddable, MetaEventListener, LineListener {
 
-	public static FileFilter fileFilter;
+	public static FileFilter fileFilter = new FileFilter() {
+		public boolean accept(File file) {
+			if (file == null)
+				return false;
+			String s = file.toString().toLowerCase();
+			if (s.endsWith(".mid") || s.endsWith(".wav"))
+				return true;
+			return false;
+		}
+	};
 
 	private static Icon MUTE_ICON, NOT_MUTE_ICON;
 
@@ -272,19 +281,6 @@ public class AudioPlayer extends JPanel implements Embeddable, MetaEventListener
 	}
 
 	private void init() {
-
-		if (fileFilter == null) {
-			fileFilter = new FileFilter() {
-				public boolean accept(File file) {
-					if (file == null)
-						return false;
-					String s = file.toString().toLowerCase();
-					if (s.endsWith(".mid") || s.endsWith(".wav"))
-						return true;
-					return false;
-				}
-			};
-		}
 
 		loadIcons();
 
