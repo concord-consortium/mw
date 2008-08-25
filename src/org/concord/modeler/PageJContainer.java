@@ -416,7 +416,7 @@ public class PageJContainer extends PagePlugin {
 		}
 	}
 
-	private void cache(URL u) {
+	private void cache(final URL u) {
 		try {
 			File file = ConnectionManager.sharedInstance().shouldUpdate(u);
 			if (file == null)
@@ -425,10 +425,9 @@ public class PageJContainer extends PagePlugin {
 		}
 		catch (FileNotFoundException e) {
 			e.printStackTrace();
-			final URL u2 = u;
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(PageJContainer.this), u2
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(PageJContainer.this), u
 							+ " was not found. Please check your cache settings with plugin #" + index + ".",
 							"File not found", JOptionPane.ERROR_MESSAGE);
 				}

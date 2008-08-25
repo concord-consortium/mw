@@ -634,7 +634,7 @@ final class PageXMLDecoder {
 				lock.notify();
 			}
 			if (referencedFiles != null)
-				page.setReferencedFiles(referencedFiles);
+				page.setAdditionalResourceFiles(referencedFiles);
 			if (resourceLoadingThread == null) {
 				resourceLoadingThread = new Thread("Resource Loader #" + threadIndex) {
 					public void run() {

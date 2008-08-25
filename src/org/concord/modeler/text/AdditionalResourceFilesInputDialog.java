@@ -29,6 +29,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -36,16 +37,16 @@ import javax.swing.JTextArea;
 
 import org.concord.modeler.Modeler;
 
-class ReferencedFilesInputDialog extends JDialog {
+class AdditionalResourceFilesInputDialog extends JDialog {
 
 	private Page page;
 	private JTextArea area;
 
-	ReferencedFilesInputDialog(Page page0) {
+	AdditionalResourceFilesInputDialog(Page page0) {
 
-		super(JOptionPane.getFrameForComponent(page0), "Referenced Files", true);
+		super(JOptionPane.getFrameForComponent(page0), "Additional Resource Files", true);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		String s = Modeler.getInternationalText("ReferencedFiles");
+		String s = Modeler.getInternationalText("AdditionalResourceFiles");
 		if (s != null)
 			setTitle(s);
 
@@ -55,11 +56,16 @@ class ReferencedFilesInputDialog extends JDialog {
 		panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		setContentPane(panel);
 
-		area = new JTextArea(page.getReferencedFiles(), 5, 40);
-		s = Modeler.getInternationalText("TypeNamesOfFilesReferencedOnThisPage");
-		panel.setBorder(BorderFactory.createTitledBorder((s != null ? s
-				: "Type the names of the files referenced on this page")
-				+ ":"));
+		s = Modeler.getInternationalText("TypeNamesOfFilesNeededToBeSavedWhenThisPageIsSaved");
+		panel
+				.add(
+						new JLabel(
+								"<html>"
+										+ (s != null ? s
+												: "Type the names of the files needed to be saved but not by default when this page is saved<br>(multiple file names should be separated by commas)")
+										+ ":</html>"), BorderLayout.NORTH);
+
+		area = new JTextArea(page.getAdditionalResourceFiles(), 5, 40);
 		panel.add(new JScrollPane(area), BorderLayout.CENTER);
 
 		JPanel p = new JPanel();
@@ -69,7 +75,7 @@ class ReferencedFilesInputDialog extends JDialog {
 		JButton button = new JButton(s != null ? s : "OK");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				page.setReferencedFiles(area.getText().trim());
+				page.setAdditionalResourceFiles(area.getText().trim());
 				page.saveReminder.setChanged(true);
 				dispose();
 			}
@@ -99,5 +105,4 @@ class ReferencedFilesInputDialog extends JDialog {
 		setLocationRelativeTo(JOptionPane.getFrameForComponent(page));
 
 	}
-
 }

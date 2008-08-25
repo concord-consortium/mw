@@ -178,10 +178,11 @@ final class PageXMLEncoder {
 		}
 
 		/* write the names of the files linked indirectly to this page (e.g. those refered in scripts) */
-		s = page.getReferencedFiles();
+		s = page.getAdditionalResourceFiles();
 		if (s != null && !s.trim().equals("")) {
 			sb.append("<referenced_files>" + XMLCharacterEncoder.encode(s) + "</referenced_files>");
 			sb.append(LINE_SEPARATOR);
+			ResourceFileService.saveAdditionalResourceFiles(file.getParentFile(), page);
 		}
 
 		FillMode fillMode = page.getFillMode();
