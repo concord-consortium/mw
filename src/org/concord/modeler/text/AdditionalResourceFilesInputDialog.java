@@ -62,7 +62,7 @@ class AdditionalResourceFilesInputDialog extends JDialog {
 						new JLabel(
 								"<html>"
 										+ (s != null ? s
-												: "Type the names of the files needed to be saved but not by default when this page is saved<br>(multiple file names should be separated by commas)")
+												: "Type the names of the files needed to be saved (but not by default) when this page is saved<br>(multiple file names should be separated by commas)")
 										+ ":</html>"), BorderLayout.NORTH);
 
 		area = new JTextArea(page.getAdditionalResourceFiles(), 5, 40);
