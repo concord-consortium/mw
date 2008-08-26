@@ -1180,12 +1180,13 @@ class Eval2D extends AbstractEval {
 	protected boolean evaluateSingleKeyword(String str) throws InterruptedException {
 		if (super.evaluateSingleKeyword(str))
 			return true;
-		if ("paint".equalsIgnoreCase(str)) { // paint
+		String strLC = str.toLowerCase();
+		if ("paint".equals(strLC)) { // paint
 			model.computeForce(-1);
 			view.repaint();
 			return true;
 		}
-		if ("snapshot".equalsIgnoreCase(str)) { // snapshot
+		if ("snapshot".equals(strLC)) { // snapshot
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					model.notifyPageComponentListeners(new PageComponentEvent(view, PageComponentEvent.SNAPSHOT_TAKEN));
@@ -1193,7 +1194,7 @@ class Eval2D extends AbstractEval {
 			});
 			return true;
 		}
-		if ("focus".equalsIgnoreCase(str)) { // focus
+		if ("focus".equals(strLC)) { // focus
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					view.requestFocusInWindow();
@@ -1201,7 +1202,7 @@ class Eval2D extends AbstractEval {
 			});
 			return true;
 		}
-		if ("run".equalsIgnoreCase(str)) { // run
+		if ("run".equals(strLC)) { // run
 			// FIXME: Why do we need to do this to make "delay modeltime" to work with a prior "run" command?
 			try {
 				Thread.sleep(100);
@@ -1216,29 +1217,42 @@ class Eval2D extends AbstractEval {
 			});
 			return true;
 		}
-		if ("stop".equalsIgnoreCase(str)) { // stop
-			EventQueue.invokeLater(new Runnable() {
-				public void run() {
-					model.stop();
-				}
-			});
-			return true;
+		if (strLC.startsWith("stop")) {
+			if ("stop".equals(strLC)) { // stop
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						model.stop();
+					}
+				});
+				return true;
+			}
+			if ("immediately".equals(strLC.substring(4).trim())) { // stop immediately
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						model.stopImmediately();
+					}
+				});
+				return true;
+			}
 		}
-		if ("stop immediately".equalsIgnoreCase(str)) { // stop immediately
-			EventQueue.invokeLater(new Runnable() {
-				public void run() {
-					model.stopImmediately();
-				}
-			});
-			return true;
+		if (strLC.startsWith("reset")) {
+			if ("reset".equals(strLC)) { // reset
+				evaluateLoadClause((String) model.getProperty("url"));
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						model.notifyModelListeners(new ModelEvent(model, ModelEvent.MODEL_RESET));
+						model.notifyPageComponentListeners(new PageComponentEvent(model,
+								PageComponentEvent.COMPONENT_RESET));
+					}
+				});
+				return true;
+			}
+			if ("silently".equals(strLC.substring(5).trim())) { // reset silently
+				evaluateLoadClause((String) model.getProperty("url"));
+				return true;
+			}
 		}
-		if ("reset".equalsIgnoreCase(str)) { // reset
-			evaluateLoadClause((String) model.getProperty("url"));
-			model.notifyModelListeners(new ModelEvent(model, ModelEvent.MODEL_RESET));
-			model.notifyPageComponentListeners(new PageComponentEvent(model, PageComponentEvent.COMPONENT_RESET));
-			return true;
-		}
-		if ("undo".equalsIgnoreCase(str)) { // undo
+		if ("undo".equals(strLC)) { // undo
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					if (model.getUndoManager().canUndo()) {
@@ -1253,7 +1267,7 @@ class Eval2D extends AbstractEval {
 			});
 			return true;
 		}
-		if ("redo".equalsIgnoreCase(str)) { // redo
+		if ("redo".equals(strLC)) { // redo
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					if (model.getUndoManager().canRedo()) {
@@ -1268,7 +1282,7 @@ class Eval2D extends AbstractEval {
 			});
 			return true;
 		}
-		if ("mark".equalsIgnoreCase(str)) { // mark
+		if ("mark".equals(strLC)) { // mark
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					model.markSelection();
@@ -1277,7 +1291,7 @@ class Eval2D extends AbstractEval {
 			notifyChange();
 			return true;
 		}
-		if ("remove".equalsIgnoreCase(str)) { // remove selected objects
+		if ("remove".equals(strLC)) { // remove selected objects
 			// CAUTION!!!!!!!!! PUTTING INTO EVENTQUEUE is dangerous if there are commands following it!
 			removeSelectedObjects();
 			// EventQueue.invokeLater(new Runnable() { public void run() { removeSelectedObjects(); } });

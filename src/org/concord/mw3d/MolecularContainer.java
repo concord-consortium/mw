@@ -412,22 +412,28 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 		view.runJmolScript("exit");
 	}
 
-	public void scriptExecuted(ScriptExecutionEvent e) {
-		if ("reset".equals(e.getDescription())) {
-			notifyModelListeners(new ModelEvent(model, ModelEvent.MODEL_RESET));
-			notifyPageComponentListeners(new PageComponentEvent(this, PageComponentEvent.COMPONENT_RESET));
+	public void scriptExecuted(final ScriptExecutionEvent e) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				scriptExecuted(e.getDescription());
+			}
+		});
+	}
+
+	private void scriptExecuted(String description) {
+		if ("reset".equals(description)) {
+			resetAction.actionPerformed(null);
 		}
-		else if ("run".equals(e.getDescription())) {
-			notifyModelListeners(new ModelEvent(model, ModelEvent.MODEL_RUN));
-			notifyPageComponentListeners(new PageComponentEvent(this, PageComponentEvent.COMPONENT_RUN));
+		else if ("run".equals(description)) {
+			runAction.actionPerformed(null);
 		}
-		else if ("stop".equals(e.getDescription())) {
-			notifyModelListeners(new ModelEvent(model, ModelEvent.MODEL_STOP));
+		else if ("stop".equals(description)) {
+			stopAction.actionPerformed(null);
 		}
-		else if ("script end".equals(e.getDescription())) {
+		else if ("script end".equals(description)) {
 			notifyModelListeners(new ModelEvent(model, ModelEvent.SCRIPT_END));
 		}
-		else if ("script start".equals(e.getDescription())) {
+		else if ("script start".equals(description)) {
 			notifyModelListeners(new ModelEvent(model, ModelEvent.SCRIPT_START));
 		}
 	}
@@ -1207,6 +1213,8 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 					run();
 				}
 				notifyModelListeners(new ModelEvent(model, ModelEvent.MODEL_RUN));
+				notifyPageComponentListeners(new PageComponentEvent(MolecularContainer.this,
+						PageComponentEvent.COMPONENT_RUN));
 			}
 		};
 		runAction.putValue(NAME, "Run");
@@ -1238,8 +1246,12 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 		// reset action
 		resetAction = new DefaultAction() {
 			public void actionPerformed(ActionEvent e) {
-				if (actionReminder.show(ActionReminder.RESET_TO_SAVED_STATE) == JOptionPane.NO_OPTION)
-					return;
+				if (model.getMovie().getCurrentFrameIndex() >= model.getMovie().length() - 2)
+					stop();
+				if (e != null) {
+					if (actionReminder.show(ActionReminder.RESET_TO_SAVED_STATE) == JOptionPane.NO_OPTION)
+						return;
+				}
 				if (resourceAddress != null)
 					input(resourceAddress, true);
 				else reset();
