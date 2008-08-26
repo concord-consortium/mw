@@ -729,11 +729,12 @@ class Eval3D extends AbstractEval {
 	protected boolean evaluateSingleKeyword(String str) throws InterruptedException {
 		if (super.evaluateSingleKeyword(str))
 			return true;
-		if ("paint".equalsIgnoreCase(str)) { // paint
+		String strLC = str.toLowerCase();
+		if ("paint".equals(strLC)) { // paint
 			view.paintImmediately(0, 0, view.getWidth(), view.getHeight());
 			return true;
 		}
-		if ("snapshot".equalsIgnoreCase(str)) { // snapshot
+		if ("snapshot".equals(strLC)) { // snapshot
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					if (view.getSnapshotListener() != null)
@@ -742,7 +743,7 @@ class Eval3D extends AbstractEval {
 			});
 			return true;
 		}
-		if ("focus".equalsIgnoreCase(str)) { // focus
+		if ("focus".equals(strLC)) { // focus
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					view.requestFocusInWindow();
@@ -750,7 +751,7 @@ class Eval3D extends AbstractEval {
 			});
 			return true;
 		}
-		if ("run".equalsIgnoreCase(str)) { // run
+		if ("run".equals(strLC)) { // run
 			// FIXME: Why do we need to do this to make "delay modeltime" to work with a prior "run" command?
 			try {
 				Thread.sleep(100);
@@ -762,22 +763,38 @@ class Eval3D extends AbstractEval {
 			notifyExecution("run");
 			return true;
 		}
-		if ("stop".equalsIgnoreCase(str)) { // stop
-			model.stop();
-			notifyExecution("stop");
-			return true;
+		if (strLC.startsWith("stop")) {
+			if ("stop".equals(strLC)) { // stop
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						model.stop();
+						notifyExecution("stop");
+					}
+				});
+				return true;
+			}
+			if ("immediately".equals(strLC.substring(4).trim())) { // stop immediately
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						model.stopImmediately();
+						notifyExecution("stop");
+					}
+				});
+				return true;
+			}
 		}
-		if ("stop immediately".equalsIgnoreCase(str)) { // stop immediately
-			model.stopImmediately();
-			notifyExecution("stop");
-			return true;
+		if (strLC.startsWith("reset")) {
+			if ("reset".equals(strLC)) { // reset
+				evaluateLoadClause(view.getResourceAddress(), true);
+				notifyExecution("reset");
+				return true;
+			}
+			if ("silently".equals(strLC.substring(5).trim())) { // reset silently
+				evaluateLoadClause(view.getResourceAddress(), true);
+				return true;
+			}
 		}
-		if ("reset".equalsIgnoreCase(str)) { // reset
-			evaluateLoadClause(view.getResourceAddress(), true);
-			notifyExecution("reset");
-			return true;
-		}
-		if ("remove".equalsIgnoreCase(str)) { // remove selected objects
+		if ("remove".equals(strLC)) { // remove selected objects
 			// CAUTION!!!!!!!!! PUTTING INTO EVENTQUEUE is dangerous if there are commands following it!
 			removeSelectedObjects();
 			// EventQueue.invokeLater(new Runnable() { public void run() { removeSelectedObjects(); } });
