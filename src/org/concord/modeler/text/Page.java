@@ -4237,6 +4237,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				if (image instanceof ImageIcon) {
 					imagePopupMenu.setImage((ImageIcon) image);
 					imagePopupMenu.putClientProperty("copy disabled", Boolean.FALSE);
+					imagePopupMenu.putClientProperty("image", null);
+					imagePopupMenu.setImage((ImageIcon) image);
 					imagePopupMenu.show(this, p.x, p.y);
 				}
 				else if (image instanceof LineIcon) {

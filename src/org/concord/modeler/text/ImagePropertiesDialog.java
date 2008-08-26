@@ -169,9 +169,9 @@ class ImagePropertiesDialog extends JDialog {
 	}
 
 	public void setLocation(String url) {
-		image = null;
+		// image = null;
+		// dimensionLabel.setText("Not calculated");
 		setParam(url);
-		dimensionLabel.setText("Not calculated");
 	}
 
 	private void setParam(String url) {

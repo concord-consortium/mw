@@ -134,6 +134,7 @@ public class HTMLPane extends MyEditorPane {
 					if (image != null) {
 						imagePopupMenu.setName(image.toString());
 						imagePopupMenu.putClientProperty("copy disabled", Boolean.TRUE);
+						imagePopupMenu.putClientProperty("image", image);
 						if (textBox == null)
 							imagePopupMenu.show(HTMLPane.this, p.x, p.y);
 						else imagePopupMenu.show(textBox, p.x, p.y);

@@ -108,6 +108,10 @@ class ImagePopupMenu extends JPopupMenu {
 		mi = new JMenuItem((s != null ? s : "Properties") + "...");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				Object o = ImagePopupMenu.this.getClientProperty("image");
+				if (o instanceof String) {
+					imagePropertiesDialog.setImage(new ImageIcon(page.getPathBase() + o));
+				}
 				imagePropertiesDialog.setCurrentValues();
 				imagePropertiesDialog.pack();
 				imagePropertiesDialog.setVisible(true);
