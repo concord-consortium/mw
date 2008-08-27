@@ -554,6 +554,9 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	 */
 	public void destroy() {
 
+		undoManager.discardAllEdits();
+		getDocument().removeUndoableEditListener(undoHandler);
+		getDocument().removeDocumentListener(editResponder);
 		stopSound();
 		if (midiPlayer != null)
 			midiPlayer.destroy();
@@ -574,8 +577,6 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 
 		if (pageLoadingThread != null)
 			pageLoadingThread.interrupt();
-		getDocument().removeUndoableEditListener(undoHandler);
-		getDocument().removeDocumentListener(editResponder);
 		editResponder.setPage(null);
 
 		actions.clear();
