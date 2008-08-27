@@ -44,6 +44,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
@@ -59,7 +60,7 @@ class PagePropertiesDialog extends JDialog {
 
 	private JTextField urlField;
 	private JLabel protocolLabel, encodingLabel;
-	private JTextField titleField;
+	private JTextField titleField, additionalResourceField;
 	private BackgroundComboBox bgComboBox;
 	private Page page;
 	private String imageURL;
@@ -68,7 +69,7 @@ class PagePropertiesDialog extends JDialog {
 
 	private static Dimension mediumField = new Dimension(120, 20);
 	private static Dimension longField = new Dimension(200, 20);
-	private static javax.swing.border.Border border = BorderFactory.createEmptyBorder(0, 0, 0, 10);
+	private static Border border = BorderFactory.createEmptyBorder(0, 0, 0, 10);
 
 	PagePropertiesDialog(final Page page0) {
 
@@ -159,11 +160,28 @@ class PagePropertiesDialog extends JDialog {
 		c.fill = GridBagConstraints.HORIZONTAL;
 		panel.add(titleField, c);
 
+		s = Modeler.getInternationalText("AdditionalResourceFiles");
+		label = new JLabel((s != null ? s : "Additional Resources") + ":");
+		label.setBorder(border);
+		c.gridwidth = 1;
+		c.gridx = 0;
+		c.gridy = 4;
+		c.weightx = 1.0;
+		panel.add(label, c);
+		additionalResourceField = new PastableTextField();
+		additionalResourceField.setPreferredSize(longField);
+		c.gridx = 1;
+		c.weightx = 1.0;
+		c.weighty = 1.0;
+		c.gridwidth = 3;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		panel.add(additionalResourceField, c);
+
 		s = Modeler.getInternationalText("Background");
 		label = new JLabel((s != null ? s : "Background") + ":");
 		label.setBorder(border);
 		c.gridx = 0;
-		c.gridy = 4;
+		c.gridy = 5;
 		panel.add(label, c);
 		bgComboBox = new BackgroundComboBox(page, ModelerUtilities.colorChooser, ModelerUtilities.fillEffectChooser);
 		bgComboBox.getColorMenu().getPopupMenu().addPopupMenuListener(new PopupMenuListener() {
@@ -226,7 +244,7 @@ class PagePropertiesDialog extends JDialog {
 		label = new JLabel((s != null ? s : "Location") + ":");
 		label.setBorder(border);
 		c.gridx = 0;
-		c.gridy = 5;
+		c.gridy = 6;
 		panel.add(label, c);
 		urlField = new PastableTextField(page.getAddress());
 		urlField.setPreferredSize(longField);
@@ -246,8 +264,15 @@ class PagePropertiesDialog extends JDialog {
 		okButton = new JButton(s != null ? s : "OK");
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (page.getTitle() == null || !page.getTitle().equals(titleField.getText())) {
+				String s = page.getTitle();
+				if (s == null || !s.equals(titleField.getText())) {
 					page.setTitle(titleField.getText());
+					if (page.isEditable())
+						page.getSaveReminder().setChanged(true);
+				}
+				s = page.getAdditionalResourceFiles();
+				if (s == null || !s.equals(additionalResourceField.getText())) {
+					page.setAdditionalResourceFiles(additionalResourceField.getText());
 					if (page.isEditable())
 						page.getSaveReminder().setChanged(true);
 				}
@@ -332,6 +357,7 @@ class PagePropertiesDialog extends JDialog {
 	public void setCurrentValues() {
 
 		titleField.setText(page.getTitle());
+		additionalResourceField.setText(page.getAdditionalResourceFiles());
 		urlField.setText(page.getAddress());
 		protocolLabel.setText(page.getAddress().indexOf("http://") == -1 ? "File Protocol"
 				: "Hypertext Transfer Protocol");
@@ -340,6 +366,7 @@ class PagePropertiesDialog extends JDialog {
 
 		boolean b = page.isEditable();
 		titleField.setEditable(b);
+		additionalResourceField.setEditable(b);
 		bgComboBox.setEnabled(b);
 
 		dynamicPanel.removeAll();

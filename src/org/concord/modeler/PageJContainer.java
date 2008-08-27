@@ -528,18 +528,23 @@ public class PageJContainer extends PagePlugin {
 	private void destroyPlugin() {
 		if (plugin != null) {
 			try {
-				plugin.stop();
+				try {
+					plugin.stop();
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+					setErrorMessage("Errors in stopping: " + e);
+				}
+				try {
+					plugin.destroy();
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+					setErrorMessage("Errors in destroying: " + e);
+				}
 			}
-			catch (Exception e) {
-				e.printStackTrace();
-				setErrorMessage("Errors in stopping: " + e);
-			}
-			try {
-				plugin.destroy();
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-				setErrorMessage("Errors in destroying: " + e);
+			finally {
+				plugin = null;
 			}
 		}
 	}
