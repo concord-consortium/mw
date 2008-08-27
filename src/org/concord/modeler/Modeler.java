@@ -713,7 +713,9 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.exit(0);
+		finally {
+			System.exit(0);
+		}
 	}
 
 	private void decideCloseOperation() {
@@ -2409,7 +2411,9 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 				catch (IOException e1) {
 					e1.printStackTrace();
 				}
-				System.exit(0);
+				finally {
+					System.exit(0);
+				}
 			}
 		});
 		menu.add(menuItem);
