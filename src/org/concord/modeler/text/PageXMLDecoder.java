@@ -2721,6 +2721,7 @@ final class PageXMLDecoder {
 			}
 			if (average) {
 				b.setAverageOnly(average);
+				b.setAverage(b.getInitialValue());
 				average = false;
 			}
 			if (orientation == PageBarGraph.VERTICAL || orientation == PageBarGraph.HORIZONTAL) {

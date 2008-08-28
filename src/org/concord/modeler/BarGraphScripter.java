@@ -45,7 +45,12 @@ class BarGraphScripter extends ComponentScripter {
 			return;
 		}
 		else if ("reset".equalsIgnoreCase(ci)) {
-			graph.setValue(graph.getInitialValue());
+			if (graph.getAverageOnly()) {
+				graph.setAverage(graph.getInitialValue());
+			}
+			else {
+				graph.setValue(graph.getInitialValue());
+			}
 			graph.repaint();
 		}
 	}
