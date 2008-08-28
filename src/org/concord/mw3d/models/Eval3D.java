@@ -534,6 +534,11 @@ class Eval3D extends AbstractEval {
 				return true;
 		}
 
+		// increment or decrement operator
+		matcher = INCREMENT_DECREMENT.matcher(ci);
+		if (matcher.find())
+			return evaluateIncrementOperator(ci);
+
 		matcher = SET_VAR.matcher(ci);
 		if (!matcher.find()) {
 			try {
