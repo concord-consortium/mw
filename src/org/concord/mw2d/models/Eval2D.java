@@ -863,30 +863,8 @@ class Eval2D extends AbstractEval {
 
 		// increment or decrement operator
 		matcher = INCREMENT_DECREMENT.matcher(ci);
-		if (matcher.find()) {
-			String s = ci.replaceFirst("(\\+\\+)|(\\-\\-)", "").trim();
-			String t = definition.get(s);
-			if (t == null) {
-				out(ScriptEvent.FAILED, "Undefined variable: " + s);
-				return false;
-			}
-			double x = 0;
-			try {
-				x = Double.parseDouble(t);
-			}
-			catch (NumberFormatException e) {
-				e.printStackTrace();
-				out(ScriptEvent.FAILED, "Data type not numeric: " + s);
-			}
-			if (ci.indexOf("++") != -1) {
-				x++;
-			}
-			else {
-				x--;
-			}
-			definition.put(s, x + "");
-			return true;
-		}
+		if (matcher.find())
+			return evaluateIncrementOperator(ci);
 
 		matcher = SET_VAR.matcher(ci);
 		if (!matcher.find()) {
