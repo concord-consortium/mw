@@ -40,6 +40,7 @@ import java.net.URLConnection;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -582,6 +583,8 @@ final class PageXMLDecoder {
 		float smoothingFactor = -1;
 		List<DataSource> dataSourceList;
 
+		private ArrayList<Style> componentStyles = new ArrayList<Style>();
+
 		private Runnable reportProgress = new Runnable() {
 			public void run() {
 				progressBar.setString(elementCounter + " elements read");
@@ -618,6 +621,15 @@ final class PageXMLDecoder {
 						progressBar.setIndeterminate(true);
 					}
 				});
+			}
+			if (!componentStyles.isEmpty()) { // just in case the styles hold up their components
+				for (Style style : componentStyles) {
+					Enumeration e = style.getAttributeNames();
+					while (e.hasMoreElements()) {
+						style.removeAttribute(e.nextElement());
+					}
+				}
+				componentStyles.clear();
 			}
 			page.setReading(true);
 		}
@@ -2012,6 +2024,7 @@ final class PageXMLDecoder {
 		 * mandates creating Swing components in the EDT.
 		 */
 		private void createComponent(Style style, String clazz) {
+			componentStyles.add(style);
 			clazz = clazz.intern();
 			// legacy container names: the actual names have been renamed to org.concord.mw2d.ui.*
 			if ("org.concord.mw2d.activity.AtomContainer" == clazz || "org.concord.mw2d.activity.GBContainer" == clazz

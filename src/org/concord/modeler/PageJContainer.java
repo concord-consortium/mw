@@ -516,6 +516,7 @@ public class PageJContainer extends PagePlugin {
 	}
 
 	public void destroy() {
+		super.destroy();
 		destroyPlugin();
 		if (downloadJobs != null) {
 			// for (Download d : downloadJobs)
@@ -523,11 +524,15 @@ public class PageJContainer extends PagePlugin {
 			downloadCancelled = true;
 			downloadJobs.clear();
 		}
+		if (maker != null)
+			maker.setJContainer(null);
+		page = null;
 	}
 
 	private void destroyPlugin() {
 		if (plugin != null) {
 			try {
+				remove(plugin.getWindow());
 				try {
 					plugin.stop();
 				}
@@ -670,8 +675,8 @@ public class PageJContainer extends PagePlugin {
 				c = method.invoke(plugin, (Object[]) null);
 			}
 		}
-		catch (Exception e1) {
-			e1.printStackTrace();
+		catch (Exception e) {
+			e.printStackTrace();
 			return;
 		}
 		if (c instanceof Component && ((Component) c).isShowing()) {

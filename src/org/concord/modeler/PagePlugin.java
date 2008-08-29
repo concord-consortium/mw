@@ -143,13 +143,13 @@ abstract public class PagePlugin extends JPanel implements Embeddable, Scriptabl
 			jarName = Collections.synchronizedList(new ArrayList<String>(pagePlugin.jarName));
 		if (pagePlugin.parameterMap != null)
 			parameterMap = new HashMap<String, String>(pagePlugin.parameterMap);
-		Thread t = new Thread("Plugin Starter") {
+		Thread startThread = new Thread("Plugin Starter") {
 			public void run() {
 				setPage(parent); // set again in case destroy() is called before this.
 				PagePlugin.this.start();
 			}
 		};
-		t.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+		startThread.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 			public void uncaughtException(Thread t, final Throwable e) {
 				e.printStackTrace();
 				EventQueue.invokeLater(new Runnable() {
@@ -161,8 +161,8 @@ abstract public class PagePlugin extends JPanel implements Embeddable, Scriptabl
 				});
 			}
 		});
-		t.setPriority(Thread.MIN_PRIORITY + 1);
-		t.start();
+		startThread.setPriority(Thread.MIN_PRIORITY + 1);
+		startThread.start();
 	}
 
 	public void addPageComponentListener(PageComponentListener pcl) {
@@ -188,7 +188,17 @@ abstract public class PagePlugin extends JPanel implements Embeddable, Scriptabl
 			l.pageComponentChanged(e);
 	}
 
-	public abstract void destroy();
+	public void destroy() {
+		if (pageComponentListenerList != null)
+			pageComponentListenerList.clear();
+		if (modelListenerList != null)
+			modelListenerList.clear();
+		changeMap.clear();
+		choiceMap.clear();
+		actionMap.clear();
+		switchMap.clear();
+		multiSwitchMap.clear();
+	}
 
 	public abstract void start();
 

@@ -356,11 +356,12 @@ public class PageApplet extends PagePlugin {
 	}
 
 	public void destroy() {
-		// page = null;
+		super.destroy();
 		if (applet != null) {
 			applet.stop();
 			applet.destroy();
 		}
+		page = null;
 	}
 
 	public void createPopupMenu() {
