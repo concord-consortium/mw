@@ -2040,6 +2040,7 @@ class Eval3D extends AbstractEval {
 		}
 		if (bs.cardinality() > 0)
 			view.removeAtoms(bs);
+		model.formMolecules();
 		view.repaint();
 	}
 
