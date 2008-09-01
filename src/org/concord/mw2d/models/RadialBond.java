@@ -767,6 +767,8 @@ public class RadialBond implements ModelComponent {
 	}
 
 	private void drawFlankLines(Graphics2D g, Color c, float ratio, Stroke stroke) {
+		if (axis == null || line == null)
+			return;
 		g.setColor(c != null ? c : model.view.contrastBackground());
 		double cos = axis.x2 - axis.x1;
 		double sin = axis.y2 - axis.y1;

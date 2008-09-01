@@ -2070,7 +2070,7 @@ class Eval2D extends AbstractEval {
 					p = model.getParticle(k);
 					if (p instanceof Atom) {
 						if (((Atom) p).id == id) {
-							r = distanceSquare(p.rx - x[0], p.ry - x[1]);
+							r = distanceSquare(p.rx - x[1], p.ry - x[2]);
 							if (r < dmin) {
 								dmin = r;
 								imin = k;
@@ -2078,7 +2078,7 @@ class Eval2D extends AbstractEval {
 						}
 					}
 					else if (p instanceof GayBerneParticle) {
-						r = distanceSquare(p.rx - x[0], p.ry - x[1]);
+						r = distanceSquare(p.rx - x[1], p.ry - x[2]);
 						if (r < dmin) {
 							dmin = r;
 							imin = k;
