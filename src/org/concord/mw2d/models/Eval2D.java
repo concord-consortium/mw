@@ -2132,6 +2132,53 @@ class Eval2D extends AbstractEval {
 		return null;
 	}
 
+	private String evaluateWhichRBondFunction(final String clause) {
+		if (clause == null || clause.equals(""))
+			return null;
+		if (!(model instanceof MolecularModel))
+			return null;
+		MolecularModel mm = (MolecularModel) model;
+		int nrb = mm.bonds.size();
+		if (nrb <= 0)
+			return null;
+		int i = clause.indexOf("(");
+		int j = clause.lastIndexOf(")");
+		if (i == -1 || j == -1) {
+			out(ScriptEvent.FAILED, "function must be enclosed within parenthesis: " + clause);
+			return null;
+		}
+		String s = clause.substring(i + 1, j);
+		String[] t = s.split(",");
+		int n = t.length;
+		switch (n) {
+		case 1:
+			float[] x = parseArray(1, t);
+			if (x != null) {
+				Atom a = mm.atom[Math.round(x[0])];
+				List<RadialBond> list = mm.bonds.getBonds(a);
+				if (list.isEmpty())
+					return null;
+				return "" + list.get(0).getIndex();
+			}
+			break;
+		case 2:
+			x = parseArray(2, t);
+			if (x != null) {
+				Atom a = mm.atom[Math.round(x[0])];
+				Atom b = mm.atom[Math.round(x[1])];
+				RadialBond rb = mm.bonds.getBond(a, b);
+				if (rb == null)
+					return null;
+				return "" + rb.getIndex();
+			}
+			break;
+		default:
+			out(ScriptEvent.FAILED, "argument error: " + clause);
+			return null;
+		}
+		return null;
+	}
+
 	private String evaluateSpeedFunction(final String clause) {
 		if (clause == null || clause.equals(""))
 			return null;
@@ -2812,6 +2859,10 @@ class Eval2D extends AbstractEval {
 				exp = evaluateWhichParticleFunction(exp);
 				if (exp != null)
 					storeDefinition(isStatic, var, exp);
+			}
+			else if (exp.startsWith("whichrbond(")) {
+				exp = evaluateWhichRBondFunction(exp);
+				storeDefinition(isStatic, var, exp != null ? exp : "-1");
 			}
 			else {
 				evaluateDefineMathexClause(isStatic, var, exp);
@@ -4412,6 +4463,7 @@ class Eval2D extends AbstractEval {
 		else if (s == "strength") {
 			if (Math.abs(x) < ZERO) {
 				m.bonds.remove(m.bonds.get(i));
+				MoleculeCollection.sort(m);
 			}
 			else {
 				m.bonds.get(i).setBondStrength(x);
@@ -6091,8 +6143,10 @@ class Eval2D extends AbstractEval {
 				}
 			}
 			mm.removeGhostAngularBonds();
-			if (b)
+			if (b) {
 				mm.view.bondChanged(null);
+				MoleculeCollection.sort(mm);
+			}
 			// mm.view.removeSelectedComponent();
 		}
 		else if (model instanceof MesoModel) {
