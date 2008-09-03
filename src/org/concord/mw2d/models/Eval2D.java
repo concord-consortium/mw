@@ -2179,6 +2179,30 @@ class Eval2D extends AbstractEval {
 		return null;
 	}
 
+	private String evaluateCountRBondFunction(final String clause) {
+		if (clause == null || clause.equals(""))
+			return null;
+		if (!(model instanceof MolecularModel))
+			return null;
+		MolecularModel mm = (MolecularModel) model;
+		if (mm.bonds.isEmpty())
+			return null;
+		int i = clause.indexOf("(");
+		int j = clause.lastIndexOf(")");
+		if (i == -1 || j == -1) {
+			out(ScriptEvent.FAILED, "function must be enclosed within parenthesis: " + clause);
+			return null;
+		}
+		String s = clause.substring(i + 1, j);
+		double x = parseMathExpression(s);
+		if (Double.isNaN(x)) {
+			out(ScriptEvent.FAILED, "Cannot parse : " + s);
+			return null;
+		}
+		Atom a = mm.atom[Math.round((float) x)];
+		return mm.bonds.getBondedPartnerCount(a) + "";
+	}
+
 	private String evaluateSpeedFunction(final String clause) {
 		if (clause == null || clause.equals(""))
 			return null;
@@ -2863,6 +2887,10 @@ class Eval2D extends AbstractEval {
 			else if (exp.startsWith("whichrbond(")) {
 				exp = evaluateWhichRBondFunction(exp);
 				storeDefinition(isStatic, var, exp != null ? exp : "-1");
+			}
+			else if (exp.startsWith("countrbond(")) {
+				exp = evaluateCountRBondFunction(exp);
+				storeDefinition(isStatic, var, exp != null ? exp : "0");
 			}
 			else {
 				evaluateDefineMathexClause(isStatic, var, exp);
