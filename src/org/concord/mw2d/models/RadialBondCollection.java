@@ -228,6 +228,8 @@ public class RadialBondCollection {
 
 	/** count the bonded partners for a given atom. */
 	public int getBondedPartnerCount(Atom atom) {
+		if (!atom.isBonded())
+			return 0;
 		int count = 0;
 		synchronized (list) {
 			for (RadialBond rb : list) {
