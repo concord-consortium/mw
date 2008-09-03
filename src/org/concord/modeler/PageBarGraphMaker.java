@@ -553,7 +553,7 @@ class PageBarGraphMaker extends ComponentMaker {
 		// row 11
 		s = Modeler.getInternationalText("WidthLabel");
 		p.add(new JLabel(s != null ? s : "Width", SwingConstants.LEFT));
-		widthField = new IntegerTextField(100, 10, 400);
+		widthField = new IntegerTextField(100, 10, 800);
 		widthField.setToolTipText("Type in the width.");
 		widthField.addActionListener(okListener);
 		p.add(widthField);
@@ -561,7 +561,7 @@ class PageBarGraphMaker extends ComponentMaker {
 		// row 12
 		s = Modeler.getInternationalText("HeightLabel");
 		p.add(new JLabel(s != null ? s : "Height", SwingConstants.LEFT));
-		heightField = new IntegerTextField(200, 10, 400);
+		heightField = new IntegerTextField(200, 10, 800);
 		heightField.setToolTipText("Type in the height.");
 		heightField.addActionListener(okListener);
 		p.add(heightField);

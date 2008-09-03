@@ -327,9 +327,24 @@ public abstract class AbstractEval {
 				i1 = str.indexOf(")");
 			str = str.substring(i0 + 1, i1);
 			String[] s = str.split(REGEX_SEPARATOR + "+");
-			int r = Float.valueOf(s[0]).intValue();
-			int g = Float.valueOf(s[1]).intValue();
-			int b = Float.valueOf(s[2]).intValue();
+			double x = parseMathExpression(s[0]);
+			if (Double.isNaN(x)) {
+				out(ScriptEvent.FAILED, "Cannot parse red color: " + s[0]);
+				return null;
+			}
+			int r = (int) Math.round(x);
+			x = parseMathExpression(s[1]);
+			if (Double.isNaN(x)) {
+				out(ScriptEvent.FAILED, "Cannot parse green color: " + s[1]);
+				return null;
+			}
+			int g = (int) Math.round(x);
+			x = parseMathExpression(s[2]);
+			if (Double.isNaN(x)) {
+				out(ScriptEvent.FAILED, "Cannot parse blue color: " + s[2]);
+				return null;
+			}
+			int b = (int) Math.round(x);
 			return new Color(r % 256, g % 256, b % 256);
 		}
 		if (RGBA_COLOR.matcher(str).find()) {
@@ -341,10 +356,30 @@ public abstract class AbstractEval {
 				i1 = str.indexOf(")");
 			str = str.substring(i0 + 1, i1);
 			String[] s = str.split(REGEX_SEPARATOR + "+");
-			int r = Float.valueOf(s[0]).intValue();
-			int g = Float.valueOf(s[1]).intValue();
-			int b = Float.valueOf(s[2]).intValue();
-			int a = Float.valueOf(s[3]).intValue();
+			double x = parseMathExpression(s[0]);
+			if (Double.isNaN(x)) {
+				out(ScriptEvent.FAILED, "Cannot parse red color: " + s[0]);
+				return null;
+			}
+			int r = (int) Math.round(x);
+			x = parseMathExpression(s[1]);
+			if (Double.isNaN(x)) {
+				out(ScriptEvent.FAILED, "Cannot parse green color: " + s[1]);
+				return null;
+			}
+			int g = (int) Math.round(x);
+			x = parseMathExpression(s[2]);
+			if (Double.isNaN(x)) {
+				out(ScriptEvent.FAILED, "Cannot parse blue color: " + s[2]);
+				return null;
+			}
+			int b = (int) Math.round(x);
+			x = parseMathExpression(s[3]);
+			if (Double.isNaN(x)) {
+				out(ScriptEvent.FAILED, "Cannot parse alpha value: " + s[3]);
+				return null;
+			}
+			int a = (int) Math.round(x);
 			return new Color(r % 256, g % 256, b % 256, a % 256);
 		}
 		if (str.startsWith("0x")) {
