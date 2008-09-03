@@ -318,70 +318,10 @@ public abstract class AbstractEval {
 	}
 
 	protected Color parseRGBColor(String str) {
-		if (RGB_COLOR.matcher(str).find()) {
-			int i0 = str.indexOf("[");
-			if (i0 == -1)
-				i0 = str.indexOf("(");
-			int i1 = str.indexOf("]");
-			if (i1 == -1)
-				i1 = str.indexOf(")");
-			str = str.substring(i0 + 1, i1);
-			String[] s = str.split(REGEX_SEPARATOR + "+");
-			double x = parseMathExpression(s[0]);
-			if (Double.isNaN(x)) {
-				out(ScriptEvent.FAILED, "Cannot parse red color: " + s[0]);
-				return null;
-			}
-			int r = (int) Math.round(x);
-			x = parseMathExpression(s[1]);
-			if (Double.isNaN(x)) {
-				out(ScriptEvent.FAILED, "Cannot parse green color: " + s[1]);
-				return null;
-			}
-			int g = (int) Math.round(x);
-			x = parseMathExpression(s[2]);
-			if (Double.isNaN(x)) {
-				out(ScriptEvent.FAILED, "Cannot parse blue color: " + s[2]);
-				return null;
-			}
-			int b = (int) Math.round(x);
-			return new Color(r % 256, g % 256, b % 256);
-		}
-		if (RGBA_COLOR.matcher(str).find()) {
-			int i0 = str.indexOf("[");
-			if (i0 == -1)
-				i0 = str.indexOf("(");
-			int i1 = str.indexOf("]");
-			if (i1 == -1)
-				i1 = str.indexOf(")");
-			str = str.substring(i0 + 1, i1);
-			String[] s = str.split(REGEX_SEPARATOR + "+");
-			double x = parseMathExpression(s[0]);
-			if (Double.isNaN(x)) {
-				out(ScriptEvent.FAILED, "Cannot parse red color: " + s[0]);
-				return null;
-			}
-			int r = (int) Math.round(x);
-			x = parseMathExpression(s[1]);
-			if (Double.isNaN(x)) {
-				out(ScriptEvent.FAILED, "Cannot parse green color: " + s[1]);
-				return null;
-			}
-			int g = (int) Math.round(x);
-			x = parseMathExpression(s[2]);
-			if (Double.isNaN(x)) {
-				out(ScriptEvent.FAILED, "Cannot parse blue color: " + s[2]);
-				return null;
-			}
-			int b = (int) Math.round(x);
-			x = parseMathExpression(s[3]);
-			if (Double.isNaN(x)) {
-				out(ScriptEvent.FAILED, "Cannot parse alpha value: " + s[3]);
-				return null;
-			}
-			int a = (int) Math.round(x);
-			return new Color(r % 256, g % 256, b % 256, a % 256);
-		}
+		if (RGB_COLOR.matcher(str).find())
+			return parseRGBA(str);
+		if (RGBA_COLOR.matcher(str).find())
+			return parseRGBA(str);
 		if (str.startsWith("0x")) {
 			try {
 				return new Color(Integer.valueOf(str.substring(2), 16));
@@ -400,8 +340,52 @@ public abstract class AbstractEval {
 				return null;
 			}
 		}
-		out(ScriptEvent.FAILED, str + " cannot be parsed as color.");
-		return null;
+		Color c = parseRGBA(str);
+		if (c == null)
+			out(ScriptEvent.FAILED, str + " cannot be parsed as color.");
+		return c;
+	}
+
+	private Color parseRGBA(String str) {
+		int i0 = str.indexOf("[");
+		if (i0 == -1)
+			i0 = str.indexOf("(");
+		int i1 = str.indexOf("]");
+		if (i1 == -1)
+			i1 = str.indexOf(")");
+		str = str.substring(i0 + 1, i1);
+		String[] s = str.split(REGEX_SEPARATOR + "+");
+		if (s.length < 3) {
+			out(ScriptEvent.FAILED, "Cannot parse color from less than 3 parameters: " + str);
+			return null;
+		}
+		double x = parseMathExpression(s[0]);
+		if (Double.isNaN(x)) {
+			out(ScriptEvent.FAILED, "Cannot parse red color: " + s[0]);
+			return null;
+		}
+		int r = (int) Math.round(x);
+		x = parseMathExpression(s[1]);
+		if (Double.isNaN(x)) {
+			out(ScriptEvent.FAILED, "Cannot parse green color: " + s[1]);
+			return null;
+		}
+		int g = (int) Math.round(x);
+		x = parseMathExpression(s[2]);
+		if (Double.isNaN(x)) {
+			out(ScriptEvent.FAILED, "Cannot parse blue color: " + s[2]);
+			return null;
+		}
+		int b = (int) Math.round(x);
+		if (s.length < 4)
+			return new Color(r % 256, g % 256, b % 256);
+		x = parseMathExpression(s[3]);
+		if (Double.isNaN(x)) {
+			out(ScriptEvent.FAILED, "Cannot parse alpha value: " + s[3]);
+			return null;
+		}
+		int a = (int) Math.round(x);
+		return new Color(r % 256, g % 256, b % 256, a % 256);
 	}
 
 	protected float[] parseArray(final int n, String str) {
