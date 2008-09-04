@@ -49,8 +49,6 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JProgressBar;
 import javax.swing.SwingConstants;
-import javax.swing.event.DocumentListener;
-import javax.swing.event.UndoableEditListener;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
@@ -118,7 +116,6 @@ import org.concord.modeler.draw.LineStyle;
 import org.concord.modeler.draw.LineSymbols;
 import org.concord.modeler.draw.LineWidth;
 import org.concord.modeler.draw.StrokeFactory;
-import org.concord.modeler.event.PageEvent;
 import org.concord.modeler.g2d.Curve;
 import org.concord.modeler.util.FileUtilities;
 import org.concord.mw2d.ui.AtomContainer;
@@ -306,25 +303,6 @@ final class PageXMLDecoder {
 			return false;
 		}
 
-		// release dependency of document on previous objects for it to be garbage-collected
-		if (doc != null) {
-			DocumentListener[] dl = doc.getDocumentListeners();
-			if (dl != null) {
-				for (DocumentListener i : dl)
-					doc.removeDocumentListener(i);
-			}
-			UndoableEditListener[] ue = doc.getUndoableEditListeners();
-			if (ue != null) {
-				for (UndoableEditListener i : ue)
-					doc.removeUndoableEditListener(i);
-			}
-			try {
-				doc.remove(0, doc.getLength());
-			}
-			catch (BadLocationException e) {
-				e.printStackTrace();
-			}
-		}
 		doc = new DefaultStyledDocument(); // do we really need to create a new instance?
 
 		boolean success = true;
@@ -389,8 +367,6 @@ final class PageXMLDecoder {
 					+ " " + (sec != null ? sec : "seconds") + ".");
 			progressBar.setIndeterminate(false);
 		}
-		// notify Editor to update buttons accordingly
-		page.notifyPageListeners(new PageEvent(page, PageEvent.PAGE_READ_END));
 	}
 
 	private void loadBackgroundImage(String location) {
