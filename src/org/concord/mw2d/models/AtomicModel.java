@@ -105,6 +105,7 @@ public abstract class AtomicModel extends MDModel {
 
 	/* the atom array */
 	Atom[] atom;
+	List<Electron> freeElectrons;
 	AtomisticView view;
 	Element nt;
 	Element pl;
@@ -3319,6 +3320,8 @@ public abstract class AtomicModel extends MDModel {
 		pointer = new int[n];
 		rx0 = new double[n];
 		ry0 = new double[n];
+		// i think we should not use CopyOnWriteArrayList as free electrons pop in and out too frequently
+		freeElectrons = Collections.synchronizedList(new ArrayList<Electron>());
 		return n;
 	}
 

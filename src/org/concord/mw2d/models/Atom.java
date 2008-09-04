@@ -333,7 +333,7 @@ public class Atom extends Particle {
 	 * between i+1 and M. Only the part of kinetic energy that equals to the energy difference between the original and
 	 * new excited state will be converted into excess energy; the remaining part will remain as kinetic energy.
 	 */
-	synchronized void thermalExcitation() {
+	void thermalExcitation() {
 
 		if (model == null)
 			return;
@@ -393,7 +393,7 @@ public class Atom extends Particle {
 	 * 
 	 * @see org.concord.mw2d.models.Atom#thermalExcitation
 	 */
-	synchronized Photon hitByPhoton(Photon p, float seProb) {
+	Photon hitByPhoton(Photon p, float seProb) {
 		if (model == null)
 			return null;
 		if (Math.random() < seProb) {
@@ -419,7 +419,7 @@ public class Atom extends Particle {
 	 * Stimulated emission happens as soon as the photon hits the atom, regardless of the lifetime set for the current
 	 * electronic state.
 	 */
-	private synchronized float stimulatedEmission(double energy) {
+	private float stimulatedEmission(double energy) {
 		if (electrons == null || electrons.isEmpty())
 			return -1;
 		Electron e = electrons.get(0);
@@ -444,7 +444,7 @@ public class Atom extends Particle {
 	 * Photonic excitation happens as soon as the photon impacts the atom, regardless of the lifetime of the current
 	 * energy level.
 	 */
-	private synchronized float photonicExcitation(double energy) {
+	private float photonicExcitation(double energy) {
 
 		if (electrons == null || electrons.isEmpty())
 			return -1;
@@ -483,7 +483,7 @@ public class Atom extends Particle {
 	 *         radiationless transition, or the electron cannot be de-excited for various reasons (for example, the
 	 *         electron is already at the ground state).
 	 */
-	public synchronized Photon deexciteElectron(float rtProbability) {
+	public Photon deexciteElectron(float rtProbability) {
 
 		if (electrons == null || electrons.isEmpty())
 			return null; // no bound electron

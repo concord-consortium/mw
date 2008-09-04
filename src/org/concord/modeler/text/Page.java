@@ -2482,13 +2482,13 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 
 		Debugger.print("Start loading page: " + uri);
 
-		deselect();
 		if (uri == null)
 			return false;
 
 		final String uriLC = uri.toLowerCase();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
+				deselect();
 				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 			}
 		});
@@ -2542,12 +2542,27 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 						StyledDocument doc = decoder.getDocument();
 						if (doc == null)
 							return;
-						// release dependency of document on listeners for it to be garbage-collected
-						getDocument().removeUndoableEditListener(undoHandler);
-						getDocument().removeDocumentListener(editResponder);
+						if (getDocument() instanceof DefaultStyledDocument) {
+							DefaultStyledDocument dsd = (DefaultStyledDocument) getDocument();
+							// release dependency of document on listeners for it to be garbage-collected
+							DocumentListener[] dl = dsd.getDocumentListeners();
+							if (dl != null) {
+								for (DocumentListener i : dl)
+									doc.removeDocumentListener(i);
+							}
+							UndoableEditListener[] ue = dsd.getUndoableEditListeners();
+							if (ue != null) {
+								for (UndoableEditListener i : ue)
+									doc.removeUndoableEditListener(i);
+							}
+						}
+						// getDocument().removeUndoableEditListener(undoHandler);
+						// getDocument().removeDocumentListener(editResponder);
 						doc.addUndoableEditListener(undoHandler);
 						doc.addDocumentListener(editResponder);
 						setStyledDocument(doc);
+						// notify Editor to update buttons accordingly
+						notifyPageListeners(new PageEvent(Page.this, PageEvent.PAGE_READ_END));
 					}
 				});
 			}
