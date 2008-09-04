@@ -353,30 +353,37 @@ public class Atom extends Particle {
 		// if(!e.readyToGo(model.getModelTime())) return;
 
 		double ke = getKineticEnergy();
-		EnergyLevel excite = null;
-		double energy = 0.0;
-		int nmin = 0;
-		for (int i = m + 1; i < n; i++) {
-			excite = es.getEnergyLevel(i);
-			energy = excite.getEnergy() - level.getEnergy();
-			if (ke < energy)
-				break;
-			nmin = i;
-		}
-		if (nmin == 0)
-			return;
+		double extra = ke + level.getEnergy();
 
-		float prob = 1.0f / (nmin - m);
-		double r = Math.random();
-		for (int i = 0; i < nmin - m; i++) {
-			if (r >= i * prob && r < (i + 1) * prob) {
-				excite = es.getEnergyLevel(i + m + 1);
-				e.setEnergyLevel(excite);
+		if (extra > 0) {
+			//System.out.println(extra);
+		}
+		else {
+			// get what is the energy level closest to the KE
+			EnergyLevel excite = null;
+			double energy = 0.0;
+			int nmin = 0;
+			for (int i = m + 1; i < n; i++) {
+				excite = es.getEnergyLevel(i);
 				energy = excite.getEnergy() - level.getEnergy();
-				double ratio = Math.sqrt(1.0 - energy / ke);
-				vx *= ratio;
-				vy *= ratio;
-				break;
+				if (ke < energy)
+					break;
+				nmin = i;
+			}
+			if (nmin == 0)
+				return;
+			float prob = 1.0f / (nmin - m);
+			double r = Math.random();
+			for (int i = 0; i < nmin - m; i++) {
+				if (r >= i * prob && r < (i + 1) * prob) {
+					excite = es.getEnergyLevel(i + m + 1);
+					e.setEnergyLevel(excite);
+					energy = excite.getEnergy() - level.getEnergy();
+					double ratio = Math.sqrt(1.0 - energy / ke);
+					vx *= ratio;
+					vy *= ratio;
+					break;
+				}
 			}
 		}
 

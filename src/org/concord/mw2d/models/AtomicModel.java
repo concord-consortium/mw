@@ -2646,6 +2646,72 @@ public abstract class AtomicModel extends MDModel {
 		}
 	}
 
+	private double computeForceForElectrons(final int time) {
+		if (freeElectrons.isEmpty())
+			return 0;
+		synchronized (freeElectrons) {
+			for (Electron e : freeElectrons) {
+				e.ax = 0;
+				e.ay = 0;
+			}
+		}
+		double vsum = 0;
+		double coul = 0;
+		double rCD = universe.getCoulombConstant() / universe.getDielectricConstant();
+		// interactions between atoms and free electrons
+		for (int i = 0; i < numberOfAtoms; i++) {
+			if (Math.abs(atom[i].charge) > ZERO) {
+				synchronized (freeElectrons) {
+					for (Electron e : freeElectrons) {
+						rxij = e.rx - atom[i].rx;
+						ryij = e.ry - atom[i].ry;
+						rijsq = rxij * rxij + ryij * ryij;
+						coul = -atom[i].charge / Math.sqrt(rijsq) * rCD;
+						vsum += coul;
+						fij = -coul / rijsq * GF_CONVERSION_CONSTANT;
+						fxij = fij * rxij;
+						fyij = fij * ryij;
+						e.fx -= fxij;
+						e.fy -= fyij;
+						atom[i].fx += fxij;
+						atom[i].fy += fyij;
+					}
+				}
+			}
+		}
+		// interactions between free electrons
+		int n = freeElectrons.size();
+		Electron ei, ej;
+		synchronized (freeElectrons) {
+			for (int i = 0; i < n; i++) {
+				ei = freeElectrons.get(i);
+				for (int j = i + 1; j < n; j++) {
+					ej = freeElectrons.get(j);
+					rxij = ei.rx - ej.rx;
+					ryij = ei.ry - ej.ry;
+					rijsq = rxij * rxij + ryij * ryij;
+					coul = -atom[i].charge / Math.sqrt(rijsq) * rCD;
+					vsum += coul;
+					fij = -coul / rijsq * GF_CONVERSION_CONSTANT;
+					fxij = fij * rxij;
+					fyij = fij * ryij;
+					ei.fx -= fxij;
+					ei.fy -= fyij;
+					ej.fx += fxij;
+					ej.fy += fyij;
+				}
+			}
+		}
+		synchronized (freeElectrons) {
+			double imass = 1.0f / Electron.mass;
+			for (Electron e : freeElectrons) {
+				e.fx *= imass;
+				e.fy *= imass;
+			}
+		}
+		return vsum;
+	}
+
 	/**
 	 * compute forces on the atoms from the potentials. This is the most expensive part of calculation. This method is
 	 * synchronized so that no intermediate data can be fetched before a round of computation is completed.
@@ -2684,6 +2750,8 @@ public abstract class AtomicModel extends MDModel {
 				}
 			}
 		}
+
+		vsum += computeForceForElectrons(time);
 
 		if (numberOfAtoms == 1) {
 
