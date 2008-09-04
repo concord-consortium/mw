@@ -20,9 +20,21 @@
 
 package org.concord.mw2d.models;
 
+import java.awt.Graphics2D;
+
 import org.concord.modeler.Model;
 
 public class Electron {
+
+	volatile double rx;
+	volatile double ry;
+	volatile double vx;
+	volatile double vy;
+	volatile double ax;
+	volatile double ay;
+	double fx, fy;
+
+	static double mass = 0.1;
 
 	private MolecularModel model;
 	private float enterStateTime;
@@ -90,6 +102,45 @@ public class Electron {
 	public int getEnergyLevelIndex() {
 		ElectronicStructure es = model.getElement(atom.id).getElectronicStructure();
 		return es.indexOf(energyLevel);
+	}
+
+	/* predict this electron's new state using 2nd order Taylor expansion */
+	void predict(double dt, double dt2) {
+		rx += vx * dt + ax * dt2;
+		ry += vy * dt + ay * dt2;
+		vx += ax * dt;
+		vy += ay * dt;
+	}
+
+	/*
+	 * @param half half of the time increment
+	 */
+	void correct(double half) {
+		vx += half * (fx - ax);
+		vy += half * (fy - ay);
+		ax = fx;
+		ay = fy;
+		fx *= mass;
+		fy *= mass;
+	}
+
+	public void render(Graphics2D g) {
+		if (atom != null) {
+			renderBoundState(g);
+		}
+		else {
+			renderFreeState(g);
+		}
+	}
+
+	// what to display if the electron is bound to an atom?
+	private void renderBoundState(Graphics2D g) {
+
+	}
+
+	// render the free electron as a tiny dot
+	private void renderFreeState(Graphics2D g) {
+
 	}
 
 }
