@@ -22,13 +22,17 @@ package org.concord.modeler;
 import static java.util.regex.Pattern.compile;
 
 import java.awt.EventQueue;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 
 import org.concord.modeler.script.Compiler;
+import org.concord.modeler.util.FileUtilities;
 
 /**
  * @author Charles Xie
@@ -40,6 +44,7 @@ class TextBoxScripter extends ComponentScripter {
 	private final static Pattern ENABLE_COMPONENT = compile("(^(?i)enablecomponent\\b){1}");
 	private final static Pattern SELECT_COMPONENT = compile("(^(?i)selectcomponent\\b){1}");
 	private final static Pattern SELECT_COMBOBOX = compile("(^(?i)selectcombobox\\b){1}");
+	private final static Pattern SNAPSHOT = compile("(^(?i)snapshot\\b){1}");
 
 	TextBoxScripter(BasicPageTextBox textBox) {
 		super(false);
@@ -54,6 +59,29 @@ class TextBoxScripter extends ComponentScripter {
 			if (textBox instanceof PageTextBox) {
 				((PageTextBox) textBox).load(ci.substring(matcher.end()).trim(), false);
 			}
+			return;
+		}
+		// snapshot
+		matcher = SNAPSHOT.matcher(ci);
+		if (matcher.find()) {
+			String s = ci.substring(matcher.end()).trim();
+			s = textBox.getPage().getPathBase() + s;
+			ImageIcon image = null;
+			if (FileUtilities.isRemote(s)) {
+				URL u = null;
+				try {
+					u = new URL(s);
+				}
+				catch (MalformedURLException e) {
+					e.printStackTrace();
+				}
+				if (u != null)
+					image = ConnectionManager.sharedInstance().loadImage(u);
+			}
+			else {
+				image = new ImageIcon(s);
+			}
+			SnapshotGallery.sharedInstance().takeSnapshot(textBox.getPage().getAddress(), image);
 			return;
 		}
 		// set <t>text</t>

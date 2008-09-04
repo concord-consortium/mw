@@ -23,12 +23,15 @@ package org.concord.modeler.text;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
+import org.concord.modeler.ConnectionManager;
 import org.concord.modeler.Modeler;
 import org.concord.modeler.ModelerUtilities;
 import org.concord.modeler.SnapshotGallery;
@@ -93,7 +96,7 @@ class ImagePopupMenu extends JPopupMenu {
 				}
 				else if (url != null) {
 					url = ModelerUtilities.convertURLToFilePath(url);
-					ImageIcon i2 = new ImageIcon(url);
+					ImageIcon i2 = createImage(url);
 					i2.setDescription(FileUtilities.getFileName(url));
 					SnapshotGallery.sharedInstance().takeSnapshot(page.getAddress(), i2);
 				}
@@ -110,7 +113,8 @@ class ImagePopupMenu extends JPopupMenu {
 			public void actionPerformed(ActionEvent e) {
 				Object o = ImagePopupMenu.this.getClientProperty("image");
 				if (o instanceof String) {
-					imagePropertiesDialog.setImage(new ImageIcon(page.getPathBase() + o));
+					String s = FileUtilities.getFileName((String) o);
+					imagePropertiesDialog.setImage(createImage(page.getPathBase() + s));
 				}
 				imagePropertiesDialog.setCurrentValues();
 				imagePropertiesDialog.pack();
@@ -119,6 +123,22 @@ class ImagePopupMenu extends JPopupMenu {
 		});
 		add(mi);
 
+	}
+
+	private ImageIcon createImage(String path) {
+		ImageIcon image = null;
+		if (FileUtilities.isRemote(path)) {
+			try {
+				image = ConnectionManager.sharedInstance().loadImage(new URL(path));
+			}
+			catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
+		}
+		else {
+			image = new ImageIcon(path);
+		}
+		return image;
 	}
 
 	public void show(Component invoker, int x, int y) {
