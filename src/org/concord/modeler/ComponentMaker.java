@@ -55,24 +55,10 @@ abstract class ComponentMaker {
 	}
 
 	static Model getModel(Page page, String modelClass, int modelID) {
-		if (modelID == -1)
-			return null;
-		Model m = null;
-		if (isTargetClass(modelClass)) {
-			try {
-				Object o = page.getEmbeddedComponent(Class.forName(modelClass), modelID);
-				if (o instanceof Model) {
-					m = (Model) o;
-				}
-			}
-			catch (ClassNotFoundException e2) {
-				e2.printStackTrace();
-			}
-		}
-		else { // backward compatible
-			m = page.getComponentPool().get(modelID).getContainer().getModel();
-		}
-		return m;
+		BasicModel m = getBasicModel(page, modelClass, modelID);
+		if (m instanceof Model)
+			return (Model) m;
+		return null;
 	}
 
 	static BasicModel getBasicModel(Page page, String modelClass, int modelID) {
@@ -86,8 +72,8 @@ abstract class ComponentMaker {
 					m = (BasicModel) o;
 				}
 			}
-			catch (ClassNotFoundException e2) {
-				e2.printStackTrace();
+			catch (ClassNotFoundException e) {
+				e.printStackTrace();
 			}
 		}
 		else { // backward compatible
