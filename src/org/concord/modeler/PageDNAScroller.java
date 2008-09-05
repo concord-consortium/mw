@@ -376,7 +376,7 @@ public class PageDNAScroller extends DNAScroller implements Embeddable, ModelCom
 		setPreferredSize(new Dimension(widthField.getValue(), heightField.getValue()));
 		setMutationEnabled(false);
 		page.getSaveReminder().setChanged(true);
-		page.reload();
+		page.settleComponentSize();
 		return true;
 	}
 

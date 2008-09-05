@@ -319,7 +319,7 @@ public class PagePotentialHill extends PotentialHill implements Embeddable, Mode
 		setPreferredSize(new Dimension(widthField.getValue(), heightField.getValue()));
 		setChangable(true);
 		page.getSaveReminder().setChanged(true);
-		page.reload();
+		page.settleComponentSize();
 		return true;
 	}
 

@@ -171,7 +171,7 @@ class PageMultipleChoiceMaker extends ComponentMaker {
 		}
 
 		pageMultipleChoice.page.getSaveReminder().setChanged(true);
-		pageMultipleChoice.page.reload();
+		pageMultipleChoice.page.settleComponentSize();
 
 		return true;
 

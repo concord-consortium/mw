@@ -197,7 +197,7 @@ class PageBarGraphMaker extends ComponentMaker {
 		pageBarGraph.setPreferredSize(new Dimension(widthField.getValue(), heightField.getValue()));
 		pageBarGraph.setChangable(true);
 		pageBarGraph.page.getSaveReminder().setChanged(true);
-		pageBarGraph.page.reload();
+		pageBarGraph.page.settleComponentSize();
 		return true;
 	}
 

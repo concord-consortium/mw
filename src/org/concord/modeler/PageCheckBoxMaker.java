@@ -147,7 +147,7 @@ class PageCheckBoxMaker extends ComponentMaker {
 		if (text != null && !text.trim().equals(""))
 			pageCheckBox.putClientProperty("deselection script", text);
 		pageCheckBox.page.getSaveReminder().setChanged(true);
-		pageCheckBox.page.reload();
+		pageCheckBox.page.settleComponentSize();
 	}
 
 	void invoke(Page page) {

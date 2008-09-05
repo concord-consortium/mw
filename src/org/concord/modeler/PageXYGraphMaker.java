@@ -333,7 +333,7 @@ class PageXYGraphMaker extends ComponentMaker {
 		pageXYGraph.getGraph().setLegendLocation(legendXField.getValue(), legendYField.getValue());
 
 		pageXYGraph.page.getSaveReminder().setChanged(true);
-		pageXYGraph.page.reload();
+		pageXYGraph.page.settleComponentSize();
 
 		return true;
 

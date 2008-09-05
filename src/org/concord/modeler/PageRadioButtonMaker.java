@@ -142,7 +142,7 @@ class PageRadioButtonMaker extends ComponentMaker {
 			pageRadioButton.setPreferredSize(new Dimension(widthField.getValue(), heightField.getValue()));
 		}
 		pageRadioButton.page.getSaveReminder().setChanged(true);
-		pageRadioButton.page.reload();
+		pageRadioButton.page.settleComponentSize();
 	}
 
 	void invoke(Page page) {

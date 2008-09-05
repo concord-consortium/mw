@@ -90,10 +90,8 @@ abstract class ComponentMaker {
 			if (isTargetClass(modelClass)) {
 				try {
 					Object o = page.getEmbeddedComponent(Class.forName(modelClass), modelID);
-					if (o instanceof PageMd3d) {
-						if (((PageMd3d) o).getMolecularModel() == source)
-							yes = true;
-					}
+					if (o == source)
+						yes = true;
 				}
 				catch (ClassNotFoundException e) {
 					e.printStackTrace();

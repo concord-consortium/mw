@@ -91,7 +91,7 @@ class PageFunctionGraphMaker extends ComponentMaker {
 		pageFunctionGraph.setBackground(bgComboBox.getSelectedColor());
 		pageFunctionGraph.setPreferredSize(new Dimension(widthField.getValue(), heightField.getValue()));
 		pageFunctionGraph.page.getSaveReminder().setChanged(true);
-		pageFunctionGraph.page.reload();
+		pageFunctionGraph.page.settleComponentSize();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				pageFunctionGraph.graph.repaint(); // must be called later to redraw

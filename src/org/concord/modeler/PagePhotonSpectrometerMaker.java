@@ -109,7 +109,7 @@ class PagePhotonSpectrometerMaker extends ComponentMaker {
 		pagePhotonSpectrometer.setUpperBound(upperBoundField.getValue());
 		pagePhotonSpectrometer.setChangable(true);
 		pagePhotonSpectrometer.page.getSaveReminder().setChanged(true);
-		pagePhotonSpectrometer.page.reload();
+		pagePhotonSpectrometer.page.settleComponentSize();
 		return true;
 	}
 

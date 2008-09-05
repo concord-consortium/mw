@@ -69,7 +69,7 @@ class SearchTextFieldMaker extends ComponentMaker {
 		searchTextField.setColumns(((Integer) spinner.getValue()).intValue());
 		searchTextField.setDatabaseType(databaseComboBox.getSelectedIndex());
 		searchTextField.page.getSaveReminder().setChanged(true);
-		searchTextField.page.reload();
+		searchTextField.page.settleComponentSize();
 	}
 
 	void invoke(Page page) {

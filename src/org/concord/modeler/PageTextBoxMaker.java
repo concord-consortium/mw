@@ -110,7 +110,7 @@ class PageTextBoxMaker extends ComponentMaker {
 		((HTMLPane) pageTextBox.getTextComponent()).removeLinkMonitor();
 		pageTextBox.showBoundary(pageTextBox.page.isEditable());
 		pageTextBox.page.getSaveReminder().setChanged(true);
-		pageTextBox.page.reload();
+		pageTextBox.page.settleComponentSize();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				pageTextBox.setEmbeddedComponentAttributes();

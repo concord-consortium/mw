@@ -115,7 +115,7 @@ class PageTableMaker extends ComponentMaker {
 			}
 		}
 		pageTable.page.getSaveReminder().setChanged(true);
-		pageTable.page.reload();
+		pageTable.page.settleComponentSize();
 	}
 
 	void invoke(Page page) {

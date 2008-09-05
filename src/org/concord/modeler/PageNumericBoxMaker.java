@@ -163,7 +163,7 @@ class PageNumericBoxMaker extends ComponentMaker {
 		}
 		pageNumericBox.setPreferredSize(new Dimension(widthField.getValue(), heightField.getValue()));
 		pageNumericBox.page.getSaveReminder().setChanged(true);
-		pageNumericBox.page.reload();
+		pageNumericBox.page.settleComponentSize();
 	}
 
 	void invoke(Page page) {

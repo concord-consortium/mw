@@ -97,7 +97,7 @@ class PageTextFieldMaker extends ComponentMaker {
 		}
 
 		pageTextField.page.getSaveReminder().setChanged(true);
-		pageTextField.page.reload();
+		pageTextField.page.settleComponentSize();
 
 		return true;
 

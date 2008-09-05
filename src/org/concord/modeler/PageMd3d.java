@@ -610,7 +610,7 @@ public class PageMd3d extends MolecularContainer implements Embeddable, Scriptab
 	protected void setViewerSize(Dimension dim) {
 		setPreferredSize(dim);
 		if (page != null)
-			page.reload();
+			page.settleComponentSize();
 	}
 
 	public void setPreferredSize(Dimension dim) {

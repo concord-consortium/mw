@@ -2329,7 +2329,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				}
 			}
 		});
-		reload();
+		//settleComponentSize();
 	}
 
 	/** Creates highlights around all occurrences of pattern */
@@ -2378,7 +2378,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	 * has a different size than that of the current container. In this case, calling this method will result in an
 	 * automatical expansion or collapsing of the model components in the textual environment.
 	 */
-	public void reload() {
+	public void settleComponentSize() {
 		// notifyPageListeners(new PageEvent(this, PageEvent.STORE_VIEW_POSITION));
 		if (isEditable())
 			oldCaretPosition = getCaretPosition();
@@ -5141,7 +5141,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			}
 		}
 		if (b)
-			reload();
+			settleComponentSize();
 		saveReminder.setChanged(changed);
 	}
 

@@ -159,7 +159,7 @@ class PageSpinnerMaker extends ComponentMaker {
 		}
 		pageSpinner.setToolTipText(toolTipField.getText());
 		pageSpinner.page.getSaveReminder().setChanged(true);
-		pageSpinner.page.reload();
+		pageSpinner.page.settleComponentSize();
 		return true;
 	}
 

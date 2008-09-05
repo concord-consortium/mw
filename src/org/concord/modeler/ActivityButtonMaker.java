@@ -142,7 +142,7 @@ class ActivityButtonMaker extends ComponentMaker {
 		else if (activityButton.isActionGrade())
 			activityButton.putClientProperty("grade_uri", textArea.getText());
 		activityButton.page.getSaveReminder().setChanged(true);
-		activityButton.page.reload();
+		activityButton.page.settleComponentSize();
 	}
 
 	private boolean needPageGroupInput(String s) {
