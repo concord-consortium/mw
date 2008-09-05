@@ -50,7 +50,7 @@ import org.concord.modeler.event.ScriptListener;
 import org.concord.modeler.process.AbstractLoadable;
 import org.concord.modeler.process.Job;
 import org.concord.modeler.process.Loadable;
-import org.concord.modeler.process.TaskAttributes;
+import org.concord.modeler.process.TaskState;
 import org.concord.modeler.util.DataQueue;
 import org.concord.modeler.util.FileUtilities;
 import org.concord.modeler.util.FloatQueue;
@@ -1747,13 +1747,13 @@ public class MolecularModel {
 		return job;
 	}
 
-	public void addCustomTasks(List<TaskAttributes> list) {
+	public void addCustomTasks(List<TaskState> list) {
 		if (job == null)
 			initializeJob();
 		job.removeAllCustomTasks();
 		if (list == null || list.isEmpty())
 			return;
-		for (TaskAttributes a : list) {
+		for (TaskState a : list) {
 			Loadable l = new AbstractLoadable() {
 				public void execute() {
 					job.runScript(getScript());

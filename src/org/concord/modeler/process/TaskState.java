@@ -28,7 +28,7 @@ import java.io.Serializable;
  * @author Charles Xie
  * 
  */
-public class TaskAttributes implements Serializable {
+public class TaskState implements Serializable {
 
 	private int priority = Thread.NORM_PRIORITY;
 	private int interval = 10;
@@ -37,10 +37,10 @@ public class TaskAttributes implements Serializable {
 	private String description;
 	private String script;
 
-	public TaskAttributes() {
+	public TaskState() {
 	}
 
-	public TaskAttributes(Loadable l) {
+	public TaskState(Loadable l) {
 		if (l == null)
 			throw new IllegalArgumentException("null input not allowed");
 		priority = l.getPriority();
