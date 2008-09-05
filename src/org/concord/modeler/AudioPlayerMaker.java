@@ -76,7 +76,7 @@ class AudioPlayerMaker extends ComponentMaker {
 		audioPlayer.setBorderType((String) borderComboBox.getSelectedItem());
 		audioPlayer.setBackground(bgComboBox.getSelectedColor());
 		audioPlayer.page.getSaveReminder().setChanged(true);
-		audioPlayer.page.reload();
+		audioPlayer.page.settleComponentSize();
 	}
 
 	void invoke(Page page) {

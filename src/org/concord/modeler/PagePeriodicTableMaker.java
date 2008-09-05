@@ -67,7 +67,7 @@ class PagePeriodicTableMaker extends ComponentMaker {
 		pagePeriodicTable.setBorderType((String) borderComboBox.getSelectedItem());
 		pagePeriodicTable.setBackground(bgComboBox.getSelectedColor());
 		pagePeriodicTable.page.getSaveReminder().setChanged(true);
-		pagePeriodicTable.page.reload();
+		pagePeriodicTable.page.settleComponentSize();
 	}
 
 	void invoke(Page page) {

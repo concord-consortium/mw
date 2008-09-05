@@ -379,7 +379,7 @@ class ColorBarDialog extends JDialog {
 				lineIcon.getWrapper()
 						.setPreferredSize(new Dimension(lineIcon.getIconWidth(), lineIcon.getIconHeight()));
 			}
-			page.reload();
+			page.settleComponentSize();
 		}
 		page.saveReminder.setChanged(true);
 		return true;

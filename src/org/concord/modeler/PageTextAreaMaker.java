@@ -93,7 +93,7 @@ class PageTextAreaMaker extends ComponentMaker {
 		}
 
 		pageTextArea.page.getSaveReminder().setChanged(true);
-		pageTextArea.page.reload();
+		pageTextArea.page.settleComponentSize();
 
 		return true;
 

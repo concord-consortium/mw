@@ -141,7 +141,7 @@ class PageElectronicStructureViewerMaker extends ComponentMaker {
 				+ pageElectronicStructureViewer.getVerticalMargin() * 2));
 		pageElectronicStructureViewer.setChangable(true);
 		pageElectronicStructureViewer.page.getSaveReminder().setChanged(true);
-		pageElectronicStructureViewer.page.reload();
+		pageElectronicStructureViewer.page.settleComponentSize();
 		pageElectronicStructureViewer.viewUpdated(new UpdateEvent(m));
 		return true;
 	}

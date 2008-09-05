@@ -168,7 +168,7 @@ class PageJContainerMaker extends ComponentMaker {
 		pageJContainer.setBorderType((String) borderComboBox.getSelectedItem());
 		pageJContainer.setBackground(bgComboBox.getSelectedColor());
 		pageJContainer.page.getSaveReminder().setChanged(true);
-		pageJContainer.page.reload();
+		pageJContainer.page.settleComponentSize();
 		pageJContainer.start();
 		return true;
 	}

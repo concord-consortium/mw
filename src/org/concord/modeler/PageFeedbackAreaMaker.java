@@ -78,7 +78,7 @@ class PageFeedbackAreaMaker extends ComponentMaker {
 		}
 		pageFeedbackArea.setPreferredSize(new Dimension((int) w, (int) h));
 		pageFeedbackArea.page.getSaveReminder().setChanged(true);
-		pageFeedbackArea.page.reload();
+		pageFeedbackArea.page.settleComponentSize();
 	}
 
 	void invoke(Page page) {

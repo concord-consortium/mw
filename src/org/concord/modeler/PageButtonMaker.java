@@ -155,7 +155,7 @@ class PageButtonMaker extends ComponentMaker {
 			pageButton.setPreferredSize(new Dimension(widthField.getValue(), heightField.getValue()));
 		}
 		pageButton.page.getSaveReminder().setChanged(true);
-		pageButton.page.reload();
+		pageButton.page.settleComponentSize();
 	}
 
 	void invoke(Page page) {

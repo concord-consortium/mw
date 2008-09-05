@@ -97,7 +97,7 @@ class ImageQuestionMaker extends ComponentMaker {
 		}
 
 		imageQuestion.page.getSaveReminder().setChanged(true);
-		imageQuestion.page.reload();
+		imageQuestion.page.settleComponentSize();
 		return true;
 
 	}

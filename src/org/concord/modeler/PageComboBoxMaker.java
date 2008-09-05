@@ -159,7 +159,7 @@ class PageComboBoxMaker extends ComponentMaker {
 		pageComboBox.setDisabledAtRun(disabledAtRunCheckBox.isSelected());
 		pageComboBox.setDisabledAtScript(disabledAtScriptCheckBox.isSelected());
 		pageComboBox.page.getSaveReminder().setChanged(true);
-		pageComboBox.page.reload();
+		pageComboBox.page.settleComponentSize();
 	}
 
 	void invoke(Page page) {

@@ -1617,7 +1617,7 @@ public class PageMolecularViewer extends JmolContainer implements BasicModel, Em
 	protected void setViewerSize(Dimension dim) {
 		setPreferredSize(dim);
 		if (page != null)
-			page.reload();
+			page.settleComponentSize();
 	}
 
 	public void setPreferredSize(Dimension dim) {

@@ -120,7 +120,7 @@ class PageAppletMaker extends ComponentMaker {
 		pageApplet.setBackground(bgComboBox.getSelectedColor());
 		pageApplet.setCachingAllowed(cachingCheckBox.isSelected());
 		pageApplet.page.getSaveReminder().setChanged(true);
-		pageApplet.page.reload();
+		pageApplet.page.settleComponentSize();
 		pageApplet.start();
 	}
 

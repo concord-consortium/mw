@@ -211,7 +211,7 @@ class PageSliderMaker extends ComponentMaker {
 		pageSlider.setOpaque(!transparentCheckBox.isSelected());
 		pageSlider.setToolTipText(toolTipField.getText());
 		pageSlider.page.getSaveReminder().setChanged(true);
-		pageSlider.page.reload();
+		pageSlider.page.settleComponentSize();
 		return true;
 	}
 

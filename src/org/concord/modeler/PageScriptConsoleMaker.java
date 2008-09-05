@@ -100,7 +100,7 @@ class PageScriptConsoleMaker extends ComponentMaker {
 		pageScriptConsole.setBorderType((String) borderComboBox.getSelectedItem());
 		pageScriptConsole.setPreferredSize(new Dimension(widthField.getValue(), heightField.getValue()));
 		pageScriptConsole.page.getSaveReminder().setChanged(true);
-		pageScriptConsole.page.reload();
+		pageScriptConsole.page.settleComponentSize();
 	}
 
 	void invoke(Page page) {
