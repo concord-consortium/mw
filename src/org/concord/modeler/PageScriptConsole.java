@@ -97,41 +97,8 @@ public class PageScriptConsole extends JPanel implements Embeddable, ModelCommun
 	}
 
 	private BasicModel getBasicModel() {
-		if (isTargetClass()) {
-			// historical reason: script console used to work only for Jmol
-			if (modelClass == null || modelClass.equals(PageMolecularViewer.class.getName())) {
-				Object o = page.getEmbeddedComponent(PageMolecularViewer.class, modelID);
-				if (o instanceof PageMolecularViewer) {
-					PageMolecularViewer mv = (PageMolecularViewer) o;
-					mv.setScriptConsole(this);
-					return mv;
-				}
-			}
-			else if (modelClass.equals(PageMd3d.class.getName())) {
-				Object o = page.getEmbeddedComponent(PageMd3d.class, modelID);
-				if (o instanceof PageMd3d) {
-					PageMd3d md = (PageMd3d) o;
-					// md.setScriptConsole(this);
-					return md;
-				}
-			}
-			else if (modelClass.equals(PageJContainer.class.getName())) {
-				Object o = page.getEmbeddedComponent(PageJContainer.class, modelID);
-				if (o instanceof PageJContainer)
-					return (PageJContainer) o;
-			}
-			else if (modelClass.equals(PageApplet.class.getName())) {
-				Object o = page.getEmbeddedComponent(PageApplet.class, modelID);
-				if (o instanceof PageApplet)
-					return (PageApplet) o;
-			}
-		}
-		else {
-			if (modelID != -1) {
-				return page.getComponentPool().get(modelID).getContainer().getModel();
-			}
-		}
-		return null;
+		BasicModel m = ComponentMaker.getBasicModel(page, modelClass, modelID);
+		return m;
 	}
 
 	public JPopupMenu getPopupMenu() {
@@ -350,6 +317,10 @@ public class PageScriptConsole extends JPanel implements Embeddable, ModelCommun
 		BasicModel m = getBasicModel();
 		if (m == null)
 			return;
+		if (m instanceof PageMolecularViewer) {
+			// we should not have had to do this to link the console with the viewer
+			((PageMolecularViewer) m).setScriptConsole(this);
+		}
 		if (m instanceof PagePlugin) {
 			((PagePlugin) m).runNativeScript(strCommand);
 		}
