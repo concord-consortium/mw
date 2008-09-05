@@ -96,26 +96,18 @@ public class PageRadioButton extends JRadioButton implements Embeddable, ModelCo
 		}
 		setText(radioButton.getText());
 		setToolTipText(radioButton.getToolTipText());
-		if (isTargetClass()) {
-			try {
-				o = page.getEmbeddedComponent(Class.forName(modelClass), modelID);
-				if (o instanceof BasicModel)
-					((BasicModel) o).addModelListener(this);
-			}
-			catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
-		}
-		else {
-			ModelCanvas mc = page.getComponentPool().get(modelID);
-			if (mc != null)
-				mc.getContainer().getModel().addModelListener(this);
-		}
+		BasicModel m = getBasicModel();
+		if (m != null)
+			m.addModelListener(this);
 		setId(radioButton.id);
 	}
 
 	boolean isTargetClass() {
 		return ComponentMaker.isTargetClass(modelClass);
+	}
+
+	private BasicModel getBasicModel() {
+		return ComponentMaker.getBasicModel(page, modelClass, modelID);
 	}
 
 	public void destroy() {
@@ -135,23 +127,9 @@ public class PageRadioButton extends JRadioButton implements Embeddable, ModelCo
 			for (ItemListener i : il)
 				removeItemListener(i);
 		}
-		if (modelID != -1) {
-			if (isTargetClass()) {
-				try {
-					Object o = page.getEmbeddedComponent(Class.forName(modelClass), modelID);
-					if (o instanceof BasicModel)
-						((BasicModel) o).removeModelListener(this);
-				}
-				catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
-			}
-			else {
-				ModelCanvas mc = page.getComponentPool().get(modelID);
-				if (mc != null)
-					mc.getContainer().getModel().removeModelListener(this);
-			}
-		}
+		BasicModel m = getBasicModel();
+		if (m != null)
+			m.removeModelListener(this);
 		page = null;
 		if (maker != null)
 			maker.setObject(null);

@@ -30,15 +30,19 @@ import java.util.Map;
 import javax.swing.Action;
 import javax.swing.event.ChangeListener;
 
+import org.concord.modeler.PageBarGraph;
 import org.concord.modeler.PageButton;
 import org.concord.modeler.PageCheckBox;
 import org.concord.modeler.PageComboBox;
 import org.concord.modeler.PageMd3d;
+import org.concord.modeler.PageNumericBox;
 import org.concord.modeler.PageRadioButton;
 import org.concord.modeler.PageScriptConsole;
 import org.concord.modeler.PageSlider;
 import org.concord.modeler.PageSpinner;
+import org.concord.modeler.PageXYGraph;
 import org.concord.modeler.event.AbstractChange;
+import org.concord.modeler.event.ModelEvent;
 import org.concord.modeler.event.ModelListener;
 import org.concord.modeler.util.FileUtilities;
 
@@ -226,6 +230,36 @@ class Mw3dConnector {
 				else if (listener instanceof PageScriptConsole) {
 					model.addModelListener(listener);
 					model.getMolecularModel().addScriptListener((PageScriptConsole) listener);
+				}
+
+				else if (listener instanceof PageNumericBox) {
+					PageNumericBox box = (PageNumericBox) listener;
+					model.addModelListener(box);
+					if (!model.getRecorderDisabled())
+						model.getMovie().addMovieListener(box);
+				}
+
+				else if (listener instanceof PageBarGraph) {
+					PageBarGraph bg = (PageBarGraph) listener;
+					model.addModelListener(bg);
+					if (!model.getRecorderDisabled())
+						model.getMovie().addMovieListener(bg);
+				}
+
+				else if (listener instanceof PageXYGraph) {
+					final PageXYGraph xyg = (PageXYGraph) listener;
+					model.addModelListener(xyg);
+					// xyg.modelUpdate(new ModelEvent(model, ModelEvent.MODEL_CHANGED));
+					xyg.modelUpdate(new ModelEvent(model, ModelEvent.MODEL_INPUT));
+					if (!model.getRecorderDisabled())
+						model.getMovie().addMovieListener(xyg);
+					// INTERESTING!! putting the repaint request at the end of the ATW queue fixes
+					// the problem of incomplete painting.
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							xyg.repaint();
+						}
+					});
 				}
 
 			}

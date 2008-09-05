@@ -131,7 +131,7 @@ public class PageTextArea extends JPanel implements Embeddable, HtmlService, Sea
 	}
 
 	public void destroy() {
-		questionArea.getHtmlPane().removeHyperlinkListener(page);
+		questionArea.destroy();
 		page = null;
 		if (maker != null)
 			maker.setObject(null); // make sure this object is not held by someone

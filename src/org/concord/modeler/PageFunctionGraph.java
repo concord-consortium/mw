@@ -182,6 +182,8 @@ public class PageFunctionGraph extends JPanel implements Embeddable {
 
 	public void destroy() {
 		page = null;
+		if (maker != null)
+			maker.setObject(null);
 	}
 
 	public JPopupMenu getPopupMenu() {

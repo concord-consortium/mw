@@ -362,6 +362,8 @@ public class PageApplet extends PagePlugin {
 			applet.destroy();
 		}
 		page = null;
+		if (maker != null)
+			maker.setApplet(null);
 	}
 
 	public void createPopupMenu() {

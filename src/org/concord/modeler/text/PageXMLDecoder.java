@@ -616,7 +616,7 @@ final class PageXMLDecoder {
 			try {
 				Thread.sleep(100);
 			}
-			catch (InterruptedException e) {
+			catch (InterruptedException ignored) {
 			}
 			synchronized (lock) {
 				lock.notify();
@@ -2678,7 +2678,7 @@ final class PageXMLDecoder {
 				borderType = null;
 			}
 			b.setChangable(page.isEditable());
-			mw2dConnector.linkModelListener(modelIndex, b);
+			connect(b);
 			return b;
 		}
 
@@ -2775,7 +2775,7 @@ final class PageXMLDecoder {
 				width = height = 0;
 			}
 			b.setChangable(page.isEditable());
-			mw2dConnector.linkModelListener(modelIndex, b);
+			connect(b);
 			drawTicks = drawLabels = false;
 			return b;
 		}
@@ -2847,7 +2847,7 @@ final class PageXMLDecoder {
 				borderType = null;
 			}
 			b.setChangable(page.isEditable());
-			mw2dConnector.linkModelListener(modelIndex, b);
+			connect(b);
 			return b;
 		}
 

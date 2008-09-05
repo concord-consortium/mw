@@ -114,26 +114,18 @@ public class PageSpinner extends JComponent implements Embeddable, ModelCommunic
 		}
 		setChangable(page.isEditable());
 		setToolTipText(spinner.getToolTipText());
-		if (isTargetClass()) {
-			try {
-				o = page.getEmbeddedComponent(Class.forName(modelClass), modelID);
-				if (o instanceof BasicModel)
-					((BasicModel) o).addModelListener(this);
-			}
-			catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
-		}
-		else {
-			ModelCanvas mc = page.getComponentPool().get(modelID);
-			if (mc != null)
-				mc.getContainer().getModel().addModelListener(this);
-		}
+		BasicModel m = getBasicModel();
+		if (m != null)
+			m.addModelListener(this);
 		setId(spinner.id);
 	}
 
 	boolean isTargetClass() {
 		return ComponentMaker.isTargetClass(modelClass);
+	}
+
+	private BasicModel getBasicModel() {
+		return ComponentMaker.getBasicModel(page, modelClass, modelID);
 	}
 
 	public void setToolTipText(String text) {
@@ -148,23 +140,9 @@ public class PageSpinner extends JComponent implements Embeddable, ModelCommunic
 			for (ChangeListener i : cl)
 				spinner.removeChangeListener(i);
 		}
-		if (modelID != -1) {
-			if (isTargetClass()) {
-				try {
-					Object o = page.getEmbeddedComponent(Class.forName(modelClass), modelID);
-					if (o instanceof BasicModel)
-						((BasicModel) o).removeModelListener(this);
-				}
-				catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
-			}
-			else {
-				ModelCanvas mc = page.getComponentPool().get(modelID);
-				if (mc != null)
-					mc.getContainer().getModel().removeModelListener(this);
-			}
-		}
+		BasicModel m = getBasicModel();
+		if (m != null)
+			m.removeModelListener(this);
 		page = null;
 		if (maker != null)
 			maker.setObject(null);

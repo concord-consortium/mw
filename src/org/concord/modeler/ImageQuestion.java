@@ -340,7 +340,7 @@ public class ImageQuestion extends JPanel implements Embeddable, TransferListene
 	}
 
 	public void destroy() {
-		questionArea.getHtmlPane().removeHyperlinkListener(page);
+		questionArea.destroy();
 		page = null;
 		thumbnailPanel.removeTransferListener(this);
 		thumbnailPanel.destroy();

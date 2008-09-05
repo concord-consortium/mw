@@ -86,7 +86,9 @@ import org.myjmol.api.JmolStatusListener;
 import org.concord.jmol.CommandEvent;
 import org.concord.jmol.CommandListener;
 import org.concord.modeler.ConnectionManager;
+import org.concord.modeler.Model;
 import org.concord.modeler.ModelerUtilities;
+import org.concord.modeler.Movie;
 import org.concord.modeler.MovieSlider;
 import org.concord.modeler.draw.DrawingElement;
 import org.concord.modeler.draw.DrawingElementStateFactory;
@@ -104,8 +106,11 @@ import org.concord.modeler.process.ImageStreamGenerator;
 import org.concord.modeler.process.Job;
 import org.concord.modeler.ui.ComboBoxRenderer;
 import org.concord.modeler.ui.IconPool;
+import org.concord.modeler.util.DataQueue;
 import org.concord.modeler.util.FileChooser;
 import org.concord.modeler.util.FileUtilities;
+import org.concord.modeler.util.FloatQueue;
+import org.concord.modeler.util.HomoQueueGroup;
 import org.concord.modeler.util.ScreenshotSaver;
 import org.concord.mw3d.models.ABond;
 import org.concord.mw3d.models.Atom;
@@ -122,7 +127,7 @@ import org.concord.mw3d.models.XyzWriter;
 import static javax.swing.Action.*;
 import static org.concord.mw3d.UserAction.*;
 
-public abstract class MolecularContainer extends JComponent implements JmolStatusListener, CommandListener,
+public abstract class MolecularContainer extends JComponent implements Model, JmolStatusListener, CommandListener,
 		ProgressListener, ScriptExecutionListener {
 
 	final static String REGEX_SEPARATOR = "[\\s&&[^\\r\\n]]+";
@@ -431,10 +436,10 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 			stopAction.actionPerformed(null);
 		}
 		else if ("script end".equals(description)) {
-			notifyModelListeners(new ModelEvent(model, ModelEvent.SCRIPT_END));
+			notifyModelListeners(new ModelEvent(this, ModelEvent.SCRIPT_END));
 		}
 		else if ("script start".equals(description)) {
-			notifyModelListeners(new ModelEvent(model, ModelEvent.SCRIPT_START));
+			notifyModelListeners(new ModelEvent(this, ModelEvent.SCRIPT_START));
 		}
 	}
 
@@ -1212,7 +1217,7 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 				else {
 					run();
 				}
-				notifyModelListeners(new ModelEvent(model, ModelEvent.MODEL_RUN));
+				notifyModelListeners(new ModelEvent(MolecularContainer.this, ModelEvent.MODEL_RUN));
 				notifyPageComponentListeners(new PageComponentEvent(MolecularContainer.this,
 						PageComponentEvent.COMPONENT_RUN));
 			}
@@ -1232,7 +1237,7 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 				model.getMovie().pause();
 				model.getMovie().enableMovieActions(true);
 				setToolBarEnabled(true);
-				notifyModelListeners(new ModelEvent(model, ModelEvent.MODEL_STOP));
+				notifyModelListeners(new ModelEvent(MolecularContainer.this, ModelEvent.MODEL_STOP));
 			}
 		};
 		stopAction.putValue(NAME, "Stop");
@@ -1255,7 +1260,7 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 				if (resourceAddress != null)
 					input(resourceAddress, true);
 				else reset();
-				notifyModelListeners(new ModelEvent(model, ModelEvent.MODEL_RESET));
+				notifyModelListeners(new ModelEvent(MolecularContainer.this, ModelEvent.MODEL_RESET));
 				notifyPageComponentListeners(new PageComponentEvent(MolecularContainer.this,
 						PageComponentEvent.COMPONENT_RESET));
 			}
@@ -2582,6 +2587,47 @@ public abstract class MolecularContainer extends JComponent implements JmolStatu
 			JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(MolecularContainer.this),
 					"There is no task yet. Please run the model.", "No task assigned", JOptionPane.WARNING_MESSAGE);
 		}
+	}
+
+	public Job getJob() {
+		return getMolecularModel().getJob();
+	}
+
+	public float getModelTime() {
+		return getMolecularModel().getModelTime();
+	}
+
+	public FloatQueue getModelTimeQueue() {
+		return getMolecularModel().getModelTimeQueue();
+	}
+
+	public Movie getMovie() {
+		return getMolecularModel().getMovie();
+	}
+
+	public HomoQueueGroup getMovieQueueGroup() {
+		return getMolecularModel().getMovieQueueGroup();
+	}
+
+	public DataQueue getQueue(String name) {
+		return getMolecularModel().getQueue(name);
+	}
+
+	public boolean getRecorderDisabled() {
+		return getMolecularModel().getRecorderDisabled();
+	}
+
+	// TODO
+	public void stopInput() {
+	}
+
+	// TODO
+	public Object getProperty(Object key) {
+		return null;
+	}
+
+	// TODO
+	public void putProperty(Object key, Object value) {
 	}
 
 	private abstract class DefaultAction extends AbstractAction {

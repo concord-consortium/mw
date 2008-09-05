@@ -87,6 +87,8 @@ public class PagePhotonSpectrometer extends PhotonSpectrometer implements Script
 			}
 		}
 		page = null;
+		if (maker != null)
+			maker.setObject(null);
 	}
 
 	public void setType(int i) {

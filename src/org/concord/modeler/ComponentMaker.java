@@ -54,6 +54,48 @@ abstract class ComponentMaker {
 		return false;
 	}
 
+	static Model getModel(Page page, String modelClass, int modelID) {
+		if (modelID == -1)
+			return null;
+		Model m = null;
+		if (isTargetClass(modelClass)) {
+			try {
+				Object o = page.getEmbeddedComponent(Class.forName(modelClass), modelID);
+				if (o instanceof Model) {
+					m = (Model) o;
+				}
+			}
+			catch (ClassNotFoundException e2) {
+				e2.printStackTrace();
+			}
+		}
+		else { // backward compatible
+			m = page.getComponentPool().get(modelID).getContainer().getModel();
+		}
+		return m;
+	}
+
+	static BasicModel getBasicModel(Page page, String modelClass, int modelID) {
+		if (modelID == -1)
+			return null;
+		BasicModel m = null;
+		if (isTargetClass(modelClass)) {
+			try {
+				Object o = page.getEmbeddedComponent(Class.forName(modelClass), modelID);
+				if (o instanceof BasicModel) {
+					m = (BasicModel) o;
+				}
+			}
+			catch (ClassNotFoundException e2) {
+				e2.printStackTrace();
+			}
+		}
+		else { // backward compatible
+			m = page.getComponentPool().get(modelID).getContainer().getModel();
+		}
+		return m;
+	}
+
 	static void enable(JComponent c, boolean b, Object source, int modelID, String modelClass, Page page) {
 		if (page == null)
 			return;

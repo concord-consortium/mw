@@ -132,7 +132,7 @@ public class PageTextField extends JPanel implements Embeddable, HtmlService, Se
 	}
 
 	public void destroy() {
-		questionArea.getHtmlPane().removeHyperlinkListener(page);
+		questionArea.destroy();
 		page = null;
 		if (maker != null)
 			maker.setObject(null);

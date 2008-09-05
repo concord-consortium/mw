@@ -67,7 +67,6 @@ import org.concord.modeler.text.XMLCharacterEncoder;
 import org.concord.modeler.ui.IconPool;
 import org.concord.modeler.util.DataQueue;
 import org.concord.modeler.util.FloatQueue;
-import org.concord.mw2d.models.MDModel;
 
 public class PageXYGraph extends XYGrapher implements Embeddable, Scriptable, ModelCommunicator, MovieListener {
 
@@ -227,16 +226,22 @@ public class PageXYGraph extends XYGrapher implements Embeddable, Scriptable, Mo
 		}
 		setPreferredSize(g.getPreferredSize());
 		setBorderType(g.getBorderType());
-		ModelCanvas mc = page.getComponentPool().get(modelID);
-		if (mc != null) {
-			MDModel m = mc.getContainer().getModel();
-			m.addModelListener(this);
-			if (!m.getRecorderDisabled()) {
-				m.getMovie().addMovieListener(this);
-			}
-		}
 		setChangable(page.isEditable());
 		setId(g.id);
+		Model m = getModel();
+		if (m != null) {
+			m.addModelListener(this);
+			if (!m.getRecorderDisabled())
+				m.getMovie().addMovieListener(this);
+		}
+	}
+
+	boolean isTargetClass() {
+		return ComponentMaker.isTargetClass(modelClass);
+	}
+
+	private Model getModel() {
+		return ComponentMaker.getModel(page, modelClass, modelID);
 	}
 
 	public String runScript(String script) {
@@ -247,12 +252,11 @@ public class PageXYGraph extends XYGrapher implements Embeddable, Scriptable, Mo
 
 	public void destroy() {
 		removeSnapshotListeners();
-		if (modelID != -1) {
-			ModelCanvas mc = page.getComponentPool().get(modelID);
-			if (mc != null) {
-				mc.getContainer().getModel().removeModelListener(this);
-				mc.getContainer().getModel().getMovie().removeMovieListener(this);
-			}
+		Model m = getModel();
+		if (m != null) {
+			m.removeModelListener(this);
+			if (m.getMovie() != null)
+				m.getMovie().removeMovieListener(this);
 		}
 		page = null;
 		if (maker != null)
@@ -754,11 +758,7 @@ public class PageXYGraph extends XYGrapher implements Embeddable, Scriptable, Mo
 	}
 
 	private void refresh(boolean initialize) {
-		if (modelID == -1) {
-			System.err.println("This X-Y graph does not server any model");
-			return;
-		}
-		Model m = page.getComponentPool().get(modelID).getContainer().getModel();
+		Model m = getModel();
 		if (m == null) {
 			System.err.println("The model this graph is supposed to serve does not exist");
 			return;
@@ -863,31 +863,21 @@ public class PageXYGraph extends XYGrapher implements Embeddable, Scriptable, Mo
 				refresh(false);
 			break;
 		case ModelEvent.MODEL_RUN:
-			if (modelID != -1) {
-				ModelCanvas mc = page.getComponentPool().get(modelID);
-				if (mc != null) {
-					if (mc.getContainer().getModel() == e.getSource()) {
-						EventQueue.invokeLater(new Runnable() {
-							public void run() {
-								enableActions(false);
-							}
-						});
+			if (getModel() == e.getSource()) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						enableActions(false);
 					}
-				}
+				});
 			}
 			break;
 		case ModelEvent.MODEL_STOP:
-			if (modelID != -1) {
-				ModelCanvas mc = page.getComponentPool().get(modelID);
-				if (mc != null) {
-					if (mc.getContainer().getModel() == e.getSource()) {
-						EventQueue.invokeLater(new Runnable() {
-							public void run() {
-								enableActions(true);
-							}
-						});
+			if (getModel() == e.getSource()) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						enableActions(true);
 					}
-				}
+				});
 			}
 			break;
 		}
@@ -895,9 +885,9 @@ public class PageXYGraph extends XYGrapher implements Embeddable, Scriptable, Mo
 
 	public void frameChanged(MovieEvent e) {
 
-		if (modelID == -1)
+		Model m = getModel();
+		if (m == null)
 			return;
-		Model m = page.getComponentPool().get(modelID).getContainer().getModel();
 
 		int frame = e.getFrame();
 
@@ -982,6 +972,8 @@ public class PageXYGraph extends XYGrapher implements Embeddable, Scriptable, Mo
 		}
 
 		StringBuffer sb = new StringBuffer("<class>" + getClass().getName() + "</class>\n");
+		if (modelClass != null)
+			sb.append("<modelclass>" + modelClass + "</modelclass>\n");
 		sb.append("<model>" + getModelID() + "</model>\n");
 		sb.append("<time_series_x>" + XMLCharacterEncoder.encode(descriptions[0]) + "</time_series_x>\n");
 		if (xMultiplier != 1.0f)

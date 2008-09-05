@@ -56,8 +56,7 @@ import org.concord.mw3d.MolecularView;
 
 import static javax.swing.Action.*;
 
-public class PageMd3d extends MolecularContainer implements BasicModel, Embeddable, Scriptable, NativelyScriptable,
-		Engine {
+public class PageMd3d extends MolecularContainer implements Embeddable, Scriptable, NativelyScriptable, Engine {
 
 	Page page;
 	private int index;

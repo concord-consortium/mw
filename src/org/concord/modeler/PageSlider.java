@@ -110,21 +110,9 @@ public class PageSlider extends JSlider implements Embeddable, ModelCommunicator
 		}
 		setChangable(page.isEditable());
 		setToolTipText(slider.getToolTipText());
-		if (isTargetClass()) {
-			try {
-				Object o = page.getEmbeddedComponent(Class.forName(modelClass), modelID);
-				if (o instanceof BasicModel)
-					((BasicModel) o).addModelListener(this);
-			}
-			catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
-		}
-		else {
-			ModelCanvas mc = page.getComponentPool().get(modelID);
-			if (mc != null)
-				mc.getContainer().getModel().addModelListener(this);
-		}
+		BasicModel m = getBasicModel();
+		if (m != null)
+			m.addModelListener(this);
 		Object o = slider.getClientProperty("Script");
 		if (o instanceof String) {
 			putClientProperty("Script", o);
@@ -141,30 +129,22 @@ public class PageSlider extends JSlider implements Embeddable, ModelCommunicator
 		return ComponentMaker.isTargetClass(modelClass);
 	}
 
+	private BasicModel getBasicModel() {
+		return ComponentMaker.getBasicModel(page, modelClass, modelID);
+	}
+
 	public void destroy() {
 		ChangeListener[] cl = getChangeListeners();
 		if (cl != null) {
 			for (ChangeListener i : cl)
 				removeChangeListener(i);
 		}
-		if (modelID != -1) {
-			if (isTargetClass()) {
-				try {
-					Object o = page.getEmbeddedComponent(Class.forName(modelClass), modelID);
-					if (o instanceof BasicModel)
-						((BasicModel) o).removeModelListener(this);
-				}
-				catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
-			}
-			else {
-				ModelCanvas mc = page.getComponentPool().get(modelID);
-				if (mc != null)
-					mc.getContainer().getModel().removeModelListener(this);
-			}
-		}
+		BasicModel m = getBasicModel();
+		if (m != null)
+			m.removeModelListener(this);
 		page = null;
+		if (maker != null)
+			maker.setObject(null);
 	}
 
 	private void init() {
