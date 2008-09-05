@@ -26,7 +26,7 @@ import java.util.List;
 
 import org.concord.modeler.draw.FillMode;
 import org.concord.modeler.process.Loadable;
-import org.concord.modeler.process.TaskAttributes;
+import org.concord.modeler.process.TaskState;
 import org.concord.mw3d.models.ABond;
 import org.concord.mw3d.models.ABondState;
 import org.concord.mw3d.models.CuboidObstacle;
@@ -64,7 +64,7 @@ public class ModelState implements Serializable {
 	private short velocityVectorScalingFactor = 1000;
 	private int cameraAtom = -1;
 	private int zDepthMagnification = 5;
-	private List<TaskAttributes> tasks;
+	private List<TaskState> tasks;
 
 	private String rotation;
 	private String cameraPosition;
@@ -111,14 +111,14 @@ public class ModelState implements Serializable {
 	private int x4Argb = 0xffff00ff;
 
 	public ModelState() {
-		tasks = new ArrayList<TaskAttributes>();
+		tasks = new ArrayList<TaskState>();
 	}
 
-	public List<TaskAttributes> getTasks() {
+	public List<TaskState> getTasks() {
 		return tasks;
 	}
 
-	public void setTasks(List<TaskAttributes> tasks) {
+	public void setTasks(List<TaskState> tasks) {
 		this.tasks = tasks;
 	}
 
@@ -126,7 +126,7 @@ public class ModelState implements Serializable {
 		if (list == null || list.isEmpty())
 			return;
 		for (Loadable l : list) {
-			tasks.add(new TaskAttributes(l));
+			tasks.add(new TaskState(l));
 		}
 	}
 

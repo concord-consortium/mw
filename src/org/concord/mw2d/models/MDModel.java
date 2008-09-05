@@ -81,7 +81,6 @@ import org.concord.modeler.process.AbstractLoadable;
 import org.concord.modeler.process.ImageStreamGenerator;
 import org.concord.modeler.process.Job;
 import org.concord.modeler.process.Loadable;
-import org.concord.modeler.process.TaskAttributes;
 import org.concord.modeler.ui.ProcessMonitor;
 import org.concord.modeler.util.DataQueue;
 import org.concord.modeler.util.FileUtilities;

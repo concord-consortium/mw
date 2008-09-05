@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.concord.modeler.process.Loadable;
-import org.concord.modeler.process.TaskAttributes;
+import org.concord.mw2d.models.TaskAttributes;
 
 public abstract class MDState implements Serializable {
 
