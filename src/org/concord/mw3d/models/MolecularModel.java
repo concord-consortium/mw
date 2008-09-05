@@ -22,6 +22,7 @@ package org.concord.mw3d.models;
 
 import java.awt.EventQueue;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Collections;
 import java.util.Iterator;
@@ -49,6 +50,7 @@ import org.concord.modeler.event.ScriptListener;
 import org.concord.modeler.process.AbstractLoadable;
 import org.concord.modeler.process.Job;
 import org.concord.modeler.process.Loadable;
+import org.concord.modeler.process.TaskAttributes;
 import org.concord.modeler.util.DataQueue;
 import org.concord.modeler.util.FileUtilities;
 import org.concord.modeler.util.FloatQueue;
@@ -118,8 +120,14 @@ public class MolecularModel {
 	private HeatBath heatBath;
 	private MoleculeImporter moleculeImporter;
 
+	/* channels for outputing computed results */
+	float[] channels = new float[8];
+
+	/* time series for the channels */
+	FloatQueue[] channelTs = new FloatQueue[8];
+
 	/* Movie queue group for this model */
-	HomoQueueGroup movieQueueGroup;
+	private HomoQueueGroup movieQueueGroup;
 
 	/* Store the real model time in a queue for reconstructing time series later. */
 	FloatQueue modelTimeQueue;
@@ -275,6 +283,16 @@ public class MolecularModel {
 		tote.setPointer(0);
 		movieQueueGroup.add(tote);
 
+		for (int i = 0; i < channelTs.length; i++) {
+			channelTs[i] = new FloatQueue("Channel " + i, movie.getCapacity());
+			channelTs[i].setReferenceUpperBound(1);
+			channelTs[i].setReferenceLowerBound(0);
+			channelTs[i].setCoordinateQueue(modelTimeQueue);
+			channelTs[i].setInterval(movieUpdater.getInterval());
+			channelTs[i].setPointer(0);
+			movieQueueGroup.add(channelTs[i]);
+		}
+
 		// FIXME: perhaps no need to use CopyOnWriteArrayList. (a) CopyOnWriteArrayList.iterator doesn't support
 		// remove(). To use it, the code that uses iterator.remove() needs to be changed. (b) The throughput
 		// gain by using CopyOnWriteArrayList may not be a lot since we have only two threads that need to
@@ -285,6 +303,8 @@ public class MolecularModel {
 		rBonds = Collections.synchronizedList(new ArrayList<RBond>());
 		aBonds = Collections.synchronizedList(new ArrayList<ABond>());
 		tBonds = Collections.synchronizedList(new ArrayList<TBond>());
+
+		Arrays.fill(channels, 0);
 
 	}
 
@@ -504,6 +524,20 @@ public class MolecularModel {
 			evalAction.removeScriptListener(listener);
 		if (evalTask != null)
 			evalTask.removeScriptListener(listener);
+	}
+
+	/** stores the result in the i-th channel */
+	public void setChannel(int i, float result) {
+		if (i < 0 || i >= channels.length)
+			throw new IllegalArgumentException("Channel " + i + " does not exist.");
+		channels[i] = result;
+	}
+
+	/** returns the result stored in the i-th channel */
+	public float getChannel(int i) {
+		if (i < 0 || i >= channels.length)
+			throw new IllegalArgumentException("Channel " + i + " does not exist.");
+		return channels[i];
 	}
 
 	public void setChangeNotifier(Runnable notifier) {
@@ -1574,6 +1608,10 @@ public class MolecularModel {
 		tote.update(tot);
 		// System.out.println("[" + iAtom + "]" + getModelTime() + ": " + kin + ", " + pot + ", " + tot);
 		updateAtomQs();
+		int n = channels.length;
+		for (int i = 0; i < n; i++) {
+			channelTs[i].update(channels[i]);
+		}
 	}
 
 	private void updateAtomQs() {
@@ -1707,6 +1745,32 @@ public class MolecularModel {
 		if (job == null)
 			initializeJob();
 		return job;
+	}
+
+	public void addCustomTasks(List<TaskAttributes> list) {
+		if (job == null)
+			initializeJob();
+		job.removeAllCustomTasks();
+		if (list == null || list.isEmpty())
+			return;
+		for (TaskAttributes a : list) {
+			Loadable l = new AbstractLoadable() {
+				public void execute() {
+					job.runScript(getScript());
+					if (job.getIndexOfStep() >= getLifetime()) {
+						setCompleted(true);
+					}
+				}
+			};
+			l.setName(a.getName());
+			l.setDescription(a.getDescription());
+			l.setScript(a.getScript());
+			l.setInterval(a.getInterval());
+			l.setLifetime(a.getLifetime());
+			l.setPriority(a.getPriority());
+			l.setSystemTask(false);
+			job.add(l);
+		}
 	}
 
 	private boolean needMinimization() {

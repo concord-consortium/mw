@@ -534,6 +534,13 @@ class Eval3D extends AbstractEval {
 				return true;
 		}
 
+		// store
+		matcher = STORE.matcher(ci);
+		if (matcher.find()) {
+			if (evaluateStoreClause(ci.substring(matcher.end()).trim()))
+				return true;
+		}
+
 		// increment or decrement operator
 		matcher = INCREMENT_DECREMENT.matcher(ci);
 		if (matcher.find())
@@ -1829,6 +1836,28 @@ class Eval3D extends AbstractEval {
 			return false;
 		str = format(str);
 		out(ScriptEvent.SUCCEEDED, str);
+		return true;
+	}
+
+	private boolean evaluateStoreClause(String str) {
+		int i = str.indexOf(" ");
+		if (i == -1) {
+			out(ScriptEvent.FAILED, "Syntax error: store " + str);
+			return false;
+		}
+		String s = str.substring(0, i);
+		String t = str.substring(i).trim();
+		try {
+			i = Integer.parseInt(s);
+		}
+		catch (NumberFormatException e) {
+			out(ScriptEvent.FAILED, "Expected integer: " + s);
+			return false;
+		}
+		double x = parseMathExpression(t);
+		if (Double.isNaN(x))
+			return false;
+		model.setChannel(i, (float) x);
 		return true;
 	}
 

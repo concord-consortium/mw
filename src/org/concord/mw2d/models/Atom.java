@@ -353,12 +353,13 @@ public class Atom extends Particle {
 		// if(!e.readyToGo(model.getModelTime())) return;
 
 		double ke = getKineticEnergy();
-		double extra = ke + level.getEnergy();
+		//double extra = ke + level.getEnergy();
 
-		if (extra > 0) {
-			//System.out.println(extra);
-		}
-		else {
+		//if (extra > 0) {
+			// the energy affords ionization
+			// System.out.println(extra);
+		//}
+		//else {
 			// get what is the energy level closest to the KE
 			EnergyLevel excite = null;
 			double energy = 0.0;
@@ -385,7 +386,7 @@ public class Atom extends Particle {
 					break;
 				}
 			}
-		}
+		//}
 
 	}
 
