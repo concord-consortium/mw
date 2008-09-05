@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.concord.modeler.process.Loadable;
-import org.concord.mw2d.models.TaskAttributes;
+import org.concord.modeler.process.TaskAttributes;
 
 public abstract class MDState implements Serializable {
 
@@ -36,7 +36,7 @@ public abstract class MDState implements Serializable {
 
 	public MDState() {
 		properties = new HashMap();
-		tasks = new ArrayList();
+		tasks = new ArrayList<TaskAttributes>();
 	}
 
 	public List<TaskAttributes> getTasks() {

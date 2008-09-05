@@ -17,11 +17,10 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * END LICENSE */
-package org.concord.mw2d.models;
+
+package org.concord.modeler.process;
 
 import java.io.Serializable;
-
-import org.concord.modeler.process.Loadable;
 
 /**
  * This is a BML adapter for a Loadable task.

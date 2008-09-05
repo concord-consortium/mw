@@ -81,6 +81,7 @@ import org.concord.modeler.process.AbstractLoadable;
 import org.concord.modeler.process.ImageStreamGenerator;
 import org.concord.modeler.process.Job;
 import org.concord.modeler.process.Loadable;
+import org.concord.modeler.process.TaskAttributes;
 import org.concord.modeler.ui.ProcessMonitor;
 import org.concord.modeler.util.DataQueue;
 import org.concord.modeler.util.FileUtilities;
@@ -1173,7 +1174,8 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		kine.update((float) kin);
 		pote.update((float) pot);
 		tote.update((float) tot);
-		for (int i = 0; i < channels.length; i++) {
+		int n = channels.length;
+		for (int i = 0; i < n; i++) {
 			channelTs[i].update((float) channels[i]);
 		}
 	}

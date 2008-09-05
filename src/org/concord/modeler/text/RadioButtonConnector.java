@@ -65,6 +65,16 @@ class RadioButtonConnector {
 	}
 
 	void clear() {
+		for (List<PageRadioButton> list : map.values()) {
+			for (PageRadioButton rb : list) {
+				Object o = rb.getClientProperty("button group");
+				// just in case ButtonGroup helds things up
+				if (o instanceof ButtonGroup) {
+					ButtonGroup bg = (ButtonGroup) o;
+					bg.remove(rb);
+				}
+			}
+		}
 		map.clear();
 	}
 

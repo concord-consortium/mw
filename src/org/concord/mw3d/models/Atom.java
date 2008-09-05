@@ -558,12 +558,12 @@ public class Atom {
 			rQ.setInterval(model.movieUpdater.getInterval());
 			rQ.setPointer(0);
 			rQ.setCoordinateQueue(model.modelTimeQueue);
-			model.movieQueueGroup.add(rQ);
+			// model.movieQueueGroup.add(rQ);
 		}
 		else {
 			rQ.setLength(n);
 			if (n < 1) {
-				model.movieQueueGroup.remove(rQ);
+				// model.movieQueueGroup.remove(rQ);
 				rQ = null;
 			}
 			else {
@@ -582,12 +582,12 @@ public class Atom {
 			vQ.setInterval(model.movieUpdater.getInterval());
 			vQ.setPointer(0);
 			vQ.setCoordinateQueue(model.modelTimeQueue);
-			model.movieQueueGroup.add(vQ);
+			// model.movieQueueGroup.add(vQ);
 		}
 		else {
 			vQ.setLength(n);
 			if (n < 1) {
-				model.movieQueueGroup.remove(vQ);
+				// model.movieQueueGroup.remove(vQ);
 				vQ = null;
 			}
 			else {
@@ -606,12 +606,12 @@ public class Atom {
 			aQ.setInterval(model.movieUpdater.getInterval());
 			aQ.setPointer(0);
 			aQ.setCoordinateQueue(model.modelTimeQueue);
-			model.movieQueueGroup.add(aQ);
+			// model.movieQueueGroup.add(aQ);
 		}
 		else {
 			aQ.setLength(n);
 			if (n < 1) {
-				model.movieQueueGroup.remove(aQ);
+				// model.movieQueueGroup.remove(aQ);
 				aQ = null;
 			}
 			else {

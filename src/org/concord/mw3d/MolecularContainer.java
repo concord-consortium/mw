@@ -852,6 +852,8 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 			state.setInvisibleSelection(s);
 		}
 
+		if (model.getJob() != null)
+			state.addTasks(model.getJob().getCustomTasks());
 		out.writeObject(state);
 
 	}
@@ -1057,6 +1059,7 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 		}
 		view.setStartingSceneWhenCameraIsOnAtom();
 		model.setRotationMatrix(view.getViewer().getRotationMatrix());
+		model.addCustomTasks(state.getTasks());
 	}
 
 	private void setGenericParticles() {
@@ -2590,31 +2593,31 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 	}
 
 	public Job getJob() {
-		return getMolecularModel().getJob();
+		return model.getJob();
 	}
 
 	public float getModelTime() {
-		return getMolecularModel().getModelTime();
+		return model.getModelTime();
 	}
 
 	public FloatQueue getModelTimeQueue() {
-		return getMolecularModel().getModelTimeQueue();
+		return model.getModelTimeQueue();
 	}
 
 	public Movie getMovie() {
-		return getMolecularModel().getMovie();
+		return model.getMovie();
 	}
 
 	public HomoQueueGroup getMovieQueueGroup() {
-		return getMolecularModel().getMovieQueueGroup();
+		return model.getMovieQueueGroup();
 	}
 
 	public DataQueue getQueue(String name) {
-		return getMolecularModel().getQueue(name);
+		return model.getQueue(name);
 	}
 
 	public boolean getRecorderDisabled() {
-		return getMolecularModel().getRecorderDisabled();
+		return model.getRecorderDisabled();
 	}
 
 	// TODO
