@@ -31,6 +31,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -55,6 +56,7 @@ import org.concord.modeler.ui.IntegerTextField;
 import org.concord.modeler.util.DataQueue;
 import org.concord.modeler.util.FloatQueue;
 import org.concord.modeler.util.QueueGroup;
+import org.concord.mw2d.models.MDModel;
 
 /**
  * @author Charles Xie
@@ -185,7 +187,13 @@ class PageBarGraphMaker extends ComponentMaker {
 		Model m = (Model) modelComboBox.getSelectedItem();
 		m.addModelListener(pageBarGraph);
 		m.getMovie().addMovieListener(pageBarGraph);
-		pageBarGraph.setModelID(pageBarGraph.page.getComponentPool().getIndex(m));
+		pageBarGraph.setModelClass(m.getClass().getName());
+		if (m instanceof MDModel) {
+			pageBarGraph.setModelID(pageBarGraph.page.getComponentPool().getIndex(m));
+		}
+		else if (m instanceof Embeddable) {
+			pageBarGraph.setModelID(((Embeddable) m).getIndex());
+		}
 		pageBarGraph.setPreferredSize(new Dimension(widthField.getValue(), heightField.getValue()));
 		pageBarGraph.setChangable(true);
 		pageBarGraph.page.getSaveReminder().setChanged(true);
@@ -224,8 +232,6 @@ class PageBarGraphMaker extends ComponentMaker {
 				}
 			});
 		}
-
-		final ComponentPool componentPool = page.getComponentPool();
 
 		modelComboBox.removeItemListener(modelSelectionListener);
 		modelComboBox.removeAllItems();
@@ -277,6 +283,8 @@ class PageBarGraphMaker extends ComponentMaker {
 			heightField.setValue(pageBarGraph.getMaximumSize().height);
 		}
 
+		// add legacy MD models to the model list
+		ComponentPool componentPool = page.getComponentPool();
 		synchronized (componentPool) {
 			for (ModelCanvas mc : componentPool.getModels()) {
 				if (mc.isUsed()) {
@@ -284,18 +292,48 @@ class PageBarGraphMaker extends ComponentMaker {
 				}
 			}
 		}
-		if (pageBarGraph.modelID != -1) {
-			ModelCanvas mc = componentPool.get(pageBarGraph.modelID);
-			modelComboBox.setSelectedItem(mc.getContainer().getModel());
-			mc.getContainer().getModel().addModelListener(pageBarGraph);
-		}
-		else {
-			Model m = (Model) modelComboBox.getSelectedItem();
-			if (m != null) {
-				pageBarGraph.setModelID(componentPool.getIndex(m));
-				m.addModelListener(pageBarGraph);
+		// add target models to the model list
+		for (Class c : ModelCommunicator.targetClass) {
+			Map map = page.getEmbeddedComponent(c);
+			if (map != null && !map.isEmpty()) {
+				for (Object o : map.keySet()) {
+					modelComboBox.addItem(map.get(o));
+				}
 			}
 		}
+
+		if (pageBarGraph.isTargetClass()) {
+			if (pageBarGraph.modelID != -1) {
+				try {
+					Object o = page.getEmbeddedComponent(Class.forName(pageBarGraph.modelClass), pageBarGraph.modelID);
+					if (o != null)
+						modelComboBox.setSelectedItem(o);
+				}
+				catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+			}
+			else {
+				Model m = (Model) modelComboBox.getSelectedItem();
+				if (m instanceof Embeddable)
+					pageBarGraph.setModelID(((Embeddable) m).getIndex());
+			}
+		}
+		else {
+			if (pageBarGraph.modelID != -1) {
+				ModelCanvas mc = componentPool.get(pageBarGraph.modelID);
+				modelComboBox.setSelectedItem(mc.getContainer().getModel());
+				mc.getContainer().getModel().addModelListener(pageBarGraph);
+			}
+			else {
+				Model m = (Model) modelComboBox.getSelectedItem();
+				if (m != null) {
+					pageBarGraph.setModelID(componentPool.getIndex(m));
+					m.addModelListener(pageBarGraph);
+				}
+			}
+		}
+
 		modelComboBox.addItemListener(modelSelectionListener);
 		fillTimeSeriesComboBox();
 		timeSeriesComboBox.addItemListener(timeSeriesSelectionListener);

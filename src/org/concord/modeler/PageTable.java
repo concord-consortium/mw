@@ -295,6 +295,8 @@ public class PageTable extends JScrollPane implements Embeddable, AutoResizable 
 
 	public void destroy() {
 		page = null;
+		if (maker != null)
+			maker.setObject(null);
 	}
 
 	public void setTableBackground(Color c) {

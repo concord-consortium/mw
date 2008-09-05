@@ -40,7 +40,6 @@ import org.concord.modeler.text.XMLCharacterEncoder;
 import org.concord.modeler.ui.BarGraph;
 import org.concord.modeler.util.DataQueue;
 import org.concord.modeler.util.FloatQueue;
-import org.concord.mw2d.models.MDModel;
 
 public class PageBarGraph extends BarGraph implements Embeddable, Scriptable, ModelCommunicator, MovieListener {
 
@@ -103,14 +102,21 @@ public class PageBarGraph extends BarGraph implements Embeddable, Scriptable, Mo
 		setMajorTicks(g.getMajorTicks());
 		setPreferredSize(g.getPreferredSize());
 		setId(g.id);
-		ModelCanvas mc = page.getComponentPool().get(modelID);
-		if (mc != null) {
-			MDModel m = mc.getContainer().getModel();
+		Model m = getModel();
+		if (m != null) {
 			m.addModelListener(this);
 			if (!m.getRecorderDisabled())
 				m.getMovie().addMovieListener(this);
 		}
 		setChangable(page.isEditable());
+	}
+
+	boolean isTargetClass() {
+		return ComponentMaker.isTargetClass(modelClass);
+	}
+
+	private Model getModel() {
+		return ComponentMaker.getModel(page, modelClass, modelID);
 	}
 
 	public String runScript(String script) {
@@ -120,12 +126,11 @@ public class PageBarGraph extends BarGraph implements Embeddable, Scriptable, Mo
 	}
 
 	public void destroy() {
-		if (modelID != -1) {
-			ModelCanvas mc = page.getComponentPool().get(modelID);
-			if (mc != null) {
-				mc.getContainer().getModel().removeModelListener(this);
-				mc.getContainer().getModel().getMovie().removeMovieListener(this);
-			}
+		Model m = getModel();
+		if (m != null) {
+			m.removeModelListener(this);
+			if (m.getMovie() != null)
+				m.getMovie().removeMovieListener(this);
 		}
 		page = null;
 		if (maker != null)
@@ -357,9 +362,9 @@ public class PageBarGraph extends BarGraph implements Embeddable, Scriptable, Mo
 	}
 
 	public void frameChanged(MovieEvent e) {
-		if (modelID == -1)
+		Model m = getModel();
+		if (m == null)
 			return;
-		Model m = page.getComponentPool().get(modelID).getContainer().getModel();
 		DataQueue q = m.getQueue(timeSeriesName);
 		int frame = e.getFrame();
 		if (q instanceof FloatQueue) {
@@ -377,6 +382,9 @@ public class PageBarGraph extends BarGraph implements Embeddable, Scriptable, Mo
 
 	public String toString() {
 		StringBuffer sb = new StringBuffer("<class>" + getClass().getName() + "</class>\n");
+		if (modelClass != null)
+			sb.append("<modelclass>" + modelClass + "</modelclass>\n");
+		sb.append("<model>" + getModelID() + "</model>\n");
 		sb.append("<timeseries>" + timeSeriesName + "</timeseries>\n");
 		if (!getDescription().equals(timeSeriesName))
 			sb.append("<description>" + XMLCharacterEncoder.encode(getDescription()) + "</description>\n");
@@ -415,7 +423,6 @@ public class PageBarGraph extends BarGraph implements Embeddable, Scriptable, Mo
 			sb.append("<bgcolor>" + Integer.toString(getBackground().getRGB(), 16) + "</bgcolor>\n");
 		if (!getForeground().equals(Color.black))
 			sb.append("<fgcolor>" + Integer.toString(getForeground().getRGB(), 16) + "</fgcolor>\n");
-		sb.append("<model>" + getModelID() + "</model>\n");
 		sb.append("<minimum>" + getMinimum() + "</minimum>\n");
 		sb.append("<maximum>" + getMaximum() + "</maximum>\n");
 		sb.append("<value>" + getValue() + "</value>\n");

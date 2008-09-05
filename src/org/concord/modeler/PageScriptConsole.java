@@ -194,8 +194,12 @@ public class PageScriptConsole extends JPanel implements Embeddable, ModelCommun
 	}
 
 	public void destroy() {
+		BasicModel m = getBasicModel();
+		if (m != null)
+			m.removeModelListener(this);
 		if (maker != null)
 			maker.setObject(null);
+		page = null;
 	}
 
 	public void setIndex(int i) {

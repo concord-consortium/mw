@@ -40,7 +40,6 @@ import org.concord.modeler.text.Page;
 import org.concord.modeler.text.XMLCharacterEncoder;
 import org.concord.modeler.util.DataQueue;
 import org.concord.modeler.util.FloatQueue;
-import org.concord.mw2d.models.MDModel;
 
 public class PageNumericBox extends JLabel implements Embeddable, ModelCommunicator, MovieListener {
 
@@ -90,9 +89,8 @@ public class PageNumericBox extends JLabel implements Embeddable, ModelCommunica
 		setForeground(box.getForeground());
 		setDescription(box.getDescription());
 		setPreferredSize(box.getPreferredSize());
-		ModelCanvas mc = page.getComponentPool().get(modelID);
-		if (mc != null) {
-			MDModel m = mc.getContainer().getModel();
+		Model m = getModel();
+		if (m != null) {
 			m.addModelListener(this);
 			if (!m.getRecorderDisabled())
 				m.getMovie().addMovieListener(this);
@@ -101,15 +99,24 @@ public class PageNumericBox extends JLabel implements Embeddable, ModelCommunica
 		setId(box.id);
 	}
 
+	boolean isTargetClass() {
+		return ComponentMaker.isTargetClass(modelClass);
+	}
+
+	private Model getModel() {
+		return ComponentMaker.getModel(page, modelClass, modelID);
+	}
+
 	public void destroy() {
-		if (modelID != -1) {
-			ModelCanvas mc = page.getComponentPool().get(modelID);
-			if (mc != null) {
-				mc.getContainer().getModel().removeModelListener(this);
-				mc.getContainer().getModel().getMovie().removeMovieListener(this);
-			}
+		Model m = getModel();
+		if (m != null) {
+			m.removeModelListener(this);
+			if (m.getMovie() != null)
+				m.getMovie().removeMovieListener(this);
 		}
 		page = null;
+		if (maker != null)
+			maker.setObject(null);
 	}
 
 	public JPopupMenu getPopupMenu() {
@@ -386,9 +393,9 @@ public class PageNumericBox extends JLabel implements Embeddable, ModelCommunica
 	}
 
 	public void frameChanged(MovieEvent e) {
-		if (modelID == -1)
+		Model m = getModel();
+		if (m == null)
 			return;
-		Model m = page.getComponentPool().get(modelID).getContainer().getModel();
 		DataQueue q = m.getQueue(getDescription());
 		int frame = e.getFrame();
 		if (q instanceof FloatQueue) {
@@ -405,6 +412,8 @@ public class PageNumericBox extends JLabel implements Embeddable, ModelCommunica
 
 	public String toString() {
 		StringBuffer sb = new StringBuffer("<class>" + getClass().getName() + "</class>\n");
+		if (modelClass != null)
+			sb.append("<modelclass>" + modelClass + "</modelclass>\n");
 		sb.append("<model>" + getModelID() + "</model>\n");
 		if (dataType != INSTANTANEOUS)
 			sb.append("<datatype>" + dataType + "</datatype>\n");

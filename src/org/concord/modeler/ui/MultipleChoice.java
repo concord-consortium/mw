@@ -271,6 +271,10 @@ public abstract class MultipleChoice extends JPanel implements HtmlService, Sear
 
 	}
 
+	protected void destroy() {
+		questionBody.destroy();
+	}
+
 	protected boolean hasNoScripts() {
 		if (scripts == null || scripts.length == 0)
 			return true;

@@ -33,6 +33,7 @@ import java.awt.event.WindowEvent;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -61,6 +62,7 @@ import org.concord.modeler.ui.IntegerTextField;
 import org.concord.modeler.util.DataQueue;
 import org.concord.modeler.util.DataQueueUtilities;
 import org.concord.modeler.util.QueueGroup;
+import org.concord.mw2d.models.MDModel;
 
 import static org.concord.modeler.PageXYGraph.MAX;
 
@@ -161,7 +163,13 @@ class PageXYGraphMaker extends ComponentMaker {
 		Model model = (Model) modelComboBox.getSelectedItem();
 		model.addModelListener(pageXYGraph);
 		model.getMovie().addMovieListener(pageXYGraph);
-		pageXYGraph.setModelID(pageXYGraph.page.getComponentPool().getIndex(model));
+		pageXYGraph.setModelClass(model.getClass().getName());
+		if (model instanceof MDModel) {
+			pageXYGraph.setModelID(pageXYGraph.page.getComponentPool().getIndex(model));
+		}
+		else if (model instanceof Embeddable) {
+			pageXYGraph.setModelID(((Embeddable) model).getIndex());
+		}
 
 		pageXYGraph.getGraph().detachDataSets();
 
@@ -363,8 +371,6 @@ class PageXYGraphMaker extends ComponentMaker {
 			});
 		}
 
-		final ComponentPool componentPool = page.getComponentPool();
-
 		modelComboBox.removeItemListener(modelSelectionListener);
 		modelComboBox.removeAllItems();
 		xComboBox.removeItemListener(timeSeriesSelectionListener);
@@ -377,36 +383,68 @@ class PageXYGraphMaker extends ComponentMaker {
 				yFilterComboBox[i].setSelectedIndex(0);
 		}
 
-		if (componentPool != null) {
+		xLabelTextField.setText(pageXYGraph.getXAxis().getTitleText());
+		yLabelTextField.setText(pageXYGraph.getYAxis().getTitleText());
+		if (pageXYGraph.isMaximumSizeSet()) {
+			widthField.setValue(pageXYGraph.getMaximumSize().width);
+			heightField.setValue(pageXYGraph.getMaximumSize().height);
+		}
 
-			xLabelTextField.setText(pageXYGraph.getXAxis().getTitleText());
-			yLabelTextField.setText(pageXYGraph.getYAxis().getTitleText());
-			if (pageXYGraph.isMaximumSizeSet()) {
-				widthField.setValue(pageXYGraph.getMaximumSize().width);
-				heightField.setValue(pageXYGraph.getMaximumSize().height);
-			}
-			synchronized (componentPool) {
-				for (ModelCanvas mc : componentPool.getModels()) {
-					if (mc.isUsed()) {
-						modelComboBox.addItem(mc.getContainer().getModel());
-					}
+		// add legacy MD models to the model list
+		ComponentPool componentPool = page.getComponentPool();
+		synchronized (componentPool) {
+			for (ModelCanvas mc : componentPool.getModels()) {
+				if (mc.isUsed()) {
+					modelComboBox.addItem(mc.getContainer().getModel());
 				}
 			}
+		}
+		// add target models to the model list
+		for (Class c : ModelCommunicator.targetClass) {
+			Map map = page.getEmbeddedComponent(c);
+			if (map != null && !map.isEmpty()) {
+				for (Object o : map.keySet()) {
+					modelComboBox.addItem(map.get(o));
+				}
+			}
+		}
+
+		if (pageXYGraph.isTargetClass()) {
 			if (pageXYGraph.modelID != -1) {
-				ModelCanvas mc = componentPool.get(pageXYGraph.modelID);
-				modelComboBox.setSelectedItem(mc.getContainer().getModel());
+				try {
+					Object o = page.getEmbeddedComponent(Class.forName(pageXYGraph.modelClass), pageXYGraph.modelID);
+					if (o != null)
+						modelComboBox.setSelectedItem(o);
+				}
+				catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
 			}
 			else {
 				Model m = (Model) modelComboBox.getSelectedItem();
-				pageXYGraph.setModelID(componentPool.getIndex(m));
+				if (m instanceof Embeddable)
+					pageXYGraph.setModelID(((Embeddable) m).getIndex());
 			}
-			modelComboBox.addItemListener(modelSelectionListener);
-
-			fillTimeSeriesComboBox(xComboBox);
-			for (int i = 0; i < MAX; i++)
-				fillTimeSeriesComboBox(yComboBox[i]);
-
 		}
+		else {
+			if (pageXYGraph.modelID != -1) {
+				ModelCanvas mc = componentPool.get(pageXYGraph.modelID);
+				modelComboBox.setSelectedItem(mc.getContainer().getModel());
+				mc.getContainer().getModel().addModelListener(pageXYGraph);
+			}
+			else {
+				Model m = (Model) modelComboBox.getSelectedItem();
+				if (m != null) {
+					pageXYGraph.setModelID(componentPool.getIndex(m));
+					m.addModelListener(pageXYGraph);
+				}
+			}
+		}
+
+		modelComboBox.addItemListener(modelSelectionListener);
+		fillTimeSeriesComboBox(xComboBox);
+		for (int i = 0; i < MAX; i++)
+			fillTimeSeriesComboBox(yComboBox[i]);
 
 		xMultiplierField.setValue(pageXYGraph.xMultiplier);
 		xAddendField.setValue(pageXYGraph.xAddend);

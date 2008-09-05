@@ -43,11 +43,13 @@ import org.concord.mw3d.MolecularView;
 import org.concord.modeler.DisasterHandler;
 import org.concord.modeler.ScriptCallback;
 import org.concord.modeler.SlideMovie;
+import org.concord.modeler.event.ModelEvent;
 import org.concord.modeler.event.ScriptExecutionListener;
 import org.concord.modeler.event.ScriptListener;
 import org.concord.modeler.process.AbstractLoadable;
 import org.concord.modeler.process.Job;
 import org.concord.modeler.process.Loadable;
+import org.concord.modeler.util.DataQueue;
 import org.concord.modeler.util.FileUtilities;
 import org.concord.modeler.util.FloatQueue;
 import org.concord.modeler.util.HomoQueueGroup;
@@ -1543,7 +1545,25 @@ public class MolecularModel {
 		return s.trim();
 	}
 
+	/** search for a queue with a specified name */
+	public DataQueue getQueue(String name) {
+		DataQueue q = null;
+		for (Iterator it = movieQueueGroup.iterator(); it.hasNext();) {
+			q = (DataQueue) it.next();
+			if (q.getName().equals(name))
+				return q;
+		}
+		return null;
+	}
+
+	public HomoQueueGroup getMovieQueueGroup() {
+		return movieQueueGroup;
+	}
+
 	void record() {
+		if (modelTimeQueue.getPointer() > 0) {
+			view.getContainer().notifyModelListeners(new ModelEvent(view.getContainer(), ModelEvent.MODEL_CHANGED));
+		}
 		modelTimeQueue.update(getModelTime());
 		kin = getKin();
 		if (getModelTime() <= ZERO)

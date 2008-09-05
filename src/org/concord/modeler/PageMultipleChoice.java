@@ -115,8 +115,9 @@ public class PageMultipleChoice extends MultipleChoice implements Embeddable, Mu
 		}
 	}
 
+	@Override
 	public void destroy() {
-		questionBody.getHtmlPane().removeHyperlinkListener(page);
+		super.destroy();
 		removeHotlinkListener(page);
 		if (maker != null)
 			maker.setObject(null); // make sure this object is not held by someone
