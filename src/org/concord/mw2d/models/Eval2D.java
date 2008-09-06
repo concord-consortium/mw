@@ -2228,6 +2228,60 @@ class Eval2D extends AbstractEval {
 		return null;
 	}
 
+	private String evaluateComplementaryTypeFunction(final String clause) {
+		if (clause == null || clause.equals(""))
+			return null;
+		if (!(model instanceof MolecularModel))
+			return null;
+		int i = clause.indexOf("(");
+		int j = clause.lastIndexOf(")");
+		if (i == -1 || j == -1) {
+			out(ScriptEvent.FAILED, "function must be enclosed within parenthesis: " + clause);
+			return null;
+		}
+		String s = clause.substring(i + 1, j).trim();
+		String[] t = s.split(",");
+		int n = t.length;
+		if (n != 2) {
+			out(ScriptEvent.FAILED, "cannot parse complementarytype function: " + clause);
+			return null;
+		}
+		double x = parseMathExpression(t[0]);
+		if (Double.isNaN(x)) {
+			out(ScriptEvent.FAILED, "Cannot parse : " + s);
+			return null;
+		}
+		byte id = (byte) Math.round((float) x);
+		t[1] = t[1].trim();
+		if ("DNA".equalsIgnoreCase(t[1])) { // complementary type is DNA
+			switch (id) {
+			case Element.ID_C:
+				return "" + Element.ID_G;
+			case Element.ID_G:
+				return "" + Element.ID_C;
+			case Element.ID_U:
+			case Element.ID_T:
+				return "" + Element.ID_A;
+			case Element.ID_A:
+				return "" + Element.ID_T;
+			}
+		}
+		if ("RNA".equalsIgnoreCase(t[1])) { // complementary type is RNA
+			switch (id) {
+			case Element.ID_C:
+				return "" + Element.ID_G;
+			case Element.ID_G:
+				return "" + Element.ID_C;
+			case Element.ID_U:
+			case Element.ID_T:
+				return "" + Element.ID_A;
+			case Element.ID_A:
+				return "" + Element.ID_U;
+			}
+		}
+		return null;
+	}
+
 	private String evaluateWhichParticleFunction(final String clause) {
 		if (clause == null || clause.equals(""))
 			return null;
@@ -3052,6 +3106,11 @@ class Eval2D extends AbstractEval {
 			}
 			else if (exp.startsWith("nearesttoatom(")) {
 				exp = evaluateNearestToAtomFunction(exp);
+				if (exp != null)
+					storeDefinition(isStatic, var, exp);
+			}
+			else if (exp.startsWith("complementarytype(")) {
+				exp = evaluateComplementaryTypeFunction(exp);
 				if (exp != null)
 					storeDefinition(isStatic, var, exp);
 			}
@@ -3970,10 +4029,7 @@ class Eval2D extends AbstractEval {
 			int i2 = Math.round(Float.parseFloat(s[3]));
 			if ("atom".equals(s[2])) {
 				Atom at = ((MolecularModel) model).getAtom(i2);
-				if (at == null) {
-					out(ScriptEvent.FAILED, "Atom " + i2 + " does not exist.");
-					return false;
-				}
+				ic.setHost(null);
 				ic.setHost(at);
 				view.repaint();
 			}
