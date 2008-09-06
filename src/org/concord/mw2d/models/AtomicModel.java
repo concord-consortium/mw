@@ -1646,6 +1646,12 @@ public abstract class AtomicModel extends MDModel {
 		return rList;
 	}
 
+	private static boolean isComplementary(int i, int j) {
+		return ((i == ID_A && j == ID_T) || (i == ID_T && j == ID_A))
+				|| ((i == ID_C && j == ID_G) || (i == ID_G && j == ID_C))
+				|| ((i == ID_A && j == ID_U) || (i == ID_U && j == ID_A));
+	}
+
 	/** set the cut-off radius matrix for force truncation. */
 	public void setCutOffMatrix(float cutoff) {
 		if (cutoff <= 0)
@@ -1663,18 +1669,17 @@ public abstract class AtomicModel extends MDModel {
 		for (int i = ID_A; i <= ID_U; i++)
 			sig[i] = nucleotideElement[i - ID_A].getSigma();
 		int n = sig.length;
+		int scale = 1;
 		for (int i = 0; i < n - 1; i++) {
 			for (int j = i + 1; j < n; j++) {
-				// the following is used to extend the interaction range between A-T and C-G so that they
-				// can attract slightly more strongly
-				if (((i == ID_A && j == ID_T) || (i == ID_T && j == ID_A))
-						|| ((i == ID_C && j == ID_G) || (i == ID_G && j == ID_C))
-						|| ((i == ID_A && j == ID_U) || (i == ID_U && j == ID_A))) {
-					cutOffSquareMatrix[j][i] = cutOffSquareMatrix[i][j] = sig[j] * sig[i] * 4 * cutoff * cutoff;
+				if (isComplementary(i, j)) {
+					// the following is used to extend the interaction range between A-T and C-G so that they
+					// can attract slightly more strongly. However, if cutoff is set short, we mean to turn off
+					// all attractions, I think.
+					if (cutoff > 1.5)
+						scale = 4;
 				}
-				else {
-					cutOffSquareMatrix[j][i] = cutOffSquareMatrix[i][j] = sig[j] * sig[i] * cutoff * cutoff;
-				}
+				cutOffSquareMatrix[j][i] = cutOffSquareMatrix[i][j] = sig[j] * sig[i] * cutoff * cutoff * scale;
 			}
 		}
 		for (int i = 0; i < n; i++) {
@@ -1785,14 +1790,8 @@ public abstract class AtomicModel extends MDModel {
 			for (int j = i + 1; j < n; j++) {
 				// Christie Williams@colostate.edu pointed out that the listSquareMatrix elements for A-T and C-G pairs
 				// should be doubled as those of cutOffSquareMatrix
-				if (((i == ID_A && j == ID_T) || (i == ID_T && j == ID_A))
-						|| ((i == ID_C && j == ID_G) || (i == ID_G && j == ID_C))
-						|| ((i == ID_A && j == ID_U) || (i == ID_U && j == ID_A))) {
-					listSquareMatrix[j][i] = listSquareMatrix[i][j] = sig[j] * sig[i] * rList * rList * 4;
-				}
-				else {
-					listSquareMatrix[j][i] = listSquareMatrix[i][j] = sig[j] * sig[i] * rList * rList;
-				}
+				listSquareMatrix[j][i] = listSquareMatrix[i][j] = sig[j] * sig[i] * rList * rList
+						* (isComplementary(i, j) ? 4 : 1);
 			}
 		}
 		for (int i = 0; i < n; i++) {
