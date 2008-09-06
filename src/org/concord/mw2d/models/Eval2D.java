@@ -2401,8 +2401,8 @@ class Eval2D extends AbstractEval {
 		if (!(model instanceof MolecularModel))
 			return null;
 		MolecularModel mm = (MolecularModel) model;
-		int nrb = mm.molecules.size();
-		if (nrb <= 0)
+		int nmol = mm.molecules.size();
+		if (nmol <= 0)
 			return null;
 		int i = clause.indexOf("(");
 		int j = clause.lastIndexOf(")");
@@ -2426,6 +2426,53 @@ class Eval2D extends AbstractEval {
 		if (mol == null)
 			return null;
 		return "" + mm.molecules.indexOf(mol);
+	}
+
+	private String evaluateAtomOfMoleculeFunction(final String clause) {
+		if (clause == null || clause.equals(""))
+			return null;
+		if (!(model instanceof MolecularModel))
+			return null;
+		MolecularModel mm = (MolecularModel) model;
+		int nmol = mm.molecules.size();
+		if (nmol <= 0)
+			return null;
+		int i = clause.indexOf("(");
+		int j = clause.lastIndexOf(")");
+		if (i == -1 || j == -1) {
+			out(ScriptEvent.FAILED, "function must be enclosed within parenthesis: " + clause);
+			return null;
+		}
+		String s = clause.substring(i + 1, j).trim();
+		String[] t = s.split(",");
+		int n = t.length;
+		if (n != 2) {
+			out(ScriptEvent.FAILED, "Cannot parse : " + clause);
+			return null;
+		}
+		double x = parseMathExpression(t[0]);
+		if (Double.isNaN(x)) {
+			out(ScriptEvent.FAILED, "Cannot parse : " + t[0]);
+			return null;
+		}
+		i = Math.round((float) x);
+		if (i < 0 || i >= nmol) {
+			out(ScriptEvent.FAILED, "Index of molecule out of bound : " + i + " in " + clause);
+			return null;
+		}
+		x = parseMathExpression(t[1]);
+		if (Double.isNaN(x)) {
+			out(ScriptEvent.FAILED, "Cannot parse : " + t[1]);
+			return null;
+		}
+		j = Math.round((float) x);
+		Molecule mol = mm.molecules.get(i);
+		if (j < 0 || j >= mol.size()) {
+			out(ScriptEvent.FAILED, "Index of atom out of bound : " + j + " in " + clause);
+			return null;
+		}
+		Atom a = mol.getAtom(j);
+		return "" + a.getIndex();
 	}
 
 	private String evaluateSpeedFunction(final String clause) {
@@ -3129,6 +3176,10 @@ class Eval2D extends AbstractEval {
 			}
 			else if (exp.startsWith("whichmolecule(")) {
 				exp = evaluateWhichMoleculeFunction(exp);
+				storeDefinition(isStatic, var, exp != null ? exp : "-1");
+			}
+			else if (exp.startsWith("atomofmolecule(")) {
+				exp = evaluateAtomOfMoleculeFunction(exp);
 				storeDefinition(isStatic, var, exp != null ? exp : "-1");
 			}
 			else {
