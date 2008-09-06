@@ -2098,12 +2098,13 @@ class Eval2D extends AbstractEval {
 				int imin = -1;
 				double r = 0;
 				Particle p = null;
+				x[3] *= x[3];
 				for (int k = 0; k < nop; k++) {
 					p = model.getParticle(k);
 					if (p instanceof Atom) {
 						if (((Atom) p).id == id || id == -1) {
 							r = distanceSquare(p.rx - x[1], p.ry - x[2]);
-							if (r < x[3] * x[3] && r < dmin) {
+							if (r < x[3] && r < dmin) {
 								dmin = r;
 								imin = k;
 							}
@@ -2111,9 +2112,109 @@ class Eval2D extends AbstractEval {
 					}
 					else if (p instanceof GayBerneParticle) {
 						r = distanceSquare(p.rx - x[1], p.ry - x[2]);
-						if (r < x[3] * x[3] && r < dmin) {
+						if (r < x[3] && r < dmin) {
 							dmin = r;
 							imin = k;
+						}
+					}
+				}
+				return "" + imin;
+			}
+			break;
+		default:
+			out(ScriptEvent.FAILED, "argument error: " + clause);
+			return null;
+		}
+		return null;
+	}
+
+	private String evaluateNearestToAtomFunction(final String clause) {
+		if (clause == null || clause.equals(""))
+			return null;
+		if (!(model instanceof MolecularModel))
+			return null;
+		MolecularModel mm = (MolecularModel) model;
+		int noa = mm.getNumberOfAtoms();
+		if (noa <= 1)
+			return "" + (noa - 1);
+		int i = clause.indexOf("(");
+		int j = clause.lastIndexOf(")");
+		if (i == -1 || j == -1) {
+			out(ScriptEvent.FAILED, "function must be enclosed within parenthesis: " + clause);
+			return null;
+		}
+		String s = clause.substring(i + 1, j);
+		String[] t = s.split(",");
+		int n = t.length;
+		switch (n) {
+		case 3:
+			float[] x = parseArray(3, t);
+			if (x != null) {
+				int id = (int) x[0];
+				int iat = (int) x[1];
+				if (iat < 0 || iat >= noa) {
+					out(ScriptEvent.FAILED, "index of atom out of bound: " + iat + " , in " + clause);
+					return null;
+				}
+				x[2] *= IR_CONVERTER;
+				x[2] *= x[2];
+				double dmin = Double.MAX_VALUE;
+				int imin = -1;
+				double r = 0;
+				Atom a = null, b = mm.atom[iat];
+				for (int k = 0; k < noa; k++) {
+					a = mm.atom[k];
+					if (a.id == id || id == -1) {
+						r = a.distanceSquare(b);
+						if (r < x[2] && r < dmin) {
+							dmin = r;
+							imin = k;
+						}
+					}
+				}
+				return "" + imin;
+			}
+			break;
+		case 4:
+			x = parseArray(4, t);
+			if (x != null) {
+				int id = (int) x[0];
+				int iat = (int) x[1];
+				if (iat < 0 || iat >= noa) {
+					out(ScriptEvent.FAILED, "index of atom out of bound: " + iat + " , in " + clause);
+					return null;
+				}
+				x[2] *= IR_CONVERTER;
+				x[2] *= x[2];
+				int option = Math.round(x[3]);
+				double dmin = Double.MAX_VALUE;
+				int imin = -1;
+				double r = 0;
+				Atom a = null, b = mm.atom[iat];
+				Molecule mol = mm.molecules.getMolecule(b);
+				for (int k = 0; k < noa; k++) {
+					a = mm.atom[k];
+					if (a.id == id || id == -1) {
+						r = a.distanceSquare(b);
+						if (r < x[2] && r < dmin) {
+							switch (option) {
+							case 0: // all-atom search
+								dmin = r;
+								imin = k;
+								break;
+							case 1: // intermolecular search
+								if (mol != mm.molecules.getMolecule(a)) {
+									dmin = r;
+									imin = k;
+								}
+								break;
+							case 2: // intramolecular search
+								if (mol == mm.molecules.getMolecule(a)) {
+									dmin = r;
+									imin = k;
+								}
+								break;
+							}
 						}
 					}
 				}
@@ -2231,8 +2332,46 @@ class Eval2D extends AbstractEval {
 			out(ScriptEvent.FAILED, "Cannot parse : " + s);
 			return null;
 		}
-		Atom a = mm.atom[Math.round((float) x)];
+		i = Math.round((float) x);
+		if (i < 0 || i >= mm.getNumberOfAtoms()) {
+			out(ScriptEvent.FAILED, "Index of atom out of bound : " + i + " in " + clause);
+			return null;
+		}
+		Atom a = mm.atom[i];
 		return mm.bonds.getBondedPartnerCount(a) + "";
+	}
+
+	private String evaluateWhichMoleculeFunction(final String clause) {
+		if (clause == null || clause.equals(""))
+			return null;
+		if (!(model instanceof MolecularModel))
+			return null;
+		MolecularModel mm = (MolecularModel) model;
+		int nrb = mm.molecules.size();
+		if (nrb <= 0)
+			return null;
+		int i = clause.indexOf("(");
+		int j = clause.lastIndexOf(")");
+		if (i == -1 || j == -1) {
+			out(ScriptEvent.FAILED, "function must be enclosed within parenthesis: " + clause);
+			return null;
+		}
+		String s = clause.substring(i + 1, j).trim();
+		double x = parseMathExpression(s);
+		if (Double.isNaN(x)) {
+			out(ScriptEvent.FAILED, "Cannot parse : " + s);
+			return null;
+		}
+		i = Math.round((float) x);
+		if (i < 0 || i >= mm.getNumberOfAtoms()) {
+			out(ScriptEvent.FAILED, "Index of atom out of bound : " + i + " in " + clause);
+			return null;
+		}
+		Atom a = mm.atom[i];
+		Molecule mol = mm.molecules.getMolecule(a);
+		if (mol == null)
+			return null;
+		return "" + mm.molecules.indexOf(mol);
 	}
 
 	private String evaluateSpeedFunction(final String clause) {
@@ -2911,6 +3050,11 @@ class Eval2D extends AbstractEval {
 				if (exp != null)
 					storeDefinition(isStatic, var, exp);
 			}
+			else if (exp.startsWith("nearesttoatom(")) {
+				exp = evaluateNearestToAtomFunction(exp);
+				if (exp != null)
+					storeDefinition(isStatic, var, exp);
+			}
 			else if (exp.startsWith("whichparticle(")) {
 				exp = evaluateWhichParticleFunction(exp);
 				if (exp != null)
@@ -2923,6 +3067,10 @@ class Eval2D extends AbstractEval {
 			else if (exp.startsWith("countrbond(")) {
 				exp = evaluateCountRBondFunction(exp);
 				storeDefinition(isStatic, var, exp != null ? exp : "0");
+			}
+			else if (exp.startsWith("whichmolecule(")) {
+				exp = evaluateWhichMoleculeFunction(exp);
+				storeDefinition(isStatic, var, exp != null ? exp : "-1");
 			}
 			else {
 				evaluateDefineMathexClause(isStatic, var, exp);
@@ -4443,8 +4591,10 @@ class Eval2D extends AbstractEval {
 			m.atom[i].hx = (float) x * R_CONVERTER;
 		else if (s == "hy")
 			m.atom[i].hy = (float) x * R_CONVERTER;
-		else if (s == "charge")
+		else if (s == "charge") {
 			m.atom[i].charge = x;
+			m.checkCharges();
+		}
 		else if (s == "friction")
 			m.atom[i].friction = (float) x;
 		else if (s == "restraint") {

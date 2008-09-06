@@ -403,6 +403,10 @@ public abstract class AbstractEval {
 	}
 
 	protected float[] parseArray(int n, String[] s) {
+		if (n > s.length) {
+			out(ScriptEvent.FAILED, "index out of bound: " + n + " > " + s.length);
+			return null;
+		}
 		float[] x = new float[n];
 		double z = 0;
 		for (int i = 0; i < n; i++) {
