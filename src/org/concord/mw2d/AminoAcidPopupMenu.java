@@ -125,7 +125,7 @@ class AminoAcidPopupMenu extends JPopupMenu {
 		}
 		if (code == null)
 			return;
-		Aminoacid a = Codon.express(code);
+		Aminoacid a = Codon.expressFromDNA(code);
 		if (a == null)
 			return;
 		for (int i = 0; i < AMINO_ACID.length; i++) {

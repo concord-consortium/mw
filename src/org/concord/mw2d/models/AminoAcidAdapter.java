@@ -59,4 +59,11 @@ public class AminoAcidAdapter {
 		return -1;
 	}
 
+	/* express a RNA codon to an amino acid */
+	static Aminoacid expressFromRNA(char[] code) {
+		if (code == null)
+			throw new IllegalArgumentException("input codon error");
+		return Aminoacid.express(code, Aminoacid.EXPRESS_FROM_RNA);
+	}
+
 }

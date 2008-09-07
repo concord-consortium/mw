@@ -24,6 +24,8 @@ import java.io.Serializable;
 
 import org.concord.molbio.engine.Aminoacid;
 
+/** This is a DNA codon */
+
 public class Codon implements Serializable {
 
 	public static final char T = 'T';
@@ -137,13 +139,13 @@ public class Codon implements Serializable {
 		return new Codon(code).isStopCodon();
 	}
 
-	/** express this codon to an amino acid */
+	/** express this DNA codon to an amino acid */
 	public Aminoacid express() {
-		return express(code);
+		return expressFromDNA(code);
 	}
 
-	/** express a codon to an amino acid */
-	public static Aminoacid express(char[] code) {
+	/** express a DNA codon to an amino acid */
+	public static Aminoacid expressFromDNA(char[] code) {
 		if (code == null)
 			throw new IllegalArgumentException("input codon error");
 		return Aminoacid.express(code);

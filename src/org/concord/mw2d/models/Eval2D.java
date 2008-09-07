@@ -2242,42 +2242,66 @@ class Eval2D extends AbstractEval {
 		String s = clause.substring(i + 1, j).trim();
 		String[] t = s.split(",");
 		int n = t.length;
-		if (n != 2) {
-			out(ScriptEvent.FAILED, "cannot parse complementarytype function: " + clause);
-			return null;
-		}
-		double x = parseMathExpression(t[0]);
-		if (Double.isNaN(x)) {
-			out(ScriptEvent.FAILED, "Cannot parse : " + s);
-			return null;
-		}
-		byte id = (byte) Math.round((float) x);
-		t[1] = t[1].trim();
-		if ("DNA".equalsIgnoreCase(t[1])) { // complementary type is DNA
-			switch (id) {
-			case Element.ID_C:
-				return "" + Element.ID_G;
-			case Element.ID_G:
-				return "" + Element.ID_C;
-			case Element.ID_U:
-			case Element.ID_T:
-				return "" + Element.ID_A;
-			case Element.ID_A:
-				return "" + Element.ID_T;
+		switch (n) {
+		case 2:
+			double x = parseMathExpression(t[0]);
+			if (Double.isNaN(x)) {
+				out(ScriptEvent.FAILED, "Cannot parse : " + s);
+				return null;
 			}
-		}
-		if ("RNA".equalsIgnoreCase(t[1])) { // complementary type is RNA
-			switch (id) {
-			case Element.ID_C:
-				return "" + Element.ID_G;
-			case Element.ID_G:
-				return "" + Element.ID_C;
-			case Element.ID_U:
-			case Element.ID_T:
-				return "" + Element.ID_A;
-			case Element.ID_A:
-				return "" + Element.ID_U;
+			byte id = (byte) Math.round((float) x);
+			t[1] = t[1].trim();
+			if ("DNA".equalsIgnoreCase(t[1])) { // complementary type is DNA
+				switch (id) {
+				case Element.ID_C:
+					return "" + Element.ID_G;
+				case Element.ID_G:
+					return "" + Element.ID_C;
+				case Element.ID_U:
+				case Element.ID_T:
+					return "" + Element.ID_A;
+				case Element.ID_A:
+					return "" + Element.ID_T;
+				}
 			}
+			if ("RNA".equalsIgnoreCase(t[1])) { // complementary type is RNA
+				switch (id) {
+				case Element.ID_C:
+					return "" + Element.ID_G;
+				case Element.ID_G:
+					return "" + Element.ID_C;
+				case Element.ID_U:
+				case Element.ID_T:
+					return "" + Element.ID_A;
+				case Element.ID_A:
+					return "" + Element.ID_U;
+				}
+			}
+			break;
+		case 4:
+			float[] y = parseArray(3, t);
+			if (y != null) {
+				char[] codon = new char[3];
+				for (int m = 0; m < 3; m++) {
+					id = (byte) Math.round(y[m]);
+					if (id < Element.ID_A || id > Element.ID_U) {
+						out(ScriptEvent.FAILED, "particle not a nucleotide : " + clause);
+						return null;
+					}
+					codon[m] = Element.idToName(id).charAt(0);
+				}
+				t[3] = t[3].trim();
+				if ("PROTEIN".equalsIgnoreCase(t[3])) { // complementary type is protein
+					id = AminoAcidAdapter.getElementID(AminoAcidAdapter.expressFromRNA(codon));
+					if (id == -1)
+						return null;
+					return "" + id;
+				}
+			}
+			break;
+		default:
+			out(ScriptEvent.FAILED, "argument error, cannot parse " + clause);
+			return null;
 		}
 		return null;
 	}

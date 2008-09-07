@@ -629,13 +629,11 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 						dnaPlayButton.setEnabled(true);
 					mb.enableMovieMenuItems(false);
 					ItemListener[] listener = mb.disableRecorderItem.getItemListeners();
-					for (int i = 0; i < listener.length; i++) {
-						mb.disableRecorderItem.removeItemListener(listener[i]);
-					}
+					for (ItemListener i : listener)
+						mb.disableRecorderItem.removeItemListener(i);
 					mb.disableRecorderItem.setSelected(true);
-					for (int i = 0; i < listener.length; i++) {
-						mb.disableRecorderItem.addItemListener(listener[i]);
-					}
+					for (ItemListener i : listener)
+						mb.disableRecorderItem.addItemListener(i);
 				}
 			});
 		}
@@ -845,7 +843,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 					view.removeMarkedAtoms(list);
 				}
 				else {
-					a.setElement(model.getElement(Codon.express(q).getAbbreviation()));
+					a.setElement(model.getElement(Codon.expressFromDNA(q).getAbbreviation()));
 					a.setCodon(new String(q));
 					adjustBondLength(a);
 					view.paintImmediately(a.getBounds(10));
@@ -863,7 +861,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 					view.repaint();
 				}
 				else {
-					a.setElement(model.getElement(Codon.express(q1).getAbbreviation()));
+					a.setElement(model.getElement(Codon.expressFromDNA(q1).getAbbreviation()));
 					a.setCodon(new String(q1));
 					adjustBondLength(a);
 					view.paintImmediately(a.getBounds(10));

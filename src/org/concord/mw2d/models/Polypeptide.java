@@ -222,7 +222,7 @@ public class Polypeptide extends Molecule {
 			code[0] = gene.charAt(3 * i);
 			code[1] = gene.charAt(3 * i + 1);
 			code[2] = gene.charAt(3 * i + 2);
-			a = Codon.express(code);
+			a = Codon.expressFromDNA(code);
 			Object o = a.getProperty("element");
 			if (o instanceof Byte) {
 				atom.setElement(model.getElement(((Byte) o).byteValue()));
