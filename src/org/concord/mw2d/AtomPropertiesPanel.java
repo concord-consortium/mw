@@ -323,9 +323,10 @@ class AtomPropertiesPanel extends PropertiesPanel {
 									typeLabel.setText("Amino Acid");
 									nameLabel.setText(atom.getName());
 									nameLabel2.setText(aa.getFullName());
-									atom.getHostModel().notifyModelListeners(
-											new ModelEvent(atom, "Selected index", null, new Integer(m
-													.indexOfAtom(atom))));
+									if (m != null)
+										atom.getHostModel().notifyModelListeners(
+												new ModelEvent(atom, "Selected index", null, new Integer(m
+														.indexOfAtom(atom))));
 									atom.getHostModel().getView().paintImmediately(atom.getBounds(10));
 									changed = true;
 								}
