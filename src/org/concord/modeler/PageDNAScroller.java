@@ -624,7 +624,7 @@ public class PageDNAScroller extends DNAScroller implements Embeddable, ModelCom
 					});
 				}
 				else {
-					a.setElement(model.getElement(Codon.express(q).getAbbreviation()));
+					a.setElement(model.getElement(Codon.expressFromDNA(q).getAbbreviation()));
 					a.setCodon(new String(q));
 					adjustBondLength(a);
 					a.getHostModel().getView().paintImmediately(a.getBounds(10));
@@ -649,7 +649,7 @@ public class PageDNAScroller extends DNAScroller implements Embeddable, ModelCom
 					});
 				}
 				else {
-					a.setElement(model.getElement(Codon.express(q1).getAbbreviation()));
+					a.setElement(model.getElement(Codon.expressFromDNA(q1).getAbbreviation()));
 					a.setCodon(new String(q1));
 					adjustBondLength(a);
 					a.getHostModel().getView().paintImmediately(a.getBounds(10));

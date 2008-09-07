@@ -581,7 +581,7 @@ public class Atom extends Particle {
 		id = e.getID();
 		if (isAminoAcid()) {
 			codon = new String(Codon.getComplementaryCode(Aminoacid.getByAbbreviation(e.getName()).encode()));
-			Aminoacid aa = Codon.express(codon.toCharArray());
+			Aminoacid aa = Codon.expressFromDNA(codon.toCharArray());
 			if (aa != null) {
 				setName("" + aa.getLetter());
 				setCharge(aa.getCharge());

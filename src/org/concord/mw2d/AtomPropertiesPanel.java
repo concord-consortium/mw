@@ -105,7 +105,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		char[] codon = null;
 		if (atom.isAminoAcid()) {
 			codon = atom.getCodon().toCharArray();
-			atom.setName("" + Codon.express(codon).getLetter());
+			atom.setName("" + Codon.expressFromDNA(codon).getLetter());
 		}
 
 		nameLabel = createLabel(atom.getName());
@@ -131,7 +131,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 			type = "";
 		}
 		else if (atom.isAminoAcid()) {
-			type = Codon.express(codon).getFullName();
+			type = Codon.expressFromDNA(codon).getFullName();
 		}
 		else if (atom.isNucleotide()) {
 			type = Nucleotide.getNucleotide(atom.getName().charAt(0)).getFullName();
@@ -312,7 +312,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 						}
 						else {
 							if (!s.equalsIgnoreCase(atom.getCodon())) {
-								Aminoacid aa = Codon.express(c);
+								Aminoacid aa = Codon.expressFromDNA(c);
 								if (aa != null) {
 									MolecularModel mm = (MolecularModel) atom.getHostModel();
 									atom.setElement(mm.getElement(aa.getAbbreviation()));
