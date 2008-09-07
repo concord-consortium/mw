@@ -3160,35 +3160,30 @@ class Eval2D extends AbstractEval {
 				if (exp != null)
 					storeDefinition(isStatic, var, exp);
 			}
-			else if (exp.startsWith("count(")) {
-				exp = evaluateCountFunction(exp);
-				if (exp != null)
-					storeDefinition(isStatic, var, exp);
-			}
 			else if (exp.startsWith("speed(")) {
 				exp = evaluateSpeedFunction(exp);
 				if (exp != null)
 					storeDefinition(isStatic, var, exp);
 			}
+			else if (exp.startsWith("count(")) {
+				exp = evaluateCountFunction(exp);
+				storeDefinition(isStatic, var, exp != null ? exp : "0");
+			}
 			else if (exp.startsWith("nearest(")) {
 				exp = evaluateNearestParticleFunction(exp);
-				if (exp != null)
-					storeDefinition(isStatic, var, exp);
+				storeDefinition(isStatic, var, exp != null ? exp : "-1");
 			}
 			else if (exp.startsWith("nearesttoatom(")) {
 				exp = evaluateNearestToAtomFunction(exp);
-				if (exp != null)
-					storeDefinition(isStatic, var, exp);
+				storeDefinition(isStatic, var, exp != null ? exp : "-1");
 			}
 			else if (exp.startsWith("complementarytype(")) {
 				exp = evaluateComplementaryTypeFunction(exp);
-				if (exp != null)
-					storeDefinition(isStatic, var, exp);
+				storeDefinition(isStatic, var, exp != null ? exp : "-1");
 			}
 			else if (exp.startsWith("whichparticle(")) {
 				exp = evaluateWhichParticleFunction(exp);
-				if (exp != null)
-					storeDefinition(isStatic, var, exp);
+				storeDefinition(isStatic, var, exp != null ? exp : "-1");
 			}
 			else if (exp.startsWith("whichrbond(")) {
 				exp = evaluateWhichRBondFunction(exp);
