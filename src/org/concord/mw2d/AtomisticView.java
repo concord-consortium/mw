@@ -88,6 +88,7 @@ import org.concord.mw2d.models.DiatomicMolecule;
 import org.concord.mw2d.models.DNAStrand;
 import org.concord.mw2d.models.ElectricField;
 import org.concord.mw2d.models.ElectricForceField;
+import org.concord.mw2d.models.Electron;
 import org.concord.mw2d.models.Element;
 import org.concord.mw2d.models.EllipseComponent;
 import org.concord.mw2d.models.Grid;
@@ -3528,6 +3529,15 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			synchronized (photons) {
 				for (Photon p : photons)
 					p.render(g2);
+			}
+		}
+
+		/* render free electrons */
+		List<Electron> electrons = model.getFreeElectrons();
+		if (electrons != null && !electrons.isEmpty()) {
+			synchronized (electrons) {
+				for (Electron e : electrons)
+					e.render(g2);
 			}
 		}
 

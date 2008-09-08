@@ -949,18 +949,6 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 
 	public abstract double getKin();
 
-	public abstract double getKinForParticles(List list);
-
-	public abstract float getTotalKineticEnergy();
-
-	public abstract float getTotalElectrostaticEnergy();
-
-	public abstract float getTotalElectricFieldEnergy();
-
-	public abstract float getTotalGravitationalFieldEnergy();
-
-	public abstract float getTotalRestraintEnergy();
-
 	/**
 	 * ask if this model has an embedded movie, or has loaded one from external source. A model is said to have an
 	 * embedded movie if all of its particles have arrays to store their zero and first order variables of motion and

@@ -153,7 +153,6 @@ public abstract class AtomicModel extends MDModel {
 	private float[][] epsab, sigab;
 	private double[] rx0, ry0;
 	private volatile boolean updateParArray;
-	private double eKT, eLJ, eES, eEF, eGF, eAF, eRS;
 	private int nlist;
 	private int jbeg, jend;
 	private double rxi, ryi, fxi, fyi, rxij, ryij, rijsq, xbox, ybox;
@@ -986,7 +985,7 @@ public abstract class AtomicModel extends MDModel {
 			updatePhotonQ();
 	}
 
-	private synchronized void updatePhotonQ() {
+	private void updatePhotonQ() {
 		if (photonEnabled) {
 			int c = movie.getCapacity();
 			for (int i = 0; i < numberOfAtoms; i++) {
@@ -1037,7 +1036,7 @@ public abstract class AtomicModel extends MDModel {
 		}
 	}
 
-	private synchronized void updateMSD() {
+	private void updateMSD() {
 		int p = getTapePointer();
 		if (p < 0)
 			return;
@@ -1799,20 +1798,28 @@ public abstract class AtomicModel extends MDModel {
 		}
 	}
 
-	public synchronized int getNumberOfParticles() {
-		return numberOfAtoms;
+	public int getNumberOfParticles() {
+		return getNumberOfAtoms();
 	}
 
-	public synchronized void setNumberOfParticles(int n) {
+	public void setNumberOfParticles(int n) {
 		setNumberOfAtoms(n);
 	}
 
-	/** same as <tt>getNumberOfParticles()</tt> */
+	/**
+	 * same as <tt>getNumberOfParticles()</tt>
+	 * 
+	 * @guarded by this
+	 */
 	public synchronized int getNumberOfAtoms() {
 		return numberOfAtoms;
 	}
 
-	/** same as <tt>setNumberOfParticles(int n)</tt> */
+	/**
+	 * same as <tt>setNumberOfParticles(int n)</tt>
+	 * 
+	 * @guarded by this
+	 */
 	public synchronized void setNumberOfAtoms(int n) {
 		if (n < 0)
 			throw new IllegalArgumentException("# of atoms cannot be negative");
@@ -1833,31 +1840,6 @@ public abstract class AtomicModel extends MDModel {
 				n++;
 		}
 		return n;
-	}
-
-	public synchronized float getTotalKineticEnergy() {
-		getKin();
-		return (float) eKT;
-	}
-
-	public synchronized float getTotalLJEnergy() {
-		return (float) eLJ;
-	}
-
-	public synchronized float getTotalElectrostaticEnergy() {
-		return (float) eES;
-	}
-
-	public synchronized float getTotalElectricFieldEnergy() {
-		return (float) eEF;
-	}
-
-	public synchronized float getTotalGravitationalFieldEnergy() {
-		return (float) eGF;
-	}
-
-	public synchronized float getTotalRestraintEnergy() {
-		return (float) eRS;
 	}
 
 	void showTimeSeries(TimeSeriesGenerator.Parameter[] p) {
@@ -1907,6 +1889,8 @@ public abstract class AtomicModel extends MDModel {
 	/**
 	 * rescale velocities such that the temperature will be equal to the input value, without setting the total momentum
 	 * to be zero.
+	 * 
+	 * @guarded by this
 	 */
 	public synchronized void setTemperature(double temperature) {
 		if (temperature < ZERO)
@@ -1939,6 +1923,7 @@ public abstract class AtomicModel extends MDModel {
 			if (temp1 > ZERO)
 				rescaleVelocities(Math.sqrt(temperature / temp1));
 		}
+		setElectronTemperature(temperature);
 	}
 
 	private List[] splitParticlesByCharges() {
@@ -1969,7 +1954,7 @@ public abstract class AtomicModel extends MDModel {
 	/**
 	 * set the temperature of the atoms of the specified ID to be the specified value.
 	 */
-	public synchronized void setTemperature(byte elementID, double temperature) {
+	public void setTemperature(byte elementID, double temperature) {
 		if (typeList == null) {
 			typeList = new ArrayList<Atom>();
 		}
@@ -1984,7 +1969,11 @@ public abstract class AtomicModel extends MDModel {
 		setTemperature(typeList, temperature);
 	}
 
-	/** set the temperature of the atom list to be the specified value. */
+	/**
+	 * set the temperature of the atom list to be the specified value.
+	 * 
+	 * @guarded by this
+	 */
 	public synchronized void setTemperature(List<Atom> list, double temperature) {
 		if (list == null || list.isEmpty())
 			return;
@@ -1996,6 +1985,15 @@ public abstract class AtomicModel extends MDModel {
 			temp1 = getKinForParticles(list) * UNIT_EV_OVER_KB;
 		}
 		rescaleVelocities(list, Math.sqrt(temperature / temp1));
+	}
+
+	void setElectronTemperature(double temperature) {
+		if (freeElectrons.isEmpty())
+			return;
+		if (temperature < ZERO)
+			temperature = 0.0;
+		double t = getKinForElectrons() * UNIT_EV_OVER_KB;
+		rescaleElectronVelocities(Math.sqrt(temperature / t));
 	}
 
 	/** change the temperature by percentage */
@@ -2187,7 +2185,7 @@ public abstract class AtomicModel extends MDModel {
 	}
 
 	/** assign velocities to atoms according to the Boltzman-Maxwell distribution */
-	public synchronized void assignTemperature(double temperature) {
+	public void assignTemperature(double temperature) {
 		if (temperature < ZERO)
 			temperature = 0.0;
 		double rtemp = Math.sqrt(temperature) * VT_CONVERSION_CONSTANT;
@@ -2249,7 +2247,7 @@ public abstract class AtomicModel extends MDModel {
 		}
 	}
 
-	synchronized void rescaleVelocities(double ratio) {
+	void rescaleVelocities(double ratio) {
 		for (int i = 0; i < numberOfAtoms; i++) {
 			Atom a = atom[i];
 			a.vx *= ratio;
@@ -2269,13 +2267,25 @@ public abstract class AtomicModel extends MDModel {
 		}
 	}
 
-	private synchronized void rescaleVelocities(List<Atom> list, double ratio) {
+	private void rescaleVelocities(List<Atom> list, double ratio) {
 		for (Atom a : list) {
 			a.vx *= ratio;
 			a.vy *= ratio;
 		}
 	}
 
+	private void rescaleElectronVelocities(double ratio) {
+		if (freeElectrons.isEmpty())
+			return;
+		synchronized (freeElectrons) {
+			for (Electron e : freeElectrons) {
+				e.vx *= ratio;
+				e.vy *= ratio;
+			}
+		}
+	}
+
+	/* @guarded by this */
 	synchronized void resetIntegrator() {
 		for (Atom a : atom) {
 			a.vx = a.vy = a.ax = a.ay = a.fx = a.fy = 0.0;
@@ -2328,6 +2338,7 @@ public abstract class AtomicModel extends MDModel {
 		return interCoulomb;
 	}
 
+	/* @guarded by this */
 	synchronized void advance(int indexOfStep) {
 		if (heatBathActivated()) {
 			if (heatBath != null && heatBath.getExpectedTemperature() < 0.01)
@@ -2589,6 +2600,20 @@ public abstract class AtomicModel extends MDModel {
 		}
 	}
 
+	void addFreeElectron(Electron e) {
+		if (freeElectrons.contains(e))
+			return;
+		freeElectrons.add(e);
+	}
+
+	void removeFreeElectron(Electron e) {
+		freeElectrons.remove(e);
+	}
+
+	public List<Electron> getFreeElectrons() {
+		return freeElectrons;
+	}
+
 	void putInBounds() {
 		switch (boundary.getType()) {
 		case RectangularBoundary.DBC_ID:
@@ -2648,15 +2673,66 @@ public abstract class AtomicModel extends MDModel {
 	private double computeForceForElectrons(final int time) {
 		if (freeElectrons.isEmpty())
 			return 0;
+
+		synchronized (freeElectrons) {
+			List<Electron> toRemove = null;
+			for (Electron e : freeElectrons) {
+				for (int i = 0; i < numberOfAtoms; i++) {
+					if (atom[i].distanceSquare(e.rx, e.ry) < atom[i].sigma * atom[i].sigma * 0.25) {
+						Electron x = atom[i].gainElectron(e);
+						if (x != null) {
+							if (toRemove == null)
+								toRemove = new ArrayList<Electron>();
+							toRemove.add(x);
+							break;
+						}
+					}
+				}
+			}
+			if (toRemove != null)
+				freeElectrons.removeAll(toRemove);
+		}
+
 		synchronized (freeElectrons) {
 			for (Electron e : freeElectrons) {
-				e.ax = 0;
-				e.ay = 0;
+				e.fx = 0;
+				e.fy = 0;
 			}
 		}
 		double vsum = 0;
 		double coul = 0;
 		double rCD = universe.getCoulombConstant() / universe.getDielectricConstant();
+		// interactions between free electrons
+		int n = freeElectrons.size();
+		if (n >= 2) {
+			Electron ei, ej;
+			synchronized (freeElectrons) {
+				for (int i = 0; i < n - 1; i++) {
+					ei = freeElectrons.get(i);
+					rxi = ei.rx;
+					ryi = ei.ry;
+					fxi = ei.fx;
+					fyi = ei.fy;
+					for (int j = i + 1; j < n; j++) {
+						ej = freeElectrons.get(j);
+						rxij = rxi - ej.rx;
+						ryij = ryi - ej.ry;
+						rijsq = rxij * rxij + ryij * ryij;
+						coul = rCD / Math.sqrt(rijsq);
+						vsum += coul;
+						fij = coul / rijsq * GF_CONVERSION_CONSTANT;
+						fxij = fij * rxij;
+						fyij = fij * ryij;
+						fxi += fxij;
+						fyi += fyij;
+						ej.fx -= fxij;
+						ej.fy -= fyij;
+					}
+					ei.fx = fxi;
+					ei.fy = fyi;
+				}
+			}
+		}
 		// interactions between atoms and free electrons
 		for (int i = 0; i < numberOfAtoms; i++) {
 			if (Math.abs(atom[i].charge) > ZERO) {
@@ -2665,9 +2741,9 @@ public abstract class AtomicModel extends MDModel {
 						rxij = e.rx - atom[i].rx;
 						ryij = e.ry - atom[i].ry;
 						rijsq = rxij * rxij + ryij * ryij;
-						coul = -atom[i].charge / Math.sqrt(rijsq) * rCD;
+						coul = atom[i].charge / (1 + Math.sqrt(rijsq)) * rCD;
 						vsum += coul;
-						fij = -coul / rijsq * GF_CONVERSION_CONSTANT;
+						fij = coul / rijsq * GF_CONVERSION_CONSTANT;
 						fxij = fij * rxij;
 						fyij = fij * ryij;
 						e.fx -= fxij;
@@ -2675,29 +2751,6 @@ public abstract class AtomicModel extends MDModel {
 						atom[i].fx += fxij;
 						atom[i].fy += fyij;
 					}
-				}
-			}
-		}
-		// interactions between free electrons
-		int n = freeElectrons.size();
-		Electron ei, ej;
-		synchronized (freeElectrons) {
-			for (int i = 0; i < n; i++) {
-				ei = freeElectrons.get(i);
-				for (int j = i + 1; j < n; j++) {
-					ej = freeElectrons.get(j);
-					rxij = ei.rx - ej.rx;
-					ryij = ei.ry - ej.ry;
-					rijsq = rxij * rxij + ryij * ryij;
-					coul = -atom[i].charge / Math.sqrt(rijsq) * rCD;
-					vsum += coul;
-					fij = -coul / rijsq * GF_CONVERSION_CONSTANT;
-					fxij = fij * rxij;
-					fyij = fij * ryij;
-					ei.fx -= fxij;
-					ei.fy -= fyij;
-					ej.fx += fxij;
-					ej.fy += fyij;
 				}
 			}
 		}
@@ -2718,17 +2771,11 @@ public abstract class AtomicModel extends MDModel {
 	 * @param time
 	 *            the current time, used in computing time-dependent forces
 	 * @return potential energy per atom
+	 * @guarded by this
 	 */
 	public synchronized double computeForce(final int time) {
 
 		double vsum = 0.0;
-		eKT = 0.0;
-		eLJ = 0.0;
-		eES = 0.0;
-		eEF = 0.0;
-		eGF = 0.0;
-		eAF = 0.0;
-		eRS = 0.0;
 		if (time <= 0) {
 			updateList = true; // the neighbor list has to be updated in order for the force vector to be plotted
 		}
@@ -2771,7 +2818,6 @@ public abstract class AtomicModel extends MDModel {
 					gf.dyn(atom[0]);
 					etemp = gf.getPotential(atom[0], time);
 					vsum += etemp;
-					eGF += etemp;
 					if (obstacles != null && !obstacles.isEmpty()) {
 						RectangularObstacle obs = null;
 						synchronized (obstacles.getSynchronizationLock()) {
@@ -2780,7 +2826,6 @@ public abstract class AtomicModel extends MDModel {
 								gf.dyn(obs);
 								etemp = gf.getPotential(obs, time);
 								vsum += etemp;
-								eGF += etemp;
 							}
 						}
 					}
@@ -2791,7 +2836,6 @@ public abstract class AtomicModel extends MDModel {
 						ef.dyn(universe.getDielectricConstant(), atom[0], time);
 						etemp = ef.getPotential(atom[0], time);
 						vsum += etemp;
-						eEF += etemp;
 					}
 				}
 				else if (f instanceof MagneticField) {
@@ -2805,7 +2849,6 @@ public abstract class AtomicModel extends MDModel {
 					af.dyn(atom[0]);
 					etemp = af.getPotential(atom[0], time);
 					vsum += etemp;
-					eAF += etemp;
 					if (obstacles != null && !obstacles.isEmpty()) {
 						RectangularObstacle obs = null;
 						synchronized (obstacles.getSynchronizationLock()) {
@@ -2814,7 +2857,6 @@ public abstract class AtomicModel extends MDModel {
 								af.dyn(obs);
 								etemp = af.getPotential(obs, time);
 								vsum += etemp;
-								eAF += etemp;
 							}
 						}
 					}
@@ -2825,7 +2867,6 @@ public abstract class AtomicModel extends MDModel {
 				atom[0].restraint.dyn(atom[0]);
 				etemp = atom[0].restraint.getEnergy(atom[0]);
 				vsum += etemp;
-				eRS += etemp;
 			}
 
 			if (atom[0].getUserField() != null) {
@@ -2909,7 +2950,6 @@ public abstract class AtomicModel extends MDModel {
 						}
 
 						vsum += vij;
-						eLJ += vij;
 						fij = wij / rijsq * SIX_TIMES_UNIT_FORCE;
 						fxij = fij * rxij;
 						fyij = fij * ryij;
@@ -2924,7 +2964,6 @@ public abstract class AtomicModel extends MDModel {
 						if (Math.abs(atom[i].charge) > ZERO && Math.abs(atom[j].charge) > ZERO) {
 							coul = atom[i].charge * atom[j].charge / Math.sqrt(rijsq) * rCD;
 							vsum += coul;
-							eES += coul;
 							fij = coul / rijsq * GF_CONVERSION_CONSTANT;
 							fxij = fij * rxij;
 							fyij = fij * ryij;
@@ -2995,7 +3034,6 @@ public abstract class AtomicModel extends MDModel {
 							}
 
 							vsum += vij;
-							eLJ += vij;
 
 							fij = wij / rijsq * SIX_TIMES_UNIT_FORCE;
 							fxij = fij * rxij;
@@ -3021,7 +3059,6 @@ public abstract class AtomicModel extends MDModel {
 							rijsq = rxij * rxij + ryij * ryij;
 							coul = atom[i].charge * atom[j].charge / Math.sqrt(rijsq) * rCD;
 							vsum += coul;
-							eES += coul;
 							fij = coul / rijsq * GF_CONVERSION_CONSTANT;
 							fxij = fij * rxij;
 							fyij = fij * ryij;
@@ -3059,7 +3096,6 @@ public abstract class AtomicModel extends MDModel {
 				a.restraint.dyn(a);
 				etemp = a.restraint.getEnergy(a);
 				vsum += etemp;
-				eRS += etemp;
 			}
 			if (a.friction > ZERO) {
 				inverseMass = GF_CONVERSION_CONSTANT * universe.getViscosity() * a.friction / a.mass;
@@ -3083,7 +3119,6 @@ public abstract class AtomicModel extends MDModel {
 							gf.dyn(obs);
 							etemp = gf.getPotential(obs, time);
 							vsum += etemp;
-							eGF += etemp;
 						}
 					}
 				}
@@ -3091,7 +3126,6 @@ public abstract class AtomicModel extends MDModel {
 					gf.dyn(atom[i]);
 					etemp = gf.getPotential(atom[i], time);
 					vsum += etemp;
-					eGF += etemp;
 				}
 			}
 			else if (f instanceof ElectricField) {
@@ -3101,7 +3135,6 @@ public abstract class AtomicModel extends MDModel {
 						ef.dyn(universe.getDielectricConstant(), atom[i], time);
 						etemp = ef.getPotential(atom[i], time);
 						vsum += etemp;
-						eEF += etemp;
 					}
 				}
 			}
@@ -3122,7 +3155,6 @@ public abstract class AtomicModel extends MDModel {
 							af.dyn(obs);
 							etemp = af.getPotential(obs, time);
 							vsum += etemp;
-							eAF += etemp;
 						}
 					}
 				}
@@ -3130,7 +3162,6 @@ public abstract class AtomicModel extends MDModel {
 					af.dyn(atom[i]);
 					etemp = af.getPotential(atom[i], time);
 					vsum += etemp;
-					eAF += etemp;
 				}
 			}
 		}
@@ -3150,6 +3181,8 @@ public abstract class AtomicModel extends MDModel {
 	 * minimize the potential energy using the steepest descent method. If the maximum force computed is not big, either
 	 * exit or slowly descent. This is for use in conjunction with the molecular dynamics engine and structure editor.
 	 * For purely minimization purpose, use sd() or cp() instead.
+	 * 
+	 * @guarded by this
 	 */
 	public synchronized void steepestDescent(double stepLength) {
 		if (numberOfAtoms == 1)
@@ -3188,11 +3221,13 @@ public abstract class AtomicModel extends MDModel {
 	 * basis.
 	 * 
 	 * @return average kinetic energy per atom
+	 * @guarded by this
 	 */
 	public synchronized double getKin() {
-		eKT = 0.0;
+		double x = 0.0;
 		for (int i = 0; i < numberOfAtoms; i++) {
-			eKT += (atom[i].vx * atom[i].vx + atom[i].vy * atom[i].vy) * atom[i].mass;
+			Atom a = atom[i];
+			x += (a.vx * a.vx + a.vy * a.vy) * a.mass;
 		}
 		if (obstacles != null && !obstacles.isEmpty()) {
 			RectangularObstacle obs = null;
@@ -3200,13 +3235,13 @@ public abstract class AtomicModel extends MDModel {
 				for (int jobs = 0, nobs = obstacles.size(); jobs < nobs; jobs++) {
 					obs = obstacles.get(jobs);
 					if (obs.isPartOfSystem() && obs.isMovable())
-						eKT += (obs.vx * obs.vx + obs.vy * obs.vy) * obs.getMass();
+						x += (obs.vx * obs.vx + obs.vy * obs.vy) * obs.getMass();
 				}
 			}
 		}
-		eKT *= EV_CONVERTER;
+		x *= EV_CONVERTER;
 		// the prefactor 0.5 doesn't show up here because it has been included in the mass unit conversion factor.
-		kin = numberOfAtoms > 0 ? eKT / numberOfAtoms : eKT;
+		kin = numberOfAtoms > 0 ? x / numberOfAtoms : x;
 		return kin;
 	}
 
@@ -3228,10 +3263,12 @@ public abstract class AtomicModel extends MDModel {
 		return getKinForParticles(typeList);
 	}
 
-	/**
+	/*
 	 * return the kinetic energy of the atom list, if there is no atom in the list, return 0.
+	 * 
+	 * @guarded by this
 	 */
-	public double getKinForParticles(List list) {
+	synchronized double getKinForParticles(List list) {
 		if (list == null || list.isEmpty())
 			return 0.0;
 		double x = 0.0;
@@ -3251,6 +3288,19 @@ public abstract class AtomicModel extends MDModel {
 		x *= EV_CONVERTER;
 		// the prefactor 0.5 doesn't show up here because of mass unit conversion.
 		return n > 0 ? x / n : x;
+	}
+
+	/* @guarded by this */
+	synchronized double getKinForElectrons() {
+		if (freeElectrons.isEmpty())
+			return 0;
+		double x = 0;
+		synchronized (freeElectrons) {
+			for (Electron e : freeElectrons) {
+				x += (e.vx * e.vx + e.vy * e.vy) * Electron.mass;
+			}
+		}
+		return x * EV_CONVERTER / freeElectrons.size();
 	}
 
 	/** <tt>setUpdateList(true)</tt> forces updating neighbor list EVERY step. */
@@ -3353,6 +3403,7 @@ public abstract class AtomicModel extends MDModel {
 			photonList.clear();
 		if (photonQueue != null)
 			photonQueue.clear();
+		freeElectrons.clear();
 		setNumberOfAtoms(0);
 		resetElements();
 		resetIntegrator();
@@ -3398,6 +3449,8 @@ public abstract class AtomicModel extends MDModel {
 	 * do not enter the propogation, therefore, velocities cannot be changed by the user. <li> Reflecting boundary
 	 * conditions cannot be applied with the Verlet method. </ol> The improved version of the Verlet method, the
 	 * so-called velocity Verlet method is equivalent to the 3rd order Gear method.
+	 * 
+	 * @guarded by this
 	 */
 	synchronized void predictor() {
 		if (numberOfAtoms == 1) {
@@ -3408,11 +3461,22 @@ public abstract class AtomicModel extends MDModel {
 				atom[i].predict(timeStep, timeStep2);
 			}
 		}
+		if (!freeElectrons.isEmpty()) {
+			synchronized (freeElectrons) {
+				for (Electron e : freeElectrons)
+					e.predict(timeStep, timeStep2);
+			}
+		}
 		putInBounds();
 	}
 
-	/* correct the prediction according to the most recently computed forces */
+	/*
+	 * correct the prediction according to the most recently computed forces
+	 * 
+	 * @guarded by this
+	 */
 	synchronized void corrector() {
+		double halfTimeStep = timeStep * 0.5;
 		if (numberOfAtoms == 1) {
 			atom[0].ax = atom[0].fx;
 			atom[0].ay = atom[0].fy;
@@ -3420,9 +3484,14 @@ public abstract class AtomicModel extends MDModel {
 			atom[0].fy *= atom[0].mass;
 		}
 		else {
-			double halfTimeStep = timeStep * 0.5;
 			for (int i = 0; i < numberOfAtoms; i++)
 				atom[i].correct(halfTimeStep);
+		}
+		if (!freeElectrons.isEmpty()) {
+			synchronized (freeElectrons) {
+				for (Electron e : freeElectrons)
+					e.correct(halfTimeStep);
+			}
 		}
 		if (obstacles != null && obstacles.size() > 0) {
 			obstacles.collide(numberOfAtoms, atom);

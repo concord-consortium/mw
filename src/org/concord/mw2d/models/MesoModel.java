@@ -59,7 +59,6 @@ public class MesoModel extends MDModel {
 	private volatile double dt = 1.0;
 	private double dt2 = dt * dt * 0.5;
 	private double nu = 1.0, mu = 2.0;
-	private double eKT, eGB, eES, eEF, eMF, eGF, eRS;
 	private double fxij, fyij, x_ij, y_ij, r_ij;
 
 	public MesoModel() {
@@ -568,31 +567,6 @@ public class MesoModel extends MDModel {
 		gbForce = new GayBerneForce(mu, nu);
 	}
 
-	public synchronized float getTotalKineticEnergy() {
-		getKin();
-		return (float) eKT;
-	}
-
-	public synchronized float getTotalGBEnergy() {
-		return (float) eGB;
-	}
-
-	public synchronized float getTotalElectrostaticEnergy() {
-		return (float) eES;
-	}
-
-	public synchronized float getTotalElectricFieldEnergy() {
-		return (float) eEF;
-	}
-
-	public synchronized float getTotalGravitationalFieldEnergy() {
-		return (float) eGF;
-	}
-
-	public synchronized float getTotalRestraintEnergy() {
-		return (float) eRS;
-	}
-
 	/**
 	 * align atoms in a two-dimensional lattice. You may choose any number for the inputs, but only those that fall
 	 * within the current box will be added.
@@ -905,7 +879,7 @@ public class MesoModel extends MDModel {
 		return kin;
 	}
 
-	public double getKinForParticles(List list) {
+	double getKinForParticles(List list) {
 		if (list == null || list.isEmpty())
 			return 0.0;
 		double x = 0.0;
@@ -1039,13 +1013,6 @@ public class MesoModel extends MDModel {
 
 		double etemp = 0.0;
 		double vsum = 0.0;
-		eKT = 0.0;
-		eGB = 0.0;
-		eES = 0.0;
-		eEF = 0.0;
-		eGF = 0.0;
-		eMF = 0.0;
-		eRS = 0.0;
 		for (int i = 0; i < numberOfParticles; i++) {
 			gb[i].fx = 0;
 			gb[i].fy = 0;
@@ -1074,7 +1041,6 @@ public class MesoModel extends MDModel {
 					gf.dyn(gb[0]);
 					etemp = gf.getPotential(gb[0], time);
 					vsum += etemp;
-					eGF += etemp;
 				}
 				else if (f instanceof ElectricField) {
 					if (Math.abs(gb[0].charge) > 0 || Math.abs(gb[0].dipoleMoment) > 0) {
@@ -1082,7 +1048,6 @@ public class MesoModel extends MDModel {
 						ef.dyn(universe.getDielectricConstant(), gb[0], time);
 						etemp = ef.getPotential(gb[0], time);
 						vsum += etemp;
-						eEF += etemp;
 					}
 				}
 				else if (f instanceof MagneticField) {
@@ -1091,7 +1056,6 @@ public class MesoModel extends MDModel {
 						mf.dyn(gb[0]);
 						etemp = mf.getPotential(gb[0], time);
 						vsum += etemp;
-						eMF += etemp;
 					}
 				}
 			}
@@ -1100,7 +1064,6 @@ public class MesoModel extends MDModel {
 				gb[0].restraint.dyn(gb[0]);
 				etemp = gb[0].restraint.getEnergy(gb[0]);
 				vsum += etemp;
-				eRS += etemp;
 			}
 
 			if (gb[0].getUserField() != null) {
@@ -1135,7 +1098,6 @@ public class MesoModel extends MDModel {
 					gbForce.checkin(gb[i], gb[j], x_ij, y_ij, r_ij);
 					etemp = gbForce.energy();
 					vsum += etemp;
-					eGB += etemp;
 					gb[i].tau -= gbForce.torque_i();
 					gb[j].tau -= gbForce.torque_j();
 					fxij = gbForce.fx_i();
@@ -1150,7 +1112,6 @@ public class MesoModel extends MDModel {
 					esForce.checkin(universe, gb[i], gb[j], x_ij, y_ij, r_ij);
 					etemp = esForce.energy();
 					vsum += etemp;
-					eES += etemp;
 					gb[i].tau -= esForce.torque_i();
 					gb[j].tau -= esForce.torque_j();
 					fxij = esForce.fx_i();
@@ -1202,7 +1163,6 @@ public class MesoModel extends MDModel {
 					gf.dyn(gb[i]);
 					etemp = gf.getPotential(gb[i], time);
 					vsum += etemp;
-					eGF += etemp;
 				}
 			}
 			else if (f instanceof ElectricField) {
@@ -1212,7 +1172,6 @@ public class MesoModel extends MDModel {
 						ef.dyn(universe.getDielectricConstant(), gb[i], time);
 						etemp = ef.getPotential(gb[i], time);
 						vsum += etemp;
-						eEF += etemp;
 					}
 				}
 			}
@@ -1223,7 +1182,6 @@ public class MesoModel extends MDModel {
 						mf.dyn(gb[i]);
 						etemp = mf.getPotential(gb[i], time);
 						vsum += etemp;
-						eMF += etemp;
 					}
 				}
 			}
