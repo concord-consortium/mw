@@ -998,7 +998,7 @@ public class Atom extends Particle {
 				g.setFont(SANSSERIF);
 				g.setColor(Color.black);
 				String s = model.view.getShowParticleIndex() ? "" + getIndex() : getName();
-				if (!"sp".equalsIgnoreCase(s)) {
+				if (!"sp".equalsIgnoreCase(s) && s != null) {
 					FontMetrics fm = g.getFontMetrics();
 					g.drawString(s, (int) (rx - 0.4 * fm.stringWidth(s)), (int) (ry + 0.4 * fm.getHeight()));
 				}
