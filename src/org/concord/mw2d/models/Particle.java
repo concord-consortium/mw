@@ -397,7 +397,11 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	}
 
 	public double distanceSquare(Particle p) {
-		return (rx - p.rx) * (rx - p.rx) + (ry - p.ry) * (ry - p.ry);
+		return distanceSquare(p.rx, p.ry);
+	}
+
+	double distanceSquare(double x, double y) {
+		return (rx - x) * (rx - x) + (ry - y) * (ry - y);
 	}
 
 	public double getVx() {

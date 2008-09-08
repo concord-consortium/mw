@@ -115,7 +115,7 @@ public class Atom extends Particle {
 			throw new IllegalArgumentException("wrong type of model");
 		model = (MolecularModel) m;
 		measuringTool.setModel(model);
-		if (electrons != null && !electrons.isEmpty()) {
+		if (!electrons.isEmpty()) {
 			synchronized (electrons) {
 				for (Electron e : electrons)
 					e.setModel(m);
@@ -306,8 +306,6 @@ public class Atom extends Particle {
 	}
 
 	public Electron getElectron(int i) {
-		if (electrons == null)
-			return null;
 		if (electrons.isEmpty())
 			return null;
 		if (i >= electrons.size())
@@ -316,7 +314,7 @@ public class Atom extends Particle {
 	}
 
 	public void resetElectronsToGroundState() {
-		if (electrons == null || electrons.isEmpty())
+		if (electrons.isEmpty())
 			return;
 		ElectronicStructure es = ((AtomicModel) model).getElement(id).getElectronicStructure();
 		EnergyLevel ground = es.getEnergyLevel(0);
@@ -324,6 +322,29 @@ public class Atom extends Particle {
 			for (Electron e : electrons)
 				e.setEnergyLevel(ground);
 		}
+	}
+
+	private void loseElectron(Electron e) {
+		double angle = Math.random() * Math.PI * 2;
+		e.rx = rx + 0.6 * sigma * Math.cos(angle);
+		e.ry = ry + 0.6 * sigma * Math.sin(angle);
+		e.vx = Math.random() * 1000;
+		e.vy = Math.random() * 1000;
+		e.setAtom(null);
+		model.addFreeElectron(e);
+		electrons.remove(e);
+		setCharge(1);
+	}
+
+	Electron gainElectron(Electron e) {
+		if (!electrons.isEmpty())
+			return null;
+		ElectronicStructure es = ((AtomicModel) model).getElement(id).getElectronicStructure();
+		e.setEnergyLevel(es.getEnergyLevel(0));
+		e.setAtom(this);
+		electrons.add(e);
+		setCharge(0);
+		return e;
 	}
 
 	/*
@@ -339,7 +360,7 @@ public class Atom extends Particle {
 			return;
 		if (!isExcitable())
 			return;
-		if (electrons == null || electrons.isEmpty())
+		if (electrons.isEmpty())
 			return;
 
 		Electron e = electrons.get(0);
@@ -353,13 +374,13 @@ public class Atom extends Particle {
 		// if(!e.readyToGo(model.getModelTime())) return;
 
 		double ke = getKineticEnergy();
-		//double extra = ke + level.getEnergy();
+		double extra = ke + level.getEnergy();
 
-		//if (extra > 0) {
+		if (extra > 0) {
 			// the energy affords ionization
-			// System.out.println(extra);
-		//}
-		//else {
+			loseElectron(e);
+		}
+		else {
 			// get what is the energy level closest to the KE
 			EnergyLevel excite = null;
 			double energy = 0.0;
@@ -386,7 +407,7 @@ public class Atom extends Particle {
 					break;
 				}
 			}
-		//}
+		}
 
 	}
 
@@ -428,7 +449,7 @@ public class Atom extends Particle {
 	 * electronic state.
 	 */
 	private float stimulatedEmission(double energy) {
-		if (electrons == null || electrons.isEmpty())
+		if (electrons.isEmpty())
 			return -1;
 		Electron e = electrons.get(0);
 		EnergyLevel level = e.getEnergyLevel();
@@ -454,7 +475,7 @@ public class Atom extends Particle {
 	 */
 	private float photonicExcitation(double energy) {
 
-		if (electrons == null || electrons.isEmpty())
+		if (electrons.isEmpty())
 			return -1;
 
 		Electron e = electrons.get(0);
@@ -493,7 +514,7 @@ public class Atom extends Particle {
 	 */
 	public Photon deexciteElectron(float rtProbability) {
 
-		if (electrons == null || electrons.isEmpty())
+		if (electrons.isEmpty())
 			return null; // no bound electron
 
 		Electron e = electrons.get(0);
@@ -700,7 +721,7 @@ public class Atom extends Particle {
 	 * initialize excitation queue. If the passed integer is less than 1, nullify the queue.
 	 */
 	public void initializeExcitationQ(int n) {
-		if (electrons == null || electrons.isEmpty())
+		if (electrons.isEmpty())
 			return;
 		if (excitationQ == null) {
 			if (n < 1)
@@ -723,7 +744,7 @@ public class Atom extends Particle {
 
 	/** push current excitation status into the excitation queue */
 	public synchronized void updateExcitationQ() {
-		if (electrons == null || electrons.isEmpty())
+		if (electrons.isEmpty())
 			return;
 		if (excitationQ == null || excitationQ.isEmpty())
 			throw new RuntimeException("Attempt to write to the empty queue");
@@ -1001,7 +1022,7 @@ public class Atom extends Particle {
 				userField.render(g, this, model.getMovie().getCurrentFrameIndex() >= model.getTapePointer() - 1);
 
 			if (model.view.excitationShown() && ((AtomicModel) model).isPhotonEnabled()) {
-				if (electrons != null && !electrons.isEmpty()) {
+				if (!electrons.isEmpty()) {
 					Electron e = electrons.get(0);
 					if (e.getEnergyLevel() != null) {
 						ElectronicStructure es = ((AtomicModel) model).getElement(id).getElectronicStructure();

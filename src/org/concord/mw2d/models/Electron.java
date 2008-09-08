@@ -20,6 +20,7 @@
 
 package org.concord.mw2d.models;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 
 import org.concord.modeler.Model;
@@ -140,7 +141,10 @@ public class Electron {
 
 	// render the free electron as a tiny dot
 	private void renderFreeState(Graphics2D g) {
-
+		g.setColor(Color.black);
+		g.drawOval((int) (rx - 2), (int) (ry - 2), 4, 4);
+		g.setColor(Color.white);
+		g.fillOval((int) (rx - 2), (int) (ry - 2), 4, 4);
 	}
 
 }
