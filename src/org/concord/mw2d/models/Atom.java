@@ -324,15 +324,23 @@ public class Atom extends Particle {
 		}
 	}
 
-	private void loseElectron(Electron e) {
+	private void loseElectron(Electron e, double extra) {
+		// place the electron just barely outside the edge of the atom
 		double angle = Math.random() * Math.PI * 2;
-		e.rx = rx + 0.6 * sigma * Math.cos(angle);
-		e.ry = ry + 0.6 * sigma * Math.sin(angle);
-		e.vx = Math.random() * 1000;
-		e.vy = Math.random() * 1000;
+		double cos = Math.cos(angle);
+		double sin = Math.sin(angle);
+		e.rx = rx + 0.6 * sigma * cos;
+		e.ry = ry + 0.6 * sigma * sin;
+		// the atom is stopped and all the remaining kenetic energy is transfered to the electron
+		vx = vy = 0;
+		double v = Math.sqrt(extra / (MDModel.EV_CONVERTER * mass));
+		e.vx = v * cos;
+		e.vy = v * sin;
+		// detach the electron from the atom and make it a free electron
 		e.setAtom(null);
-		model.addFreeElectron(e);
 		electrons.remove(e);
+		model.addFreeElectron(e);
+		// positively charge the ion that is left behind
 		setCharge(1);
 	}
 
@@ -340,7 +348,13 @@ public class Atom extends Particle {
 		if (!electrons.isEmpty())
 			return null;
 		ElectronicStructure es = ((AtomicModel) model).getElement(id).getElectronicStructure();
-		e.setEnergyLevel(es.getEnergyLevel(0));
+		EnergyLevel top = es.getEnergyLevel(es.getNumberOfEnergyLevels() - 1);
+		double oldKE = getKineticEnergy();
+		double newKE = top.getEnergy() + e.getKineticEnergy() + oldKE;
+		double ratio = Math.sqrt(newKE / oldKE);
+		vx *= ratio;
+		vy *= ratio;
+		e.setEnergyLevel(top);
 		e.setAtom(this);
 		electrons.add(e);
 		setCharge(0);
@@ -378,7 +392,7 @@ public class Atom extends Particle {
 
 		if (extra > 0) {
 			// the energy affords ionization
-			loseElectron(e);
+			loseElectron(e, extra);
 		}
 		else {
 			// get what is the energy level closest to the KE
