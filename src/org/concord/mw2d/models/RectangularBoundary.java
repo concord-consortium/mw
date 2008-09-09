@@ -605,6 +605,21 @@ public class RectangularBoundary extends Rectangle2D.Double implements Boundary 
 					}
 				}
 			}
+			List<Electron> electronList = am.getFreeElectrons();
+			if (electronList != null && !electronList.isEmpty()) {
+				synchronized (electronList) {
+					for (Electron electron : electronList) {
+						if (electron.rx < x)
+							electron.rx += width;
+						else if (electron.rx > x1)
+							electron.rx -= width;
+						if (electron.ry < y)
+							electron.ry += height;
+						else if (electron.ry > y1)
+							electron.ry -= height;
+					}
+				}
+			}
 		}
 		else if (model instanceof MesoModel) {
 			MesoModel mm = (MesoModel) model;
@@ -1085,6 +1100,25 @@ public class RectangularBoundary extends Rectangle2D.Double implements Boundary 
 				}
 			}
 		}
+		List<Electron> electronList = mm.getFreeElectrons();
+		if (electronList != null && !electronList.isEmpty()) {
+			synchronized (electronList) {
+				for (Electron electron : electronList) {
+					if (electron.rx < xmin) {
+						electron.rx = xmin;
+						electron.vx = Math.abs(electron.vx);
+					}
+					else if (electron.rx > xmax) {
+						electron.rx = xmax;
+						electron.vx = -Math.abs(electron.vx);
+					}
+					if (electron.ry < y)
+						electron.ry += height;
+					else if (electron.ry > y + height)
+						electron.ry -= height;
+				}
+			}
+		}
 	}
 
 	/** apply periodic boundary conditions in x-axis and reflectory boundary conditions in y-axis. */
@@ -1179,6 +1213,25 @@ public class RectangularBoundary extends Rectangle2D.Double implements Boundary 
 						photon.x += width;
 					else if (photon.x > x + width)
 						photon.x -= width;
+				}
+			}
+		}
+		List<Electron> electronList = mm.getFreeElectrons();
+		if (electronList != null && !electronList.isEmpty()) {
+			synchronized (electronList) {
+				for (Electron electron : electronList) {
+					if (electron.rx < x)
+						electron.rx += width;
+					else if (electron.rx > x + width)
+						electron.rx -= width;
+					if (electron.ry < ymin) {
+						electron.ry = ymin;
+						electron.vy = Math.abs(electron.vy);
+					}
+					else if (electron.ry > ymax) {
+						electron.ry = ymax;
+						electron.vy = -Math.abs(electron.vy);
+					}
 				}
 			}
 		}
