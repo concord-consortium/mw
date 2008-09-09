@@ -859,19 +859,19 @@ public class RectangularBoundary extends Rectangle2D.Double implements Boundary 
 				synchronized (electronList) {
 					for (Electron electron : electronList) {
 						if (electron.rx < xmin) {
-							electron.rx = xmin;
+							// electron.rx = xmin;
 							electron.vx = Math.abs(electron.vx);
 						}
 						else if (electron.rx > xmax) {
-							electron.rx = xmax;
+							// electron.rx = xmax;
 							electron.vx = -Math.abs(electron.vx);
 						}
 						if (electron.ry < ymin) {
-							electron.ry = ymin;
+							// electron.ry = ymin;
 							electron.vy = Math.abs(electron.vy);
 						}
 						else if (electron.ry > ymax) {
-							electron.ry = ymax;
+							// electron.ry = ymax;
 							electron.vy = -Math.abs(electron.vy);
 						}
 					}
@@ -1105,11 +1105,11 @@ public class RectangularBoundary extends Rectangle2D.Double implements Boundary 
 			synchronized (electronList) {
 				for (Electron electron : electronList) {
 					if (electron.rx < xmin) {
-						electron.rx = xmin;
+						// electron.rx = xmin;
 						electron.vx = Math.abs(electron.vx);
 					}
 					else if (electron.rx > xmax) {
-						electron.rx = xmax;
+						// electron.rx = xmax;
 						electron.vx = -Math.abs(electron.vx);
 					}
 					if (electron.ry < y)
@@ -1225,11 +1225,11 @@ public class RectangularBoundary extends Rectangle2D.Double implements Boundary 
 					else if (electron.rx > x + width)
 						electron.rx -= width;
 					if (electron.ry < ymin) {
-						electron.ry = ymin;
+						// electron.ry = ymin;
 						electron.vy = Math.abs(electron.vy);
 					}
 					else if (electron.ry > ymax) {
-						electron.ry = ymax;
+						// electron.ry = ymax;
 						electron.vy = -Math.abs(electron.vy);
 					}
 				}

@@ -127,6 +127,14 @@ public class MagneticField implements VectorField, Serializable {
 		}
 	}
 
+	void dyn(Electron e) {
+		double temp = -Math.abs(b) * MDModel.GF_CONVERSION_CONSTANT / Electron.mass;
+		if (o == OUTWARD)
+			temp = -temp;
+		e.fx += temp * e.vy;
+		e.fy -= temp * e.vx;
+	}
+
 	/*
 	 * The magnetic potential of an atom is always zero, because magnetic force does not do any work. But for a dipole
 	 * moment, it is not zero. FIXME: I didn't find a closed-form solution for an electric dipole's magnetic potential.
