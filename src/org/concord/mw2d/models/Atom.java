@@ -324,16 +324,17 @@ public class Atom extends Particle {
 		}
 	}
 
-	private void loseElectron(Electron e, double extra) {
-		// place the electron just barely outside the edge of the atom
+	private void loseElectron(Electron e, double excess) {
+		// place the electron just barely inside the edge of the atom to prevent it from overlapping
+		// with another atom immediately upon releasing
 		double angle = Math.random() * Math.PI * 2;
 		double cos = Math.cos(angle);
 		double sin = Math.sin(angle);
-		e.rx = rx + 0.6 * sigma * cos;
-		e.ry = ry + 0.6 * sigma * sin;
+		e.rx = rx + 0.55 * sigma * cos;
+		e.ry = ry + 0.55 * sigma * sin;
 		// the atom is stopped and all the remaining kenetic energy is transfered to the electron
 		vx = vy = 0;
-		double v = Math.sqrt(extra / (MDModel.EV_CONVERTER * mass));
+		double v = Math.sqrt(excess / (MDModel.EV_CONVERTER * mass));
 		e.vx = v * cos;
 		e.vy = v * sin;
 		// detach the electron from the atom and make it a free electron
@@ -348,15 +349,18 @@ public class Atom extends Particle {
 		if (!electrons.isEmpty())
 			return null;
 		ElectronicStructure es = ((AtomicModel) model).getElement(id).getElectronicStructure();
+		// always put the electron at the highest energy level
 		EnergyLevel top = es.getEnergyLevel(es.getNumberOfEnergyLevels() - 1);
-		double oldKE = getKineticEnergy();
-		double newKE = top.getEnergy() + e.getKineticEnergy() + oldKE;
-		double ratio = Math.sqrt(newKE / oldKE);
-		vx *= ratio;
-		vy *= ratio;
 		e.setEnergyLevel(top);
+		// conservation of momentum, maybe should use conservation of energy
+		double m1 = Electron.mass / (Electron.mass + mass);
+		double m2 = mass / (Electron.mass + mass);
+		vx = m1 * e.vx + m2 * vx;
+		vy = m1 * e.vy + m2 * vy;
+		// associate the electron with this atom
 		e.setAtom(this);
 		electrons.add(e);
+		// neutralize the atom
 		setCharge(0);
 		return e;
 	}
@@ -388,11 +392,11 @@ public class Atom extends Particle {
 		// if(!e.readyToGo(model.getModelTime())) return;
 
 		double ke = getKineticEnergy();
-		double extra = ke + level.getEnergy();
+		double excess = ke + level.getEnergy();
 
-		if (extra > 0) {
+		if (excess > 0) {
 			// the energy affords ionization
-			loseElectron(e, extra);
+			loseElectron(e, excess);
 		}
 		else {
 			// get what is the energy level closest to the KE
@@ -464,13 +468,13 @@ public class Atom extends Particle {
 	 */
 	private float stimulatedEmission(double energy) {
 		if (electrons.isEmpty())
-			return -1;
+			return 0;
 		Electron e = electrons.get(0);
 		EnergyLevel level = e.getEnergyLevel();
 		ElectronicStructure es = ((AtomicModel) model).getElement(id).getElectronicStructure();
 		int m = es.indexOf(level);
 		if (m <= 0)
-			return -1;
+			return 0;
 		EnergyLevel state;
 		for (int i = 0; i < m; i++) {
 			state = es.getEnergyLevel(i);
@@ -479,7 +483,7 @@ public class Atom extends Particle {
 				return level.getEnergy() - state.getEnergy(); // return the precise energy
 			}
 		}
-		return -1;
+		return 0;
 	}
 
 	/*
@@ -490,7 +494,7 @@ public class Atom extends Particle {
 	private float photonicExcitation(double energy) {
 
 		if (electrons.isEmpty())
-			return -1;
+			return 0;
 
 		Electron e = electrons.get(0);
 		EnergyLevel level = e.getEnergyLevel();
@@ -498,20 +502,26 @@ public class Atom extends Particle {
 		int n = es.getNumberOfEnergyLevels();
 		int m = es.indexOf(level);
 		if (m == -1 || m >= n - 1)
-			return -1;
+			return 0;
 
 		// if(!e.readyToGo(model.getModelTime())) return false;
 
-		EnergyLevel excite;
-		for (int i = m + 1; i < n; i++) {
-			excite = es.getEnergyLevel(i);
-			if (Math.abs(excite.getEnergy() - level.getEnergy() - energy) < ENERGY_GAP_TOLL) {
-				e.setEnergyLevel(excite);
-				return excite.getEnergy() - level.getEnergy(); // return the precise energy
+		double excess = energy + level.getEnergy();
+		if (excess > 0) {
+			loseElectron(e, excess);
+		}
+		else {
+			EnergyLevel excite;
+			for (int i = m + 1; i < n; i++) {
+				excite = es.getEnergyLevel(i);
+				if (Math.abs(excite.getEnergy() - level.getEnergy() - energy) < ENERGY_GAP_TOLL) {
+					e.setEnergyLevel(excite);
+					return excite.getEnergy() - level.getEnergy(); // return the precise energy
+				}
 			}
 		}
 
-		return -1;
+		return 0;
 
 	}
 

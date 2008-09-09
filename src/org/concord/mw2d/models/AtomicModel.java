@@ -2693,13 +2693,23 @@ public abstract class AtomicModel extends MDModel {
 				freeElectrons.removeAll(toRemove);
 		}
 
+		double vsum = 0;
 		synchronized (freeElectrons) {
 			for (Electron e : freeElectrons) {
 				e.fx = 0;
 				e.fy = 0;
+				for (VectorField f : fields) {
+					if (f instanceof ElectricField) {
+						ElectricField ef = (ElectricField) f;
+						ef.dyn(universe.getDielectricConstant(), e, time);
+						vsum += ef.getPotential(e, time);
+					}
+					else if (f instanceof MagneticField) {
+						((MagneticField) f).dyn(e);
+					}
+				}
 			}
 		}
-		double vsum = 0;
 		double coul = 0;
 		double rCD = universe.getCoulombConstant() / universe.getDielectricConstant();
 		// interactions between free electrons
@@ -2741,7 +2751,9 @@ public abstract class AtomicModel extends MDModel {
 						rxij = e.rx - atom[i].rx;
 						ryij = e.ry - atom[i].ry;
 						rijsq = rxij * rxij + ryij * ryij;
-						coul = atom[i].charge / (1 + Math.sqrt(rijsq)) * rCD;
+						// FIXME: 0.5 is for reducing the electrostatic force to make photoionization happen
+						// 0.1 is for preventing DBZ error
+						coul = 0.5 * atom[i].charge / (0.1 + Math.sqrt(rijsq)) * rCD;
 						vsum += coul;
 						fij = coul / rijsq * GF_CONVERSION_CONSTANT;
 						fxij = fij * rxij;

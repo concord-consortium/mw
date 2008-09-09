@@ -167,7 +167,7 @@ public class ElectricField implements VectorField, Serializable {
 	 * @param p the passed particle @return the electric potential of the particle in this field
 	 */
 	double getPotential(Particle p, float time) {
-		if (bounds != null && !bounds.contains(p.getRx(), p.getRy()))
+		if (bounds != null && !bounds.contains(p.rx, p.ry))
 			return 0;
 		if (local) // we cannot do energy conservation for a local field
 			return 0;
@@ -212,7 +212,7 @@ public class ElectricField implements VectorField, Serializable {
 	}
 
 	void dyn(float dielectric, Particle p, float time) {
-		if (bounds != null && !bounds.contains(p.getRx(), p.getRy()))
+		if (bounds != null && !bounds.contains(p.rx, p.ry))
 			return;
 		double fx = 0.0, fy = 0.0;
 		if (o == NORTH || o == SOUTH) {
@@ -245,6 +245,39 @@ public class ElectricField implements VectorField, Serializable {
 						* (getDcForce() + amp * Math.sin(frq * time)) / gb.inertia;
 			}
 		}
+	}
+
+	double getPotential(Electron e, float time) {
+		if (local) // we cannot do energy conservation for a local field
+			return 0;
+		double h = 0.0;
+		switch (o) {
+		case NORTH:
+			h = e.ry;
+			break;
+		case SOUTH:
+			h = bounds.getBounds().height - e.ry;
+			break;
+		case EAST:
+			h = bounds.getBounds().width - e.rx;
+			break;
+		case WEST:
+			h = e.rx;
+			break;
+		}
+		return -h * (getDcForce() + amp * Math.sin(frq * time));
+	}
+
+	void dyn(float dielectric, Electron e, float time) {
+		double fx = 0.0, fy = 0.0;
+		if (o == NORTH || o == SOUTH) {
+			fy = -(getDcForce() + amp * Math.sin(frq * time)) / Electron.mass;
+		}
+		else if (o == EAST || o == WEST) {
+			fx = -(getDcForce() + amp * Math.sin(frq * time)) / Electron.mass;
+		}
+		e.fx += fx * MDModel.GF_CONVERSION_CONSTANT / dielectric;
+		e.fy += fy * MDModel.GF_CONVERSION_CONSTANT / dielectric;
 	}
 
 }

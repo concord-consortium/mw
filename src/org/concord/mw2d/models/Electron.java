@@ -24,6 +24,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 import org.concord.modeler.Model;
+import org.concord.mw2d.ViewAttribute;
 
 public class Electron {
 
@@ -147,10 +148,11 @@ public class Electron {
 
 	// render the free electron as a tiny dot
 	private void renderFreeState(Graphics2D g) {
+		g.setStroke(ViewAttribute.THIN);
+		g.setColor(Color.white);
+		g.fillOval((int) (rx - 1), (int) (ry - 1), 2, 2);
 		g.setColor(Color.black);
 		g.drawOval((int) (rx - 2), (int) (ry - 2), 4, 4);
-		g.setColor(Color.white);
-		g.fillOval((int) (rx - 2), (int) (ry - 2), 4, 4);
 	}
 
 }
