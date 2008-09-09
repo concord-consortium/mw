@@ -125,6 +125,12 @@ public class Electron {
 		fy *= mass;
 	}
 
+	/** @return the classic kinetic energy of this electron in electronic volt (eV) */
+	public double getKineticEnergy() {
+		// the prefactor 0.5 doesn't show up here because of mass unit conversion.
+		return (vx * vx + vy * vy) * mass * MDModel.EV_CONVERTER;
+	}
+
 	public void render(Graphics2D g) {
 		if (atom != null) {
 			renderBoundState(g);

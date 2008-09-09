@@ -267,7 +267,7 @@ public class FloatQueue extends DataQueue {
 			return data[0];
 		float ra = 0;
 		int k = Math.max(0, m - n);
-		for (int i = m - 1; i > k; i--)
+		for (int i = m - 1; i >= k; i--)
 			ra += data[i];
 		return ra / (m - k);
 	}
