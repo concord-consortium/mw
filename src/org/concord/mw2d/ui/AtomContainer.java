@@ -366,8 +366,11 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 		return getCompatibleName();
 	}
 
-	/** return a representation name backward compatible to Version 1.3 */
-	public static String getCompatibleName() {
+	/**
+	 * return a representation name backward compatible to Version 1.3. What a stupid example of using class names to
+	 * represent data.
+	 */
+	public final static String getCompatibleName() {
 		return "org.concord.mw2d.activity.AtomContainer";
 	}
 
@@ -1129,8 +1132,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 		JMenuItem energyTSItem;
 		JMenuItem disableRecorderItem;
 		JMenuItem removeToolBarItem;
-		JMenuItem computeMSDMenuItem;
-		JMenuItem computePhotonMenuItem;
+		JMenuItem computePhotonElectronMenuItem;
 		JMenuItem setupFlowMenuItem;
 		JMenuItem enableFlowMenuItem;
 		JMenuItem eFieldLineMenuItem;
@@ -1183,8 +1185,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			menu.setMnemonic(KeyEvent.VK_C);
 			menu.addMenuListener(new MenuListener() {
 				public void menuSelected(MenuEvent e) {
-					setMenuItemWithoutNotifyingListeners(computeMSDMenuItem, model.isComputed(MDModel.COMPUTE_MSD));
-					setMenuItemWithoutNotifyingListeners(computePhotonMenuItem, model.isPhotonEnabled());
+					setMenuItemWithoutNotifyingListeners(computePhotonElectronMenuItem, model.isPhotonEnabled());
 				}
 
 				public void menuCanceled(MenuEvent e) {
@@ -1195,29 +1196,13 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			});
 			add(menu);
 
-			computeMSDMenuItem = new JCheckBoxMenuItem(MDModel.COMPUTE_MSD);
-			computeMSDMenuItem.addItemListener(new ItemListener() {
-				public void itemStateChanged(ItemEvent e) {
-					if (e.getStateChange() == ItemEvent.SELECTED) {
-						model.addCompute(MDModel.COMPUTE_MSD);
-					}
-					else {
-						model.removeCompute(MDModel.COMPUTE_MSD);
-					}
-				}
-			});
-			menu.add(computeMSDMenuItem);
-
-			computePhotonMenuItem = new JCheckBoxMenuItem(MolecularModel.COMPUTE_PHOTON);
-			computePhotonMenuItem.addItemListener(new ItemListener() {
+			computePhotonElectronMenuItem = new JCheckBoxMenuItem(MolecularModel.COMPUTE_PHOTON_ELECTRON);
+			computePhotonElectronMenuItem.addItemListener(new ItemListener() {
 				public void itemStateChanged(ItemEvent e) {
 					model.setPhotonEnabled(e.getStateChange() == ItemEvent.SELECTED);
 				}
 			});
-			menu.add(computePhotonMenuItem);
-
-			// menuItem=new JCheckBoxMenuItem("Ionization"); menuItem.setEnabled(false); menu.add(menuItem);
-			// menuItem=new JCheckBoxMenuItem("Electron Transfer"); menuItem.setEnabled(false); menu.add(menuItem);
+			menu.add(computePhotonElectronMenuItem);
 
 			/* analysis menu */
 

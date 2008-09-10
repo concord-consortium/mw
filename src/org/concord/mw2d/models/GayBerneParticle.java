@@ -260,8 +260,6 @@ public class GayBerneParticle extends UnitedAtom implements Rotatable {
 		delta = omega * dt + alpha * dt2;
 		rx += dx;
 		ry += dy;
-		tx += dx;
-		ty += dy;
 		theta += delta;
 		vx += ax * dt;
 		vy += ay * dt;
