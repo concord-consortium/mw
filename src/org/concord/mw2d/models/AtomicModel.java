@@ -101,8 +101,6 @@ public abstract class AtomicModel extends MDModel {
 	/** maximum number of atoms allowed */
 	private static short NMAX = 500;
 
-	public final static String COMPUTE_PHOTON_ELECTRON = "Photons and Electrons";
-
 	/* the atom array */
 	Atom[] atom;
 	List<Electron> freeElectrons;

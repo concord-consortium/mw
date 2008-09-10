@@ -1127,7 +1127,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 		JMenuItem energyTSItem;
 		JMenuItem disableRecorderItem;
 		JMenuItem removeToolBarItem;
-		JMenuItem computePhotonElectronMenuItem;
+		JMenuItem photonElectronMenuItem;
 		JMenuItem setupFlowMenuItem;
 		JMenuItem enableFlowMenuItem;
 		JMenuItem eFieldLineMenuItem;
@@ -1180,7 +1180,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			menu.setMnemonic(KeyEvent.VK_C);
 			menu.addMenuListener(new MenuListener() {
 				public void menuSelected(MenuEvent e) {
-					setMenuItemWithoutNotifyingListeners(computePhotonElectronMenuItem, model.isPhotonEnabled());
+					setMenuItemWithoutNotifyingListeners(photonElectronMenuItem, model.isPhotonEnabled());
 				}
 
 				public void menuCanceled(MenuEvent e) {
@@ -1191,13 +1191,14 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			});
 			add(menu);
 
-			computePhotonElectronMenuItem = new JCheckBoxMenuItem(MolecularModel.COMPUTE_PHOTON_ELECTRON);
-			computePhotonElectronMenuItem.addItemListener(new ItemListener() {
+			s = getInternationalText("PhotonsAndElectrons");
+			photonElectronMenuItem = new JCheckBoxMenuItem(s != null ? s : "Photons and Electrons");
+			photonElectronMenuItem.addItemListener(new ItemListener() {
 				public void itemStateChanged(ItemEvent e) {
 					model.setPhotonEnabled(e.getStateChange() == ItemEvent.SELECTED);
 				}
 			});
-			menu.add(computePhotonElectronMenuItem);
+			menu.add(photonElectronMenuItem);
 
 			/* analysis menu */
 

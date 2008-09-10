@@ -124,7 +124,8 @@ public class PageElectronicStructureViewer extends ElectronicStructureViewer imp
 		popupMenu = new JPopupMenu();
 		popupMenu.setInvoker(this);
 
-		final JMenuItem miCustom = new JMenuItem("Customize This Electronic Structure...");
+		String s = Modeler.getInternationalText("CustomizeElectronicStructure");
+		final JMenuItem miCustom = new JMenuItem((s != null ? s : "Customize This Electronic Structure") + "...");
 		miCustom.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (maker == null) {
@@ -138,7 +139,8 @@ public class PageElectronicStructureViewer extends ElectronicStructureViewer imp
 		});
 		popupMenu.add(miCustom);
 
-		final JMenuItem miRemove = new JMenuItem("Remove This Electronic Structure");
+		s = Modeler.getInternationalText("RemoveElectronicStructure");
+		final JMenuItem miRemove = new JMenuItem(s != null ? s : "Remove This Electronic Structure");
 		miRemove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				page.removeComponent(PageElectronicStructureViewer.this);
@@ -146,7 +148,8 @@ public class PageElectronicStructureViewer extends ElectronicStructureViewer imp
 		});
 		popupMenu.add(miRemove);
 
-		JMenuItem mi = new JMenuItem("Copy This Electronic Structure");
+		s = Modeler.getInternationalText("CopyElectronicStructure");
+		JMenuItem mi = new JMenuItem(s != null ? s : "Copy This Electronic Structure");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				page.copyComponent(PageElectronicStructureViewer.this);
@@ -155,7 +158,8 @@ public class PageElectronicStructureViewer extends ElectronicStructureViewer imp
 		popupMenu.add(mi);
 		popupMenu.addSeparator();
 
-		mi = new JMenuItem("Take a Snapshot...");
+		s = Modeler.getInternationalText("TakeSnapshot");
+		mi = new JMenuItem((s != null ? s : "Take a Snapshot") + "...");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				SnapshotGallery.sharedInstance().takeSnapshot(page.getAddress(), PageElectronicStructureViewer.this);
@@ -164,7 +168,8 @@ public class PageElectronicStructureViewer extends ElectronicStructureViewer imp
 		popupMenu.add(mi);
 		popupMenu.addSeparator();
 
-		final JMenuItem miDeleteLevel = new JMenuItem("Remove Selected Excited State Energy Level");
+		s = Modeler.getInternationalText("RemoveSelectedExcitedState");
+		final JMenuItem miDeleteLevel = new JMenuItem(s != null ? s : "Remove Selected Excited State");
 		miDeleteLevel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				removeSelectedEnergyLevel();
@@ -172,7 +177,8 @@ public class PageElectronicStructureViewer extends ElectronicStructureViewer imp
 		});
 		popupMenu.add(miDeleteLevel);
 
-		final JMenuItem miRemoveAll = new JMenuItem("Remove All Excited State Energy Levels");
+		s = Modeler.getInternationalText("RemoveAllExcitedStates");
+		final JMenuItem miRemoveAll = new JMenuItem(s != null ? s : "Remove All Excited States");
 		miRemoveAll.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				removeAllExcitedEnergyLevels();
@@ -180,7 +186,8 @@ public class PageElectronicStructureViewer extends ElectronicStructureViewer imp
 		});
 		popupMenu.add(miRemoveAll);
 
-		final JMenuItem miInsertLevel = new JMenuItem("Insert Energy Level");
+		s = Modeler.getInternationalText("InsertEnergyLevel");
+		final JMenuItem miInsertLevel = new JMenuItem(s != null ? s : "Insert Energy Level");
 		miInsertLevel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				insertEnergyLevel(getMouseY());
@@ -188,7 +195,8 @@ public class PageElectronicStructureViewer extends ElectronicStructureViewer imp
 		});
 		popupMenu.add(miInsertLevel);
 
-		final JMenuItem miContinuum = new JMenuItem("Create a Continuum");
+		s = Modeler.getInternationalText("CreateContinuum");
+		final JMenuItem miContinuum = new JMenuItem(s != null ? s : "Create a Continuum");
 		miContinuum.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				createContinuum();
@@ -197,12 +205,14 @@ public class PageElectronicStructureViewer extends ElectronicStructureViewer imp
 		popupMenu.add(miContinuum);
 		popupMenu.addSeparator();
 
-		final JMenu lifetimeMenu = new JMenu("Set Lifetime of Selected Energy Level");
+		s = Modeler.getInternationalText("SetLifetimeOfSelectedEnergyLevel");
+		final JMenu lifetimeMenu = new JMenu(s != null ? s : "Set Lifetime of Selected Energy Level");
 		popupMenu.add(lifetimeMenu);
 
 		ButtonGroup bg = new ButtonGroup();
 
-		final JMenuItem miShort = new JRadioButtonMenuItem("Short-Lived");
+		s = Modeler.getInternationalText("Short");
+		final JMenuItem miShort = new JRadioButtonMenuItem(s != null ? s : "Short");
 		miShort.setSelected(true);
 		miShort.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
@@ -219,7 +229,8 @@ public class PageElectronicStructureViewer extends ElectronicStructureViewer imp
 		lifetimeMenu.add(miShort);
 		bg.add(miShort);
 
-		final JMenuItem miMedium = new JRadioButtonMenuItem("Metastable");
+		s = Modeler.getInternationalText("Metastable");
+		final JMenuItem miMedium = new JRadioButtonMenuItem(s != null ? s : "Metastable");
 		miMedium.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -235,7 +246,8 @@ public class PageElectronicStructureViewer extends ElectronicStructureViewer imp
 		lifetimeMenu.add(miMedium);
 		bg.add(miMedium);
 
-		final JMenuItem miLong = new JRadioButtonMenuItem("Long-Lived");
+		s = Modeler.getInternationalText("Long");
+		final JMenuItem miLong = new JRadioButtonMenuItem(s != null ? s : "Long");
 		miLong.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
