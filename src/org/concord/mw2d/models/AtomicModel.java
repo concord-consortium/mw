@@ -2590,7 +2590,6 @@ public abstract class AtomicModel extends MDModel {
 	}
 
 	private double computeForceForElectrons(final int time) {
-		if(true) return 0;
 		if (freeElectrons.isEmpty())
 			return 0;
 
@@ -2660,12 +2659,11 @@ public abstract class AtomicModel extends MDModel {
 					for (Electron e : freeElectrons) {
 						rxij = e.rx - atom[i].rx;
 						ryij = e.ry - atom[i].ry;
-						rijsq = rxij * rxij + ryij * ryij;
-						// FIXME: 0.5 is for reducing the electrostatic force to make photoionization happen
-						// 0.1 is for preventing DBZ error
-						coul = 0.5 * atom[i].charge / (0.1 + Math.sqrt(rijsq)) * rCD;
+						rijsq = Math.sqrt(rxij * rxij + ryij * ryij);
+						// FIXME: offset 10 to prevent DBZ error
+						coul = atom[i].charge / (20 + rijsq) * rCD;
 						vsum += coul;
-						fij = coul / rijsq * GF_CONVERSION_CONSTANT;
+						fij = GF_CONVERSION_CONSTANT * coul / (20 + rijsq) / rijsq;
 						fxij = fij * rxij;
 						fyij = fij * ryij;
 						e.fx -= fxij;

@@ -36,7 +36,8 @@ public class Electron {
 	volatile double ay;
 	double fx, fy;
 
-	static double mass = 0.1;
+	static float mass = 0.1f;
+	static byte radius = 2;
 
 	private MolecularModel model;
 	private float enterStateTime;
@@ -150,9 +151,9 @@ public class Electron {
 	private void renderFreeState(Graphics2D g) {
 		g.setStroke(ViewAttribute.THIN);
 		g.setColor(Color.white);
-		g.fillOval((int) (rx - 1), (int) (ry - 1), 2, 2);
+		g.fillOval((int) (rx - radius + 1), (int) (ry - radius + 1), radius * 2 - 2, radius * 2 - 2);
 		g.setColor(Color.black);
-		g.drawOval((int) (rx - 2), (int) (ry - 2), 4, 4);
+		g.drawOval((int) (rx - radius), (int) (ry - radius), radius * 2, radius * 2);
 	}
 
 }
