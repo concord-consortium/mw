@@ -812,9 +812,30 @@ public class RectangularBoundary extends Rectangle2D.Double implements Boundary 
 					am.view.removeMarkedAtoms(markedAtomList);
 			}
 
+			List<Electron> electronList = am.getFreeElectrons();
+			if (electronList != null && !electronList.isEmpty()) {
+				synchronized (electronList) {
+					for (Electron electron : electronList) {
+						if (electron.rx < xmin) {
+							electron.vx = Math.abs(electron.vx);
+						}
+						else if (electron.rx > xmax) {
+							electron.vx = -Math.abs(electron.vx);
+						}
+						if (electron.ry < ymin) {
+							electron.vy = Math.abs(electron.vy);
+						}
+						else if (electron.ry > ymax) {
+							electron.vy = -Math.abs(electron.vy);
+						}
+					}
+				}
+			}
+
 			List<Photon> photonList = am.getPhotons();
 			if (photonList != null && !photonList.isEmpty()) {
 				if (lightThrough) {
+					// CAUTION: we modified xmin etc. here, so photon reflection must be at last
 					xmin -= 50;
 					xmax += 50;
 					ymin -= 50;
@@ -854,29 +875,7 @@ public class RectangularBoundary extends Rectangle2D.Double implements Boundary 
 					}
 				}
 			}
-			List<Electron> electronList = am.getFreeElectrons();
-			if (electronList != null && !electronList.isEmpty()) {
-				synchronized (electronList) {
-					for (Electron electron : electronList) {
-						if (electron.rx < xmin) {
-							// electron.rx = xmin;
-							electron.vx = Math.abs(electron.vx);
-						}
-						else if (electron.rx > xmax) {
-							// electron.rx = xmax;
-							electron.vx = -Math.abs(electron.vx);
-						}
-						if (electron.ry < ymin) {
-							// electron.ry = ymin;
-							electron.vy = Math.abs(electron.vy);
-						}
-						else if (electron.ry > ymax) {
-							// electron.ry = ymax;
-							electron.vy = -Math.abs(electron.vy);
-						}
-					}
-				}
-			}
+
 		}
 
 		else if (model instanceof MesoModel) {

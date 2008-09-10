@@ -1180,7 +1180,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			menu.setMnemonic(KeyEvent.VK_C);
 			menu.addMenuListener(new MenuListener() {
 				public void menuSelected(MenuEvent e) {
-					setMenuItemWithoutNotifyingListeners(photonElectronMenuItem, model.isPhotonEnabled());
+					setMenuItemWithoutNotifyingListeners(photonElectronMenuItem, model.isSubatomicEnabled());
 				}
 
 				public void menuCanceled(MenuEvent e) {
@@ -1195,7 +1195,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			photonElectronMenuItem = new JCheckBoxMenuItem(s != null ? s : "Photons and Electrons");
 			photonElectronMenuItem.addItemListener(new ItemListener() {
 				public void itemStateChanged(ItemEvent e) {
-					model.setPhotonEnabled(e.getStateChange() == ItemEvent.SELECTED);
+					model.setSubatomicEnabled(e.getStateChange() == ItemEvent.SELECTED);
 				}
 			});
 			menu.add(photonElectronMenuItem);
