@@ -1757,6 +1757,8 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 	}
 
 	private void validateComponent(Object src, final boolean changed) {
+		if (!EventQueue.isDispatchThread())
+			throw new RuntimeException("thread hazard");
 		boolean onPage = false;
 		MDContainer m = null;
 		synchronized (componentPool) {
@@ -1800,10 +1802,10 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 					}
 					if (but != null) {
 						// rearrange toolbar buttons according to current container size
-						for (int i = 0; i < but.length; i++) {
-							if (!(but[i] instanceof AbstractButton))
+						for (Component i : but) {
+							if (!(i instanceof AbstractButton))
 								continue;
-							Action a = ((AbstractButton) but[i]).getAction();
+							Action a = ((AbstractButton) i).getAction();
 							if (a != null) {
 								String s = (String) a.getValue(Action.NAME);
 								m.addToolBarButton(s);
@@ -1813,6 +1815,8 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 					c.setMaximumSize(c.getPreferredSize());
 					c.setMinimumSize(c.getMaximumSize());
 					c.validate();
+					if (!c.getSize().equals(c.getPreferredSize()))
+						page.settleComponentSize();
 					((MDView) c.getContainer().getModel().getView()).clearEditor(true);
 					onPage = true;
 				}
