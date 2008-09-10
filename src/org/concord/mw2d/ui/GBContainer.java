@@ -201,12 +201,7 @@ public class GBContainer extends MDContainer {
 		if (super.enableRecorder(b) == JOptionPane.NO_OPTION)
 			return JOptionPane.NO_OPTION;
 		mb.enableMovieMenuItems(b);
-		ItemListener[] listener = mb.disableRecorderItem.getItemListeners();
-		for (int i = 0; i < listener.length; i++)
-			mb.disableRecorderItem.removeItemListener(listener[i]);
-		mb.disableRecorderItem.setSelected(!b);
-		for (int i = 0; i < listener.length; i++)
-			mb.disableRecorderItem.addItemListener(listener[i]);
+		ModelerUtilities.selectWithoutNotifyingListeners(mb.disableRecorderItem, !b);
 		return JOptionPane.YES_OPTION;
 	}
 
@@ -261,12 +256,7 @@ public class GBContainer extends MDContainer {
 			disableRecorderItem.addItemListener(new ItemListener() {
 				public void itemStateChanged(ItemEvent e) {
 					if (enableRecorder(e.getStateChange() == ItemEvent.DESELECTED) == JOptionPane.NO_OPTION) {
-						ItemListener[] lis = disableRecorderItem.getItemListeners();
-						for (int i = 0; i < lis.length; i++)
-							disableRecorderItem.removeItemListener(lis[i]);
-						disableRecorderItem.setSelected(false);
-						for (int i = 0; i < lis.length; i++)
-							disableRecorderItem.addItemListener(lis[i]);
+						ModelerUtilities.selectWithoutNotifyingListeners(disableRecorderItem, false);
 					}
 					model.notifyChange();
 				}
