@@ -815,17 +815,18 @@ public class RectangularBoundary extends Rectangle2D.Double implements Boundary 
 			List<Electron> electronList = am.getFreeElectrons();
 			if (electronList != null && !electronList.isEmpty()) {
 				synchronized (electronList) {
+					// reflected from 2 pixels away from the border line to keep it visible
 					for (Electron electron : electronList) {
-						if (electron.rx < xmin) {
+						if (electron.rx - Electron.radius - 2 < xmin) {
 							electron.vx = Math.abs(electron.vx);
 						}
-						else if (electron.rx > xmax) {
+						else if (electron.rx + Electron.radius + 2 > xmax) {
 							electron.vx = -Math.abs(electron.vx);
 						}
-						if (electron.ry < ymin) {
+						if (electron.ry - Electron.radius - 2 < ymin) {
 							electron.vy = Math.abs(electron.vy);
 						}
-						else if (electron.ry > ymax) {
+						else if (electron.ry + Electron.radius + 2 > ymax) {
 							electron.vy = -Math.abs(electron.vy);
 						}
 					}
@@ -1103,12 +1104,10 @@ public class RectangularBoundary extends Rectangle2D.Double implements Boundary 
 		if (electronList != null && !electronList.isEmpty()) {
 			synchronized (electronList) {
 				for (Electron electron : electronList) {
-					if (electron.rx < xmin) {
-						// electron.rx = xmin;
+					if (electron.rx - Electron.radius - 2 < xmin) {
 						electron.vx = Math.abs(electron.vx);
 					}
-					else if (electron.rx > xmax) {
-						// electron.rx = xmax;
+					else if (electron.rx + Electron.radius + 2 > xmax) {
 						electron.vx = -Math.abs(electron.vx);
 					}
 					if (electron.ry < y)
@@ -1223,12 +1222,10 @@ public class RectangularBoundary extends Rectangle2D.Double implements Boundary 
 						electron.rx += width;
 					else if (electron.rx > x + width)
 						electron.rx -= width;
-					if (electron.ry < ymin) {
-						// electron.ry = ymin;
+					if (electron.ry - Electron.radius - 2 < ymin) {
 						electron.vy = Math.abs(electron.vy);
 					}
-					else if (electron.ry > ymax) {
-						// electron.ry = ymax;
+					else if (electron.ry + Electron.radius + 2 > ymax) {
 						electron.vy = -Math.abs(electron.vy);
 					}
 				}
