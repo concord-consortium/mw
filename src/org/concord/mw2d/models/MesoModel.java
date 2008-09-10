@@ -26,7 +26,6 @@ import java.awt.EventQueue;
 import java.awt.Shape;
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -1278,13 +1277,6 @@ public class MesoModel extends MDModel {
 		}
 		setNumberOfParticles(pointer);
 
-		if (computeList != null)
-			computeList.clear();
-		else computeList = new ArrayList<String>();
-		List<String> compList = state.getComputeList();
-		if (compList != null)
-			computeList.addAll(compList);
-
 		loadLayeredComponent(vs);
 
 		monitor.setProgressMessage("Retrieving boundary...");
@@ -1372,7 +1364,6 @@ public class MesoModel extends MDModel {
 		State state = new State();
 		if (job != null)
 			state.addTasks(job.getCustomTasks());
-		state.setComputeList(computeList);
 		state.setUniverse(universe);
 		state.setProperties(properties);
 		state.setObstacles(obstacles.getList());

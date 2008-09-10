@@ -189,7 +189,6 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	float range_xmin = 20, range_xmax = 20, range_ymin = 20, range_ymax = 20;
 	short id_xmin, id_xmax, id_ymin, id_ymax;
 
-	List<String> computeList;
 	Map<Object, Object> properties;
 	JProgressBar ioProgressBar;
 	Map<String, Action> actionMap;
@@ -459,7 +458,6 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 
 		movieQueueGroup = new HomoQueueGroup("Movie");
 
-		computeList = new ArrayList<String>();
 		properties = new HashMap<Object, Object>();
 		undoManager = new UndoManager();
 		undoManager.setLimit(1);
@@ -1092,22 +1090,6 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 
 	public float getPlanckConstant() {
 		return PLANCK_CONSTANT;
-	}
-
-	public void addCompute(String s) {
-		computeList.add(s);
-	}
-
-	public boolean isComputed(String s) {
-		if (computeList == null)
-			return false;
-		return computeList.contains(s);
-	}
-
-	public void removeCompute(String s) {
-		if (computeList == null)
-			return;
-		computeList.remove(s);
 	}
 
 	/** return true if this model contains no mobile object at all. */
@@ -1955,8 +1937,6 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			obstacles.clear();
 		}
 		setUniverse(new Universe());
-		if (computeList != null)
-			computeList.clear();
 		if (updateListenerList != null) {
 			// we must clear the listener to allow gc to clean, but this method is also called by reset(),
 			// so we save a copy of the listeners to be used after reset() is called
@@ -2673,7 +2653,6 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 
 	public abstract static class State extends MDState {
 
-		private List<String> computeList;
 		private Universe universe;
 		private Vector<VectorField> fields;
 		private ArrayList<RectangularObstacle.Delegate> obstacles;
@@ -2689,7 +2668,6 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		private String script;
 
 		public State() {
-			computeList = new ArrayList<String>();
 			obstacles = new ArrayList<RectangularObstacle.Delegate>();
 			fields = new Vector<VectorField>();
 		}
@@ -2732,16 +2710,6 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 
 		public int getReminderInterval() {
 			return reminderInterval;
-		}
-
-		public void setComputeList(List<String> list) {
-			computeList.clear();
-			if (list != null)
-				computeList.addAll(list);
-		}
-
-		public List<String> getComputeList() {
-			return computeList;
 		}
 
 		public void setFrameInterval(int i) {

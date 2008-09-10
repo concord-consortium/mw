@@ -101,7 +101,7 @@ public abstract class AtomicModel extends MDModel {
 	/** maximum number of atoms allowed */
 	private static short NMAX = 500;
 
-	public final static String COMPUTE_PHOTON = "Photon Absorption and Emission";
+	public final static String COMPUTE_PHOTON_ELECTRON = "Photons and Electrons";
 
 	/* the atom array */
 	Atom[] atom;
@@ -126,7 +126,6 @@ public abstract class AtomicModel extends MDModel {
 	int[] neighborList, pointer;
 
 	FloatQueue[] kep = new FloatQueue[4];
-	FloatQueue[] msd = new FloatQueue[4];
 
 	/* the time step for unfolding this model */
 	private volatile double timeStep = 2.0;
@@ -323,7 +322,6 @@ public abstract class AtomicModel extends MDModel {
 		movieQueueGroup.add(tote);
 
 		for (byte i = 0; i < 4; i++) {
-
 			kep[i] = new FloatQueue("Kinetic Energy/Particle " + idToName(i), movie.getCapacity());
 			kep[i].setReferenceUpperBound(5);
 			kep[i].setReferenceLowerBound(-5);
@@ -331,15 +329,6 @@ public abstract class AtomicModel extends MDModel {
 			kep[i].setInterval(movieUpdater.getInterval());
 			kep[i].setPointer(0);
 			movieQueueGroup.add(kep[i]);
-
-			msd[i] = new FloatQueue("Mean Square Displacement/Particle " + idToName(i), movie.getCapacity());
-			msd[i].setReferenceUpperBound(100);
-			msd[i].setReferenceLowerBound(0);
-			msd[i].setCoordinateQueue(modelTimeQueue);
-			msd[i].setInterval(movieUpdater.getInterval());
-			msd[i].setPointer(0);
-			movieQueueGroup.add(msd[i]);
-
 		}
 
 		Action a = null;
@@ -955,10 +944,8 @@ public abstract class AtomicModel extends MDModel {
 
 	public void clearTimeSeries() {
 		super.clearTimeSeries();
-		for (int i = 0; i < msd.length; i++) {
-			movieQueueGroup.add(kep[i]);
-			movieQueueGroup.add(msd[i]);
-		}
+		for (FloatQueue q : kep)
+			movieQueueGroup.add(q);
 	}
 
 	void record() {
@@ -966,21 +953,9 @@ public abstract class AtomicModel extends MDModel {
 		updateAllRQ();
 		updateAllVQ();
 		updateAllAQ();
-		updateAllDQ();
 		updatePressureQ();
 		for (byte i = 0; i < 4; i++)
 			kep[i].update((float) getKinForType(i));
-		if (computeList != null) {
-			if (computeList.contains(COMPUTE_MSD)) {
-				updateMSD();
-			}
-			else {
-				// move the pointers of uncalculated arrays to avoid errors
-				int p = getTapePointer();
-				for (int i = 0; i < msd.length; i++)
-					msd[i].setPointer(p);
-			}
-		}
 		if (photonEnabled || (lightSource != null && lightSource.isOn()))
 			updatePhotonQ();
 	}
@@ -1034,37 +1009,6 @@ public abstract class AtomicModel extends MDModel {
 				}
 			}
 		}
-	}
-
-	private void updateMSD() {
-		int p = getTapePointer();
-		if (p < 0)
-			return;
-		int[] n = new int[4];
-		Arrays.fill(n, 0);
-		for (int i = 0; i < numberOfAtoms; i++) {
-			if (atom[i].id >= 0 && atom[i].id < 4)
-				n[atom[i].id]++;
-		}
-		if (n[0] == 0 && n[1] == 0 && n[2] == 0 && n[3] == 0)
-			return;
-		float[] c = new float[4];
-		float sx, sy;
-		for (int k = 0; k < p; k++) {
-			Arrays.fill(c, 0f);
-			for (int i = 0; i < numberOfAtoms; i++) {
-				if (atom[i].id >= 0 && atom[i].id < 4) {
-					sx = atom[i].dQ.getQueue1().sum(0, k);
-					sy = atom[i].dQ.getQueue2().sum(0, k);
-					c[atom[i].id] += sx * sx + sy * sy;
-				}
-			}
-			for (int i = 0; i < 4; i++)
-				if (n[i] != 0)
-					msd[i].setData(k, c[i] / n[i]);
-		}
-		for (int i = 0; i < 4; i++)
-			msd[i].setPointer(p);
 	}
 
 	public Atom createAtomOfElement(int id) {
@@ -1253,17 +1197,14 @@ public abstract class AtomicModel extends MDModel {
 			atom[i].moveRPointer(0);
 			atom[i].moveVPointer(0);
 			atom[i].moveAPointer(0);
-			atom[i].moveDPointer(0);
 		}
 		kine.setPointer(0);
 		pote.setPointer(0);
 		tote.setPointer(0);
 		for (FloatQueue q : channelTs)
 			q.setPointer(0);
-		for (int i = 0; i < 4; i++) {
-			kep[i].setPointer(0);
-			msd[i].setPointer(0);
-		}
+		for (FloatQueue q : kep)
+			q.setPointer(0);
 		modelTimeQueue.setPointer(0);
 		int nmov = stateHolder.getNumberOfObstacles();
 		if (nmov > 0) {
@@ -1321,7 +1262,6 @@ public abstract class AtomicModel extends MDModel {
 			atom[i].moveRPointer(n);
 			atom[i].moveVPointer(n);
 			atom[i].moveAPointer(n);
-			atom[i].moveDPointer(n);
 		}
 		if (obstacles != null && !obstacles.isEmpty()) {
 			RectangularObstacle obs = null;
@@ -1342,10 +1282,8 @@ public abstract class AtomicModel extends MDModel {
 		tote.setPointer(n);
 		for (FloatQueue q : channelTs)
 			q.setPointer(n);
-		for (int i = 0; i < 4; i++) {
-			kep[i].setPointer(n);
-			msd[i].setPointer(n);
-		}
+		for (FloatQueue q : kep)
+			q.setPointer(n);
 	}
 
 	private void setQueueLength(int n) {
@@ -1355,10 +1293,8 @@ public abstract class AtomicModel extends MDModel {
 		tote.setLength(n);
 		for (FloatQueue q : channelTs)
 			q.setLength(n);
-		for (int i = 0; i < 4; i++) {
-			kep[i].setLength(n);
-			msd[i].setLength(n);
-		}
+		for (FloatQueue q : kep)
+			q.setLength(n);
 	}
 
 	public void activateEmbeddedMovie(boolean b) {
@@ -1372,10 +1308,8 @@ public abstract class AtomicModel extends MDModel {
 			tote.setInterval(m);
 			for (FloatQueue q : channelTs)
 				q.setInterval(m);
-			for (int i = 0; i < 4; i++) {
-				kep[i].setInterval(m);
-				msd[i].setInterval(m);
-			}
+			for (FloatQueue q : kep)
+				q.setInterval(m);
 			int n = movie.getCapacity();
 			setQueueLength(n);
 			for (int i = 0; i < numberOfAtoms; i++) {
@@ -1510,19 +1444,6 @@ public abstract class AtomicModel extends MDModel {
 						}
 					}
 				}
-			}
-		}
-	}
-
-	private void updateAllDQ() {
-		int c = movie.getCapacity();
-		for (int i = 0; i < numberOfAtoms; i++) {
-			try {
-				atom[i].updateDQ();
-			}
-			catch (Exception e) {
-				atom[i].initializeDQ(c);
-				atom[i].updateDQ();
 			}
 		}
 	}
@@ -3825,7 +3746,6 @@ public abstract class AtomicModel extends MDModel {
 		State state = new State(numberOfAtoms);
 		if (job != null)
 			state.addTasks(job.getCustomTasks());
-		state.setComputeList(computeList);
 		state.setLJBetweenBondPairs(ljBetweenBondPairs);
 		state.setInterCoulomb(interCoulomb);
 		state.setUniverse(universe);
@@ -4031,10 +3951,8 @@ public abstract class AtomicModel extends MDModel {
 		tote.clear();
 		for (FloatQueue q : channelTs)
 			q.clear();
-		for (int i = 0; i < 4; i++) {
-			kep[i].clear();
-			msd[i].clear();
-		}
+		for (FloatQueue q : kep)
+			q.clear();
 		Arrays.fill(channels, 0);
 		movieUpdater.setInterval(state.getFrameInterval());
 		if (heatBath != null)
@@ -4215,13 +4133,6 @@ public abstract class AtomicModel extends MDModel {
 		setNumberOfAtoms(pointer);
 		checkCharges();
 
-		if (computeList != null)
-			computeList.clear();
-		else computeList = new ArrayList<String>();
-		List<String> compList = state.getComputeList();
-		if (compList != null)
-			computeList.addAll(compList);
-
 		/* finally restore boundary. This should be placed at last. */
 
 		monitor.setProgressMessage("Retrieving boundary...");
@@ -4295,8 +4206,6 @@ public abstract class AtomicModel extends MDModel {
 			a.vy = a.vQ.getQueue2().getData(frame);
 			a.ax = a.aQ.getQueue1().getData(frame);
 			a.ay = a.aQ.getQueue2().getData(frame);
-			a.tx = a.dQ.getQueue1().getData(frame);
-			a.ty = a.dQ.getQueue2().getData(frame);
 			a.fx = a.ax * a.mass;
 			a.fy = a.ay * a.mass;
 		}

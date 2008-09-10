@@ -20,6 +20,8 @@
 
 package org.concord.mw2d.models;
 
+import org.concord.modeler.util.FloatQueue;
+
 public class StructureFactor {
 
 	public final static byte LINEAR_SCALING = 101;
@@ -68,6 +70,20 @@ public class StructureFactor {
 		return Math.round(reciprocalUnit * 5000);
 	}
 
+	private static float getMeanDisplacement(FloatQueue q) {
+		if (q == null)
+			throw new IllegalStateException("the recorder must be turned on to do this calculation.");
+		int n = Math.min(q.getPointer(), q.getLength());
+		if (n < 2)
+			return 0;
+		float tx = 0;
+		float[] x = (float[]) q.getData();
+		for (int i = 1; i < n; i++) {
+			tx += Math.abs(x[i] - x[i - 1]);
+		}
+		return tx / (n - 1);
+	}
+
 	public void compute(AtomicModel model, final int type) {
 
 		int m = model.getNumberOfAtoms();
@@ -78,11 +94,11 @@ public class StructureFactor {
 			if (bFactor == null || bFactor.length < m)
 				bFactor = new float[m];
 			if (model.getTapePointer() > 0) {
-				double dx, dy;
+				float dx, dy;
 				for (int i = 0; i < m; i++) {
-					dx = model.atom[i].getDxDyQueue().getQueue1().getMeanSquare();
-					dy = model.atom[i].getDxDyQueue().getQueue2().getMeanSquare();
-					bFactor[i] = (float) (0.1 * (dx + dy)) * reciprocalUnit;
+					dx = getMeanDisplacement(model.atom[i].rQ.getQueue1());
+					dy = getMeanDisplacement(model.atom[i].rQ.getQueue2());
+					bFactor[i] = (0.1f * (dx * dx + dy * dy)) * reciprocalUnit;
 				}
 			}
 			else {

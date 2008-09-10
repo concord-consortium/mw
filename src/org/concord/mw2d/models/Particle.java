@@ -136,13 +136,6 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	double dy;
 
 	/*
-	 * hold the net x, y displacement between two calls to updateRQ(). tx and ty are the sums of stepwise displacements
-	 * dx and dy between adjacent calls to updateRQ(). We do not have to worry about folding back dx and dy when the
-	 * periodic boundary conditions are applied.
-	 */
-	double tx, ty;
-
-	/*
 	 * custom external force applied to this particle. Unit: 10*eV/A
 	 */
 	float hx, hy;
@@ -161,9 +154,6 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 
 	/* store <tt>ax, ay</tt> queues */
 	transient FloatQueueTwin aQ;
-
-	/* store the x,y displacements over the period of a recording interval */
-	transient FloatQueueTwin dQ;
 
 	/* true if this particle is selected */
 	transient boolean selected;
@@ -235,7 +225,6 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 		rQ = null;
 		vQ = null;
 		aQ = null;
-		dQ = null;
 		restraint = null;
 		userField = null;
 	}
@@ -810,7 +799,6 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 		initializeRQ(n);
 		initializeVQ(n);
 		initializeAQ(n);
-		initializeDQ(n);
 	}
 
 	/**
@@ -888,31 +876,6 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 		}
 	}
 
-	/**
-	 * initialize displacement queue twin. If the passed integer is less than 1, nullify the queues.
-	 */
-	public void initializeDQ(int n) {
-		if (dQ == null) {
-			if (n < 1)
-				return; // already null
-			dQ = new FloatQueueTwin(new FloatQueue("Dx: " + toString(), n), new FloatQueue("Dy: " + toString(), n));
-			dQ.setInterval(getMovieInterval());
-			dQ.setPointer(0);
-			dQ.setCoordinateQueue(getHostModel().getModelTimeQueue());
-			// getHostModel().getMovieQueueGroup().add(dxdyQ);
-		}
-		else {
-			dQ.setLength(n);
-			if (n < 1) {
-				// getHostModel().getMovieQueueGroup().remove(dxdyQ);
-				dQ = null;
-			}
-			else {
-				dQ.setPointer(0);
-			}
-		}
-	}
-
 	/** push current coordinate into the coordinate queue */
 	public synchronized void updateRQ() {
 		if (rQ == null || rQ.isEmpty())
@@ -932,14 +895,6 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 		if (aQ == null || aQ.isEmpty())
 			throw new RuntimeException("Attempt to write to the empty queue");
 		aQ.update(ax, ay);
-	}
-
-	/** store the displacements since last recording into the displacement queue. */
-	public synchronized void updateDQ() {
-		if (dQ == null || dQ.isEmpty())
-			throw new RuntimeException("Attempt to write to the empty queue");
-		dQ.update(tx, ty);
-		tx = ty = 0;
 	}
 
 	/**
@@ -988,23 +943,6 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 		aQ.setPointer(i);
 	}
 
-	/** @see org.concord.mw2d.models.Particle#getRPointer */
-	public synchronized int getDPointer() {
-		if (dQ == null || dQ.isEmpty())
-			return -1;
-		return dQ.getPointer();
-	}
-
-	/** @see org.concord.mw2d.models.Particle#getRPointer */
-	public synchronized void moveDPointer(int i) {
-		if (dQ == null || dQ.isEmpty())
-			return;
-		if (i <= 0) {
-			tx = ty = 0;
-		}
-		dQ.setPointer(i);
-	}
-
 	public FloatQueueTwin getRxRyQueue() {
 		return rQ;
 	}
@@ -1015,10 +953,6 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 
 	public FloatQueueTwin getAxAyQueue() {
 		return aQ;
-	}
-
-	public FloatQueueTwin getDxDyQueue() {
-		return dQ;
 	}
 
 	public void setShowRTraj(boolean b) {

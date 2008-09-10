@@ -807,8 +807,6 @@ public class Atom extends Particle {
 		ry += dy;
 		vx += ax * dt;
 		vy += ay * dt;
-		tx += dx;
-		ty += dy;
 	}
 
 	/*

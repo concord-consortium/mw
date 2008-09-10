@@ -82,8 +82,11 @@ public class GBContainer extends MDContainer {
 		return getCompatibleName();
 	}
 
-	/** return a representation name backward compatible to Version 1.3 */
-	public static String getCompatibleName() {
+	/**
+	 * return a representation name backward compatible to Version 1.3. What a stupid example of using class names to
+	 * represent data.
+	 */
+	public final static String getCompatibleName() {
 		return "org.concord.mw2d.activity.GBContainer";
 	}
 
