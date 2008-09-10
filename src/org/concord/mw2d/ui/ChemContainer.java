@@ -205,12 +205,7 @@ public class ChemContainer extends MDContainer {
 		if (super.enableRecorder(b) == JOptionPane.NO_OPTION)
 			return JOptionPane.NO_OPTION;
 		mb.enableMovieMenuItems(b);
-		ItemListener[] listener = mb.disableRecorderItem.getItemListeners();
-		for (ItemListener i : listener)
-			mb.disableRecorderItem.removeItemListener(i);
-		mb.disableRecorderItem.setSelected(!b);
-		for (ItemListener i : listener)
-			mb.disableRecorderItem.addItemListener(i);
+		ModelerUtilities.selectWithoutNotifyingListeners(mb.disableRecorderItem, !b);
 		return JOptionPane.YES_OPTION;
 	}
 
@@ -416,12 +411,7 @@ public class ChemContainer extends MDContainer {
 			disableRecorderItem.addItemListener(new ItemListener() {
 				public void itemStateChanged(ItemEvent e) {
 					if (enableRecorder(e.getStateChange() == ItemEvent.DESELECTED) == JOptionPane.NO_OPTION) {
-						ItemListener[] lis = disableRecorderItem.getItemListeners();
-						for (ItemListener i : lis)
-							disableRecorderItem.removeItemListener(i);
-						disableRecorderItem.setSelected(false);
-						for (ItemListener i : lis)
-							disableRecorderItem.addItemListener(i);
+						ModelerUtilities.selectWithoutNotifyingListeners(disableRecorderItem, false);
 					}
 					model.notifyChange();
 				}

@@ -631,12 +631,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 					if (dnaPlayButton != null)
 						dnaPlayButton.setEnabled(true);
 					mb.enableMovieMenuItems(false);
-					ItemListener[] listener = mb.disableRecorderItem.getItemListeners();
-					for (ItemListener i : listener)
-						mb.disableRecorderItem.removeItemListener(i);
-					mb.disableRecorderItem.setSelected(true);
-					for (ItemListener i : listener)
-						mb.disableRecorderItem.addItemListener(i);
+					ModelerUtilities.selectWithoutNotifyingListeners(mb.disableRecorderItem, true);
 				}
 			});
 		}
@@ -1559,12 +1554,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			disableRecorderItem.addItemListener(new ItemListener() {
 				public void itemStateChanged(ItemEvent e) {
 					if (enableRecorder(e.getStateChange() == ItemEvent.DESELECTED) == JOptionPane.NO_OPTION) {
-						ItemListener[] lis = disableRecorderItem.getItemListeners();
-						for (int i = 0; i < lis.length; i++)
-							disableRecorderItem.removeItemListener(lis[i]);
-						disableRecorderItem.setSelected(false);
-						for (int i = 0; i < lis.length; i++)
-							disableRecorderItem.addItemListener(lis[i]);
+						ModelerUtilities.selectWithoutNotifyingListeners(disableRecorderItem, false);
 					}
 					model.notifyChange();
 				}
