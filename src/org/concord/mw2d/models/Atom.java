@@ -334,7 +334,7 @@ public class Atom extends Particle {
 		e.ry = ry + 0.55 * sigma * sin;
 		// the atom is stopped and all the remaining kenetic energy is transfered to the electron
 		vx = vy = 0;
-		double v = Math.sqrt(excess / (MDModel.EV_CONVERTER * mass));
+		double v = Math.sqrt(excess / (MDModel.EV_CONVERTER * Electron.mass));
 		e.vx = v * cos;
 		e.vy = v * sin;
 		// detach the electron from the atom and make it a free electron
@@ -1043,7 +1043,7 @@ public class Atom extends Particle {
 			if (userField != null)
 				userField.render(g, this, model.getMovie().getCurrentFrameIndex() >= model.getTapePointer() - 1);
 
-			if (model.view.excitationShown() && ((AtomicModel) model).isPhotonEnabled()) {
+			if (model.view.excitationShown() && ((AtomicModel) model).isSubatomicEnabled()) {
 				if (!electrons.isEmpty()) {
 					Electron e = electrons.get(0);
 					if (e.getEnergyLevel() != null) {

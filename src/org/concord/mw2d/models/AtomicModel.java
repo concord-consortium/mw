@@ -159,7 +159,7 @@ public abstract class AtomicModel extends MDModel {
 	private List<Photon> photonList;
 	private ObjectQueue photonQueue;
 	private LightSource lightSource;
-	private boolean photonEnabled;
+	private boolean subatomicEnabled;
 	private boolean collisionalDeexcitation;
 	private boolean atomFlowEnabled;
 	AtomSource atomSource;
@@ -529,7 +529,7 @@ public abstract class AtomicModel extends MDModel {
 
 	void initializeJob() {
 		super.initializeJob();
-		if (photonEnabled) {
+		if (subatomicEnabled) {
 			if (!job.contains(electronicDynamics))
 				job.add(electronicDynamics);
 		}
@@ -626,10 +626,10 @@ public abstract class AtomicModel extends MDModel {
 		return collisionalDeexcitation;
 	}
 
-	public void setPhotonEnabled(boolean b) {
-		photonEnabled = b;
+	public void setSubatomicEnabled(boolean b) {
+		subatomicEnabled = b;
 		if (job != null) {
-			if (photonEnabled) {
+			if (subatomicEnabled) {
 				if (!job.contains(electronicDynamics))
 					job.add(electronicDynamics);
 			}
@@ -639,8 +639,8 @@ public abstract class AtomicModel extends MDModel {
 		}
 	}
 
-	public boolean isPhotonEnabled() {
-		return photonEnabled;
+	public boolean isSubatomicEnabled() {
+		return subatomicEnabled;
 	}
 
 	public void setLightSource(LightSource lightSource) {
@@ -659,7 +659,7 @@ public abstract class AtomicModel extends MDModel {
 		if (b) {
 			if (!job.contains(photonGun) && !job.toBeAdded(photonGun))
 				job.add(photonGun);
-			setPhotonEnabled(true);
+			setSubatomicEnabled(true);
 		}
 		else {
 			job.remove(photonGun);
@@ -954,12 +954,12 @@ public abstract class AtomicModel extends MDModel {
 		updatePressureQ();
 		for (byte i = 0; i < 4; i++)
 			kep[i].update((float) getKinForType(i));
-		if (photonEnabled || (lightSource != null && lightSource.isOn()))
+		if (subatomicEnabled || (lightSource != null && lightSource.isOn()))
 			updatePhotonQ();
 	}
 
 	private void updatePhotonQ() {
-		if (photonEnabled) {
+		if (subatomicEnabled) {
 			int c = movie.getCapacity();
 			for (int i = 0; i < numberOfAtoms; i++) {
 				if (atom[i].getElectrons().isEmpty())
@@ -2590,6 +2590,7 @@ public abstract class AtomicModel extends MDModel {
 	}
 
 	private double computeForceForElectrons(final int time) {
+		if(true) return 0;
 		if (freeElectrons.isEmpty())
 			return 0;
 
@@ -2611,24 +2612,14 @@ public abstract class AtomicModel extends MDModel {
 			if (toRemove != null)
 				freeElectrons.removeAll(toRemove);
 		}
-
-		double vsum = 0;
 		synchronized (freeElectrons) {
 			for (Electron e : freeElectrons) {
 				e.fx = 0;
 				e.fy = 0;
-				for (VectorField f : fields) {
-					if (f instanceof ElectricField) {
-						ElectricField ef = (ElectricField) f;
-						ef.dyn(universe.getDielectricConstant(), e, time);
-						vsum += ef.getPotential(e, time);
-					}
-					else if (f instanceof MagneticField) {
-						((MagneticField) f).dyn(e);
-					}
-				}
 			}
 		}
+
+		double vsum = 0;
 		double coul = 0;
 		double rCD = universe.getCoulombConstant() / universe.getDielectricConstant();
 		// interactions between free electrons
@@ -2690,6 +2681,16 @@ public abstract class AtomicModel extends MDModel {
 			for (Electron e : freeElectrons) {
 				e.fx *= imass;
 				e.fy *= imass;
+				for (VectorField f : fields) {
+					if (f instanceof ElectricField) {
+						ElectricField ef = (ElectricField) f;
+						ef.dyn(universe.getDielectricConstant(), e, time);
+						vsum += ef.getPotential(e, time);
+					}
+					else if (f instanceof MagneticField) {
+						((MagneticField) f).dyn(e);
+					}
+				}
 			}
 		}
 		return vsum;
@@ -3338,7 +3339,7 @@ public abstract class AtomicModel extends MDModel {
 		setNumberOfAtoms(0);
 		resetElements();
 		resetIntegrator();
-		setPhotonEnabled(false);
+		setSubatomicEnabled(false);
 		setLightSourceEnabled(false);
 		setAtomFlowEnabled(false);
 	}
@@ -3757,7 +3758,7 @@ public abstract class AtomicModel extends MDModel {
 		state.setFrameInterval(movieUpdater.getInterval());
 		state.setMoEpsilon(mo.getEpsilon());
 		state.setMoMass(mo.getMass());
-		state.setPhotonEnabled(isPhotonEnabled());
+		state.setPhotonEnabled(isSubatomicEnabled());
 		state.setLightSource(lightSource);
 		state.setQuantumRule(quantumRule);
 		state.setCollisionalDeexcitation(collisionalDeexcitation);
@@ -3784,7 +3785,7 @@ public abstract class AtomicModel extends MDModel {
 			state.setFlowInterval(getFlowInterval());
 		}
 
-		if (photonEnabled) {
+		if (subatomicEnabled) {
 			// save the excited states of the electrons of the atoms
 			ExcitedStates excitedStates = new ExcitedStates();
 			for (int i = 0; i < numberOfAtoms; i++) {
@@ -3899,7 +3900,7 @@ public abstract class AtomicModel extends MDModel {
 		setLJBetweenBondPairs(state.getLJBetweenBondPairs());
 		setInterCoulomb(state.getInterCoulomb());
 		setUniverse(state.getUniverse() == null ? new Universe() : state.getUniverse());
-		setPhotonEnabled(state.getPhotonEnabled());
+		setSubatomicEnabled(state.getPhotonEnabled());
 		setLightSource(state.getLightSource() == null ? new LightSource() : state.getLightSource());
 		photonGun.setInterval(lightSource.getRadiationPeriod());
 		quantumRule = state.getQuantumRule() != null ? state.getQuantumRule() : new QuantumRule();
@@ -4225,7 +4226,7 @@ public abstract class AtomicModel extends MDModel {
 				}
 			}
 		}
-		if (photonEnabled) {
+		if (subatomicEnabled) {
 			for (int i = 0; i < numberOfAtoms; i++) {
 				if (atom[i].getElectrons().isEmpty())
 					continue;
@@ -4235,7 +4236,7 @@ public abstract class AtomicModel extends MDModel {
 			}
 			notifyUpdateListeners(new UpdateEvent(AtomicModel.this, UpdateEvent.VIEW_UPDATED));
 		}
-		if (photonEnabled || (lightSource != null && lightSource.isOn())) {
+		if (subatomicEnabled || (lightSource != null && lightSource.isOn())) {
 			if (photonQueue != null) {
 				if (photonList != null)
 					photonList.clear();
@@ -4264,7 +4265,7 @@ public abstract class AtomicModel extends MDModel {
 		private boolean cutOffShift = true;
 		private double moEpsilon = 0.1;
 		private double moMass = 5.0;
-		private boolean photonEnabled2;
+		private boolean subatomicEnabled;
 		private boolean collisionalDeexcitation;
 		private LightSource lightSource;
 		private QuantumRule quantumRule;
@@ -4342,11 +4343,11 @@ public abstract class AtomicModel extends MDModel {
 		}
 
 		public void setPhotonEnabled(boolean b) {
-			photonEnabled2 = b;
+			subatomicEnabled = b;
 		}
 
 		public boolean getPhotonEnabled() {
-			return photonEnabled2;
+			return subatomicEnabled;
 		}
 
 		public void setCollisionalDeexcitation(boolean b) {
