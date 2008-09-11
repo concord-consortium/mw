@@ -1013,6 +1013,87 @@ public class HTMLPane extends MyEditorPane {
 
 	}
 
+	/**
+	 * FIXME: The problem is that the RunElements in the HTMLDocument is not mutable. Because of this, we have to insert
+	 * new elements that call cached links and remove the corresponding old elements that call remote links. Can we find
+	 * a better way to do this?
+	 */
+	private void useCachedLinks(boolean b, String codeBase) {
+
+		if (!(getDocument() instanceof HTMLDocument))
+			return;
+
+		AttributeSet as = null;
+		Element el = null;
+		Enumeration en = null;
+		String rel = null;
+		String href = null;
+		String type = null;
+		Object obj = null;
+		boolean baseSet = false;
+		String s2 = null;
+
+		HTMLDocument doc = (HTMLDocument) getDocument();
+		URL originalBase = doc.getBase();
+		ElementIterator it = new ElementIterator(doc);
+
+		synchronized (doc) {
+			while (it.next() != null) {
+				el = it.current();
+				if (el.getName().equalsIgnoreCase(HTML.Tag.LINK.toString())) {
+					as = el.getAttributes();
+					en = as.getAttributeNames();
+					while (en.hasMoreElements()) {
+						obj = en.nextElement();
+						s2 = obj.toString();
+						if (s2.equalsIgnoreCase(HTML.Attribute.HREF.toString())) {
+							href = as.getAttribute(obj).toString();
+						}
+						else if (s2.equalsIgnoreCase(HTML.Attribute.REL.toString())) {
+							rel = as.getAttribute(obj).toString();
+						}
+						else if (s2.equalsIgnoreCase(HTML.Attribute.TYPE.toString())) {
+							type = as.getAttribute(obj).toString();
+						}
+					}
+					if (b) {
+						href = ConnectionManager.sharedInstance().getLocalCopy(
+								FileUtilities.concatenate(codeBase, href)).toString();
+						if (!baseSet) {
+							try {
+								doc.setBase(new File(FileUtilities.getCodeBase(href)).toURI().toURL());
+							}
+							catch (Exception e) {
+								e.printStackTrace();
+							}
+							baseSet = true;
+						}
+						href = doc.getBase() + FileUtilities.getFileName(href);
+					}
+					else {
+						href = FileUtilities.getFileName(href);
+					}
+					s2 = "<link href=\"" + href.trim() + "\" rel=\"" + rel + "\" type=\"" + type + "\">";
+					try {
+						doc.insertAfterEnd(el, s2);
+					}
+					catch (BadLocationException e) {
+						e.printStackTrace();
+						continue;
+					}
+					catch (IOException e) {
+						e.printStackTrace();
+						continue;
+					}
+					rel = href = type = null;
+					it.next(); // this is called to skip the original image element!!!
+				}
+			}
+			doc.setBase(originalBase);
+		}
+
+	}
+
 	public void cacheLinkedFiles(String codeBase) {
 
 		if (!ConnectionManager.sharedInstance().isCachingAllowed())
@@ -1031,6 +1112,7 @@ public class HTMLPane extends MyEditorPane {
 			catch (IOException e) {
 				e.printStackTrace();
 			}
+			useCachedLinks(true, codeBase);
 		}
 
 		String bgImage = getAttribute("body", "background");
