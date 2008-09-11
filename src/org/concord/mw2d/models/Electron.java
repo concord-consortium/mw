@@ -35,6 +35,7 @@ public class Electron {
 	volatile double ax;
 	volatile double ay;
 	double fx, fy;
+	double dx, dy;
 
 	static float mass = 0.1f;
 	static byte radius = 2;
@@ -109,8 +110,10 @@ public class Electron {
 
 	/* predict this electron's new state using 2nd order Taylor expansion */
 	void predict(double dt, double dt2) {
-		rx += vx * dt + ax * dt2;
-		ry += vy * dt + ay * dt2;
+		dx = vx * dt + ax * dt2;
+		dy = vy * dt + ay * dt2;
+		rx += dx;
+		ry += dy;
 		vx += ax * dt;
 		vy += ay * dt;
 	}

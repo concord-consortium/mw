@@ -524,6 +524,36 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 
 	}
 
+	void collide(Electron e) {
+		double x0 = getMinX();
+		double y0 = getMinY();
+		double x1 = getMaxX();
+		double y1 = getMaxY();
+		if (e.rx - Electron.radius < x1 && e.rx + Electron.radius > x0 && e.ry - Electron.radius < y1
+				&& e.ry + Electron.radius > y0) {
+			byte xing = borderCross(Electron.radius, e.rx, e.ry, e.dx, e.dy, x0, y0, x1, y1);
+			switch (xing) {
+			case NORTH:
+				e.vy = -elasticity * Math.abs(e.vy);
+				break;
+			case WEST:
+				e.vx = -elasticity * Math.abs(e.vx);
+				break;
+			case SOUTH:
+				e.vy = elasticity * Math.abs(e.vy);
+				break;
+			case EAST:
+				e.vx = elasticity * Math.abs(e.vx);
+				break;
+			case -1:
+				System.out.println("missed face hit: " + e);
+				e.vx *= -elasticity;
+				e.vy *= -elasticity;
+				break;
+			}
+		}
+	}
+
 	/**
 	 * collision of atoms with this obstacle.
 	 * 

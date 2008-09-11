@@ -1728,7 +1728,7 @@ public abstract class AtomicModel extends MDModel {
 	/**
 	 * same as <tt>getNumberOfParticles()</tt>
 	 * 
-	 * @guarded by this
+	 * @GuardedBy("this")
 	 */
 	public synchronized int getNumberOfAtoms() {
 		return numberOfAtoms;
@@ -1737,7 +1737,7 @@ public abstract class AtomicModel extends MDModel {
 	/**
 	 * same as <tt>setNumberOfParticles(int n)</tt>
 	 * 
-	 * @guarded by this
+	 * @GuardedBy("this")
 	 */
 	public synchronized void setNumberOfAtoms(int n) {
 		if (n < 0)
@@ -1809,7 +1809,7 @@ public abstract class AtomicModel extends MDModel {
 	 * rescale velocities such that the temperature will be equal to the input value, without setting the total momentum
 	 * to be zero.
 	 * 
-	 * @guarded by this
+	 * @GuardedBy("this")
 	 */
 	public synchronized void setTemperature(double temperature) {
 		if (temperature < ZERO)
@@ -1891,7 +1891,7 @@ public abstract class AtomicModel extends MDModel {
 	/**
 	 * set the temperature of the atom list to be the specified value.
 	 * 
-	 * @guarded by this
+	 * @GuardedBy("this")
 	 */
 	public synchronized void setTemperature(List<Atom> list, double temperature) {
 		if (list == null || list.isEmpty())
@@ -2204,7 +2204,7 @@ public abstract class AtomicModel extends MDModel {
 		}
 	}
 
-	/* @guarded by this */
+	/* @GuardedBy("this") */
 	synchronized void resetIntegrator() {
 		for (Atom a : atom) {
 			a.vx = a.vy = a.ax = a.ay = a.fx = a.fy = 0.0;
@@ -2257,7 +2257,7 @@ public abstract class AtomicModel extends MDModel {
 		return interCoulomb;
 	}
 
-	/* @guarded by this */
+	/* @GuardedBy("this") */
 	synchronized void advance(int indexOfStep) {
 		if (heatBathActivated()) {
 			if (heatBath != null && heatBath.getExpectedTemperature() < 0.01)
@@ -2701,7 +2701,7 @@ public abstract class AtomicModel extends MDModel {
 	 * @param time
 	 *            the current time, used in computing time-dependent forces
 	 * @return potential energy per atom
-	 * @guarded by this
+	 * @GuardedBy("this")
 	 */
 	public synchronized double computeForce(final int time) {
 
@@ -3112,7 +3112,7 @@ public abstract class AtomicModel extends MDModel {
 	 * exit or slowly descent. This is for use in conjunction with the molecular dynamics engine and structure editor.
 	 * For purely minimization purpose, use sd() or cp() instead.
 	 * 
-	 * @guarded by this
+	 * @GuardedBy("this")
 	 */
 	public synchronized void steepestDescent(double stepLength) {
 		if (numberOfAtoms == 1)
@@ -3151,7 +3151,7 @@ public abstract class AtomicModel extends MDModel {
 	 * basis.
 	 * 
 	 * @return average kinetic energy per atom
-	 * @guarded by this
+	 * @GuardedBy("this")
 	 */
 	public synchronized double getKin() {
 		double x = 0.0;
@@ -3196,7 +3196,7 @@ public abstract class AtomicModel extends MDModel {
 	/*
 	 * return the kinetic energy of the atom list, if there is no atom in the list, return 0.
 	 * 
-	 * @guarded by this
+	 * @GuardedBy("this")
 	 */
 	synchronized double getKinForParticles(List list) {
 		if (list == null || list.isEmpty())
@@ -3220,7 +3220,7 @@ public abstract class AtomicModel extends MDModel {
 		return n > 0 ? x / n : x;
 	}
 
-	/* @guarded by this */
+	/* @GuardedBy("this") */
 	synchronized double getKinForElectrons() {
 		if (freeElectrons.isEmpty())
 			return 0;
@@ -3380,7 +3380,7 @@ public abstract class AtomicModel extends MDModel {
 	 * conditions cannot be applied with the Verlet method. </ol> The improved version of the Verlet method, the
 	 * so-called velocity Verlet method is equivalent to the 3rd order Gear method.
 	 * 
-	 * @guarded by this
+	 * @GuardedBy("this")
 	 */
 	synchronized void predictor() {
 		if (numberOfAtoms == 1) {
@@ -3403,7 +3403,7 @@ public abstract class AtomicModel extends MDModel {
 	/*
 	 * correct the prediction according to the most recently computed forces
 	 * 
-	 * @guarded by this
+	 * @GuardedBy("this")
 	 */
 	synchronized void corrector() {
 		double halfTimeStep = timeStep * 0.5;
@@ -3426,6 +3426,12 @@ public abstract class AtomicModel extends MDModel {
 		if (obstacles != null && obstacles.size() > 0) {
 			obstacles.collide(numberOfAtoms, atom);
 			obstacles.move(timeStep, timeStep2, numberOfAtoms, atom);
+			if (!freeElectrons.isEmpty()) {
+				synchronized (freeElectrons) {
+					for (Electron e : freeElectrons)
+						obstacles.collide(e);
+				}
+			}
 		}
 		int n = view.getNumberOfInstances(LineComponent.class);
 		if (n > 0) {
