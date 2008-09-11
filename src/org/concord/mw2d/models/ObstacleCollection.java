@@ -138,6 +138,13 @@ public class ObstacleCollection {
 		}
 	}
 
+	void collide(Electron e) {
+		synchronized (obsList) {
+			for (RectangularObstacle o : obsList)
+				o.collide(e);
+		}
+	}
+
 	/*
 	 * collisions of atoms with the obstacles. An obstacle reflection action needs information from dynamics history,
 	 * i.e. displacements dx, dy, to find out which faces atoms have crossed through.
