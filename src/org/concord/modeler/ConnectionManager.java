@@ -33,6 +33,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.ImageIcon;
 
@@ -44,7 +45,7 @@ public class ConnectionManager {
 	private static int connectTimeout = 5000;
 	private static int readTimeout = 30000;
 	private final static ConnectionManager sharedInstance = new ConnectionManager();
-	private boolean checkUpdate = true;
+	private AtomicBoolean checkUpdate = new AtomicBoolean(true);
 	private boolean updateFirstFile;
 	private boolean allowCaching = true;
 	private boolean workOffline;
@@ -124,8 +125,8 @@ public class ConnectionManager {
 		return readTimeout;
 	}
 
-	public synchronized void setCheckUpdate(boolean b) {
-		checkUpdate = b;
+	public void setCheckUpdate(boolean b) {
+		checkUpdate.set(b);
 	}
 
 	public void setWorkOffline(boolean b) {
@@ -259,7 +260,7 @@ public class ConnectionManager {
 					if (workOffline)
 						return file;
 					// ONLY check update for the first cml file when a batch of files for a page are to be loaded.
-					if (checkUpdate) {
+					if (checkUpdate.get()) {
 						long lm = getLastModified(url);
 						// what about people from different time zone?
 						if (lm > 0L && lm - file.lastModified() > 5000L) {
@@ -270,7 +271,7 @@ public class ConnectionManager {
 							// lm=0 means query for last modified time has failed, use the local copy
 						}
 						updateFirstFile = update;
-						checkUpdate = false;
+						checkUpdate.set(false);
 					}
 					// if the first file must be updated, all the other files are assumed to need update
 					// as well, regardless of wether or not they have actually been changed.

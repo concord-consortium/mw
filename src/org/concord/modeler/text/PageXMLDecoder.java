@@ -2178,10 +2178,8 @@ final class PageXMLDecoder {
 				}
 				width = height = 0;
 			}
-			if (ConnectionManager.sharedInstance().isCachingAllowed()) {
-				if (page.isRemote())
-					t.cacheLinkedFiles(page.getPathBase());
-			}
+			if (ConnectionManager.sharedInstance().isCachingAllowed() && page.isRemote())
+				t.cacheLinkedFiles(page.getPathBase());
 			htmlComponentConnector.enroll(t);
 			indexOfComponent++;
 			return t;
