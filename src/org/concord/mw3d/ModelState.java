@@ -110,8 +110,18 @@ public class ModelState implements Serializable {
 	private int x3Argb = 0xff0000ff;
 	private int x4Argb = 0xffff00ff;
 
+	private String xyzFileName;
+
 	public ModelState() {
 		tasks = new ArrayList<TaskState>();
+	}
+
+	public void setXyzFileName(String s) {
+		xyzFileName = s;
+	}
+
+	public String getXyzFileName() {
+		return xyzFileName;
 	}
 
 	public List<TaskState> getTasks() {

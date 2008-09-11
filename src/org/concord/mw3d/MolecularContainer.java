@@ -684,7 +684,8 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 		model.clearScriptQueue();
 		MyImageSaver.saveImages(view, file.getParentFile()); // save images first before resourceAddress changes
 		resourceAddress = file.toString();
-		outputXyz(new File(FileUtilities.changeExtension(resourceAddress, "xyz")));
+		File xyzFile = new File(FileUtilities.changeExtension(resourceAddress, "xyz"));
+		outputXyz(xyzFile);
 		if (progressBar != null) {
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
@@ -710,7 +711,7 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 		XMLEncoder out = new XMLEncoder(os);
 		try {
 			synchronized (view.getUpdateLock()) {
-				encode(out);
+				encode(out, FileUtilities.getFileName(xyzFile.toString()));
 			}
 		}
 		catch (Exception e) {
@@ -740,11 +741,11 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 		}
 	}
 
-	private void encode(XMLEncoder out) throws Exception {
+	private void encode(XMLEncoder out, String xyzFileName) throws Exception {
 
 		setProgressMessage("Writing states ......");
 		ModelState state = new ModelState();
-
+		state.setXyzFileName(xyzFileName);
 		state.setRotation(view.getViewer().getCurrentOrientation());
 		state.setNavigationMode(view.getViewer().getNavigationMode());
 		state.setPerspectiveDepth(view.getViewer().getPerspectiveDepth());
