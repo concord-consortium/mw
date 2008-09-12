@@ -1485,7 +1485,7 @@ public abstract class AbstractEval {
 		else {
 			f = new File(address);
 		}
-		if (!f.exists()) {
+		if (f == null || !f.exists()) {
 			return null;
 		}
 		URL u = null;
