@@ -266,21 +266,23 @@ public class PageJContainer extends PagePlugin {
 		}
 
 		// check security certificate
-		Certificate cert1 = ModelerUtilities.getCertificate(Modeler.class);
-		if (cert1 == null) {
-			setErrorMessage("MW is not signed yet. Do not load anything.");
-			return;
-		}
-		Certificate cert2 = ModelerUtilities.getCertificate(c);
-		if (cert2 == null) {
-			setErrorMessage("Sorry, this plugin does not have a security certificate:\n<code>" + c.getName()
-					+ "</code>");
-			return;
-		}
-		if (!cert2.equals(cert1)) {
-			setErrorMessage("Sorry, we do not recognize the security certificate of this plugin:\n<code>" + c.getName()
-					+ "</code>");
-			return;
+		if (!"true".equalsIgnoreCase(System.getProperty("mw.nosecurity"))) {
+			Certificate cert1 = ModelerUtilities.getCertificate(Modeler.class);
+			if (cert1 == null) {
+				setErrorMessage("MW is not signed yet. Do not load anything.");
+				return;
+			}
+			Certificate cert2 = ModelerUtilities.getCertificate(c);
+			if (cert2 == null) {
+				setErrorMessage("Sorry, this plugin does not have a security certificate:\n<code>" + c.getName()
+						+ "</code>");
+				return;
+			}
+			if (!cert2.equals(cert1)) {
+				setErrorMessage("Sorry, we do not recognize the security certificate of this plugin:\n<code>"
+						+ c.getName() + "</code>");
+				return;
+			}
 		}
 
 		// instantiate
