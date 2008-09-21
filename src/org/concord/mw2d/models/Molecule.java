@@ -505,6 +505,12 @@ public class Molecule implements ModelComponent, Rotatable {
 		translateBy(x - x0, y - y0);
 	}
 
+	public void translateAtomTo(Atom a, double x, double y) {
+		double x0 = a.getRx();
+		double y0 = a.getRy();
+		translateBy(x - x0, y - y0);
+	}
+
 	void rotateBondToAngle(RadialBond rb, double angle) {
 		double delta = angle - rb.getAngle();
 		double costheta0 = Math.cos(delta);
