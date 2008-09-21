@@ -499,16 +499,28 @@ public class Molecule implements ModelComponent, Rotatable {
 		translateTo(p.getX(), p.getY());
 	}
 
+	/** translate the molecule by moving the specified bond to the specified location */
 	public void translateBondCenterTo(RadialBond rb, double x, double y) {
-		double x0 = rb.getRx();
-		double y0 = rb.getRy();
-		translateBy(x - x0, y - y0);
+		if (contains(rb)) {
+			double x0 = rb.getRx();
+			double y0 = rb.getRy();
+			translateBy(x - x0, y - y0);
+		}
+		else {
+			throw new IllegalArgumentException("RadialBond " + rb + " doesn't belong to this molecule");
+		}
 	}
 
+	/** translate the molecule by moving the specified atom to the specified location */
 	public void translateAtomTo(Atom a, double x, double y) {
-		double x0 = a.getRx();
-		double y0 = a.getRy();
-		translateBy(x - x0, y - y0);
+		if (contains(a)) {
+			double x0 = a.getRx();
+			double y0 = a.getRy();
+			translateBy(x - x0, y - y0);
+		}
+		else {
+			throw new IllegalArgumentException("Atom " + a + " doesn't belong to this molecule");
+		}
 	}
 
 	void rotateBondToAngle(RadialBond rb, double angle) {
