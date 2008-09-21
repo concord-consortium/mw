@@ -423,7 +423,7 @@ public class PageJContainer extends PagePlugin {
 			File file = ConnectionManager.sharedInstance().shouldUpdate(u);
 			if (file == null)
 				file = ConnectionManager.sharedInstance().cache(u);
-			ConnectionManager.sharedInstance().setCheckUpdate(true);
+			// ConnectionManager.sharedInstance().setCheckUpdate(true);
 		}
 		catch (FileNotFoundException e) {
 			e.printStackTrace();

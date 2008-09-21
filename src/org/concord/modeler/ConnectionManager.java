@@ -262,6 +262,7 @@ public class ConnectionManager {
 					// ONLY check update for the first cml file when a batch of files for a page are to be loaded.
 					if (checkUpdate.get()) {
 						long lm = getLastModified(url);
+						// System.out.println(url + "=" + new java.util.Date(lm));
 						// what about people from different time zone?
 						if (lm > 0L && lm - file.lastModified() > 5000L) {
 							update = true; // allow 5 second tolerance
@@ -273,8 +274,8 @@ public class ConnectionManager {
 						updateFirstFile = update;
 						checkUpdate.set(false);
 					}
-					// if the first file must be updated, all the other files are assumed to need update
-					// as well, regardless of wether or not they have actually been changed.
+					// if the first file has been updated, all the other files are assumed to need update
+					// check as well, regardless of wether or not they have actually been changed.
 					if (updateFirstFile)
 						update = true;
 				}
