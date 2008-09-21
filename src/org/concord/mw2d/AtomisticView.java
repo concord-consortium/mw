@@ -5484,8 +5484,15 @@ public class AtomisticView extends MDView implements BondChangeListener {
 	private void moveHostTo(ModelComponent host, double x, double y) {
 		if (host instanceof Atom) {
 			Atom a = (Atom) host;
-			a.translateTo(x, y);
-			boundary.setRBC(a);
+			if (a.isBonded()) {
+				Molecule m = model.getMolecules().getMolecule(a);
+				m.translateAtomTo(a, x, y);
+				boundary.setRBC(m);
+			}
+			else {
+				a.translateTo(x, y);
+				boundary.setRBC(a);
+			}
 			refreshForces();
 		}
 		else if (host instanceof RadialBond) {
