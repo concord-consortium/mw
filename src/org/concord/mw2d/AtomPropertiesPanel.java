@@ -108,7 +108,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 			atom.setName("" + Codon.expressFromDNA(codon).getLetter());
 		}
 
-		nameLabel = createLabel(atom.getName());
+		nameLabel = createLabel(atom.getName() + " (element " + atom.getID() + ")");
 
 		String s = MDView.getInternationalText("Atom");
 		String type = s != null ? s : "Atom";

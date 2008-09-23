@@ -368,7 +368,7 @@ public class ConnectionManager {
 		}
 		catch (FileNotFoundException e) {
 			e.printStackTrace();
-			return null;
+			throw new FileNotFoundException(e.getMessage());
 		}
 
 		byte b[] = new byte[1024];
