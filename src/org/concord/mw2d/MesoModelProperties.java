@@ -188,13 +188,13 @@ class MesoModelProperties extends ModelProperties {
 		p.add(new JLabel(" femtosecond"));
 
 		String info = "<html><body><hr><font size=2>";
-		String url = (String) model.getProperty("url");
+		String str = (String) model.getProperty("url");
 		s = MDView.getInternationalText("FileLabel");
-		if (s != null)
-			info += "<b>File:</b> " + url + "<br>";
+		if (str != null)
+			info += (s != null ? s : "<b>File</b>") + ": " + str + "<br>";
 		Date date = (Date) model.getProperty("date");
 		s = MDView.getInternationalText("LastModifiedLabel");
-		info += (date != null ? "<b>" + (s != null ? s : "Last modified") + ":</b> " + date
+		info += (date != null ? (s != null ? s : "<b>Last modified</b>") + ": " + date
 				: "The current model has never been saved.")
 				+ "</font></body></html>";
 		panel.add(new JLabel(info), BorderLayout.SOUTH);
