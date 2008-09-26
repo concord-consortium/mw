@@ -42,6 +42,9 @@ import javax.swing.table.DefaultTableModel;
 
 class SystemInfoDialog extends JDialog {
 
+	private DefaultTableModel threadTableModel;
+	private JTable jvmTable;
+
 	SystemInfoDialog(Modeler modeler) {
 
 		super(modeler, "System Information", false);
@@ -49,20 +52,38 @@ class SystemInfoDialog extends JDialog {
 		if (s != null)
 			setTitle(s);
 
+		final JTabbedPane tabbedPane = new JTabbedPane();
+		getContentPane().add(BorderLayout.CENTER, tabbedPane);
+
 		JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		getContentPane().add(panel, BorderLayout.SOUTH);
 
+		s = Modeler.getInternationalText("Update");
+		JButton button = new JButton(s != null ? s : "Update");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				switch (tabbedPane.getSelectedIndex()) {
+				case 0:
+					updateMemoryTable();
+					break;
+				case 1:
+					break;
+				case 2:
+					updateThreadTableModel();
+					break;
+				}
+			}
+		});
+		panel.add(button);
+
 		s = Modeler.getInternationalText("CloseButton");
-		JButton button = new JButton(s != null ? s : "Close");
+		button = new JButton(s != null ? s : "Close");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				SystemInfoDialog.this.dispose();
 			}
 		});
 		panel.add(button);
-
-		JTabbedPane tabbedPane = new JTabbedPane();
-		getContentPane().add(BorderLayout.CENTER, tabbedPane);
 
 		// JVM information
 		s = Modeler.getInternationalText("VirtualMachine");
@@ -135,14 +156,14 @@ class SystemInfoDialog extends JDialog {
 		rowData[6][1] = Math.round(rt.freeMemory() / 1048576.f) + " MB";
 
 		tableModel.setDataVector(rowData, columnNames);
-		JTable table = new JTable(tableModel);
-		table.setBorder(BorderFactory.createLineBorder(table.getGridColor()));
-		table.setRowMargin(10);
-		table.setRowHeight(table.getRowHeight() + 5);
-		((DefaultTableColumnModel) table.getColumnModel()).setColumnMargin(10);
-		table.getColumnModel().getColumn(0).setPreferredWidth(150);
-		table.getColumnModel().getColumn(1).setPreferredWidth(250);
-		JScrollPane sp = new JScrollPane(table);
+		jvmTable = new JTable(tableModel);
+		jvmTable.setBorder(BorderFactory.createLineBorder(jvmTable.getGridColor()));
+		jvmTable.setRowMargin(10);
+		jvmTable.setRowHeight(jvmTable.getRowHeight() + 5);
+		((DefaultTableColumnModel) jvmTable.getColumnModel()).setColumnMargin(10);
+		jvmTable.getColumnModel().getColumn(0).setPreferredWidth(150);
+		jvmTable.getColumnModel().getColumn(1).setPreferredWidth(250);
+		JScrollPane sp = new JScrollPane(jvmTable);
 		sp.setPreferredSize(new Dimension(400, 300));
 		panel.add(sp, BorderLayout.NORTH);
 
@@ -248,12 +269,12 @@ class SystemInfoDialog extends JDialog {
 		JPanel panel = new JPanel(new BorderLayout());
 		total.add(panel, BorderLayout.CENTER);
 
-		final DefaultTableModel threadTableModel = new DefaultTableModel() {
+		threadTableModel = new DefaultTableModel() {
 			public boolean isCellEditable(int row, int column) {
 				return false;
 			}
 		};
-		updateThreadTableModel(threadTableModel);
+		updateThreadTableModel();
 		JTable table = new JTable(threadTableModel);
 		table.setBorder(BorderFactory.createLineBorder(table.getGridColor()));
 		table.setRowMargin(10);
@@ -264,23 +285,18 @@ class SystemInfoDialog extends JDialog {
 		sp.setPreferredSize(new Dimension(400, 300));
 		panel.add(sp, BorderLayout.NORTH);
 
-		JPanel buttonPanel = new JPanel();
-		panel.add(buttonPanel, BorderLayout.SOUTH);
-
-		String s = Modeler.getInternationalText("Update");
-		JButton button = new JButton(s != null ? s : "Update");
-		button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				updateThreadTableModel(threadTableModel);
-			}
-		});
-		buttonPanel.add(button);
-
 		return total;
 
 	}
 
-	private void updateThreadTableModel(DefaultTableModel threadTableModel) {
+	private void updateMemoryTable() {
+		Runtime rt = Runtime.getRuntime();
+		jvmTable.setValueAt(Math.round(rt.maxMemory() / 1048576.f) + " MB", 4, 1);
+		jvmTable.setValueAt(Math.round(rt.totalMemory() / 1048576.f) + " MB", 5, 1);
+		jvmTable.setValueAt(Math.round(rt.freeMemory() / 1048576.f) + " MB", 6, 1);
+	}
+
+	private void updateThreadTableModel() {
 		Thread[] list = new Thread[Thread.activeCount()];
 		int n2 = Thread.enumerate(list);
 		String[] columnNames = { "Name", "Priority" };
