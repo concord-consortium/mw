@@ -86,7 +86,8 @@ class AminoAcidPopupMenu extends JPopupMenu {
 						atom.getHostModel().getView().paintImmediately(atom.getBounds(10));
 						Molecule mol = ((MolecularModel) atom.getHostModel()).getMolecules().getMolecule(atom);
 						atom.getHostModel().notifyModelListeners(
-								new ModelEvent(atom, "Selected index", null, new Integer(mol.indexOfAtom(atom))));
+								new ModelEvent(atom, "Selected index", null, mol == null ? 0 : new Integer(mol
+										.indexOfAtom(atom))));
 					}
 				}
 			});
