@@ -2750,15 +2750,16 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 						int x = getLocation().x + xOffset;
 						int y = getLocation().y + yOffset;
 						if (o instanceof HyperlinkParameter) {
-							resizable = ((HyperlinkParameter) o).getResizable();
-							hasToolbar = ((HyperlinkParameter) o).getToolbar();
-							hasMenubar = ((HyperlinkParameter) o).getMenubar();
-							hasStatusbar = ((HyperlinkParameter) o).getStatusbar();
-							fullscreen = ((HyperlinkParameter) o).getFullscreen();
-							int x1 = ((HyperlinkParameter) o).getLeft();
-							int y1 = ((HyperlinkParameter) o).getTop();
-							int w1 = ((HyperlinkParameter) o).getWidth();
-							int h1 = ((HyperlinkParameter) o).getHeight();
+							HyperlinkParameter p = (HyperlinkParameter) o;
+							resizable = p.getResizable();
+							hasToolbar = p.getToolbar();
+							hasMenubar = p.getMenubar();
+							hasStatusbar = p.getStatusbar();
+							fullscreen = p.getFullscreen();
+							int x1 = p.getLeft();
+							int y1 = p.getTop();
+							int w1 = p.getWidth();
+							int h1 = p.getHeight();
 							if (w1 > 0)
 								w = w1;
 							if (h1 > 0)

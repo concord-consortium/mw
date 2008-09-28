@@ -153,7 +153,8 @@ class PageElectronicStructureViewerMaker extends ComponentMaker {
 		createContentPane();
 
 		if (needNewDialog(dialog, page)) {
-			dialog = ModelerUtilities.getChildDialog(page, "Customize electronic structure", true);
+			String s = Modeler.getInternationalText("CustomizeElectronicStructure");
+			dialog = ModelerUtilities.getChildDialog(page, s != null ? s : "Customize electronic structure", true);
 			dialog.setContentPane(contentPane);
 			dialog.pack();
 			dialog.setLocationRelativeTo(dialog.getOwner());
@@ -260,7 +261,8 @@ class PageElectronicStructureViewerMaker extends ComponentMaker {
 		p.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		contentPane.add(p, BorderLayout.CENTER);
 
-		lockEnergyLevelsCheckBox = new JCheckBox("Lock Energy Levels");
+		s = Modeler.getInternationalText("LockEnergyLevels");
+		lockEnergyLevelsCheckBox = new JCheckBox(s != null ? s : "Lock Energy Levels");
 		lockEnergyLevelsCheckBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				pageElectronicStructureViewer.setLockEnergyLevels(e.getStateChange() == ItemEvent.SELECTED);
@@ -273,7 +275,8 @@ class PageElectronicStructureViewerMaker extends ComponentMaker {
 		contentPane.add(p, BorderLayout.NORTH);
 
 		// row 1
-		p.add(new JLabel("Select a model", SwingConstants.LEFT));
+		s = Modeler.getInternationalText("SelectModelLabel");
+		p.add(new JLabel(s != null ? s : "Select a model", SwingConstants.LEFT));
 		modelComboBox = new JComboBox();
 		modelComboBox.setPreferredSize(new Dimension(200, 20));
 		modelComboBox
@@ -281,9 +284,10 @@ class PageElectronicStructureViewerMaker extends ComponentMaker {
 		p.add(modelComboBox);
 
 		// row 2
-		p.add(new JLabel("Select an element", SwingConstants.LEFT));
+		s = Modeler.getInternationalText("SelectGroup");
+		p.add(new JLabel(s != null ? s : "Select a group", SwingConstants.LEFT));
 		elementComboBox = new JComboBox(new String[] { "Nt", "Pl", "Ws", "Ck" });
-		elementComboBox.setToolTipText("Select the element whose electronic structure will be controlled.");
+		elementComboBox.setToolTipText("Select a group of particles that form this electronic structure.");
 		elementComboBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.DESELECTED)
@@ -299,35 +303,40 @@ class PageElectronicStructureViewerMaker extends ComponentMaker {
 		p.add(elementComboBox);
 
 		// row 3
-		p.add(new JLabel("Type a short title", SwingConstants.LEFT));
+		s = Modeler.getInternationalText("SetAShortTitle");
+		p.add(new JLabel(s != null ? s : "Set a short title", SwingConstants.LEFT));
 		titleField = new JTextField();
 		titleField.setToolTipText("Type in a short string that describes this component.");
 		titleField.addActionListener(okListener);
 		p.add(titleField);
 
 		// row 4
-		p.add(new JLabel("Upper bound of energy", SwingConstants.LEFT));
+		s = Modeler.getInternationalText("EnergyUpperBound");
+		p.add(new JLabel(s != null ? s : "Upper bound of energy", SwingConstants.LEFT));
 		upperBoundField = new FloatNumberTextField(-0.5f, -10, 0);
 		upperBoundField.setToolTipText("Type in the upper bound of energy (in eV).");
 		upperBoundField.addActionListener(okListener);
 		p.add(upperBoundField);
 
 		// row 5
-		p.add(new JLabel("Lower bound of energy", SwingConstants.LEFT));
+		s = Modeler.getInternationalText("EnergyLowerBound");
+		p.add(new JLabel(s != null ? s : "Lower bound of energy", SwingConstants.LEFT));
 		lowerBoundField = new FloatNumberTextField(-1.0f, -20, -1.0f);
 		lowerBoundField.setToolTipText("Type in the lower bound of energy (in eV).");
 		lowerBoundField.addActionListener(okListener);
 		p.add(lowerBoundField);
 
 		// row 6
-		p.add(new JLabel("Draw snap ticks", SwingConstants.LEFT));
+		s = Modeler.getInternationalText("DisplaySnapTicks");
+		p.add(new JLabel(s != null ? s : "Display snap ticks", SwingConstants.LEFT));
 		drawTicksComboBox = new JComboBox(new Object[] { "Yes", "No" });
 		drawTicksComboBox.setSelectedIndex(1);
 		drawTicksComboBox.setToolTipText("Select yes to draw tick marks that the energy levels will snap to.");
 		p.add(drawTicksComboBox);
 
 		// row 7
-		p.add(new JLabel("Number of snap ticks", SwingConstants.LEFT));
+		s = Modeler.getInternationalText("NumberOfSnapTicks");
+		p.add(new JLabel(s != null ? s : "Number of snap ticks", SwingConstants.LEFT));
 		ntickSpinner = new JSpinner(new SpinnerNumberModel(new Integer(20), new Integer(10), new Integer(100),
 				new Integer(1)));
 		ntickSpinner
@@ -336,21 +345,24 @@ class PageElectronicStructureViewerMaker extends ComponentMaker {
 		p.add(ntickSpinner);
 
 		// row 8
-		p.add(new JLabel("Width", SwingConstants.LEFT));
+		s = Modeler.getInternationalText("WidthLabel");
+		p.add(new JLabel(s != null ? s : "Width", SwingConstants.LEFT));
 		widthField = new IntegerTextField(200, 100, 800);
 		widthField.setToolTipText("Type in an integer to set the width of this component.");
 		widthField.addActionListener(okListener);
 		p.add(widthField);
 
 		// row 9
-		p.add(new JLabel("Height of level zone", SwingConstants.LEFT));
+		s = Modeler.getInternationalText("HeightLabel");
+		p.add(new JLabel(s != null ? s : "Height of level zone", SwingConstants.LEFT));
 		heightField = new IntegerTextField(200, 100, 800);
 		heightField.setToolTipText("Type in an integer to set the height of the energy level zone.");
 		heightField.addActionListener(okListener);
 		p.add(heightField);
 
 		// row 10
-		p.add(new JLabel("Background", SwingConstants.LEFT));
+		s = Modeler.getInternationalText("BackgroundColorLabel");
+		p.add(new JLabel(s != null ? s : "Background", SwingConstants.LEFT));
 		bgColorComboBox = new ColorComboBox(pageElectronicStructureViewer);
 		bgColorComboBox.setSelectedIndex(6);
 		bgColorComboBox.setRequestFocusEnabled(false);
@@ -358,7 +370,8 @@ class PageElectronicStructureViewerMaker extends ComponentMaker {
 		p.add(bgColorComboBox);
 
 		// row 11
-		p.add(new JLabel("Foreground", SwingConstants.LEFT));
+		s = Modeler.getInternationalText("ForegroundColorLabel");
+		p.add(new JLabel(s != null ? s : "Foreground", SwingConstants.LEFT));
 		fgColorComboBox = new ColorComboBox(pageElectronicStructureViewer);
 		fgColorComboBox.setSelectedIndex(6);
 		fgColorComboBox.setRequestFocusEnabled(false);
@@ -366,7 +379,8 @@ class PageElectronicStructureViewerMaker extends ComponentMaker {
 		p.add(fgColorComboBox);
 
 		// row 12
-		p.add(new JLabel("Border", SwingConstants.LEFT));
+		s = Modeler.getInternationalText("BorderLabel");
+		p.add(new JLabel(s != null ? s : "Border", SwingConstants.LEFT));
 		borderComboBox = new JComboBox(BorderManager.BORDER_TYPE);
 		borderComboBox.setRenderer(new ComboBoxRenderer.BorderCell());
 		borderComboBox.setBackground(p.getBackground());

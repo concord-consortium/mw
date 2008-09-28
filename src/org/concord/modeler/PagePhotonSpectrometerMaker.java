@@ -232,10 +232,10 @@ class PagePhotonSpectrometerMaker extends ComponentMaker {
 		p1.add(new JLabel(s != null ? s : "Width", SwingConstants.LEFT));
 		s = Modeler.getInternationalText("HeightLabel");
 		p1.add(new JLabel(s != null ? s : "Height", SwingConstants.LEFT));
-		s = Modeler.getInternationalText("EnergyUpperBound");
-		p1.add(new JLabel(s != null ? s : "Upper bound of energy", SwingConstants.LEFT));
-		s = Modeler.getInternationalText("EnergyLowerBound");
-		p1.add(new JLabel(s != null ? s : "Lower bound of energy", SwingConstants.LEFT));
+		s = Modeler.getInternationalText("FrequencyUpperBound");
+		p1.add(new JLabel(s != null ? s : "Upper bound of frequency in the unit of eV", SwingConstants.LEFT));
+		s = Modeler.getInternationalText("FrequencyLowerBound");
+		p1.add(new JLabel(s != null ? s : "Lower bound of frequency in the unit of eV", SwingConstants.LEFT));
 		s = Modeler.getInternationalText("NumberOfTickMarks");
 		p1.add(new JLabel(s != null ? s : "Number of tick marks", SwingConstants.LEFT));
 		s = Modeler.getInternationalText("BorderLabel");
