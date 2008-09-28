@@ -363,7 +363,20 @@ class ViewProperties extends JDialog {
 
 		s = MDView.getInternationalText("RestraintStyle");
 		p3.add(new JLabel("  " + (s != null ? s : "Restraint"), SwingConstants.LEFT));
-		restraintStyleComboBox = new JComboBox(new String[] { "Cross", "Heavy Spring", "Light Spring", "Ghost" });
+		String[] opt = new String[] { "Cross", "Heavy Spring", "Light Spring", "Invisible" };
+		s = MDView.getInternationalText("Cross");
+		if (s != null)
+			opt[0] = s;
+		s = MDView.getInternationalText("HeavySpring");
+		if (s != null)
+			opt[1] = s;
+		s = MDView.getInternationalText("LightSpring");
+		if (s != null)
+			opt[2] = s;
+		s = MDView.getInternationalText("Invisible");
+		if (s != null)
+			opt[3] = s;
+		restraintStyleComboBox = new JComboBox(opt);
 		restraintStyleComboBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -392,7 +405,17 @@ class ViewProperties extends JDialog {
 
 		s = MDView.getInternationalText("TrajectoryStyle");
 		p3.add(new JLabel("  " + (s != null ? s : "Trajectory"), SwingConstants.LEFT));
-		trajectoryStyleComboBox = new JComboBox(new String[] { "Line", "Dotted Line", "Circles" });
+		opt = new String[] { "Line", "Dotted Line", "Circles" };
+		s = MDView.getInternationalText("Line");
+		if (s != null)
+			opt[0] = s;
+		s = MDView.getInternationalText("DottedLine");
+		if (s != null)
+			opt[1] = s;
+		s = MDView.getInternationalText("Circles");
+		if (s != null)
+			opt[2] = s;
+		trajectoryStyleComboBox = new JComboBox(opt);
 		trajectoryStyleComboBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -539,6 +562,12 @@ class ViewProperties extends JDialog {
 		p2.add(p, BorderLayout.SOUTH);
 
 		o = new String[] { "Quality rendering", "Speed rendering" };
+		s = MDView.getInternationalText("QualityRendering");
+		if (s != null)
+			o[0] = s;
+		s = MDView.getInternationalText("SpeedRendering");
+		if (s != null)
+			o[1] = s;
 		qualityComboBox = new JComboBox(o);
 		qualityComboBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
@@ -558,6 +587,12 @@ class ViewProperties extends JDialog {
 		p.add(qualityComboBox);
 
 		o = new String[] { "Anti-aliasing on", "Anti-aliasing off" };
+		s = MDView.getInternationalText("AntiAliasingOn");
+		if (s != null)
+			o[0] = s;
+		s = MDView.getInternationalText("AntiAliasingOff");
+		if (s != null)
+			o[1] = s;
 		antialiasComboBox = new JComboBox(o);
 		antialiasComboBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
