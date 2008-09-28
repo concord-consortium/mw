@@ -179,7 +179,7 @@ public final class ImageStreamGenerator {
 		p.add(button);
 
 		s = JobTable.getInternationalText("Frame");
-		Object[] lengthChoices = new String[] { " 100 " + (s != null ? s : "frames"),
+		Object[] lengthChoices = new String[] { "100 " + (s != null ? s : "frames"),
 				"200 " + (s != null ? s : "frames"), "400 " + (s != null ? s : "frames"),
 				"800 " + (s != null ? s : "frames"), "1600 " + (s != null ? s : "frames"),
 				"3200 " + (s != null ? s : "frames") };
