@@ -411,8 +411,7 @@ public class PageButton extends JButton implements Embeddable, ModelCommunicator
 		setPreferredSize(new Dimension(w, h));
 	}
 
-	// old setIcon method
-	public void setIcon2(Icon icon) {
+	public void setIconOLD(Icon icon) {
 		super.setIcon(icon);
 		if (!autoSize)
 			return;
