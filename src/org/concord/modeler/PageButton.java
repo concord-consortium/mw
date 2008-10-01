@@ -390,6 +390,7 @@ public class PageButton extends JButton implements Embeddable, ModelCommunicator
 		return button;
 	}
 
+	// old setText method
 	public void setText2(String text) {
 		super.setText(text);
 		if (!autoSize)
@@ -410,6 +411,7 @@ public class PageButton extends JButton implements Embeddable, ModelCommunicator
 		setPreferredSize(new Dimension(w, h));
 	}
 
+	// old setIcon method
 	public void setIcon2(Icon icon) {
 		super.setIcon(icon);
 		if (!autoSize)

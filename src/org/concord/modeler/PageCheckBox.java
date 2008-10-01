@@ -324,6 +324,7 @@ public class PageCheckBox extends JCheckBox implements Embeddable, ModelCommunic
 		return checkBox;
 	}
 
+	// old setText method
 	public void setText2(String text) {
 		super.setText(text);
 		if (!autoSize)
@@ -344,6 +345,7 @@ public class PageCheckBox extends JCheckBox implements Embeddable, ModelCommunic
 		setPreferredSize(new Dimension(w, h));
 	}
 
+	// old setIcon method
 	public void setIcon2(Icon icon) {
 		super.setIcon(icon);
 		if (!autoSize)
