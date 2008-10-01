@@ -2595,23 +2595,35 @@ public abstract class AtomicModel extends MDModel {
 
 		synchronized (freeElectrons) {
 			List<Electron> toRemove = null;
+			List<Electron> toAdd = null;
 			for (Electron e : freeElectrons) {
 				for (int i = 0; i < numberOfAtoms; i++) {
-					if (atom[i].distanceSquare(e.rx, e.ry) < atom[i].sigma * atom[i].sigma * 0.25) {
-						Electron x = atom[i].gainElectron(e);
-						if (x != null) {
-							if (toRemove == null)
-								toRemove = new ArrayList<Electron>();
-							toRemove.add(x);
-							break;
+					if (atom[i].contains(e)) {
+						if (atom[i].hasElectrons()) { // if the atom contains electrons
+							Electron x = atom[i].collideWithElectron(e);
+							if (x != null) {
+								if (toAdd == null)
+									toAdd = new ArrayList<Electron>();
+								toAdd.add(x);
+							}
 						}
+						else { // if the atom is a positive ion, recombine
+							Electron x = atom[i].gainElectron(e);
+							if (x != null) {
+								if (toRemove == null)
+									toRemove = new ArrayList<Electron>();
+								toRemove.add(x);
+							}
+						}
+						break;
 					}
 				}
 			}
 			if (toRemove != null)
 				freeElectrons.removeAll(toRemove);
-		}
-		synchronized (freeElectrons) {
+			if (toAdd != null) {
+				freeElectrons.addAll(toAdd);
+			}
 			for (Electron e : freeElectrons) {
 				e.fx = 0;
 				e.fy = 0;
@@ -2654,6 +2666,7 @@ public abstract class AtomicModel extends MDModel {
 		}
 		// interactions between atoms and free electrons
 		for (int i = 0; i < numberOfAtoms; i++) {
+			// if an atom is charged, compute the electrostatic force
 			if (Math.abs(atom[i].charge) > ZERO) {
 				synchronized (freeElectrons) {
 					for (Electron e : freeElectrons) {

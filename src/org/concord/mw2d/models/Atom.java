@@ -115,12 +115,16 @@ public class Atom extends Particle {
 			throw new IllegalArgumentException("wrong type of model");
 		model = (MolecularModel) m;
 		measuringTool.setModel(model);
-		if (!electrons.isEmpty()) {
+		if (hasElectrons()) {
 			synchronized (electrons) {
 				for (Electron e : electrons)
 					e.setModel(m);
 			}
 		}
+	}
+
+	boolean hasElectrons() {
+		return !electrons.isEmpty();
 	}
 
 	public MDModel getHostModel() {
@@ -198,6 +202,10 @@ public class Atom extends Particle {
 
 	public double getMaxY() {
 		return ry + 0.5 * sigma;
+	}
+
+	boolean contains(Electron e) {
+		return distanceSquare(e.rx, e.ry) < sigma * sigma * 0.25;
 	}
 
 	public boolean contains(double x, double y) {
@@ -324,6 +332,36 @@ public class Atom extends Particle {
 		}
 	}
 
+	Electron collideWithElectron(Electron incomer) {
+		if (electrons.isEmpty()) // nothing to lose
+			return null;
+		Electron e = electrons.get(0);
+		EnergyLevel level = e.getEnergyLevel();
+		double excess = incomer.getKineticEnergy() + level.getEnergy();
+		if (excess > 0) {
+			// place the electron just barely inside the edge of the atom to prevent it from overlapping
+			// with another atom immediately upon releasing
+			double angle = Math.random() * Math.PI * 2;
+			double cos = Math.cos(angle);
+			double sin = Math.sin(angle);
+			e.rx = rx + 0.55 * sigma * cos;
+			e.ry = ry + 0.55 * sigma * sin;
+			// the incomer is stopped and all its kenetic energy is transfered to the electron
+			incomer.vx = 0;
+			incomer.vy = 0;
+			double v = Math.sqrt(excess / (MDModel.EV_CONVERTER * Electron.mass));
+			e.vx = v * cos;
+			e.vy = v * sin;
+			// detach the electron from the atom and make it a free electron
+			e.setAtom(null);
+			electrons.remove(e);
+			// positively charge the ion that is left behind
+			setCharge(1);
+			return e;
+		}
+		return null;
+	}
+
 	private void loseElectron(Electron e, double excess) {
 		// place the electron just barely inside the edge of the atom to prevent it from overlapping
 		// with another atom immediately upon releasing
@@ -332,7 +370,7 @@ public class Atom extends Particle {
 		double sin = Math.sin(angle);
 		e.rx = rx + 0.55 * sigma * cos;
 		e.ry = ry + 0.55 * sigma * sin;
-		// the atom is stopped and all the remaining kenetic energy is transfered to the electron
+		// the atom is stopped and all its remaining kenetic energy is transfered to the electron
 		vx = vy = 0;
 		double v = Math.sqrt(excess / (MDModel.EV_CONVERTER * Electron.mass));
 		e.vx = v * cos;
@@ -340,19 +378,19 @@ public class Atom extends Particle {
 		// detach the electron from the atom and make it a free electron
 		e.setAtom(null);
 		electrons.remove(e);
-		model.addFreeElectron(e);
 		// positively charge the ion that is left behind
 		setCharge(1);
+		model.addFreeElectron(e);
 	}
 
 	Electron gainElectron(Electron e) {
-		if (!electrons.isEmpty())
+		if (hasElectrons())
 			return null;
 		ElectronicStructure es = ((AtomicModel) model).getElement(id).getElectronicStructure();
 		// always put the electron at the highest energy level
 		EnergyLevel top = es.getEnergyLevel(es.getNumberOfEnergyLevels() - 1);
 		e.setEnergyLevel(top);
-		// conservation of momentum, maybe should use conservation of energy
+		// conservation of momentum
 		double m1 = Electron.mass / (Electron.mass + mass);
 		double m2 = mass / (Electron.mass + mass);
 		vx = m1 * e.vx + m2 * vx;
@@ -1044,7 +1082,7 @@ public class Atom extends Particle {
 				userField.render(g, this, model.getMovie().getCurrentFrameIndex() >= model.getTapePointer() - 1);
 
 			if (model.view.excitationShown() && ((AtomicModel) model).isSubatomicEnabled()) {
-				if (!electrons.isEmpty()) {
+				if (hasElectrons()) {
 					Electron e = electrons.get(0);
 					if (e.getEnergyLevel() != null) {
 						ElectronicStructure es = ((AtomicModel) model).getElement(id).getElectronicStructure();
