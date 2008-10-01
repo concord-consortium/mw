@@ -264,7 +264,7 @@ public class ActivityButton extends JButton implements Embeddable {
 		return button;
 	}
 
-	public void setText(String text) {
+	public void setText2(String text) {
 		super.setText(text);
 		if (text == null)
 			return;
@@ -285,7 +285,7 @@ public class ActivityButton extends JButton implements Embeddable {
 		setPreferredSize(new Dimension(w, h));
 	}
 
-	public void setIcon(Icon icon) {
+	public void setIcon2(Icon icon) {
 		super.setIcon(icon);
 		if (!autoSize)
 			return;
