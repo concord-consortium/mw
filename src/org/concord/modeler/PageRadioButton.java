@@ -369,8 +369,7 @@ public class PageRadioButton extends JRadioButton implements Embeddable, ModelCo
 		setPreferredSize(new Dimension(w, h));
 	}
 
-	// old setIcon method
-	public void setIcon2(Icon icon) {
+	public void setIconOLD(Icon icon) {
 		super.setIcon(icon);
 		if (!autoSize)
 			return;
