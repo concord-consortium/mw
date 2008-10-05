@@ -77,7 +77,10 @@ class ImagePopupMenu extends JPopupMenu {
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (imagePropertiesDialog.getImage() != null) {
-					ModelerUtilities.saveTargetAs(page, imagePropertiesDialog.getImage().toString());
+					String url = imagePropertiesDialog.getImage().toString();
+					if (FileUtilities.isRelative(url))
+						url = page.getPathBase() + url;
+					ModelerUtilities.saveTargetAs(page, url);
 				}
 				else if (url != null) {
 					url = ModelerUtilities.convertURLToFilePath(url);
