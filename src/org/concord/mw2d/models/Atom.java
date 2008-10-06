@@ -51,7 +51,7 @@ public class Atom extends Particle {
 	private final static double ENERGY_GAP_TOLL = 0.05;
 
 	private transient MolecularModel model;
-	private List<Electron> electrons;
+	List<Electron> electrons;
 
 	private boolean stateStored;
 	private double rxUndo, ryUndo, vxUndo, vyUndo;
@@ -410,7 +410,7 @@ public class Atom extends Particle {
 	 * between i+1 and M. Only the part of kinetic energy that equals to the energy difference between the original and
 	 * new excited state will be converted into excess energy; the remaining part will remain as kinetic energy.
 	 */
-	void thermalExcitation() {
+	private void thermalExcitation() {
 
 		if (model == null)
 			return;
