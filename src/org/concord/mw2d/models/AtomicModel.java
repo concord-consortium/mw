@@ -163,6 +163,8 @@ public abstract class AtomicModel extends MDModel {
 	private boolean collisionalDeexcitation;
 	private boolean atomFlowEnabled;
 	AtomSource atomSource;
+	private ThermalExcitor thermalExcitor;
+	private ThermalDeexcitor thermalDeexcitor;
 
 	/* analysis tools */
 	private TimeSeriesGenerator tsGenerator;
@@ -2400,8 +2402,11 @@ public abstract class AtomicModel extends MDModel {
 					sig = 0.5 * (atom[i].sigma + atom[j].sigma);
 					sig *= sig;
 					if (rijsq < sig) {
-						atom[i].thermalExcitation();
-						atom[j].thermalExcitation();
+						if (thermalExcitor == null)
+							thermalExcitor = new ThermalExcitor(AtomicModel.this);
+						thermalExcitor.collisionalExcitation(atom[i], atom[j]);
+						// atom[i].thermalExcitation();
+						// atom[j].thermalExcitation();
 					}
 				}
 			}
