@@ -35,17 +35,10 @@ class ThermalDeexcitor {
 	private double v1, v2; // speed of atom 1 and 2 in the contact direction after collision
 	private double w1, w2; // speed of atom 1 and 2 in the tangential direction (no change)
 	private double dx, dy; // unit vector pointing from atom 1's center to atom 2's center
-	private float rtProbability = 0.5f; // the probability of radiationless transition
 	private Electron electron;
 
 	ThermalDeexcitor(AtomicModel model) {
 		this.model = model;
-		try {
-			rtProbability = model.quantumRule.getProbability(QuantumRule.RADIATIONLESS_TRANSITION);
-		}
-		catch (Exception e) {
-			rtProbability = 0.5f;
-		}
 	}
 
 	Electron getElectron() {
@@ -129,6 +122,13 @@ class ThermalDeexcitor {
 				e.setEnergyLevel(level);
 
 				/* emit a photon */
+				float rtProbability = 0.5f;
+				try {
+					rtProbability = model.quantumRule.getProbability(QuantumRule.RADIATIONLESS_TRANSITION);
+				}
+				catch (Exception ex) {
+					rtProbability = 0.5f;
+				}
 				if (r2 > rtProbability)
 					return new Photon((float) a.rx, (float) a.ry, -excess / MDModel.PLANCK_CONSTANT);
 
