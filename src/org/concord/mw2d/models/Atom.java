@@ -574,7 +574,7 @@ public class Atom extends Particle {
 	 *         radiationless transition, or the electron cannot be de-excited for various reasons (for example, the
 	 *         electron is already at the ground state).
 	 */
-	public Photon deexciteElectron(float rtProbability) {
+	Photon deexciteElectron(float rtProbability) {
 
 		if (electrons.isEmpty())
 			return null; // no bound electron
