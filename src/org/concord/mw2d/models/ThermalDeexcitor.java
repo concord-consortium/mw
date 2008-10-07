@@ -87,15 +87,8 @@ class ThermalDeexcitor {
 			return null;
 
 		if (e1 != null && e2 != null) {
-			if (Math.random() < 0.5) {
-				Photon p = deexcite(e2);
-				if (p != null)
-					return p;
+			if (Math.random() < 0.5)
 				return deexcite(e1);
-			}
-			Photon p = deexcite(e1);
-			if (p != null)
-				return p;
 			return deexcite(e2);
 		}
 		else if (e1 == null) {
@@ -128,14 +121,17 @@ class ThermalDeexcitor {
 			if (r1 >= i * prob && r1 < (i + 1) * prob) {
 
 				level = es.getEnergyLevel(i);
-				excess = e.getEnergyLevel().getEnergy() - level.getEnergy();
+				excess = level.getEnergy() - e.getEnergyLevel().getEnergy();
 				e.setEnergyLevel(level);
-
-				/* the excess energy is converted into the kinetic energy of the atoms */
 
 				/* emit a photon */
 				if (r2 > rtProbability)
-					return new Photon((float) a.rx, (float) a.ry, excess / MDModel.PLANCK_CONSTANT);
+					return new Photon((float) a.rx, (float) a.ry, -excess / MDModel.PLANCK_CONSTANT);
+
+				/* the excess energy is converted into the kinetic energy of the atoms */
+				transformVelocities();
+				solve(excess);
+				transformVelocitiesBack();
 
 				break;
 

@@ -2479,8 +2479,11 @@ public abstract class AtomicModel extends MDModel {
 					sig = 0.5 * (atom[i].sigma + atom[j].sigma);
 					sig *= sig;
 					if (rijsq < sig) {
-						deexcite(atom[i], prob);
-						deexcite(atom[j], prob);
+						if (thermalDeexcitor == null)
+							thermalDeexcitor = new ThermalDeexcitor(AtomicModel.this);
+						thermalDeexcitor.collisionalDeexcitation(prob, atom[i], atom[j]);
+						// deexcite(atom[i], prob);
+						// deexcite(atom[j], prob);
 					}
 				}
 			}
