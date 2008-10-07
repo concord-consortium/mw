@@ -48,8 +48,6 @@ import static org.concord.mw2d.models.Element.*;
 
 public class Atom extends Particle {
 
-	private final static double ENERGY_GAP_TOLL = 0.05;
-
 	private transient MolecularModel model;
 	List<Electron> electrons;
 
@@ -407,102 +405,6 @@ public class Atom extends Particle {
 		// neutralize the atom
 		setCharge(0);
 		return e;
-	}
-
-	/**
-	 * This method models the interaction between a photon and an atom. Currently, a photon is either absorbed by an
-	 * atom, or causes stimulated emission.
-	 * 
-	 * @param p
-	 *            the photon hitting the atom
-	 * @param seProb
-	 *            the probability the incident photon is to cause stimulated emission
-	 * 
-	 * @see org.concord.mw2d.models.Atom#thermalExcitation
-	 */
-	Photon hitByPhoton(Photon p, float seProb) {
-		if (model == null)
-			return null;
-		if (Math.random() < seProb) {
-			float preciseEnergy = stimulatedEmission(p.getEnergy());
-			if (preciseEnergy > 0) {
-				Photon p2 = new Photon(p);
-				p2.setY(p2.getY() + 4);
-				p2.setEnergy(preciseEnergy);
-				return p2;
-			}
-		}
-		else {
-			float preciseEnergy = photonicExcitation(p.getEnergy());
-			if (preciseEnergy > 0) {
-				p.setEnergy(preciseEnergy);
-				return p;
-			}
-		}
-		return null;
-	}
-
-	/*
-	 * Stimulated emission happens as soon as the photon hits the atom, regardless of the lifetime set for the current
-	 * electronic state.
-	 */
-	private float stimulatedEmission(double energy) {
-		if (electrons.isEmpty())
-			return 0;
-		Electron e = electrons.get(0);
-		EnergyLevel level = e.getEnergyLevel();
-		ElectronicStructure es = ((AtomicModel) model).getElement(id).getElectronicStructure();
-		int m = es.indexOf(level);
-		if (m <= 0)
-			return 0;
-		EnergyLevel state;
-		for (int i = 0; i < m; i++) {
-			state = es.getEnergyLevel(i);
-			if (Math.abs(level.getEnergy() - state.getEnergy() - energy) < ENERGY_GAP_TOLL) {
-				e.setEnergyLevel(state);
-				return level.getEnergy() - state.getEnergy(); // return the precise energy
-			}
-		}
-		return 0;
-	}
-
-	/*
-	 * Excite an electron, if the photonic energy matches the energy gap between the current state and a higher state.
-	 * Photonic excitation happens as soon as the photon impacts the atom, regardless of the lifetime of the current
-	 * energy level.
-	 */
-	private float photonicExcitation(double energy) {
-
-		if (electrons.isEmpty())
-			return 0;
-
-		Electron e = electrons.get(0);
-		EnergyLevel level = e.getEnergyLevel();
-		ElectronicStructure es = ((AtomicModel) model).getElement(id).getElectronicStructure();
-		int n = es.getNumberOfEnergyLevels();
-		int m = es.indexOf(level);
-		if (m == -1 || m >= n - 1)
-			return 0;
-
-		// if(!e.readyToGo(model.getModelTime())) return false;
-
-		double excess = energy + level.getEnergy();
-		if (excess > 0) {
-			loseElectron(e, excess);
-		}
-		else {
-			EnergyLevel excite;
-			for (int i = m + 1; i < n; i++) {
-				excite = es.getEnergyLevel(i);
-				if (Math.abs(excite.getEnergy() - level.getEnergy() - energy) < ENERGY_GAP_TOLL) {
-					e.setEnergyLevel(excite);
-					return excite.getEnergy() - level.getEnergy(); // return the precise energy
-				}
-			}
-		}
-
-		return 0;
-
 	}
 
 	/**
