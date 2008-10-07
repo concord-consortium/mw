@@ -29,12 +29,9 @@ import java.awt.Point;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -55,7 +52,6 @@ class ElectronicDynamicsRuleEditor extends JPanel {
 	private PieChart pieChart1;
 	private PieChart pieChart2;
 	private JComboBox whatIsComboBox;
-	private JCheckBox collisionalDeexcitationCheckBox;
 
 	ElectronicDynamicsRuleEditor() {
 
@@ -117,16 +113,6 @@ class ElectronicDynamicsRuleEditor extends JPanel {
 		pieChart1.setColor(0, Color.red);
 		pieChart1.setColor(1, Color.blue);
 		panel.add(pieChart1, BorderLayout.CENTER);
-		JPanel p = new JPanel();
-		collisionalDeexcitationCheckBox = new JCheckBox("Deexcitation only at collisions");
-		collisionalDeexcitationCheckBox.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				JCheckBox cb = (JCheckBox) e.getSource();
-				model.setCollisionalDeexcitation(cb.isSelected());
-			}
-		});
-		p.add(collisionalDeexcitationCheckBox);
-		panel.add(p, BorderLayout.SOUTH);
 
 		panel = new JPanel(new BorderLayout());
 		tabbedPane.addTab("Electron Transfer", panel);
@@ -171,8 +157,6 @@ class ElectronicDynamicsRuleEditor extends JPanel {
 		}
 		pieChart2.setPercent(0, 1.0f - x);
 		pieChart2.setPercent(1, x);
-
-		collisionalDeexcitationCheckBox.setSelected(model.getCollisionDeexcitation());
 
 		final JDialog d = new JDialog(JOptionPane.getFrameForComponent(parent), "Edit Electronic Dynamics Rules", true);
 		d.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);

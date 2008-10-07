@@ -160,7 +160,6 @@ public abstract class AtomicModel extends MDModel {
 	private ObjectQueue photonQueue;
 	private LightSource lightSource;
 	private boolean subatomicEnabled;
-	private boolean collisionalDeexcitation;
 	private boolean atomFlowEnabled;
 	AtomSource atomSource;
 	private ThermalExcitor thermalExcitor;
@@ -198,8 +197,8 @@ public abstract class AtomicModel extends MDModel {
 	Loadable electronicDynamics = new AbstractLoadable(20) {
 		public void execute() {
 			photonHitAtom();
-			thermalExciteAtoms();
-			deexciteElectrons();
+			thermallyExciteAtoms();
+			thermallyDeexciteAtoms();
 		}
 
 		public String getName() {
@@ -618,14 +617,6 @@ public abstract class AtomicModel extends MDModel {
 
 	public QuantumRule getQuantumRule() {
 		return quantumRule;
-	}
-
-	public void setCollisionalDeexcitation(boolean b) {
-		collisionalDeexcitation = b;
-	}
-
-	public boolean getCollisionDeexcitation() {
-		return collisionalDeexcitation;
 	}
 
 	public void setSubatomicEnabled(boolean b) {
@@ -2277,6 +2268,69 @@ public abstract class AtomicModel extends MDModel {
 		movePhotons();
 	}
 
+	/* thermal excitation */
+	private void thermallyExciteAtoms() {
+		double rxi, ryi, rxij, ryij, rijsq, sig;
+		for (int i = 0; i < numberOfAtoms - 1; i++) {
+			rxi = atom[i].rx;
+			ryi = atom[i].ry;
+			for (int j = i + 1; j < numberOfAtoms; j++) {
+				if (atom[i].isExcitable() || atom[j].isExcitable()) {
+					rxij = rxi - atom[j].rx;
+					ryij = ryi - atom[j].ry;
+					rijsq = rxij * rxij + ryij * ryij;
+					sig = 0.5 * (atom[i].sigma + atom[j].sigma);
+					sig *= sig;
+					if (rijsq < sig) {
+						if (thermalExcitor == null)
+							thermalExcitor = new ThermalExcitor(AtomicModel.this);
+						thermalExcitor.excite(atom[i], atom[j]);
+					}
+				}
+			}
+		}
+	}
+
+	/* collisional de-excitation */
+	private void thermallyDeexciteAtoms() {
+		double rxi, ryi, rxij, ryij, rijsq, sig;
+		for (int i = 0; i < numberOfAtoms - 1; i++) {
+			rxi = atom[i].rx;
+			ryi = atom[i].ry;
+			for (int j = i + 1; j < numberOfAtoms; j++) {
+				if (atom[i].isExcitable() || atom[j].isExcitable()) {
+					rxij = rxi - atom[j].rx;
+					ryij = ryi - atom[j].ry;
+					rijsq = rxij * rxij + ryij * ryij;
+					sig = 0.5 * (atom[i].sigma + atom[j].sigma);
+					sig *= sig;
+					if (rijsq < sig) {
+						if (thermalDeexcitor == null)
+							thermalDeexcitor = new ThermalDeexcitor(AtomicModel.this);
+						Photon p = thermalDeexcitor.deexcite(atom[i], atom[j]);
+						if (p != null) {
+							p.setModel(this);
+							p.setAngle((float) (Math.random() * 2 * Math.PI));
+							Electron e = thermalDeexcitor.getElectron();
+							if (e != null) {
+								Atom a = e.getAtom();
+								if (a != null) {
+									double x = a.sigma * 0.51 * Math.cos(p.getAngle());
+									double y = a.sigma * 0.51 * Math.sin(p.getAngle());
+									p.setX(p.getX() + (float) x);
+									p.setY(p.getY() + (float) y);
+								}
+							}
+							addPhoton(p);
+							// notifyModelListeners(new ModelEvent(this, "Photon emitted", null, p));
+							// postone to be handled by RectangularBoundary when the photon exits
+						}
+					}
+				}
+			}
+		}
+	}
+
 	private void movePhotons() {
 		if (photonList == null || photonList.isEmpty())
 			return;
@@ -2388,31 +2442,6 @@ public abstract class AtomicModel extends MDModel {
 		addPhoton(p);
 	}
 
-	/* thermal excitation: absorb heat and excite electrons. */
-	private void thermalExciteAtoms() {
-		double rxi, ryi, rxij, ryij, rijsq, sig;
-		for (int i = 0; i < numberOfAtoms - 1; i++) {
-			rxi = atom[i].rx;
-			ryi = atom[i].ry;
-			for (int j = i + 1; j < numberOfAtoms; j++) {
-				if (atom[i].isExcitable() || atom[j].isExcitable()) {
-					rxij = rxi - atom[j].rx;
-					ryij = ryi - atom[j].ry;
-					rijsq = rxij * rxij + ryij * ryij;
-					sig = 0.5 * (atom[i].sigma + atom[j].sigma);
-					sig *= sig;
-					if (rijsq < sig) {
-						if (thermalExcitor == null)
-							thermalExcitor = new ThermalExcitor(AtomicModel.this);
-						thermalExcitor.collisionalExcitation(atom[i], atom[j]);
-						// atom[i].thermalExcitation();
-						// atom[j].thermalExcitation();
-					}
-				}
-			}
-		}
-	}
-
 	/*
 	 * Two things can happen when a photon hits an atom. The first is absorption: the atom absorbs photonic energy and
 	 * its electron is excited. The second is stimulated emission: the photon induces the emission of another photon and
@@ -2463,67 +2492,6 @@ public abstract class AtomicModel extends MDModel {
 					tmpList.clear();
 				}
 			}
-		}
-	}
-
-	private void collisionalDeexcite(float prob) {
-		double rxi, ryi, rxij, ryij, rijsq, sig;
-		for (int i = 0; i < numberOfAtoms - 1; i++) {
-			rxi = atom[i].rx;
-			ryi = atom[i].ry;
-			for (int j = i + 1; j < numberOfAtoms; j++) {
-				if (atom[i].isExcitable() || atom[j].isExcitable()) {
-					rxij = rxi - atom[j].rx;
-					ryij = ryi - atom[j].ry;
-					rijsq = rxij * rxij + ryij * ryij;
-					sig = 0.5 * (atom[i].sigma + atom[j].sigma);
-					sig *= sig;
-					if (rijsq < sig) {
-						if (thermalDeexcitor == null)
-							thermalDeexcitor = new ThermalDeexcitor(AtomicModel.this);
-						thermalDeexcitor.collisionalDeexcitation(prob, atom[i], atom[j]);
-						// deexcite(atom[i], prob);
-						// deexcite(atom[j], prob);
-					}
-				}
-			}
-		}
-	}
-
-	private void lifetimeDeexcite(float prob) {
-		for (int k = 0; k < numberOfAtoms; k++) {
-			deexcite(atom[k], prob);
-		}
-	}
-
-	private void deexcite(Atom a, float prob) {
-		Photon p = a.deexciteElectron(prob);
-		if (p != null) {
-			p.setModel(this);
-			p.setAngle((float) (Math.random() * 2 * Math.PI));
-			double x = a.sigma * 0.51 * Math.cos(p.getAngle());
-			double y = a.sigma * 0.51 * Math.sin(p.getAngle());
-			p.setX(p.getX() + (float) x);
-			p.setY(p.getY() + (float) y);
-			addPhoton(p);
-			// notifyModelListeners(new ModelEvent(this, "Photon emitted", null, p));
-			// postone to be handled by RectangularBoundary when the photon exits
-		}
-	}
-
-	private void deexciteElectrons() {
-		float prob;
-		try {
-			prob = quantumRule.getProbability(QuantumRule.RADIATIONLESS_TRANSITION);
-		}
-		catch (Exception e) {
-			prob = 0.5f;
-		}
-		if (collisionalDeexcitation) {
-			collisionalDeexcite(prob);
-		}
-		else {
-			lifetimeDeexcite(prob);
 		}
 	}
 
@@ -3786,7 +3754,6 @@ public abstract class AtomicModel extends MDModel {
 		state.setPhotonEnabled(isSubatomicEnabled());
 		state.setLightSource(lightSource);
 		state.setQuantumRule(quantumRule);
-		state.setCollisionalDeexcitation(collisionalDeexcitation);
 		state.setReminderEnabled(isReminderEnabled());
 		if (isReminderEnabled()) {
 			state.setRepeatReminder(reminder.getLifetime() == Loadable.ETERNAL);
@@ -3929,7 +3896,6 @@ public abstract class AtomicModel extends MDModel {
 		setLightSource(state.getLightSource() == null ? new LightSource() : state.getLightSource());
 		photonGun.setInterval(lightSource.getRadiationPeriod());
 		quantumRule = state.getQuantumRule() != null ? state.getQuantumRule() : new QuantumRule();
-		setCollisionalDeexcitation(state.getCollisionalDeexcitation());
 		enableReminder(state.getReminderEnabled());
 		if (isReminderEnabled()) {
 			reminder.setInterval(state.getReminderInterval());

@@ -37,32 +37,7 @@ class ThermalExcitor {
 		this.model = model;
 	}
 
-	private void transformVelocities() {
-		dx = a2.rx - a1.rx;
-		dy = a2.ry - a1.ry;
-		double tmp = 1.0 / Math.hypot(dx, dy);
-		dx *= tmp;
-		dy *= tmp;
-		u1 = a1.vx * dx + a1.vy * dy;
-		u2 = a2.vx * dx + a2.vy * dy;
-		w1 = a1.vy * dx - a1.vx * dy;
-		w2 = a2.vy * dx - a2.vx * dy;
-	}
-
-	private void transformVelocitiesBack() {
-		a1.vx = v1 * dx - w1 * dy;
-		a1.vy = v1 * dy + w1 * dx;
-		a2.vx = v2 * dx - w2 * dy;
-		a2.vy = v2 * dy + w2 * dx;
-	}
-
-	private double getRelativeKE() {
-		double du = u2 - u1;
-		// the prefactor 0.5 doesn't show up here because of mass unit conversion.
-		return du * du * a1.mass * a2.mass / (a1.mass + a2.mass) * MDModel.EV_CONVERTER;
-	}
-
-	void collisionalExcitation(Atom atom1, Atom atom2) {
+	void excite(Atom atom1, Atom atom2) {
 
 		// give the pair a grace period to leave each other
 		if (a1 == atom1 && a2 == atom2) {
@@ -156,6 +131,31 @@ class ThermalExcitor {
 
 		return true;
 
+	}
+
+	private void transformVelocities() {
+		dx = a2.rx - a1.rx;
+		dy = a2.ry - a1.ry;
+		double tmp = 1.0 / Math.hypot(dx, dy);
+		dx *= tmp;
+		dy *= tmp;
+		u1 = a1.vx * dx + a1.vy * dy;
+		u2 = a2.vx * dx + a2.vy * dy;
+		w1 = a1.vy * dx - a1.vx * dy;
+		w2 = a2.vy * dx - a2.vx * dy;
+	}
+
+	private void transformVelocitiesBack() {
+		a1.vx = v1 * dx - w1 * dy;
+		a1.vy = v1 * dy + w1 * dx;
+		a2.vx = v2 * dx - w2 * dy;
+		a2.vy = v2 * dy + w2 * dx;
+	}
+
+	private double getRelativeKE() {
+		double du = u2 - u1;
+		// the prefactor 0.5 doesn't show up here because of mass unit conversion.
+		return du * du * a1.mass * a2.mass / (a1.mass + a2.mass) * MDModel.EV_CONVERTER;
 	}
 
 	// solve v1 and v2 according to the conservation of momentum and energy
