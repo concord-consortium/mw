@@ -164,6 +164,7 @@ public abstract class AtomicModel extends MDModel {
 	AtomSource atomSource;
 	private ThermalExcitor thermalExcitor;
 	private ThermalDeexcitor thermalDeexcitor;
+	private PhotonicExcitor photonicExcitor;
 
 	/* analysis tools */
 	private TimeSeriesGenerator tsGenerator;
@@ -2268,6 +2269,54 @@ public abstract class AtomicModel extends MDModel {
 		movePhotons();
 	}
 
+	/*
+	 * Two things can happen when a photon hits an atom. The first is absorption: the atom absorbs photonic energy and
+	 * its electron is excited. The second is stimulated emission: the photon induces the emission of another photon and
+	 * causes the atom to de-excite. In both cases, the incident photon must have the energy identical to the energy
+	 * difference between the two states involved in the transition.
+	 */
+	private void photonHitAtom() {
+		if (photonList == null || photonList.isEmpty())
+			return;
+		Photon p;
+		double s2;
+		List<Photon> tmpList = null;
+		double dx, dy;
+		for (int k = 0; k < numberOfAtoms; k++) {
+			if (photonList.isEmpty())
+				break; // no more photons
+			s2 = atom[k].sigma * atom[k].sigma * 0.25;
+			synchronized (photonList) {
+				for (Iterator it = photonList.iterator(); it.hasNext();) {
+					p = (Photon) it.next();
+					dx = p.x - atom[k].rx;
+					dy = p.y - atom[k].ry;
+					if (dx * dx + dy * dy < s2) {
+						if (photonicExcitor == null)
+							photonicExcitor = new PhotonicExcitor(AtomicModel.this);
+						Photon p2 = photonicExcitor.interact(p, atom[k]);
+						if (p2 == p) {
+							p.setModel(null);
+							it.remove();
+							notifyModelListeners(new ModelEvent(this, "Photon absorbed", null, p));
+						}
+						else if (p2 != null) {
+							if (tmpList == null)
+								tmpList = new ArrayList<Photon>();
+							tmpList.add(p2);
+							// notifyModelListeners(new ModelEvent(this, "Photon emitted", null, p2));
+							// postone to be handled by RectangularBoundary when the photon exits
+						}
+					}
+				}
+				if (tmpList != null) {
+					photonList.addAll(tmpList);
+					tmpList.clear();
+				}
+			}
+		}
+	}
+
 	/* thermal excitation */
 	private void thermallyExciteAtoms() {
 		double rxi, ryi, rxij, ryij, rijsq, sig;
@@ -2440,59 +2489,6 @@ public abstract class AtomicModel extends MDModel {
 		p.setModel(this);
 		p.setFromLightSource(true);
 		addPhoton(p);
-	}
-
-	/*
-	 * Two things can happen when a photon hits an atom. The first is absorption: the atom absorbs photonic energy and
-	 * its electron is excited. The second is stimulated emission: the photon induces the emission of another photon and
-	 * causes the atom to de-excite. In both cases, the incident photon must have the energy identical to the energy
-	 * difference between the two states involved in the transition.
-	 */
-	void photonHitAtom() {
-		if (photonList == null || photonList.isEmpty())
-			return;
-		float prob;
-		try {
-			prob = quantumRule.getProbability(QuantumRule.STIMULATED_EMISSION);
-		}
-		catch (Exception e) {
-			prob = 0.5f;
-		}
-		Photon p;
-		double s2;
-		List<Photon> tmpList = null;
-		double dx, dy;
-		for (int k = 0; k < numberOfAtoms; k++) {
-			if (photonList.isEmpty())
-				break; // no more photons
-			s2 = atom[k].sigma * atom[k].sigma * 0.25;
-			synchronized (photonList) {
-				for (Iterator it = photonList.iterator(); it.hasNext();) {
-					p = (Photon) it.next();
-					dx = p.x - atom[k].rx;
-					dy = p.y - atom[k].ry;
-					if (dx * dx + dy * dy < s2) {
-						Photon p2 = atom[k].hitByPhoton(p, prob);
-						if (p2 == p) {
-							p.setModel(null);
-							it.remove();
-							notifyModelListeners(new ModelEvent(this, "Photon absorbed", null, p));
-						}
-						else if (p2 != null) {
-							if (tmpList == null)
-								tmpList = new ArrayList<Photon>();
-							tmpList.add(p2);
-							// notifyModelListeners(new ModelEvent(this, "Photon emitted", null, p2));
-							// postone to be handled by RectangularBoundary when the photon exits
-						}
-					}
-				}
-				if (tmpList != null) {
-					photonList.addAll(tmpList);
-					tmpList.clear();
-				}
-			}
-		}
 	}
 
 	void addFreeElectron(Electron e) {
