@@ -26,9 +26,9 @@ import java.io.Serializable;
 
 public class EnergyLevel implements Serializable, Comparable {
 
-	public final static int SHORT_LIFETIME = 250;
-	public final static int MEDIUM_LIFETIME = 2500;
-	public final static int LONG_LIFETIME = 25000;
+	public final static int SHORT_LIFETIME = 200;
+	public final static int MEDIUM_LIFETIME = 2000;
+	public final static int LONG_LIFETIME = 20000;
 
 	private int lifetime = SHORT_LIFETIME;
 	private int degeneracy = 2;

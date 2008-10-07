@@ -83,7 +83,7 @@ public class Electron {
 		return model;
 	}
 
-	public boolean readyToGo(float t) {
+	public boolean readyToDeexcite(float t) {
 		if (energyLevel == null)
 			return true;
 		return t - enterStateTime >= energyLevel.getLifetime() * (0.8 + 0.4 * Math.random());

@@ -79,17 +79,26 @@ class ThermalDeexcitor {
 		if (a1.electrons.isEmpty() && a2.electrons.isEmpty()) // neither a1 nor a2 has electrons
 			return null;
 
-		Electron e1 = a1.electrons.get(0);
-		Electron e2 = a2.electrons.get(0);
+		Electron e1 = a1.electrons.isEmpty() ? null : a1.electrons.get(0);
+		Electron e2 = a2.electrons.isEmpty() ? null : a2.electrons.get(0);
 		if (e1 == null && (e2 != null && (a2.isExcitable() || isInGroundState(e2))))
 			return null;
 		if (e2 == null && (e1 != null && (a1.isExcitable() || isInGroundState(e1))))
 			return null;
 
 		if (e1 != null && e2 != null) {
-			if (Math.random() < 0.5)
-				return deexcite(e1);
-			return deexcite(e2);
+			Photon p = null;
+			if (Math.random() < 0.5) {
+				p = deexcite(e1);
+				if (p == null)
+					p = deexcite(e2);
+			}
+			else {
+				p = deexcite(e2);
+				if (p == null)
+					p = deexcite(e1);
+			}
+			return p;
 		}
 		else if (e1 == null) {
 			return deexcite(e2);
@@ -105,6 +114,11 @@ class ThermalDeexcitor {
 	private Photon deexcite(Electron e) {
 
 		int m = getIndexOfEnergyLevel(e);
+		if (m == 0)
+			return null; // electron already in the ground state
+
+		if (!e.readyToDeexcite(model.getModelTime())) // the electron is just excited
+			return null;
 
 		// assume that the probability for the electron to transition to any lower state is equal
 		float prob = 1.0f / m;

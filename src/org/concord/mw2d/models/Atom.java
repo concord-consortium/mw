@@ -309,6 +309,12 @@ public class Atom extends Particle {
 		id = i;
 	}
 
+	public boolean isExcited() {
+		if (electrons.isEmpty())
+			return false;
+		return electrons.get(0).getEnergyLevelIndex() > 0;
+	}
+
 	public List<Electron> getElectrons() {
 		return electrons;
 	}
@@ -589,7 +595,7 @@ public class Atom extends Particle {
 		if (m == 0)
 			return null; // electron already in the ground state
 
-		if (!e.readyToGo(model.getModelTime()))
+		if (!e.readyToDeexcite(model.getModelTime()))
 			return null;
 
 		/*
