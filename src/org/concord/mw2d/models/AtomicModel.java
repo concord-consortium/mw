@@ -195,10 +195,10 @@ public abstract class AtomicModel extends MDModel {
 	 * the subtask for simulating the electronic dynamics, which is viewed as the random walk of electrons in the energy
 	 * level space and described by the master equation.
 	 */
-	private Loadable electronicDynamics = new AbstractLoadable(20) {
+	Loadable electronicDynamics = new AbstractLoadable(20) {
 		public void execute() {
-			thermalExciteAtoms();
 			photonHitAtom();
+			thermalExciteAtoms();
 			deexciteElectrons();
 		}
 

@@ -31,6 +31,7 @@ class ThermalExcitor {
 	private double v1, v2; // speed of atom 1 and 2 in the contact direction after collision
 	private double w1, w2; // speed of atom 1 and 2 in the tangential direction (no change)
 	private double dx, dy; // unit vector pointing from atom 1's center to atom 2's center
+	private int lastStep;
 
 	ThermalExcitor(AtomicModel model) {
 		this.model = model;
@@ -63,8 +64,15 @@ class ThermalExcitor {
 
 	void collisionalExcitation(Atom atom1, Atom atom2) {
 
+		// give the pair a grace period to leave each other
+		if (a1 == atom1 && a2 == atom2) {
+			if (model.job.getIndexOfStep() - lastStep <= model.electronicDynamics.getInterval())
+				return;
+		}
+
 		a1 = atom1;
 		a2 = atom2;
+		lastStep = model.job.getIndexOfStep();
 
 		if (!a1.isExcitable() && !a2.isExcitable())
 			return;
@@ -72,8 +80,8 @@ class ThermalExcitor {
 		if (a1.electrons.isEmpty() && a2.electrons.isEmpty()) // neither a1 nor a2 has electrons
 			return;
 
-		Electron e1 = a1.electrons.get(0);
-		Electron e2 = a2.electrons.get(0);
+		Electron e1 = a1.electrons.isEmpty() ? null : a1.electrons.get(0);
+		Electron e2 = a2.electrons.isEmpty() ? null : a2.electrons.get(0);
 		if (e1 == null && e2 != null && a2.isExcitable())
 			return;
 		if (e2 == null && e1 != null && a1.isExcitable())
