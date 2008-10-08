@@ -165,6 +165,7 @@ public abstract class AtomicModel extends MDModel {
 	private ThermalExcitor thermalExcitor;
 	private ThermalDeexcitor thermalDeexcitor;
 	private PhotonicExcitor photonicExcitor;
+	private ThreeBodyRecombination threeBodyRecombination;
 
 	/* analysis tools */
 	private TimeSeriesGenerator tsGenerator;
@@ -2572,19 +2573,20 @@ public abstract class AtomicModel extends MDModel {
 				for (int i = 0; i < numberOfAtoms; i++) {
 					if (atom[i].contains(e)) {
 						if (atom[i].hasElectrons()) { // if the atom contains electrons
-							Electron x = atom[i].collideWithElectron(e);
-							if (x != null) {
-								if (toAdd == null)
-									toAdd = new ArrayList<Electron>();
-								toAdd.add(x);
-							}
+							//Electron x = atom[i].collideWithElectron(e);
+							//if (x != null) {
+								//if (toAdd == null)
+									//toAdd = new ArrayList<Electron>();
+								//toAdd.add(x);
+							//}
 						}
 						else { // if the atom is a positive ion, recombine
-							Electron x = atom[i].gainElectron(e);
-							if (x != null) {
+							if (threeBodyRecombination == null)
+								threeBodyRecombination = new ThreeBodyRecombination(this);
+							if (threeBodyRecombination.recombine(atom[i], e)) {
 								if (toRemove == null)
 									toRemove = new ArrayList<Electron>();
-								toRemove.add(x);
+								toRemove.add(e);
 							}
 						}
 						break;
