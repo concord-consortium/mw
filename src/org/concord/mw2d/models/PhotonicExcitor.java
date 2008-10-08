@@ -26,7 +26,8 @@ package org.concord.mw2d.models;
 class PhotonicExcitor {
 
 	private final static float ENERGY_GAP_TOLL = 0.05f;
-
+	private Photon photon;
+	private Atom atom;
 	private AtomicModel model;
 
 	PhotonicExcitor(AtomicModel model) {
@@ -34,6 +35,8 @@ class PhotonicExcitor {
 	}
 
 	Photon interact(Photon photon, Atom atom) {
+		this.photon = photon;
+		this.atom = atom;
 		float prob;
 		try {
 			prob = model.quantumRule.getProbability(QuantumRule.STIMULATED_EMISSION);
@@ -42,7 +45,7 @@ class PhotonicExcitor {
 			prob = 0.5f;
 		}
 		if (Math.random() < prob) {
-			float preciseEnergy = stimulatedEmission(photon, atom);
+			float preciseEnergy = stimulatedEmission();
 			if (preciseEnergy > 0) {
 				Photon p2 = new Photon(photon);
 				p2.setY(p2.getY() + 4);
@@ -51,7 +54,7 @@ class PhotonicExcitor {
 			}
 		}
 		else {
-			float preciseEnergy = excite(photon, atom);
+			float preciseEnergy = excite();
 			if (preciseEnergy > 0) {
 				photon.setEnergy(preciseEnergy);
 				return photon;
@@ -65,7 +68,7 @@ class PhotonicExcitor {
 	 * Photonic excitation happens as soon as the photon impacts the atom, regardless of the lifetime of the current
 	 * energy level.
 	 */
-	private float excite(Photon photon, Atom atom) {
+	private float excite() {
 
 		if (atom.electrons.isEmpty())
 			return 0;
@@ -80,7 +83,7 @@ class PhotonicExcitor {
 
 		double excess = photon.getEnergy() + level.getEnergy();
 		if (excess > 0) {
-			// loseElectron(e, excess);
+			loseElectron(e, excess);
 		}
 		else {
 			EnergyLevel excite;
@@ -101,7 +104,7 @@ class PhotonicExcitor {
 	 * Stimulated emission happens as soon as the photon hits the atom, regardless of the lifetime set for the current
 	 * electronic state.
 	 */
-	private float stimulatedEmission(Photon photon, Atom atom) {
+	private float stimulatedEmission() {
 		if (atom.electrons.isEmpty())
 			return 0;
 		Electron e = atom.electrons.get(0);
@@ -119,6 +122,26 @@ class PhotonicExcitor {
 			}
 		}
 		return 0;
+	}
+
+	private void loseElectron(Electron e, double excess) {
+		// place the electron just barely inside the edge of the atom to prevent it from overlapping
+		// with another atom immediately upon releasing
+		double cos = Math.cos(photon.getAngle());
+		double sin = Math.sin(photon.getAngle());
+		e.rx = atom.rx + 0.55 * atom.sigma * cos;
+		e.ry = atom.ry + 0.55 * atom.sigma * sin;
+
+		double v = Math.sqrt(excess / (MDModel.EV_CONVERTER * Electron.mass));
+		e.vx = atom.vx + v * cos;
+		e.vy = atom.vy + v * sin;
+		// detach the electron from the atom and make it a free electron
+		e.setAtom(null);
+		atom.electrons.remove(e);
+
+		// positively charge the ion that is left behind
+		atom.setCharge(1);
+		model.addFreeElectron(e);
 	}
 
 }

@@ -366,27 +366,6 @@ public class Atom extends Particle {
 		return null;
 	}
 
-	private void loseElectron(Electron e, double excess) {
-		// place the electron just barely inside the edge of the atom to prevent it from overlapping
-		// with another atom immediately upon releasing
-		double angle = Math.random() * Math.PI * 2;
-		double cos = Math.cos(angle);
-		double sin = Math.sin(angle);
-		e.rx = rx + 0.55 * sigma * cos;
-		e.ry = ry + 0.55 * sigma * sin;
-		// the atom is stopped and all its remaining kenetic energy is transfered to the electron
-		vx = vy = 0;
-		double v = Math.sqrt(excess / (MDModel.EV_CONVERTER * Electron.mass));
-		e.vx = v * cos;
-		e.vy = v * sin;
-		// detach the electron from the atom and make it a free electron
-		e.setAtom(null);
-		electrons.remove(e);
-		// positively charge the ion that is left behind
-		setCharge(1);
-		model.addFreeElectron(e);
-	}
-
 	Electron gainElectron(Electron e) {
 		if (hasElectrons())
 			return null;
