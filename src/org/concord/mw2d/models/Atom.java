@@ -366,26 +366,6 @@ public class Atom extends Particle {
 		return null;
 	}
 
-	Electron gainElectron(Electron e) {
-		if (hasElectrons())
-			return null;
-		ElectronicStructure es = ((AtomicModel) model).getElement(id).getElectronicStructure();
-		// always put the electron at the highest energy level
-		EnergyLevel top = es.getEnergyLevel(es.getNumberOfEnergyLevels() - 1);
-		e.setEnergyLevel(top);
-		// conservation of momentum
-		double m1 = Electron.mass / (Electron.mass + mass);
-		double m2 = mass / (Electron.mass + mass);
-		vx = m1 * e.vx + m2 * vx;
-		vy = m1 * e.vy + m2 * vy;
-		// associate the electron with this atom
-		e.setAtom(this);
-		electrons.add(e);
-		// neutralize the atom
-		setCharge(0);
-		return e;
-	}
-
 	/**
 	 * get the DNA codon (triple-nucleotide letters on 5-3 strand), if this atom represents an amino acid.
 	 */
