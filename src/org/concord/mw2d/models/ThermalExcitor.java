@@ -25,12 +25,13 @@ package org.concord.mw2d.models;
  */
 class ThermalExcitor {
 
+	private final static float EDGE = 0.55f;
 	private AtomicModel model;
 	private Atom a1, a2;
 	private double u1, u2; // speed of atom 1 and 2 in the contact direction before collision
 	private double v1, v2; // speed of atom 1 and 2 in the contact direction after collision
 	private double w1, w2; // speed of atom 1 and 2 in the tangential direction (no change)
-	private double dx, dy; // unit vector pointing from atom 1's center to atom 2's center
+	private double cos, sin; // unit vector pointing from atom 1's center to atom 2's center
 	private int lastStep;
 
 	ThermalExcitor(AtomicModel model) {
@@ -97,7 +98,8 @@ class ThermalExcitor {
 		double excess = relativeKE + level.getEnergy();
 
 		if (excess > 0) { // the energy affords ionization
-			// loseElectron(e, excess);
+			if (!loseElectron(e, excess))
+				return false;
 		}
 		else {
 			// get the lowest energy level above the current that the relative KE can reach
@@ -126,30 +128,67 @@ class ThermalExcitor {
 					break;
 				}
 			}
-			transformVelocitiesBack();
 		}
+
+		transformVelocitiesBack();
+		return true;
+
+	}
+
+	private boolean loseElectron(Electron e, double excess) {
+
+		// detach the electron from the atom and make it a free electron
+		Atom atom = e.getAtom();
+		atom.electrons.remove(e);
+		e.setAtom(null);
+		// positively charge the ion that is left behind
+		atom.setCharge(1);
+		model.addFreeElectron(e);
+
+		// pop out the electron from the opposite side of the contact of impact
+		int sign = atom == a2 ? 1 : -1;
+		e.rx = atom.rx + EDGE * atom.sigma * cos * sign;
+		e.ry = atom.ry + EDGE * atom.sigma * sin * sign;
+
+		// give the electron the minimum energy needed to leave the Coulombic binding of its original atom
+		double rCD = model.universe.getCoulombConstant() / model.universe.getDielectricConstant();
+		double ve = Math.sqrt(rCD / (Electron.mass * MDModel.EV_CONVERTER * EDGE * atom.sigma));
+		e.vx = ve * cos * sign;
+		e.vy = ve * sin * sign;
+
+		double m1 = a1.mass;
+		double m2 = a2.mass;
+		// convert the energy unit into the default unit for delta in the following
+		double K = (Electron.mass + m1) * u1 * u1 + m2 * u2 * u2 - Electron.mass * Electron.mass * ve - excess
+				/ MDModel.EV_CONVERTER;
+		double p = (Electron.mass + m1) * u1 + m2 * u2 - Electron.mass * ve;
+		double s = K * (m1 + m2) - p * p;
+		if (s < 0)
+			return false;
+		v1 = (p - Math.sqrt(m2 / m1 * s)) / (m1 + m2);
+		v2 = (p + Math.sqrt(m1 / m2 * s)) / (m1 + m2);
 
 		return true;
 
 	}
 
 	private void transformVelocities() {
-		dx = a2.rx - a1.rx;
-		dy = a2.ry - a1.ry;
-		double tmp = 1.0 / Math.hypot(dx, dy);
-		dx *= tmp;
-		dy *= tmp;
-		u1 = a1.vx * dx + a1.vy * dy;
-		u2 = a2.vx * dx + a2.vy * dy;
-		w1 = a1.vy * dx - a1.vx * dy;
-		w2 = a2.vy * dx - a2.vx * dy;
+		cos = a2.rx - a1.rx;
+		sin = a2.ry - a1.ry;
+		double tmp = 1.0 / Math.hypot(cos, sin);
+		cos *= tmp;
+		sin *= tmp;
+		u1 = a1.vx * cos + a1.vy * sin;
+		u2 = a2.vx * cos + a2.vy * sin;
+		w1 = a1.vy * cos - a1.vx * sin;
+		w2 = a2.vy * cos - a2.vx * sin;
 	}
 
 	private void transformVelocitiesBack() {
-		a1.vx = v1 * dx - w1 * dy;
-		a1.vy = v1 * dy + w1 * dx;
-		a2.vx = v2 * dx - w2 * dy;
-		a2.vy = v2 * dy + w2 * dx;
+		a1.vx = v1 * cos - w1 * sin;
+		a1.vy = v1 * sin + w1 * cos;
+		a2.vx = v2 * cos - w2 * sin;
+		a2.vy = v2 * sin + w2 * cos;
 	}
 
 	private double getRelativeKE() {

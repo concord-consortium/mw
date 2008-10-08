@@ -2712,7 +2712,8 @@ public abstract class AtomicModel extends MDModel {
 			}
 		}
 
-		vsum += computeForceForElectrons(time);
+		// vsum += computeForceForElectrons(time);
+		computeForceForElectrons(time);
 
 		if (numberOfAtoms == 1) {
 
