@@ -2573,12 +2573,12 @@ public abstract class AtomicModel extends MDModel {
 				for (int i = 0; i < numberOfAtoms; i++) {
 					if (atom[i].contains(e)) {
 						if (atom[i].hasElectrons()) { // if the atom contains electrons
-							//Electron x = atom[i].collideWithElectron(e);
-							//if (x != null) {
-								//if (toAdd == null)
-									//toAdd = new ArrayList<Electron>();
-								//toAdd.add(x);
-							//}
+							// Electron x = atom[i].collideWithElectron(e);
+							// if (x != null) {
+							// if (toAdd == null)
+							// toAdd = new ArrayList<Electron>();
+							// toAdd.add(x);
+							// }
 						}
 						else { // if the atom is a positive ion, recombine
 							if (threeBodyRecombination == null)
@@ -2714,8 +2714,8 @@ public abstract class AtomicModel extends MDModel {
 			}
 		}
 
-		// vsum += computeForceForElectrons(time);
-		computeForceForElectrons(time);
+		vsum += computeForceForElectrons(time);
+		// computeForceForElectrons(time);
 
 		if (numberOfAtoms == 1) {
 
@@ -3154,6 +3154,13 @@ public abstract class AtomicModel extends MDModel {
 					obs = obstacles.get(jobs);
 					if (obs.isPartOfSystem() && obs.isMovable())
 						x += (obs.vx * obs.vx + obs.vy * obs.vy) * obs.getMass();
+				}
+			}
+		}
+		if (!freeElectrons.isEmpty()) {
+			synchronized (freeElectrons) {
+				for (Electron e : freeElectrons) {
+					x += (e.vx * e.vx + e.vy * e.vy) * Electron.mass;
 				}
 			}
 		}

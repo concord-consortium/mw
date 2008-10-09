@@ -98,7 +98,7 @@ class ThermalExcitor {
 		double excess = relativeKE + level.getEnergy();
 
 		if (excess > 0) { // the energy affords ionization
-			if (!loseElectron(e, excess))
+			if (!loseElectron(e))
 				return false;
 		}
 		else {
@@ -135,38 +135,38 @@ class ThermalExcitor {
 
 	}
 
-	private boolean loseElectron(Electron e, double excess) {
-
-		// detach the electron from the atom and make it a free electron
-		Atom atom = e.getAtom();
-		atom.electrons.remove(e);
-		e.setAtom(null);
-		// positively charge the ion that is left behind
-		atom.setCharge(1);
-		model.addFreeElectron(e);
+	private boolean loseElectron(Electron e) {
 
 		// pop out the electron from the opposite side of the contact of impact
+		Atom atom = e.getAtom();
 		int sign = atom == a2 ? 1 : -1;
 		e.rx = atom.rx + EDGE * atom.sigma * cos * sign;
 		e.ry = atom.ry + EDGE * atom.sigma * sin * sign;
 
 		// give the electron the minimum energy needed to leave the Coulombic binding of its original atom
 		double rCD = model.universe.getCoulombConstant() / model.universe.getDielectricConstant();
-		double ve = Math.sqrt(rCD / (Electron.mass * MDModel.EV_CONVERTER * EDGE * atom.sigma));
+		double ve = 0.1 * Math.sqrt(rCD / (Electron.mass * MDModel.EV_CONVERTER * EDGE * atom.sigma));
 		e.vx = ve * cos * sign;
 		e.vy = ve * sin * sign;
 
 		double m1 = a1.mass;
 		double m2 = a2.mass;
-		// convert the energy unit into the default unit for delta in the following
-		double K = (Electron.mass + m1) * u1 * u1 + m2 * u2 * u2 - Electron.mass * Electron.mass * ve - excess
+		double energy = e.getEnergyLevel().getEnergy();
+		double K = (Electron.mass + m1) * u1 * u1 + m2 * u2 * u2 - Electron.mass * ve * ve + energy
 				/ MDModel.EV_CONVERTER;
 		double p = (Electron.mass + m1) * u1 + m2 * u2 - Electron.mass * ve;
 		double s = K * (m1 + m2) - p * p;
 		if (s < 0)
 			return false;
-		v1 = (p - Math.sqrt(m2 / m1 * s)) / (m1 + m2);
-		v2 = (p + Math.sqrt(m1 / m2 * s)) / (m1 + m2);
+		v1 = (p - Math.signum(u1 - u2) * Math.sqrt(m2 / m1 * s)) / (m1 + m2);
+		v2 = (p + Math.signum(u1 - u2) * Math.sqrt(m1 / m2 * s)) / (m1 + m2);
+
+		// detach the electron from the atom and make it a free electron
+		atom.electrons.remove(e);
+		e.setAtom(null);
+		// positively charge the ion that is left behind
+		atom.setCharge(1);
+		model.addFreeElectron(e);
 
 		return true;
 
