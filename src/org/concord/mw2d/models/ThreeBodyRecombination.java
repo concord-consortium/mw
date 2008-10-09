@@ -25,7 +25,6 @@ package org.concord.mw2d.models;
  */
 class ThreeBodyRecombination {
 
-	private final static float EDGE = 0.55f;
 	private AtomicModel model;
 	private Atom a1, a2;
 	private Electron e;
@@ -41,9 +40,15 @@ class ThreeBodyRecombination {
 	}
 
 	boolean recombine(Atom atom, Electron electron) {
-		if(true) return false;
 		if (!atom.isExcitable())
 			return false;
+		// give the pair a grace period to leave each other
+		if (a1 == atom && e == electron) {
+			if (model.job.getIndexOfStep() - lastStep <= model.electronicDynamics.getInterval())
+				return false;
+		}
+		lastStep = model.job.getIndexOfStep();
+
 		a1 = atom; // the electron will recombine with a1 with the assistance of a2
 		e = electron;
 		double rxij, ryij, rijsq, sig;
@@ -54,13 +59,14 @@ class ThreeBodyRecombination {
 			rxij = a1.rx - a2.rx;
 			ryij = a1.ry - a2.ry;
 			rijsq = rxij * rxij + ryij * ryij;
-			sig = EDGE * (a1.sigma + a2.sigma);
+			sig = 0.55 * (a1.sigma + a2.sigma);
 			sig *= sig;
 			if (rijsq < sig) {
 				break;
 			}
 			a2 = null;
 		}
+		System.out.println(a1 + ">>>" + a2);
 		if (a2 == null)
 			return false;
 		transformVelocities();
@@ -115,8 +121,8 @@ class ThreeBodyRecombination {
 		double s = L * (m1 + m2 + Electron.mass) - q * q;
 		if (s < 0)
 			return false;
-		v1 = (q - Math.sqrt((m2 + Electron.mass) / m1 * s)) / (m1 + m2 + Electron.mass);
-		v2 = (q + Math.sqrt(m1 / (m2 + Electron.mass) * s)) / (m1 + m2 + Electron.mass);
+		v1 = (q - Math.signum(u2 - u1) * Math.sqrt(m2 / (m1 + Electron.mass) * s)) / (m1 + m2 + Electron.mass);
+		v2 = (q + Math.signum(u2 - u1) * Math.sqrt((m1 + Electron.mass) / m2 * s)) / (m1 + m2 + Electron.mass);
 		return true;
 	}
 

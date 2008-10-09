@@ -37,7 +37,7 @@ public class Electron {
 	double fx, fy;
 	double dx, dy;
 
-	static float mass = 0.01f;
+	static float mass = 0.1f;
 	static byte radius = 2;
 
 	private MolecularModel model;

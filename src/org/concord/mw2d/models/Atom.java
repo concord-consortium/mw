@@ -202,8 +202,8 @@ public class Atom extends Particle {
 		return ry + 0.5 * sigma;
 	}
 
-	boolean contains(Electron e) {
-		return distanceSquare(e.rx, e.ry) < sigma * sigma * 0.25;
+	boolean near(Electron e, double distance) {
+		return distanceSquare(e.rx, e.ry) < distance * distance;
 	}
 
 	public boolean contains(double x, double y) {
