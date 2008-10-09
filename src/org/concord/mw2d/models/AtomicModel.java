@@ -100,6 +100,7 @@ public abstract class AtomicModel extends MDModel {
 
 	/** maximum number of atoms allowed */
 	private static short NMAX = 500;
+	private final static float alpha = 0.01f;
 
 	/* the atom array */
 	Atom[] atom;
@@ -2570,6 +2571,8 @@ public abstract class AtomicModel extends MDModel {
 			List<Electron> toRemove = null;
 			List<Electron> toAdd = null;
 			for (Electron e : freeElectrons) {
+				e.fx = 0;
+				e.fy = 0;
 				for (int i = 0; i < numberOfAtoms; i++) {
 					if (atom[i].contains(e)) {
 						if (atom[i].hasElectrons()) { // if the atom contains electrons
@@ -2598,14 +2601,10 @@ public abstract class AtomicModel extends MDModel {
 			if (toAdd != null) {
 				freeElectrons.addAll(toAdd);
 			}
-			for (Electron e : freeElectrons) {
-				e.fx = 0;
-				e.fy = 0;
-			}
 		}
 
 		double vsum = 0;
-		double coul = 0;
+		double vij = 0;
 		double rCD = universe.getCoulombConstant() / universe.getDielectricConstant();
 		// interactions between free electrons
 		int n = freeElectrons.size();
@@ -2622,10 +2621,11 @@ public abstract class AtomicModel extends MDModel {
 						ej = freeElectrons.get(j);
 						rxij = rxi - ej.rx;
 						ryij = ryi - ej.ry;
+						minimumImageConvention();
 						rijsq = rxij * rxij + ryij * ryij;
-						coul = rCD / Math.sqrt(rijsq);
-						vsum += coul;
-						fij = coul / rijsq * GF_CONVERSION_CONSTANT;
+						vij = rCD / Math.sqrt(rijsq);
+						vsum += vij;
+						fij = vij / rijsq * GF_CONVERSION_CONSTANT;
 						fxij = fij * rxij;
 						fyij = fij * ryij;
 						fxi += fxij;
@@ -2638,7 +2638,8 @@ public abstract class AtomicModel extends MDModel {
 				}
 			}
 		}
-		// interactions between atoms and free electrons
+		// interactions between atoms and free electrons: v(r)=alpha*sigma^11/r^12-Q/r
+		double sig11, r12, coul;
 		for (int i = 0; i < numberOfAtoms; i++) {
 			// if an atom is charged, compute the electrostatic force
 			if (Math.abs(atom[i].charge) > ZERO) {
@@ -2646,17 +2647,20 @@ public abstract class AtomicModel extends MDModel {
 					for (Electron e : freeElectrons) {
 						rxij = e.rx - atom[i].rx;
 						ryij = e.ry - atom[i].ry;
-						rijsq = Math.sqrt(rxij * rxij + ryij * ryij);
-						// FIXME: offset 10 to prevent DBZ error
-						coul = atom[i].charge / (20 + rijsq) * rCD;
-						vsum += coul;
-						fij = GF_CONVERSION_CONSTANT * coul / (20 + rijsq) / rijsq;
+						minimumImageConvention();
+						rijsq = rxij * rxij + ryij * ryij;
+						coul = -atom[i].charge / Math.sqrt(rijsq) * rCD;
+						sig11 = getPower(atom[i].sigma, 11);
+						r12 = getPower(rijsq, 6);
+						vij = alpha * sig11 / r12 + coul;
+						vsum += vij;
+						fij = GF_CONVERSION_CONSTANT * (12 * alpha * sig11 / r12 + coul) / rijsq;
 						fxij = fij * rxij;
 						fyij = fij * ryij;
-						e.fx -= fxij;
-						e.fy -= fyij;
-						atom[i].fx += fxij;
-						atom[i].fy += fyij;
+						e.fx += fxij;
+						e.fy += fyij;
+						atom[i].fx -= fxij;
+						atom[i].fy -= fyij;
 					}
 				}
 			}
@@ -2679,6 +2683,13 @@ public abstract class AtomicModel extends MDModel {
 			}
 		}
 		return vsum;
+	}
+
+	private static double getPower(double a, int n) {
+		double x = a;
+		for (int i = 1; i < n; i++)
+			x *= a;
+		return x;
 	}
 
 	/**
