@@ -131,21 +131,29 @@ class ThermalExcitor {
 		}
 
 		transformVelocitiesBack();
+
 		return true;
 
 	}
 
 	private boolean loseElectron(Electron e) {
 
-		// pop out the electron from the opposite side of the contact of impact
 		Atom atom = e.getAtom();
+		if (atom == a2) { // swap a1 and a2 because the formula below assumes that a1 emits e
+			Atom copy = a1;
+			a1 = a2;
+			a2 = copy;
+			transformVelocitiesBack(); // redo velocity transformation after swap
+		}
+
+		// pop out the electron from the opposite side of the contact of impact
 		int sign = atom == a2 ? 1 : -1;
 		e.rx = atom.rx + EDGE * atom.sigma * cos * sign;
 		e.ry = atom.ry + EDGE * atom.sigma * sin * sign;
 
 		// give the electron the minimum energy needed to leave the Coulombic binding of its original atom
 		double rCD = model.universe.getCoulombConstant() / model.universe.getDielectricConstant();
-		double ve = 0.1 * Math.sqrt(rCD / (Electron.mass * MDModel.EV_CONVERTER * EDGE * atom.sigma));
+		double ve = 0.2 * Math.sqrt(rCD / (Electron.mass * MDModel.EV_CONVERTER * EDGE * atom.sigma));
 		e.vx = ve * cos * sign;
 		e.vy = ve * sin * sign;
 
