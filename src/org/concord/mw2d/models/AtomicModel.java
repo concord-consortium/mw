@@ -100,7 +100,7 @@ public abstract class AtomicModel extends MDModel {
 
 	/** maximum number of atoms allowed */
 	private static short NMAX = 500;
-	private final static float alpha = 0.08f;
+	private final static float alpha = 0.01f;
 
 	/* the atom array */
 	Atom[] atom;
@@ -2566,7 +2566,7 @@ public abstract class AtomicModel extends MDModel {
 	private double computeForceForElectrons(final int time) {
 		if (freeElectrons.isEmpty())
 			return 0;
-
+		
 		synchronized (freeElectrons) {
 			List<Electron> toRemove = null;
 			List<Electron> toAdd = null;
@@ -2574,7 +2574,7 @@ public abstract class AtomicModel extends MDModel {
 				e.fx = 0;
 				e.fy = 0;
 				for (int i = 0; i < numberOfAtoms; i++) {
-					if (atom[i].contains(e)) {
+					if (atom[i].near(e, atom[i].sigma * 0.5)) {
 						if (atom[i].hasElectrons()) { // if the atom contains electrons
 							// Electron x = atom[i].collideWithElectron(e);
 							// if (x != null) {

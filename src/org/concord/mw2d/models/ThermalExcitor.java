@@ -25,7 +25,9 @@ package org.concord.mw2d.models;
  */
 class ThermalExcitor {
 
+	// consider the electron within an atom if the distance is less than EDGE*sigma
 	private final static float EDGE = 0.55f;
+
 	private AtomicModel model;
 	private Atom a1, a2;
 	private double u1, u2; // speed of atom 1 and 2 in the contact direction before collision
@@ -139,23 +141,15 @@ class ThermalExcitor {
 	private boolean loseElectron(Electron e) {
 
 		Atom atom = e.getAtom();
-		if (atom == a2) { // swap a1 and a2 because the formula below assumes that a1 emits e
-			Atom copy = a1;
-			a1 = a2;
-			a2 = copy;
-			transformVelocitiesBack(); // redo velocity transformation after swap
-		}
 
 		// pop out the electron from the opposite side of the contact of impact
-		int sign = atom == a2 ? 1 : -1;
+		int sign = atom == a1 ? -1 : 1;
 		e.rx = atom.rx + EDGE * atom.sigma * cos * sign;
 		e.ry = atom.ry + EDGE * atom.sigma * sin * sign;
 
 		// give the electron the minimum energy needed to leave the Coulombic binding of its original atom
 		double rCD = model.universe.getCoulombConstant() / model.universe.getDielectricConstant();
-		double ve = 0.2 * Math.sqrt(rCD / (Electron.mass * MDModel.EV_CONVERTER * EDGE * atom.sigma));
-		e.vx = ve * cos * sign;
-		e.vy = ve * sin * sign;
+		double ve = Math.sqrt(rCD / (Electron.mass * MDModel.EV_CONVERTER * EDGE * atom.sigma));
 
 		double m1 = a1.mass;
 		double m2 = a2.mass;
@@ -166,6 +160,8 @@ class ThermalExcitor {
 		double s = K * (m1 + m2) - p * p;
 		if (s < 0)
 			return false;
+		e.vx = ve * cos * sign;
+		e.vy = ve * sin * sign;
 		v1 = (p - Math.signum(u1 - u2) * Math.sqrt(m2 / m1 * s)) / (m1 + m2);
 		v2 = (p + Math.signum(u1 - u2) * Math.sqrt(m1 / m2 * s)) / (m1 + m2);
 
