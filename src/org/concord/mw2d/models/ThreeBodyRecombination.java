@@ -41,6 +41,7 @@ class ThreeBodyRecombination {
 	}
 
 	boolean recombine(Atom atom, Electron electron) {
+		if(true) return false;
 		if (!atom.isExcitable())
 			return false;
 		a1 = atom; // the electron will recombine with a1 with the assistance of a2
