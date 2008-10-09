@@ -1096,8 +1096,8 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			List<Integer> list = new ArrayList<Integer>();
 			list.add(((Atom) selectedComponent).getIndex());
 			selectedComponent.setSelected(false);
-			pasteBuffer = selectedComponent;
 			removeMarkedAtoms(list);
+			pasteBuffer = atomBufferArray[atomBufferArray.length - 1];
 			repaint();
 			model.setNumberOfParticles(nAtom);
 			if (!doNotFireUndoEvent) {

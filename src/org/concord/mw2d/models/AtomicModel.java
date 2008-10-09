@@ -100,7 +100,7 @@ public abstract class AtomicModel extends MDModel {
 
 	/** maximum number of atoms allowed */
 	private static short NMAX = 500;
-	private final static float alpha = 0.01f;
+	private final static float alpha = 0.08f;
 
 	/* the atom array */
 	Atom[] atom;
