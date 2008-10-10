@@ -61,7 +61,6 @@ class ThreeBodyRecombination {
 			}
 			a2 = null;
 		}
-		System.out.println(a1 + ">>>" + a2);
 		if (a2 == null)
 			return false;
 		transformVelocities();

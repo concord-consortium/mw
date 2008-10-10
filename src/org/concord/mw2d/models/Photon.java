@@ -22,6 +22,7 @@ package org.concord.mw2d.models;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Stroke;
 import java.awt.geom.GeneralPath;
 
 import org.concord.mw2d.ViewAttribute;
@@ -52,6 +53,7 @@ public class Photon implements ModelComponent {
 	private boolean visible;
 	private boolean blinking;
 	private Color color = Color.black;
+	private Stroke stroke = ViewAttribute.THIN;
 	private boolean stateStored;
 
 	public Photon(float x, float y, float freq) {
@@ -173,6 +175,7 @@ public class Photon implements ModelComponent {
 		setShape(omega);
 		if (omega <= MIN_VISIBLE_FREQ || omega >= MAX_VISIBLE_FREQ) {
 			color = Color.black;
+			stroke = ViewAttribute.THIN_DOTTED;
 		}
 		else {
 			float d = (MAX_VISIBLE_FREQ - MIN_VISIBLE_FREQ) / 7.0f;
@@ -191,6 +194,7 @@ public class Photon implements ModelComponent {
 				color = new Color((int) (r1 + remainder * (r2 - r1)), (int) (g1 + remainder * (g2 - g1)),
 						(int) (b1 + remainder * (b2 - b1)));
 			}
+			stroke = ViewAttribute.THIN;
 		}
 	}
 
@@ -247,7 +251,7 @@ public class Photon implements ModelComponent {
 		g.translate(x, y);
 		g.rotate(angle);
 
-		g.setStroke(ViewAttribute.THIN);
+		g.setStroke(stroke);
 		g.setColor(color);
 		g.drawLine(0, 0, 4, 0);
 		g.drawLine(4, 0, 2, -2);
