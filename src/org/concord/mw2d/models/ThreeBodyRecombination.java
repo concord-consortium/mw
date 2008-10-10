@@ -33,21 +33,16 @@ class ThreeBodyRecombination {
 	private double w1, w2; // speed of atom 1 and 2 in the tangential direction (no change)
 	private double ue, we; // speed components of the electron in the two directions
 	private double cos, sin; // unit vector pointing from atom 1's center to atom 2's center
-	private int lastStep;
 
 	ThreeBodyRecombination(AtomicModel model) {
 		this.model = model;
 	}
 
 	boolean recombine(Atom atom, Electron electron) {
+		if (!electron.readyToGo(model.getModelTime())) // the electron is just ionized
+			return false;
 		if (!atom.isExcitable())
 			return false;
-		// give the pair a grace period to leave each other
-		if (a1 == atom && e == electron) {
-			if (model.job.getIndexOfStep() - lastStep <= model.electronicDynamics.getInterval())
-				return false;
-		}
-		lastStep = model.job.getIndexOfStep();
 
 		a1 = atom; // the electron will recombine with a1 with the assistance of a2
 		e = electron;
@@ -70,24 +65,19 @@ class ThreeBodyRecombination {
 		if (a2 == null)
 			return false;
 		transformVelocities();
-		double excess = gainElectron();
+		ElectronicStructure es = model.getElement(a1.id).getElectronicStructure();
+		EnergyLevel level = es.getEnergyLevel(0);
+		double excess = level.getEnergy();
 		if (!solve(excess))
 			return false;
-		transformVelocitiesBack();
-		return true;
-	}
-
-	private double gainElectron() {
-		ElectronicStructure es = model.getElement(a1.id).getElectronicStructure();
-		// always put the electron at the highest energy level
-		EnergyLevel top = es.getEnergyLevel(es.getNumberOfEnergyLevels() - 1);
-		e.setEnergyLevel(top);
+		e.setEnergyLevel(level);
 		// associate the electron with this atom
 		e.setAtom(a1);
 		a1.electrons.add(e);
 		// neutralize the atom
 		a1.setCharge(0);
-		return top.getEnergy();
+		transformVelocitiesBack();
+		return true;
 	}
 
 	private void transformVelocities() {
