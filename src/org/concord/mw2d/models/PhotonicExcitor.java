@@ -29,9 +29,11 @@ class PhotonicExcitor {
 	private Photon photon;
 	private Atom atom;
 	private AtomicModel model;
+	private final double zeroPoint;
 
 	PhotonicExcitor(AtomicModel model) {
 		this.model = model;
+		zeroPoint = Math.pow(AtomicModel.alpha, 1.0 / 11.0);
 	}
 
 	Photon interact(Photon photon, Atom atom) {
@@ -84,15 +86,14 @@ class PhotonicExcitor {
 		double excess = photon.getEnergy() + level.getEnergy();
 		if (excess > 0) {
 			loseElectron(e, excess);
+			return (float) excess;
 		}
-		else {
-			EnergyLevel excite;
-			for (int i = m + 1; i < n; i++) {
-				excite = es.getEnergyLevel(i);
-				if (Math.abs(excite.getEnergy() - level.getEnergy() - photon.getEnergy()) < ENERGY_GAP_TOLL) {
-					e.setEnergyLevel(excite);
-					return excite.getEnergy() - level.getEnergy(); // return the precise energy
-				}
+		EnergyLevel excite;
+		for (int i = m + 1; i < n; i++) {
+			excite = es.getEnergyLevel(i);
+			if (Math.abs(excite.getEnergy() - level.getEnergy() - photon.getEnergy()) < ENERGY_GAP_TOLL) {
+				e.setEnergyLevel(excite);
+				return excite.getEnergy() - level.getEnergy(); // return the precise energy
 			}
 		}
 
@@ -129,8 +130,8 @@ class PhotonicExcitor {
 		// with another atom immediately upon releasing
 		double cos = Math.cos(photon.getAngle());
 		double sin = Math.sin(photon.getAngle());
-		e.rx = atom.rx + 0.55 * atom.sigma * cos;
-		e.ry = atom.ry + 0.55 * atom.sigma * sin;
+		e.rx = atom.rx + zeroPoint * atom.sigma * cos;
+		e.ry = atom.ry + zeroPoint * atom.sigma * sin;
 
 		double v = Math.sqrt(excess / (MDModel.EV_CONVERTER * Electron.mass));
 		e.vx = atom.vx + v * cos;

@@ -99,7 +99,7 @@ class ThermalDeexcitor {
 		if (m == 0)
 			return null; // electron already in the ground state
 
-		if (!e.readyToDeexcite(model.getModelTime())) // the electron is just excited
+		if (!e.readyToGo(model.getModelTime())) // the electron is just excited
 			return null;
 
 		electron = e;

@@ -25,9 +25,6 @@ package org.concord.mw2d.models;
  */
 class ThermalExcitor {
 
-	// consider the electron within an atom if the distance is less than EDGE*sigma
-	private final static float EDGE = 0.55f;
-
 	private AtomicModel model;
 	private Atom a1, a2;
 	private double u1, u2; // speed of atom 1 and 2 in the contact direction before collision
@@ -35,9 +32,11 @@ class ThermalExcitor {
 	private double w1, w2; // speed of atom 1 and 2 in the tangential direction (no change)
 	private double cos, sin; // unit vector pointing from atom 1's center to atom 2's center
 	private int lastStep;
+	private final double zeroPoint;
 
 	ThermalExcitor(AtomicModel model) {
 		this.model = model;
+		zeroPoint = Math.pow(AtomicModel.alpha, 1.0 / 11.0);
 	}
 
 	void excite(Atom atom1, Atom atom2) {
@@ -144,16 +143,18 @@ class ThermalExcitor {
 
 		// pop out the electron from the opposite side of the contact of impact
 		int sign = atom == a1 ? -1 : 1;
-		e.rx = atom.rx + EDGE * atom.sigma * cos * sign;
-		e.ry = atom.ry + EDGE * atom.sigma * sin * sign;
+		e.rx = atom.rx + zeroPoint * atom.sigma * cos * sign;
+		e.ry = atom.ry + zeroPoint * atom.sigma * sin * sign;
+
+		double energy = e.getEnergyLevel().getEnergy();
 
 		// give the electron the minimum energy needed to leave the Coulombic binding of its original atom
-		double rCD = model.universe.getCoulombConstant() / model.universe.getDielectricConstant();
-		double ve = Math.sqrt(rCD / (Electron.mass * MDModel.EV_CONVERTER * EDGE * atom.sigma));
+		double coul = model.universe.getCoulombConstant()
+				/ (model.universe.getDielectricConstant() * zeroPoint * atom.sigma);
+		double ve = Math.sqrt(coul / (Electron.mass * MDModel.EV_CONVERTER));
 
 		double m1 = a1.mass;
 		double m2 = a2.mass;
-		double energy = e.getEnergyLevel().getEnergy();
 		double K = (Electron.mass + m1) * u1 * u1 + m2 * u2 * u2 - Electron.mass * ve * ve + energy
 				/ MDModel.EV_CONVERTER;
 		double p = (Electron.mass + m1) * u1 + m2 * u2 - Electron.mass * ve;

@@ -37,7 +37,7 @@ public class Electron {
 	double fx, fy;
 	double dx, dy;
 
-	static float mass = 0.1f;
+	static float mass = 0.05f;
 	static byte radius = 2;
 
 	private MolecularModel model;
@@ -62,6 +62,8 @@ public class Electron {
 	 */
 	public void setAtom(Atom atom) {
 		this.atom = atom;
+		if (atom == null)
+			setEnergyLevel(null);
 	}
 
 	/** get the atom that owns this electron. */
@@ -83,10 +85,11 @@ public class Electron {
 		return model;
 	}
 
-	public boolean readyToDeexcite(float t) {
+	public boolean readyToGo(float t) {
+		// if the electron is ionized, give it the longest lifetime before it can be recombined
 		if (energyLevel == null)
-			return true;
-		return t - enterStateTime >= energyLevel.getLifetime() * (0.8 + 0.4 * Math.random());
+			return t - enterStateTime >= EnergyLevel.LONG_LIFETIME;
+		return t - enterStateTime >= energyLevel.getLifetime();
 	}
 
 	/**
