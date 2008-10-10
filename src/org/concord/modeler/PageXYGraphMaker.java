@@ -1020,7 +1020,7 @@ class PageXYGraphMaker extends ComponentMaker {
 		s = Modeler.getInternationalText("WidthLabel");
 		temp.add(new JLabel(s != null ? s : "Width", SwingConstants.LEFT));
 
-		widthField = new IntegerTextField(250, 100, 600);
+		widthField = new IntegerTextField(250, 100, 1000);
 		widthField.setToolTipText("Type in the width for this graph.");
 		widthField.addActionListener(okListener);
 		temp.add(widthField);

@@ -175,7 +175,7 @@ public class Photon implements ModelComponent {
 		setShape(omega);
 		if (omega <= MIN_VISIBLE_FREQ || omega >= MAX_VISIBLE_FREQ) {
 			color = Color.black;
-			stroke = ViewAttribute.THIN_DOTTED;
+			stroke = ViewAttribute.THIN_DASHED;
 		}
 		else {
 			float d = (MAX_VISIBLE_FREQ - MIN_VISIBLE_FREQ) / 7.0f;
