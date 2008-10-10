@@ -85,6 +85,9 @@ class ThermalExcitor {
 
 	private boolean excite(Electron e) {
 
+		if (!e.readyToGo(model.getModelTime())) // the electron is just de-excited
+			return false;
+
 		Atom a = e.getAtom();
 		EnergyLevel level = e.getEnergyLevel();
 		ElectronicStructure es = model.getElement(a.id).getElectronicStructure();
