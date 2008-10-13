@@ -133,6 +133,24 @@ class ObstaclePropertiesPanel extends PropertiesPanel {
 			}
 		});
 
+		s = MDView.getInternationalText("Photon");
+		final JCheckBox photonPassCheckBox = new JCheckBox(s != null ? s : "Photon");
+		photonPassCheckBox.setSelected(obs.isPhotonPermeable());
+		photonPassCheckBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				obs.setPhotonPermeable(e.getStateChange() == ItemEvent.SELECTED);
+			}
+		});
+
+		s = MDView.getInternationalText("Electron");
+		final JCheckBox electronPassCheckBox = new JCheckBox(s != null ? s : "Electron");
+		electronPassCheckBox.setSelected(obs.isElectronPermeable());
+		electronPassCheckBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				obs.setElectronPermeable(e.getStateChange() == ItemEvent.SELECTED);
+			}
+		});
+
 		s = MDView.getInternationalText("West");
 		westProbeLabel = new HyperlinkLabel(s != null ? s : "West");
 		westProbeLabel.setEnabled(false);
@@ -521,6 +539,8 @@ class ObstaclePropertiesPanel extends PropertiesPanel {
 		panel.add(plPassCheckBox);
 		panel.add(wsPassCheckBox);
 		panel.add(ckPassCheckBox);
+		panel.add(photonPassCheckBox);
+		panel.add(electronPassCheckBox);
 
 		panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		add(panel, BorderLayout.SOUTH);
