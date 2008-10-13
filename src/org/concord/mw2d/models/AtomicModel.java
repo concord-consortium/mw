@@ -157,7 +157,7 @@ public abstract class AtomicModel extends MDModel {
 	private double sr2, sr6, sr12, vij, wij, fij, fxij, fyij;
 
 	private List<Atom> typeList;
-	private List<Photon> photonList;
+	private List<Photon> photons;
 	private ObjectQueue photonQueue;
 	private LightSource lightSource;
 	private boolean subatomicEnabled;
@@ -465,7 +465,7 @@ public abstract class AtomicModel extends MDModel {
 
 	/** return true if this model contains no mobile object at all. */
 	public synchronized boolean isEmpty() {
-		if (photonList != null && !photonList.isEmpty())
+		if (photons != null && !photons.isEmpty())
 			return false;
 		return super.isEmpty();
 	}
@@ -781,25 +781,25 @@ public abstract class AtomicModel extends MDModel {
 	}
 
 	public List<Photon> getPhotons() {
-		return photonList;
+		return photons;
 	}
 
 	public void addPhoton(Photon p) {
 		if (p == null)
 			return;
-		if (photonList == null)
-			photonList = Collections.synchronizedList(new ArrayList<Photon>());
+		if (photons == null)
+			photons = Collections.synchronizedList(new ArrayList<Photon>());
 		p.setModel(this);
-		photonList.add(p);
+		photons.add(p);
 	}
 
 	public void removePhoton(Photon p) {
 		if (p == null)
 			return;
-		if (photonList == null)
+		if (photons == null)
 			return;
 		p.setModel(null); // allow garbage collector to get rid of it
-		photonList.remove(p);
+		photons.remove(p);
 	}
 
 	public void setLightSourceInterval(int i) {
@@ -971,9 +971,9 @@ public abstract class AtomicModel extends MDModel {
 		}
 		if (photonQueue == null)
 			photonQueue = new ObjectQueue(movie.getCapacity());
-		if (photonList != null && !photonList.isEmpty()) {
+		if (photons != null && !photons.isEmpty()) {
 			ArrayList<Photon.Delegate> list = new ArrayList<Photon.Delegate>();
-			for (Photon p : photonList) {
+			for (Photon p : photons) {
 				list.add(new Photon.Delegate(p));
 			}
 			photonQueue.update(list);
@@ -2278,18 +2278,18 @@ public abstract class AtomicModel extends MDModel {
 	 * difference between the two states involved in the transition.
 	 */
 	private void photonHitAtom() {
-		if (photonList == null || photonList.isEmpty())
+		if (photons == null || photons.isEmpty())
 			return;
 		Photon p;
 		double s2;
 		List<Photon> tmpList = null;
 		double dx, dy;
 		for (int k = 0; k < numberOfAtoms; k++) {
-			if (photonList.isEmpty())
+			if (photons.isEmpty())
 				break; // no more photons
 			s2 = atom[k].sigma * atom[k].sigma * 0.25;
-			synchronized (photonList) {
-				for (Iterator it = photonList.iterator(); it.hasNext();) {
+			synchronized (photons) {
+				for (Iterator it = photons.iterator(); it.hasNext();) {
 					p = (Photon) it.next();
 					dx = p.x - atom[k].rx;
 					dy = p.y - atom[k].ry;
@@ -2312,7 +2312,7 @@ public abstract class AtomicModel extends MDModel {
 					}
 				}
 				if (tmpList != null) {
-					photonList.addAll(tmpList);
+					photons.addAll(tmpList);
 					tmpList.clear();
 				}
 			}
@@ -2383,10 +2383,10 @@ public abstract class AtomicModel extends MDModel {
 	}
 
 	private void movePhotons() {
-		if (photonList == null || photonList.isEmpty())
+		if (photons == null || photons.isEmpty())
 			return;
-		synchronized (photonList) {
-			for (Photon p : photonList) {
+		synchronized (photons) {
+			for (Photon p : photons) {
 				p.move((float) timeStep);
 			}
 		}
@@ -3335,8 +3335,8 @@ public abstract class AtomicModel extends MDModel {
 			a.setVelocitySelection(false);
 			a.resetElectronsToGroundState();
 		}
-		if (photonList != null)
-			photonList.clear();
+		if (photons != null)
+			photons.clear();
 		if (photonQueue != null)
 			photonQueue.clear();
 		freeElectrons.clear();
@@ -3430,14 +3430,12 @@ public abstract class AtomicModel extends MDModel {
 			}
 		}
 		if (obstacles != null && obstacles.size() > 0) {
+			if (photons != null && !photons.isEmpty())
+				obstacles.reflect(photons);
+			if (!freeElectrons.isEmpty())
+				obstacles.collide(freeElectrons);
 			obstacles.collide(numberOfAtoms, atom);
 			obstacles.move(timeStep, timeStep2, numberOfAtoms, atom);
-			if (!freeElectrons.isEmpty()) {
-				synchronized (freeElectrons) {
-					for (Electron e : freeElectrons)
-						obstacles.collide(e);
-				}
-			}
 		}
 		int n = view.getNumberOfInstances(LineComponent.class);
 		if (n > 0) {
@@ -4246,8 +4244,8 @@ public abstract class AtomicModel extends MDModel {
 		}
 		if (subatomicEnabled || (lightSource != null && lightSource.isOn())) {
 			if (photonQueue != null) {
-				if (photonList != null)
-					photonList.clear();
+				if (photons != null)
+					photons.clear();
 				Object o = photonQueue.getData(frame);
 				if (o instanceof ArrayList) {
 					List<Photon.Delegate> list = (ArrayList<Photon.Delegate>) o;
@@ -4255,7 +4253,7 @@ public abstract class AtomicModel extends MDModel {
 						Photon p = new Photon(pd.getX(), pd.getY(), pd.getOmega());
 						p.setModel(AtomicModel.this);
 						p.setAngle(pd.getAngle());
-						photonList.add(p);
+						photons.add(p);
 					}
 				}
 			}
