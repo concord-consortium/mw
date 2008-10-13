@@ -2037,11 +2037,16 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		RectangularObstacle.Delegate d;
 		for (Iterator it = delegates.iterator(); it.hasNext();) {
 			d = (RectangularObstacle.Delegate) it.next();
-			obstacles.add(new RectangularObstacle(d.getX(), d.getY(), d.getWidth() == 0 ? 1 : d.getWidth(), d
+			RectangularObstacle o = new RectangularObstacle(d.getX(), d.getY(), d.getWidth() == 0 ? 1 : d.getWidth(), d
 					.getHeight() == 0 ? 1 : d.getHeight(), d.getVx(), d.getVy(), d.getExternalFx(), d.getExternalFy(),
 					d.getUserField(), d.getElasticity(), d.getFriction(), d.getDensity(), d.isWestProbe(), d
-							.isNorthProbe(), d.isEastProbe(), d.isSouthProbe(), d.getPermeability(), d.isBounced(), d
-							.isVisible(), d.isRoundCornered(), d.getFillMode()));
+							.isNorthProbe(), d.isEastProbe(), d.isSouthProbe(), d.isBounced(), d.isVisible(), d
+							.isRoundCornered(), d.getFillMode());
+			o.permeable = d.getPermeability();
+			o.setPhotonPermeable(d.isPhotonPermeable());
+			o.setElectronPermeable(d.isElectronPermeable());
+			obstacles.add(o);
+
 		}
 	}
 
@@ -2769,10 +2774,15 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			RectangularObstacle o = null;
 			for (Iterator it = obs.iterator(); it.hasNext();) {
 				o = (RectangularObstacle) it.next();
-				obstacles.add(new RectangularObstacle.Delegate(o.x, o.y, o.width, o.height, o.getVx(), o.getVy(), o
-						.getHx(), o.getHy(), o.getUserField(), o.getElasticity(), o.getFriction(), o.getDensity(), o
-						.isWestProbe(), o.isNorthProbe(), o.isEastProbe(), o.isSouthProbe(), o.permeable,
-						o.isBounced(), o.isVisible(), o.getRoundCornerRadius() > 0, o.getFillMode()));
+				RectangularObstacle.Delegate rod = new RectangularObstacle.Delegate(o.x, o.y, o.width, o.height, o
+						.getVx(), o.getVy(), o.getHx(), o.getHy(), o.getUserField(), o.getElasticity(),
+						o.getFriction(), o.getDensity(), o.isWestProbe(), o.isNorthProbe(), o.isEastProbe(), o
+								.isSouthProbe(), o.isBounced(), o.isVisible(), o.getRoundCornerRadius() > 0, o
+								.getFillMode());
+				rod.setPermeability(o.permeable);
+				rod.setPhotonPermeable(o.isPhotonPermeable());
+				rod.setElectronPermeable(o.isElectronPermeable());
+				obstacles.add(rod);
 			}
 		}
 

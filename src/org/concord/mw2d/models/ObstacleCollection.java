@@ -157,8 +157,9 @@ public class ObstacleCollection {
 		synchronized (obsList) {
 			for (RectangularObstacle o : obsList) {
 				synchronized (photons) {
-					for (Photon p : photons)
+					for (Photon p : photons) {
 						o.reflect(p);
+					}
 				}
 			}
 		}
