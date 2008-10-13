@@ -138,10 +138,29 @@ public class ObstacleCollection {
 		}
 	}
 
-	void collide(Electron e) {
+	void collide(List<Electron> electrons) {
+		if (isEmpty())
+			return;
 		synchronized (obsList) {
-			for (RectangularObstacle o : obsList)
-				o.collide(e);
+			for (RectangularObstacle o : obsList) {
+				synchronized (electrons) {
+					for (Electron e : electrons)
+						o.collide(e);
+				}
+			}
+		}
+	}
+
+	void reflect(List<Photon> photons) {
+		if (isEmpty())
+			return;
+		synchronized (obsList) {
+			for (RectangularObstacle o : obsList) {
+				synchronized (photons) {
+					for (Photon p : photons)
+						o.reflect(p);
+				}
+			}
 		}
 	}
 

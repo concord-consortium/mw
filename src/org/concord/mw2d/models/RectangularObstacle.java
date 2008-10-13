@@ -554,6 +554,34 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 		}
 	}
 
+	void reflect(Photon p) {
+		double x0 = getMinX();
+		double y0 = getMinY();
+		double x1 = getMaxX();
+		double y1 = getMaxY();
+		if (p.x < x1 && p.x > x0 && p.y < y1 && p.y > y0) {
+			float ninty = (float) (0.5 * Math.PI);
+			double cos = Math.cos(p.getAngle()) * Photon.getC() * model.getTimeStep();
+			if (p.x - cos < x0) {
+				p.x = (float) x0;
+				p.setAngle(p.getAngle() > 0 ? p.getAngle() + ninty : p.getAngle() - ninty);
+			}
+			else if (p.x - cos > x1) {
+				p.x = (float) x1;
+				p.setAngle(p.getAngle() > 0 ? p.getAngle() - ninty : p.getAngle() + ninty);
+			}
+			double sin = Math.sin(p.getAngle()) * Photon.getC() * model.getTimeStep();
+			if (p.y - sin < y0) {
+				p.y = (float) y0;
+				p.setAngle(-p.getAngle());
+			}
+			else if (p.y - sin > y1) {
+				p.y = (float) y1;
+				p.setAngle(-p.getAngle());
+			}
+		}
+	}
+
 	/**
 	 * collision of atoms with this obstacle.
 	 * 
