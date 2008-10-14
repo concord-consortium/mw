@@ -2353,7 +2353,8 @@ public abstract class AtomicModel extends MDModel {
 					rxij = rxi - atom[j].rx;
 					ryij = ryi - atom[j].ry;
 					rijsq = rxij * rxij + ryij * ryij;
-					sig = 0.5 * (atom[i].sigma + atom[j].sigma);
+					// 0.55 < 0.5*2^(1/6)~0.56 --- allow a bit penetration
+					sig = 0.55 * (atom[i].sigma + atom[j].sigma);
 					sig *= sig;
 					if (rijsq < sig) {
 						if (thermalDeexcitor == null)

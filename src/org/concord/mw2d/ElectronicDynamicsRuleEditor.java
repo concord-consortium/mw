@@ -29,9 +29,12 @@ import java.awt.Point;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -42,6 +45,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 
 import org.concord.modeler.Modeler;
+import org.concord.modeler.ModelerUtilities;
 import org.concord.modeler.ui.PieChart;
 import org.concord.mw2d.models.MolecularModel;
 import org.concord.mw2d.models.QuantumRule;
@@ -52,6 +56,7 @@ class ElectronicDynamicsRuleEditor extends JPanel {
 	private PieChart pieChart1;
 	private PieChart pieChart2;
 	private JComboBox whatIsComboBox;
+	private JCheckBox ionizationCheckBox;
 
 	ElectronicDynamicsRuleEditor() {
 
@@ -115,6 +120,20 @@ class ElectronicDynamicsRuleEditor extends JPanel {
 		panel.add(pieChart1, BorderLayout.CENTER);
 
 		panel = new JPanel(new BorderLayout());
+		tabbedPane.addTab("Ionization", panel);
+
+		JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		ionizationCheckBox = new JCheckBox("Allow ionization");
+		ionizationCheckBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				JCheckBox cb = (JCheckBox) e.getSource();
+				model.getQuantumRule().setIonizationDisallowed(!cb.isSelected());
+			}
+		});
+		p.add(ionizationCheckBox);
+		panel.add(p, BorderLayout.NORTH);
+
+		panel = new JPanel(new BorderLayout());
 		tabbedPane.addTab("Electron Transfer", panel);
 
 	}
@@ -157,6 +176,9 @@ class ElectronicDynamicsRuleEditor extends JPanel {
 		}
 		pieChart2.setPercent(0, 1.0f - x);
 		pieChart2.setPercent(1, x);
+
+		ModelerUtilities.selectWithoutNotifyingListeners(ionizationCheckBox, !model.getQuantumRule()
+				.isIonizationDisallowed());
 
 		final JDialog d = new JDialog(JOptionPane.getFrameForComponent(parent), "Edit Electronic Dynamics Rules", true);
 		d.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
