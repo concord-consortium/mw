@@ -101,7 +101,7 @@ class ThermalExcitor {
 		double relativeKE = getRelativeKE();
 		double excess = relativeKE + level.getEnergy();
 
-		if (excess > 0) { // the energy affords ionization
+		if (excess > 0 && !model.quantumRule.isIonizationDisallowed()) { // the energy affords ionization
 			if (!loseElectron(e))
 				return false;
 		}

@@ -96,12 +96,13 @@ class ThermalDeexcitor {
 	private Photon deexcite(Electron e) {
 
 		int m = getIndexOfEnergyLevel(e);
+		
 		if (m == 0)
 			return null; // electron already in the ground state
 
 		if (!e.readyToGo(model.getModelTime())) // the electron is just excited
 			return null;
-
+		
 		electron = e;
 
 		// assume that the probability for the electron to transition to any lower state is equal

@@ -83,10 +83,12 @@ class PhotonicExcitor {
 		if (m == -1 || m >= n - 1)
 			return 0;
 
-		double excess = photon.getEnergy() + level.getEnergy();
-		if (excess > 0) {
-			loseElectron(e, excess);
-			return (float) excess;
+		if (!model.quantumRule.isIonizationDisallowed()) {
+			double excess = photon.getEnergy() + level.getEnergy();
+			if (excess > 0) {
+				loseElectron(e, excess);
+				return (float) excess;
+			}
 		}
 		EnergyLevel excite;
 		for (int i = m + 1; i < n; i++) {

@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * This class specifies the rules used to model the quantum effects related to light-matter interactions and others.
+ * This class specifies the rules used to model the quantum effects related to electrons and photons.
  */
 
 public class QuantumRule implements Serializable {
@@ -34,6 +34,7 @@ public class QuantumRule implements Serializable {
 	public final static Integer STIMULATED_EMISSION = new Integer(12);
 
 	private Map<Object, Float> probabilityMap;
+	private boolean disallowIonization;
 
 	public QuantumRule() {
 	}
@@ -41,6 +42,15 @@ public class QuantumRule implements Serializable {
 	public void reset() {
 		if (probabilityMap != null)
 			probabilityMap.clear();
+		disallowIonization = false;
+	}
+
+	public void setIonizationDisallowed(boolean b) {
+		disallowIonization = b;
+	}
+
+	public boolean isIonizationDisallowed() {
+		return disallowIonization;
 	}
 
 	public void setProbabilityMap(Map<Object, Float> map) {
