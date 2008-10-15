@@ -89,8 +89,6 @@ class MoleculePopupMenu extends JPopupMenu {
 				if (view.selectedComponent instanceof Molecule) {
 					Molecule mol = (Molecule) view.selectedComponent;
 					mol.rotateBy(180);
-					view.refreshJmol();
-					view.repaint();
 				}
 			}
 		});
@@ -103,8 +101,6 @@ class MoleculePopupMenu extends JPopupMenu {
 				if (view.selectedComponent instanceof Molecule) {
 					Molecule mol = (Molecule) view.selectedComponent;
 					mol.rotateBy(90);
-					view.refreshJmol();
-					view.repaint();
 				}
 			}
 		});
@@ -117,8 +113,6 @@ class MoleculePopupMenu extends JPopupMenu {
 				if (view.selectedComponent instanceof Molecule) {
 					Molecule mol = (Molecule) view.selectedComponent;
 					mol.rotateBy(-90);
-					view.refreshJmol();
-					view.repaint();
 				}
 			}
 		});
@@ -130,9 +124,19 @@ class MoleculePopupMenu extends JPopupMenu {
 			public void actionPerformed(ActionEvent e) {
 				if (view.selectedComponent instanceof Molecule) {
 					Molecule mol = (Molecule) view.selectedComponent;
-					mol.rotateBy(-90);
-					view.refreshJmol();
-					view.repaint();
+					mol.flipHorizontal();
+				}
+			}
+		});
+		add(mi);
+
+		s = MDView.getInternationalText("FlipVertical");
+		mi = new JMenuItem(s != null ? s : "Flip Vertical");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (view.selectedComponent instanceof Molecule) {
+					Molecule mol = (Molecule) view.selectedComponent;
+					mol.flipVertical();
 				}
 			}
 		});
