@@ -728,6 +728,67 @@ public abstract class AtomicModel extends MDModel {
 		return false;
 	}
 
+	public boolean flipSelectedParticles(byte direction) {
+		double c = 0;
+		int n = 0;
+		for (int i = 0; i < numberOfAtoms; i++) {
+			if (atom[i].isSelected()) {
+				c += direction == 0 ? atom[i].rx : atom[i].ry;
+				n++;
+			}
+		}
+		if (n == 0)
+			return true;
+		c /= n;
+		boolean b = true;
+		n = 0;
+		double d;
+		for (int i = 0; i < numberOfAtoms; i++) {
+			if (!atom[i].isSelected())
+				continue;
+			atom[i].storeCurrentState();
+			if (direction == 0) {
+				d = atom[i].rx - c;
+				atom[i].rx -= 2 * d;
+			}
+			else {
+				d = atom[i].ry - c;
+				atom[i].ry -= 2 * d;
+			}
+			if (!boundary.contains(atom[i].rx, atom[i].ry)) {
+				b = false;
+				n = i;
+				break;
+			}
+		}
+		if (b) {
+			for (int i = 0; i < numberOfAtoms; i++) {
+				if (!atom[i].isSelected())
+					continue;
+				PointRestraint pr = atom[i].getRestraint();
+				if (pr != null) {
+					if (direction == 0) {
+						d = pr.getX0() - c;
+						pr.setX0(pr.getX0() - 2 * d);
+					}
+					else {
+						d = pr.getY0() - c;
+						pr.setY0(pr.getY0() - 2 * d);
+					}
+				}
+			}
+			if (view.getUseJmol())
+				view.refreshJmol();
+			view.repaint();
+			return true;
+		}
+		for (int i = 0; i <= n; i++) {
+			if (atom[i].isSelected())
+				atom[i].restoreState();
+		}
+		return false;
+	}
+
 	/** translate all components of the model by the specified distance */
 	public boolean translateWholeModel(double dx, double dy) {
 		boolean b = true;

@@ -635,6 +635,22 @@ public class Molecule implements ModelComponent, Rotatable {
 		model.rotateSelectedParticles(angleInDegrees);
 	}
 
+	public void flipVertical() {
+		BitSet bs = new BitSet(model.getNumberOfAtoms());
+		for (Atom a : atoms)
+			bs.set(a.getIndex());
+		model.setSelectionSet(bs);
+		model.flipSelectedParticles((byte) 0);
+	}
+
+	public void flipHorizontal() {
+		BitSet bs = new BitSet(model.getNumberOfAtoms());
+		for (Atom a : atoms)
+			bs.set(a.getIndex());
+		model.setSelectionSet(bs);
+		model.flipSelectedParticles((byte) 1);
+	}
+
 	public double getRx() {
 		return getCenterOfMass2D().getX();
 	}
