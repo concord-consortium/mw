@@ -671,7 +671,7 @@ public abstract class AtomicModel extends MDModel {
 		return job.contains(photonGun);
 	}
 
-	boolean rotateSelectedParticles(double angleInDegrees) {
+	public boolean rotateSelectedParticles(double angleInDegrees) {
 		double xc = 0, yc = 0;
 		int n = 0;
 		for (int i = 0; i < numberOfAtoms; i++) {

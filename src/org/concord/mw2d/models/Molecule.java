@@ -30,6 +30,7 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -624,41 +625,14 @@ public class Molecule implements ModelComponent, Rotatable {
 	 * rotate this molecule by the specified angle, around its center of mass.
 	 * 
 	 * @param angle
-	 *            the angle this molecule is to rotate, in radians. Clockwise rotation angle is positive.
+	 *            the angle this molecule is to rotate, in degrees. Clockwise rotation angle is positive.
 	 */
-	void rotateBy(double angle) {
-
-		if (savedCenter == null)
-			savedCenter = getCenterOfMass2D();
-
-		double costheta = Math.cos(angle);
-		double sintheta = Math.sin(angle);
-		double sintheta0, costheta0, distance, dx, dy;
-		Point2D oldPoint;
-		double oldX, oldY;
-		synchronized (atoms) {
-			for (Atom at : atoms) {
-				if (savedCRD == null || savedCRD.isEmpty()) {
-					oldX = at.rx;
-					oldY = at.ry;
-				}
-				else {
-					oldPoint = savedCRD.get(at);
-					oldX = oldPoint.getX();
-					oldY = oldPoint.getY();
-				}
-				dx = oldX - savedCenter.getX();
-				dy = oldY - savedCenter.getY();
-				distance = Math.hypot(dx, dy);
-				if (distance > 0.1) {
-					costheta0 = dx / distance;
-					sintheta0 = dy / distance;
-					at.rx = savedCenter.getX() + distance * (costheta * costheta0 - sintheta * sintheta0);
-					at.ry = savedCenter.getY() + distance * (sintheta * costheta0 + costheta * sintheta0);
-				}
-			}
-		}
-
+	public void rotateBy(double angleInDegrees) {
+		BitSet bs = new BitSet(model.getNumberOfAtoms());
+		for (Atom a : atoms)
+			bs.set(a.getIndex());
+		model.setSelectionSet(bs);
+		model.rotateSelectedParticles(angleInDegrees);
 	}
 
 	public double getRx() {
