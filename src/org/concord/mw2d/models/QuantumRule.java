@@ -37,11 +37,11 @@ public class QuantumRule implements Serializable {
 	private boolean disallowIonization;
 
 	public QuantumRule() {
+		probabilityMap = new HashMap<Object, Float>();
 	}
 
 	public void reset() {
-		if (probabilityMap != null)
-			probabilityMap.clear();
+		probabilityMap.clear();
 		disallowIonization = false;
 	}
 
@@ -62,13 +62,14 @@ public class QuantumRule implements Serializable {
 	}
 
 	public void setProbability(Object key, float value) {
-		if (probabilityMap == null)
-			probabilityMap = new HashMap<Object, Float>();
 		probabilityMap.put(key, value);
 	}
 
-	public float getProbability(Object key) throws Exception {
-		return probabilityMap.get(key);
+	public float getProbability(Object key) {
+		Float x = probabilityMap.get(key);
+		if (x == null)
+			return 0.5f;
+		return x;
 	}
 
 }
