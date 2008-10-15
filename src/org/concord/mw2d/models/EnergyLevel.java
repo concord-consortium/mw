@@ -30,7 +30,7 @@ public class EnergyLevel implements Serializable, Comparable {
 	public final static int MEDIUM_LIFETIME = 2000;
 	public final static int LONG_LIFETIME = 20000;
 
-	private int lifetime = MEDIUM_LIFETIME;
+	private int lifetime = SHORT_LIFETIME;
 	private int degeneracy = 2;
 	private float energy = -1.0f;
 

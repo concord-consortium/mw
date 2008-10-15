@@ -23,6 +23,7 @@ package org.concord.mw2d;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.Action;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -30,6 +31,7 @@ import javax.swing.JPopupMenu;
 
 import org.concord.modeler.process.Executable;
 import org.concord.modeler.ui.IconPool;
+import org.concord.mw2d.models.Molecule;
 
 class MoleculePopupMenu extends JPopupMenu {
 
@@ -76,10 +78,66 @@ class MoleculePopupMenu extends JPopupMenu {
 		a.putValue(Action.NAME, UserAction.getName(UserAction.ROTA_ID));
 		a.putValue(Action.SHORT_DESCRIPTION, "Rotate this molecule");
 		mi = new JMenuItem(a);
-		s = MDView.getInternationalText("Rotate");
-		if (s != null)
-			mi.setText(s);
+		s = MDView.getInternationalText("FreeRotation");
+		mi.setText(s != null ? s : "Free Rotation");
 		add(mi);
+
+		s = MDView.getInternationalText("Rotate180Degrees");
+		mi = new JMenuItem(s != null ? s : "<html>Rotate 180&#176;</html>");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (view.selectedComponent instanceof Molecule) {
+					Molecule mol = (Molecule) view.selectedComponent;
+					mol.rotateBy(180);
+					view.refreshJmol();
+					view.repaint();
+				}
+			}
+		});
+		add(mi);
+
+		s = MDView.getInternationalText("Rotate90DegreesCW");
+		mi = new JMenuItem(s != null ? s : "<html>Rotate 90&#176; CW</html>");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (view.selectedComponent instanceof Molecule) {
+					Molecule mol = (Molecule) view.selectedComponent;
+					mol.rotateBy(90);
+					view.refreshJmol();
+					view.repaint();
+				}
+			}
+		});
+		add(mi);
+
+		s = MDView.getInternationalText("Rotate90DegreesCCW");
+		mi = new JMenuItem(s != null ? s : "<html>Rotate 90&#176; CCW</html>");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (view.selectedComponent instanceof Molecule) {
+					Molecule mol = (Molecule) view.selectedComponent;
+					mol.rotateBy(-90);
+					view.refreshJmol();
+					view.repaint();
+				}
+			}
+		});
+		add(mi);
+
+		s = MDView.getInternationalText("FlipHorizontal");
+		mi = new JMenuItem(s != null ? s : "Flip Horizontal");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (view.selectedComponent instanceof Molecule) {
+					Molecule mol = (Molecule) view.selectedComponent;
+					mol.rotateBy(-90);
+					view.refreshJmol();
+					view.repaint();
+				}
+			}
+		});
+		add(mi);
+
 		addSeparator();
 
 		s = MDView.getInternationalText("Properties");
