@@ -166,6 +166,7 @@ public abstract class AtomicModel extends MDModel {
 	private ThermalExcitor thermalExcitor;
 	private ThermalDeexcitor thermalDeexcitor;
 	private PhotonicExcitor photonicExcitor;
+	private SpontaneousEmission spontaneousEmission;
 	private ThreeBodyRecombination threeBodyRecombination;
 
 	/* analysis tools */
@@ -202,6 +203,7 @@ public abstract class AtomicModel extends MDModel {
 			photonHitAtom();
 			thermallyExciteAtoms();
 			thermallyDeexciteAtoms();
+			spontaneousEmission();
 		}
 
 		public String getName() {
@@ -2321,6 +2323,8 @@ public abstract class AtomicModel extends MDModel {
 
 	/* thermal excitation */
 	private void thermallyExciteAtoms() {
+		if (thermalExcitor == null)
+			thermalExcitor = new ThermalExcitor(this);
 		double rxi, ryi, rxij, ryij, rijsq, sig;
 		for (int i = 0; i < numberOfAtoms - 1; i++) {
 			rxi = atom[i].rx;
@@ -2333,8 +2337,6 @@ public abstract class AtomicModel extends MDModel {
 					sig = 0.5 * (atom[i].sigma + atom[j].sigma);
 					sig *= sig;
 					if (rijsq < sig) {
-						if (thermalExcitor == null)
-							thermalExcitor = new ThermalExcitor(AtomicModel.this);
 						thermalExcitor.excite(atom[i], atom[j]);
 					}
 				}
@@ -2344,7 +2346,9 @@ public abstract class AtomicModel extends MDModel {
 
 	/* collisional de-excitation */
 	private void thermallyDeexciteAtoms() {
-		double rxi, ryi, rxij, ryij, rijsq, sig;
+		if (thermalDeexcitor == null)
+			thermalDeexcitor = new ThermalDeexcitor(this);
+		double sig;
 		for (int i = 0; i < numberOfAtoms - 1; i++) {
 			rxi = atom[i].rx;
 			ryi = atom[i].ry;
@@ -2357,8 +2361,6 @@ public abstract class AtomicModel extends MDModel {
 					sig = 0.55 * (atom[i].sigma + atom[j].sigma);
 					sig *= sig;
 					if (rijsq < sig) {
-						if (thermalDeexcitor == null)
-							thermalDeexcitor = new ThermalDeexcitor(AtomicModel.this);
 						Photon p = thermalDeexcitor.deexcite(atom[i], atom[j]);
 						if (p != null) {
 							p.setModel(this);
@@ -2379,6 +2381,25 @@ public abstract class AtomicModel extends MDModel {
 						}
 					}
 				}
+			}
+		}
+	}
+
+	private void spontaneousEmission() {
+		if (spontaneousEmission == null)
+			spontaneousEmission = new SpontaneousEmission(this);
+		for (int i = 0; i < numberOfAtoms; i++) {
+			Photon p = spontaneousEmission.emit(atom[i]);
+			if (p != null) {
+				p.setModel(this);
+				p.setAngle((float) ((-1 + 2 * Math.random()) * Math.PI));
+				double x = atom[i].sigma * 0.51 * Math.cos(p.getAngle());
+				double y = atom[i].sigma * 0.51 * Math.sin(p.getAngle());
+				p.setX(p.getX() + (float) x);
+				p.setY(p.getY() + (float) y);
+				addPhoton(p);
+				// notifyModelListeners(new ModelEvent(this, "Photon emitted", null, p));
+				// postone to be handled by RectangularBoundary when the photon exits
 			}
 		}
 	}

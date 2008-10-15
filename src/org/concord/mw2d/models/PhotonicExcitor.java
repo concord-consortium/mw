@@ -39,14 +39,7 @@ class PhotonicExcitor {
 	Photon interact(Photon photon, Atom atom) {
 		this.photon = photon;
 		this.atom = atom;
-		float prob;
-		try {
-			prob = model.quantumRule.getProbability(QuantumRule.STIMULATED_EMISSION);
-		}
-		catch (Exception e) {
-			prob = 0.5f;
-		}
-		if (Math.random() < prob) {
+		if (Math.random() < model.quantumRule.getProbability(QuantumRule.STIMULATED_EMISSION)) {
 			float preciseEnergy = stimulatedEmission();
 			if (preciseEnergy > 0) {
 				Photon p2 = new Photon(photon);

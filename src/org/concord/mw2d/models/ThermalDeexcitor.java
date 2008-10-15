@@ -96,13 +96,13 @@ class ThermalDeexcitor {
 	private Photon deexcite(Electron e) {
 
 		int m = getIndexOfEnergyLevel(e);
-		
+
 		if (m == 0)
 			return null; // electron already in the ground state
 
 		if (!e.readyToGo(model.getModelTime())) // the electron is just excited
 			return null;
-		
+
 		electron = e;
 
 		// assume that the probability for the electron to transition to any lower state is equal
@@ -123,14 +123,7 @@ class ThermalDeexcitor {
 				e.setEnergyLevel(level);
 
 				/* emit a photon */
-				float rtProbability = 0.5f;
-				try {
-					rtProbability = model.quantumRule.getProbability(QuantumRule.RADIATIONLESS_TRANSITION);
-				}
-				catch (Exception ex) {
-					rtProbability = 0.5f;
-				}
-				if (r2 > rtProbability)
+				if (r2 > model.quantumRule.getProbability(QuantumRule.RADIATIONLESS_TRANSITION))
 					return new Photon((float) a.rx, (float) a.ry, -excess / MDModel.PLANCK_CONSTANT);
 
 				/* the excess energy is converted into the kinetic energy of the atoms */

@@ -89,7 +89,7 @@ public class Electron {
 		// if the electron is ionized, give it the longest lifetime before it can be recombined
 		if (energyLevel == null)
 			return t - enterStateTime >= EnergyLevel.LONG_LIFETIME;
-		return t - enterStateTime >= energyLevel.getLifetime();
+		return t - enterStateTime >= (Math.random() + 0.5) * energyLevel.getLifetime();
 	}
 
 	/**

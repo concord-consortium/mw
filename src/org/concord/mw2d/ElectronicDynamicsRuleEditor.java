@@ -158,22 +158,11 @@ class ElectronicDynamicsRuleEditor extends JPanel {
 
 		final QuantumRule rule = model.getQuantumRule();
 
-		float x;
-		try {
-			x = rule.getProbability(QuantumRule.RADIATIONLESS_TRANSITION);
-		}
-		catch (Exception e) {
-			x = 0.5f;
-		}
+		float x = rule.getProbability(QuantumRule.RADIATIONLESS_TRANSITION);
 		pieChart1.setPercent(0, 1.0f - x);
 		pieChart1.setPercent(1, x);
 
-		try {
-			x = rule.getProbability(QuantumRule.STIMULATED_EMISSION);
-		}
-		catch (Exception e) {
-			x = 0.5f;
-		}
+		x = rule.getProbability(QuantumRule.STIMULATED_EMISSION);
 		pieChart2.setPercent(0, 1.0f - x);
 		pieChart2.setPercent(1, x);
 
