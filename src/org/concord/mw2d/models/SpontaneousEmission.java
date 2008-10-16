@@ -34,6 +34,8 @@ class SpontaneousEmission {
 	Photon emit(Atom atom) {
 
 		Electron e = atom.getElectron(0);
+		if (e == null)
+			return null;
 		ElectronicStructure es = model.getElement(atom.id).getElectronicStructure();
 		int m = es.indexOf(e.getEnergyLevel());
 		if (m == 0)
