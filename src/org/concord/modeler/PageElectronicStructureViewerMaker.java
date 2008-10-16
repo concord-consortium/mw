@@ -322,7 +322,7 @@ class PageElectronicStructureViewerMaker extends ComponentMaker {
 		// row 5
 		s = Modeler.getInternationalText("EnergyLowerBound");
 		p.add(new JLabel(s != null ? s : "Lower bound of energy", SwingConstants.LEFT));
-		lowerBoundField = new FloatNumberTextField(-1.0f, -20, -1.0f);
+		lowerBoundField = new FloatNumberTextField(-1.0f, -100, -1.0f);
 		lowerBoundField.setToolTipText("Type in the lower bound of energy (in eV).");
 		lowerBoundField.addActionListener(okListener);
 		p.add(lowerBoundField);
