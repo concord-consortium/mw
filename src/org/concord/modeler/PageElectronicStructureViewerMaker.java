@@ -115,6 +115,7 @@ class PageElectronicStructureViewerMaker extends ComponentMaker {
 		}
 		pageElectronicStructureViewer.removeAllParameterChangeListeners();
 		pageElectronicStructureViewer.addParameterChangeListener((MolecularModel) m);
+		((MolecularModel) m).addUpdateListener(pageElectronicStructureViewer);
 		pageElectronicStructureViewer.setUpperBound(upperBoundField.getValue());
 		pageElectronicStructureViewer.setLowerBound(lowerBoundField.getValue());
 		if (pageElectronicStructureViewer.getUpperBound() <= pageElectronicStructureViewer.getLowerBound()) {
