@@ -2450,6 +2450,8 @@ public abstract class AtomicModel extends MDModel {
 		if (spontaneousEmission == null)
 			spontaneousEmission = new SpontaneousEmission(this);
 		for (int i = 0; i < numberOfAtoms; i++) {
+			if (!atom[i].isExcitable())
+				continue;
 			Photon p = spontaneousEmission.emit(atom[i]);
 			if (p != null) {
 				p.setModel(this);

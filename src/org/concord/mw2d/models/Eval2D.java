@@ -2618,7 +2618,7 @@ class Eval2D extends AbstractEval {
 				for (int k = 1; k < 5; k++)
 					x[k] *= IR_CONVERTER;
 				Shape shape = new Rectangle2D.Float(x[1], x[2], x[3], x[4]);
-				return "" + model.getTemperature((byte) x[0], shape);
+				return "" + model.getTemperature((byte) Math.round(x[0]), shape);
 			}
 			break;
 		case 4:
@@ -2627,9 +2627,16 @@ class Eval2D extends AbstractEval {
 				for (int k = 1; k < 4; k++)
 					x[k] *= IR_CONVERTER;
 				Shape shape = new Ellipse2D.Float(x[1] - x[3], x[2] - x[3], x[3] * 2, x[3] * 2);
-				return "" + model.getTemperature((byte) x[0], shape);
+				return "" + model.getTemperature((byte) Math.round(x[0]), shape);
 			}
 			break;
+		case 1:
+			double z = parseMathExpression(t[0]);
+			if (Double.isNaN(z)) {
+				out(ScriptEvent.FAILED, "Cannot parse : " + t[0]);
+				return null;
+			}
+			return "" + model.getTemperature((byte) Math.round(z), null);
 		default:
 			out(ScriptEvent.FAILED, "argument error: " + clause);
 			return null;

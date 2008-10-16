@@ -114,7 +114,7 @@ class QuantumDynamicsRuleEditor extends JPanel {
 
 		pieChart1 = new PieChart(2);
 		pieChart1.setText(0, "1 - Spontaneous emission.");
-		pieChart1.setText(1, "2 - Radiationless transition.");
+		pieChart1.setText(1, "2 - Radiationless transition (only through collision).");
 		pieChart1.setColor(0, Color.red);
 		pieChart1.setColor(1, Color.blue);
 		panel.add(pieChart1, BorderLayout.CENTER);
