@@ -41,6 +41,7 @@ class EnergyLevelView implements Comparable {
 	private Rectangle rect;
 	private int cx, cy;
 	private List<ElectronView> electronViewList;
+	private static int electronViewMargin = 5;
 
 	EnergyLevelView(EnergyLevel energyLevel) {
 		this.energyLevel = energyLevel;
@@ -60,6 +61,10 @@ class EnergyLevelView implements Comparable {
 		cx = x + w / 2;
 		cy = y + h / 2;
 		setElectronPositions();
+	}
+
+	static int getElectronViewMargin() {
+		return electronViewMargin;
 	}
 
 	int getWidth() {
@@ -140,11 +145,21 @@ class EnergyLevelView implements Comparable {
 
 	private void setElectronPositions() {
 		int n = electronViewList == null ? 0 : electronViewList.size();
-		if (n > 0 && n <= rect.width / (2 * ElectronView.getRadius())) {
+		if (n == 0)
+			return;
+		if (n <= getMax()) {
 			int x0 = cx - ElectronView.getRadius() * n;
 			synchronized (electronViewList) {
 				for (int i = 0; i < n; i++) {
 					electronViewList.get(i).setLocation(x0 + ElectronView.getRadius() * 2 * i,
+							cy - ElectronView.getRadius());
+				}
+			}
+		}
+		else {
+			synchronized (electronViewList) {
+				for (int i = 0; i < n; i++) {
+					electronViewList.get(i).setLocation(rect.x + electronViewMargin + ElectronView.getRadius() * 2 * i,
 							cy - ElectronView.getRadius());
 				}
 			}
@@ -172,7 +187,7 @@ class EnergyLevelView implements Comparable {
 		if (n <= 0) {
 			// no electron
 		}
-		else if (n <= rect.width / (ElectronView.getRadius() * 2)) {
+		else if (n <= getMax()) {
 			synchronized (electronViewList) {
 				for (int i = 0; i < n; i++) {
 					electronViewList.get(i).draw(g);
@@ -184,6 +199,10 @@ class EnergyLevelView implements Comparable {
 			g.drawString(n + "", cx - 2, cy - 2);
 		}
 
+	}
+
+	private int getMax() {
+		return (rect.width - electronViewMargin * 2) / (ElectronView.getRadius() * 2);
 	}
 
 	public int compareTo(Object o) {

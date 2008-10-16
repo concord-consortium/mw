@@ -89,6 +89,7 @@ public class PageElectronicStructureViewer extends ElectronicStructureViewer imp
 		ModelCanvas mc = page.getComponentPool().get(modelID);
 		if (mc != null) {
 			mc.getContainer().getModel().addModelListener(this);
+			mc.getContainer().getModel().addUpdateListener(this);
 			setElement(((MolecularModel) mc.getContainer().getModel()).getElement(getElementID()));
 			addParameterChangeListener(mc.getContainer().getModel());
 			scaleViewer();
