@@ -50,7 +50,7 @@ import org.concord.modeler.ui.PieChart;
 import org.concord.mw2d.models.MolecularModel;
 import org.concord.mw2d.models.QuantumRule;
 
-class ElectronicDynamicsRuleEditor extends JPanel {
+class QuantumDynamicsRuleEditor extends JPanel {
 
 	private MolecularModel model;
 	private PieChart pieChart1;
@@ -58,7 +58,7 @@ class ElectronicDynamicsRuleEditor extends JPanel {
 	private JComboBox whatIsComboBox;
 	private JCheckBox ionizationCheckBox;
 
-	ElectronicDynamicsRuleEditor() {
+	QuantumDynamicsRuleEditor() {
 
 		super(new BorderLayout());
 		setPreferredSize(new Dimension(400, 300));
@@ -169,7 +169,7 @@ class ElectronicDynamicsRuleEditor extends JPanel {
 		ModelerUtilities.selectWithoutNotifyingListeners(ionizationCheckBox, !model.getQuantumRule()
 				.isIonizationDisallowed());
 
-		final JDialog d = new JDialog(JOptionPane.getFrameForComponent(parent), "Edit Electronic Dynamics Rules", true);
+		final JDialog d = new JDialog(JOptionPane.getFrameForComponent(parent), "Edit Quantum Dynamics Rules", true);
 		d.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		d.getContentPane().add(this, BorderLayout.CENTER);
 

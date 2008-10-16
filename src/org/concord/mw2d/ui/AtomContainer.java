@@ -1127,7 +1127,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 		JMenuItem energyTSItem;
 		JMenuItem disableRecorderItem;
 		JMenuItem removeToolBarItem;
-		JMenuItem photonElectronMenuItem;
+		JMenuItem quantumdynamicsMenuItem;
 		JMenuItem setupFlowMenuItem;
 		JMenuItem enableFlowMenuItem;
 		JMenuItem eFieldLineMenuItem;
@@ -1149,10 +1149,10 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			JMenu menu = createEditMenu();
 			add(menu);
 
-			String s = getInternationalText("LightMatterInteraction");
-			JMenu subMenu = new JMenu(s != null ? s : "Light-Matter Interactions");
+			String s = getInternationalText("QuantumDynamics");
+			JMenu subMenu = new JMenu(s != null ? s : "Quantum Dynamics");
 			subMenu.setMnemonic(KeyEvent.VK_L);
-			subMenu.setIcon(new ImageIcon(getClass().getResource("images/LMI.gif")));
+			subMenu.setIcon(new ImageIcon(getClass().getResource("images/qm.gif")));
 			menu.add(subMenu);
 			enabledComponentsWhenEditable.add(subMenu);
 
@@ -1162,9 +1162,9 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			menuItem.setIcon(null);
 			subMenu.add(menuItem);
 
-			menuItem = new JMenuItem(model.getActions().get("Edit rules of electronic dynamics"));
-			s = getInternationalText("ElectronicDynamicsRules");
-			menuItem.setText((s != null ? s : "Rules of Electronic Dynamics") + "...");
+			menuItem = new JMenuItem(model.getActions().get("Edit quantum dynamics rules"));
+			s = getInternationalText("QuantumDynamicsRules");
+			menuItem.setText((s != null ? s : "Quantum Dynamics Rules") + "...");
 			menuItem.setIcon(null);
 			subMenu.add(menuItem);
 
@@ -1180,7 +1180,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			menu.setMnemonic(KeyEvent.VK_C);
 			menu.addMenuListener(new MenuListener() {
 				public void menuSelected(MenuEvent e) {
-					setMenuItemWithoutNotifyingListeners(photonElectronMenuItem, model.isSubatomicEnabled());
+					setMenuItemWithoutNotifyingListeners(quantumdynamicsMenuItem, model.isSubatomicEnabled());
 				}
 
 				public void menuCanceled(MenuEvent e) {
@@ -1191,14 +1191,14 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			});
 			add(menu);
 
-			s = getInternationalText("PhotonsAndElectrons");
-			photonElectronMenuItem = new JCheckBoxMenuItem(s != null ? s : "Photons and Electrons");
-			photonElectronMenuItem.addItemListener(new ItemListener() {
+			s = getInternationalText("QuantumDynamics");
+			quantumdynamicsMenuItem = new JCheckBoxMenuItem(s != null ? s : "Quantum Dynamics");
+			quantumdynamicsMenuItem.addItemListener(new ItemListener() {
 				public void itemStateChanged(ItemEvent e) {
 					model.setSubatomicEnabled(e.getStateChange() == ItemEvent.SELECTED);
 				}
 			});
-			menu.add(photonElectronMenuItem);
+			menu.add(quantumdynamicsMenuItem);
 
 			/* analysis menu */
 

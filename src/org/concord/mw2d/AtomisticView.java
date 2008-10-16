@@ -146,7 +146,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 	/* widgets */
 	ElementEditor elementEditor;
 	LightSourceEditor lightSourceEditor;
-	ElectronicDynamicsRuleEditor electronicDynamicsRuleEditor;
+	QuantumDynamicsRuleEditor quantumDynamicsRuleEditor;
 
 	private Action editElementAction;
 
@@ -557,9 +557,9 @@ public class AtomisticView extends MDView implements BondChangeListener {
 
 		a = new ModelAction(model, new Executable() {
 			public void execute() {
-				if (electronicDynamicsRuleEditor == null)
-					electronicDynamicsRuleEditor = new ElectronicDynamicsRuleEditor();
-				electronicDynamicsRuleEditor.createDialog(JOptionPane.getFrameForComponent(AtomisticView.this), model)
+				if (quantumDynamicsRuleEditor == null)
+					quantumDynamicsRuleEditor = new QuantumDynamicsRuleEditor();
+				quantumDynamicsRuleEditor.createDialog(JOptionPane.getFrameForComponent(AtomisticView.this), model)
 						.setVisible(true);
 			}
 		}) {
@@ -568,8 +568,8 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			}
 		};
 		a.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_D);
-		a.putValue(Action.NAME, "Rules of Electronic Dynamics");
-		a.putValue(Action.SHORT_DESCRIPTION, "Edit rules of electronic dynamics");
+		a.putValue(Action.NAME, "Quantum Dynamics Rules");
+		a.putValue(Action.SHORT_DESCRIPTION, "Edit quantum dynamics rules");
 		model.getActions().put(a.toString(), a);
 
 		if (!layerBasket.isEmpty()) {
