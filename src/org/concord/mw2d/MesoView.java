@@ -1505,69 +1505,66 @@ public class MesoView extends MDView {
 			break;
 
 		case SELE_ID:
-			boolean selectedComponentDraggable = false;
 			if (selectedComponent != null) {
 				if (!selectedComponent.isDraggable()) {
-					showActionTip("<html><font color=red>The selected component is not draggable!</font></html>", x, y);
+					showActionTip("<html><font color=red>The selected object is not draggable!</font></html>", x, y);
 				}
 				else {
-					selectedComponentDraggable = true;
-				}
-			}
-			if (isEditable() || selectedComponentDraggable) {
-				dragSelected = false;
-				if (selectedComponent instanceof GayBerneParticle) {
-					GayBerneParticle p = (GayBerneParticle) selectedComponent;
-					if (p.getRestraint() != null) {
-						int amp = (int) (400.0 / p.getRestraint().getK());
-						Vector2D loc = moveSpring(x, y, (int) p.getRestraint().getX0(), (int) p.getRestraint().getY0(),
-								0, amp);
-						if (loc == null)
-							return;
-						p.setRx(loc.getX());
-						p.setRy(loc.getY());
+					dragSelected = false;
+					if (selectedComponent instanceof GayBerneParticle) {
+						GayBerneParticle p = (GayBerneParticle) selectedComponent;
+						if (p.getRestraint() != null) {
+							int amp = (int) (400.0 / p.getRestraint().getK());
+							Vector2D loc = moveSpring(x, y, (int) p.getRestraint().getX0(), (int) p.getRestraint()
+									.getY0(), 0, amp);
+							if (loc == null)
+								return;
+							p.setRx(loc.getX());
+							p.setRy(loc.getY());
+						}
+						else {
+							p.setRx(x - clickPoint.x);
+							p.setRy(y - clickPoint.y);
+						}
+						boundary.setRBC(p, RectangularBoundary.TRANSLATION);
+						dragSelected = true;
 					}
-					else {
-						p.setRx(x - clickPoint.x);
-						p.setRy(y - clickPoint.y);
+					else if (selectedComponent instanceof ImageComponent) {
+						ImageComponent ic = (ImageComponent) selectedComponent;
+						ic.translateTo(x - clickPoint.x, y - clickPoint.y);
+						dragSelected = true;
+						moveHostTo(ic.getHost(), ic.getRx() + ic.getWidth() * 0.5, ic.getRy() + ic.getHeight() * 0.5);
 					}
-					boundary.setRBC(p, RectangularBoundary.TRANSLATION);
-					dragSelected = true;
-				}
-				else if (selectedComponent instanceof ImageComponent) {
-					ImageComponent ic = (ImageComponent) selectedComponent;
-					ic.translateTo(x - clickPoint.x, y - clickPoint.y);
-					dragSelected = true;
-					moveHostTo(ic.getHost(), ic.getRx() + ic.getWidth() * 0.5, ic.getRy() + ic.getHeight() * 0.5);
-				}
-				else if (selectedComponent instanceof TextBoxComponent) {
-					TextBoxComponent tb = (TextBoxComponent) selectedComponent;
-					tb.translateTo(x - clickPoint.x, y - clickPoint.y);
-					dragSelected = true;
-					if (tb.getAttachmentPosition() == TextBoxComponent.BOX_CENTER)
-						moveHostTo(tb.getHost(), tb.getRx() + 0.5 * tb.getWidth(), tb.getRy() + 0.5 * tb.getHeight());
-				}
-				else if (selectedComponent instanceof LineComponent) {
-					LineComponent lc = (LineComponent) selectedComponent;
-					lc.translateTo(x - clickPoint.x, y - clickPoint.y);
-					dragSelected = true;
-					moveHostTo(lc.getHost(), lc.getRx(), lc.getRy());
-				}
-				else if (selectedComponent instanceof RectangleComponent) {
-					RectangleComponent rc = (RectangleComponent) selectedComponent;
-					rc.translateTo(x - clickPoint.x, y - clickPoint.y);
-					dragSelected = true;
-					moveHostTo(rc.getHost(), rc.getRx(), rc.getRy());
-				}
-				else if (selectedComponent instanceof EllipseComponent) {
-					EllipseComponent ec = (EllipseComponent) selectedComponent;
-					ec.translateTo(x - clickPoint.x, y - clickPoint.y);
-					dragSelected = true;
-					moveHostTo(ec.getHost(), ec.getRx(), ec.getRy());
-				}
-				if (dragSelected) {
-					repaint();
-					setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+					else if (selectedComponent instanceof TextBoxComponent) {
+						TextBoxComponent tb = (TextBoxComponent) selectedComponent;
+						tb.translateTo(x - clickPoint.x, y - clickPoint.y);
+						dragSelected = true;
+						if (tb.getAttachmentPosition() == TextBoxComponent.BOX_CENTER)
+							moveHostTo(tb.getHost(), tb.getRx() + 0.5 * tb.getWidth(), tb.getRy() + 0.5
+									* tb.getHeight());
+					}
+					else if (selectedComponent instanceof LineComponent) {
+						LineComponent lc = (LineComponent) selectedComponent;
+						lc.translateTo(x - clickPoint.x, y - clickPoint.y);
+						dragSelected = true;
+						moveHostTo(lc.getHost(), lc.getRx(), lc.getRy());
+					}
+					else if (selectedComponent instanceof RectangleComponent) {
+						RectangleComponent rc = (RectangleComponent) selectedComponent;
+						rc.translateTo(x - clickPoint.x, y - clickPoint.y);
+						dragSelected = true;
+						moveHostTo(rc.getHost(), rc.getRx(), rc.getRy());
+					}
+					else if (selectedComponent instanceof EllipseComponent) {
+						EllipseComponent ec = (EllipseComponent) selectedComponent;
+						ec.translateTo(x - clickPoint.x, y - clickPoint.y);
+						dragSelected = true;
+						moveHostTo(ec.getHost(), ec.getRx(), ec.getRy());
+					}
+					if (dragSelected) {
+						repaint();
+						setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+					}
 				}
 			}
 			break;
@@ -1873,32 +1870,32 @@ public class MesoView extends MDView {
 		int keyID = e.getKeyCode();
 
 		if (selectedComponent != null) {
-			if (!selectedComponent.isDraggable()) {
-				showActionTip("<html><font color=red>The selected component is not nudgable!</font></html>", 10, 10);
+			if (!isEditable() && !selectedComponent.isDraggable()) {
+				showActionTip("<html><font color=red>The selected object is not nudgable!</font></html>", 10, 10);
 			}
-			if (isEditable() || selectedComponent.isDraggable()) {
+			else {
 				int dx = 0, dy = 0;
 				switch (keyID) {
 				case KeyEvent.VK_UP:
-					keyPressed = keyPressed | UP_PRESSED;
+					keyPressedCode = keyPressedCode | UP_PRESSED;
 					break;
 				case KeyEvent.VK_DOWN:
-					keyPressed = keyPressed | DOWN_PRESSED;
+					keyPressedCode = keyPressedCode | DOWN_PRESSED;
 					break;
 				case KeyEvent.VK_LEFT:
-					keyPressed = keyPressed | LEFT_PRESSED;
+					keyPressedCode = keyPressedCode | LEFT_PRESSED;
 					break;
 				case KeyEvent.VK_RIGHT:
-					keyPressed = keyPressed | RIGHT_PRESSED;
+					keyPressedCode = keyPressedCode | RIGHT_PRESSED;
 					break;
 				}
-				if ((keyPressed & UP_PRESSED) == UP_PRESSED)
+				if ((keyPressedCode & UP_PRESSED) == UP_PRESSED)
 					dy--;
-				if ((keyPressed & DOWN_PRESSED) == DOWN_PRESSED)
+				if ((keyPressedCode & DOWN_PRESSED) == DOWN_PRESSED)
 					dy++;
-				if ((keyPressed & LEFT_PRESSED) == LEFT_PRESSED)
+				if ((keyPressedCode & LEFT_PRESSED) == LEFT_PRESSED)
 					dx--;
-				if ((keyPressed & RIGHT_PRESSED) == RIGHT_PRESSED)
+				if ((keyPressedCode & RIGHT_PRESSED) == RIGHT_PRESSED)
 					dx++;
 				if (dx == 0 && dy == 0)
 					return;
