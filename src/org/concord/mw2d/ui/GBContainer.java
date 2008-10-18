@@ -207,7 +207,7 @@ public class GBContainer extends MDContainer {
 
 	private class MB extends SimulatorMenuBar {
 
-		JMenuItem energyTSItem, disableRecorderItem, removeToolBarItem, dragOnlyWhenEditingMenuItem;
+		private JMenuItem energyTSItem, disableRecorderItem, removeToolBarItem;
 
 		private void enableMovieMenuItems(boolean b) {
 			energyTSItem.setEnabled(b);

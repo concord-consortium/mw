@@ -1450,8 +1450,8 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 
 	JMenu createToolBarMenu(final JMenuItem removeToolBarItem) {
 
-		String s = getInternationalText("ToolBar");
-		JMenu menu = new JMenu(s != null ? s : "Toolbar");
+		String s = getInternationalText("Tools");
+		JMenu menu = new JMenu(s != null ? s : "Tools");
 		menu.setMnemonic(KeyEvent.VK_T);
 		menu.addMenuListener(new MenuListener() {
 			public void menuSelected(MenuEvent e) {
@@ -1465,8 +1465,8 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 			}
 		});
 
-		s = getInternationalText("AddAllButtons");
-		JMenuItem menuItem = new JMenuItem(s != null ? s : "Add All Buttons");
+		s = getInternationalText("AddAllTools");
+		JMenuItem menuItem = new JMenuItem(s != null ? s : "Add All Tools");
 		menuItem.setMnemonic(KeyEvent.VK_A);
 		menuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

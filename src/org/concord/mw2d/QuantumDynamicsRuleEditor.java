@@ -98,11 +98,14 @@ class QuantumDynamicsRuleEditor extends JPanel {
 		// create panel for photon-atom interaction
 
 		JPanel panel = new JPanel(new BorderLayout());
-		tabbedPane.addTab("Photon-Atom Interaction", panel);
+		String s = MDView.getInternationalText("PhotonAtomInteraction");
+		tabbedPane.addTab(s != null ? s : "Photon-Atom Interaction", panel);
 
 		pieChart2 = new PieChart(2);
-		pieChart2.setText(0, "1 - Absorption.");
-		pieChart2.setText(1, "2 - Stimulated emission.");
+		s = MDView.getInternationalText("Absorption");
+		pieChart2.setText(0, "1 - " + (s != null ? s : "Absorption") + ".");
+		s = MDView.getInternationalText("StimulatedEmission");
+		pieChart2.setText(1, "2 - " + (s != null ? s : "Stimulated emission") + ".");
 		pieChart2.setColor(0, Color.green);
 		pieChart2.setColor(1, Color.magenta);
 		panel.add(pieChart2, BorderLayout.CENTER);
@@ -110,20 +113,25 @@ class QuantumDynamicsRuleEditor extends JPanel {
 		// create panel for de-excitation
 
 		panel = new JPanel(new BorderLayout());
-		tabbedPane.addTab("De-excitation", panel);
+		s = MDView.getInternationalText("Deexcitation");
+		tabbedPane.addTab(s != null ? s : "De-excitation", panel);
 
 		pieChart1 = new PieChart(2);
-		pieChart1.setText(0, "1 - Spontaneous emission.");
-		pieChart1.setText(1, "2 - Radiationless transition (only through collision).");
+		s = MDView.getInternationalText("SpontaneousEmission");
+		pieChart1.setText(0, "1 - " + (s != null ? s : "Spontaneous emission") + ".");
+		s = MDView.getInternationalText("RadiationlessTransition");
+		pieChart1.setText(1, "2 - " + (s != null ? s : "Radiationless transition") + " (only through collision).");
 		pieChart1.setColor(0, Color.red);
 		pieChart1.setColor(1, Color.blue);
 		panel.add(pieChart1, BorderLayout.CENTER);
 
 		panel = new JPanel(new BorderLayout());
-		tabbedPane.addTab("Ionization", panel);
+		s = MDView.getInternationalText("Ionization");
+		tabbedPane.addTab(s != null ? s : "Ionization", panel);
 
 		JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		ionizationCheckBox = new JCheckBox("Allow ionization");
+		s = MDView.getInternationalText("AllowIonization");
+		ionizationCheckBox = new JCheckBox(s != null ? s : "Allow ionization");
 		ionizationCheckBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				JCheckBox cb = (JCheckBox) e.getSource();
@@ -134,7 +142,8 @@ class QuantumDynamicsRuleEditor extends JPanel {
 		panel.add(p, BorderLayout.NORTH);
 
 		panel = new JPanel(new BorderLayout());
-		tabbedPane.addTab("Electron Transfer", panel);
+		s = MDView.getInternationalText("ElectronTransfer");
+		tabbedPane.addTab(s != null ? s : "Electron Transfer", panel);
 
 	}
 
@@ -169,7 +178,9 @@ class QuantumDynamicsRuleEditor extends JPanel {
 		ModelerUtilities.selectWithoutNotifyingListeners(ionizationCheckBox, !model.getQuantumRule()
 				.isIonizationDisallowed());
 
-		final JDialog d = new JDialog(JOptionPane.getFrameForComponent(parent), "Edit Quantum Dynamics Rules", true);
+		String s = MDView.getInternationalText("QuantumDynamicsRules");
+		final JDialog d = new JDialog(JOptionPane.getFrameForComponent(parent), s != null ? s
+				: "Quantum Dynamics Rules", true);
 		d.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		d.getContentPane().add(this, BorderLayout.CENTER);
 
@@ -179,7 +190,8 @@ class QuantumDynamicsRuleEditor extends JPanel {
 		p.add(new JLabel("Explain:"));
 		p.add(whatIsComboBox);
 
-		JButton okButton = new JButton("OK");
+		s = MDView.getInternationalText("OKButton");
+		JButton okButton = new JButton(s != null ? s : "OK");
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				rule.setProbability(QuantumRule.RADIATIONLESS_TRANSITION, pieChart1.getPercent(1));
@@ -189,7 +201,8 @@ class QuantumDynamicsRuleEditor extends JPanel {
 			}
 		});
 
-		JButton cancelButton = new JButton("Cancel");
+		s = MDView.getInternationalText("CancelButton");
+		JButton cancelButton = new JButton(s != null ? s : "Cancel");
 		cancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				d.dispose();
