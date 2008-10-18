@@ -125,7 +125,6 @@ public abstract class MDView extends PrintableComponent {
 	final static int LEFT_PRESSED = 4;
 	final static int RIGHT_PRESSED = 8;
 	final static double ZERO = 0.000000001;
-	final static long MINIMUM_KEY_RESPONSE_INTERVAL = 20L;
 	final static long MINIMUM_MOUSE_DRAG_RESPONSE_INTERVAL = 20L;
 	final static int SPEED_RENDERING = 1;
 	final static int ANTIALIASING_OFF = 2;
@@ -174,7 +173,7 @@ public abstract class MDView extends PrintableComponent {
 	boolean readyToAdjustDistanceVector;
 	int indexOfSelectedMeasurement = -1;
 	boolean repaintBlocked;
-	int keyPressed;
+	int keyPressedCode;
 	long mouseHeldTime;
 	int mouseHeldX, mouseHeldY;
 	boolean popupMenuEnabled = true;
@@ -801,11 +800,11 @@ public abstract class MDView extends PrintableComponent {
 		accelerationFlavor.set(Color.red, ViewAttribute.THIN, 100);
 		forceFlavor.set(Color.magenta, ViewAttribute.THIN, 1);
 		pointHeater.reset();
-		resetKeyPressedFlag();
+		resetKeyPressedCode();
 	}
 
-	private void resetKeyPressedFlag() {
-		keyPressed = 0;
+	private void resetKeyPressedCode() {
+		keyPressedCode = 0;
 	}
 
 	/** remove all the objects in the view. */
@@ -2934,19 +2933,19 @@ public abstract class MDView extends PrintableComponent {
 		boolean b = false;
 		switch (e.getKeyCode()) {
 		case KeyEvent.VK_UP:
-			keyPressed = keyPressed ^ UP_PRESSED;
+			keyPressedCode = keyPressedCode ^ UP_PRESSED;
 			b = true;
 			break;
 		case KeyEvent.VK_DOWN:
-			keyPressed = keyPressed ^ DOWN_PRESSED;
+			keyPressedCode = keyPressedCode ^ DOWN_PRESSED;
 			b = true;
 			break;
 		case KeyEvent.VK_LEFT:
-			keyPressed = keyPressed ^ LEFT_PRESSED;
+			keyPressedCode = keyPressedCode ^ LEFT_PRESSED;
 			b = true;
 			break;
 		case KeyEvent.VK_RIGHT:
-			keyPressed = keyPressed ^ RIGHT_PRESSED;
+			keyPressedCode = keyPressedCode ^ RIGHT_PRESSED;
 			b = true;
 			break;
 		}
