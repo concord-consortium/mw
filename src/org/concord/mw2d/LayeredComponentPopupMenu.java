@@ -487,7 +487,7 @@ class LayeredComponentPopupMenu extends JPopupMenu {
 		add(mi);
 
 		s = MDView.getInternationalText("DraggableByUserInNonEditingMode");
-		miDraggable = new JCheckBoxMenuItem("Draggable by User in Non-Editing Mode");
+		miDraggable = new JCheckBoxMenuItem(s != null ? s : "Draggable by User in Non-Editing Mode");
 		miDraggable.setIcon(IconPool.getIcon("user draggable"));
 		miDraggable.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
