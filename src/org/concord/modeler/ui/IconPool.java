@@ -223,6 +223,9 @@ public final class IconPool {
 		icon = new ImageIcon(c.getResource("images/angularbondcursor.gif"));
 		map.put("angular bond cursor", icon);
 
+		icon = new ImageIcon(c.getResource("images/userdraggable.gif"));
+		map.put("user draggable", icon);
+
 	}
 
 	public static Icon getIcon(String name) {

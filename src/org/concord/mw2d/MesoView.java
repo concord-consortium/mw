@@ -1505,7 +1505,7 @@ public class MesoView extends MDView {
 			break;
 
 		case SELE_ID:
-			if (isEditable() || !dragObjectOnlyWhenEditing) {
+			if (isEditable() || (selectedComponent != null && selectedComponent.isDraggable())) {
 				dragSelected = false;
 				if (selectedComponent instanceof GayBerneParticle) {
 					GayBerneParticle p = (GayBerneParticle) selectedComponent;
@@ -1864,52 +1864,50 @@ public class MesoView extends MDView {
 		int keyID = e.getKeyCode();
 
 		if (selectedComponent != null) {
-
-			int dx = 0, dy = 0;
-			switch (keyID) {
-			case KeyEvent.VK_UP:
-				keyPressed = keyPressed | UP_PRESSED;
-				break;
-			case KeyEvent.VK_DOWN:
-				keyPressed = keyPressed | DOWN_PRESSED;
-				break;
-			case KeyEvent.VK_LEFT:
-				keyPressed = keyPressed | LEFT_PRESSED;
-				break;
-			case KeyEvent.VK_RIGHT:
-				keyPressed = keyPressed | RIGHT_PRESSED;
-				break;
-			}
-			if ((keyPressed & UP_PRESSED) == UP_PRESSED)
-				dy--;
-			if ((keyPressed & DOWN_PRESSED) == DOWN_PRESSED)
-				dy++;
-			if ((keyPressed & LEFT_PRESSED) == LEFT_PRESSED)
-				dx--;
-			if ((keyPressed & RIGHT_PRESSED) == RIGHT_PRESSED)
-				dx++;
-			if (dx == 0 && dy == 0)
-				return;
-			model.notifyChange();
-
-			if (selectedComponent instanceof GayBerneParticle) {
-				GayBerneParticle p = (GayBerneParticle) selectedComponent;
-				p.storeCurrentState();
-				p.translateBy(dx, dy);
-				boundary.setRBC(p, RectangularBoundary.TRANSLATION);
-				finalizeLocation(p);
-			}
-			else if (selectedComponent instanceof Layered) {
-				selectedComponent.storeCurrentState();
-				((Layered) selectedComponent).translateBy(dx, dy);
+			if (isEditable() || selectedComponent.isDraggable()) {
+				int dx = 0, dy = 0;
+				switch (keyID) {
+				case KeyEvent.VK_UP:
+					keyPressed = keyPressed | UP_PRESSED;
+					break;
+				case KeyEvent.VK_DOWN:
+					keyPressed = keyPressed | DOWN_PRESSED;
+					break;
+				case KeyEvent.VK_LEFT:
+					keyPressed = keyPressed | LEFT_PRESSED;
+					break;
+				case KeyEvent.VK_RIGHT:
+					keyPressed = keyPressed | RIGHT_PRESSED;
+					break;
+				}
+				if ((keyPressed & UP_PRESSED) == UP_PRESSED)
+					dy--;
+				if ((keyPressed & DOWN_PRESSED) == DOWN_PRESSED)
+					dy++;
+				if ((keyPressed & LEFT_PRESSED) == LEFT_PRESSED)
+					dx--;
+				if ((keyPressed & RIGHT_PRESSED) == RIGHT_PRESSED)
+					dx++;
+				if (dx == 0 && dy == 0)
+					return;
+				model.notifyChange();
+				if (selectedComponent instanceof GayBerneParticle) {
+					GayBerneParticle p = (GayBerneParticle) selectedComponent;
+					p.storeCurrentState();
+					p.translateBy(dx, dy);
+					boundary.setRBC(p, RectangularBoundary.TRANSLATION);
+					finalizeLocation(p);
+				}
+				else if (selectedComponent instanceof Layered) {
+					selectedComponent.storeCurrentState();
+					((Layered) selectedComponent).translateBy(dx, dy);
+				}
 			}
 
 		}
 		else {
-
 			boolean keyIsRight = false;
 			UserField uf = null;
-
 			for (int i = 0; i < nParticle; i++) {
 				uf = gb[i].getUserField();
 				if (uf != null) {

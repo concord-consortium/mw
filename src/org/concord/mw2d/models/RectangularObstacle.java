@@ -139,6 +139,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 	private transient boolean selected;
 	private boolean marked;
 	private boolean visible = true;
+	private boolean draggable = true;
 	private boolean bounceAtBoundary = true;
 	private boolean partOfSystem = true;
 
@@ -988,6 +989,14 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 
 	public synchronized boolean isVisible() {
 		return visible;
+	}
+
+	public void setDraggable(boolean b) {
+		draggable = b;
+	}
+
+	public boolean isDraggable() {
+		return draggable;
 	}
 
 	void setGrabRects() {

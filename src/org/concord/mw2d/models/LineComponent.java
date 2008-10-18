@@ -40,6 +40,8 @@ public class LineComponent extends AbstractLine implements ModelComponent, Layer
 	private boolean stateStored;
 	private ModelComponent host;
 	private Vector2d axis, velo;
+	private boolean visible = true;
+	private boolean draggable = true;
 
 	public LineComponent() {
 		super();
@@ -136,10 +138,19 @@ public class LineComponent extends AbstractLine implements ModelComponent, Layer
 	}
 
 	public void setVisible(boolean b) {
+		visible = b;
 	}
 
 	public boolean isVisible() {
-		return true;
+		return visible;
+	}
+
+	public void setDraggable(boolean b) {
+		draggable = b;
+	}
+
+	public boolean isDraggable() {
+		return draggable;
 	}
 
 	/** set a model component this line attaches to. */

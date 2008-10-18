@@ -36,6 +36,8 @@ public class TextBoxComponent extends TextContainer implements ModelComponent, L
 	private double savedX = -1.0, savedY = -1.0;
 	private boolean stateStored;
 	private ModelComponent host;
+	private boolean visible = true;
+	private boolean draggable = true;
 
 	public TextBoxComponent() {
 		super("");
@@ -113,11 +115,22 @@ public class TextBoxComponent extends TextContainer implements ModelComponent, L
 		host = null;
 	}
 
+	/** TODO */
 	public void setVisible(boolean b) {
+		visible = b;
 	}
 
+	/** TODO */
 	public boolean isVisible() {
-		return true;
+		return visible;
+	}
+
+	public void setDraggable(boolean b) {
+		draggable = b;
+	}
+
+	public boolean isDraggable() {
+		return draggable;
 	}
 
 	/** set a model component this text box should mount on. */

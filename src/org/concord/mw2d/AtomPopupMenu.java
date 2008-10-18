@@ -24,6 +24,8 @@ import java.awt.EventQueue;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 
 import javax.swing.Action;
@@ -31,6 +33,7 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
+import org.concord.modeler.ModelerUtilities;
 import org.concord.modeler.process.Executable;
 import org.concord.modeler.ui.IconPool;
 import org.concord.mw2d.models.Atom;
@@ -40,6 +43,7 @@ class AtomPopupMenu extends JPopupMenu {
 
 	private AtomisticView view;
 	private JMenuItem miSteer, miUnsteer, miTraj, miRMean, miFMean;
+	private JMenuItem miDraggable;
 	private Action releaseAction;
 
 	void setCoor(int x, int y) {
@@ -56,6 +60,7 @@ class AtomPopupMenu extends JPopupMenu {
 					miTraj.setEnabled(!view.model.getRecorderDisabled());
 					miRMean.setEnabled(miTraj.isEnabled());
 					miFMean.setEnabled(miTraj.isEnabled());
+					ModelerUtilities.selectWithoutNotifyingListeners(miDraggable, a.isDraggable());
 				}
 			}
 		});
@@ -338,6 +343,22 @@ class AtomPopupMenu extends JPopupMenu {
 			}
 		});
 		add(miFMean);
+		addSeparator();
+
+		s = MDView.getInternationalText("DraggableByUserInNonEditingMode");
+		miDraggable = new JCheckBoxMenuItem("Draggable by User in Non-Editing Mode");
+		miDraggable.setIcon(IconPool.getIcon("user draggable"));
+		miDraggable.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if (view.selectedComponent instanceof Atom) {
+					Atom a = (Atom) view.selectedComponent;
+					a.setDraggable(a.isDraggable());
+					view.repaint();
+					view.model.notifyChange();
+				}
+			}
+		});
+		add(miDraggable);
 
 		pack();
 

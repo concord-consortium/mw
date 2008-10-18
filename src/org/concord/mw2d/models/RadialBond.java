@@ -493,6 +493,15 @@ public class RadialBond implements ModelComponent {
 		return visible;
 	}
 
+	/** a radial bond is always not draggable, calling this method has no effect. */
+	public void setDraggable(boolean b) {
+	}
+
+	/** a radial bond is always not draggable. This method always returns false. */
+	public boolean isDraggable() {
+		return false;
+	}
+
 	/** return the chemical energy stored in this bond * */
 	public double getChemicalEnergy() {
 		return chemicalEnergy;

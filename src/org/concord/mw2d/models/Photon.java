@@ -52,6 +52,7 @@ public class Photon implements ModelComponent {
 	private boolean marked;
 	private boolean visible;
 	private boolean blinking;
+	private boolean draggable = true;
 	private Color color = Color.black;
 	private Stroke stroke = ViewAttribute.THIN;
 	private boolean stateStored;
@@ -107,6 +108,14 @@ public class Photon implements ModelComponent {
 
 	public boolean isVisible() {
 		return visible;
+	}
+
+	public void setDraggable(boolean b) {
+		draggable = b;
+	}
+
+	public boolean isDraggable() {
+		return draggable;
 	}
 
 	public void setBlinking(boolean b) {

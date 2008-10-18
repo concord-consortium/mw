@@ -82,6 +82,7 @@ public class RectangularBoundary extends Rectangle2D.Double implements Boundary 
 	private int magnifier = 5;
 	private transient boolean blinking;
 	private boolean visible = true;
+	private boolean draggable = true;
 
 	private MDModel model;
 	private ObjectQueue queue;
@@ -168,6 +169,14 @@ public class RectangularBoundary extends Rectangle2D.Double implements Boundary 
 	/** TODO */
 	public synchronized boolean isVisible() {
 		return visible;
+	}
+
+	public void setDraggable(boolean b) {
+		draggable = b;
+	}
+
+	public boolean isDraggable() {
+		return draggable;
 	}
 
 	public void setModel(MDModel model) {

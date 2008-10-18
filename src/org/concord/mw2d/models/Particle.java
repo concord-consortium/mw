@@ -166,6 +166,8 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 
 	boolean visible = true;
 
+	boolean draggable = true;
+
 	boolean movable = true;
 
 	/* if the trajectory of the center of mass of this particle is shown */
@@ -346,6 +348,14 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 
 	public boolean isVisible() {
 		return visible;
+	}
+
+	public void setDraggable(boolean b) {
+		draggable = b;
+	}
+
+	public boolean isDraggable() {
+		return draggable;
 	}
 
 	public void setMovable(boolean b) {
