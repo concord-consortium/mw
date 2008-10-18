@@ -4723,7 +4723,16 @@ public class AtomisticView extends MDView implements BondChangeListener {
 
 		case SELE_ID:
 
-			if (isEditable() || (selectedComponent != null && selectedComponent.isDraggable())) {
+			boolean selectedComponentDraggable = false;
+			if (selectedComponent != null) {
+				if (!selectedComponent.isDraggable()) {
+					showActionTip("<html><font color=red>The selected component is not draggable!</font></html>", x, y);
+				}
+				else {
+					selectedComponentDraggable = true;
+				}
+			}
+			if (isEditable() || selectedComponentDraggable) {
 				if (selectedComponent instanceof RectangularObstacle) {
 					if (obsRectSelected > RectangularObstacle.INSIDE) {
 						RectangularObstacle r2d = (RectangularObstacle) selectedComponent;
@@ -5620,6 +5629,9 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			return;
 
 		if (selectedComponent != null) {
+			if (!selectedComponent.isDraggable()) {
+				showActionTip("<html><font color=red>The selected component is not nudgable!</font></html>", 10, 10);
+			}
 			if (isEditable() || selectedComponent.isDraggable()) {
 				if (selectedComponent instanceof Atom) {
 					Atom a = (Atom) selectedComponent;

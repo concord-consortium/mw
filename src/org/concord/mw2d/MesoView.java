@@ -1505,7 +1505,16 @@ public class MesoView extends MDView {
 			break;
 
 		case SELE_ID:
-			if (isEditable() || (selectedComponent != null && selectedComponent.isDraggable())) {
+			boolean selectedComponentDraggable = false;
+			if (selectedComponent != null) {
+				if (!selectedComponent.isDraggable()) {
+					showActionTip("<html><font color=red>The selected component is not draggable!</font></html>", x, y);
+				}
+				else {
+					selectedComponentDraggable = true;
+				}
+			}
+			if (isEditable() || selectedComponentDraggable) {
 				dragSelected = false;
 				if (selectedComponent instanceof GayBerneParticle) {
 					GayBerneParticle p = (GayBerneParticle) selectedComponent;
@@ -1864,6 +1873,9 @@ public class MesoView extends MDView {
 		int keyID = e.getKeyCode();
 
 		if (selectedComponent != null) {
+			if (!selectedComponent.isDraggable()) {
+				showActionTip("<html><font color=red>The selected component is not nudgable!</font></html>", 10, 10);
+			}
 			if (isEditable() || selectedComponent.isDraggable()) {
 				int dx = 0, dy = 0;
 				switch (keyID) {

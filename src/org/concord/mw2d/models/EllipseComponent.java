@@ -265,6 +265,8 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 				}
 			}
 			vectorField = e.getVectorField();
+			draggable = e.draggable;
+			visible = e.visible;
 		}
 
 		public void setVectorField(VectorField vectorField) {
