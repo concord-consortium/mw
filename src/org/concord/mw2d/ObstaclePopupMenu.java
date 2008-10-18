@@ -23,9 +23,14 @@ package org.concord.mw2d;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
+import org.concord.modeler.ModelerUtilities;
 import org.concord.modeler.ui.IconPool;
 import org.concord.mw2d.models.RectangularObstacle;
 import org.concord.mw2d.models.UserField;
@@ -33,7 +38,7 @@ import org.concord.mw2d.models.UserField;
 class ObstaclePopupMenu extends JPopupMenu {
 
 	private AtomisticView view;
-	private JMenuItem miSteer, miUnsteer;
+	private JMenuItem miSteer, miUnsteer, miDraggable;
 
 	void setCoor(int x, int y) {
 		EventQueue.invokeLater(new Runnable() {
@@ -45,6 +50,10 @@ class ObstaclePopupMenu extends JPopupMenu {
 					// miUnsteer.setEnabled(model.getRecorderDisabled() && o.getUserField()!=null);
 					miSteer.setEnabled(o.getUserField() == null);
 					miUnsteer.setEnabled(o.getUserField() != null);
+					if (view.selectedComponent instanceof RectangularObstacle) {
+						ModelerUtilities
+								.setWithoutNotifyingListeners(miDraggable, view.selectedComponent.isDraggable());
+					}
 				}
 			}
 		});
@@ -104,6 +113,20 @@ class ObstaclePopupMenu extends JPopupMenu {
 			}
 		});
 		add(mi);
+
+		s = MDView.getInternationalText("DraggableByUserInNonEditingMode");
+		miDraggable = new JCheckBoxMenuItem("Draggable by User in Non-Editing Mode");
+		miDraggable.setIcon(IconPool.getIcon("user draggable"));
+		miDraggable.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if (view.selectedComponent instanceof RectangularObstacle) {
+					view.selectedComponent.setDraggable(e.getStateChange() == ItemEvent.SELECTED);
+					view.repaint();
+					view.getModel().notifyChange();
+				}
+			}
+		});
+		add(miDraggable);
 
 		pack();
 

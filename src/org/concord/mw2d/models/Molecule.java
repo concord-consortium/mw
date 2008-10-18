@@ -283,10 +283,15 @@ public class Molecule implements ModelComponent, Rotatable {
 			x.setVisible(b);
 	}
 
+	/** if one of its atoms is visible, then the entire molecule is considered visible. */
 	public boolean isVisible() {
 		if (atoms.isEmpty())
 			return false;
-		return atoms.get(0).isVisible();
+		for (Atom a : atoms) {
+			if (!a.isVisible())
+				return false;
+		}
+		return true;
 	}
 
 	public void setDraggable(boolean b) {
@@ -294,10 +299,15 @@ public class Molecule implements ModelComponent, Rotatable {
 			a.setDraggable(b);
 	}
 
+	/** if one of its atoms is draggable, then the entire molecule is considered visible. */
 	public boolean isDraggable() {
 		if (atoms.isEmpty())
 			return false;
-		return atoms.get(0).isDraggable();
+		for (Atom a : atoms) {
+			if (!a.isDraggable())
+				return false;
+		}
+		return true;
 	}
 
 	public void setTorque(MolecularTorque mt) {

@@ -184,30 +184,17 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 		setRect(x, y, w, h);
 	}
 
-	public RectangularObstacle(double x, double y, double w, double h, FillMode fm) {
-		this(x, y, w, h, 0, 0, 0, 0, null, 1, 0, HEAVY + HEAVY, false, false, false, false, true, true, false, fm);
-	}
-
 	public RectangularObstacle(double x, double y, double w, double h, double vx, double vy, float hx, float hy,
-			UserField userField, float elasticity, float friction, double density, boolean westProbe,
-			boolean northProbe, boolean eastProbe, boolean southProbe, boolean bounced, boolean visible,
-			boolean roundCornered, FillMode fm) {
+			boolean westProbe, boolean northProbe, boolean eastProbe, boolean southProbe, boolean roundCornered) {
 		this(x, y, w, h);
-		setFillMode(fm);
 		this.vx = vx;
 		this.vy = vy;
 		this.hx = hx;
 		this.hy = hy;
-		this.userField = userField;
-		this.density = density;
-		this.elasticity = elasticity;
-		this.friction = friction;
-		this.visible = visible;
 		this.westProbe = westProbe;
 		this.northProbe = northProbe;
 		this.eastProbe = eastProbe;
 		this.southProbe = southProbe;
-		bounceAtBoundary = bounced;
 		cornerArcRadius = roundCornered ? defaultRoundCornerRadius : 0;
 	}
 
@@ -1931,6 +1918,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 		private double density = HEAVY + HEAVY;
 		private boolean bounced = true;
 		private boolean visible = true;
+		private boolean draggable = true;
 		private boolean roundCornered;
 		private float friction;
 		private float elasticity = 1.0f;
@@ -1945,25 +1933,15 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 		}
 
 		public Delegate(double x, double y, double width, double height, double vx, double vy, float hx, float hy,
-				UserField userField, float elasticity, float friction, double density, boolean westProbe,
-				boolean northProbe, boolean eastProbe, boolean southProbe, boolean bounced, boolean visible,
-				boolean roundCornered, FillMode fillMode) {
+				boolean westProbe, boolean northProbe, boolean eastProbe, boolean southProbe) {
 			this.x = x;
 			this.y = y;
 			this.width = width;
 			this.height = height;
-			this.fillMode = fillMode;
 			this.vx = vx;
 			this.vy = vy;
 			this.hx = hx;
 			this.hy = hy;
-			this.userField = userField;
-			this.elasticity = elasticity;
-			this.friction = friction;
-			this.bounced = bounced;
-			this.visible = visible;
-			this.roundCornered = roundCornered;
-			this.density = density;
 			this.westProbe = westProbe;
 			this.eastProbe = eastProbe;
 			this.southProbe = southProbe;
@@ -2056,6 +2034,14 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 
 		public boolean isVisible() {
 			return visible;
+		}
+
+		public void setDraggable(boolean b) {
+			draggable = b;
+		}
+
+		public boolean isDraggable() {
+			return draggable;
 		}
 
 		public void setBounced(boolean b) {
