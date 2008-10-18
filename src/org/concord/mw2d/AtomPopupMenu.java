@@ -352,7 +352,7 @@ class AtomPopupMenu extends JPopupMenu {
 			public void itemStateChanged(ItemEvent e) {
 				if (view.selectedComponent instanceof Atom) {
 					Atom a = (Atom) view.selectedComponent;
-					a.setDraggable(a.isDraggable());
+					a.setDraggable(e.getStateChange() == ItemEvent.SELECTED);
 					view.repaint();
 					view.model.notifyChange();
 				}

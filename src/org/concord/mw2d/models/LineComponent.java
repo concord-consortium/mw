@@ -65,6 +65,8 @@ public class LineComponent extends AbstractLine implements ModelComponent, Layer
 	public void set(Delegate d) {
 		setLine((float) (d.getX() + 0.5 * d.getX12()), (float) (d.getY() + 0.5 * d.getY12()),
 				(float) (d.getX() - 0.5 * d.getX12()), (float) (d.getY() - 0.5 * d.getY12()));
+		setVisible(d.visible);
+		setDraggable(d.draggable);
 		setColor(d.getColor());
 		setOption(d.getOption());
 		setLineStyle((byte) d.getStyle());
@@ -394,6 +396,8 @@ public class LineComponent extends AbstractLine implements ModelComponent, Layer
 			beginStyle = t.getBeginStyle();
 			endStyle = t.getEndStyle();
 			reflector = t.isReflector();
+			draggable = t.draggable;
+			visible = t.visible;
 		}
 
 		public void setReflector(boolean b) {

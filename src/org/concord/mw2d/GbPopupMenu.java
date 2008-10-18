@@ -24,12 +24,15 @@ import java.awt.EventQueue;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 import javax.swing.Action;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
+import org.concord.modeler.ModelerUtilities;
 import org.concord.modeler.process.Executable;
 import org.concord.modeler.ui.IconPool;
 import org.concord.mw2d.models.GayBerneParticle;
@@ -39,6 +42,7 @@ class GbPopupMenu extends JPopupMenu {
 
 	private MesoView view;
 	private JMenuItem miRelease, miSteer, miUnsteer, miTraj, miRMean, miFMean;
+	private JMenuItem miDraggable;
 
 	void setCoor(int x, int y) {
 		EventQueue.invokeLater(new Runnable() {
@@ -52,6 +56,7 @@ class GbPopupMenu extends JPopupMenu {
 					miFMean.setEnabled(miTraj.isEnabled());
 					miSteer.setEnabled(p.getUserField() == null);
 					miUnsteer.setEnabled(p.getUserField() != null);
+					ModelerUtilities.selectWithoutNotifyingListeners(miDraggable, p.isDraggable());
 				}
 			}
 		});
@@ -323,6 +328,22 @@ class GbPopupMenu extends JPopupMenu {
 			}
 		});
 		add(miFMean);
+		addSeparator();
+
+		s = MDView.getInternationalText("DraggableByUserInNonEditingMode");
+		miDraggable = new JCheckBoxMenuItem("Draggable by User in Non-Editing Mode");
+		miDraggable.setIcon(IconPool.getIcon("user draggable"));
+		miDraggable.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if (view.selectedComponent instanceof GayBerneParticle) {
+					GayBerneParticle p = (GayBerneParticle) view.selectedComponent;
+					p.setDraggable(e.getStateChange() == ItemEvent.SELECTED);
+					view.repaint();
+					view.model.notifyChange();
+				}
+			}
+		});
+		add(miDraggable);
 
 		pack();
 

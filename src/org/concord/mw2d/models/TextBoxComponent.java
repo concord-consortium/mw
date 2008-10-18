@@ -59,6 +59,8 @@ public class TextBoxComponent extends TextContainer implements ModelComponent, L
 	}
 
 	private void set2(Delegate d) {
+		setVisible(d.visible);
+		setDraggable(d.draggable);
 		setRx(d.getX());
 		setRy(d.getY());
 		setAngle(d.getAngle());
@@ -245,6 +247,8 @@ public class TextBoxComponent extends TextContainer implements ModelComponent, L
 			attachmentPosition = t.getAttachmentPosition();
 			callOut = t.isCallOut();
 			callOutPoint.setLocation(t.getCallOutPoint());
+			draggable = t.draggable;
+			visible = t.visible;
 		}
 
 		public void setFont(Font font) {
