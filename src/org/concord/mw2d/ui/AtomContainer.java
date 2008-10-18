@@ -1122,19 +1122,46 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 
 	private class MB extends SimulatorMenuBar {
 
-		JRadioButtonMenuItem rbMenuItem0;
-		JMenu gridMenu;
-		JMenuItem energyTSItem;
-		JMenuItem disableRecorderItem;
-		JMenuItem removeToolBarItem;
-		JMenuItem quantumdynamicsMenuItem;
-		JMenuItem setupFlowMenuItem;
-		JMenuItem enableFlowMenuItem;
-		JMenuItem eFieldLineMenuItem;
-		JMenuItem dragOnlyWhenEditingMenuItem;
+		private JRadioButtonMenuItem rbMenuItem0;
+		private JMenu gridMenu;
+		private JMenuItem energyTSItem;
+		private JMenuItem disableRecorderItem;
+		private JMenuItem removeToolBarItem;
+		private JMenuItem quantumdynamicsMenuItem;
+		private JMenuItem setupFlowMenuItem;
+		private JMenuItem enableFlowMenuItem;
+		private JMenuItem eFieldLineMenuItem;
+		private JMenu computeMenu;
+		private JMenuItem lightSourceMenuItem;
+		private JMenuItem quantumDynamicsRuleMenuItem;
 
 		private void enableMovieMenuItems(boolean b) {
 			energyTSItem.setEnabled(b);
+		}
+
+		private void addQuantumDynamicsMenuItems() {
+			if (model.isSubatomicEnabled()) {
+				if (lightSourceMenuItem == null) {
+					lightSourceMenuItem = new JMenuItem(model.getActions().get("Edit the light source"));
+					String s = getInternationalText("LightSource");
+					lightSourceMenuItem.setText((s != null ? s : "Light Source") + "...");
+					lightSourceMenuItem.setIcon(null);
+				}
+				computeMenu.add(lightSourceMenuItem);
+				if (quantumDynamicsRuleMenuItem == null) {
+					quantumDynamicsRuleMenuItem = new JMenuItem(model.getActions().get("Edit quantum dynamics rules"));
+					String s = getInternationalText("QuantumDynamicsRules");
+					quantumDynamicsRuleMenuItem.setText((s != null ? s : "Quantum Dynamics Rules") + "...");
+					quantumDynamicsRuleMenuItem.setIcon(null);
+				}
+				computeMenu.add(quantumDynamicsRuleMenuItem);
+			}
+			else {
+				if (lightSourceMenuItem != null)
+					computeMenu.remove(lightSourceMenuItem);
+				if (quantumDynamicsRuleMenuItem != null)
+					computeMenu.remove(quantumDynamicsRuleMenuItem);
+			}
 		}
 
 		MB(MolecularModel m) {
@@ -1149,38 +1176,19 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			JMenu menu = createEditMenu();
 			add(menu);
 
-			String s = getInternationalText("QuantumDynamics");
-			JMenu subMenu = new JMenu(s != null ? s : "Quantum Dynamics");
-			subMenu.setMnemonic(KeyEvent.VK_L);
-			subMenu.setIcon(new ImageIcon(getClass().getResource("images/qm.gif")));
-			menu.add(subMenu);
-			enabledComponentsWhenEditable.add(subMenu);
-
-			JMenuItem menuItem = new JMenuItem(model.getActions().get("Edit the light source"));
-			s = getInternationalText("LightSource");
-			menuItem.setText((s != null ? s : "Light Source") + "...");
-			menuItem.setIcon(null);
-			subMenu.add(menuItem);
-
-			menuItem = new JMenuItem(model.getActions().get("Edit quantum dynamics rules"));
-			s = getInternationalText("QuantumDynamicsRules");
-			menuItem.setText((s != null ? s : "Quantum Dynamics Rules") + "...");
-			menuItem.setIcon(null);
-			subMenu.add(menuItem);
-
 			/* tool bar menu */
-
 			removeToolBarItem = new JMenuItem("Remove Toolbar");
 			add(createToolBarMenu(removeToolBarItem));
 
 			/* compute menu */
 
-			s = getInternationalText("Compute");
-			menu = new JMenu(s != null ? s : "Compute");
-			menu.setMnemonic(KeyEvent.VK_C);
-			menu.addMenuListener(new MenuListener() {
+			String s = getInternationalText("Compute");
+			computeMenu = new JMenu(s != null ? s : "Compute");
+			computeMenu.setMnemonic(KeyEvent.VK_C);
+			computeMenu.addMenuListener(new MenuListener() {
 				public void menuSelected(MenuEvent e) {
 					setMenuItemWithoutNotifyingListeners(quantumdynamicsMenuItem, model.isSubatomicEnabled());
+					addQuantumDynamicsMenuItems();
 				}
 
 				public void menuCanceled(MenuEvent e) {
@@ -1189,16 +1197,18 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 				public void menuDeselected(MenuEvent e) {
 				}
 			});
-			add(menu);
+			add(computeMenu);
 
 			s = getInternationalText("QuantumDynamics");
 			quantumdynamicsMenuItem = new JCheckBoxMenuItem(s != null ? s : "Quantum Dynamics");
 			quantumdynamicsMenuItem.addItemListener(new ItemListener() {
 				public void itemStateChanged(ItemEvent e) {
 					model.setSubatomicEnabled(e.getStateChange() == ItemEvent.SELECTED);
+					addQuantumDynamicsMenuItems();
 				}
 			});
-			menu.add(quantumdynamicsMenuItem);
+			computeMenu.add(quantumdynamicsMenuItem);
+			addQuantumDynamicsMenuItems();
 
 			/* analysis menu */
 
@@ -1327,11 +1337,11 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			bg.add(rbMenuItem);
 
 			s = getInternationalText("Crystallography");
-			subMenu = new JMenu(s != null ? s : "Crystallography");
+			JMenu subMenu = new JMenu(s != null ? s : "Crystallography");
 			subMenu.setMnemonic(KeyEvent.VK_C);
 			menu.add(subMenu);
 
-			menuItem = new JMenuItem(xrayAction);
+			JMenuItem menuItem = new JMenuItem(xrayAction);
 			s = getInternationalText("Xray");
 			menuItem.setText((s != null ? s : "X-ray Spectrum") + "...");
 			subMenu.add(menuItem);

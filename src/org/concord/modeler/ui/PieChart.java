@@ -48,7 +48,7 @@ public class PieChart extends JComponent {
 	private Ellipse2D.Float[] hotspots;
 	private Arc2D[] arcs;
 	private Rectangle bound;
-	private static Font font = new Font("Verdana", Font.PLAIN, 10);
+	private static Font font = new Font(null, Font.PLAIN, 11);
 	private Point2D endPoint;
 	private int iselected = -1;
 	private float total;
