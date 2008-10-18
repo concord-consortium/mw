@@ -23,12 +23,16 @@ package org.concord.mw2d;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 import javax.swing.Action;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
+import org.concord.modeler.ModelerUtilities;
 import org.concord.modeler.process.Executable;
 import org.concord.modeler.ui.IconPool;
 import org.concord.mw2d.models.Molecule;
@@ -38,6 +42,7 @@ class MoleculePopupMenu extends JPopupMenu {
 	AtomisticView view;
 	int xpos, ypos;
 	private JMenu menuTS;
+	private JMenuItem miDraggable;
 
 	void setCoor(int x, int y) {
 		xpos = x;
@@ -47,6 +52,9 @@ class MoleculePopupMenu extends JPopupMenu {
 				view.clearEditor(false);
 				if (menuTS != null)
 					menuTS.setEnabled(!view.model.getRecorderDisabled());
+				if (view.selectedComponent instanceof Molecule) {
+					ModelerUtilities.setWithoutNotifyingListeners(miDraggable, view.selectedComponent.isDraggable());
+				}
 			}
 		});
 	}
@@ -152,6 +160,20 @@ class MoleculePopupMenu extends JPopupMenu {
 			}
 		});
 		add(mi);
+
+		s = MDView.getInternationalText("DraggableByUserInNonEditingMode");
+		miDraggable = new JCheckBoxMenuItem("Draggable by User in Non-Editing Mode");
+		miDraggable.setIcon(IconPool.getIcon("user draggable"));
+		miDraggable.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if (view.selectedComponent instanceof Molecule) {
+					view.selectedComponent.setDraggable(e.getStateChange() == ItemEvent.SELECTED);
+					view.repaint();
+					view.getModel().notifyChange();
+				}
+			}
+		});
+		add(miDraggable);
 
 		pack();
 
