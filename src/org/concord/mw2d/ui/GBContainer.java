@@ -238,8 +238,6 @@ public class GBContainer extends MDContainer {
 			menu.addMenuListener(new MenuListener() {
 				public void menuSelected(MenuEvent e) {
 					disableRecorderItem.setEnabled(!model.hasGraphs());
-					setMenuItemWithoutNotifyingListeners(dragOnlyWhenEditingMenuItem, view
-							.getDragObjectOnlyWhenEditing());
 				}
 
 				public void menuCanceled(MenuEvent e) {
@@ -262,17 +260,6 @@ public class GBContainer extends MDContainer {
 				}
 			});
 			menu.add(disableRecorderItem);
-
-			s = getInternationalText("DragObjectsOnlyWhenEditing");
-			dragOnlyWhenEditingMenuItem = new JCheckBoxMenuItem(s != null ? s : "Drag Objects Only When Editing");
-			dragOnlyWhenEditingMenuItem.setMnemonic(KeyEvent.VK_D);
-			dragOnlyWhenEditingMenuItem.addItemListener(new ItemListener() {
-				public void itemStateChanged(ItemEvent e) {
-					view.setDragObjectOnlyWhenEditing(e.getStateChange() == ItemEvent.SELECTED);
-					model.notifyChange();
-				}
-			});
-			menu.add(dragOnlyWhenEditingMenuItem);
 
 			s = getInternationalText("ShowActionTip");
 			JMenuItem menuItem = new JCheckBoxMenuItem(s != null ? s : "Show Action Tip");

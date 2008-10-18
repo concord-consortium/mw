@@ -4723,8 +4723,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 
 		case SELE_ID:
 
-			if (isEditable() || !dragObjectOnlyWhenEditing) {
-
+			if (isEditable() || (selectedComponent != null && selectedComponent.isDraggable())) {
 				if (selectedComponent instanceof RectangularObstacle) {
 					if (obsRectSelected > RectangularObstacle.INSIDE) {
 						RectangularObstacle r2d = (RectangularObstacle) selectedComponent;
@@ -4853,8 +4852,8 @@ public class AtomisticView extends MDView implements BondChangeListener {
 					repaint();
 					setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
 				}
-
 			}
+
 			break;
 
 		case ADDA_ID:
@@ -5621,52 +5620,46 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			return;
 
 		if (selectedComponent != null) {
-
-			if (selectedComponent instanceof Atom) {
-				Atom a = (Atom) selectedComponent;
-				if (!a.isBonded()) {
-					a.storeCurrentState();
-					a.translateBy(dx, dy);
-					int x = (int) a.getRx();
-					int y = (int) a.getRy();
-					if (a.getRestraint() != null) {
-						int amp = (int) (400.0 / a.getRestraint().getK());
-						Vector2D loc = moveSpring(x, y, (int) a.getRestraint().getX0(), (int) a.getRestraint().getY0(),
-								0, amp);
-						if (loc == null)
-							return;
-						a.translateTo(loc.getX(), loc.getY());
+			if (isEditable() || selectedComponent.isDraggable()) {
+				if (selectedComponent instanceof Atom) {
+					Atom a = (Atom) selectedComponent;
+					if (!a.isBonded()) {
+						a.storeCurrentState();
+						a.translateBy(dx, dy);
+						int x = (int) a.getRx();
+						int y = (int) a.getRy();
+						if (a.getRestraint() != null) {
+							int amp = (int) (400.0 / a.getRestraint().getK());
+							Vector2D loc = moveSpring(x, y, (int) a.getRestraint().getX0(), (int) a.getRestraint()
+									.getY0(), 0, amp);
+							if (loc == null)
+								return;
+							a.translateTo(loc.getX(), loc.getY());
+						}
+						finalizeAtomLocation(a, false);
 					}
-					finalizeAtomLocation(a, false);
 				}
+				else if (selectedComponent instanceof Molecule) {
+					Molecule mol = (Molecule) selectedComponent;
+					mol.storeCurrentState();
+					mol.translateBy(dx, dy);
+					finalizeMoleculeLocation((Molecule) selectedComponent);
+					refreshForces();
+				}
+				else if (selectedComponent instanceof RectangularObstacle) {
+					RectangularObstacle r = (RectangularObstacle) selectedComponent;
+					r.storeCurrentState();
+					r.translateBy(dx, dy);
+					finalizeObstacleLocation(r);
+				}
+				else if (selectedComponent instanceof Layered) {
+					selectedComponent.storeCurrentState();
+					((Layered) selectedComponent).translateBy(dx, dy);
+				}
+				model.notifyChange();
 			}
-
-			else if (selectedComponent instanceof Molecule) {
-				Molecule mol = (Molecule) selectedComponent;
-				mol.storeCurrentState();
-				mol.translateBy(dx, dy);
-				finalizeMoleculeLocation((Molecule) selectedComponent);
-				refreshForces();
-			}
-
-			else if (selectedComponent instanceof RectangularObstacle) {
-				RectangularObstacle r = (RectangularObstacle) selectedComponent;
-				r.storeCurrentState();
-				r.translateBy(dx, dy);
-				finalizeObstacleLocation(r);
-			}
-
-			else if (selectedComponent instanceof Layered) {
-				selectedComponent.storeCurrentState();
-				((Layered) selectedComponent).translateBy(dx, dy);
-			}
-
-			model.notifyChange();
-
 		}
-
 		else {
-
 			UserField uf = null;
 			for (int i = 0; i < nAtom; i++) {
 				uf = atom[i].getUserField();
@@ -5675,7 +5668,6 @@ public class AtomisticView extends MDView implements BondChangeListener {
 					uf.setIntensity(UserField.INCREMENT * uf.getGear());
 				}
 			}
-
 			if (obstacles != null && !obstacles.isEmpty()) {
 				RectangularObstacle obs = null;
 				synchronized (obstacles.getSynchronizationLock()) {
@@ -5689,9 +5681,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 					}
 				}
 			}
-
 			refreshForces();
-
 		}
 
 		if (useJmol)

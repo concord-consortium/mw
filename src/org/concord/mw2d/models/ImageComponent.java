@@ -72,6 +72,8 @@ public class ImageComponent implements ModelComponent, Layered, Rotatable {
 	private String address;
 	private ModelComponent host;
 	private boolean selectedToRotate;
+	private boolean visible = true;
+	private boolean draggable = true;
 
 	public ImageComponent(String address) throws IOException {
 		if (address == null)
@@ -196,17 +198,22 @@ public class ImageComponent implements ModelComponent, Layered, Rotatable {
 		images = null;
 	}
 
-	/**
-	 * As an image should always be visible (otherwise why would you add one?), calling this method has no effect
-	 */
+	/** TODO */
 	public void setVisible(boolean b) {
+		visible = b;
 	}
 
-	/**
-	 * As an image should always be visible (otherwise why would you add one?), this method always returns true
-	 */
+	/** TODO */
 	public boolean isVisible() {
-		return true;
+		return visible;
+	}
+
+	public void setDraggable(boolean b) {
+		draggable = b;
+	}
+
+	public boolean isDraggable() {
+		return draggable;
 	}
 
 	public boolean isSelectedToRotate() {

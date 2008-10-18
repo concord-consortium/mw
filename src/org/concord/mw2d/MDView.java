@@ -181,7 +181,6 @@ public abstract class MDView extends PrintableComponent {
 	boolean drawString = true;
 	double relativeKEForShading = 1.0;
 	boolean showClock = true, showParticleIndex, drawCharge = true, showSelectionHalo = true;
-	boolean dragObjectOnlyWhenEditing;
 	boolean drawExternalForce;
 	boolean showMirrorImages = true;
 	float chargeIncrement = 0.5f;
@@ -640,14 +639,6 @@ public abstract class MDView extends PrintableComponent {
 			return;
 		for (ActionStateListener a : actionStateListeners)
 			a.actionStateChanged(e);
-	}
-
-	public void setDragObjectOnlyWhenEditing(boolean b) {
-		dragObjectOnlyWhenEditing = b;
-	}
-
-	public boolean getDragObjectOnlyWhenEditing() {
-		return dragObjectOnlyWhenEditing;
 	}
 
 	/**
@@ -2757,16 +2748,20 @@ public abstract class MDView extends PrintableComponent {
 
 	boolean callOutMouseDragged(int x, int y) {
 		if (selectedComponent instanceof TextBoxComponent) {
-			if (((TextBoxComponent) selectedComponent).isChangingCallOut()) {
-				((TextBoxComponent) selectedComponent).setCallOutLocation(x, y);
-				repaint();
-				return true;
+			if (selectedComponent.isDraggable()) {
+				if (((TextBoxComponent) selectedComponent).isChangingCallOut()) {
+					((TextBoxComponent) selectedComponent).setCallOutLocation(x, y);
+					repaint();
+					return true;
+				}
 			}
 		}
 		return false;
 	}
 
 	boolean handleMouseDragged(int x, int y) {
+		if (selectedComponent != null && !selectedComponent.isDraggable())
+			return false;
 		if (selectedComponent instanceof LineComponent) {
 			LineComponent lc = (LineComponent) selectedComponent;
 			boolean b = false;
@@ -3410,7 +3405,6 @@ public abstract class MDView extends PrintableComponent {
 		private String colorCode;
 		private Color background = Color.white;
 		private int markColor = 0xffccccff;
-		private boolean dragObjectOnlyWhenEditing;
 		private boolean energizer;
 		private boolean showParticleIndex, showClock = true, drawCharge = true, showMirrorImages = true,
 				drawExternalForce;
@@ -3432,14 +3426,6 @@ public abstract class MDView extends PrintableComponent {
 			momentumFlavor = new VectorFlavor(Color.gray, ViewAttribute.THIN, 1);
 			accelerationFlavor = new VectorFlavor(Color.red, ViewAttribute.THIN, 100);
 			forceFlavor = new VectorFlavor(Color.orange, ViewAttribute.THIN, 1);
-		}
-
-		public void setDragObjectOnlyWhenEditing(boolean b) {
-			dragObjectOnlyWhenEditing = b;
-		}
-
-		public boolean getDragObjectOnlyWhenEditing() {
-			return dragObjectOnlyWhenEditing;
 		}
 
 		public void setRenderingMethod(int i) {

@@ -36,6 +36,8 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 	private boolean stateStored;
 	private ModelComponent host;
 	private VectorField vectorField;
+	private boolean visible = true;
+	private boolean draggable = true;
 
 	public EllipseComponent() {
 		super();
@@ -141,10 +143,19 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 	}
 
 	public void setVisible(boolean b) {
+		visible = b;
 	}
 
 	public boolean isVisible() {
-		return true;
+		return visible;
+	}
+
+	public void setDraggable(boolean b) {
+		draggable = b;
+	}
+
+	public boolean isDraggable() {
+		return draggable;
 	}
 
 	/** set a model component this line attaches to. */

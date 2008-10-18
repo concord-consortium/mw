@@ -219,6 +219,15 @@ public class AngularBond implements ModelComponent {
 		return false;
 	}
 
+	/** As an angular bond is always not draggable, calling this method has no effect */
+	public void setDraggable(boolean b) {
+	}
+
+	/** As an angular bond is always not draggable, this method always returns false */
+	public boolean isDraggable() {
+		return false;
+	}
+
 	public void destroy() {
 		atom1 = null;
 		atom2 = null;
@@ -440,9 +449,9 @@ public class AngularBond implements ModelComponent {
 	double getAngle(int frame) {
 		if (frame < 0)
 			return getAngle(atom1, atom3, atom2);
-		return getAngle(atom1.rQ.getQueue1().getData(frame), atom1.rQ.getQueue2().getData(frame), atom3.rQ
-				.getQueue1().getData(frame), atom3.rQ.getQueue2().getData(frame), atom2.rQ.getQueue1().getData(
-				frame), atom2.rQ.getQueue2().getData(frame));
+		return getAngle(atom1.rQ.getQueue1().getData(frame), atom1.rQ.getQueue2().getData(frame), atom3.rQ.getQueue1()
+				.getData(frame), atom3.rQ.getQueue2().getData(frame), atom2.rQ.getQueue1().getData(frame), atom2.rQ
+				.getQueue2().getData(frame));
 	}
 
 	public int indexOf(Atom atom) {

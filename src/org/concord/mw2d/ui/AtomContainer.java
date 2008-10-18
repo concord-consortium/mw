@@ -1533,8 +1533,6 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			menu.addMenuListener(new MenuListener() {
 				public void menuSelected(MenuEvent e) {
 					setMenuItemWithoutNotifyingListeners(enableFlowMenuItem, model.isAtomFlowEnabled());
-					setMenuItemWithoutNotifyingListeners(dragOnlyWhenEditingMenuItem, view
-							.getDragObjectOnlyWhenEditing());
 					setupFlowMenuItem.setEnabled(model.getRecorderDisabled() && model.isAtomFlowEnabled());
 					enableFlowMenuItem.setEnabled(model.getRecorderDisabled());
 					disableRecorderItem.setEnabled(!model.hasGraphs() && !hasDNAScroller()
@@ -1561,17 +1559,6 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 				}
 			});
 			menu.add(disableRecorderItem);
-
-			s = getInternationalText("DragObjectsOnlyWhenEditing");
-			dragOnlyWhenEditingMenuItem = new JCheckBoxMenuItem(s != null ? s : "Drag Objects Only When Editing");
-			dragOnlyWhenEditingMenuItem.setMnemonic(KeyEvent.VK_D);
-			dragOnlyWhenEditingMenuItem.addItemListener(new ItemListener() {
-				public void itemStateChanged(ItemEvent e) {
-					view.setDragObjectOnlyWhenEditing(e.getStateChange() == ItemEvent.SELECTED);
-					model.notifyChange();
-				}
-			});
-			menu.add(dragOnlyWhenEditingMenuItem);
 
 			s = getInternationalText("EnableFlow");
 			enableFlowMenuItem = new JCheckBoxMenuItem(s != null ? s : "Enable Flow");

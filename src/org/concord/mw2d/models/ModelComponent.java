@@ -37,6 +37,10 @@ public interface ModelComponent {
 	public void setVisible(boolean b);
 
 	public boolean isVisible();
+	
+	public void setDraggable(boolean b);
+	
+	public boolean isDraggable();
 
 	public void setBlinking(boolean b);
 

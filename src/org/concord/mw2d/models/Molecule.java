@@ -284,7 +284,20 @@ public class Molecule implements ModelComponent, Rotatable {
 	}
 
 	public boolean isVisible() {
+		if (atoms.isEmpty())
+			return false;
 		return atoms.get(0).isVisible();
+	}
+
+	public void setDraggable(boolean b) {
+		for (Atom a : atoms)
+			a.setDraggable(b);
+	}
+
+	public boolean isDraggable() {
+		if (atoms.isEmpty())
+			return false;
+		return atoms.get(0).isDraggable();
 	}
 
 	public void setTorque(MolecularTorque mt) {
