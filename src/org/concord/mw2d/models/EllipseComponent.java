@@ -60,6 +60,8 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 	}
 
 	public void set(Delegate d) {
+		setVisible(d.visible);
+		setDraggable(d.draggable);
 		setOval((float) d.x, (float) d.y, d.w, d.h);
 		setAngle(d.angle);
 		setAlpha(d.alpha);
