@@ -367,37 +367,37 @@ public class LineComponent extends AbstractLine implements ModelComponent, Layer
 		public Delegate() {
 		}
 
-		public Delegate(LineComponent t) {
-			if (t == null)
+		public Delegate(LineComponent l) {
+			if (l == null)
 				throw new IllegalArgumentException("arg can't be null");
-			x = t.getRx();
-			y = t.getRy();
-			x12 = t.getX1() - t.getX2();
-			y12 = t.getY1() - t.getY2();
-			color = t.getColor();
-			option = t.getOption();
-			weight = t.getLineWeight();
-			style = t.getLineStyle();
-			layer = t.getLayer();
-			layerPosition = (byte) ((MDView) t.getHostModel().getView()).getLayerPosition(t);
-			if (t.getHost() != null) {
-				hostType = t.getHost().getClass().toString();
-				if (t.getHost() instanceof Particle) {
-					hostIndex = ((Particle) t.getHost()).getIndex();
+			x = l.getRx();
+			y = l.getRy();
+			x12 = l.getX1() - l.getX2();
+			y12 = l.getY1() - l.getY2();
+			color = l.getColor();
+			option = l.getOption();
+			weight = l.getLineWeight();
+			style = l.getLineStyle();
+			layer = l.getLayer();
+			layerPosition = (byte) ((MDView) l.getHostModel().getView()).getLayerPosition(l);
+			if (l.getHost() != null) {
+				hostType = l.getHost().getClass().toString();
+				if (l.getHost() instanceof Particle) {
+					hostIndex = ((Particle) l.getHost()).getIndex();
 				}
-				else if (t.getHost() instanceof RadialBond) {
-					hostIndex = ((RadialBond) t.getHost()).getIndex();
+				else if (l.getHost() instanceof RadialBond) {
+					hostIndex = ((RadialBond) l.getHost()).getIndex();
 				}
-				else if (t.getHost() instanceof RectangularObstacle) {
-					hostIndex = t.getHostModel().getObstacles().indexOf(t.getHost());
+				else if (l.getHost() instanceof RectangularObstacle) {
+					hostIndex = l.getHostModel().getObstacles().indexOf(l.getHost());
 				}
 			}
-			attachmentPosition = t.getAttachmentPosition();
-			beginStyle = t.getBeginStyle();
-			endStyle = t.getEndStyle();
-			reflector = t.isReflector();
-			draggable = t.draggable;
-			visible = t.visible;
+			attachmentPosition = l.getAttachmentPosition();
+			beginStyle = l.getBeginStyle();
+			endStyle = l.getEndStyle();
+			reflector = l.isReflector();
+			draggable = l.draggable;
+			visible = l.visible;
 		}
 
 		public void setReflector(boolean b) {
