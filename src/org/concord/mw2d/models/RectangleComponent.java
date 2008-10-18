@@ -60,6 +60,8 @@ public class RectangleComponent extends AbstractRectangle implements ModelCompon
 	}
 
 	public void set(Delegate d) {
+		setVisible(d.visible);
+		setDraggable(d.draggable);
 		setRect((float) d.x, (float) d.y, d.w, d.h);
 		setArcWidth(d.getArcWidth());
 		setArcHeight(d.getArcHeight());
@@ -268,6 +270,8 @@ public class RectangleComponent extends AbstractRectangle implements ModelCompon
 				}
 			}
 			vectorField = r.getVectorField();
+			draggable = r.draggable;
+			visible = r.visible;
 		}
 
 		public void setVectorField(VectorField vectorField) {

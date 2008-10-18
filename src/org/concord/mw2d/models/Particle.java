@@ -707,6 +707,7 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 		fx = fy = 0;
 		hx = hy = 0;
 		visible = true;
+		draggable = true;
 		movable = true;
 		marked = false;
 		selected = false;

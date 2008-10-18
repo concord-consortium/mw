@@ -35,6 +35,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
+import org.concord.modeler.ModelerUtilities;
 import org.concord.modeler.process.Executable;
 import org.concord.modeler.ui.IconPool;
 import org.concord.mw2d.models.ElectricField;
@@ -63,6 +64,7 @@ class LayeredComponentPopupMenu extends JPopupMenu {
 	private JMenuItem westMI;
 	private JMenu physicsMenu;
 	private JMenuItem miEField, miBField, miReflect;
+	private JMenuItem miDraggable;
 
 	LayeredComponentPopupMenu(final MDView view) {
 
@@ -158,6 +160,7 @@ class LayeredComponentPopupMenu extends JPopupMenu {
 					else {
 						physicsMenu.setEnabled(false);
 					}
+					ModelerUtilities.setWithoutNotifyingListeners(miDraggable, view.selectedComponent.isDraggable());
 				}
 			}
 
@@ -482,6 +485,20 @@ class LayeredComponentPopupMenu extends JPopupMenu {
 			}
 		});
 		add(mi);
+
+		s = MDView.getInternationalText("DraggableByUserInNonEditingMode");
+		miDraggable = new JCheckBoxMenuItem("Draggable by User in Non-Editing Mode");
+		miDraggable.setIcon(IconPool.getIcon("user draggable"));
+		miDraggable.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if (view.selectedComponent instanceof Layered) {
+					view.selectedComponent.setDraggable(e.getStateChange() == ItemEvent.SELECTED);
+					view.repaint();
+					view.getModel().notifyChange();
+				}
+			}
+		});
+		add(miDraggable);
 
 	}
 

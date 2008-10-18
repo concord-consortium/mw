@@ -27,6 +27,24 @@ public abstract class LayeredComponentDelegate extends ComponentDelegate {
 	byte layerPosition;
 	String hostType;
 	int hostIndex;
+	boolean draggable = true;
+	boolean visible = true;
+
+	public void setDraggable(boolean b) {
+		draggable = b;
+	}
+
+	public boolean isDraggable() {
+		return draggable;
+	}
+
+	public void setVisible(boolean b) {
+		visible = b;
+	}
+
+	public boolean isVisible() {
+		return visible;
+	}
 
 	public void setHostType(String s) {
 		hostType = s;

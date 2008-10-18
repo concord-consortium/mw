@@ -102,6 +102,8 @@ public class ImageComponent implements ModelComponent, Layered, Rotatable {
 	}
 
 	public void set(Delegate d) {
+		setVisible(d.visible);
+		setDraggable(d.draggable);
 		setLoopCount(d.getLoopCount());
 		setLayer(d.getLayer());
 		setLocation(d.getX(), d.getY());
@@ -706,6 +708,8 @@ public class ImageComponent implements ModelComponent, Layered, Rotatable {
 					hostIndex = ic.getHostModel().getObstacles().indexOf(ic.getHost());
 				}
 			}
+			draggable = ic.draggable;
+			visible = ic.visible;
 		}
 
 		public void setLoopCount(int i) {
