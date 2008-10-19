@@ -49,7 +49,6 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JProgressBar;
 import javax.swing.SwingConstants;
-import javax.swing.event.HyperlinkEvent;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
