@@ -4124,7 +4124,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			}
 		}
 		else if (eventType == HyperlinkEvent.EventType.ENTERED) {
-			if (e.getSource() instanceof HTMLPane) { // reassure that we have restored the document base
+			// reassure that we have restored the document base - set documentation at PageXMLDecoder.createTextBox();
+			if (e.getSource() instanceof HTMLPane) {
 				((HTMLPane) e.getSource()).setBase(getURL());
 			}
 			urlDisplay.setText(e.getURL() == null ? desc : e.getURL().toString());
@@ -4172,7 +4173,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			}
 		}
 		else if (eventType == HyperlinkEvent.EventType.ENTERED) {
-			if (e.getSource() instanceof HTMLPane) { // reassure that we have restored the document base
+			// reassure that we have restored the document base - set documentation at PageXMLDecoder.createTextBox();
+			if (e.getSource() instanceof HTMLPane) {
 				((HTMLPane) e.getSource()).setBase(getURL());
 			}
 			if (urlDisplay != null)

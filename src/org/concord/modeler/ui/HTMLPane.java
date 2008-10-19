@@ -49,6 +49,7 @@ import javax.swing.ButtonModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
@@ -816,6 +817,8 @@ public class HTMLPane extends MyEditorPane {
 				File file = ConnectionManager.sharedInstance().shouldUpdate(pb);
 				if (file == null)
 					file = ConnectionManager.sharedInstance().cache(pb);
+				if (file != null)
+					setBackgroundImage(new ImageIcon(file.toURI().toURL()));
 			}
 			catch (IOException e) {
 				e.printStackTrace();
