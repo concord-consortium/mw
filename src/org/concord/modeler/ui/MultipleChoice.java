@@ -29,6 +29,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -350,6 +351,10 @@ public abstract class MultipleChoice extends JPanel implements HtmlService, Sear
 
 	public String getAttribute(String tag, String name) {
 		return questionBody.getAttribute(tag, name);
+	}
+
+	public void setBase(File file) {
+		questionBody.setBase(file);
 	}
 
 	public void setBase(URL u) {

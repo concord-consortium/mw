@@ -30,6 +30,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +43,6 @@ import javax.swing.JTextArea;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.text.JTextComponent;
-import javax.swing.text.html.HTMLDocument;
 
 import org.concord.modeler.event.HotlinkListener;
 import org.concord.modeler.event.TextInputEvent;
@@ -328,15 +328,16 @@ public class PageTextArea extends JPanel implements Embeddable, HtmlService, Sea
 		BorderManager.setBorder(this, s, page.getBackground());
 	}
 
+	public void setBase(File file) {
+		questionArea.setBase(file);
+	}
+
 	public void setBase(URL u) {
-		if (questionArea.getTextComponent().getDocument() instanceof HTMLDocument)
-			((HTMLDocument) questionArea.getTextComponent().getDocument()).setBase(u);
+		questionArea.setBase(u);
 	}
 
 	public URL getBase() {
-		if (questionArea.getTextComponent().getDocument() instanceof HTMLDocument)
-			return ((HTMLDocument) questionArea.getTextComponent().getDocument()).getBase();
-		return null;
+		return questionArea.getBase();
 	}
 
 	public List<String> getImageNames() {

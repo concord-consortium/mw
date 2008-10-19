@@ -2219,9 +2219,8 @@ final class PageXMLDecoder {
 				 * 
 				 * (One of them is actually for making image map work.)
 				 */
-			}
-			if (needCache) { // FIXME: Do we want to check caching for all linked files?
-				t.cacheLinkedFiles(page.getPathBase());
+				if (needCache) // FIXME: Do we want to check caching for all linked files?
+					t.cacheLinkedFiles(page.getPathBase());
 			}
 			htmlComponentConnector.enroll(t);
 			return t;
@@ -2911,9 +2910,18 @@ final class PageXMLDecoder {
 				m.setAnswer(key);
 				answer = null;
 			}
+			boolean needCache = ConnectionManager.sharedInstance().isCachingAllowed() && page.isRemote();
 			if (titleText != null) {
+				if (needCache) {
+					File cml = ConnectionManager.sharedInstance().getLocalCopy(page.getAddress());
+					if (cml != null && cml.exists())
+						m.setBase(cml);
+				}
+				// do not restore the base, see createTextBox()
 				m.setQuestion(titleText);
 				titleText = null;
+				if (needCache) // FIXME: Do we want to check caching for all linked files?
+					m.cacheLinkedFiles(page.getPathBase());
 			}
 			if (!opaque) {
 				m.setOpaque(false);
@@ -3000,9 +3008,18 @@ final class PageXMLDecoder {
 				iq.setPreferredSize(new Dimension((int) width, (int) height));
 				width = height = 0;
 			}
+			boolean needCache = ConnectionManager.sharedInstance().isCachingAllowed() && page.isRemote();
 			if (titleText != null) {
+				if (needCache) {
+					File cml = ConnectionManager.sharedInstance().getLocalCopy(page.getAddress());
+					if (cml != null && cml.exists())
+						iq.setBase(cml);
+				}
+				// do not restore the base, see createTextBox()
 				iq.setQuestion(titleText);
 				titleText = null;
+				if (needCache) // FIXME: Do we want to check caching for all linked files?
+					iq.cacheLinkedFiles(page.getPathBase());
 			}
 			iq.setChangable(page.isEditable());
 			String key = page.getAddress() + "#" + ModelerUtilities.getSortableString(indexOfComponent, 3) + "%"
@@ -3047,9 +3064,18 @@ final class PageXMLDecoder {
 			PageTextArea t = new PageTextArea();
 			t.setPage(page);
 			t.setIndex(indexOfComponent);
+			boolean needCache = ConnectionManager.sharedInstance().isCachingAllowed() && page.isRemote();
 			if (titleText != null) {
+				if (needCache) {
+					File cml = ConnectionManager.sharedInstance().getLocalCopy(page.getAddress());
+					if (cml != null && cml.exists())
+						t.setBase(cml);
+				}
+				// do not restore the base, see createTextBox()
 				t.setTitle(titleText);
 				titleText = null;
+				if (needCache) // FIXME: Do we want to check caching for all linked files?
+					t.cacheLinkedFiles(page.getPathBase());
 			}
 			if (description != null) {
 				t.setReferenceAnswer(description);
@@ -3112,9 +3138,18 @@ final class PageXMLDecoder {
 			PageTextField t = new PageTextField();
 			t.setPage(page);
 			t.setIndex(indexOfComponent);
+			boolean needCache = ConnectionManager.sharedInstance().isCachingAllowed() && page.isRemote();
 			if (titleText != null) {
+				if (needCache) {
+					File cml = ConnectionManager.sharedInstance().getLocalCopy(page.getAddress());
+					if (cml != null && cml.exists())
+						t.setBase(cml);
+				}
+				// do not restore the base, see createTextBox()
 				t.setTitle(titleText);
 				titleText = null;
+				if (needCache) // FIXME: Do we want to check caching for all linked files?
+					t.cacheLinkedFiles(page.getPathBase());
 			}
 			if (description != null) {
 				t.setReferenceAnswer(description);
