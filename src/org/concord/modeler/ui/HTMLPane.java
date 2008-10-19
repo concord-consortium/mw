@@ -843,12 +843,15 @@ public class HTMLPane extends MyEditorPane {
 		}
 	}
 
-	/**
+	/*
 	 * FIXME: The problem is that the RunElements in the HTMLDocument is not mutable. Because of this, we have to insert
-	 * new elements that call cached images and remove the corresponding old elements that call remote images. Can we
-	 * find a better way to do this?
+	 * new elements that call cached images and remove the corresponding old elements that call remote images. This
+	 * ensures that the images will be shown when offline, but removes the performance benefit of caching. Can we find a
+	 * better way to do this?
+	 * 
+	 * @param b if true, use the file path of the local cache to replace the src attribute of the img tag.
 	 */
-	public void useCachedImages(boolean b, String codeBase) {
+	void useCachedImages(boolean b, String codeBase) {
 
 		if (!(getDocument() instanceof HTMLDocument))
 			return;
@@ -870,6 +873,9 @@ public class HTMLPane extends MyEditorPane {
 		URL originalBase = doc.getBase();
 		ElementIterator it = new ElementIterator(doc);
 
+		// the problem is that by the time we start to traverse the HTMLDocument, the image files specified by the IMG
+		// tag may have been downloaded by the default HTML parser of Java, which essentially removes the performance
+		// benefit of caching.
 		synchronized (doc) {
 			while (it.next() != null) {
 				el = it.current();
@@ -910,9 +916,13 @@ public class HTMLPane extends MyEditorPane {
 							}
 							baseSet = true;
 						}
+						// the following converts the file path to url path, i.e.
+						// C:\Documents and Settings\... to file:/C:/Documents%20and%20Settings/...
 						s = doc.getBase() + FileUtilities.getFileName(s);
 					}
 					else {
+						// when this method is called when a page is saved, we need to restore the src attribute back to
+						// the original relative form (s is now a long file path starting with the cache directory).
 						s = FileUtilities.getFileName(s);
 					}
 					if (href != null) {
@@ -958,6 +968,8 @@ public class HTMLPane extends MyEditorPane {
 			doc.setBase(originalBase);
 		}
 
+		// regardless of the value of b, this method must be called (because if b is false, we need to remove the cache
+		// reference from the src attribute and replace it with the original relative form).
 		removeAllImages();
 
 	}
@@ -1013,7 +1025,7 @@ public class HTMLPane extends MyEditorPane {
 
 	}
 
-	/**
+	/*
 	 * FIXME: The problem is that the RunElements in the HTMLDocument is not mutable. Because of this, we have to insert
 	 * new elements that call cached links and remove the corresponding old elements that call remote links. Can we find
 	 * a better way to do this?
@@ -1094,8 +1106,8 @@ public class HTMLPane extends MyEditorPane {
 
 	}
 
-	public void cacheLinkedFiles(String codeBase) {
-
+	void cacheLinkedFiles(String codeBase) {
+		
 		if (!ConnectionManager.sharedInstance().isCachingAllowed())
 			return;
 		if (!FileUtilities.isRemote(codeBase))
@@ -1146,6 +1158,10 @@ public class HTMLPane extends MyEditorPane {
 			useCachedImages(true, codeBase);
 		}
 
+	}
+
+	void cacheText(String parentURL, int index) {
+		ConnectionManager.sharedInstance().cacheText(getText(), parentURL, index);
 	}
 
 }

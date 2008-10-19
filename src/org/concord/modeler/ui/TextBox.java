@@ -378,7 +378,7 @@ public class TextBox extends JPanel implements HtmlService, Searchable {
 	}
 
 	public String getText() {
-		// workaround for the visited link color problem! This quick fix prevents color 000099 to render.
+		// FIXME: workaround for the visited link color problem! This quick fix prevents color 000099 to render.
 		return textBody.getText().replaceAll("(?)\\s+color=\"#000099\"", "");
 	}
 
@@ -404,6 +404,10 @@ public class TextBox extends JPanel implements HtmlService, Searchable {
 
 	public void cacheLinkedFiles(String codeBase) {
 		textBody.cacheLinkedFiles(codeBase);
+	}
+
+	public void cacheText(String parentURL, int index) {
+		textBody.cacheText(parentURL, index);
 	}
 
 	/** encode the HTML text so that it can be embedded into XML */
