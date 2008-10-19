@@ -28,7 +28,6 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
-import java.net.MalformedURLException;
 
 import javax.swing.AbstractButton;
 import javax.swing.JMenuItem;
@@ -278,12 +277,7 @@ public class PageMultipleChoice extends MultipleChoice implements Embeddable, Mu
 		addHotlinkListener(page);
 		/* Sun's HyperlinkListener added to make image map work */
 		questionBody.getHtmlPane().addHyperlinkListener(page);
-		try {
-			setBase(page.getURL());
-		}
-		catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
+		setBase(page.getURL());
 		questionBody.setFont(new Font(null, Font.PLAIN, Page.getDefaultFontSize()));
 	}
 

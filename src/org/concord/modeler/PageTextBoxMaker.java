@@ -87,7 +87,6 @@ class PageTextBoxMaker extends ComponentMaker {
 			pageTextBox.setContentType("text/plain");
 		}
 		pageTextBox.setText(text);
-		pageTextBox.setOriginalText(text);
 		double w = widthField.getValue();
 		double h = heightField.getValue();
 		if (w > 0 && w < 1.05) {

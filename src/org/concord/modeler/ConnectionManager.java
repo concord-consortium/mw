@@ -21,12 +21,9 @@
 package org.concord.modeler;
 
 import java.awt.Toolkit;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -395,111 +392,6 @@ public class ConnectionManager {
 
 		return cachedFile;
 
-	}
-
-	public String getCachedText(String parentURL, int id) {
-		if (!allowCaching)
-			return null;
-		URL url = null;
-		try {
-			url = new URL(parentURL);
-		}
-		catch (MalformedURLException e) {
-			return null;
-		}
-		File cachedParentFile = new File(Initializer.sharedInstance().getCacheDirectory(), convertURLToFileName(url));
-		File cachedFile = new File(cachedParentFile.toString() + "$" + id + ".htm");
-		if (!cachedFile.exists() || cachedFile.lastModified() != cachedParentFile.lastModified())
-			return null; // if the text has not been cached or the time stamp is not the same as the parent
-		BufferedReader br = null;
-		try {
-			br = new BufferedReader(new FileReader(cachedFile));
-		}
-		catch (FileNotFoundException e) {
-			e.printStackTrace();
-			return null;
-		}
-		String text = "";
-		boolean error = false;
-		String line = null;
-		try {
-			while ((line = br.readLine()) != null) {
-				text += line;
-			}
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-			error = true;
-		}
-		finally {
-			try {
-				br.close();
-			}
-			catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		if (error)
-			return null;
-		return text;
-	}
-
-	/**
-	 * this method is used to cache the content of a text box so that its resource files can point directly to the
-	 * cached version, instead of having to download everything.
-	 * 
-	 * @param text
-	 *            the modified text
-	 * @param parentURL
-	 *            the URL of the parent CML file
-	 * @return the cached file
-	 */
-	public File cacheText(String text, String parentURL, int id) {
-		if (!allowCaching)
-			return null;
-		URL url = null;
-		try {
-			url = new URL(parentURL);
-		}
-		catch (MalformedURLException e) {
-			return null;
-		}
-		File cachedParentFile = new File(Initializer.sharedInstance().getCacheDirectory(), convertURLToFileName(url));
-		String uri = FileUtilities.getCodeBase(cachedParentFile.toURI().toString());
-		if (text.indexOf(uri) == -1)
-			return null;
-		if (!cachedParentFile.exists())
-			return null;
-		File cachedFile = new File(cachedParentFile.toString() + "$" + id + ".htm");
-		if (cachedFile.exists() && cachedFile.lastModified() == cachedParentFile.lastModified())
-			return cachedFile; // if the text has been cached and the time stamp is the same as the parent, skip
-		FileWriter writer = null;
-		try {
-			writer = new FileWriter(cachedFile);
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-		boolean error = false;
-		try {
-			writer.write(text);
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-			error = true;
-		}
-		finally {
-			try {
-				writer.close();
-			}
-			catch (IOException e) {
-			}
-		}
-		if (error)
-			return null;
-		cachedFile.setLastModified(cachedParentFile.lastModified());
-		return cachedFile;
 	}
 
 	/**

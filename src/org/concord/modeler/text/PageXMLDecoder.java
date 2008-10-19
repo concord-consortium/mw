@@ -49,6 +49,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JProgressBar;
 import javax.swing.SwingConstants;
+import javax.swing.event.HyperlinkEvent;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
@@ -429,22 +430,17 @@ final class PageXMLDecoder {
 			IconWrapper wrap = new IconWrapper(icon, page);
 			wrap.setIndex(indexOfComponent++);
 			if (text != null) {
-				wrap.setOriginalText(text);
-				String cachedText = ConnectionManager.sharedInstance()
-						.getCachedText(page.getAddress(), wrap.getIndex());
-				if (cachedText != null) {
-					wrap.setUseCacheText(true);
-					wrap.decodeText(cachedText);
-				}
-				else {
-					wrap.setUseCacheText(false);
-					wrap.decodeText(text);
-				}
-				if (ConnectionManager.sharedInstance().isCachingAllowed() && page.isRemote()) {
-					if (!wrap.getUseCacheText()) {
-						wrap.cacheLinkedFiles(page.getPathBase());
-						wrap.cacheText(page.getAddress(), wrap.getIndex());
+				boolean needCache = ConnectionManager.sharedInstance().isCachingAllowed() && page.isRemote();
+				if (needCache) {
+					File cml = ConnectionManager.sharedInstance().getLocalCopy(page.getAddress());
+					if (cml != null && cml.exists()) {
+						wrap.setBase(cml);
 					}
+				}
+				wrap.decodeText(text);
+				// if (needCache) wrap.setBase(page.getURL()); // set createTextBox()
+				if (needCache) { // FIXME: do we want to check caching for all linked files?
+					wrap.cacheLinkedFiles(page.getPathBase());
 				}
 			}
 			StyleConstants.setComponent(style, wrap);
@@ -2192,24 +2188,41 @@ final class PageXMLDecoder {
 				}
 				width = height = 0;
 			}
+			boolean needCache = ConnectionManager.sharedInstance().isCachingAllowed() && page.isRemote();
 			if (titleText != null) {
-				String cachedText = ConnectionManager.sharedInstance().getCachedText(page.getAddress(), t.getIndex());
-				if (cachedText != null) {
-					t.setUseCacheText(true);
-					t.decodeText(cachedText);
+				if (needCache) {
+					File cml = ConnectionManager.sharedInstance().getLocalCopy(page.getAddress());
+					if (cml != null && cml.exists())
+						t.setBase(cml);
 				}
-				else {
-					t.setUseCacheText(false);
-					t.decodeText(titleText);
-				}
-				t.setOriginalText(titleText);
+				t.decodeText(titleText);
 				titleText = null;
+				// if (needCache) t.setBase(page.getURL());
+				/**
+				 * WARNING: if we restore the document base now, the resource files will load in correctly because their
+				 * loader threads will presumably use the original document base. This has two consequencies. First, the
+				 * resources cannot be loaded offline (since the loaders that are seeking to download the resources from
+				 * remote sites will not be able to download). Second, there will not be caching for for the source
+				 * files because the HTML document will be redirected to remote files and there is no built-in caching
+				 * mechanism in the default HTML loading in a HTMLDocument. So we must NOT restore the document base
+				 * until all the sources have been loaded.
+				 * 
+				 * If we do not restore the document base, there is one consequence. All the links within the text box
+				 * will point to the cached files. If there are no links, then I would say that we may not bother to
+				 * restore the document base, as the text box contains no ACTIVE pieces. So it is really the links that
+				 * requires base restoration.
+				 * 
+				 * So where and when do we restore the document base? As for the timing, I think it is pretty clear that
+				 * the restoration has to happen AFTER all the sources have been loaded. The good news is that since we
+				 * are now able to use cached files, the loading process should be rapid. So an optimal place to restore
+				 * the base is actually the first time when the user is about to click a link. There are two places in
+				 * Page: hyperlinkUpdate(HyperlinkEvent e) and hotlinkUpdate(HyperlinkEvent e).
+				 * 
+				 * (One of them is actually for making image map work.)
+				 */
 			}
-			if (ConnectionManager.sharedInstance().isCachingAllowed() && page.isRemote()) {
-				if (!t.getUseCacheText()) {
-					t.cacheLinkedFiles(page.getPathBase());
-					t.cacheText(page.getAddress(), t.getIndex());
-				}
+			if (needCache) { // FIXME: Do we want to check caching for all linked files?
+				t.cacheLinkedFiles(page.getPathBase());
 			}
 			htmlComponentConnector.enroll(t);
 			return t;

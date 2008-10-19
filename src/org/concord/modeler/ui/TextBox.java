@@ -31,6 +31,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelListener;
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -62,7 +63,6 @@ public class TextBox extends JPanel implements HtmlService, Searchable {
 
 	protected HTMLPane textBody;
 	private FrameHeader header;
-	private String originalText;
 
 	private TextComponentPopupMenu popupMenu;
 	private JScrollPane scroller;
@@ -317,6 +317,15 @@ public class TextBox extends JPanel implements HtmlService, Searchable {
 		return textBody.getHotlinkListeners();
 	}
 
+	public void setBase(File file) {
+		try {
+			setBase(file.toURI().toURL());
+		}
+		catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public void setBase(String url) {
 		try {
 			setBase(new URL(url));
@@ -359,14 +368,6 @@ public class TextBox extends JPanel implements HtmlService, Searchable {
 		textBody.setPage(url);
 	}
 
-	public void setOriginalText(String text) {
-		originalText = text;
-	}
-
-	public String getOriginalText() {
-		return originalText;
-	}
-
 	public void setText(String text) {
 		if (text == null) {
 			setContentType("text/html");
@@ -398,21 +399,13 @@ public class TextBox extends JPanel implements HtmlService, Searchable {
 		textBody.removeSelfScriptListener(l);
 	}
 
-	public void useCachedImages(boolean b, String codeBase) {
-		textBody.useCachedImages(b, codeBase);
-	}
-
 	public void cacheLinkedFiles(String codeBase) {
 		textBody.cacheLinkedFiles(codeBase);
 	}
 
-	public void cacheText(String parentURL, int index) {
-		textBody.cacheText(parentURL, index);
-	}
-
 	/** encode the HTML text so that it can be embedded into XML */
 	protected String encodeText() {
-		return XMLCharacterEncoder.encode(originalText == null ? getText() : originalText);
+		return XMLCharacterEncoder.encode(getText());
 	}
 
 	/** decode the encoded HTML text embedded in XML */

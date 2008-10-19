@@ -49,7 +49,6 @@ import javax.swing.ButtonModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
@@ -57,7 +56,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.swing.text.ElementIterator;
@@ -804,328 +802,12 @@ public class HTMLPane extends MyEditorPane {
 		super.paintComponent(g);
 	}
 
-	/**
-	 * workaround to set the background image of a HTML text box because we cannot directly set it through changing the
-	 * HTML document. This is necessary for the background image of a text box to be displayed while offline. While
-	 * online, this results in double rendering of the background image: one through the HTML text structure, the other
-	 * through calling the setBackgroundImage method of the TextBox class.
-	 */
-	public void useCachedBackgroundImage(String codeBase) {
-		if (!(getDocument() instanceof HTMLDocument))
-			return;
-		AttributeSet as = null;
-		Element el = null;
-		Enumeration en = null;
-		String s = null;
-		Object obj = null;
-		HTMLDocument doc = (HTMLDocument) getDocument();
-		ElementIterator it = new ElementIterator(doc);
-		synchronized (doc) {
-			while (it.next() != null) {
-				el = it.current();
-				if (el.getName().equalsIgnoreCase(HTML.Tag.BODY.toString())) {
-					as = el.getAttributes();
-					en = as.getAttributeNames();
-					while (en.hasMoreElements()) {
-						obj = en.nextElement();
-						if (obj.toString().equalsIgnoreCase(HTML.Attribute.BACKGROUND.toString())) {
-							s = as.getAttribute(obj).toString();
-							break;
-						}
-					}
-					if (s != null) {
-						s = ConnectionManager.sharedInstance().getLocalCopy(codeBase + FileUtilities.getFileName(s))
-								.toString();
-						setBackgroundImage(new ImageIcon(s));
-					}
-				}
-			}
-		}
-	}
-
-	/*
-	 * FIXME: The problem is that the RunElements in the HTMLDocument is not mutable. Because of this, we have to insert
-	 * new elements that call cached images and remove the corresponding old elements that call remote images. This
-	 * ensures that the images will be shown when offline, but removes the performance benefit of caching. Can we find a
-	 * better way to do this?
-	 * 
-	 * @param b if true, use the file path of the local cache to replace the src attribute of the img tag.
-	 */
-	void useCachedImages(boolean b, String codeBase) {
-
-		if (!(getDocument() instanceof HTMLDocument))
-			return;
-
-		AttributeSet as = null;
-		Element el = null;
-		Enumeration en = null;
-		String s = null;
-		String usemap = null;
-		String href = null;
-		String border = null;
-		String imgWidth = null;
-		String imgHeight = null;
-		Object obj = null;
-		boolean baseSet = false;
-		String s2 = null;
-
-		HTMLDocument doc = (HTMLDocument) getDocument();
-		URL originalBase = doc.getBase();
-		ElementIterator it = new ElementIterator(doc);
-
-		// the problem is that by the time we start to traverse the HTMLDocument, the image files specified by the IMG
-		// tag may have been downloaded by the default HTML parser of Java, which essentially removes the performance
-		// benefit of caching.
-		synchronized (doc) {
-			while (it.next() != null) {
-				el = it.current();
-				if (el.getName().equalsIgnoreCase(HTML.Tag.IMG.toString())) {
-					as = el.getAttributes();
-					en = as.getAttributeNames();
-					while (en.hasMoreElements()) {
-						obj = en.nextElement();
-						s2 = obj.toString();
-						if (s2.equalsIgnoreCase(HTML.Attribute.SRC.toString())) {
-							s = as.getAttribute(obj).toString();
-						}
-						else if (s2.equalsIgnoreCase(HTML.Attribute.USEMAP.toString())) {
-							usemap = as.getAttribute(obj).toString();
-						}
-						else if (s2.equalsIgnoreCase(HTML.Tag.A.toString())) {
-							href = as.getAttribute(obj).toString();
-						}
-						else if (s2.equalsIgnoreCase(HTML.Attribute.BORDER.toString())) {
-							border = as.getAttribute(obj).toString();
-						}
-						else if (s2.equalsIgnoreCase(HTML.Attribute.WIDTH.toString())) {
-							imgWidth = as.getAttribute(obj).toString();
-						}
-						else if (s2.equalsIgnoreCase(HTML.Attribute.HEIGHT.toString())) {
-							imgHeight = as.getAttribute(obj).toString();
-						}
-					}
-					if (b) {
-						s = ConnectionManager.sharedInstance().getLocalCopy(FileUtilities.concatenate(codeBase, s))
-								.toString();
-						if (!baseSet) {
-							try {
-								doc.setBase(new File(FileUtilities.getCodeBase(s)).toURI().toURL());
-							}
-							catch (Exception e) {
-								e.printStackTrace();
-							}
-							baseSet = true;
-						}
-						// the following converts the file path to url path, i.e.
-						// C:\Documents and Settings\... to file:/C:/Documents%20and%20Settings/...
-						s = doc.getBase() + FileUtilities.getFileName(s);
-					}
-					else {
-						// when this method is called when a page is saved, we need to restore the src attribute back to
-						// the original relative form (s is now a long file path starting with the cache directory).
-						s = FileUtilities.getFileName(s);
-					}
-					if (href != null) {
-						s2 = "<a " + href.trim() + ">";
-					}
-					else {
-						s2 = "";
-					}
-					if (usemap == null) {
-						s2 += "<img src=\"" + s + "\"";
-					}
-					else {
-						s2 += "<img usemap=\"" + usemap + "\" src=\"" + s + "\"";
-					}
-					if (border != null) {
-						s2 += " border=\"" + border + "\"";
-					}
-					if (imgWidth != null) {
-						s2 += " width=\"" + imgWidth + "\"";
-					}
-					if (imgHeight != null) {
-						s2 += " height=\"" + imgHeight + "\"";
-					}
-					s2 += "\">";
-					if (href != null) {
-						s2 += "</a>";
-					}
-					try {
-						doc.insertAfterEnd(el, s2);
-					}
-					catch (BadLocationException e) {
-						e.printStackTrace();
-						continue;
-					}
-					catch (IOException e) {
-						e.printStackTrace();
-						continue;
-					}
-					s = href = usemap = border = null;
-					it.next(); // this is called to skip the original image element!!!
-				}
-			}
-			doc.setBase(originalBase);
-		}
-
-		// regardless of the value of b, this method must be called (because if b is false, we need to remove the cache
-		// reference from the src attribute and replace it with the original relative form).
-		removeAllImages();
-
-	}
-
-	private void removeAllImages() {
-
-		if (!(getDocument() instanceof HTMLDocument))
-			return;
-		HTMLDocument doc = (HTMLDocument) getDocument();
-
-		ElementIterator it = new ElementIterator(doc);
-		HTMLDocument.RunElement re = null;
-		int startOffset, endOffset;
-		Element el = null;
-		AttributeSet as = null;
-		List<Integer> startOffsetList = new ArrayList<Integer>();
-		List<Integer> endOffsetList = new ArrayList<Integer>();
-
-		synchronized (doc) {
-			while (it.next() != null) {
-				el = it.current();
-				if (el.getName().equalsIgnoreCase(HTML.Tag.IMG.toString())) {
-					as = el.getAttributes();
-					if (as instanceof HTMLDocument.RunElement) {
-						re = (HTMLDocument.RunElement) as;
-						try {
-							startOffset = re.getStartOffset();
-							endOffset = re.getEndOffset();
-							startOffsetList.add(startOffset);
-							endOffsetList.add(endOffset);
-						}
-						catch (Exception e) {
-							e.printStackTrace();
-							continue;
-						}
-					}
-					it.next();
-				}
-			}
-		}
-
-		int n = startOffsetList.size();
-		for (int i = n - 1; i >= 0; i--) {
-			startOffset = startOffsetList.get(i);
-			endOffset = endOffsetList.get(i);
-			try {
-				doc.remove(startOffset, endOffset - startOffset);
-			}
-			catch (BadLocationException e) {
-				e.printStackTrace();
-			}
-		}
-
-	}
-
-	/*
-	 * FIXME: The problem is that the RunElements in the HTMLDocument is not mutable. Because of this, we have to insert
-	 * new elements that call cached links and remove the corresponding old elements that call remote links. Can we find
-	 * a better way to do this?
-	 */
-	private void useCachedLinks(boolean b, String codeBase) {
-
-		if (!(getDocument() instanceof HTMLDocument))
-			return;
-
-		AttributeSet as = null;
-		Element el = null;
-		Enumeration en = null;
-		String rel = null;
-		String href = null;
-		String type = null;
-		Object obj = null;
-		boolean baseSet = false;
-		String s2 = null;
-
-		HTMLDocument doc = (HTMLDocument) getDocument();
-		URL originalBase = doc.getBase();
-		ElementIterator it = new ElementIterator(doc);
-
-		synchronized (doc) {
-			while (it.next() != null) {
-				el = it.current();
-				if (el.getName().equalsIgnoreCase(HTML.Tag.LINK.toString())) {
-					as = el.getAttributes();
-					en = as.getAttributeNames();
-					while (en.hasMoreElements()) {
-						obj = en.nextElement();
-						s2 = obj.toString();
-						if (s2.equalsIgnoreCase(HTML.Attribute.HREF.toString())) {
-							href = as.getAttribute(obj).toString();
-						}
-						else if (s2.equalsIgnoreCase(HTML.Attribute.REL.toString())) {
-							rel = as.getAttribute(obj).toString();
-						}
-						else if (s2.equalsIgnoreCase(HTML.Attribute.TYPE.toString())) {
-							type = as.getAttribute(obj).toString();
-						}
-					}
-					if (b) {
-						href = ConnectionManager.sharedInstance().getLocalCopy(
-								FileUtilities.concatenate(codeBase, href)).toString();
-						if (!baseSet) {
-							try {
-								doc.setBase(new File(FileUtilities.getCodeBase(href)).toURI().toURL());
-							}
-							catch (Exception e) {
-								e.printStackTrace();
-							}
-							baseSet = true;
-						}
-						href = doc.getBase() + FileUtilities.getFileName(href);
-					}
-					else {
-						href = FileUtilities.getFileName(href);
-					}
-					s2 = "<link href=\"" + href.trim() + "\" rel=\"" + rel + "\" type=\"" + type + "\">";
-					try {
-						doc.insertAfterEnd(el, s2);
-					}
-					catch (BadLocationException e) {
-						e.printStackTrace();
-						continue;
-					}
-					catch (IOException e) {
-						e.printStackTrace();
-						continue;
-					}
-					rel = href = type = null;
-					it.next(); // this is called to skip the original image element!!!
-				}
-			}
-			doc.setBase(originalBase);
-		}
-
-	}
-
 	void cacheLinkedFiles(String codeBase) {
-		
+
 		if (!ConnectionManager.sharedInstance().isCachingAllowed())
 			return;
 		if (!FileUtilities.isRemote(codeBase))
 			return;
-
-		String href = getAttribute("link", "href");
-		if (href != null) {
-			String pb = codeBase + FileUtilities.getFileName(href);
-			try {
-				File file = ConnectionManager.sharedInstance().shouldUpdate(pb);
-				if (file == null)
-					file = ConnectionManager.sharedInstance().cache(pb);
-			}
-			catch (IOException e) {
-				e.printStackTrace();
-			}
-			useCachedLinks(true, codeBase);
-		}
 
 		String bgImage = getAttribute("body", "background");
 		if (bgImage != null) {
@@ -1138,7 +820,6 @@ public class HTMLPane extends MyEditorPane {
 			catch (IOException e) {
 				e.printStackTrace();
 			}
-			useCachedBackgroundImage(codeBase);
 		}
 
 		List<String> list = getImageNames();
@@ -1155,13 +836,21 @@ public class HTMLPane extends MyEditorPane {
 					e.printStackTrace();
 				}
 			}
-			useCachedImages(true, codeBase);
 		}
 
-	}
+		String href = getAttribute("link", "href");
+		if (href != null) {
+			String pb = codeBase + FileUtilities.getFileName(href);
+			try {
+				File file = ConnectionManager.sharedInstance().shouldUpdate(pb);
+				if (file == null)
+					file = ConnectionManager.sharedInstance().cache(pb);
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 
-	void cacheText(String parentURL, int index) {
-		ConnectionManager.sharedInstance().cacheText(getText(), parentURL, index);
 	}
 
 }

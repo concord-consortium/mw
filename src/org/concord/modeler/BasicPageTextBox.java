@@ -23,7 +23,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
-import java.net.MalformedURLException;
 import java.util.Enumeration;
 
 import javax.swing.BorderFactory;
@@ -63,7 +62,6 @@ public abstract class BasicPageTextBox extends TextBox implements AutoResizable,
 
 	private boolean wasOpaque;
 	private boolean marked;
-	private boolean useCacheText;
 	private TextBoxScripter scripter;
 
 	public BasicPageTextBox() {
@@ -186,12 +184,7 @@ public abstract class BasicPageTextBox extends TextBox implements AutoResizable,
 		/* Sun's HyperlinkListener added to make image map work */
 		textBody.addHyperlinkListener(page);
 		textBody.setPopupMenus(page.getPopupMenus());
-		try {
-			setBase(page.getURL());
-		}
-		catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
+		setBase(page.getURL());
 		textBody.setFont(new Font(Page.getDefaultFontFamily(), Font.PLAIN, Page.getDefaultFontSize()));
 	}
 
@@ -235,14 +228,6 @@ public abstract class BasicPageTextBox extends TextBox implements AutoResizable,
 		super.setPreferredSize(dim);
 		super.setMinimumSize(dim);
 		super.setMaximumSize(dim);
-	}
-
-	public void setUseCacheText(boolean b) {
-		useCacheText = b;
-	}
-
-	public boolean getUseCacheText() {
-		return useCacheText;
 	}
 
 	public void decodeText(String s) {

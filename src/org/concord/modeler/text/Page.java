@@ -138,7 +138,6 @@ import org.concord.modeler.Embeddable;
 import org.concord.modeler.Engine;
 import org.concord.modeler.FileFilterFactory;
 import org.concord.modeler.HistoryManager;
-import org.concord.modeler.HtmlService;
 import org.concord.modeler.ImageQuestion;
 import org.concord.modeler.Initializer;
 import org.concord.modeler.InstancePool;
@@ -192,6 +191,7 @@ import org.concord.modeler.event.PageEvent;
 import org.concord.modeler.event.PageListener;
 import org.concord.modeler.event.ProgressEvent;
 import org.concord.modeler.event.ProgressListener;
+import org.concord.modeler.ui.HTMLPane;
 import org.concord.modeler.ui.IconPool;
 import org.concord.modeler.ui.TextComponentPopupMenu;
 import org.concord.modeler.util.FileChooser;
@@ -1354,14 +1354,16 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		urlDisplay = l;
 	}
 
-	public JLabel getURLDisplay() {
-		return urlDisplay;
-	}
-
-	public URL getURL() throws MalformedURLException {
-		if (isRemote())
-			return new URL(pageAddress);
-		return new File(pageAddress).toURI().toURL();
+	public URL getURL() {
+		try {
+			if (isRemote())
+				return new URL(pageAddress);
+			return new File(pageAddress).toURI().toURL();
+		}
+		catch (MalformedURLException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	public String getAddress() {
@@ -2329,7 +2331,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				}
 			}
 		});
-		//settleComponentSize();
+		// settleComponentSize();
 	}
 
 	/** Creates highlights around all occurrences of pattern */
@@ -3345,15 +3347,6 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 					: PageEvent.PAGE_WRITE_END);
 
 			if (!isWriting()) {
-				if (isRemote()) {
-					List list = getEmbeddedComponents();
-					String pathBase = getPathBase();
-					for (Object o : list) {
-						if (o instanceof HtmlService) {
-							((HtmlService) o).useCachedImages(false, pathBase);
-						}
-					}
-				}
 				final String newPageAddress = newAddress;
 				new SwingWorker("Page-saving thread") {
 					public Object construct() {
@@ -4131,6 +4124,9 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			}
 		}
 		else if (eventType == HyperlinkEvent.EventType.ENTERED) {
+			if (e.getSource() instanceof HTMLPane) { // reassure that we have restored the document base
+				((HTMLPane) e.getSource()).setBase(getURL());
+			}
 			urlDisplay.setText(e.getURL() == null ? desc : e.getURL().toString());
 		}
 		else if (eventType == HyperlinkEvent.EventType.EXITED) {
@@ -4176,6 +4172,9 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			}
 		}
 		else if (eventType == HyperlinkEvent.EventType.ENTERED) {
+			if (e.getSource() instanceof HTMLPane) { // reassure that we have restored the document base
+				((HTMLPane) e.getSource()).setBase(getURL());
+			}
 			if (urlDisplay != null)
 				urlDisplay.setText(e.getURL() == null ? desc : e.getURL().toString());
 		}

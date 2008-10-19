@@ -30,7 +30,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -304,10 +303,6 @@ public class ImageQuestion extends JPanel implements Embeddable, TransferListene
 		questionArea.cacheLinkedFiles(codeBase);
 	}
 
-	public void useCachedImages(boolean b, String codeBase) {
-		questionArea.useCachedImages(b, codeBase);
-	}
-
 	public TextBox getQuestionTextBox() {
 		return questionArea;
 	}
@@ -326,12 +321,7 @@ public class ImageQuestion extends JPanel implements Embeddable, TransferListene
 		questionArea.addHotlinkListener(page);
 		/* Sun's HyperlinkListener added to make image map work */
 		questionArea.getHtmlPane().addHyperlinkListener(page);
-		try {
-			setBase(page.getURL());
-		}
-		catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
+		setBase(page.getURL());
 		questionArea.setFont(new Font(null, Font.PLAIN, Page.getDefaultFontSize()));
 	}
 
