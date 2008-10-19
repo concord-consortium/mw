@@ -301,12 +301,7 @@ class PageScripter extends ComponentScripter {
 	private void showMessageDialog(String message) {
 		HTMLPane h = new HTMLPane("text/html", message);
 		h.setEditable(false);
-		try {
-			h.setBase(page.getURL());
-		}
-		catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
+		h.setBase(page.getURL());
 		JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(page), new JScrollPane(h));
 	}
 

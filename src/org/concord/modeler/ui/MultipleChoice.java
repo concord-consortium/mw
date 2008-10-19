@@ -364,10 +364,6 @@ public abstract class MultipleChoice extends JPanel implements HtmlService, Sear
 		questionBody.cacheLinkedFiles(codeBase);
 	}
 
-	public void useCachedImages(boolean b, String codeBase) {
-		questionBody.useCachedImages(b, codeBase);
-	}
-
 	public TextBox getQuestionTextBox() {
 		return questionBody;
 	}

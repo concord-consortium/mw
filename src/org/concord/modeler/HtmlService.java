@@ -41,17 +41,11 @@ public interface HtmlService {
 	public List<String> getImageNames();
 
 	/**
-	 * cache the embedded images and the background image.
+	 * cache the embedded images, the background image and other files such as css.
 	 * 
 	 * @param codeBase
 	 *            the current parent directory
 	 */
 	public void cacheLinkedFiles(String codeBase);
-
-	/**
-	 * If b is true, it is used to modify the HTML document so that the images point to the cached ones. Otherwise, it
-	 * is used to remove the attribute changes related to caching before saving the page.
-	 */
-	public void useCachedImages(boolean b, String codeBase);
 
 }

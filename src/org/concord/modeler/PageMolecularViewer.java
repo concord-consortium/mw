@@ -904,12 +904,7 @@ public class PageMolecularViewer extends JmolContainer implements BasicModel, Em
 				window.addEditButton(null);
 			}
 			window.setContentType("text/html");
-			try {
-				window.setBase(page.getURL());
-			}
-			catch (MalformedURLException e) {
-				e.printStackTrace();
-			}
+			window.setBase(page.getURL());
 		}
 		showPopupText(a.getText(), a.getBackgroundRgb(), x, y, w, h, xCallOut, yCallOut);
 	}

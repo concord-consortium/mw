@@ -28,7 +28,6 @@ import java.awt.RenderingHints;
 
 import javax.swing.Icon;
 
-
 /**
  * This class should have been named ColorBar. Its functionalities have been extended beyond drawing simple lines.
  * 
@@ -111,6 +110,8 @@ class LineIcon implements Icon {
 	}
 
 	public String getText() {
+		if (wrapper != null)
+			return wrapper.getText();
 		return text;
 	}
 
@@ -315,8 +316,9 @@ class LineIcon implements Icon {
 			sb.append("<cornerarc>" + cornerArc + "</cornerarc>");
 		if (!filled)
 			sb.append("<opaque>false</opaque>");
-		if (text != null && !text.trim().equals(""))
-			sb.append("<title>" + XMLCharacterEncoder.encode(text) + "</title>");
+		String s = getText();
+		if (s != null && !s.trim().equals(""))
+			sb.append("<title>" + XMLCharacterEncoder.encode(s) + "</title>");
 		if (color != null)
 			sb.append("<bgcolor>" + Integer.toString(color.getRGB(), 16) + "</bgcolor>");
 		if (topMargin != 0)
