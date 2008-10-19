@@ -420,21 +420,40 @@ final class PageXMLDecoder {
 				icon = BulletIcon.ImageNotFoundIcon.sharedInstance();
 			}
 		}
-		setWrappedIcon(style, icon);
+		setWrappedIcon(style, icon, null);
 		page.setEmbeddedImageFound(true);
 	}
 
-	private void setWrappedIcon(Style style, Icon icon) {
+	private void setWrappedIcon(Style style, Icon icon, String text) {
 		if (Page.wrapIconWithComponent(icon)) {
-			IconWrapper iconWrapper = new IconWrapper(icon, page);
-			iconWrapper.cacheLinkedFiles(page.getPathBase());
-			StyleConstants.setComponent(style, iconWrapper);
-			htmlComponentConnector.enroll(iconWrapper);
+			IconWrapper wrap = new IconWrapper(icon, page);
+			wrap.setIndex(indexOfComponent++);
+			if (text != null) {
+				wrap.setOriginalText(text);
+				String cachedText = ConnectionManager.sharedInstance()
+						.getCachedText(page.getAddress(), wrap.getIndex());
+				if (cachedText != null) {
+					wrap.setUseCacheText(true);
+					wrap.decodeText(cachedText);
+				}
+				else {
+					wrap.setUseCacheText(false);
+					wrap.decodeText(text);
+				}
+				if (ConnectionManager.sharedInstance().isCachingAllowed() && page.isRemote()) {
+					if (!wrap.getUseCacheText()) {
+						wrap.cacheLinkedFiles(page.getPathBase());
+						wrap.cacheText(page.getAddress(), wrap.getIndex());
+					}
+				}
+			}
+			StyleConstants.setComponent(style, wrap);
+			htmlComponentConnector.enroll(wrap);
 			if (icon instanceof LineIcon) {
 				LineIcon li = (LineIcon) icon;
 				if (li.getWidth() < 1.05f) {
-					iconWrapper.setWidthRatio(li.getWidth());
-					iconWrapper.setWidthRelative(true);
+					wrap.setWidthRatio(li.getWidth());
+					wrap.setWidthRelative(true);
 				}
 			}
 		}
@@ -611,7 +630,7 @@ final class PageXMLDecoder {
 		}
 
 		public synchronized void endDocument() throws SAXException {
-			// Is this right? the following code fixes the missed notification problem in Mac OS X
+			// FIXME: Is this right? the following code seems to fix the missed notification problem in Mac OS X
 			// when there is a mw3d container on the page with many atoms and bonds to load.
 			try {
 				Thread.sleep(100);
@@ -1282,11 +1301,11 @@ final class PageXMLDecoder {
 						lineIcon.setArcHeight(arcHeight);
 						arcHeight = 0;
 					}
+					setWrappedIcon(currentStyle, lineIcon, titleText);
 					if (titleText != null) {
-						lineIcon.setText(XMLCharacterDecoder.decode(titleText));
+						// lineIcon.setText(XMLCharacterDecoder.decode(titleText));
 						titleText = null;
 					}
-					setWrappedIcon(currentStyle, lineIcon);
 					className = null;
 				}
 				else {
@@ -2128,6 +2147,7 @@ final class PageXMLDecoder {
 
 		private PageTextBox createTextBox() {
 			PageTextBox t = new PageTextBox();
+			t.setIndex(indexOfComponent++);
 			if (titleText != null && titleText.trim().length() >= 6) {
 				t.setContentType(titleText.trim().substring(0, 6).toLowerCase().equals("<html>") ? "text/html"
 						: "text/plain");
@@ -2135,13 +2155,7 @@ final class PageXMLDecoder {
 			else {
 				t.setContentType("text/plain");
 			}
-			t.setIndex(indexOfComponent);
 			t.setPage(page);
-			if (titleText != null) {
-				t.decodeText(titleText);
-				t.setOriginalText(titleText);
-				titleText = null;
-			}
 			if (!opaque) {
 				t.setOpaque(false);
 				opaque = true;
@@ -2178,10 +2192,26 @@ final class PageXMLDecoder {
 				}
 				width = height = 0;
 			}
-			if (ConnectionManager.sharedInstance().isCachingAllowed() && page.isRemote())
-				t.cacheLinkedFiles(page.getPathBase());
+			if (titleText != null) {
+				String cachedText = ConnectionManager.sharedInstance().getCachedText(page.getAddress(), t.getIndex());
+				if (cachedText != null) {
+					t.setUseCacheText(true);
+					t.decodeText(cachedText);
+				}
+				else {
+					t.setUseCacheText(false);
+					t.decodeText(titleText);
+				}
+				t.setOriginalText(titleText);
+				titleText = null;
+			}
+			if (ConnectionManager.sharedInstance().isCachingAllowed() && page.isRemote()) {
+				if (!t.getUseCacheText()) {
+					t.cacheLinkedFiles(page.getPathBase());
+					t.cacheText(page.getAddress(), t.getIndex());
+				}
+			}
 			htmlComponentConnector.enroll(t);
-			indexOfComponent++;
 			return t;
 		}
 

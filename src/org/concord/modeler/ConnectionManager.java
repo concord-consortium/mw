@@ -21,9 +21,12 @@
 package org.concord.modeler;
 
 import java.awt.Toolkit;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -252,37 +255,27 @@ public class ConnectionManager {
 		boolean update = false;
 		if (isCached(url)) {
 			file = sharedInstance.getLocalCopy(url);
-			if (file == null) {
-				update = true;
-			}
-			else {
-				if (file.exists()) {
-					if (workOffline)
-						return file;
-					// ONLY check update for the first cml file when a batch of files for a page are to be loaded.
-					if (checkUpdate.get()) {
-						long lm = getLastModified(url);
-						// System.out.println(url + "=" + new java.util.Date(lm));
-						// what about people from different time zone?
-						if (lm > 0L && lm - file.lastModified() > 5000L) {
-							update = true; // allow 5 second tolerance
-						}
-						else {
-							update = false;
-							// lm=0 means query for last modified time has failed, use the local copy
-						}
-						updateFirstFile = update;
-						checkUpdate.set(false);
-					}
-					// if the first file has been updated, all the other files are assumed to need update
-					// check as well, regardless of wether or not they have actually been changed.
-					if (updateFirstFile)
-						update = true;
+			if (workOffline)
+				return file;
+			// ONLY check update for the first cml file when a batch of files for a page are to be loaded.
+			if (checkUpdate.get()) {
+				long lm = getLastModified(url);
+				// System.out.println(url + "=" + new java.util.Date(lm));
+				// what about people from different time zone?
+				if (lm > 0L && lm - file.lastModified() > 5000L) {
+					update = true; // allow 5 second tolerance
 				}
 				else {
-					update = true;
+					update = false;
+					// lm=0 means query for last modified time has failed, use the local copy
 				}
+				updateFirstFile = update;
+				checkUpdate.set(false);
 			}
+			// if the first file has been updated, all the other files are assumed to need update
+			// check as well, regardless of wether or not they have actually been changed.
+			if (updateFirstFile)
+				update = true;
 		}
 		else {
 			update = true;
@@ -404,28 +397,136 @@ public class ConnectionManager {
 
 	}
 
+	public String getCachedText(String parentURL, int id) {
+		if (!allowCaching)
+			return null;
+		URL url = null;
+		try {
+			url = new URL(parentURL);
+		}
+		catch (MalformedURLException e) {
+			return null;
+		}
+		File cachedParentFile = new File(Initializer.sharedInstance().getCacheDirectory(), convertURLToFileName(url));
+		File cachedFile = new File(cachedParentFile.toString() + "$" + id + ".htm");
+		if (!cachedFile.exists() || cachedFile.lastModified() != cachedParentFile.lastModified())
+			return null; // if the text has not been cached or the time stamp is not the same as the parent
+		BufferedReader br = null;
+		try {
+			br = new BufferedReader(new FileReader(cachedFile));
+		}
+		catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return null;
+		}
+		String text = "";
+		boolean error = false;
+		String line = null;
+		try {
+			while ((line = br.readLine()) != null) {
+				text += line;
+			}
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+			error = true;
+		}
+		finally {
+			try {
+				br.close();
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		if (error)
+			return null;
+		return text;
+	}
+
+	/**
+	 * this method is used to cache the content of a text box so that its resource files can point directly to the
+	 * cached version, instead of having to download everything.
+	 * 
+	 * @param text
+	 *            the modified text
+	 * @param parentURL
+	 *            the URL of the parent CML file
+	 * @return the cached file
+	 */
+	public File cacheText(String text, String parentURL, int id) {
+		if (!allowCaching)
+			return null;
+		URL url = null;
+		try {
+			url = new URL(parentURL);
+		}
+		catch (MalformedURLException e) {
+			return null;
+		}
+		File cachedParentFile = new File(Initializer.sharedInstance().getCacheDirectory(), convertURLToFileName(url));
+		String uri = FileUtilities.getCodeBase(cachedParentFile.toURI().toString());
+		if (text.indexOf(uri) == -1)
+			return null;
+		if (!cachedParentFile.exists())
+			return null;
+		File cachedFile = new File(cachedParentFile.toString() + "$" + id + ".htm");
+		if (cachedFile.exists() && cachedFile.lastModified() == cachedParentFile.lastModified())
+			return cachedFile; // if the text has been cached and the time stamp is the same as the parent, skip
+		FileWriter writer = null;
+		try {
+			writer = new FileWriter(cachedFile);
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+		boolean error = false;
+		try {
+			writer.write(text);
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+			error = true;
+		}
+		finally {
+			try {
+				writer.close();
+			}
+			catch (IOException e) {
+			}
+		}
+		if (error)
+			return null;
+		cachedFile.setLastModified(cachedParentFile.lastModified());
+		return cachedFile;
+	}
+
 	/**
 	 * get the last-modified time of this Web resource. The result is the number of milliseconds since January 1, 1970
 	 * GMT. This is used to check update for a resource.
 	 */
 	private static long getLastModified(URL url) {
-		// System.out.println(Thread.currentThread()+":"+url);
+		// System.out.println(Thread.currentThread() + " : " + url);
 		if (url == null)
 			throw new IllegalArgumentException("Null URL");
 		if (sharedInstance.getWorkOffline())
 			return 0;
-		// if(!ServerChecker.sharedInstance().shouldCheck(url.getHost())) return 0;
 		HttpURLConnection conn = getConnection(url);
 		if (conn == null)
 			return 0;
+		long lm = 0;
 		try {
 			conn.setRequestMethod("HEAD");
+			lm = conn.getLastModified();
 		}
 		catch (ProtocolException e) {
 			e.printStackTrace();
 		}
-		// conn.disconnect();
-		return conn.getLastModified();
+		finally {
+			conn.disconnect();
+		}
+		return lm;
 	}
 
 	/**
@@ -447,12 +548,15 @@ public class ConnectionManager {
 				return null;
 			try {
 				conn.setRequestMethod("HEAD");
+				t[0] = conn.getLastModified();
+				t[1] = conn.getContentLength();
 			}
 			catch (ProtocolException e) {
 				e.printStackTrace();
 			}
-			t[0] = conn.getLastModified();
-			t[1] = conn.getContentLength();
+			finally {
+				conn.disconnect();
+			}
 		}
 		else {
 			t[0] = file.lastModified();

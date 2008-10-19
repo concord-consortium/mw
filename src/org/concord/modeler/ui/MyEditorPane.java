@@ -32,6 +32,8 @@ import javax.swing.text.Element;
 import javax.swing.text.ElementIterator;
 import javax.swing.text.html.HTML;
 
+import org.concord.modeler.util.FileUtilities;
+
 /**
  * This class can be used to retrieve the image elements of a HTML document reliably.
  * 
@@ -101,8 +103,9 @@ public class MyEditorPane extends JEditorPane {
 						if (obj.toString().equalsIgnoreCase(HTML.Attribute.SRC.toString())) {
 							if (list == null)
 								list = new ArrayList<String>();
-							// s=FileUtilities.getFileName(as.getAttribute(obj).toString());
 							s = as.getAttribute(obj).toString();
+							if (s.startsWith("file:/"))
+								s = FileUtilities.getFileName(as.getAttribute(obj).toString());
 							if (!list.contains(s))
 								list.add(s);
 						}

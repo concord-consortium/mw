@@ -63,6 +63,7 @@ public abstract class BasicPageTextBox extends TextBox implements AutoResizable,
 
 	private boolean wasOpaque;
 	private boolean marked;
+	private boolean useCacheText;
 	private TextBoxScripter scripter;
 
 	public BasicPageTextBox() {
@@ -234,6 +235,14 @@ public abstract class BasicPageTextBox extends TextBox implements AutoResizable,
 		super.setPreferredSize(dim);
 		super.setMinimumSize(dim);
 		super.setMaximumSize(dim);
+	}
+
+	public void setUseCacheText(boolean b) {
+		useCacheText = b;
+	}
+
+	public boolean getUseCacheText() {
+		return useCacheText;
 	}
 
 	public void decodeText(String s) {
