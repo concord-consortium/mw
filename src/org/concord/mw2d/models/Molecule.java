@@ -60,21 +60,21 @@ public class Molecule implements ModelComponent, Rotatable {
 	 * The graphical handle that the user can grab to rotate this molecule. If null, no graphics associated with this
 	 * method will be displayed.
 	 */
-	static Rectangle2D.Double rotateRect;
+	static Rectangle2D.Float rotateRect;
 
 	/*
 	 * The graphical components for rotating this molecule. If null, no graphics associated with this method will be
 	 * displayed.
 	 */
-	static Line2D.Double[] rotateCrossLine;
+	static Line2D.Float[] rotateCrossLine;
 
 	public Molecule() {
 		super();
 		atoms = Collections.synchronizedList(new ArrayList<Atom>());
 		if (rotateRect == null)
-			rotateRect = new Rectangle2D.Double();
+			rotateRect = new Rectangle2D.Float();
 		if (rotateCrossLine == null)
-			rotateCrossLine = new Line2D.Double[] { new Line2D.Double(), new Line2D.Double() };
+			rotateCrossLine = new Line2D.Float[] { new Line2D.Float(), new Line2D.Float() };
 	}
 
 	public void addAtom(Atom a) {
@@ -191,24 +191,20 @@ public class Molecule implements ModelComponent, Rotatable {
 		return x * MDModel.EV_CONVERTER;
 	}
 
-	/** @return true if the specified location is inside the bounding box of this molecule */
+	/** @return true if the specified location is inside an atom of this molecule */
 	public boolean contains(double x, double y) {
-		return getBounds2D().contains(x, y);
+		if (atoms.isEmpty())
+			return false;
+		for (Atom a : atoms) {
+			if (a.contains(x, y))
+				return true;
+		}
+		return false;
 	}
 
 	/** @return true if the specified area is inside the bounding box of this molecule */
 	public boolean contains(double x, double y, double w, double h) {
 		return getBounds2D().contains(x, y, w, h);
-	}
-
-	/** @return true if the specified point is inside the bounding box of this molecule */
-	public boolean contains(Point2D p) {
-		return getBounds2D().contains(p);
-	}
-
-	/** @return true if the specified rectangle is inside the bounding box of this molecule */
-	public boolean contains(Rectangle2D r) {
-		return getBounds2D().contains(r);
 	}
 
 	/** @return the bounding box of this molecule */
@@ -422,12 +418,12 @@ public class Molecule implements ModelComponent, Rotatable {
 	}
 
 	private void locateRotationHandles() {
-		Point com = getCenterOfMass();
-		if (com.x == Math.round(rotateCrossLine[0].x1) && com.y == Math.round(rotateCrossLine[0].y1))
+		Point2D com = getCenterOfMass2D();
+		if (com.getX() == rotateCrossLine[0].x1 && com.getY() == rotateCrossLine[0].y1)
 			return;
-		rotateRect.setRect(com.x - 64, com.y - 4, 8, 8);
-		rotateCrossLine[0].setLine(com.x, com.y, com.x - 60, com.y);
-		rotateCrossLine[1].setLine(com.x - 60, com.y - 10, com.x - 60, com.y + 10);
+		rotateRect.setRect(com.getX() - 64, com.getY() - 4, 8, 8);
+		rotateCrossLine[0].setLine(com.getX(), com.getY(), com.getX() - 60, com.getY());
+		rotateCrossLine[1].setLine(com.getX() - 60, com.getY() - 10, com.getX() - 60, com.getY() + 10);
 	}
 
 	public void storeCurrentState() {
@@ -602,11 +598,12 @@ public class Molecule implements ModelComponent, Rotatable {
 
 		double costheta = dx / distance;
 		double sintheta = dy / distance;
-		x = (int) (savedCenter.getX() + 60.0 * costheta);
-		y = (int) (savedCenter.getY() + 60.0 * sintheta);
-		rotateRect.setRect(x - 4, y - 4, 8, 8);
-		rotateCrossLine[0].setLine(savedCenter.getX(), savedCenter.getY(), x, y);
-		rotateCrossLine[1].setLine(x - 10.0 * sintheta, y + 10.0 * costheta, x + 10.0 * sintheta, y - 10.0 * costheta);
+		double x2 = savedCenter.getX() + 60.0 * costheta;
+		double y2 = savedCenter.getY() + 60.0 * sintheta;
+		rotateRect.setRect(x2 - 4, y2 - 4, 8, 8);
+		rotateCrossLine[0].setLine(savedCenter.getX(), savedCenter.getY(), x2, y2);
+		rotateCrossLine[1].setLine(x2 - 10.0 * sintheta, y2 + 10.0 * costheta, x2 + 10.0 * sintheta, y2 - 10.0
+				* costheta);
 
 		if (b) {
 			// delta = theta - theta0
@@ -923,10 +920,13 @@ public class Molecule implements ModelComponent, Rotatable {
 			}
 
 			if (model.view.getAction() == UserAction.ROTA_ID) {
-				Point com = getCenterOfMass();
-				g.fillOval(com.x - 5, com.y - 5, 10, 10);
+				Point2D com = getCenterOfMass2D();
+				g.fillOval((int) (com.getX() - 5), (int) (com.getY() - 5), 10, 10);
 				g.setStroke(ViewAttribute.THIN);
-				g.drawOval(com.x - 40, com.y - 40, 80, 80);
+				g.drawOval((int) (com.getX() - 40), (int) (com.getY() - 40), 80, 80);
+				rotateRect.setRect(com.getX() - 64, com.getY() - 4, 8, 8);
+				rotateCrossLine[0].setLine(com.getX(), com.getY(), com.getX() - 60, com.getY());
+				rotateCrossLine[1].setLine(com.getX() - 60, com.getY() - 10, com.getX() - 60, com.getY() + 10);
 				g.draw(rotateCrossLine[0]);
 				g.setStroke(ViewAttribute.MODERATE);
 				g.draw(rotateCrossLine[1]);

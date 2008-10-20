@@ -729,6 +729,8 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		}
 		if (actionID == ROTA_ID) {
 			if (selectedComponent instanceof Rotatable) {
+				// calling the following method should cause the positions of the rotation handles to be re-calculated
+				selectedComponent.setSelected(true);
 				((Rotatable) selectedComponent).setSelectedToRotate(true);
 			}
 		}
@@ -2266,6 +2268,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			mol = whichMolecularObject(x, y);
 		if (mol != null) {
 			mol.setSelected(true);
+			clickPoint.setLocation(x - mol.getRx(), y - mol.getRy());
 			return true;
 		}
 		ModelComponent mc = whichLayeredComponent(x, y);
@@ -4016,8 +4019,16 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				else {
 					r.setSelectedToRotate(false);
 					setCursor(rotateCursor2);
-					showActionTip("Drag the small handle(s) of the selected object to rotate", x + 10, y + 10);
 					selectRotatable(x, y);
+					if (r instanceof Molecule) {
+						Molecule m = (Molecule) r;
+						if (!m.contains(x, y)) {
+							showActionTip("Drag the small handle of the selected molecule to rotate", x + 10, y + 10);
+						}
+					}
+					else {
+						showActionTip("Drag the small handles of the selected object to rotate", x + 10, y + 10);
+					}
 				}
 			}
 			else {
@@ -4914,7 +4925,22 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				Rotatable r = (Rotatable) selectedComponent;
 				if (r.isSelectedToRotate()) {
 					r.rotateTo(x, y, rotationHandle);
+					if (r instanceof Molecule)
+						refreshForces();
 					repaint();
+				}
+				else {
+					if (selectedComponent instanceof Molecule) {
+						dragSelected = true;
+						Molecule mol = (Molecule) selectedComponent;
+						if (mol.contains(x, y)) {
+							mol.setSelected(true);
+							mol.translateTo(x - clickPoint.x, y - clickPoint.y);
+							boundary.setRBC(mol);
+							refreshForces();
+							repaint();
+						}
+					}
 				}
 			}
 			break;
@@ -5280,6 +5306,24 @@ public class AtomisticView extends MDView implements BondChangeListener {
 										new UndoableEditEvent(model, new UndoableMoving(selectedComponent)));
 								updateUndoUIComponents();
 							}
+						}
+					}
+				}
+				else {
+					if (selectedComponent instanceof Molecule) {
+						if (finalizeMoleculeLocation((Molecule) selectedComponent)) {
+							model.notifyChange();
+							if (selectedComponent != null) {
+								if (!doNotFireUndoEvent) {
+									model.getUndoManager().undoableEditHappened(
+											new UndoableEditEvent(model, new UndoableMoving(selectedComponent)));
+									updateUndoUIComponents();
+								}
+							}
+							dragSelected = false;
+						}
+						else {
+							((Molecule) selectedComponent).setSelected(true);
 						}
 					}
 				}
