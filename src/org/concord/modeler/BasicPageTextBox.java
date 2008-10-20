@@ -65,7 +65,7 @@ public abstract class BasicPageTextBox extends TextBox implements AutoResizable,
 	private TextBoxScripter scripter;
 
 	public BasicPageTextBox() {
-		super("Your text");
+		super("");
 		addSelfScriptListener(this);
 	}
 
