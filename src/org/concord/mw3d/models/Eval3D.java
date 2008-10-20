@@ -1750,7 +1750,7 @@ class Eval3D extends AbstractEval {
 				return false;
 			}
 			address = FileUtilities.getCodeBase(view.getResourceAddress()) + address;
-			URL u = ConnectionManager.sharedInstance().getRemoteCopy(address);
+			URL u = ConnectionManager.sharedInstance().getRemoteLocation(address);
 			if (u != null)
 				address = u.toString();
 		}

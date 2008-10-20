@@ -570,7 +570,7 @@ class Jmol extends Draw {
 				}
 				s = FileUtilities.getCodeBase(resourceAddress) + s;
 			}
-			URL remoteCopy = ConnectionManager.sharedInstance().getRemoteCopy(s);
+			URL remoteCopy = ConnectionManager.sharedInstance().getRemoteLocation(s);
 			if (remoteCopy != null)
 				s = remoteCopy.toString();
 			if (FileUtilities.isRemote(s)) {
