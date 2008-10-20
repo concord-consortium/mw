@@ -58,8 +58,8 @@ public class ConnectionManager {
 		return sharedInstance;
 	}
 
+	// TODO: I do not know how to tell the owner of the progress from this singleton
 	public void addProgressListener(ProgressListener listener) {
-		// TODO: I do not know how to tell the owner of the progress from this singleton
 		if (progressListeners == null)
 			progressListeners = new ArrayList<ProgressListener>();
 		progressListeners.add(listener);
@@ -273,6 +273,9 @@ public class ConnectionManager {
 			if (workOffline)
 				return file;
 			// ONLY check update for the first cml file when a batch of files for a page are to be loaded.
+			// This assumes that the first file to check is ALWAYS the cml file. When PageXMLDecoder finishes
+			// parsing cml, checkUpdate is set to be false, essentially turning off update checking for all
+			// the other files on the cml page.
 			if (checkUpdate.get()) {
 				long lm = getLastModified(url);
 				// System.out.println(url + "=" + new java.util.Date(lm));
