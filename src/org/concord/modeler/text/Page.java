@@ -4177,7 +4177,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		}
 	}
 
-	private String ensureLocation(String url) {
+	private static String ensureLocation(String url) {
 		if (url.startsWith("file:")) {
 			url = ModelerUtilities.convertURLToFilePath(url);
 			String s = ConnectionManager.sharedInstance().getRemoteLocationString(url);
