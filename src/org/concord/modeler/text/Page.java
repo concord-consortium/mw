@@ -4116,18 +4116,11 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		if (eventType == HyperlinkEvent.EventType.ACTIVATED) {
 			if (targetIsBlank && linkParam != null)
 				linkParam.reset();
-			if (e.getURL() != null) {
-				openHyperlink(e.getURL());
-			}
-			else {
-				openHyperlink(desc);
-			}
+			String url = e.getURL() != null ? e.getURL().toString() : desc;
+			openHyperlink(ensureLocation(url));
 		}
 		else if (eventType == HyperlinkEvent.EventType.ENTERED) {
-			// reassure that we have restored the document base - set documentation at PageXMLDecoder.createTextBox();
-			if (e.getSource() instanceof HTMLPane) {
-				((HTMLPane) e.getSource()).setBase(getURL());
-			}
+			reassureDocumentBase(e.getSource());
 			urlDisplay.setText(e.getURL() == null ? desc : e.getURL().toString());
 		}
 		else if (eventType == HyperlinkEvent.EventType.EXITED) {
@@ -4162,27 +4155,42 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			}
 			if (targetIsBlank)
 				setLinkParam(b);
+			String url = null;
 			if (e.getURL() == null) {
-				if (desc != null && desc.startsWith("?client=mw")) {
+				if (desc != null && desc.startsWith("?client=mw"))
 					desc = Modeler.getContextRoot() + desc;
-				}
-				openHyperlink(desc);
+				url = desc;
 			}
 			else {
-				openHyperlink(e.getURL());
+				url = e.getURL().toString();
 			}
+			openHyperlink(ensureLocation(url));
 		}
 		else if (eventType == HyperlinkEvent.EventType.ENTERED) {
-			// reassure that we have restored the document base - set documentation at PageXMLDecoder.createTextBox();
-			if (e.getSource() instanceof HTMLPane) {
-				((HTMLPane) e.getSource()).setBase(getURL());
-			}
+			reassureDocumentBase(e.getSource());
 			if (urlDisplay != null)
 				urlDisplay.setText(e.getURL() == null ? desc : e.getURL().toString());
 		}
 		else if (eventType == HyperlinkEvent.EventType.EXITED) {
 			if (urlDisplay != null)
 				urlDisplay.setText(null);
+		}
+	}
+
+	private String ensureLocation(String url) {
+		if (url.startsWith("file:")) {
+			url = ModelerUtilities.convertURLToFilePath(url);
+			String s = ConnectionManager.sharedInstance().getRemoteLocationString(url);
+			if (s != null)
+				return s;
+		}
+		return url;
+	}
+
+	// reassure that we have restored the document base - set documentation at PageXMLDecoder.createTextBox();
+	private void reassureDocumentBase(Object src) {
+		if (src instanceof HTMLPane) {
+			((HTMLPane) src).setBase(getURL());
 		}
 	}
 

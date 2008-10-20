@@ -2492,7 +2492,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 
 		private void updateProperties() {
 			if (file != null) {
-				URL u = ConnectionManager.sharedInstance().getRemoteCopy(file);
+				URL u = ConnectionManager.sharedInstance().getRemoteLocation(file);
 				if (u == null)
 					putProperties(file);
 				else putProperties(u);

@@ -175,7 +175,7 @@ public class PageApplet extends PagePlugin {
 					else {
 						if (file[0] != null) {
 							s = FileUtilities.getCodeBase(file[0].toString());
-							u = ConnectionManager.sharedInstance().getRemoteCopy(s);
+							u = ConnectionManager.sharedInstance().getRemoteLocation(s);
 							if (u != null)
 								return u;
 						}

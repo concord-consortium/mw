@@ -205,7 +205,7 @@ class ImagePropertiesDialog extends JDialog {
 		else {
 			File f = null;
 			String s = ModelerUtilities.convertURLToFilePath(url);
-			URL u = ConnectionManager.sharedInstance().getRemoteCopy(new File(s));
+			URL u = ConnectionManager.sharedInstance().getRemoteLocation(new File(s));
 			if (u == null) {
 				f = new File(FileUtilities.getCodeBase(page.getAddress()), FileUtilities.getFileName(s));
 			}

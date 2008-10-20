@@ -163,13 +163,13 @@ public class ConnectionManager {
 	}
 
 	/** if a local file is a copy of a remote file, return the remote file's URL */
-	public URL getRemoteCopy(File file) {
+	public URL getRemoteLocation(File file) {
 		if (file == null)
 			return null;
-		return getRemoteCopy(file.toString());
+		return getRemoteLocation(file.toString());
 	}
 
-	public URL getRemoteCopy(String t) {
+	public URL getRemoteLocation(String t) {
 		if (t == null)
 			return null;
 		boolean isWindows = System.getProperty("os.name").startsWith("Windows");
@@ -192,6 +192,24 @@ public class ConnectionManager {
 			e.printStackTrace();
 		}
 		return u;
+	}
+
+	public String getRemoteLocationString(String t) {
+		if (t == null)
+			return null;
+		boolean isWindows = System.getProperty("os.name").startsWith("Windows");
+		if (isWindows && !FileUtilities.isRemote(t)) {
+			t = t.replace('/', '\\');
+		}
+		String s = getCacheDirectory().toString();
+		if (!t.startsWith(s))
+			return null;
+		s = t.substring(s.length());
+		s = s.replace('@', ':');
+		if (isWindows) {
+			s = s.replace(System.getProperty("file.separator").charAt(0), '/');
+		}
+		return "http:/" + s;
 	}
 
 	/**
