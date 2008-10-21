@@ -924,9 +924,10 @@ public class Molecule implements ModelComponent, Rotatable {
 				g.fillOval((int) (com.getX() - 5), (int) (com.getY() - 5), 10, 10);
 				g.setStroke(ViewAttribute.THIN);
 				g.drawOval((int) (com.getX() - 40), (int) (com.getY() - 40), 80, 80);
-				rotateRect.setRect(com.getX() - 64, com.getY() - 4, 8, 8);
-				rotateCrossLine[0].setLine(com.getX(), com.getY(), com.getX() - 60, com.getY());
-				rotateCrossLine[1].setLine(com.getX() - 60, com.getY() - 10, com.getX() - 60, com.getY() + 10);
+				// FIXME: if we do this, the handle will not be able to rotate with the molecule
+				// rotateRect.setRect(com.getX() - 64, com.getY() - 4, 8, 8);
+				// rotateCrossLine[0].setLine(com.getX(), com.getY(), com.getX() - 60, com.getY());
+				// rotateCrossLine[1].setLine(com.getX() - 60, com.getY() - 10, com.getX() - 60, com.getY() + 10);
 				g.draw(rotateCrossLine[0]);
 				g.setStroke(ViewAttribute.MODERATE);
 				g.draw(rotateCrossLine[1]);

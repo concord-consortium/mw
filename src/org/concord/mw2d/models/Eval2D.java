@@ -3238,6 +3238,14 @@ class Eval2D extends AbstractEval {
 									rb.setVisible(b);
 							}
 						}
+						RectangularObstacle obs;
+						synchronized (mm.obstacles.getSynchronizationLock()) {
+							for (Iterator it = mm.obstacles.iterator(); it.hasNext();) {
+								obs = (RectangularObstacle) it.next();
+								if (obs.isSelected())
+									obs.setVisible(b);
+							}
+						}
 					}
 					notifyChange();
 					view.repaint();
