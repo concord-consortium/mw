@@ -86,7 +86,7 @@ public class GravitationalField implements VectorField, Serializable {
 	}
 
 	double getPotential(RectangularObstacle obs, float time) {
-		if (obs.getDensity() >= RectangularObstacle.HEAVY)
+		if (!obs.isMovable())
 			return 0.0;
 		return obs.getMass() * g * (bounds.getBounds().height - obs.y);
 	}

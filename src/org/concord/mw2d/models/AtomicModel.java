@@ -2189,7 +2189,7 @@ public abstract class AtomicModel extends MDModel {
 			synchronized (obstacles.getSynchronizationLock()) {
 				for (Iterator it = obstacles.iterator(); it.hasNext();) {
 					obs = (RectangularObstacle) it.next();
-					if (obs.getDensity() < RectangularObstacle.HEAVY - 10) {
+					if (obs.isMovable()) {
 						obs.vx = rtemp * RANDOM.nextGaussian();
 						obs.vy = rtemp * RANDOM.nextGaussian();
 						mass = obs.getMass();
@@ -2214,7 +2214,7 @@ public abstract class AtomicModel extends MDModel {
 				synchronized (obstacles.getSynchronizationLock()) {
 					for (Iterator it = obstacles.iterator(); it.hasNext();) {
 						obs = (RectangularObstacle) it.next();
-						if (obs.getDensity() < RectangularObstacle.HEAVY - 10) {
+						if (obs.isMovable()) {
 							obs.vx -= sumVx;
 							obs.vy -= sumVy;
 						}

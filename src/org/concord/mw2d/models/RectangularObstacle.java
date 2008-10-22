@@ -68,7 +68,6 @@ import org.concord.mw2d.ViewAttribute;
 
 public class RectangularObstacle extends Rectangle2D.Double implements Obstacle {
 
-	public final static short HEAVY = 500;
 	public final static byte INSIDE = 0;
 	public final static byte NW = 1;
 	public final static byte NORTH = 2;
@@ -78,6 +77,8 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 	public final static byte SOUTH = 6;
 	public final static byte SW = 7;
 	public final static byte WEST = 8;
+
+	private final static short HEAVY = 500;
 
 	private static Rectangle2D rectN = new Rectangle2D.Float(), rectS = new Rectangle2D.Float(),
 			rectE = new Rectangle2D.Float(), rectW = new Rectangle2D.Float(), rectNE = new Rectangle2D.Float(),
@@ -398,20 +399,12 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 		return partOfSystem;
 	}
 
-	public void setMovable(boolean b) {
-		setDensity(HEAVY + HEAVY);
-	}
-
 	public boolean isMovable() {
 		return density < HEAVY;
 	}
 
-	public void setDensity(double m) {
-		density = m;
-		if (!isMovable()) {
-			vx = vy = 0.0;
-			ax = ay = 0.0;
-		}
+	public void setDensity(double density) {
+		this.density = density;
 	}
 
 	public double getDensity() {
