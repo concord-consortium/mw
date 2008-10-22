@@ -2747,7 +2747,7 @@ public abstract class MDView extends PrintableComponent {
 
 	boolean callOutMouseDragged(int x, int y) {
 		if (selectedComponent instanceof TextBoxComponent) {
-			if (selectedComponent.isDraggable()) {
+			if (isEditable() || selectedComponent.isDraggable()) {
 				if (((TextBoxComponent) selectedComponent).isChangingCallOut()) {
 					((TextBoxComponent) selectedComponent).setCallOutLocation(x, y);
 					repaint();
@@ -2759,7 +2759,7 @@ public abstract class MDView extends PrintableComponent {
 	}
 
 	boolean handleMouseDragged(int x, int y) {
-		if (selectedComponent != null && !selectedComponent.isDraggable())
+		if (!isEditable() && selectedComponent != null && !selectedComponent.isDraggable())
 			return false;
 		if (selectedComponent instanceof LineComponent) {
 			LineComponent lc = (LineComponent) selectedComponent;
