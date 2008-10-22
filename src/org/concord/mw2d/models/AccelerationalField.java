@@ -97,7 +97,7 @@ public class AccelerationalField implements VectorField, Serializable {
 	}
 
 	void dyn(RectangularObstacle obs) {
-		if (obs.getDensity() >= RectangularObstacle.HEAVY)
+		if (!obs.isMovable())
 			return;
 		switch (o) {
 		case SOUTH:
@@ -142,7 +142,7 @@ public class AccelerationalField implements VectorField, Serializable {
 	}
 
 	double getPotential(RectangularObstacle obs, float time) {
-		if (obs.getDensity() >= RectangularObstacle.HEAVY)
+		if (!obs.isMovable())
 			return 0.0;
 		double h = 0.0;
 		switch (o) {

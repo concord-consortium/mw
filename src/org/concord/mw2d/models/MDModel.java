@@ -2042,7 +2042,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 					d.isWestProbe(), d.isNorthProbe(), d.isEastProbe(), d.isSouthProbe(), d.isRoundCornered());
 			o.setElasticity(d.getElasticity());
 			o.setFriction(d.getFriction());
-			o.setDensity(o.getDensity());
+			o.setDensity(d.getDensity());
 			o.setUserField(d.getUserField());
 			o.setBounced(d.isBounced());
 			o.permeable = d.getPermeability();
