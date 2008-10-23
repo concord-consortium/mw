@@ -175,11 +175,11 @@ class PagePopupMenu extends TextComponentPopupMenu {
 		insertOutputMenu.add(menuItem);
 
 		menuItem = new JMenuItem(page.getAction(Page.INSERT_COMPONENT));
-		menuItem.setName("Histogram Graph");
-		s = Modeler.getInternationalText("InsertHistogram");
-		menuItem.setText((s != null ? s : "Histogram Graph") + "...");
-		menuItem.setIcon(IconPool.getIcon("histogram"));
-		menuItem.setEnabled(false);
+		menuItem.setName("Gauge");
+		s = Modeler.getInternationalText("InsertGauge");
+		menuItem.setText((s != null ? s : "Gauge") + "...");
+		menuItem.setIcon(IconPool.getIcon("gauge"));
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.ALT_MASK | KeyEvent.SHIFT_MASK, true));
 		insertOutputMenu.add(menuItem);
 
 		menuItem = new JMenuItem(page.getAction(Page.INSERT_COMPONENT));
