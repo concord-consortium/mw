@@ -159,6 +159,7 @@ import org.concord.modeler.PageDiffractionInstrument;
 import org.concord.modeler.PageElectronicStructureViewer;
 import org.concord.modeler.PageFeedbackArea;
 import org.concord.modeler.PageFunctionGraph;
+import org.concord.modeler.PageGauge;
 import org.concord.modeler.PageJContainer;
 import org.concord.modeler.PageMd3d;
 import org.concord.modeler.PageMolecularViewer;
@@ -1284,6 +1285,11 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			if (bar != null)
 				insertComponent(bar);
 		}
+		else if (type.equalsIgnoreCase("Gauge")) {
+			PageGauge gauge = PageGauge.create(this);
+			if (gauge != null)
+				insertComponent(gauge);
+		}
 		else if (type.equalsIgnoreCase("X-Y Graph")) {
 			PageXYGraph curve = PageXYGraph.create(this);
 			if (curve != null)
@@ -1759,6 +1765,9 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			}
 			else if (c instanceof PageBarGraph) {
 				insertComponent(new PageBarGraph((PageBarGraph) c, this));
+			}
+			else if (c instanceof PageGauge) {
+				insertComponent(new PageGauge((PageGauge) c, this));
 			}
 			else if (c instanceof PageXYGraph) {
 				insertComponent(new PageXYGraph((PageXYGraph) c, this));

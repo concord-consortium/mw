@@ -74,21 +74,7 @@ public final class ImageStreamGenerator {
 	/* the subtask of updating the cache data store */
 	private final Loadable snapshoter = new AbstractLoadable(500, 100) {
 		public void execute() {
-			if (indexOfFrame < 10) {
-				name = "000" + indexOfFrame;
-			}
-			else if (indexOfFrame < 100) {
-				name = "00" + indexOfFrame;
-			}
-			else if (indexOfFrame < 1000) {
-				name = "0" + indexOfFrame;
-			}
-			else if (indexOfFrame < 10000) {
-				name = Integer.toString(indexOfFrame);
-			}
-			else {
-				System.exit(1);
-			}
+			name = String.format("%06d", indexOfFrame);
 			ModelerUtilities.screenshot(view, dir + System.getProperty("file.separator") + name + ".png", false);
 			indexOfFrame++;
 			if (indexOfFrame >= getLifetime()) {

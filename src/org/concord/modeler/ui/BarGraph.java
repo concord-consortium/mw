@@ -244,7 +244,7 @@ public class BarGraph extends JComponent implements SwingConstants {
 		return formatter.getMaximumIntegerDigits();
 	}
 
-	private Color getContrastColor() {
+	private Color getMedianColor() {
 		return new Color((getBackground().getRed() + getForeground().getRed()) / 2,
 				(getBackground().getGreen() + getForeground().getGreen()) / 2,
 				(getBackground().getBlue() + getForeground().getBlue()) / 2);
@@ -300,7 +300,7 @@ public class BarGraph extends JComponent implements SwingConstants {
 					g2.fillRect(0, dim.height - tube, tubeWidth, tube);
 					if (average != 0.0) {
 						aver = (int) ((average - min) * tubeUnit);
-						g2.setColor(getContrastColor());
+						g2.setColor(getMedianColor());
 						int delta = tubeWidth / 2 > 5 ? 5 : tubeWidth / 2;
 						int tubeh = dim.height - aver;
 						if (a == null)
@@ -341,7 +341,7 @@ public class BarGraph extends JComponent implements SwingConstants {
 					}
 					if (average != 0.0) {
 						aver = (int) (average * tubeUnit);
-						g2.setColor(getContrastColor());
+						g2.setColor(getMedianColor());
 						int delta = tubeWidth / 2 > 5 ? 5 : tubeWidth / 2;
 						int tubeh = zero - aver;
 						if (a == null)
@@ -422,7 +422,7 @@ public class BarGraph extends JComponent implements SwingConstants {
 					g2.fillRect(0, 0, tube, tubeHeight);
 					if (average != 0.0) {
 						aver = (int) ((average - min) * tubeUnit);
-						g2.setColor(getContrastColor());
+						g2.setColor(getMedianColor());
 						int delta = tubeHeight / 2 > 5 ? 5 : tubeHeight / 2;
 						if (a == null)
 							a = new int[3];
@@ -462,7 +462,7 @@ public class BarGraph extends JComponent implements SwingConstants {
 					}
 					if (average != 0.0) {
 						aver = (int) (average * tubeUnit);
-						g2.setColor(getContrastColor());
+						g2.setColor(getMedianColor());
 						int delta = tubeHeight / 2 > 5 ? 5 : tubeHeight / 2;
 						int tubeh = zero + aver;
 						if (a == null)

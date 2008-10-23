@@ -3249,7 +3249,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		}
 
 		ModelerUtilities.testQuicktime();
-
+		
 	}
 
 }
