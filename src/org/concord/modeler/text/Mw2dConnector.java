@@ -40,6 +40,7 @@ import org.concord.modeler.PageComboBox;
 import org.concord.modeler.PageDiffractionInstrument;
 import org.concord.modeler.PageDNAScroller;
 import org.concord.modeler.PageElectronicStructureViewer;
+import org.concord.modeler.PageGauge;
 import org.concord.modeler.PageNumericBox;
 import org.concord.modeler.PagePhotonSpectrometer;
 import org.concord.modeler.PagePotentialHill;
@@ -293,6 +294,13 @@ class Mw2dConnector {
 					model.addModelListener(bg);
 					if (!model.getRecorderDisabled())
 						model.getMovie().addMovieListener(bg);
+				}
+
+				else if (listener instanceof PageGauge) {
+					PageGauge g = (PageGauge) listener;
+					model.addModelListener(g);
+					if (!model.getRecorderDisabled())
+						model.getMovie().addMovieListener(g);
 				}
 
 				else if (listener instanceof PageXYGraph) {

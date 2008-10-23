@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2006  The Concord Consortium, Inc.,
+ *   Copyright (C) 2008  The Concord Consortium, Inc.,
  *   25 Love Lane, Concord, MA 01742
  *
  *   This program is free software; you can redistribute it and/or modify
@@ -51,6 +51,7 @@ import javax.swing.text.JTextComponent;
 
 import org.concord.modeler.text.Page;
 import org.concord.modeler.ui.ColorComboBox;
+import org.concord.modeler.ui.ComboBoxRenderer;
 import org.concord.modeler.ui.FloatNumberTextField;
 import org.concord.modeler.ui.IntegerTextField;
 import org.concord.modeler.util.DataQueue;
@@ -62,16 +63,14 @@ import org.concord.mw2d.models.MDModel;
  * @author Charles Xie
  * 
  */
-class PageBarGraphMaker extends ComponentMaker {
+class PageGaugeMaker extends ComponentMaker {
 
-	private PageBarGraph pageBarGraph;
+	private PageGauge pageGauge;
 	private int filterType;
 	private JDialog dialog;
 	private JTextField descriptionField;
-	private FloatNumberTextField multiplierField;
-	private FloatNumberTextField addendField;
-	private JComboBox modelComboBox, timeSeriesComboBox, filterComboBox, orieComboBox, averageOnlyComboBox;
-	private JComboBox tickComboBox, labelComboBox, titleComboBox;
+	private JComboBox modelComboBox, timeSeriesComboBox, filterComboBox, averageOnlyComboBox;
+	private JComboBox borderComboBox, tickComboBox, labelComboBox, titleComboBox;
 	private JComboBox averageTypeComboBox;
 	private JComboBox formatComboBox;
 	private ColorComboBox bgComboBox, fgComboBox;
@@ -91,11 +90,11 @@ class PageBarGraphMaker extends ComponentMaker {
 		public void itemStateChanged(ItemEvent e) {
 			Model m = (Model) modelComboBox.getSelectedItem();
 			if (e.getStateChange() == ItemEvent.DESELECTED) {
-				m.removeModelListener(pageBarGraph);
+				m.removeModelListener(pageGauge);
 			}
 			else {
-				m.addModelListener(pageBarGraph);
-				pageBarGraph.setModelID(pageBarGraph.page.getComponentPool().getIndex(m));
+				m.addModelListener(pageGauge);
+				pageGauge.setModelID(pageGauge.page.getComponentPool().getIndex(m));
 				fillTimeSeriesComboBox();
 			}
 		}
@@ -108,11 +107,11 @@ class PageBarGraphMaker extends ComponentMaker {
 			Object obj = timeSeriesComboBox.getSelectedItem();
 			try {
 				if (obj instanceof FloatQueue) {
-					pageBarGraph.setValue(((FloatQueue) obj).getCurrentValue());
+					pageGauge.setValue(((FloatQueue) obj).getCurrentValue());
 					maxField.setValue((float) ((FloatQueue) obj).getReferenceUpperBound());
 					minField.setValue((float) ((FloatQueue) obj).getReferenceLowerBound());
 				}
-				valueField.setValue((float) pageBarGraph.getValue());
+				valueField.setValue((float) pageGauge.getValue());
 				descriptionField.setText(obj.toString());
 			}
 			catch (Exception exception) {
@@ -121,12 +120,12 @@ class PageBarGraphMaker extends ComponentMaker {
 		}
 	};
 
-	PageBarGraphMaker(PageBarGraph pbg) {
-		setObject(pbg);
+	PageGaugeMaker(PageGauge pg) {
+		setObject(pg);
 	}
 
-	void setObject(PageBarGraph pbg) {
-		pageBarGraph = pbg;
+	void setObject(PageGauge pbg) {
+		pageGauge = pbg;
 	}
 
 	private boolean confirm() {
@@ -138,72 +137,69 @@ class PageBarGraphMaker extends ComponentMaker {
 		}
 		switch (averageTypeComboBox.getSelectedIndex()) {
 		case 0:
-			pageBarGraph.setAverageType(PageBarGraph.GROWING_POINT_RUNNING_AVERAGE);
+			pageGauge.setAverageType(PageBarGraph.GROWING_POINT_RUNNING_AVERAGE);
 			break;
 		case 1:
-			pageBarGraph.setAverageType(PageBarGraph.SIMPLE_RUNNING_AVERAGE);
+			pageGauge.setAverageType(PageBarGraph.SIMPLE_RUNNING_AVERAGE);
 			int n = (int) parameterField.getValue();
 			if (n < 10 || n > Modeler.tapeLength) {
 				JOptionPane.showMessageDialog(dialog, "The number of sampling points you set " + n + " is illegal.",
 						"Sampling points error", JOptionPane.ERROR_MESSAGE);
 				return false;
 			}
-			pageBarGraph.setSamplingPoints(n);
+			pageGauge.setSamplingPoints(n);
 			break;
 		case 2:
-			pageBarGraph.setAverageType(PageBarGraph.EXPONENTIAL_RUNNING_AVERAGE);
+			pageGauge.setAverageType(PageBarGraph.EXPONENTIAL_RUNNING_AVERAGE);
 			float sf = parameterField.getValue();
 			if (sf < 0 || sf > 1) {
 				JOptionPane.showMessageDialog(dialog, "The smoothing factor you set " + sf + " is illegal.",
 						"Smoothing factor error", JOptionPane.ERROR_MESSAGE);
 				return false;
 			}
-			pageBarGraph.setSmoothingFactor(sf);
+			pageGauge.setSmoothingFactor(sf);
 			break;
 		}
-		pageBarGraph.setAverageOnly(averageOnlyComboBox.getSelectedIndex() == 1);
-		pageBarGraph.setFormat((String) formatComboBox.getSelectedItem());
-		pageBarGraph.setMultiplier(multiplierField.getValue());
-		pageBarGraph.setAddend(addendField.getValue());
-		pageBarGraph.setMaximumFractionDigits(maximumFractionDigitField.getValue());
-		pageBarGraph.setMaximumIntegerDigits(maximumIntegerDigitField.getValue());
-		pageBarGraph.setMinorTicks(((Integer) minorTickSpinner.getValue()));
-		pageBarGraph.setMajorTicks(((Integer) majorTickSpinner.getValue()));
-		pageBarGraph.setOrientation(orieComboBox.getSelectedIndex() == 0 ? PageBarGraph.HORIZONTAL
-				: PageBarGraph.VERTICAL);
-		pageBarGraph.setBackground(bgComboBox.getSelectedColor());
-		pageBarGraph.setForeground(fgComboBox.getSelectedColor());
-		pageBarGraph.setPaintTitle(titleComboBox.getSelectedIndex() == 0);
-		pageBarGraph.setPaintTicks(tickComboBox.getSelectedIndex() == 0);
-		pageBarGraph.setPaintLabels(labelComboBox.getSelectedIndex() == 0);
-		pageBarGraph.setMinimum(minField.getValue());
-		pageBarGraph.setMaximum(maxField.getValue());
+		pageGauge.setAverageOnly(averageOnlyComboBox.getSelectedIndex() == 1);
+		pageGauge.setFormat((String) formatComboBox.getSelectedItem());
+		pageGauge.setMaximumFractionDigits(maximumFractionDigitField.getValue());
+		pageGauge.setMaximumIntegerDigits(maximumIntegerDigitField.getValue());
+		pageGauge.setMinorTicks(((Integer) minorTickSpinner.getValue()));
+		pageGauge.setMajorTicks(((Integer) majorTickSpinner.getValue()));
+		pageGauge.setBackground(bgComboBox.getSelectedColor());
+		pageGauge.setForeground(fgComboBox.getSelectedColor());
+		pageGauge.setBorderType((String) borderComboBox.getSelectedItem());
+		pageGauge.setPaintTitle(titleComboBox.getSelectedIndex() == 0);
+		pageGauge.setPaintTicks(tickComboBox.getSelectedIndex() == 0);
+		pageGauge.setPaintLabels(labelComboBox.getSelectedIndex() == 0);
+		pageGauge.setMinimum(minField.getValue());
+		pageGauge.setMaximum(maxField.getValue());
 		Object obj = timeSeriesComboBox.getSelectedItem();
 		if (obj instanceof DataQueue) {
-			pageBarGraph.setTimeSeriesName(((DataQueue) obj).getName());
+			pageGauge.setTimeSeriesName(((DataQueue) obj).getName());
 		}
 		if (descriptionField.getText() != null && !descriptionField.getText().trim().equals(""))
-			pageBarGraph.setDescription(descriptionField.getText());
+			pageGauge.setDescription(descriptionField.getText());
 		Model m = (Model) modelComboBox.getSelectedItem();
-		m.addModelListener(pageBarGraph);
-		m.getMovie().addMovieListener(pageBarGraph);
-		pageBarGraph.setModelClass(m.getClass().getName());
+		m.addModelListener(pageGauge);
+		m.getMovie().addMovieListener(pageGauge);
+		pageGauge.setModelClass(m.getClass().getName());
 		if (m instanceof MDModel) {
-			pageBarGraph.setModelID(pageBarGraph.page.getComponentPool().getIndex(m));
+			pageGauge.setModelID(pageGauge.page.getComponentPool().getIndex(m));
 		}
 		else if (m instanceof Embeddable) {
-			pageBarGraph.setModelID(((Embeddable) m).getIndex());
+			pageGauge.setModelID(((Embeddable) m).getIndex());
 		}
-		pageBarGraph.setPreferredSize(new Dimension(widthField.getValue(), heightField.getValue()));
-		pageBarGraph.setChangable(true);
-		pageBarGraph.page.getSaveReminder().setChanged(true);
-		pageBarGraph.page.settleComponentSize();
+		pageGauge.setPreferredSize(new Dimension(widthField.getValue(), heightField.getValue()));
+		pageGauge.setChangable(true);
+		pageGauge.page.getSaveReminder().setChanged(true);
+		pageGauge.page.settleComponentSize();
 		return true;
 	}
 
 	void invoke(Page page) {
 
-		pageBarGraph.page = page;
+		pageGauge.page = page;
 		page.deselect();
 		focusTextComponent = null;
 		createContentPane();
@@ -237,7 +233,7 @@ class PageBarGraphMaker extends ComponentMaker {
 		modelComboBox.removeAllItems();
 		timeSeriesComboBox.removeItemListener(timeSeriesSelectionListener);
 		filterComboBox.setSelectedIndex(0);
-		switch (pageBarGraph.averageType) {
+		switch (pageGauge.averageType) {
 		case PageBarGraph.GROWING_POINT_RUNNING_AVERAGE:
 			averageTypeComboBox.setSelectedIndex(0);
 			parameterLabel.setEnabled(false);
@@ -250,7 +246,7 @@ class PageBarGraphMaker extends ComponentMaker {
 			parameterLabel.setEnabled(true);
 			String s = Modeler.getInternationalText("SamplingPoints");
 			parameterLabel.setText(s != null ? s : "Sampling points");
-			parameterField.setValue(pageBarGraph.samplingPoints);
+			parameterField.setValue(pageGauge.samplingPoints);
 			parameterField.setMinValue(10);
 			parameterField.setMaxValue(Modeler.tapeLength);
 			parameterField.setEditable(true);
@@ -260,27 +256,24 @@ class PageBarGraphMaker extends ComponentMaker {
 			parameterLabel.setEnabled(true);
 			s = Modeler.getInternationalText("SmoothingFactor");
 			parameterLabel.setText(s != null ? s : "Smoothing factor");
-			parameterField.setValue(pageBarGraph.smoothingFactor);
+			parameterField.setValue(pageGauge.smoothingFactor);
 			parameterField.setMinValue(0);
 			parameterField.setMaxValue(1);
 			parameterField.setEditable(true);
 			break;
 		}
-		averageOnlyComboBox.setSelectedIndex(pageBarGraph.getAverageOnly() ? 1 : 0);
+		averageOnlyComboBox.setSelectedIndex(pageGauge.getAverageOnly() ? 1 : 0);
 
-		orieComboBox.setSelectedIndex(pageBarGraph.getOrientation() == PageBarGraph.HORIZONTAL ? 0 : 1);
-		titleComboBox.setSelectedIndex(pageBarGraph.getPaintTitle() ? 0 : 1);
-		tickComboBox.setSelectedIndex(pageBarGraph.getPaintTicks() ? 0 : 1);
-		labelComboBox.setSelectedIndex(pageBarGraph.getPaintLabels() ? 0 : 1);
-		descriptionField.setText(pageBarGraph.getDescription());
-		multiplierField.setValue(pageBarGraph.getMultiplier());
-		addendField.setValue(pageBarGraph.getAddend());
-		minField.setValue((float) pageBarGraph.getMinimum());
-		maxField.setValue((float) pageBarGraph.getMaximum());
-		valueField.setValue((float) pageBarGraph.getValue());
-		if (pageBarGraph.isMaximumSizeSet()) {
-			widthField.setValue(pageBarGraph.getMaximumSize().width);
-			heightField.setValue(pageBarGraph.getMaximumSize().height);
+		titleComboBox.setSelectedIndex(pageGauge.getPaintTitle() ? 0 : 1);
+		tickComboBox.setSelectedIndex(pageGauge.getPaintTicks() ? 0 : 1);
+		labelComboBox.setSelectedIndex(pageGauge.getPaintLabels() ? 0 : 1);
+		descriptionField.setText(pageGauge.getDescription());
+		minField.setValue((float) pageGauge.getMinimum());
+		maxField.setValue((float) pageGauge.getMaximum());
+		valueField.setValue((float) pageGauge.getValue());
+		if (pageGauge.isMaximumSizeSet()) {
+			widthField.setValue(pageGauge.getMaximumSize().width);
+			heightField.setValue(pageGauge.getMaximumSize().height);
 		}
 
 		// add legacy MD models to the model list
@@ -302,10 +295,10 @@ class PageBarGraphMaker extends ComponentMaker {
 			}
 		}
 
-		if (pageBarGraph.isTargetClass()) {
-			if (pageBarGraph.modelID != -1) {
+		if (pageGauge.isTargetClass()) {
+			if (pageGauge.modelID != -1) {
 				try {
-					Object o = page.getEmbeddedComponent(Class.forName(pageBarGraph.modelClass), pageBarGraph.modelID);
+					Object o = page.getEmbeddedComponent(Class.forName(pageGauge.modelClass), pageGauge.modelID);
 					if (o != null)
 						modelComboBox.setSelectedItem(o);
 				}
@@ -316,20 +309,20 @@ class PageBarGraphMaker extends ComponentMaker {
 			else {
 				Model m = (Model) modelComboBox.getSelectedItem();
 				if (m instanceof Embeddable)
-					pageBarGraph.setModelID(((Embeddable) m).getIndex());
+					pageGauge.setModelID(((Embeddable) m).getIndex());
 			}
 		}
 		else {
-			if (pageBarGraph.modelID != -1) {
-				ModelCanvas mc = componentPool.get(pageBarGraph.modelID);
+			if (pageGauge.modelID != -1) {
+				ModelCanvas mc = componentPool.get(pageGauge.modelID);
 				modelComboBox.setSelectedItem(mc.getContainer().getModel());
-				mc.getContainer().getModel().addModelListener(pageBarGraph);
+				mc.getContainer().getModel().addModelListener(pageGauge);
 			}
 			else {
 				Model m = (Model) modelComboBox.getSelectedItem();
 				if (m != null) {
-					pageBarGraph.setModelID(componentPool.getIndex(m));
-					m.addModelListener(pageBarGraph);
+					pageGauge.setModelID(componentPool.getIndex(m));
+					m.addModelListener(pageGauge);
 				}
 			}
 		}
@@ -338,13 +331,14 @@ class PageBarGraphMaker extends ComponentMaker {
 		fillTimeSeriesComboBox();
 		timeSeriesComboBox.addItemListener(timeSeriesSelectionListener);
 
-		formatComboBox.setSelectedItem(pageBarGraph.getFormat());
-		maximumFractionDigitField.setValue(pageBarGraph.getMaximumFractionDigits());
-		maximumIntegerDigitField.setValue(pageBarGraph.getMaximumIntegerDigits());
-		majorTickSpinner.setValue(pageBarGraph.getMajorTicks());
-		minorTickSpinner.setValue(pageBarGraph.getMinorTicks());
-		bgComboBox.setColor(pageBarGraph.getBackground());
-		fgComboBox.setColor(pageBarGraph.getForeground());
+		formatComboBox.setSelectedItem(pageGauge.getFormat());
+		maximumFractionDigitField.setValue(pageGauge.getMaximumFractionDigits());
+		maximumIntegerDigitField.setValue(pageGauge.getMaximumIntegerDigits());
+		majorTickSpinner.setValue(pageGauge.getMajorTicks());
+		minorTickSpinner.setValue(pageGauge.getMinorTicks());
+		bgComboBox.setColor(pageGauge.getBackground());
+		fgComboBox.setColor(pageGauge.getForeground());
+		borderComboBox.setSelectedItem(pageGauge.getBorderType());
 		okButton.setEnabled(modelComboBox.getItemCount() > 0 && timeSeriesComboBox.getItemCount() > 0);
 
 		dialog.setVisible(true);
@@ -391,7 +385,7 @@ class PageBarGraphMaker extends ComponentMaker {
 		int guard = 0;
 		for (int i = 0; i < nitem; i++) {
 			q = (DataQueue) timeSeriesComboBox.getItemAt(i);
-			if (q.getName().equals(pageBarGraph.timeSeriesName)) {
+			if (q.getName().equals(pageGauge.timeSeriesName)) {
 				timeSeriesComboBox.setSelectedItem(q);
 				if (q instanceof FloatQueue) {
 					try {
@@ -523,7 +517,7 @@ class PageBarGraphMaker extends ComponentMaker {
 					String s = Modeler.getInternationalText("SamplingPoints");
 					parameterLabel.setText(s != null ? s : "Sampling points");
 					parameterLabel.setEnabled(true);
-					parameterField.setValue(pageBarGraph.samplingPoints);
+					parameterField.setValue(pageGauge.samplingPoints);
 					parameterField.setEditable(true);
 					parameterField.setMinValue(10);
 					parameterField.setMaxValue(Modeler.tapeLength);
@@ -532,7 +526,7 @@ class PageBarGraphMaker extends ComponentMaker {
 					s = Modeler.getInternationalText("SmoothingFactor");
 					parameterLabel.setText(s != null ? s : "Smoothing factor");
 					parameterLabel.setEnabled(true);
-					parameterField.setValue(pageBarGraph.smoothingFactor);
+					parameterField.setValue(pageGauge.smoothingFactor);
 					parameterField.setEditable(true);
 					parameterField.setMinValue(0);
 					parameterField.setMaxValue(1);
@@ -615,29 +609,6 @@ class PageBarGraphMaker extends ComponentMaker {
 		box.add(p);
 
 		// row 1
-		s = Modeler.getInternationalText("OrientationLabel");
-		p.add(new JLabel(s != null ? s : "Select orientation", SwingConstants.LEFT));
-		orieComboBox = new JComboBox(new Object[] { "Horizontal", "Vertical" });
-		orieComboBox.setToolTipText("Set the orientation of this bar graph.");
-		p.add(orieComboBox);
-
-		// row 2
-		s = Modeler.getInternationalText("Multiplier");
-		p.add(new JLabel(s != null ? s : "Multiplier", SwingConstants.LEFT));
-		multiplierField = new FloatNumberTextField(1, -Float.MAX_VALUE, Float.MAX_VALUE);
-		multiplierField.addActionListener(okListener);
-		multiplierField.setToolTipText("Type in a value to multiply the output.");
-		p.add(multiplierField);
-
-		// row 3
-		s = Modeler.getInternationalText("Addend");
-		p.add(new JLabel(s != null ? s : "Addend", SwingConstants.LEFT));
-		addendField = new FloatNumberTextField(0, -Float.MAX_VALUE, Float.MAX_VALUE);
-		addendField.addActionListener(okListener);
-		addendField.setToolTipText("Type in a value to be added to the output.");
-		p.add(addendField);
-
-		// row 4
 		s = Modeler.getInternationalText("DrawTitle");
 		p.add(new JLabel(s != null ? s : "Draw title", SwingConstants.LEFT));
 		String[] yesno = new String[] { "Yes", "No" };
@@ -651,39 +622,39 @@ class PageBarGraphMaker extends ComponentMaker {
 		titleComboBox.setToolTipText("Select yes if a title should be drawn; select no otherwise.");
 		p.add(titleComboBox);
 
-		// row 5
+		// row 2
 		s = Modeler.getInternationalText("DrawTicks");
 		p.add(new JLabel(s != null ? s : "Draw ticks", SwingConstants.LEFT));
 		tickComboBox = new JComboBox(yesno);
 		tickComboBox.setToolTipText("Select yes if ticks should be drawn; select no otherwise.");
 		p.add(tickComboBox);
 
-		// row 6
+		// row 3
 		s = Modeler.getInternationalText("MajorTicks");
 		p.add(new JLabel(s != null ? s : "Major ticks", SwingConstants.LEFT));
-		majorTickSpinner = new JSpinner(new SpinnerNumberModel(pageBarGraph.getMajorTicks(), 0, 20, 1));
+		majorTickSpinner = new JSpinner(new SpinnerNumberModel(pageGauge.getMajorTicks(), 0, 20, 1));
 		((JSpinner.DefaultEditor) majorTickSpinner.getEditor()).getTextField().setToolTipText(
 				"Select the major tick spacing.");
 		((JSpinner.DefaultEditor) majorTickSpinner.getEditor()).getTextField().addActionListener(okListener);
 		p.add(majorTickSpinner);
 
-		// row 7
+		// row 4
 		s = Modeler.getInternationalText("MinorTicks");
 		p.add(new JLabel(s != null ? s : "Minor ticks", SwingConstants.LEFT));
-		minorTickSpinner = new JSpinner(new SpinnerNumberModel(pageBarGraph.getMinorTicks(), 0, 100, 1));
+		minorTickSpinner = new JSpinner(new SpinnerNumberModel(pageGauge.getMinorTicks(), 0, 100, 1));
 		((JSpinner.DefaultEditor) minorTickSpinner.getEditor()).getTextField().setToolTipText(
 				"Select the minor tick spacing.");
 		((JSpinner.DefaultEditor) minorTickSpinner.getEditor()).getTextField().addActionListener(okListener);
 		p.add(minorTickSpinner);
 
-		// row 8
+		// row 5
 		s = Modeler.getInternationalText("DigitalFormat");
 		p.add(new JLabel(s != null ? s : "Digital format", SwingConstants.LEFT));
 		formatComboBox = new JComboBox(new String[] { "Fixed point", "Scientific notation" });
 		formatComboBox.setToolTipText("Select the digital format.");
 		p.add(formatComboBox);
 
-		// row 9
+		// row 6
 		s = Modeler.getInternationalText("MaximumFractionDigits");
 		p.add(new JLabel(s != null ? s : "Maximum fraction digits", SwingConstants.LEFT));
 		maximumFractionDigitField = new IntegerTextField(5, 0, 20);
@@ -692,7 +663,7 @@ class PageBarGraphMaker extends ComponentMaker {
 		maximumFractionDigitField.addActionListener(okListener);
 		p.add(maximumFractionDigitField);
 
-		// row 10
+		// row 7
 		s = Modeler.getInternationalText("MaximumIntegerDigits");
 		p.add(new JLabel(s != null ? s : "Maximum integer digits", SwingConstants.LEFT));
 		maximumIntegerDigitField = new IntegerTextField(1, 0, 20);
@@ -701,33 +672,42 @@ class PageBarGraphMaker extends ComponentMaker {
 		maximumIntegerDigitField.addActionListener(okListener);
 		p.add(maximumIntegerDigitField);
 
-		// row 11
+		// row 8
 		s = Modeler.getInternationalText("DrawLabels");
 		p.add(new JLabel(s != null ? s : "Draw labels", SwingConstants.LEFT));
 		labelComboBox = new JComboBox(yesno);
 		labelComboBox.setToolTipText("Select yes if labels should be drawn; select no otherwise.");
 		p.add(labelComboBox);
 
-		// row 12
-		s = Modeler.getInternationalText("BarColor");
-		p.add(new JLabel(s != null ? s : "Bar color", SwingConstants.LEFT));
-		fgComboBox = new ColorComboBox(pageBarGraph);
+		// row 9
+		s = Modeler.getInternationalText("ForegroundColor");
+		p.add(new JLabel(s != null ? s : "Foreground color", SwingConstants.LEFT));
+		fgComboBox = new ColorComboBox(pageGauge);
 		fgComboBox.setSelectedIndex(0);
 		fgComboBox.setRequestFocusEnabled(false);
-		fgComboBox.setToolTipText("Select the color of the bar.");
+		fgComboBox.setToolTipText("Select the foreground color.");
 		p.add(fgComboBox);
 
-		// row 13
-		s = Modeler.getInternationalText("FillingColor");
-		p.add(new JLabel(s != null ? s : "Filling color", SwingConstants.LEFT));
-		bgComboBox = new ColorComboBox(pageBarGraph);
+		// row 10
+		s = Modeler.getInternationalText("BackgroundColor");
+		p.add(new JLabel(s != null ? s : "Background color", SwingConstants.LEFT));
+		bgComboBox = new ColorComboBox(pageGauge);
 		bgComboBox.setMinimumSize(new Dimension(80, 24));
 		bgComboBox.setSelectedIndex(6);
 		bgComboBox.setRequestFocusEnabled(false);
-		bgComboBox.setToolTipText("Select the filling color in the bar box.");
+		bgComboBox.setToolTipText("Select the background color.");
 		p.add(bgComboBox);
 
-		ModelerUtilities.makeCompactGrid(p, 13, 2, 5, 5, 10, 2);
+		// row 11
+		s = Modeler.getInternationalText("BorderLabel");
+		p.add(new JLabel(s != null ? s : "Border type", SwingConstants.LEFT));
+		borderComboBox = new JComboBox(BorderManager.BORDER_TYPE);
+		borderComboBox.setRenderer(new ComboBoxRenderer.BorderCell());
+		borderComboBox.setBackground(p.getBackground());
+		borderComboBox.setToolTipText("Select the border type.");
+		p.add(borderComboBox);
+
+		ModelerUtilities.makeCompactGrid(p, 11, 2, 5, 5, 10, 2);
 
 	}
 

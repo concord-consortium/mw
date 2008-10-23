@@ -90,6 +90,7 @@ import org.concord.modeler.PageDNAScroller;
 import org.concord.modeler.PageElectronicStructureViewer;
 import org.concord.modeler.PageFeedbackArea;
 import org.concord.modeler.PageFunctionGraph;
+import org.concord.modeler.PageGauge;
 import org.concord.modeler.PageJContainer;
 import org.concord.modeler.PageMd3d;
 import org.concord.modeler.PageMolecularViewer;
@@ -2093,6 +2094,9 @@ final class PageXMLDecoder {
 			else if (PageBarGraph.class.getName() == clazz) {
 				StyleConstants.setComponent(style, createBarGraph());
 			}
+			else if (PageGauge.class.getName() == clazz) {
+				StyleConstants.setComponent(style, createGauge());
+			}
 			else if (PageXYGraph.class.getName() == clazz) {
 				StyleConstants.setComponent(style, createXYGraph());
 			}
@@ -2817,6 +2821,96 @@ final class PageXMLDecoder {
 			connect(b);
 			drawTicks = drawLabels = false;
 			return b;
+		}
+
+		private PageGauge createGauge() {
+			PageGauge g = new PageGauge();
+			g.setPage(page);
+			g.setModelID(modelIndex);
+			g.setValue(value);
+			g.setInitialValue(value);
+			g.setMinimum(minimum);
+			g.setMaximum(maximum);
+			if (dataType != 0) {
+				g.setAverageType((byte) dataType);
+				dataType = 0;
+				switch (g.getAverageType()) {
+				case PageBarGraph.EXPONENTIAL_RUNNING_AVERAGE:
+					if (smoothingFactor > 0) {
+						g.setSmoothingFactor(smoothingFactor);
+						smoothingFactor = -1;
+					}
+					break;
+				case PageBarGraph.SIMPLE_RUNNING_AVERAGE:
+					if (samplingPoints > 0) {
+						g.setSamplingPoints(samplingPoints);
+						samplingPoints = -1;
+					}
+					break;
+				}
+			}
+			if (average) {
+				g.setAverageOnly(average);
+				g.setAverage(g.getInitialValue());
+				average = false;
+			}
+			if ((argb1 | ARGB_NOT_SET) != ARGB_NOT_SET) {
+				g.setBackground(new Color(argb1));
+				argb1 = ARGB_NOT_SET;
+			}
+			if ((argb2 | ARGB_NOT_SET) != ARGB_NOT_SET) {
+				g.setForeground(new Color(argb2));
+				argb2 = ARGB_NOT_SET;
+			}
+			g.setPaintTicks(drawTicks);
+			g.setPaintLabels(drawLabels);
+			if (format != null) {
+				g.setFormat(format);
+				format = null;
+			}
+			if (maxFractionDigit != 3) {
+				g.setMaximumFractionDigits(maxFractionDigit);
+				maxFractionDigit = 3;
+			}
+			if (maxIntegerDigit != 3) {
+				g.setMaximumIntegerDigits(maxIntegerDigit);
+				maxIntegerDigit = 3;
+			}
+			if (titleText != null) {
+				g.setPaintTitle(titleText.equalsIgnoreCase("true"));
+				titleText = null;
+			}
+			if (nstep > 0) {
+				g.setMinorTicks(nstep);
+				nstep = 0;
+			}
+			if (majorTicks > 0) {
+				g.setMajorTicks(majorTicks);
+				majorTicks = 0;
+			}
+			if (description != null) {
+				g.setDescription(description);
+				description = null;
+			}
+			if (timeSeries != null) {
+				g.setTimeSeriesName(timeSeries);
+				timeSeries = null;
+			}
+			else {
+				g.setTimeSeriesName(g.getDescription());
+			}
+			if (borderType != null) {
+				g.setBorderType(borderType);
+				borderType = null;
+			}
+			if (width > 0 && height > 0) {
+				g.setPreferredSize(new Dimension((int) width, (int) height));
+				width = height = 0;
+			}
+			g.setChangable(page.isEditable());
+			connect(g);
+			drawTicks = drawLabels = false;
+			return g;
 		}
 
 		private PageNumericBox createNumericBox() {
