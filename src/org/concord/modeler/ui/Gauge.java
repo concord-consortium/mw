@@ -226,9 +226,6 @@ public class Gauge extends JComponent {
 			}
 		}
 
-		if (getBorder() != null)
-			paintBorder(g2);
-
 		int xc = dim.width / 2;
 		int yc = dim.height - panelHeight;
 
@@ -281,6 +278,9 @@ public class Gauge extends JComponent {
 		g2.fillOval(xc - 4, yc - 4, 8, 8);
 		g2.setColor(getForeground());
 		g2.drawOval(xc - 4, yc - 4, 8, 8);
+
+		if (getBorder() != null)
+			paintBorder(g2);
 
 	}
 
