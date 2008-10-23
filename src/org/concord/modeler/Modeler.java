@@ -1595,13 +1595,13 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		editor.addEnabledComponentWhenEditable(menuItem);
 
 		menuItem = new JMenuItem(page.getAction(Page.INSERT_COMPONENT));
-		menuItem.setMnemonic(KeyEvent.VK_H);
-		menuItem.setName("Histogram");
-		s = getInternationalText("InsertHistogram");
-		menuItem.setText((s != null ? s : "Histogram") + "...");
-		menuItem.setEnabled(false);
+		menuItem.setMnemonic(KeyEvent.VK_G);
+		menuItem.setName("Gauge");
+		s = getInternationalText("InsertGauge");
+		menuItem.setText((s != null ? s : "Guage") + "...");
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.ALT_MASK | KeyEvent.SHIFT_MASK, true));
 		subMenu.add(menuItem);
-		// editor.addEnabledComponentWhenEditable(menuItem);
+		editor.addEnabledComponentWhenEditable(menuItem);
 
 		menuItem = new JMenuItem(page.getAction(Page.INSERT_COMPONENT));
 		menuItem.setMnemonic(KeyEvent.VK_P);

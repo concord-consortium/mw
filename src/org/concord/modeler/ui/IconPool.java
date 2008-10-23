@@ -145,8 +145,8 @@ public final class IconPool {
 		icon = new ImageIcon(c.getResource("images/linegraph.gif"));
 		map.put("linegraph", icon);
 
-		icon = new ImageIcon(c.getResource("images/histogram.gif"));
-		map.put("histogram", icon);
+		icon = new ImageIcon(c.getResource("images/gauge.gif"));
+		map.put("gauge", icon);
 
 		icon = new ImageIcon(c.getResource("images/piechart.gif"));
 		map.put("piechart", icon);

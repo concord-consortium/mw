@@ -102,9 +102,11 @@ class InsertComponentPopupMenu extends JPopupMenu {
 		menuItem.setIcon(IconPool.getIcon("linegraph"));
 		menu.add(menuItem);
 
-		s = Modeler.getInternationalText("InsertHistogram");
-		menuItem = new JMenuItem((s != null ? s : "Histogram") + "...", IconPool.getIcon("histogram"));
-		menuItem.setEnabled(false);
+		menuItem = new JMenuItem(page.getAction(Page.INSERT_COMPONENT));
+		menuItem.setName("Gauge");
+		s = Modeler.getInternationalText("InsertGauge");
+		menuItem.setText((s != null ? s : "Gauge") + "...");
+		menuItem.setIcon(IconPool.getIcon("gauge"));
 		menu.add(menuItem);
 
 		s = Modeler.getInternationalText("InsertPieChart");

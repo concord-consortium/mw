@@ -73,10 +73,10 @@ class LineIcon implements Icon {
 		leftMargin = lineIcon.leftMargin;
 		rightMargin = lineIcon.rightMargin;
 		filled = lineIcon.filled;
-		text = lineIcon.text;
 		arcWidth = lineIcon.arcWidth;
 		arcHeight = lineIcon.arcHeight;
 		cornerArc = lineIcon.cornerArc;
+		setText(lineIcon.getText());
 	}
 
 	public void setWrapper(IconWrapper ic) {

@@ -78,9 +78,9 @@ public class IconWrapper extends BasicPageTextBox {
 			setBorder(BorderFactory.createEmptyBorder(h, w, h, w));
 			setContentType("text/html");
 			LineIcon li = (LineIcon) icon;
+			decodeText(li.getText());
 			li.setWrapper(this);
 			setPage(page0);
-			decodeText(li.getText());
 		}
 		else {
 			this.page = page0;
@@ -97,7 +97,7 @@ public class IconWrapper extends BasicPageTextBox {
 
 	static IconWrapper newInstance(Icon icon, Page page) {
 		if (icon instanceof LineIcon)
-			return new IconWrapper(new LineIcon((LineIcon) icon), page);
+			return new IconWrapper(new LineIcon(((LineIcon) icon)), page);
 		return new IconWrapper(icon, page);
 	}
 
