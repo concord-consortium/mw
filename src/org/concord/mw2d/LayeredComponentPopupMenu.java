@@ -64,7 +64,7 @@ class LayeredComponentPopupMenu extends JPopupMenu {
 	private JMenuItem westMI;
 	private JMenu physicsMenu;
 	private JMenuItem miEField, miBField, miReflect;
-	private JMenuItem miDraggable;
+	private JMenuItem miVisible, miDraggable;
 
 	LayeredComponentPopupMenu(final MDView view) {
 
@@ -161,6 +161,7 @@ class LayeredComponentPopupMenu extends JPopupMenu {
 						physicsMenu.setEnabled(false);
 					}
 					ModelerUtilities.setWithoutNotifyingListeners(miDraggable, view.selectedComponent.isDraggable());
+					ModelerUtilities.setWithoutNotifyingListeners(miVisible, view.selectedComponent.isVisible());
 				}
 			}
 
@@ -485,6 +486,20 @@ class LayeredComponentPopupMenu extends JPopupMenu {
 			}
 		});
 		add(mi);
+
+		s = MDView.getInternationalText("Visible");
+		miVisible = new JCheckBoxMenuItem(s != null ? s : "Visible");
+		miVisible.setIcon(IconPool.getIcon("view"));
+		miVisible.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if (view.selectedComponent instanceof Layered) {
+					view.selectedComponent.setVisible(e.getStateChange() == ItemEvent.SELECTED);
+					view.repaint();
+					view.getModel().notifyChange();
+				}
+			}
+		});
+		add(miVisible);
 
 		s = MDView.getInternationalText("DraggableByUserInNonEditingMode");
 		miDraggable = new JCheckBoxMenuItem(s != null ? s : "Draggable by User in Non-Editing Mode");

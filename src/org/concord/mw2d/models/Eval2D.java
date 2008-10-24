@@ -3078,6 +3078,12 @@ class Eval2D extends AbstractEval {
 				out(ScriptEvent.FAILED, "Argument error: " + str);
 				return false;
 			}
+			if ("on".equalsIgnoreCase(s[1]) || "off".equalsIgnoreCase(s[1])) {
+				if ("visible".equalsIgnoreCase(s[0])) {
+					setImageField(str.substring(0, end - 1), s[0], "on".equalsIgnoreCase(s[1]));
+					return true;
+				}
+			}
 			double x = parseMathExpression(s[1]);
 			if (Double.isNaN(x))
 				return false;
@@ -5084,6 +5090,32 @@ class Eval2D extends AbstractEval {
 		if (b) {
 			notifyChange();
 			view.repaint();
+		}
+	}
+
+	private void setImageField(String str1, String str2, boolean x) {
+		int lb = str1.indexOf("[");
+		int rb = str1.indexOf("]");
+		double z = parseMathExpression(str1.substring(lb + 1, rb));
+		if (Double.isNaN(z))
+			return;
+		int i = (int) Math.round(z);
+		ImageComponent[] ic = view.getImages();
+		if (i < 0 || i >= ic.length) {
+			out(ScriptEvent.FAILED, "Image " + i + " doesn't exisit.");
+			return;
+		}
+		String s = str2.toLowerCase().intern();
+		boolean b = true;
+		if (s == "visible")
+			ic[i].setVisible(x);
+		else {
+			out(ScriptEvent.FAILED, "Cannot set propery: " + str2);
+			b = false;
+		}
+		if (b) {
+			view.repaint();
+			notifyChange();
 		}
 	}
 
