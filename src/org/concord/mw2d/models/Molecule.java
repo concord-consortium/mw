@@ -275,8 +275,9 @@ public class Molecule implements ModelComponent, Rotatable {
 		for (Atom a : atoms)
 			a.setVisible(b);
 		List<RadialBond> bonds = getBonds();
-		for (RadialBond x : bonds)
-			x.setVisible(b);
+		if (bonds != null)
+			for (RadialBond x : bonds)
+				x.setVisible(b);
 	}
 
 	/** if one of its atoms is visible, then the entire molecule is considered visible. */
