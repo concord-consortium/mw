@@ -3988,6 +3988,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 					output = sendScript(token, IconWrapper.class);
 				else if (t0 == "bargraph")
 					output = sendScript(token, PageBarGraph.class);
+				else if (t0 == "gauge")
+					output = sendScript(token, PageGauge.class);
 				else if (t0 == "xygraph")
 					output = sendScript(token, PageXYGraph.class);
 				else if (t0 == "energylevel")

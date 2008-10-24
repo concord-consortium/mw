@@ -67,6 +67,7 @@ import org.concord.modeler.Model;
 import org.concord.modeler.ModelerUtilities;
 import org.concord.modeler.Movie;
 import org.concord.modeler.PageBarGraph;
+import org.concord.modeler.PageGauge;
 import org.concord.modeler.PageXYGraph;
 import org.concord.modeler.ScriptCallback;
 import org.concord.modeler.SlideMovie;
@@ -1259,7 +1260,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			return false;
 		synchronized (modelListenerList) {
 			for (ModelListener ml : modelListenerList) {
-				if ((ml instanceof PageXYGraph) || (ml instanceof PageBarGraph))
+				if (ml instanceof PageXYGraph || ml instanceof PageBarGraph || ml instanceof PageGauge)
 					return true;
 			}
 		}
