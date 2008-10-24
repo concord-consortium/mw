@@ -2164,6 +2164,8 @@ class Eval2D extends AbstractEval {
 				Atom a = null, b = mm.atom[iat];
 				for (int k = 0; k < noa; k++) {
 					a = mm.atom[k];
+					if (a == b)
+						continue;
 					if (a.id == id || id == -1) {
 						r = a.distanceSquare(b);
 						if (r < x[2] && r < dmin) {
@@ -2194,6 +2196,8 @@ class Eval2D extends AbstractEval {
 				Molecule mol = mm.molecules.getMolecule(b);
 				for (int k = 0; k < noa; k++) {
 					a = mm.atom[k];
+					if (a == b)
+						continue;
 					if (a.id == id || id == -1) {
 						r = a.distanceSquare(b);
 						if (r < x[2] && r < dmin) {
