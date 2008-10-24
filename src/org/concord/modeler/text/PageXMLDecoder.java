@@ -2835,24 +2835,19 @@ final class PageXMLDecoder {
 				g.setAverageType((byte) dataType);
 				dataType = 0;
 				switch (g.getAverageType()) {
-				case PageBarGraph.EXPONENTIAL_RUNNING_AVERAGE:
+				case PageGauge.EXPONENTIAL_RUNNING_AVERAGE:
 					if (smoothingFactor > 0) {
 						g.setSmoothingFactor(smoothingFactor);
 						smoothingFactor = -1;
 					}
 					break;
-				case PageBarGraph.SIMPLE_RUNNING_AVERAGE:
+				case PageGauge.SIMPLE_RUNNING_AVERAGE:
 					if (samplingPoints > 0) {
 						g.setSamplingPoints(samplingPoints);
 						samplingPoints = -1;
 					}
 					break;
 				}
-			}
-			if (average) {
-				g.setAverageOnly(average);
-				g.setAverage(g.getInitialValue());
-				average = false;
 			}
 			if ((argb1 | ARGB_NOT_SET) != ARGB_NOT_SET) {
 				g.setBackground(new Color(argb1));
