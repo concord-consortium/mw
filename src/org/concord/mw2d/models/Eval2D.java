@@ -5215,6 +5215,20 @@ class Eval2D extends AbstractEval {
 		else if (s == "visible") {
 			c[i].setVisible("on".equalsIgnoreCase(str3));
 		}
+		else if (s == "layer") {
+			if ("in_front_of_particles".equalsIgnoreCase(str3)) {
+				c[i].setLayer(Layered.IN_FRONT_OF_PARTICLES);
+			}
+			else if ("behind_particles".equalsIgnoreCase(str3)) {
+				c[i].setLayer(Layered.BEHIND_PARTICLES);
+			}
+			else if ("back".equalsIgnoreCase(str3)) {
+				view.sendLayerToBack(c[i]);
+			}
+			else if ("front".equalsIgnoreCase(str3)) {
+				view.bringLayerToFront(c[i]);
+			}
+		}
 		else {
 			out(ScriptEvent.FAILED, "Cannot set propery: " + str2);
 			b = false;
@@ -5315,6 +5329,20 @@ class Eval2D extends AbstractEval {
 		else if (s == "visible") {
 			c[i].setVisible("on".equalsIgnoreCase(str3));
 		}
+		else if (s == "layer") {
+			if ("in_front_of_particles".equalsIgnoreCase(str3)) {
+				c[i].setLayer(Layered.IN_FRONT_OF_PARTICLES);
+			}
+			else if ("behind_particles".equalsIgnoreCase(str3)) {
+				c[i].setLayer(Layered.BEHIND_PARTICLES);
+			}
+			else if ("back".equalsIgnoreCase(str3)) {
+				view.sendLayerToBack(c[i]);
+			}
+			else if ("front".equalsIgnoreCase(str3)) {
+				view.bringLayerToFront(c[i]);
+			}
+		}
 		else {
 			out(ScriptEvent.FAILED, "Cannot set propery: " + str2);
 			b = false;
@@ -5414,6 +5442,20 @@ class Eval2D extends AbstractEval {
 		}
 		else if (s == "visible") {
 			c[i].setVisible("on".equalsIgnoreCase(str3));
+		}
+		else if (s == "layer") {
+			if ("in_front_of_particles".equalsIgnoreCase(str3)) {
+				c[i].setLayer(Layered.IN_FRONT_OF_PARTICLES);
+			}
+			else if ("behind_particles".equalsIgnoreCase(str3)) {
+				c[i].setLayer(Layered.BEHIND_PARTICLES);
+			}
+			else if ("back".equalsIgnoreCase(str3)) {
+				view.sendLayerToBack(c[i]);
+			}
+			else if ("front".equalsIgnoreCase(str3)) {
+				view.bringLayerToFront(c[i]);
+			}
 		}
 		else {
 			out(ScriptEvent.FAILED, "Cannot set propery: " + str2);
@@ -5540,6 +5582,20 @@ class Eval2D extends AbstractEval {
 			}
 			catch (Exception e) {
 				t[i].setShadowType(n);
+			}
+		}
+		else if (s == "layer") {
+			if ("in_front_of_particles".equalsIgnoreCase(str3)) {
+				t[i].setLayer(Layered.IN_FRONT_OF_PARTICLES);
+			}
+			else if ("behind_particles".equalsIgnoreCase(str3)) {
+				t[i].setLayer(Layered.BEHIND_PARTICLES);
+			}
+			else if ("back".equalsIgnoreCase(str3)) {
+				view.sendLayerToBack(t[i]);
+			}
+			else if ("front".equalsIgnoreCase(str3)) {
+				view.bringLayerToFront(t[i]);
 			}
 		}
 		else {
