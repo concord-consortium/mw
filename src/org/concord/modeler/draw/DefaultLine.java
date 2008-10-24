@@ -42,4 +42,11 @@ public class DefaultLine extends AbstractLine {
 	protected void attachToHost() {
 	}
 
+	protected void setVisible(boolean b) {
+	}
+
+	protected boolean isVisible() {
+		return true;
+	}
+
 }

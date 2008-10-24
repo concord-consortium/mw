@@ -200,12 +200,10 @@ public class ImageComponent implements ModelComponent, Layered, Rotatable {
 		images = null;
 	}
 
-	/** TODO */
 	public void setVisible(boolean b) {
 		visible = b;
 	}
 
-	/** TODO */
 	public boolean isVisible() {
 		return visible;
 	}
@@ -334,12 +332,15 @@ public class ImageComponent implements ModelComponent, Layered, Rotatable {
 			yc = y + getLogicalScreenHeight() * 0.5;
 			g2.rotate(a, xc, yc);
 		}
-		if (n == 1) {
-			if (images[0] != null)
-				g2.drawImage(images[0], (int) x, (int) y, null);
-		}
-		else {
-			g2.drawImage(images[frameCounter < n ? frameCounter : n - 1], (int) getXFrame(), (int) getYFrame(), null);
+		if (visible) {
+			if (n == 1) {
+				if (images[0] != null)
+					g2.drawImage(images[0], (int) x, (int) y, null);
+			}
+			else {
+				g2.drawImage(images[frameCounter < n ? frameCounter : n - 1], (int) getXFrame(), (int) getYFrame(),
+						null);
+			}
 		}
 		if (selected && !selectedToRotate && ((MDView) model.getView()).getShowSelectionHalo()) {
 			Stroke oldStroke = g2.getStroke();

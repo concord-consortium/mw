@@ -30,7 +30,7 @@ public class DefaultRectangle extends AbstractRectangle {
 		super();
 		setRect(x, y, w, h);
 	}
-	
+
 	public DefaultRectangle(RectangleState s) {
 		super(s);
 	}
@@ -40,6 +40,14 @@ public class DefaultRectangle extends AbstractRectangle {
 	}
 
 	protected void attachToHost() {
+	}
+
+	protected void setVisible(boolean b) {
+	}
+
+	/** @return true */
+	protected boolean isVisible() {
+		return true;
 	}
 
 }

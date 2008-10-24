@@ -23,6 +23,7 @@ package org.concord.modeler.draw;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -63,6 +64,7 @@ public abstract class AbstractLine implements DrawingElement {
 	private float arrowx, arrowy, wingx, wingy;
 	private int arrowWeight;
 	private Polygon polygon;
+	private Font font = new Font("Arial", Font.PLAIN | Font.BOLD, 14);
 
 	protected AbstractLine() {
 		line = new Line2D.Float();
@@ -363,6 +365,10 @@ public abstract class AbstractLine implements DrawingElement {
 
 	protected abstract void attachToHost();
 
+	protected abstract void setVisible(boolean b);
+
+	protected abstract boolean isVisible();
+
 	public void paint(Graphics g) {
 
 		attachToHost();
@@ -372,7 +378,7 @@ public abstract class AbstractLine implements DrawingElement {
 		Color oldColor = g.getColor();
 		Stroke oldStroke = g2.getStroke();
 
-		if (lineWeight > 0) {
+		if (lineWeight > 0 && isVisible()) {
 			g.setColor(color);
 			g2.setStroke(stroke);
 			g2.draw(line);
@@ -411,6 +417,7 @@ public abstract class AbstractLine implements DrawingElement {
 				g2.draw(end1);
 			if (attachmentPosition != ENDPOINT2)
 				g2.draw(end2);
+			g2.setFont(font);
 			g2.drawString("1", end1.x + end1.width, end1.y + end1.height);
 			g2.drawString("2", end2.x + end2.width, end2.y + end2.height);
 		}

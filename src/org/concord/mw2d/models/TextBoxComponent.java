@@ -117,12 +117,10 @@ public class TextBoxComponent extends TextContainer implements ModelComponent, L
 		host = null;
 	}
 
-	/** TODO */
 	public void setVisible(boolean b) {
 		visible = b;
 	}
 
-	/** TODO */
 	public boolean isVisible() {
 		return visible;
 	}

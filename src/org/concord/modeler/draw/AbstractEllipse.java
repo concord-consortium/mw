@@ -128,12 +128,16 @@ public abstract class AbstractEllipse implements DrawingElement {
 
 	protected abstract void attachToHost();
 
+	protected abstract void setVisible(boolean b);
+
+	protected abstract boolean isVisible();
+
 	public boolean intersects(Rectangle r) {
 		return r.intersects(x, y, width, height);
 	}
 
 	/**
-	 * set the UI component whose graphics context this rectangle will be drawn upon.
+	 * set the UI component whose context this rectangle will be drawn upon.
 	 */
 	public void setComponent(Component c) {
 		component = c;
@@ -475,42 +479,47 @@ public abstract class AbstractEllipse implements DrawingElement {
 
 		attachToHost();
 
-		if (fillMode instanceof FillMode.ColorFill) {
-			if (alpha == 255) {
-				g2.setColor(((FillMode.ColorFill) fillMode).getColor());
-				g2.fillOval(x, y, width, height);
-			}
-			else if (alpha > 0) {
-				g2.setColor(new Color((alpha << 24)
-						| (0x00ffffff & ((FillMode.ColorFill) fillMode).getColor().getRGB()), true));
-				g2.fillOval(x, y, width, height);
-			}
-		}
-		else if (fillMode instanceof FillMode.ImageFill) {
-			if (bgImage != null) {
-				if (bgImage.getIconWidth() != width || bgImage.getIconHeight() != height)
-					bgImage = new ImageIcon(fullImage.getScaledInstance(width, height, Image.SCALE_DEFAULT));
-				bgImage.paintIcon(component, g, x, y);
-			}
-		}
-		else if (fillMode instanceof FillMode.GradientFill) {
-			FillMode.GradientFill gfm = (FillMode.GradientFill) fillMode;
-			Color c1 = new Color((alphaAtCenter << 24) | (0x00ffffff & gfm.getColor1().getRGB()), true);
-			Color c2 = new Color((alphaAtEdge << 24) | (0x00ffffff & gfm.getColor2().getRGB()), true);
-			GradientFactory.paintOval(gradientPaint, g2, c1, c2, x, y, width, height, angle);
-		}
-		else if (fillMode instanceof FillMode.PatternFill) {
-			FillMode.PatternFill tfm = (FillMode.PatternFill) fillMode;
-			Color c1 = new Color((alpha << 24) | (0x00ffffff & tfm.getForeground()), true);
-			Color c2 = new Color((alpha << 24) | (0x00ffffff & tfm.getBackground()), true);
-			g2.setPaint(PatternFactory.createPattern(tfm.getStyle(), tfm.getCellWidth(), tfm.getCellHeight(), c1, c2));
-			g2.fillOval(x, y, width, height);
-		}
+		if (isVisible()) {
 
-		if (lineWeight > 0) {
-			g.setColor(lineColor);
-			g2.setStroke(stroke);
-			g2.drawOval(x, y, width, height);
+			if (fillMode instanceof FillMode.ColorFill) {
+				if (alpha == 255) {
+					g2.setColor(((FillMode.ColorFill) fillMode).getColor());
+					g2.fillOval(x, y, width, height);
+				}
+				else if (alpha > 0) {
+					g2.setColor(new Color((alpha << 24)
+							| (0x00ffffff & ((FillMode.ColorFill) fillMode).getColor().getRGB()), true));
+					g2.fillOval(x, y, width, height);
+				}
+			}
+			else if (fillMode instanceof FillMode.ImageFill) {
+				if (bgImage != null) {
+					if (bgImage.getIconWidth() != width || bgImage.getIconHeight() != height)
+						bgImage = new ImageIcon(fullImage.getScaledInstance(width, height, Image.SCALE_DEFAULT));
+					bgImage.paintIcon(component, g, x, y);
+				}
+			}
+			else if (fillMode instanceof FillMode.GradientFill) {
+				FillMode.GradientFill gfm = (FillMode.GradientFill) fillMode;
+				Color c1 = new Color((alphaAtCenter << 24) | (0x00ffffff & gfm.getColor1().getRGB()), true);
+				Color c2 = new Color((alphaAtEdge << 24) | (0x00ffffff & gfm.getColor2().getRGB()), true);
+				GradientFactory.paintOval(gradientPaint, g2, c1, c2, x, y, width, height, angle);
+			}
+			else if (fillMode instanceof FillMode.PatternFill) {
+				FillMode.PatternFill tfm = (FillMode.PatternFill) fillMode;
+				Color c1 = new Color((alpha << 24) | (0x00ffffff & tfm.getForeground()), true);
+				Color c2 = new Color((alpha << 24) | (0x00ffffff & tfm.getBackground()), true);
+				g2.setPaint(PatternFactory.createPattern(tfm.getStyle(), tfm.getCellWidth(), tfm.getCellHeight(), c1,
+						c2));
+				g2.fillOval(x, y, width, height);
+			}
+
+			if (lineWeight > 0) {
+				g.setColor(lineColor);
+				g2.setStroke(stroke);
+				g2.drawOval(x, y, width, height);
+			}
+
 		}
 
 		g2.setTransform(at);

@@ -121,6 +121,10 @@ public abstract class AbstractRectangle implements DrawingElement {
 
 	protected abstract void attachToHost();
 
+	protected abstract void setVisible(boolean b);
+
+	protected abstract boolean isVisible();
+
 	public boolean intersects(Rectangle r) {
 		return rect.intersects(r);
 	}
@@ -482,44 +486,47 @@ public abstract class AbstractRectangle implements DrawingElement {
 
 		attachToHost();
 
-		if (fillMode instanceof FillMode.ColorFill) {
-			if (alpha == 255) {
-				g2.setColor(((FillMode.ColorFill) fillMode).getColor());
+		if (isVisible()) {
+			if (fillMode instanceof FillMode.ColorFill) {
+				if (alpha == 255) {
+					g2.setColor(((FillMode.ColorFill) fillMode).getColor());
+					g2.fill(rect);
+				}
+				else if (alpha > 0) {
+					g2.setColor(new Color((alpha << 24)
+							| (0x00ffffff & ((FillMode.ColorFill) fillMode).getColor().getRGB()), true));
+					g2.fill(rect);
+				}
+			}
+			else if (fillMode instanceof FillMode.ImageFill) {
+				if (bgImage != null) {
+					if (bgImage.getIconWidth() != rect.width || bgImage.getIconHeight() != rect.height)
+						bgImage = new ImageIcon(fullImage.getScaledInstance(Math.round(rect.width), Math
+								.round(rect.height), Image.SCALE_DEFAULT));
+					bgImage.paintIcon(component, g, Math.round(rect.x), Math.round(rect.y));
+				}
+			}
+			else if (fillMode instanceof FillMode.GradientFill) {
+				FillMode.GradientFill gfm = (FillMode.GradientFill) fillMode;
+				Color c1 = new Color((alpha << 24) | (0x00ffffff & gfm.getColor1().getRGB()), true);
+				Color c2 = new Color((alpha << 24) | (0x00ffffff & gfm.getColor2().getRGB()), true);
+				GradientFactory.paintRect(g2, gfm.getStyle(), gfm.getVariant(), c1, c2, rect.x, rect.y, rect.width,
+						rect.height);
+			}
+			else if (fillMode instanceof FillMode.PatternFill) {
+				FillMode.PatternFill tfm = (FillMode.PatternFill) fillMode;
+				Color c1 = new Color((alpha << 24) | (0x00ffffff & tfm.getForeground()), true);
+				Color c2 = new Color((alpha << 24) | (0x00ffffff & tfm.getBackground()), true);
+				g2.setPaint(PatternFactory.createPattern(tfm.getStyle(), tfm.getCellWidth(), tfm.getCellHeight(), c1,
+						c2));
 				g2.fill(rect);
 			}
-			else if (alpha > 0) {
-				g2.setColor(new Color((alpha << 24)
-						| (0x00ffffff & ((FillMode.ColorFill) fillMode).getColor().getRGB()), true));
-				g2.fill(rect);
-			}
-		}
-		else if (fillMode instanceof FillMode.ImageFill) {
-			if (bgImage != null) {
-				if (bgImage.getIconWidth() != rect.width || bgImage.getIconHeight() != rect.height)
-					bgImage = new ImageIcon(fullImage.getScaledInstance(Math.round(rect.width),
-							Math.round(rect.height), Image.SCALE_DEFAULT));
-				bgImage.paintIcon(component, g, Math.round(rect.x), Math.round(rect.y));
-			}
-		}
-		else if (fillMode instanceof FillMode.GradientFill) {
-			FillMode.GradientFill gfm = (FillMode.GradientFill) fillMode;
-			Color c1 = new Color((alpha << 24) | (0x00ffffff & gfm.getColor1().getRGB()), true);
-			Color c2 = new Color((alpha << 24) | (0x00ffffff & gfm.getColor2().getRGB()), true);
-			GradientFactory.paintRect(g2, gfm.getStyle(), gfm.getVariant(), c1, c2, rect.x, rect.y, rect.width,
-					rect.height);
-		}
-		else if (fillMode instanceof FillMode.PatternFill) {
-			FillMode.PatternFill tfm = (FillMode.PatternFill) fillMode;
-			Color c1 = new Color((alpha << 24) | (0x00ffffff & tfm.getForeground()), true);
-			Color c2 = new Color((alpha << 24) | (0x00ffffff & tfm.getBackground()), true);
-			g2.setPaint(PatternFactory.createPattern(tfm.getStyle(), tfm.getCellWidth(), tfm.getCellHeight(), c1, c2));
-			g2.fill(rect);
-		}
 
-		if (lineWeight > 0) {
-			g.setColor(lineColor);
-			g2.setStroke(stroke);
-			g2.draw(rect);
+			if (lineWeight > 0) {
+				g.setColor(lineColor);
+				g2.setStroke(stroke);
+				g2.draw(rect);
+			}
 		}
 
 		g2.setTransform(at);

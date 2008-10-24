@@ -393,6 +393,10 @@ public abstract class TextContainer implements DrawingElement {
 
 	protected abstract void attachToHost();
 
+	protected abstract void setVisible(boolean b);
+
+	protected abstract boolean isVisible();
+
 	public void paint(Graphics g) {
 
 		Color oldColor = g.getColor();
@@ -420,226 +424,230 @@ public abstract class TextContainer implements DrawingElement {
 			rectangle.y = y1;
 		}
 
-		g.setColor(Color.gray);
-		if (fillMode == FillMode.getNoFillMode()) {
-			switch (borderType) {
-			case 0:
-			case 1:
-				switch (shadowType) {
+		if (isVisible()) {
+
+			g.setColor(Color.gray);
+			if (fillMode == FillMode.getNoFillMode()) {
+				switch (borderType) {
+				case 0:
 				case 1:
-					g.drawRect(x1 + shadowSize, y1 + shadowSize, w1, h1);
+					switch (shadowType) {
+					case 1:
+						g.drawRect(x1 + shadowSize, y1 + shadowSize, w1, h1);
+						break;
+					case 2:
+						g.drawRect(x1 - shadowSize, y1 + shadowSize, w1, h1);
+						break;
+					case 3:
+						g.drawRect(x1 + shadowSize, y1 - shadowSize, w1, h1);
+						break;
+					case 4:
+						g.drawRect(x1 - shadowSize, y1 - shadowSize, w1, h1);
+						break;
+					}
 					break;
 				case 2:
-					g.drawRect(x1 - shadowSize, y1 + shadowSize, w1, h1);
-					break;
-				case 3:
-					g.drawRect(x1 + shadowSize, y1 - shadowSize, w1, h1);
-					break;
-				case 4:
-					g.drawRect(x1 - shadowSize, y1 - shadowSize, w1, h1);
-					break;
-				}
-				break;
-			case 2:
-				switch (shadowType) {
-				case 1:
-					g.drawRoundRect(x1 + shadowSize, y1 + shadowSize, w1, h1, 10, 10);
-					break;
-				case 2:
-					g.drawRoundRect(x1 - shadowSize, y1 + shadowSize, w1, h1, 10, 10);
-					break;
-				case 3:
-					g.drawRoundRect(x1 + shadowSize, y1 - shadowSize, w1, h1, 10, 10);
-					break;
-				case 4:
-					g.drawRoundRect(x1 - shadowSize, y1 - shadowSize, w1, h1, 10, 10);
+					switch (shadowType) {
+					case 1:
+						g.drawRoundRect(x1 + shadowSize, y1 + shadowSize, w1, h1, 10, 10);
+						break;
+					case 2:
+						g.drawRoundRect(x1 - shadowSize, y1 + shadowSize, w1, h1, 10, 10);
+						break;
+					case 3:
+						g.drawRoundRect(x1 + shadowSize, y1 - shadowSize, w1, h1, 10, 10);
+						break;
+					case 4:
+						g.drawRoundRect(x1 - shadowSize, y1 - shadowSize, w1, h1, 10, 10);
+						break;
+					}
 					break;
 				}
-				break;
-			}
-		}
-		else {
-			switch (borderType) {
-			case 0:
-			case 1:
-				switch (shadowType) {
-				case 1:
-					g.fillRect(x1 + shadowSize, y1 + shadowSize, w1, h1);
-					break;
-				case 2:
-					g.fillRect(x1 - shadowSize, y1 + shadowSize, w1, h1);
-					break;
-				case 3:
-					g.fillRect(x1 + shadowSize, y1 - shadowSize, w1, h1);
-					break;
-				case 4:
-					g.fillRect(x1 - shadowSize, y1 - shadowSize, w1, h1);
-					break;
-				}
-				break;
-			case 2:
-				switch (shadowType) {
-				case 1:
-					g.fillRoundRect(x1 + shadowSize, y1 + shadowSize, w1, h1, 10, 10);
-					break;
-				case 2:
-					g.fillRoundRect(x1 - shadowSize, y1 + shadowSize, w1, h1, 10, 10);
-					break;
-				case 3:
-					g.fillRoundRect(x1 + shadowSize, y1 - shadowSize, w1, h1, 10, 10);
-					break;
-				case 4:
-					g.fillRoundRect(x1 - shadowSize, y1 - shadowSize, w1, h1, 10, 10);
-					break;
-				}
-				break;
-			}
-		}
-		if (fillMode instanceof FillMode.ColorFill) {
-			g.setColor(((FillMode.ColorFill) fillMode).getColor());
-			switch (borderType) {
-			case 0:
-			case 1:
-				g.fillRect(x1, y1, w1, h1);
-				break;
-			case 2:
-				g.fillRoundRect(x1, y1, w1, h1, 10, 10);
-				break;
-			}
-		}
-		else if (fillMode instanceof FillMode.ImageFill) {
-			if (bgImage != null) {
-				if (bgImage.getIconWidth() != w1 || bgImage.getIconHeight() != h1)
-					bgImage = new ImageIcon(fullImage.getScaledInstance(w1, h1, Image.SCALE_DEFAULT));
-				bgImage.paintIcon(component, g, x1, y1);
-			}
-		}
-		else if (fillMode instanceof FillMode.GradientFill) {
-			FillMode.GradientFill gfm = (FillMode.GradientFill) fillMode;
-			GradientFactory.paintRect((Graphics2D) g, gfm.getStyle(), gfm.getVariant(), gfm.getColor1(), gfm
-					.getColor2(), x1, y1, w1, h1);
-		}
-		else if (fillMode instanceof FillMode.PatternFill) {
-			FillMode.PatternFill tfm = (FillMode.PatternFill) fillMode;
-			((Graphics2D) g).setPaint(PatternFactory.createPattern(tfm.getStyle(), tfm.getCellWidth(), tfm
-					.getCellHeight(), new Color(tfm.getForeground()), new Color(tfm.getBackground())));
-			switch (borderType) {
-			case 0:
-			case 1:
-				g.fillRect(x1, y1, w1, h1);
-				break;
-			case 2:
-				g.fillRoundRect(x1, y1, w1, h1, 10, 10);
-				break;
-			}
-		}
-		if (component != null)
-			g.setColor(new Color(0xffffff ^ component.getBackground().getRGB()));
-		switch (borderType) {
-		case 1:
-			g.drawRect(x1, y1, w1, h1);
-			break;
-		case 2:
-			g.drawRoundRect(x1, y1, w1, h1, 10, 10);
-			break;
-		}
-		if (callOut && callOutPoint != null) {
-			xPoints[0] = callOutPoint.x;
-			yPoints[0] = callOutPoint.y;
-			int oc = rectangle.outcode(callOutPoint.x, callOutPoint.y);
-			boolean b = true;
-			if ((oc & Rectangle2D.OUT_BOTTOM) == Rectangle2D.OUT_BOTTOM) {
-				if ((oc & Rectangle2D.OUT_LEFT) == Rectangle2D.OUT_LEFT) {
-					xPoints[1] = rectangle.x;
-					yPoints[1] = (int) (rectangle.y + rectangle.height * 0.8);
-					xPoints[2] = (int) (rectangle.x + rectangle.width * 0.2);
-					yPoints[2] = rectangle.y + rectangle.height;
-				}
-				else if ((oc & Rectangle2D.OUT_RIGHT) == Rectangle2D.OUT_RIGHT) {
-					xPoints[1] = rectangle.x + rectangle.width;
-					yPoints[1] = (int) (rectangle.y + rectangle.height * 0.8);
-					xPoints[2] = (int) (rectangle.x + rectangle.width * 0.8);
-					yPoints[2] = rectangle.y + rectangle.height;
-				}
-				else {
-					xPoints[1] = (int) (rectangle.x + rectangle.width * 0.4);
-					xPoints[2] = (int) (rectangle.x + rectangle.width * 0.6);
-					yPoints[2] = yPoints[1] = rectangle.y + rectangle.height;
-				}
-			}
-			else if ((oc & Rectangle2D.OUT_TOP) == Rectangle2D.OUT_TOP) {
-				if ((oc & Rectangle2D.OUT_LEFT) == Rectangle2D.OUT_LEFT) {
-					xPoints[1] = rectangle.x;
-					yPoints[1] = (int) (rectangle.y + rectangle.height * 0.2);
-					xPoints[2] = (int) (rectangle.x + rectangle.width * 0.2);
-					yPoints[2] = rectangle.y;
-				}
-				else if ((oc & Rectangle2D.OUT_RIGHT) == Rectangle2D.OUT_RIGHT) {
-					xPoints[1] = (int) (rectangle.x + rectangle.width * 0.8);
-					yPoints[1] = rectangle.y;
-					xPoints[2] = rectangle.x + rectangle.width;
-					yPoints[2] = (int) (rectangle.y + rectangle.height * 0.2);
-				}
-				else {
-					xPoints[1] = (int) (rectangle.x + rectangle.width * 0.4);
-					xPoints[2] = (int) (rectangle.x + rectangle.width * 0.6);
-					yPoints[2] = yPoints[1] = rectangle.y + 1;
-				}
-			}
-			else if ((oc & Rectangle2D.OUT_LEFT) == Rectangle2D.OUT_LEFT) {
-				xPoints[2] = xPoints[1] = rectangle.x + 1;
-				yPoints[1] = (int) (rectangle.y + rectangle.height * 0.4);
-				yPoints[2] = (int) (rectangle.y + rectangle.height * 0.6);
-			}
-			else if ((oc & Rectangle2D.OUT_RIGHT) == Rectangle2D.OUT_RIGHT) {
-				xPoints[2] = xPoints[1] = rectangle.x + rectangle.width;
-				yPoints[1] = (int) (rectangle.y + rectangle.height * 0.4);
-				yPoints[2] = (int) (rectangle.y + rectangle.height * 0.6);
 			}
 			else {
-				b = false;
-			}
-			if (b) {
-				if (fillMode instanceof FillMode.ColorFill) {
-					g.setColor(((FillMode.ColorFill) fillMode).getColor());
-					g.fillPolygon(xPoints, yPoints, 3);
+				switch (borderType) {
+				case 0:
+				case 1:
+					switch (shadowType) {
+					case 1:
+						g.fillRect(x1 + shadowSize, y1 + shadowSize, w1, h1);
+						break;
+					case 2:
+						g.fillRect(x1 - shadowSize, y1 + shadowSize, w1, h1);
+						break;
+					case 3:
+						g.fillRect(x1 + shadowSize, y1 - shadowSize, w1, h1);
+						break;
+					case 4:
+						g.fillRect(x1 - shadowSize, y1 - shadowSize, w1, h1);
+						break;
+					}
+					break;
+				case 2:
+					switch (shadowType) {
+					case 1:
+						g.fillRoundRect(x1 + shadowSize, y1 + shadowSize, w1, h1, 10, 10);
+						break;
+					case 2:
+						g.fillRoundRect(x1 - shadowSize, y1 + shadowSize, w1, h1, 10, 10);
+						break;
+					case 3:
+						g.fillRoundRect(x1 + shadowSize, y1 - shadowSize, w1, h1, 10, 10);
+						break;
+					case 4:
+						g.fillRoundRect(x1 - shadowSize, y1 - shadowSize, w1, h1, 10, 10);
+						break;
+					}
+					break;
 				}
-				if (borderType != 0) {
-					g.setColor(contrastView);
-					g.drawLine(xPoints[0], yPoints[0], xPoints[1], yPoints[1]);
-					g.drawLine(xPoints[0], yPoints[0], xPoints[2], yPoints[2]);
+			}
+			if (fillMode instanceof FillMode.ColorFill) {
+				g.setColor(((FillMode.ColorFill) fillMode).getColor());
+				switch (borderType) {
+				case 0:
+				case 1:
+					g.fillRect(x1, y1, w1, h1);
+					break;
+				case 2:
+					g.fillRoundRect(x1, y1, w1, h1, 10, 10);
+					break;
 				}
 			}
-		}
-		if (selected && selectionDrawn) {
-			if (callOut && callOutPoint != null) {
-				xPoints[0] = callOutPoint.x - 4;
-				yPoints[0] = callOutPoint.y;
-				xPoints[1] = callOutPoint.x;
-				yPoints[1] = callOutPoint.y + 4;
-				xPoints[2] = callOutPoint.x + 4;
-				yPoints[2] = callOutPoint.y;
-				xPoints[3] = callOutPoint.x;
-				yPoints[3] = callOutPoint.y - 4;
-				g.setColor(Color.yellow);
-				g.fillPolygon(xPoints, yPoints, 4);
-				g.setColor(contrastView);
-				g.drawPolygon(xPoints, yPoints, 4);
+			else if (fillMode instanceof FillMode.ImageFill) {
+				if (bgImage != null) {
+					if (bgImage.getIconWidth() != w1 || bgImage.getIconHeight() != h1)
+						bgImage = new ImageIcon(fullImage.getScaledInstance(w1, h1, Image.SCALE_DEFAULT));
+					bgImage.paintIcon(component, g, x1, y1);
+				}
 			}
-			g.setColor(contrastView);
-			((Graphics2D) g).setStroke(THIN_DASHED);
+			else if (fillMode instanceof FillMode.GradientFill) {
+				FillMode.GradientFill gfm = (FillMode.GradientFill) fillMode;
+				GradientFactory.paintRect((Graphics2D) g, gfm.getStyle(), gfm.getVariant(), gfm.getColor1(), gfm
+						.getColor2(), x1, y1, w1, h1);
+			}
+			else if (fillMode instanceof FillMode.PatternFill) {
+				FillMode.PatternFill tfm = (FillMode.PatternFill) fillMode;
+				((Graphics2D) g).setPaint(PatternFactory.createPattern(tfm.getStyle(), tfm.getCellWidth(), tfm
+						.getCellHeight(), new Color(tfm.getForeground()), new Color(tfm.getBackground())));
+				switch (borderType) {
+				case 0:
+				case 1:
+					g.fillRect(x1, y1, w1, h1);
+					break;
+				case 2:
+					g.fillRoundRect(x1, y1, w1, h1, 10, 10);
+					break;
+				}
+			}
+			if (component != null)
+				g.setColor(new Color(0xffffff ^ component.getBackground().getRGB()));
 			switch (borderType) {
-			case 2:
-				g.drawRoundRect(x1 - 2, y1 - 2, w1 + 4, h1 + 4, 12, 12);
+			case 1:
+				g.drawRect(x1, y1, w1, h1);
 				break;
-			default:
-				g.drawRect(x1 - 2, y1 - 2, w1 + 4, h1 + 4);
+			case 2:
+				g.drawRoundRect(x1, y1, w1, h1, 10, 10);
+				break;
 			}
-		}
-		g.setColor(fgColor);
-		if (lines != null) {
-			for (int i = 0; i < lines.length; i++)
-				g.drawString(lines[i], (int) (x + fontHeight * 0.75f), (int) (y + (i + 1) * fontHeight));
+			if (callOut && callOutPoint != null) {
+				xPoints[0] = callOutPoint.x;
+				yPoints[0] = callOutPoint.y;
+				int oc = rectangle.outcode(callOutPoint.x, callOutPoint.y);
+				boolean b = true;
+				if ((oc & Rectangle2D.OUT_BOTTOM) == Rectangle2D.OUT_BOTTOM) {
+					if ((oc & Rectangle2D.OUT_LEFT) == Rectangle2D.OUT_LEFT) {
+						xPoints[1] = rectangle.x;
+						yPoints[1] = (int) (rectangle.y + rectangle.height * 0.8);
+						xPoints[2] = (int) (rectangle.x + rectangle.width * 0.2);
+						yPoints[2] = rectangle.y + rectangle.height;
+					}
+					else if ((oc & Rectangle2D.OUT_RIGHT) == Rectangle2D.OUT_RIGHT) {
+						xPoints[1] = rectangle.x + rectangle.width;
+						yPoints[1] = (int) (rectangle.y + rectangle.height * 0.8);
+						xPoints[2] = (int) (rectangle.x + rectangle.width * 0.8);
+						yPoints[2] = rectangle.y + rectangle.height;
+					}
+					else {
+						xPoints[1] = (int) (rectangle.x + rectangle.width * 0.4);
+						xPoints[2] = (int) (rectangle.x + rectangle.width * 0.6);
+						yPoints[2] = yPoints[1] = rectangle.y + rectangle.height;
+					}
+				}
+				else if ((oc & Rectangle2D.OUT_TOP) == Rectangle2D.OUT_TOP) {
+					if ((oc & Rectangle2D.OUT_LEFT) == Rectangle2D.OUT_LEFT) {
+						xPoints[1] = rectangle.x;
+						yPoints[1] = (int) (rectangle.y + rectangle.height * 0.2);
+						xPoints[2] = (int) (rectangle.x + rectangle.width * 0.2);
+						yPoints[2] = rectangle.y;
+					}
+					else if ((oc & Rectangle2D.OUT_RIGHT) == Rectangle2D.OUT_RIGHT) {
+						xPoints[1] = (int) (rectangle.x + rectangle.width * 0.8);
+						yPoints[1] = rectangle.y;
+						xPoints[2] = rectangle.x + rectangle.width;
+						yPoints[2] = (int) (rectangle.y + rectangle.height * 0.2);
+					}
+					else {
+						xPoints[1] = (int) (rectangle.x + rectangle.width * 0.4);
+						xPoints[2] = (int) (rectangle.x + rectangle.width * 0.6);
+						yPoints[2] = yPoints[1] = rectangle.y + 1;
+					}
+				}
+				else if ((oc & Rectangle2D.OUT_LEFT) == Rectangle2D.OUT_LEFT) {
+					xPoints[2] = xPoints[1] = rectangle.x + 1;
+					yPoints[1] = (int) (rectangle.y + rectangle.height * 0.4);
+					yPoints[2] = (int) (rectangle.y + rectangle.height * 0.6);
+				}
+				else if ((oc & Rectangle2D.OUT_RIGHT) == Rectangle2D.OUT_RIGHT) {
+					xPoints[2] = xPoints[1] = rectangle.x + rectangle.width;
+					yPoints[1] = (int) (rectangle.y + rectangle.height * 0.4);
+					yPoints[2] = (int) (rectangle.y + rectangle.height * 0.6);
+				}
+				else {
+					b = false;
+				}
+				if (b) {
+					if (fillMode instanceof FillMode.ColorFill) {
+						g.setColor(((FillMode.ColorFill) fillMode).getColor());
+						g.fillPolygon(xPoints, yPoints, 3);
+					}
+					if (borderType != 0) {
+						g.setColor(contrastView);
+						g.drawLine(xPoints[0], yPoints[0], xPoints[1], yPoints[1]);
+						g.drawLine(xPoints[0], yPoints[0], xPoints[2], yPoints[2]);
+					}
+				}
+			}
+			if (selected && selectionDrawn) {
+				if (callOut && callOutPoint != null) {
+					xPoints[0] = callOutPoint.x - 4;
+					yPoints[0] = callOutPoint.y;
+					xPoints[1] = callOutPoint.x;
+					yPoints[1] = callOutPoint.y + 4;
+					xPoints[2] = callOutPoint.x + 4;
+					yPoints[2] = callOutPoint.y;
+					xPoints[3] = callOutPoint.x;
+					yPoints[3] = callOutPoint.y - 4;
+					g.setColor(Color.yellow);
+					g.fillPolygon(xPoints, yPoints, 4);
+					g.setColor(contrastView);
+					g.drawPolygon(xPoints, yPoints, 4);
+				}
+				g.setColor(contrastView);
+				((Graphics2D) g).setStroke(THIN_DASHED);
+				switch (borderType) {
+				case 2:
+					g.drawRoundRect(x1 - 2, y1 - 2, w1 + 4, h1 + 4, 12, 12);
+					break;
+				default:
+					g.drawRect(x1 - 2, y1 - 2, w1 + 4, h1 + 4);
+				}
+			}
+			g.setColor(fgColor);
+			if (lines != null) {
+				for (int i = 0; i < lines.length; i++)
+					g.drawString(lines[i], (int) (x + fontHeight * 0.75f), (int) (y + (i + 1) * fontHeight));
+			}
+
 		}
 
 		((Graphics2D) g).setTransform(at);
