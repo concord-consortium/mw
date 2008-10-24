@@ -45,12 +45,7 @@ class GaugeScripter extends ComponentScripter {
 			return;
 		}
 		else if ("reset".equalsIgnoreCase(ci)) {
-			if (gauge.getAverageOnly()) {
-				gauge.setAverage(gauge.getInitialValue());
-			}
-			else {
-				gauge.setValue(gauge.getInitialValue());
-			}
+			gauge.setValue(gauge.getInitialValue());
 			gauge.repaint();
 		}
 	}

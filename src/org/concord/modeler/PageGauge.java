@@ -43,15 +43,10 @@ import org.concord.modeler.util.FloatQueue;
 
 public class PageGauge extends Gauge implements Embeddable, Scriptable, ModelCommunicator, MovieListener {
 
-	public final static byte GROWING_POINT_RUNNING_AVERAGE = 0;
-	public final static byte SIMPLE_RUNNING_AVERAGE = 1;
-	public final static byte EXPONENTIAL_RUNNING_AVERAGE = 2;
-
 	Page page;
 	String timeSeriesName;
 	String modelClass;
 	int modelID = -1;
-	byte averageType = GROWING_POINT_RUNNING_AVERAGE;
 	float smoothingFactor = 0.05f;
 	int samplingPoints = 10;
 	private double initialValue;
@@ -237,14 +232,6 @@ public class PageGauge extends Gauge implements Embeddable, Scriptable, ModelCom
 		return initialValue;
 	}
 
-	public void setAverageType(byte i) {
-		averageType = i;
-	}
-
-	public byte getAverageType() {
-		return averageType;
-	}
-
 	public void setSamplingPoints(int n) {
 		samplingPoints = n;
 	}
@@ -338,7 +325,7 @@ public class PageGauge extends Gauge implements Embeddable, Scriptable, ModelCom
 				if (q != null && !q.isEmpty() && q.getPointer() > 0) {
 					if (q instanceof FloatQueue) {
 						setValue(((FloatQueue) q).getCurrentValue());
-						switch (averageType) {
+						switch (getAverageType()) {
 						case GROWING_POINT_RUNNING_AVERAGE:
 							setAverage(((FloatQueue) q).getAverage());
 							break;
@@ -369,7 +356,7 @@ public class PageGauge extends Gauge implements Embeddable, Scriptable, ModelCom
 		int frame = e.getFrame();
 		if (q instanceof FloatQueue) {
 			setValue(((FloatQueue) q).getData(frame));
-			switch (averageType) {
+			switch (getAverageType()) {
 			case EXPONENTIAL_RUNNING_AVERAGE:
 				setAverage(((FloatQueue) q).getExponentialRunningAverage(smoothingFactor, frame));
 				break;
@@ -388,18 +375,19 @@ public class PageGauge extends Gauge implements Embeddable, Scriptable, ModelCom
 		sb.append("<timeseries>" + timeSeriesName + "</timeseries>\n");
 		if (!getDescription().equals(timeSeriesName))
 			sb.append("<description>" + XMLCharacterEncoder.encode(getDescription()) + "</description>\n");
-		switch (averageType) {
+		switch (getAverageType()) {
+		case GROWING_POINT_RUNNING_AVERAGE:
+			sb.append("<datatype>" + getAverageType() + "</datatype>\n");
+			break;
 		case SIMPLE_RUNNING_AVERAGE:
-			sb.append("<datatype>" + averageType + "</datatype>\n");
+			sb.append("<datatype>" + getAverageType() + "</datatype>\n");
 			sb.append("<samplingpoints>" + samplingPoints + "</samplingpoints>\n");
 			break;
 		case EXPONENTIAL_RUNNING_AVERAGE:
-			sb.append("<datatype>" + averageType + "</datatype>\n");
+			sb.append("<datatype>" + getAverageType() + "</datatype>\n");
 			sb.append("<smoothingfactor>" + smoothingFactor + "</smoothingfactor>\n");
 			break;
 		}
-		if (getAverageOnly())
-			sb.append("<average>" + getAverageOnly() + "</average>\n");
 		if (!format.equals("Fixed point"))
 			sb.append("<format>" + format + "</format>\n");
 		if (getMaximumFractionDigits() != 3)

@@ -39,17 +39,22 @@ import javax.swing.JComponent;
 
 public class Gauge extends JComponent {
 
+	public final static byte INSTANTANEOUS = 0;
+	public final static byte GROWING_POINT_RUNNING_AVERAGE = 1;
+	public final static byte SIMPLE_RUNNING_AVERAGE = 2;
+	public final static byte EXPONENTIAL_RUNNING_AVERAGE = 3;
+
 	protected String format = "Fixed point";
 	protected DecimalFormat formatter;
 
 	private Font font;
 	protected double value;
 	private double min = -1.0, max = 1.0, average;
+	private byte averageType = INSTANTANEOUS;
 	private String description;
 	private boolean paintTicks = true, paintLabels = true, paintTitle = true;
 	private int majorTicks = 10, minorTicks = 20;
 	private int majorTickLength = 10, minorTickLength = 5;
-	private boolean averageOnly;
 	private int margin = 20, panelHeight = 50;
 	private Line2D.Float line;
 	private BasicStroke thinStroke = new BasicStroke(1.0f);
@@ -61,14 +66,6 @@ public class Gauge extends JComponent {
 		formatter.setMaximumFractionDigits(3);
 		formatter.setMaximumIntegerDigits(3);
 		line = new Line2D.Float();
-	}
-
-	public void setAverageOnly(boolean b) {
-		averageOnly = b;
-	}
-
-	public boolean getAverageOnly() {
-		return averageOnly;
 	}
 
 	public void setFont(Font font) {
@@ -86,6 +83,14 @@ public class Gauge extends JComponent {
 
 	public String getDescription() {
 		return description;
+	}
+
+	public void setAverageType(byte i) {
+		averageType = i;
+	}
+
+	public byte getAverageType() {
+		return averageType;
 	}
 
 	public void setValue(double d) {
@@ -266,7 +271,7 @@ public class Gauge extends JComponent {
 			}
 		}
 
-		delta = (float) getAngle(value, alpha);
+		delta = (float) getAngle(averageType == INSTANTANEOUS ? value : average, alpha);
 		cos = (float) Math.cos(delta);
 		sin = (float) Math.sin(delta);
 		line.x1 = xc + (r - minorTickLength) * cos;
