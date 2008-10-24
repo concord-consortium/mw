@@ -1279,8 +1279,8 @@ public abstract class MDView extends PrintableComponent {
 		}
 	}
 
-	/** send this LayeredComponent one frame backward in the stack */
-	public void layerBack(Layered c) {
+	/* send this LayeredComponent one frame backward in the stack */
+	void layerBack(Layered c) {
 		if (layerBasket.isEmpty())
 			return;
 		int i = layerBasket.indexOf(c);
@@ -1297,7 +1297,7 @@ public abstract class MDView extends PrintableComponent {
 		}
 	}
 
-	void sendLayerToBack(Layered c) {
+	public void sendLayerToBack(Layered c) {
 		if (layerBasket.isEmpty())
 			return;
 		int i = layerBasket.indexOf(c);
@@ -1314,8 +1314,8 @@ public abstract class MDView extends PrintableComponent {
 		}
 	}
 
-	/** bring this LayeredComponent one frame forward in the stack */
-	public void layerForward(Layered c) {
+	/* bring this LayeredComponent one frame forward in the stack */
+	void layerForward(Layered c) {
 		if (layerBasket.isEmpty())
 			return;
 		int i = layerBasket.indexOf(c);
@@ -1332,7 +1332,7 @@ public abstract class MDView extends PrintableComponent {
 		}
 	}
 
-	void bringLayerToFront(Layered c) {
+	public void bringLayerToFront(Layered c) {
 		if (layerBasket.isEmpty())
 			return;
 		int i = layerBasket.indexOf(c);
@@ -1350,7 +1350,7 @@ public abstract class MDView extends PrintableComponent {
 	}
 
 	void sendBehindParticles(Layered c) {
-		c.setLayer(Layered.BACK);
+		c.setLayer(Layered.BEHIND_PARTICLES);
 		getModel().notifyChange();
 		if (!doNotFireUndoEvent) {
 			getModel().getUndoManager().undoableEditHappened(
@@ -1361,7 +1361,7 @@ public abstract class MDView extends PrintableComponent {
 	}
 
 	void bringInFrontOfParticles(Layered c) {
-		c.setLayer(Layered.FRONT);
+		c.setLayer(Layered.IN_FRONT_OF_PARTICLES);
 		getModel().notifyChange();
 		if (!doNotFireUndoEvent) {
 			getModel().getUndoManager().undoableEditHappened(
@@ -2311,7 +2311,7 @@ public abstract class MDView extends PrintableComponent {
 			g2.fillRect(0, 0, getWidth(), getHeight());
 		}
 
-		paintLayeredComponents(g, Layered.BACK);
+		paintLayeredComponents(g, Layered.BEHIND_PARTICLES);
 
 	}
 
@@ -3884,10 +3884,10 @@ public abstract class MDView extends PrintableComponent {
 				layerBack(lc);
 				break;
 			case UndoAction.FRONT_LAYERED_COMPONENT:
-				lc.setLayer(Layered.BACK);
+				lc.setLayer(Layered.BEHIND_PARTICLES);
 				break;
 			case UndoAction.BACK_LAYERED_COMPONENT:
-				lc.setLayer(Layered.FRONT);
+				lc.setLayer(Layered.IN_FRONT_OF_PARTICLES);
 				break;
 			case UndoAction.DETACH_LAYERED_COMPONENT:
 				lc.setHost(mc);
@@ -3935,10 +3935,10 @@ public abstract class MDView extends PrintableComponent {
 				layerForward(lc);
 				break;
 			case UndoAction.FRONT_LAYERED_COMPONENT:
-				lc.setLayer(Layered.FRONT);
+				lc.setLayer(Layered.IN_FRONT_OF_PARTICLES);
 				break;
 			case UndoAction.BACK_LAYERED_COMPONENT:
-				lc.setLayer(Layered.BACK);
+				lc.setLayer(Layered.BEHIND_PARTICLES);
 				break;
 			case UndoAction.ATTACH_LAYERED_COMPONENT:
 				lc.setHost(mc);

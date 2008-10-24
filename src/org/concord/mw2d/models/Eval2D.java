@@ -3078,16 +3078,7 @@ class Eval2D extends AbstractEval {
 				out(ScriptEvent.FAILED, "Argument error: " + str);
 				return false;
 			}
-			if ("on".equalsIgnoreCase(s[1]) || "off".equalsIgnoreCase(s[1])) {
-				if ("visible".equalsIgnoreCase(s[0])) {
-					setImageField(str.substring(0, end - 1), s[0], "on".equalsIgnoreCase(s[1]));
-					return true;
-				}
-			}
-			double x = parseMathExpression(s[1]);
-			if (Double.isNaN(x))
-				return false;
-			setImageField(str.substring(0, end - 1), s[0], x);
+			setImageField(str.substring(0, end - 1), s[0], s[1]);
 			return true;
 		}
 
@@ -5098,7 +5089,7 @@ class Eval2D extends AbstractEval {
 			notifyChange();
 	}
 
-	private void setImageField(String str1, String str2, double x) {
+	private void setImageField(String str1, String str2, String str3) {
 		int lb = str1.indexOf("[");
 		int rb = str1.indexOf("]");
 		double z = parseMathExpression(str1.substring(lb + 1, rb));
@@ -5112,42 +5103,48 @@ class Eval2D extends AbstractEval {
 		}
 		String s = str2.toLowerCase().intern();
 		boolean b = true;
-		if (s == "x")
-			ic[i].translateTo(x * IR_CONVERTER, ic[i].getRy());
-		else if (s == "y")
-			ic[i].translateTo(ic[i].getRx(), x * IR_CONVERTER);
-		else if (s == "angle")
-			ic[i].setAngle((float) Math.toRadians(x));
-		else if (s == "frame")
-			ic[i].setCurrentFrame((int) x);
-		else if (s == "loop")
-			ic[i].setLoopCount((int) x);
-		else {
-			out(ScriptEvent.FAILED, "Cannot set propery: " + str2);
-			b = false;
+		if (s == "visible") {
+			ic[i].setVisible("on".equalsIgnoreCase(str3));
 		}
-		if (b) {
-			notifyChange();
-			view.repaint();
+		else if (s == "x") {
+			double x = parseMathExpression(str3);
+			if (!Double.isNaN(x))
+				ic[i].translateTo(x * IR_CONVERTER, ic[i].getRy());
 		}
-	}
-
-	private void setImageField(String str1, String str2, boolean x) {
-		int lb = str1.indexOf("[");
-		int rb = str1.indexOf("]");
-		double z = parseMathExpression(str1.substring(lb + 1, rb));
-		if (Double.isNaN(z))
-			return;
-		int i = (int) Math.round(z);
-		ImageComponent[] ic = view.getImages();
-		if (i < 0 || i >= ic.length) {
-			out(ScriptEvent.FAILED, "Image " + i + " doesn't exisit.");
-			return;
+		else if (s == "y") {
+			double x = parseMathExpression(str3);
+			if (!Double.isNaN(x))
+				ic[i].translateTo(ic[i].getRx(), x * IR_CONVERTER);
 		}
-		String s = str2.toLowerCase().intern();
-		boolean b = true;
-		if (s == "visible")
-			ic[i].setVisible(x);
+		else if (s == "angle") {
+			double x = parseMathExpression(str3);
+			if (!Double.isNaN(x))
+				ic[i].setAngle((float) Math.toRadians(x));
+		}
+		else if (s == "frame") {
+			double x = parseMathExpression(str3);
+			if (!Double.isNaN(x))
+				ic[i].setCurrentFrame((int) Math.round(x));
+		}
+		else if (s == "loop") {
+			double x = parseMathExpression(str3);
+			if (!Double.isNaN(x))
+				ic[i].setLoopCount((int) Math.round(x));
+		}
+		else if (s == "layer") {
+			if ("in_front_of_particles".equalsIgnoreCase(str3)) {
+				ic[i].setLayer(Layered.IN_FRONT_OF_PARTICLES);
+			}
+			else if ("behind_particles".equalsIgnoreCase(str3)) {
+				ic[i].setLayer(Layered.BEHIND_PARTICLES);
+			}
+			else if ("back".equalsIgnoreCase(str3)) {
+				view.sendLayerToBack(ic[i]);
+			}
+			else if ("front".equalsIgnoreCase(str3)) {
+				view.bringLayerToFront(ic[i]);
+			}
+		}
 		else {
 			out(ScriptEvent.FAILED, "Cannot set propery: " + str2);
 			b = false;

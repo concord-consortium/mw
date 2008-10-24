@@ -31,7 +31,7 @@ import org.concord.mw2d.MDView;
 public class TextBoxComponent extends TextContainer implements ModelComponent, Layered {
 
 	private boolean blinking, marked;
-	private int layer = FRONT;
+	private int layer = IN_FRONT_OF_PARTICLES;
 	private MDModel model;
 	private double savedX = -1.0, savedY = -1.0;
 	private boolean stateStored;

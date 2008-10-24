@@ -2805,7 +2805,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 
 	private ModelComponent getRolloverComponent(int x, int y) {
 		ModelComponent lc = whichLayeredComponent(x, y);
-		if (lc != null && ((Layered) lc).getLayer() == Layered.FRONT)
+		if (lc != null && ((Layered) lc).getLayer() == Layered.IN_FRONT_OF_PARTICLES)
 			return lc;
 		Atom at = whichAtom(x, y);
 		if (at != null) {
@@ -2828,7 +2828,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		AngularBond aBond = whichAngle(x, y);
 		if (aBond != null)
 			return aBond;
-		if (lc != null && ((Layered) lc).getLayer() == Layered.BACK)
+		if (lc != null && ((Layered) lc).getLayer() == Layered.BEHIND_PARTICLES)
 			return lc;
 		return null;
 	}
@@ -2837,7 +2837,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		ModelComponent lc = null;
 		if ((modifiers & MouseEvent.SHIFT_DOWN_MASK) != MouseEvent.SHIFT_DOWN_MASK) {
 			lc = whichLayeredComponent(x, y);
-			if (lc != null && ((Layered) lc).getLayer() == Layered.FRONT) {
+			if (lc != null && ((Layered) lc).getLayer() == Layered.IN_FRONT_OF_PARTICLES) {
 				lc.setSelected(true);
 				clickPoint.setLocation(x - lc.getRx(), y - lc.getRy());
 				return selectedComponent;
@@ -2888,7 +2888,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			aBond.setSelected(true);
 			return selectedComponent;
 		}
-		if (lc != null && ((Layered) lc).getLayer() == Layered.BACK) {
+		if (lc != null && ((Layered) lc).getLayer() == Layered.BEHIND_PARTICLES) {
 			lc.setSelected(true);
 			clickPoint.setLocation(x - lc.getRx(), y - lc.getRy());
 			return selectedComponent;
@@ -3654,7 +3654,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		g2.setStroke(ViewAttribute.THIN);
 		if (getClockPainted())
 			paintInfo(g);
-		paintLayeredComponents(g, Layered.FRONT);
+		paintLayeredComponents(g, Layered.IN_FRONT_OF_PARTICLES);
 		paintShapeDrawing(g);
 
 	}
@@ -3724,7 +3724,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			}
 			if (selectedComponent != null)
 				selectedComponent.setSelected(false);
-			if (openLayeredComponentPopupMenus(x, y, Layered.FRONT))
+			if (openLayeredComponentPopupMenus(x, y, Layered.IN_FRONT_OF_PARTICLES))
 				return;
 			final Atom at = whichAtom(x, y);
 			if (at != null) {
@@ -3786,7 +3786,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				angularBondPopupMenu.show(this, x, y);
 				return;
 			}
-			if (openLayeredComponentPopupMenus(x, y, Layered.BACK))
+			if (openLayeredComponentPopupMenus(x, y, Layered.BEHIND_PARTICLES))
 				return;
 			selectedComponent = null;
 			defaultPopupMenu.setCoor(x, y);
