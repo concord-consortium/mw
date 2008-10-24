@@ -3234,6 +3234,41 @@ class Eval2D extends AbstractEval {
 						if (p.isSelected())
 							p.visible = b;
 					}
+					LineComponent[] lc = view.getLines();
+					if (lc != null && lc.length > 0) {
+						for (LineComponent x : lc) {
+							if (x.isSelected())
+								x.setVisible(b);
+						}
+					}
+					RectangleComponent[] rc = view.getRectangles();
+					if (rc != null && rc.length > 0) {
+						for (RectangleComponent x : rc) {
+							if (x.isSelected())
+								x.setVisible(b);
+						}
+					}
+					EllipseComponent[] ec = view.getEllipses();
+					if (ec != null && ec.length > 0) {
+						for (EllipseComponent x : ec) {
+							if (x.isSelected())
+								x.setVisible(b);
+						}
+					}
+					TextBoxComponent[] tc = view.getTextBoxes();
+					if (tc != null && tc.length > 0) {
+						for (TextBoxComponent x : tc) {
+							if (x.isSelected())
+								x.setVisible(b);
+						}
+					}
+					ImageComponent[] ic = view.getImages();
+					if (ic != null && ic.length > 0) {
+						for (ImageComponent x : ic) {
+							if (x.isSelected())
+								x.setVisible(b);
+						}
+					}
 					if (model instanceof MolecularModel) {
 						MolecularModel mm = (MolecularModel) model;
 						RadialBond rb;
@@ -5083,6 +5118,10 @@ class Eval2D extends AbstractEval {
 			ic[i].translateTo(ic[i].getRx(), x * IR_CONVERTER);
 		else if (s == "angle")
 			ic[i].setAngle((float) Math.toRadians(x));
+		else if (s == "frame")
+			ic[i].setCurrentFrame((int) x);
+		else if (s == "loop")
+			ic[i].setLoopCount((int) x);
 		else {
 			out(ScriptEvent.FAILED, "Cannot set propery: " + str2);
 			b = false;
@@ -5175,6 +5214,9 @@ class Eval2D extends AbstractEval {
 			Color color = parseRGBColor(str3);
 			if (color != null)
 				c[i].setColor(color);
+		}
+		else if (s == "visible") {
+			c[i].setVisible("on".equalsIgnoreCase(str3));
 		}
 		else {
 			out(ScriptEvent.FAILED, "Cannot set propery: " + str2);
@@ -5273,6 +5315,9 @@ class Eval2D extends AbstractEval {
 			if (color != null)
 				c[i].setFillMode(new FillMode.ColorFill(color));
 		}
+		else if (s == "visible") {
+			c[i].setVisible("on".equalsIgnoreCase(str3));
+		}
 		else {
 			out(ScriptEvent.FAILED, "Cannot set propery: " + str2);
 			b = false;
@@ -5370,6 +5415,9 @@ class Eval2D extends AbstractEval {
 			if (color != null)
 				c[i].setFillMode(new FillMode.ColorFill(color));
 		}
+		else if (s == "visible") {
+			c[i].setVisible("on".equalsIgnoreCase(str3));
+		}
 		else {
 			out(ScriptEvent.FAILED, "Cannot set propery: " + str2);
 			b = false;
@@ -5439,6 +5487,9 @@ class Eval2D extends AbstractEval {
 			Color c = parseRGBColor(str3);
 			if (c != null)
 				t[i].setFillMode(new FillMode.ColorFill(c));
+		}
+		else if (s == "visible") {
+			t[i].setVisible("on".equalsIgnoreCase(str3));
 		}
 		else if (s == "font") {
 			t[i].setFontFamily(str3);
