@@ -383,6 +383,8 @@ public class ImageComponent implements ModelComponent, Layered, Rotatable {
 	 */
 	public void setLoopCount(int i) {
 		loopCount = i;
+		loopCounter = 0;
+		previousFrameTime = 0;
 	}
 
 	public int getLoopCount() {
