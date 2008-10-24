@@ -205,8 +205,8 @@ class PageGaugeMaker extends ComponentMaker {
 		createContentPane();
 
 		if (needNewDialog(dialog, page)) {
-			String s = Modeler.getInternationalText("CustomizeBarGraphDialogTitle");
-			dialog = ModelerUtilities.getChildDialog(page, s != null ? s : "Customize bar graph", true);
+			String s = Modeler.getInternationalText("CustomizeGaugeDialogTitle");
+			dialog = ModelerUtilities.getChildDialog(page, s != null ? s : "Customize gauge", true);
 			dialog.setContentPane(contentPane);
 			dialog.pack();
 			dialog.setLocationRelativeTo(dialog.getOwner());
@@ -237,14 +237,15 @@ class PageGaugeMaker extends ComponentMaker {
 		case PageBarGraph.GROWING_POINT_RUNNING_AVERAGE:
 			averageTypeComboBox.setSelectedIndex(0);
 			parameterLabel.setEnabled(false);
-			parameterLabel.setText("Parameter");
+			String s = Modeler.getInternationalText("Parameter");
+			parameterLabel.setText(s != null ? s : "Parameter");
 			parameterField.setText(null);
 			parameterField.setEditable(false);
 			break;
 		case PageBarGraph.SIMPLE_RUNNING_AVERAGE:
 			averageTypeComboBox.setSelectedIndex(1);
 			parameterLabel.setEnabled(true);
-			String s = Modeler.getInternationalText("SamplingPoints");
+			s = Modeler.getInternationalText("SamplingPoints");
 			parameterLabel.setText(s != null ? s : "Sampling points");
 			parameterField.setValue(pageGauge.samplingPoints);
 			parameterField.setMinValue(10);
@@ -400,10 +401,10 @@ class PageGaugeMaker extends ComponentMaker {
 		}
 
 		if (guard >= 2)
-			throw new IllegalStateException("More than one time series are using this bar graph (" + guard + ")");
+			throw new IllegalStateException("More than one time series are using this gauge (" + guard + ")");
 
 		/*
-		 * when no time series is using this bar graph, display in the value field the newest value of this first time
+		 * when no time series is using this gauge, display in the value field the newest value of this first time
 		 * series in the combo box
 		 */
 		if (guard == 0 && nitem > 0) {
@@ -472,7 +473,7 @@ class PageGaugeMaker extends ComponentMaker {
 			smallFont = new Font(modelComboBox.getFont().getFamily(), modelComboBox.getFont().getStyle(), 10);
 		modelComboBox.setFont(smallFont);
 		modelComboBox
-				.setToolTipText("If there are multiple models on the page, select the one that outputs to this bar graph.");
+				.setToolTipText("If there are multiple models on the page, select the one that outputs to this gauge.");
 		p.add(modelComboBox);
 
 		// row 2
@@ -480,7 +481,7 @@ class PageGaugeMaker extends ComponentMaker {
 		p.add(new JLabel(s != null ? s : "Select a variable", SwingConstants.LEFT));
 		timeSeriesComboBox = new JComboBox();
 		timeSeriesComboBox.setFont(smallFont);
-		timeSeriesComboBox.setToolTipText("Select the time series output to be displayed in this bar graph.");
+		timeSeriesComboBox.setToolTipText("Select the time series output to be displayed in this gauge.");
 		p.add(timeSeriesComboBox);
 
 		// row 3
@@ -555,7 +556,7 @@ class PageGaugeMaker extends ComponentMaker {
 		p.add(new JLabel(s != null ? s : "Description", SwingConstants.LEFT));
 		descriptionField = new JTextField();
 		descriptionField.addActionListener(okListener);
-		descriptionField.setToolTipText("Type in the text to be displayed in the bar graph.");
+		descriptionField.setToolTipText("Type in the text to be displayed in the gauge.");
 		p.add(descriptionField);
 
 		// row 8
@@ -563,7 +564,7 @@ class PageGaugeMaker extends ComponentMaker {
 		p.add(new JLabel(s != null ? s : "Set upper bound", SwingConstants.LEFT));
 		maxField = new FloatNumberTextField(1.0f, -Float.MAX_VALUE, Float.MAX_VALUE);
 		maxField.addActionListener(okListener);
-		maxField.setToolTipText("Type in the upper bound this bar graph displays.");
+		maxField.setToolTipText("Type in the upper bound this gauge displays.");
 		p.add(maxField);
 
 		// row 9
@@ -571,7 +572,7 @@ class PageGaugeMaker extends ComponentMaker {
 		p.add(new JLabel(s != null ? s : "Set lower bound", SwingConstants.LEFT));
 		minField = new FloatNumberTextField(-1.0f, -Float.MAX_VALUE, Float.MAX_VALUE);
 		minField.addActionListener(okListener);
-		minField.setToolTipText("Type in the lower bound this bar graph displays.");
+		minField.setToolTipText("Type in the lower bound this gauge displays.");
 		p.add(minField);
 
 		// row 10
@@ -680,7 +681,7 @@ class PageGaugeMaker extends ComponentMaker {
 		p.add(labelComboBox);
 
 		// row 9
-		s = Modeler.getInternationalText("ForegroundColor");
+		s = Modeler.getInternationalText("ForegroundColorLabel");
 		p.add(new JLabel(s != null ? s : "Foreground color", SwingConstants.LEFT));
 		fgComboBox = new ColorComboBox(pageGauge);
 		fgComboBox.setSelectedIndex(0);
@@ -689,7 +690,7 @@ class PageGaugeMaker extends ComponentMaker {
 		p.add(fgComboBox);
 
 		// row 10
-		s = Modeler.getInternationalText("BackgroundColor");
+		s = Modeler.getInternationalText("BackgroundColorLabel");
 		p.add(new JLabel(s != null ? s : "Background color", SwingConstants.LEFT));
 		bgComboBox = new ColorComboBox(pageGauge);
 		bgComboBox.setMinimumSize(new Dimension(80, 24));

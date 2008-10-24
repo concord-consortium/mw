@@ -314,18 +314,18 @@ public class PageGauge extends Gauge implements Embeddable, Scriptable, ModelCom
 	public static PageGauge create(Page page) {
 		if (page == null)
 			return null;
-		PageGauge bar = new PageGauge();
-		bar.setBackground(page.getBackground());
+		PageGauge gauge = new PageGauge();
+		gauge.setBackground(page.getBackground());
 		if (maker == null) {
-			maker = new PageGaugeMaker(bar);
+			maker = new PageGaugeMaker(gauge);
 		}
 		else {
-			maker.setObject(bar);
+			maker.setObject(gauge);
 		}
 		maker.invoke(page);
 		if (maker.cancel)
 			return null;
-		return bar;
+		return gauge;
 	}
 
 	public void modelUpdate(ModelEvent e) {

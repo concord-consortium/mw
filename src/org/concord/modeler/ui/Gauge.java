@@ -233,34 +233,37 @@ public class Gauge extends JComponent {
 		float alpha = dim.width - margin - xc;
 		alpha = alpha <= r ? (float) Math.acos(alpha / r) : 0;
 		float delta = (float) (Math.PI - 2 * alpha) / minorTicks;
-		int ntick = minorTicks / majorTicks;
-		if (ntick <= 0)
-			ntick = 1;
-
-		g2.setStroke(thinStroke);
-		String s;
 		float cos, sin;
-		for (int i = 0; i <= minorTicks; i++) {
-			cos = (float) Math.cos(alpha + i * delta);
-			sin = (float) Math.sin(alpha + i * delta);
-			if (i % ntick == 0) {
-				line.x1 = xc + (r + majorTickLength) * cos;
-				line.y1 = yc - (r + majorTickLength) * sin;
-				line.x2 = xc + r * cos;
-				line.y2 = yc - r * sin;
-				if (paintLabels) {
-					s = formatter.format(max - i * (max - min) / (ntick * majorTicks));
-					w = fm.stringWidth(s);
-					g2.drawString(s, line.x1 + 10 * cos - w / 2, line.y1 - 10 * sin);
+
+		if (paintTicks) {
+			int ntick = minorTicks / majorTicks;
+			if (ntick <= 0)
+				ntick = 1;
+
+			g2.setStroke(thinStroke);
+			String s;
+			for (int i = 0; i <= minorTicks; i++) {
+				cos = (float) Math.cos(alpha + i * delta);
+				sin = (float) Math.sin(alpha + i * delta);
+				if (i % ntick == 0) {
+					line.x1 = xc + (r + majorTickLength) * cos;
+					line.y1 = yc - (r + majorTickLength) * sin;
+					line.x2 = xc + r * cos;
+					line.y2 = yc - r * sin;
+					if (paintLabels) {
+						s = formatter.format(max - i * (max - min) / (ntick * majorTicks));
+						w = fm.stringWidth(s);
+						g2.drawString(s, line.x1 + 10 * cos - w / 2, line.y1 - 10 * sin);
+					}
 				}
+				else {
+					line.x1 = xc + (r + minorTickLength) * cos;
+					line.y1 = yc - (r + minorTickLength) * sin;
+					line.x2 = xc + r * cos;
+					line.y2 = yc - r * sin;
+				}
+				g2.draw(line);
 			}
-			else {
-				line.x1 = xc + (r + minorTickLength) * cos;
-				line.y1 = yc - (r + minorTickLength) * sin;
-				line.x2 = xc + r * cos;
-				line.y2 = yc - r * sin;
-			}
-			g2.draw(line);
 		}
 
 		delta = (float) getAngle(value, alpha);

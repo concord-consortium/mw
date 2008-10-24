@@ -241,14 +241,15 @@ class PageBarGraphMaker extends ComponentMaker {
 		case PageBarGraph.GROWING_POINT_RUNNING_AVERAGE:
 			averageTypeComboBox.setSelectedIndex(0);
 			parameterLabel.setEnabled(false);
-			parameterLabel.setText("Parameter");
+			String s = Modeler.getInternationalText("Parameter");
+			parameterLabel.setText(s != null ? s : "Parameter");
 			parameterField.setText(null);
 			parameterField.setEditable(false);
 			break;
 		case PageBarGraph.SIMPLE_RUNNING_AVERAGE:
 			averageTypeComboBox.setSelectedIndex(1);
 			parameterLabel.setEnabled(true);
-			String s = Modeler.getInternationalText("SamplingPoints");
+			s = Modeler.getInternationalText("SamplingPoints");
 			parameterLabel.setText(s != null ? s : "Sampling points");
 			parameterField.setValue(pageBarGraph.samplingPoints);
 			parameterField.setMinValue(10);
