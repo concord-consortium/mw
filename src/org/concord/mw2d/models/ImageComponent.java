@@ -58,7 +58,7 @@ public class ImageComponent implements ModelComponent, Layered, Rotatable {
 
 	private GifDecoder gifDecoder;
 	private boolean selected, blinking, marked;
-	private int layer = FRONT;
+	private int layer = IN_FRONT_OF_PARTICLES;
 	private MDModel model;
 	private Image[] images;
 	private int loopCount = 1000;

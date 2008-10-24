@@ -33,7 +33,7 @@ import org.concord.mw2d.MDView;
 public class LineComponent extends AbstractLine implements ModelComponent, Layered {
 
 	private boolean blinking, marked;
-	private int layer = FRONT;
+	private int layer = IN_FRONT_OF_PARTICLES;
 	private boolean reflector;
 	private MDModel model;
 	private float savedX1 = -1, savedY1 = -1, savedX2 = -1, savedY2 = -1;

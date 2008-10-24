@@ -30,7 +30,7 @@ import org.concord.mw2d.MDView;
 public class EllipseComponent extends AbstractEllipse implements ModelComponent, Layered, FieldArea {
 
 	private boolean blinking, marked;
-	private int layer = FRONT;
+	private int layer = IN_FRONT_OF_PARTICLES;
 	private MDModel model;
 	private float savedX = -1, savedY = -1, savedW = -1, savedH = -1;
 	private boolean stateStored;

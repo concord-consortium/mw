@@ -124,7 +124,7 @@ class LayeredComponentPopupMenu extends JPopupMenu {
 							sendToBackMI.setEnabled(true);
 						}
 					}
-					boolean b = ((Layered) view.selectedComponent).getLayer() == Layered.FRONT;
+					boolean b = ((Layered) view.selectedComponent).getLayer() == Layered.IN_FRONT_OF_PARTICLES;
 					bringFrontMI.setEnabled(!b);
 					sendBehindMI.setEnabled(b);
 					b = view.selectedComponent instanceof LineComponent;

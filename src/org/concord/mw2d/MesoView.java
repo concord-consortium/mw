@@ -710,7 +710,7 @@ public class MesoView extends MDView {
 		ModelComponent lc = null;
 		if ((modifiers & MouseEvent.SHIFT_DOWN_MASK) != MouseEvent.SHIFT_DOWN_MASK) {
 			lc = whichLayeredComponent(x, y);
-			if (lc != null && ((Layered) lc).getLayer() == Layered.FRONT) {
+			if (lc != null && ((Layered) lc).getLayer() == Layered.IN_FRONT_OF_PARTICLES) {
 				lc.setSelected(true);
 				clickPoint.setLocation(x - lc.getRx(), y - lc.getRy());
 				return selectedComponent;
@@ -722,7 +722,7 @@ public class MesoView extends MDView {
 			clickPoint.setLocation(x - p.getRx(), y - p.getRy());
 			return p;
 		}
-		if (lc != null && ((Layered) lc).getLayer() == Layered.BACK) {
+		if (lc != null && ((Layered) lc).getLayer() == Layered.BEHIND_PARTICLES) {
 			lc.setSelected(true);
 			clickPoint.setLocation(x - lc.getRx(), y - lc.getRy());
 			return selectedComponent;
@@ -732,12 +732,12 @@ public class MesoView extends MDView {
 
 	private ModelComponent getRolloverComponent(int x, int y) {
 		ModelComponent lc = whichLayeredComponent(x, y);
-		if (lc != null && ((Layered) lc).getLayer() == Layered.FRONT)
+		if (lc != null && ((Layered) lc).getLayer() == Layered.IN_FRONT_OF_PARTICLES)
 			return lc;
 		GayBerneParticle p = whichParticle(x, y);
 		if (p != null)
 			return p;
-		if (lc != null && ((Layered) lc).getLayer() == Layered.BACK)
+		if (lc != null && ((Layered) lc).getLayer() == Layered.BEHIND_PARTICLES)
 			return lc;
 		return null;
 	}
@@ -881,7 +881,7 @@ public class MesoView extends MDView {
 		g2.setStroke(ViewAttribute.THIN);
 		if (getClockPainted())
 			paintInfo(g);
-		paintLayeredComponents(g, Layered.FRONT);
+		paintLayeredComponents(g, Layered.IN_FRONT_OF_PARTICLES);
 		paintShapeDrawing(g);
 
 	}
@@ -943,7 +943,7 @@ public class MesoView extends MDView {
 				defaultPopupMenu.show(this, x, y);
 				return;
 			}
-			if (openLayeredComponentPopupMenus(x, y, Layered.FRONT))
+			if (openLayeredComponentPopupMenus(x, y, Layered.IN_FRONT_OF_PARTICLES))
 				return;
 			if (getSelectedComponent(e.getModifiersEx(), x, y) instanceof GayBerneParticle) {
 				GayBerneParticle p = (GayBerneParticle) selectedComponent;
@@ -953,7 +953,7 @@ public class MesoView extends MDView {
 				showGbPopupMenu(p, x, y);
 				return;
 			}
-			if (openLayeredComponentPopupMenus(x, y, Layered.BACK))
+			if (openLayeredComponentPopupMenus(x, y, Layered.BEHIND_PARTICLES))
 				return;
 			defaultPopupMenu.setCoor(x, y);
 			defaultPopupMenu.show(this, x, y);

@@ -25,8 +25,8 @@ import java.awt.Point;
 
 public interface Layered {
 
-	public final static int FRONT = 1;
-	public final static int BACK = 2;
+	public final static int IN_FRONT_OF_PARTICLES = 1;
+	public final static int BEHIND_PARTICLES = 2;
 
 	public void setLayer(int i);
 
