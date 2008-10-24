@@ -6617,8 +6617,10 @@ class Eval2D extends AbstractEval {
 			boolean b = false;
 			synchronized (mm.bonds.getSynchronizationLock()) {
 				for (Iterator it = mm.bonds.iterator(); it.hasNext();) {
-					if (((RadialBond) it.next()).isSelected()) {
+					RadialBond rb = (RadialBond) it.next();
+					if (rb.isSelected()) {
 						it.remove();
+						rb.removeAttachedLayeredComponents();
 						b = true;
 					}
 				}

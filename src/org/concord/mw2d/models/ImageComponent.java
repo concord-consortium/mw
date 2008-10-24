@@ -271,6 +271,8 @@ public class ImageComponent implements ModelComponent, Layered, Rotatable {
 	/** show the next frame of this animated image. */
 	public void nextFrame() {
 
+		if (loopCount < 0)
+			return;
 		int n = images != null ? images.length : 0;
 		if (n <= 1)
 			return;
