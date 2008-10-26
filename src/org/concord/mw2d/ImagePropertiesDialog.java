@@ -223,8 +223,8 @@ class ImagePropertiesDialog extends JDialog {
 
 		// row 6
 		s = MDView.getInternationalText("NumberOfLoops");
-		child.add(new JLabel((s != null ? s : "Number of Loops") + ":"));
-		loopField = new IntegerTextField(1000, 1, 100000, 8);
+		child.add(new JLabel((s != null ? s : "Number of Loops") + " (-1: No loop; 0: Loop forever):"));
+		loopField = new IntegerTextField(1000, -1, 100000, 8);
 		child.add(loopField);
 
 		PropertiesPanel.makeCompactGrid(child, 6, 2, 5, 5, 20, 10);
