@@ -255,6 +255,8 @@ public class GayBerneParticle extends UnitedAtom implements Rotatable {
 
 	/* advance this particle using 2nd order Taylor expansion */
 	void predict(double dt, double dt2) {
+		if (!movable)
+			return;
 		dx = vx * dt + ax * dt2;
 		dy = vy * dt + ay * dt2;
 		delta = omega * dt + alpha * dt2;
@@ -277,6 +279,8 @@ public class GayBerneParticle extends UnitedAtom implements Rotatable {
 	 * @param dt <tt>dt2</tt> half of the time increment
 	 */
 	void correct(double dt2) {
+		if (!movable)
+			return;
 		vx += dt2 * (fx - ax);
 		vy += dt2 * (fy - ay);
 		omega += dt2 * (tau - alpha);
