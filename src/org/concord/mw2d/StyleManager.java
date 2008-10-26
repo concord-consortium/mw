@@ -150,12 +150,14 @@ class StyleManager {
 		boolean reaction = view.model instanceof ReactionModel;
 		for (int i = 0; i < n; i++) {
 			a = view.atom[i];
-			d = a.getSigma();
-			if (reaction) {
-				g.drawOval((int) (a.getRx() - d), (int) (a.getRy() - d), (int) (d + d), (int) (d + d));
-			}
-			else {
-				g.drawOval((int) (a.getRx() - 0.5 * d), (int) (a.getRy() - 0.5 * d), (int) d, (int) d);
+			if (a.isVisible()) {
+				d = a.getSigma();
+				if (reaction) {
+					g.drawOval((int) (a.getRx() - d), (int) (a.getRy() - d), (int) (d + d), (int) (d + d));
+				}
+				else {
+					g.drawOval((int) (a.getRx() - 0.5 * d), (int) (a.getRy() - 0.5 * d), (int) d, (int) d);
+				}
 			}
 		}
 	}
@@ -182,10 +184,12 @@ class StyleManager {
 			return;
 		int id;
 		for (int i = 0; i < view.nAtom; i++) {
-			id = view.atom[i].getID();
-			createGradientImage(id);
-			g.drawImage(gradientImages[id], (int) (view.atom[i].getRx() - view.atom[i].getSigma() * 0.5),
-					(int) (view.atom[i].getRy() - view.atom[i].getSigma() * 0.5), view);
+			if (view.atom[i].isVisible()) {
+				id = view.atom[i].getID();
+				createGradientImage(id);
+				g.drawImage(gradientImages[id], (int) (view.atom[i].getRx() - view.atom[i].getSigma() * 0.5),
+						(int) (view.atom[i].getRy() - view.atom[i].getSigma() * 0.5), view);
+			}
 		}
 	}
 
