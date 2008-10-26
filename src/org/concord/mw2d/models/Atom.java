@@ -554,8 +554,10 @@ public class Atom extends Particle {
 	}
 
 	public boolean intersects(Atom atom, boolean noOverlapTolerance) {
-		if (noOverlapTolerance)
-			return getBounds2D().intersects(atom.getBounds2D());
+		if (noOverlapTolerance) {
+			return distanceSquare(atom) < 0.25 * (sigma + atom.sigma) * (sigma + atom.sigma);
+			// return getBounds2D().intersects(atom.getBounds2D());
+		}
 		return getBounds2D(0.5 * sigma).intersects(atom.getBounds2D(0.5 * atom.sigma));
 	}
 
