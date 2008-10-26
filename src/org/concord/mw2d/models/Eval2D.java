@@ -2916,10 +2916,13 @@ class Eval2D extends AbstractEval {
 			}
 			if ("on".equalsIgnoreCase(s[1]) || "off".equalsIgnoreCase(s[1])) {
 				if ("visible".equalsIgnoreCase(s[0])) {
-					setAtomField(s2, s[0], "on".equalsIgnoreCase(s[1]));
+					setParticleField(s2, s[0], "on".equalsIgnoreCase(s[1]));
 				}
 				else if ("movable".equalsIgnoreCase(s[0])) {
-					setAtomField(s2, s[0], "on".equalsIgnoreCase(s[1]));
+					setParticleField(s2, s[0], "on".equalsIgnoreCase(s[1]));
+				}
+				else if ("draggable".equalsIgnoreCase(s[0])) {
+					setParticleField(s2, s[0], "on".equalsIgnoreCase(s[1]));
 				}
 			}
 			else {
@@ -2948,10 +2951,13 @@ class Eval2D extends AbstractEval {
 			}
 			if ("on".equalsIgnoreCase(s[1]) || "off".equalsIgnoreCase(s[1])) {
 				if ("visible".equalsIgnoreCase(s[0])) {
-					setAtomField(s2, s[0], "on".equalsIgnoreCase(s[1]));
+					setParticleField(s2, s[0], "on".equalsIgnoreCase(s[1]));
 				}
 				else if ("movable".equalsIgnoreCase(s[0])) {
-					setAtomField(s2, s[0], "on".equalsIgnoreCase(s[1]));
+					setParticleField(s2, s[0], "on".equalsIgnoreCase(s[1]));
+				}
+				else if ("draggable".equalsIgnoreCase(s[0])) {
+					setParticleField(s2, s[0], "on".equalsIgnoreCase(s[1]));
 				}
 			}
 			else {
@@ -3043,6 +3049,9 @@ class Eval2D extends AbstractEval {
 			}
 			if ("on".equalsIgnoreCase(s[1]) || "off".equalsIgnoreCase(s[1])) {
 				if ("visible".equalsIgnoreCase(s[0])) {
+					setObstacleField(str.substring(0, end - 1), s[0], "on".equalsIgnoreCase(s[1]));
+				}
+				else if ("draggable".equalsIgnoreCase(s[0])) {
 					setObstacleField(str.substring(0, end - 1), s[0], "on".equalsIgnoreCase(s[1]));
 				}
 			}
@@ -3285,6 +3294,63 @@ class Eval2D extends AbstractEval {
 					}
 					notifyChange();
 					view.repaint();
+					return true;
+				}
+				if (s0 == "draggable") {
+					boolean b = "on".equalsIgnoreCase(s[1].trim());
+					int n = model.getNumberOfParticles();
+					for (int i = 0; i < n; i++) {
+						Particle p = model.getParticle(i);
+						if (p.isSelected())
+							p.setDraggable(b);
+					}
+					LineComponent[] lc = view.getLines();
+					if (lc != null && lc.length > 0) {
+						for (LineComponent x : lc) {
+							if (x.isSelected())
+								x.setDraggable(b);
+						}
+					}
+					RectangleComponent[] rc = view.getRectangles();
+					if (rc != null && rc.length > 0) {
+						for (RectangleComponent x : rc) {
+							if (x.isSelected())
+								x.setDraggable(b);
+						}
+					}
+					EllipseComponent[] ec = view.getEllipses();
+					if (ec != null && ec.length > 0) {
+						for (EllipseComponent x : ec) {
+							if (x.isSelected())
+								x.setDraggable(b);
+						}
+					}
+					TextBoxComponent[] tc = view.getTextBoxes();
+					if (tc != null && tc.length > 0) {
+						for (TextBoxComponent x : tc) {
+							if (x.isSelected())
+								x.setDraggable(b);
+						}
+					}
+					ImageComponent[] ic = view.getImages();
+					if (ic != null && ic.length > 0) {
+						for (ImageComponent x : ic) {
+							if (x.isSelected())
+								x.setDraggable(b);
+						}
+					}
+					if (model instanceof MolecularModel) {
+						MolecularModel mm = (MolecularModel) model;
+						RectangularObstacle obs;
+						synchronized (mm.obstacles.getSynchronizationLock()) {
+							for (Iterator it = mm.obstacles.iterator(); it.hasNext();) {
+								obs = (RectangularObstacle) it.next();
+								if (obs.isSelected())
+									obs.setDraggable(b);
+							}
+						}
+					}
+					notifyChange();
 					return true;
 				}
 				if (s0 == "movable") {
@@ -4798,26 +4864,25 @@ class Eval2D extends AbstractEval {
 			notifyChange();
 	}
 
-	private void setAtomField(String str1, String str2, boolean x) {
-		if (!(model instanceof MolecularModel))
-			return;
-		MolecularModel m = (MolecularModel) model;
+	private void setParticleField(String str1, String str2, boolean x) {
 		int lb = str1.indexOf("[");
 		int rb = str1.indexOf("]");
 		double z = parseMathExpression(str1.substring(lb + 1, rb));
 		if (Double.isNaN(z))
 			return;
 		int i = (int) Math.round(z);
-		if (i < 0 || i >= m.numberOfAtoms) {
-			out(ScriptEvent.FAILED, "Atom " + i + " doesn't exisit.");
+		if (i < 0 || i >= model.getNumberOfParticles()) {
+			out(ScriptEvent.FAILED, "Particle " + i + " doesn't exisit.");
 			return;
 		}
 		String s = str2.toLowerCase().intern();
 		boolean b = true;
 		if (s == "visible")
-			m.atom[i].setVisible(x);
+			model.getParticle(i).setVisible(x);
 		else if (s == "movable")
-			m.atom[i].setMovable(x);
+			model.getParticle(i).setMovable(x);
+		else if (s == "draggable")
+			model.getParticle(i).setDraggable(x);
 		else {
 			out(ScriptEvent.FAILED, "Cannot set propery: " + str2);
 			b = false;
@@ -5085,6 +5150,9 @@ class Eval2D extends AbstractEval {
 		if (s == "visible") {
 			obs.setVisible(x);
 		}
+		else if (s == "draggable") {
+			obs.setDraggable(x);
+		}
 		else {
 			out(ScriptEvent.FAILED, "Cannot set propery: " + str2);
 			b = false;
@@ -5109,6 +5177,9 @@ class Eval2D extends AbstractEval {
 		boolean b = true;
 		if (s == "visible") {
 			ic[i].setVisible("on".equalsIgnoreCase(str3));
+		}
+		else if (s == "draggable") {
+			ic[i].setDraggable("on".equalsIgnoreCase(str3));
 		}
 		else if (s == "x") {
 			double x = parseMathExpression(str3);
@@ -5218,6 +5289,9 @@ class Eval2D extends AbstractEval {
 		}
 		else if (s == "visible") {
 			c[i].setVisible("on".equalsIgnoreCase(str3));
+		}
+		else if (s == "draggable") {
+			c[i].setDraggable("on".equalsIgnoreCase(str3));
 		}
 		else if (s == "layer") {
 			if ("in_front_of_particles".equalsIgnoreCase(str3)) {
@@ -5333,6 +5407,9 @@ class Eval2D extends AbstractEval {
 		else if (s == "visible") {
 			c[i].setVisible("on".equalsIgnoreCase(str3));
 		}
+		else if (s == "draggable") {
+			c[i].setDraggable("on".equalsIgnoreCase(str3));
+		}
 		else if (s == "layer") {
 			if ("in_front_of_particles".equalsIgnoreCase(str3)) {
 				c[i].setLayer(Layered.IN_FRONT_OF_PARTICLES);
@@ -5447,6 +5524,9 @@ class Eval2D extends AbstractEval {
 		else if (s == "visible") {
 			c[i].setVisible("on".equalsIgnoreCase(str3));
 		}
+		else if (s == "draggable") {
+			c[i].setDraggable("on".equalsIgnoreCase(str3));
+		}
 		else if (s == "layer") {
 			if ("in_front_of_particles".equalsIgnoreCase(str3)) {
 				c[i].setLayer(Layered.IN_FRONT_OF_PARTICLES);
@@ -5533,6 +5613,9 @@ class Eval2D extends AbstractEval {
 		}
 		else if (s == "visible") {
 			t[i].setVisible("on".equalsIgnoreCase(str3));
+		}
+		else if (s == "draggable") {
+			t[i].setDraggable("on".equalsIgnoreCase(str3));
 		}
 		else if (s == "font") {
 			t[i].setFontFamily(str3);
