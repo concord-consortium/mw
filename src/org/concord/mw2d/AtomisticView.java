@@ -2750,7 +2750,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 					for (int i = 0; i < nAtom; i++) {
 						if (a != atom[i]) {
 							if (!mol.contains(atom[i])) {
-								if (atom[i].intersects(a, true))
+								if (atom[i].intersects(a, false))
 									return true;
 							}
 						}
