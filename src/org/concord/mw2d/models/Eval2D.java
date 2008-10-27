@@ -237,6 +237,7 @@ class Eval2D extends AbstractEval {
 				GayBerneParticle p = ((MesoModel) model).gb[i];
 				s = replaceAll(s, "%particle\\[" + v + "\\]\\.charge", p.charge);
 				s = replaceAll(s, "%particle\\[" + v + "\\]\\.friction", p.friction);
+				s = replaceAll(s, "%particle\\[" + v + "\\]\\.restraint", p.restraint != null ? p.restraint.k * 100 : 0);
 				s = replaceAll(s, "%particle\\[" + v + "\\]\\.mass", p.mass * M_CONVERTER);
 				s = replaceAll(s, "%particle\\[" + v + "\\]\\.hx", p.hx * IR_CONVERTER);
 				s = replaceAll(s, "%particle\\[" + v + "\\]\\.hy", p.hy * IR_CONVERTER);
@@ -268,6 +269,7 @@ class Eval2D extends AbstractEval {
 				Atom a = ((AtomicModel) model).atom[i];
 				s = replaceAll(s, "%particle\\[" + v + "\\]\\.charge", a.charge);
 				s = replaceAll(s, "%particle\\[" + v + "\\]\\.friction", a.friction);
+				s = replaceAll(s, "%particle\\[" + v + "\\]\\.restraint", a.restraint != null ? a.restraint.k * 100 : 0);
 				s = replaceAll(s, "%particle\\[" + v + "\\]\\.mass", a.mass * M_CONVERTER);
 				s = replaceAll(s, "%particle\\[" + v + "\\]\\.hx", a.hx * IR_CONVERTER);
 				s = replaceAll(s, "%particle\\[" + v + "\\]\\.hy", a.hy * IR_CONVERTER);
@@ -316,6 +318,7 @@ class Eval2D extends AbstractEval {
 				s = replaceAll(s, "%atom\\[" + v + "\\]\\.sigma", a.sigma * 0.1);
 				s = replaceAll(s, "%atom\\[" + v + "\\]\\.epsilon", a.epsilon);
 				s = replaceAll(s, "%atom\\[" + v + "\\]\\.friction", a.friction);
+				s = replaceAll(s, "%atom\\[" + v + "\\]\\.restraint", a.restraint != null ? a.restraint.k * 100 : 0);
 				s = replaceAll(s, "%atom\\[" + v + "\\]\\.hx", a.hx * IR_CONVERTER);
 				s = replaceAll(s, "%atom\\[" + v + "\\]\\.hy", a.hy * IR_CONVERTER);
 				if (frame < 0) {
@@ -2128,6 +2131,54 @@ class Eval2D extends AbstractEval {
 		return null;
 	}
 
+	private String evaluateNearestMoleculeFunction(final String clause) {
+		if (clause == null || clause.equals(""))
+			return null;
+		if (!(model instanceof MolecularModel))
+			return null;
+		MolecularModel mm = (MolecularModel) model;
+		if (mm.molecules.isEmpty())
+			return null;
+		int i = clause.indexOf("(");
+		int j = clause.lastIndexOf(")");
+		if (i == -1 || j == -1) {
+			out(ScriptEvent.FAILED, "function must be enclosed within parenthesis: " + clause);
+			return null;
+		}
+		int nom = mm.molecules.size();
+		String s = clause.substring(i + 1, j);
+		String[] t = s.split(",");
+		int n = t.length;
+		switch (n) {
+		case 3:
+			float[] x = parseArray(3, t);
+			if (x != null) {
+				for (int k = 0; k < x.length; k++)
+					x[k] *= IR_CONVERTER;
+				x[2] *= x[2];
+				double dmin = Double.MAX_VALUE;
+				int imin = -1;
+				double r = 0;
+				Molecule m = null;
+				for (int k = 0; k < nom; k++) {
+					m = mm.molecules.get(k);
+					Point2D p = m.getCenterOfMass2D();
+					r = distanceSquare(p.getX() - x[0], p.getY() - x[1]);
+					if (r < x[2] && r < dmin) {
+						dmin = r;
+						imin = k;
+					}
+				}
+				return "" + imin;
+			}
+			break;
+		default:
+			out(ScriptEvent.FAILED, "argument error: " + clause);
+			return null;
+		}
+		return null;
+	}
+
 	private String evaluateNearestToAtomFunction(final String clause) {
 		if (clause == null || clause.equals(""))
 			return null;
@@ -3188,6 +3239,10 @@ class Eval2D extends AbstractEval {
 			}
 			else if (exp.startsWith("nearest(")) {
 				exp = evaluateNearestParticleFunction(exp);
+				storeDefinition(isStatic, var, exp != null ? exp : "-1");
+			}
+			else if (exp.startsWith("nearestmolecule(")) {
+				exp = evaluateNearestMoleculeFunction(exp);
 				storeDefinition(isStatic, var, exp != null ? exp : "-1");
 			}
 			else if (exp.startsWith("nearesttoatom(")) {
