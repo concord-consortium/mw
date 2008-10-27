@@ -1230,6 +1230,7 @@ public class MesoModel extends MDModel {
 			q.clear();
 		Arrays.fill(channels, 0);
 		movieUpdater.setInterval(state.getFrameInterval());
+		paintView.setInterval(state.getViewRefreshInterval());
 		if (heatBath != null)
 			heatBath.destroy();
 		heatBath = state.getHeatBath();
@@ -1371,6 +1372,7 @@ public class MesoModel extends MDModel {
 		state.setFields(fields);
 		state.setNumberOfParticles(numberOfParticles);
 		state.setFrameInterval(movieUpdater.getInterval());
+		state.setViewRefreshInterval(paintView.getInterval());
 		state.setTimeStep(getTimeStep());
 		state.setScript(initializationScript);
 		state.setReminderEnabled(isReminderEnabled());
