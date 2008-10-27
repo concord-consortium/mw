@@ -361,7 +361,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	};
 
 	/* the subtask of painting the view at a given frequency */
-	private Loadable paintView = new AbstractLoadable(50) {
+	Loadable paintView = new AbstractLoadable(50) {
 		public void execute() {
 			if (isEmpty())
 				return;
@@ -2673,6 +2673,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		private double timeStep = 2.0;
 		private HeatBath bath;
 		private int frameInterval = 100;
+		private int viewRefreshInterval = 50;
 		private boolean repeatReminder;
 		private int reminderInterval = 5000;
 		private boolean reminderEnabled;
@@ -2730,6 +2731,14 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 
 		public int getFrameInterval() {
 			return frameInterval;
+		}
+
+		public void setViewRefreshInterval(int i) {
+			viewRefreshInterval = i;
+		}
+
+		public int getViewRefreshInterval() {
+			return viewRefreshInterval;
 		}
 
 		public void setHeatBath(HeatBath hb) {
