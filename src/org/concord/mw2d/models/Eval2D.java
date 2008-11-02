@@ -1287,6 +1287,23 @@ class Eval2D extends AbstractEval {
 		if (clause == null || clause.equals(""))
 			return false;
 
+		if ("none".equalsIgnoreCase(clause)) { // "none" clause is a special case
+			view.setImageSelectionSet(null);
+			view.setLineSelectionSet(null);
+			view.setRectangleSelectionSet(null);
+			view.setEllipseSelectionSet(null);
+			view.setTextBoxSelectionSet(null);
+			model.setSelectionSet(null);
+			if (model instanceof MolecularModel) {
+				MolecularModel mm = (MolecularModel) model;
+				mm.bonds.setSelectionSet(null);
+				mm.bends.setSelectionSet(null);
+				mm.molecules.setSelectionSet(null);
+				mm.obstacles.setSelectionSet(null);
+			}
+			return true;
+		}
+
 		if (!NOT_SELECTED.matcher(clause).find()) { // "not selected" clause is a special case.
 			model.setSelectionSet(null);
 		}
