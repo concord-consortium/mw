@@ -752,7 +752,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	// methods that support scripting
 
 	/** select a set of particles according to the instruction BitSet. */
-	public void setSelectionSet(BitSet set) {
+	public void setParticleSelectionSet(BitSet set) {
 		if (set == null) {
 			for (int i = 0; i < getNumberOfParticles(); i++)
 				getParticle(i).setSelected(false);
@@ -766,7 +766,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	}
 
 	/** return the selected set of particles in BitSet. */
-	public BitSet getSelectionSet() {
+	public BitSet getParticleSelectionSet() {
 		int n = getNumberOfParticles();
 		BitSet bs = new BitSet(n);
 		for (int i = 0; i < n; i++) {
@@ -975,13 +975,13 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	 * @return true if this rotation is permitted
 	 */
 	public boolean rotateWholeModel(double angleInDegrees) {
-		BitSet bs = getSelectionSet();
+		BitSet bs = getParticleSelectionSet();
 		setExclusiveSelection(false);
 		int n = getNumberOfParticles();
 		for (int i = 0; i < n; i++)
 			getParticle(i).setSelected(true);
 		boolean b = rotateSelectedParticles(angleInDegrees);
-		setSelectionSet(bs);
+		setParticleSelectionSet(bs);
 		return b;
 	}
 

@@ -1282,30 +1282,35 @@ class Eval2D extends AbstractEval {
 		return false;
 	}
 
+	private void deselectAll() {
+		view.setImageSelectionSet(null);
+		view.setLineSelectionSet(null);
+		view.setRectangleSelectionSet(null);
+		view.setEllipseSelectionSet(null);
+		view.setTextBoxSelectionSet(null);
+		model.setParticleSelectionSet(null);
+		if (model instanceof MolecularModel) {
+			MolecularModel mm = (MolecularModel) model;
+			mm.bonds.setSelectionSet(null);
+			mm.bends.setSelectionSet(null);
+			mm.molecules.setSelectionSet(null);
+			mm.obstacles.setSelectionSet(null);
+		}
+	}
+
 	private boolean evaluateSelectClause(String clause) {
 
 		if (clause == null || clause.equals(""))
 			return false;
 
-		if ("none".equalsIgnoreCase(clause)) { // "none" clause is a special case
-			view.setImageSelectionSet(null);
-			view.setLineSelectionSet(null);
-			view.setRectangleSelectionSet(null);
-			view.setEllipseSelectionSet(null);
-			view.setTextBoxSelectionSet(null);
-			model.setSelectionSet(null);
-			if (model instanceof MolecularModel) {
-				MolecularModel mm = (MolecularModel) model;
-				mm.bonds.setSelectionSet(null);
-				mm.bends.setSelectionSet(null);
-				mm.molecules.setSelectionSet(null);
-				mm.obstacles.setSelectionSet(null);
-			}
+		// "none" clause is a special case for clearing the selection status of all types
+		if ("none".equalsIgnoreCase(clause)) {
+			deselectAll();
 			return true;
 		}
 
 		if (!NOT_SELECTED.matcher(clause).find()) { // "not selected" clause is a special case.
-			model.setSelectionSet(null);
+			deselectAll();
 		}
 
 		Matcher matcher = IMAGE.matcher(clause); // select by image
@@ -5784,14 +5789,14 @@ class Eval2D extends AbstractEval {
 			}
 		}
 		if (found)
-			model.setSelectionSet(bs);
+			model.setParticleSelectionSet(bs);
 		return found ? bs : null;
 	}
 
 	private BitSet selectParticles(String str) {
 
 		if ("selected".equalsIgnoreCase(str)) {
-			return model.getSelectionSet();
+			return model.getParticleSelectionSet();
 		}
 
 		BitSet bs = genericSelect(str);
@@ -5953,7 +5958,7 @@ class Eval2D extends AbstractEval {
 		}
 
 		if (found) {
-			model.setSelectionSet(bs);
+			model.setParticleSelectionSet(bs);
 		}
 		else {
 			out(ScriptEvent.FAILED, "Unrecognized expression: " + str);
@@ -5966,7 +5971,7 @@ class Eval2D extends AbstractEval {
 	private BitSet selectElements(String str) {
 
 		if ("selected".equalsIgnoreCase(str))
-			return model.getSelectionSet();
+			return model.getParticleSelectionSet();
 
 		BitSet bs = genericSelect(str);
 		if (bs != null)
@@ -6181,7 +6186,7 @@ class Eval2D extends AbstractEval {
 		}
 
 		if (found) {
-			model.setSelectionSet(bs);
+			model.setParticleSelectionSet(bs);
 		}
 		else {
 			out(ScriptEvent.FAILED, "Unrecognized expression: " + str);
@@ -6686,7 +6691,7 @@ class Eval2D extends AbstractEval {
 		switch (type) {
 		case BY_ATOM:
 		case BY_ELEMENT:
-			model.setSelectionSet(bs);
+			model.setParticleSelectionSet(bs);
 			break;
 		case BY_OBSTACLE:
 			model.obstacles.setSelectionSet(bs);

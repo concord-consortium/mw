@@ -1333,10 +1333,16 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 		if (s != null)
 			clearMI.setText(s);
 
-		JMenu menu = new JMenu("Edit");
+		s = getInternationalText("DeselectAll");
+		JMenuItem deselectAllMI = new JMenuItem(s != null ? s : "Deselect All");
+		deselectAllMI.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				getModel().runScript("select none");
+			}
+		});
+
 		s = getInternationalText("Edit");
-		if (s != null)
-			menu.setText(s);
+		JMenu menu = new JMenu(s == null ? "Edit" : s);
 		menu.setMnemonic(KeyEvent.VK_E);
 		menu.addMenuListener(new MenuListener() {
 			public void menuSelected(MenuEvent e) {
@@ -1379,6 +1385,7 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 		menu.add(copyMI);
 		menu.add(pasteMI);
 		menu.add(clearMI);
+		menu.add(deselectAllMI);
 		menu.addSeparator();
 
 		menuItem = new JMenuItem(getView().getActionMap().get("Input Image"));
