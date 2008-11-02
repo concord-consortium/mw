@@ -652,7 +652,7 @@ public class Molecule implements ModelComponent, Rotatable {
 		BitSet bs = new BitSet(model.getNumberOfAtoms());
 		for (Atom a : atoms)
 			bs.set(a.getIndex());
-		model.setSelectionSet(bs);
+		model.setParticleSelectionSet(bs);
 		model.rotateSelectedParticles(angleInDegrees);
 	}
 
@@ -660,7 +660,7 @@ public class Molecule implements ModelComponent, Rotatable {
 		BitSet bs = new BitSet(model.getNumberOfAtoms());
 		for (Atom a : atoms)
 			bs.set(a.getIndex());
-		model.setSelectionSet(bs);
+		model.setParticleSelectionSet(bs);
 		model.flipSelectedParticles((byte) 0);
 	}
 
@@ -668,7 +668,7 @@ public class Molecule implements ModelComponent, Rotatable {
 		BitSet bs = new BitSet(model.getNumberOfAtoms());
 		for (Atom a : atoms)
 			bs.set(a.getIndex());
-		model.setSelectionSet(bs);
+		model.setParticleSelectionSet(bs);
 		model.flipSelectedParticles((byte) 1);
 	}
 

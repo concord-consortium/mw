@@ -816,7 +816,32 @@ class Eval3D extends AbstractEval {
 		return false;
 	}
 
+	private void deselectAll() {
+		// view.setImageSelectionSet(null);
+		// view.setLineSelectionSet(null);
+		// view.setRectangleSelectionSet(null);
+		// view.setEllipseSelectionSet(null);
+		// view.setTextBoxSelectionSet(null);
+		// model.setObstacleSelectionSet(null);
+		model.setAtomSelectionSet(null);
+		model.setRBondSelectionSet(null);
+		model.setABondSelectionSet(null);
+		model.setTBondSelectionSet(null);
+		model.setMoleculeSelectionSet(null);
+	}
+
 	private boolean evaluateSelectClause(String clause) {
+
+		// "none" clause is a special case for clearing the selection status of all types
+		if ("none".equalsIgnoreCase(clause)) {
+			deselectAll();
+			return true;
+		}
+
+		if (!NOT_SELECTED.matcher(clause).find()) { // "not selected" clause is a special case.
+			deselectAll();
+		}
+
 		Matcher matcher = ATOM.matcher(clause); // select by atom
 		if (matcher.find()) {
 			BitSet selection = null;
