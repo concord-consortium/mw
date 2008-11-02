@@ -1335,6 +1335,7 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 
 		s = getInternationalText("DeselectAll");
 		JMenuItem deselectAllMI = new JMenuItem(s != null ? s : "Deselect All");
+		deselectAllMI.setIcon(new ImageIcon(getClass().getResource("images/deselectall.gif")));
 		deselectAllMI.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				getModel().runScript("select none");
