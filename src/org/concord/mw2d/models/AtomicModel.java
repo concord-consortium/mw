@@ -1012,7 +1012,7 @@ public abstract class AtomicModel extends MDModel {
 		updateAllAQ();
 		updatePressureQ();
 		for (byte i = 0; i < 4; i++)
-			kep[i].update((float) getKinForType(i));
+			kep[i].update((float) getKEOfType(i));
 		if (subatomicEnabled || (lightSource != null && lightSource.isOn()))
 			updatePhotonQ();
 	}
@@ -1893,10 +1893,10 @@ public abstract class AtomicModel extends MDModel {
 				setTemperature(l, temperature);
 		}
 		else {
-			double temp1 = getKin() * UNIT_EV_OVER_KB;
+			double temp1 = getKE() * UNIT_EV_OVER_KB;
 			if (temp1 < ZERO && temperature > ZERO) {
 				assignTemperature(temperature);
-				temp1 = getKin() * UNIT_EV_OVER_KB;
+				temp1 = getKE() * UNIT_EV_OVER_KB;
 			}
 			if (temp1 > ZERO)
 				rescaleVelocities(Math.sqrt(temperature / temp1));
@@ -1957,10 +1957,10 @@ public abstract class AtomicModel extends MDModel {
 			return;
 		if (temperature < ZERO)
 			temperature = 0.0;
-		double temp1 = getKinForParticles(list) * UNIT_EV_OVER_KB;
+		double temp1 = getKEOfParticles(list) * UNIT_EV_OVER_KB;
 		if (temp1 < ZERO) {
 			assignTemperature(list, 100.0);
-			temp1 = getKinForParticles(list) * UNIT_EV_OVER_KB;
+			temp1 = getKEOfParticles(list) * UNIT_EV_OVER_KB;
 		}
 		rescaleVelocities(list, Math.sqrt(temperature / temp1));
 	}
@@ -1970,7 +1970,7 @@ public abstract class AtomicModel extends MDModel {
 			return;
 		if (temperature < ZERO)
 			temperature = 0.0;
-		double t = getKinForElectrons() * UNIT_EV_OVER_KB;
+		double t = getKEOfElectrons() * UNIT_EV_OVER_KB;
 		rescaleElectronVelocities(Math.sqrt(temperature / t));
 	}
 
@@ -1979,7 +1979,7 @@ public abstract class AtomicModel extends MDModel {
 		if (percent < -1.0)
 			percent = -1.0;
 		if (!heatBathActivated()) {
-			double temp1 = getKin() * UNIT_EV_OVER_KB;
+			double temp1 = getKE() * UNIT_EV_OVER_KB;
 			if (temp1 < ZERO)
 				assignTemperature(100.0);
 			rescaleVelocities(Math.sqrt(percent + 1.0));
@@ -1991,7 +1991,7 @@ public abstract class AtomicModel extends MDModel {
 	}
 
 	public double getTemperature() {
-		return getKin() * UNIT_EV_OVER_KB;
+		return getKE() * UNIT_EV_OVER_KB;
 	}
 
 	private double[] getTotalKineticEnergy(byte type, Shape shape) {
@@ -2081,7 +2081,7 @@ public abstract class AtomicModel extends MDModel {
 	public void transferHeat(double amount) {
 		if (getNumberOfAtoms() <= 0)
 			return;
-		double k0 = getKin();
+		double k0 = getKE();
 		if (k0 < ZERO)
 			assignTemperature(1);
 		for (int i = 0; i < numberOfAtoms; i++) {
@@ -2117,7 +2117,7 @@ public abstract class AtomicModel extends MDModel {
 	public void transferHeatToParticles(List list, double amount) {
 		if (list == null || list.isEmpty())
 			return;
-		double k0 = getKinForParticles(list);
+		double k0 = getKEOfParticles(list);
 		if (k0 < ZERO)
 			assignTemperature(list, 1);
 		Atom a = null;
@@ -3237,7 +3237,7 @@ public abstract class AtomicModel extends MDModel {
 	 * @return average kinetic energy per atom
 	 * @GuardedBy("this")
 	 */
-	public synchronized double getKin() {
+	public synchronized double getKE() {
 		double x = 0.0;
 		for (int i = 0; i < numberOfAtoms; i++) {
 			Atom a = atom[i];
@@ -3270,7 +3270,7 @@ public abstract class AtomicModel extends MDModel {
 	 * @return the kinetic energy of the specified type of atoms.
 	 * @see org.concord.mw2d.models.Element
 	 */
-	public double getKinForType(byte element) {
+	public double getKEOfType(byte element) {
 		if (typeList == null) {
 			typeList = new ArrayList<Atom>();
 		}
@@ -3281,7 +3281,7 @@ public abstract class AtomicModel extends MDModel {
 			if (atom[i].id == element)
 				typeList.add(atom[i]);
 		}
-		return getKinForParticles(typeList);
+		return getKEOfParticles(typeList);
 	}
 
 	/*
@@ -3289,7 +3289,7 @@ public abstract class AtomicModel extends MDModel {
 	 * 
 	 * @GuardedBy("this")
 	 */
-	synchronized double getKinForParticles(List list) {
+	synchronized double getKEOfParticles(List list) {
 		if (list == null || list.isEmpty())
 			return 0.0;
 		double x = 0.0;
@@ -3312,7 +3312,7 @@ public abstract class AtomicModel extends MDModel {
 	}
 
 	/* @GuardedBy("this") */
-	synchronized double getKinForElectrons() {
+	synchronized double getKEOfElectrons() {
 		if (freeElectrons.isEmpty())
 			return 0;
 		double x = 0;

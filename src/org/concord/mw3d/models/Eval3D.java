@@ -999,15 +999,15 @@ class Eval3D extends AbstractEval {
 	}
 
 	private boolean evaluateHeatClause(String str) {
-		float c = 0;
+		float h = 0;
 		try {
-			c = Float.valueOf(str).floatValue();
+			h = Float.valueOf(str).floatValue();
 		}
 		catch (NumberFormatException e) {
 			out(ScriptEvent.FAILED, str + " cannot be parsed as a number.");
 			return false;
 		}
-		if (c == 0)
+		if (h == 0)
 			return true;
 		int nop = model.getAtomCount();
 		if (nop <= 0)
@@ -1017,7 +1017,7 @@ class Eval3D extends AbstractEval {
 			if (atom[k].isSelected())
 				list.add(atom[k]);
 		}
-		// model.heatAtoms(list, c);
+		model.heatAtoms(list, h);
 		view.repaint();
 		model.notifyChange();
 		return true;

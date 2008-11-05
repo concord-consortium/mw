@@ -385,6 +385,15 @@ public class Atom {
 		return r < (sigma + a.sigma) * 0.5f;
 	}
 
+	/** given the speed scalar, assign a velocity vector in a random direction */
+	public void setRandomVelocity(float speed) {
+		double theta = 2.0 * Math.PI * Math.random();
+		double phi = 2.0 * Math.PI * Math.random();
+		vx = (float) (speed * Math.cos(phi) * Math.sin(theta));
+		vy = (float) (speed * Math.sin(phi) * Math.sin(theta));
+		vz = (float) (speed * Math.cos(theta));
+	}
+
 	public float getKe() {
 		return mass * (vx * vx + vy * vy + vz * vz) * 0.5f;
 	}

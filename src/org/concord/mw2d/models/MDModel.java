@@ -946,7 +946,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 
 	public abstract void setUpdateList(boolean b);
 
-	public abstract double getKin();
+	public abstract double getKE();
 
 	/**
 	 * ask if this model has an embedded movie, or has loaded one from external source. A model is said to have an
@@ -1137,7 +1137,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			}
 		}
 		modelTimeQueue.update(modelTime);
-		getKin();
+		getKE();
 		if (modelTime < ZERO)
 			pot = computeForce(0);
 		tot = kin + pot;
