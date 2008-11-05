@@ -96,6 +96,9 @@ class PageScriptConsoleMaker extends ComponentMaker {
 		}
 		else if (o instanceof Embeddable) {
 			pageScriptConsole.setModelID(((Embeddable) o).getIndex());
+			if (o instanceof PageMd3d) {
+				((PageMd3d) o).getMolecularModel().addScriptListener(pageScriptConsole);
+			}
 		}
 		pageScriptConsole.setBorderType((String) borderComboBox.getSelectedItem());
 		pageScriptConsole.setPreferredSize(new Dimension(widthField.getValue(), heightField.getValue()));
