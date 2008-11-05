@@ -668,16 +668,16 @@ public class MesoModel extends MDModel {
 	public synchronized void setTemperature(double temperature) {
 		if (temperature < ZERO)
 			temperature = 0.0;
-		double temp1 = getKin() * UNIT_EV_OVER_KB;
+		double temp1 = getKE() * UNIT_EV_OVER_KB;
 		if (temp1 < ZERO) {
 			assignTemperature(100.0);
-			temp1 = getKin() * UNIT_EV_OVER_KB;
+			temp1 = getKE() * UNIT_EV_OVER_KB;
 		}
 		rescaleVelocities(Math.sqrt(temperature / temp1));
 	}
 
 	public double getTemperature() {
-		return getKin() * UNIT_EV_OVER_KB;
+		return getKE() * UNIT_EV_OVER_KB;
 	}
 
 	public double getTemperature(byte type, Shape shape) {
@@ -754,7 +754,7 @@ public class MesoModel extends MDModel {
 	public void transferHeat(double amount) {
 		if (numberOfParticles <= 0)
 			return;
-		double k0 = getKin();
+		double k0 = getKE();
 		if (k0 < ZERO)
 			assignTemperature(1);
 		for (int i = 0; i < numberOfParticles; i++) {
@@ -864,7 +864,7 @@ public class MesoModel extends MDModel {
 	}
 
 	/** @return the total translational and rotational kinetic energy */
-	public synchronized double getKin() {
+	public synchronized double getKE() {
 		if (numberOfParticles <= 0)
 			return 0.0;
 		double kineticEnergy = 0.0;

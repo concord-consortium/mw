@@ -3260,7 +3260,7 @@ public abstract class MDView extends PrintableComponent {
 
 		void paint(Graphics2D g) {
 			setX(getWidth() - 18);
-			int sk = (int) (100.0 * Math.log(1.0 + getModel().getKin()));
+			int sk = (int) (100.0 * Math.log(1.0 + getModel().getKE()));
 			g.setStroke(ViewAttribute.THIN);
 			g.setColor(exitButtonColor);
 			g.fill(exitButton);

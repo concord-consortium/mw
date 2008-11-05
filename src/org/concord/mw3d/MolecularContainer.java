@@ -1061,6 +1061,7 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 		view.setStartingSceneWhenCameraIsOnAtom();
 		model.setRotationMatrix(view.getViewer().getRotationMatrix());
 		model.addCustomTasks(state.getTasks());
+		model.getJob().processPendingRequests();
 	}
 
 	private void setGenericParticles() {

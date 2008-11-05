@@ -103,6 +103,8 @@ public class MolecularModel {
 	final static float ZERO = 1000000 * Float.MIN_VALUE;
 	private final static short DEFAULT_MINIMUM_JOB_CYCLE_TIME = 20;
 
+	final static Random RANDOM = new Random();
+
 	MolecularView view;
 	private ScriptCallback externalScriptCallback;
 	private Eval3D evalAction, evalTask;
@@ -2082,6 +2084,61 @@ public class MolecularModel {
 				atom[i].vy *= k0;
 				atom[i].vz *= k0;
 			}
+		}
+	}
+
+	/* assign velocities to a group of atoms according to the temperature given */
+	private void assignTemperature(List<Atom> list, float temperature) {
+		if (list == null || list.isEmpty())
+			return;
+		if (temperature < ZERO)
+			temperature = ZERO;
+		double rtemp = Math.sqrt(temperature) * VT_CONVERSION_CONSTANT;
+		if (list.size() == 1) {
+			list.get(0).setRandomVelocity((float) rtemp);
+			return;
+		}
+		for (Atom a : list) {
+			a.vx = (float) (rtemp * RANDOM.nextGaussian());
+			a.vy = (float) (rtemp * RANDOM.nextGaussian());
+			a.vz = (float) (rtemp * RANDOM.nextGaussian());
+		}
+	}
+
+	/* return the kinetic energy of the atom list, if there is no atom in the list, return 0. */
+	private float getKEOfAtoms(List<Atom> list) {
+		if (list == null || list.isEmpty())
+			return 0;
+		float x = 0;
+		int n = 0;
+		synchronized (list) {
+			for (Atom a : list) {
+				x += (a.vx * a.vx + a.vy * a.vy + a.vz * a.vz) * a.mass;
+				n++;
+			}
+		}
+		x *= EV_CONVERTER;
+		// the prefactor 0.5 doesn't show up here because of mass unit conversion.
+		return n > 0 ? x / n : x;
+	}
+
+	public void heatAtoms(List<Atom> list, float amount) {
+		if (list == null || list.isEmpty())
+			return;
+		float k0 = getKEOfAtoms(list);
+		if (k0 < ZERO)
+			assignTemperature(list, 1);
+		for (Atom a : list) {
+			k0 = EV_CONVERTER * a.mass * (a.vx * a.vx + a.vy * a.vy + a.vz * a.vz);
+			if (k0 <= ZERO)
+				k0 = ZERO;
+			k0 = (k0 + amount) / k0;
+			if (k0 <= ZERO)
+				k0 = ZERO;
+			k0 = (float) Math.sqrt(k0);
+			a.vx *= k0;
+			a.vy *= k0;
+			a.vz *= k0;
 		}
 	}
 
