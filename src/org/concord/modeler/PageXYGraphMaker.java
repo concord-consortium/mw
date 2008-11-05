@@ -877,6 +877,7 @@ class PageXYGraphMaker extends ComponentMaker {
 		if (smallFont == null)
 			smallFont = new Font(modelComboBox.getFont().getFamily(), modelComboBox.getFont().getStyle(), 10);
 		modelComboBox.setFont(smallFont);
+		modelComboBox.setRenderer(new LabelRenderer());
 		modelComboBox
 				.setToolTipText("If there are multiple models on the page, select the one that outputs to this X-Y graph.");
 		p2.add(modelComboBox);
