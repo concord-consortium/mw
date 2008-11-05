@@ -31,7 +31,7 @@ import org.concord.modeler.text.Page;
  * @author Charles Xie
  * 
  */
-abstract class ComponentMaker {
+public abstract class ComponentMaker {
 
 	final static String EXECUTE_MW_SCRIPT = "Execute MW script";
 	final static String EXECUTE_JMOL_SCRIPT = "Execute Jmol script";
@@ -39,7 +39,7 @@ abstract class ComponentMaker {
 
 	boolean cancel;
 
-	static boolean isScriptActionKey(String s) {
+	public static boolean isScriptActionKey(String s) {
 		return EXECUTE_MW_SCRIPT.equals(s) || EXECUTE_JMOL_SCRIPT.equals(s) || EXECUTE_NATIVE_SCRIPT.equals(s)
 				|| "Script".equals(s);
 	}

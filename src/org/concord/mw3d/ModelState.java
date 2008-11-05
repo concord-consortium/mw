@@ -65,6 +65,8 @@ public class ModelState implements Serializable {
 	private int cameraAtom = -1;
 	private int zDepthMagnification = 5;
 	private List<TaskState> tasks;
+	private int frameInterval = 200;
+	private int viewRefreshInterval = 50;
 
 	private String rotation;
 	private String cameraPosition;
@@ -114,6 +116,22 @@ public class ModelState implements Serializable {
 
 	public ModelState() {
 		tasks = new ArrayList<TaskState>();
+	}
+
+	public void setFrameInterval(int i) {
+		frameInterval = i;
+	}
+
+	public int getFrameInterval() {
+		return frameInterval;
+	}
+
+	public void setViewRefreshInterval(int i) {
+		viewRefreshInterval = i;
+	}
+
+	public int getViewRefreshInterval() {
+		return viewRefreshInterval;
 	}
 
 	public void setXyzFileName(String s) {

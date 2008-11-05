@@ -564,7 +564,7 @@ public class Atom {
 				return; // already null
 			rQ = new FloatQueueTriplet(new FloatQueue("Rx: " + toString(), n), new FloatQueue("Ry: " + toString(), n),
 					new FloatQueue("Rz: " + toString(), n));
-			rQ.setInterval(model.movieUpdater.getInterval());
+			rQ.setInterval(model.getFrameInterval());
 			rQ.setPointer(0);
 			rQ.setCoordinateQueue(model.modelTimeQueue);
 			// model.movieQueueGroup.add(rQ);
@@ -588,7 +588,7 @@ public class Atom {
 				return; // already null
 			vQ = new FloatQueueTriplet(new FloatQueue("Vx: " + toString(), n), new FloatQueue("Vy: " + toString(), n),
 					new FloatQueue("Vz: " + toString(), n));
-			vQ.setInterval(model.movieUpdater.getInterval());
+			vQ.setInterval(model.getFrameInterval());
 			vQ.setPointer(0);
 			vQ.setCoordinateQueue(model.modelTimeQueue);
 			// model.movieQueueGroup.add(vQ);
@@ -612,7 +612,7 @@ public class Atom {
 				return; // already null
 			aQ = new FloatQueueTriplet(new FloatQueue("Ax: " + toString(), n), new FloatQueue("Ay: " + toString(), n),
 					new FloatQueue("Az: " + toString(), n));
-			aQ.setInterval(model.movieUpdater.getInterval());
+			aQ.setInterval(model.getFrameInterval());
 			aQ.setPointer(0);
 			aQ.setCoordinateQueue(model.modelTimeQueue);
 			// model.movieQueueGroup.add(aQ);

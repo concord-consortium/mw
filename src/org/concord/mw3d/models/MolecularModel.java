@@ -212,7 +212,7 @@ public class MolecularModel {
 	};
 
 	/* the subtask of updating the movie queues */
-	Loadable movieUpdater = new AbstractLoadable(200) {
+	private Loadable movieUpdater = new AbstractLoadable(200) {
 		public void execute() {
 			/*
 			 * if(isEmpty()) { stopImmediately(); stopAtNextRecordingStep=false; return; }
@@ -308,6 +308,22 @@ public class MolecularModel {
 
 		Arrays.fill(channels, 0);
 
+	}
+
+	public void setFrameInterval(int i) {
+		movieUpdater.setInterval(i);
+	}
+
+	public int getFrameInterval() {
+		return movieUpdater.getInterval();
+	}
+
+	public void setViewRefreshInterval(int i) {
+		paintView.setInterval(i);
+	}
+
+	public int getViewRefreshInterval() {
+		return paintView.getInterval();
 	}
 
 	public static byte getGenericParticleTypes() {

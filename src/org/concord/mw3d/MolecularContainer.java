@@ -757,6 +757,8 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 			Point3f cp = view.getViewer().getCameraPosition();
 			state.setCameraPosition(cp.x + " " + cp.y + " " + cp.z);
 		}
+		state.setFrameInterval(model.getFrameInterval());
+		state.setViewRefreshInterval(model.getViewRefreshInterval());
 		state.setInitScript(model.getInitializationScript());
 		state.setZDepthMagnification(view.getViewer().getZDepthMagnification());
 		state.setShowAtomIndex(view.getShowAtomIndex());
@@ -934,6 +936,8 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 				}
 			}
 		}
+		model.setFrameInterval(state.getFrameInterval());
+		model.setViewRefreshInterval(state.getViewRefreshInterval());
 		model.setInitializationScript(state.getInitScript());
 		model.setTimeStep(state.getTimeStep());
 		model.setLength(state.getLength());
