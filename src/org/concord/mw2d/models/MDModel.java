@@ -1507,7 +1507,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	}
 
 	void addCustomTasks(List<TaskAttributes> list) {
-		job.removeAllCustomTasks();
+		job.removeAllNonSystemTasks();
 		if (list == null || list.isEmpty())
 			return;
 		for (TaskAttributes a : list) {
@@ -1661,7 +1661,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		haltScriptExecution();
 		stopImmediately();
 		if (job != null)
-			job.removeAllCustomTasks();
+			job.removeAllNonSystemTasks();
 		final String url = (String) getProperty("url");
 		if (url == null) {
 			if (hasEmbeddedMovie()) {
@@ -1951,7 +1951,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		// if (pageComponentListenerList != null) pageComponentListenerList.clear();
 		// if(modelListenerList!=null) modelListenerList.clear();
 		if (job != null)
-			job.removeAllCustomTasks();
+			job.removeAllNonSystemTasks();
 	}
 
 	public void setView(MDView v) {

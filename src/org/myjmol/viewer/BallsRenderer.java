@@ -273,8 +273,7 @@ class BallsRenderer extends ShapeRenderer {
 		if (atom.interactionKey && viewer.interactionCentersVisible) {
 			drawInteractionCenter(atom);
 		}
-		if (viewer instanceof ExtendedViewer ? viewer.isSelected(atom.atomIndex) : viewer.getSelectionHaloEnabled()
-				&& viewer.isSelected(atom.atomIndex)) {
+		if (viewer.getSelectionHaloEnabled() && viewer.isSelected(atom.atomIndex)) {
 			fillScreenedCircle(atom, colixSelection);
 		}
 		if (atom.atomIndex == viewer.clickedAtom) {

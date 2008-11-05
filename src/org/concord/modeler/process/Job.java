@@ -86,11 +86,11 @@ public abstract class Job implements Runnable {
 			mainThread.interrupt();
 	}
 
-	/** remove all the customer tasks */
-	public void removeAllCustomTasks() {
+	/** remove all the non-system tasks */
+	public void removeAllNonSystemTasks() {
 		synchronized (taskPool) {
 			for (Loadable l : taskPool) {
-				if (!l.isSystemTask())
+				if (!l.isSystemTask() || (l instanceof DelayModelTimeLoadable))
 					remove(l);
 			}
 		}

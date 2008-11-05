@@ -46,7 +46,7 @@ import org.concord.modeler.draw.FillMode;
 import org.concord.modeler.event.ScriptEvent;
 import org.concord.modeler.event.ScriptExecutionEvent;
 import org.concord.modeler.event.ScriptExecutionListener;
-import org.concord.modeler.process.AbstractLoadable;
+import org.concord.modeler.process.DelayModelTimeLoadable;
 import org.concord.modeler.script.AbstractEval;
 import org.concord.modeler.script.Compiler;
 import org.concord.modeler.text.XMLCharacterDecoder;
@@ -1305,6 +1305,12 @@ class Eval3D extends AbstractEval {
 			view.setKeShading(result == ON);
 			return true;
 		}
+		result = parseOnOff("selectionhalo", s);
+		if (result != -1) {
+			view.getViewer().setSelectionHaloEnabled(result == ON);
+			view.repaint();
+			return true;
+		}
 		out(ScriptEvent.FAILED, "Unrecognized keyword: " + str);
 		return false;
 	}
@@ -1723,7 +1729,7 @@ class Eval3D extends AbstractEval {
 			if (str.matches(REGEX_NONNEGATIVE_DECIMAL)) {
 				int i = Math.round(Float.valueOf(str).floatValue() / model.getTimeStep());
 				int step0 = model.job != null ? model.job.getIndexOfStep() : 0;
-				AbstractLoadable l = new AbstractLoadable(i) {
+				DelayModelTimeLoadable l = new DelayModelTimeLoadable(i) {
 					public void execute() {
 						// if (model.job.getIndexOfStep() - step0 < i - 1) return; // what the hell is this?
 						synchronized (Eval3D.this) {

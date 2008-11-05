@@ -55,7 +55,7 @@ import org.concord.modeler.draw.LineStyle;
 import org.concord.modeler.event.ModelEvent;
 import org.concord.modeler.event.PageComponentEvent;
 import org.concord.modeler.event.ScriptEvent;
-import org.concord.modeler.process.AbstractLoadable;
+import org.concord.modeler.process.DelayModelTimeLoadable;
 import org.concord.modeler.script.AbstractEval;
 import org.concord.modeler.script.Compiler;
 import org.concord.modeler.text.XMLCharacterDecoder;
@@ -4466,7 +4466,7 @@ class Eval2D extends AbstractEval {
 			if (str.matches(REGEX_NONNEGATIVE_DECIMAL)) {
 				int i = Math.round(Float.valueOf(str).floatValue() / (float) model.getTimeStep());
 				int step0 = model.job != null ? model.job.getIndexOfStep() : 0;
-				AbstractLoadable l = new AbstractLoadable(i) {
+				DelayModelTimeLoadable l = new DelayModelTimeLoadable(i) {
 					public void execute() {
 						// if (model.job.getIndexOfStep() - step0 < i - 1) return; // what the hell is this?
 						synchronized (Eval2D.this) {
