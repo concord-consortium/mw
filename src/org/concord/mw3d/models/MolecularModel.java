@@ -1750,7 +1750,7 @@ public class MolecularModel {
 	public void addCustomTasks(List<TaskState> list) {
 		if (job == null)
 			initializeJob();
-		job.removeAllCustomTasks();
+		job.removeAllNonSystemTasks();
 		if (list == null || list.isEmpty())
 			return;
 		for (TaskState a : list) {

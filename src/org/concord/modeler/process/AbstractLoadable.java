@@ -45,24 +45,6 @@ public abstract class AbstractLoadable implements Loadable {
 	private int priority = Thread.NORM_PRIORITY;
 	private transient PropertyChangeSupport pcs;
 
-	/**
-	 * this subtask forces the main thread to sleep at a given frequency. The default frequency is 1 millesecond per 500
-	 * simulation steps.
-	 */
-	public static final Loadable SLEEP = new AbstractLoadable(500) {
-		public void execute() {
-			try {
-				Thread.sleep(1);
-			}
-			catch (InterruptedException e) {
-			}
-		}
-
-		public String getName() {
-			return "Sleeping";
-		}
-	};
-
 	public AbstractLoadable() {
 		name += "@" + System.currentTimeMillis();
 		pcs = new PropertyChangeSupport(this);
