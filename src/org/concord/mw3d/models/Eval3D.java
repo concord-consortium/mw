@@ -1336,6 +1336,22 @@ class Eval3D extends AbstractEval {
 
 		String[] s = null;
 
+		// element field
+		matcher = ELEMENT_FIELD.matcher(str);
+		if (matcher.find()) {
+			int end = matcher.end();
+			s = str.substring(end).trim().split(REGEX_WHITESPACE + "+");
+			if (s.length != 2) {
+				out(ScriptEvent.FAILED, "Argument error: " + str);
+				return false;
+			}
+			double x = parseMathExpression(s[1]);
+			if (Double.isNaN(x))
+				return false;
+			setElementField(str.substring(0, end - 1), s[0], (float) x);
+			return true;
+		}
+
 		// atom field
 		matcher = ATOM_FIELD.matcher(str);
 		if (matcher.find()) {
@@ -1977,6 +1993,61 @@ class Eval3D extends AbstractEval {
 			}
 		}
 		return q;
+	}
+
+	private void setElementField(String str1, String str2, float x) {
+		int lb = str1.indexOf("[");
+		int rb = str1.indexOf("]");
+		double z = parseMathExpression(str1.substring(lb + 1, rb));
+		if (Double.isNaN(z))
+			return;
+		int i = (int) Math.round(z);
+		if (i < 110 || i >= 113) {
+			out(ScriptEvent.FAILED, "Element " + i + " isn't generic particle.");
+			return;
+		}
+		String symbol = null;
+		switch (i) {
+		case 110:
+			symbol = "X1";
+			break;
+		case 111:
+			symbol = "X2";
+			break;
+		case 112:
+			symbol = "X3";
+			break;
+		case 113:
+			symbol = "X4";
+			break;
+		}
+		String s = str2.toLowerCase().intern();
+		boolean b = true;
+		if (s == "mass") {
+			model.setElementMass(symbol, x);
+			for (i = 0; i < model.getAtomCount(); i++)
+				model.atom[i].mass = x;
+		}
+		else if (s == "sigma") {
+			model.setElementSigma(symbol, x);
+			for (i = 0; i < model.getAtomCount(); i++) {
+				model.atom[i].sigma = x;
+				view.getViewer().setAtomSize(i, x * 1000);
+			}
+		}
+		else if (s == "epsilon") {
+			model.setElementEpsilon(symbol, x);
+			for (i = 0; i < model.getAtomCount(); i++)
+				model.atom[i].epsilon = x;
+		}
+		else {
+			out(ScriptEvent.FAILED, "Cannot set propery: " + str2);
+			b = false;
+		}
+		if (b) {
+			view.repaint();
+			model.notifyChange();
+		}
 	}
 
 	private void setAtomField(String str1, String str2, boolean x) {

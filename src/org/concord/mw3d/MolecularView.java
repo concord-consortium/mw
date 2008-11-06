@@ -517,6 +517,7 @@ public class MolecularView extends Draw {
 
 	public void setKeShading(boolean b) {
 		keShading = b;
+		viewer.setKEShading(b);
 		if (!b)
 			viewer.resetDefaultAtomColors();
 		refresh();
@@ -822,6 +823,10 @@ public class MolecularView extends Draw {
 			Atom at;
 			for (int i = 0; i < n; i++) {
 				at = model.getAtom(i);
+				if (at.isGenericParticle()) {
+					int vdw = viewer.getPercentVdwAtom();
+					viewer.setAtomSize(i, vdw == 100 ? 1000 * at.getSigma() : at.getSigma() * vdw * 10);
+				}
 				if (keShading) {
 					viewer.setAtomCoordinates(i, at.getRx(), at.getRy(), at.getRz(), getKeShadingColor(at.getKe()));
 				}
@@ -830,10 +835,6 @@ public class MolecularView extends Draw {
 				}
 				if (velocityBitSet.get(i))
 					viewer.setAtomVelocities(i, at.getVx(), at.getVy(), at.getVz());
-				if (at.isGenericParticle()) {
-					int vdw = viewer.getPercentVdwAtom();
-					viewer.setAtomSize(i, vdw == 100 ? 1000 * at.getSigma() : at.getSigma() * vdw * 10);
-				}
 			}
 			if (showVdwLines) {
 				viewer.setVdwForceLines(model.getVdwPairs());
