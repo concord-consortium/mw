@@ -52,7 +52,8 @@ import org.myjmol.viewer.Viewer;
 
 abstract public class JmolViewer extends JmolSimpleViewer {
 
-	/** XIE */
+	abstract public void setKEShading(boolean b);
+
 	abstract public void cleanUp();
 
 	abstract public void loadingStarted();

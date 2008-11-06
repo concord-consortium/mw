@@ -114,6 +114,7 @@ public class Viewer extends JmolViewer {
 	int activeBondInteraction = -1; // XIE
 	boolean engineOn; // XIE
 	boolean interactionCentersVisible = true; // XIE
+	boolean keShading;
 
 	private String strJavaVendor;
 	private String strJavaVersion;
@@ -159,6 +160,10 @@ public class Viewer extends JmolViewer {
 		fileManager = new FileManager(this, modelAdapter);
 		repaintManager = new RepaintManager(this);
 		eval = new Eval(this);
+	}
+
+	public void setKEShading(boolean b) {
+		keShading = b;
 	}
 
 	/** TODO: clean up used objects to reclaim memory */

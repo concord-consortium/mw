@@ -183,7 +183,7 @@ class BallsRenderer extends ShapeRenderer {
 		int diameter = atom.screenDiameter;
 		if (viewer instanceof ExtendedViewer) {
 			if (atom.isGenericAtom()) {
-				if (atom.colixAtom != atom.colixCustom) {
+				if (atom.colixAtom != atom.colixCustom && !viewer.keShading) {
 					atom.colixAtom = atom.colixCustom;
 				}
 			}
