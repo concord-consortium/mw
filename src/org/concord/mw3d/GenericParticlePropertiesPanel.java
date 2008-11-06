@@ -152,11 +152,11 @@ class GenericParticlePropertiesPanel extends PropertiesPanel {
 		if ("X1".equals(symbol))
 			return massField[0];
 		if ("X2".equals(symbol))
-			return massField[0];
+			return massField[1];
 		if ("X3".equals(symbol))
-			return massField[0];
+			return massField[2];
 		if ("X4".equals(symbol))
-			return massField[0];
+			return massField[3];
 		return null;
 	}
 
@@ -164,11 +164,11 @@ class GenericParticlePropertiesPanel extends PropertiesPanel {
 		if ("X1".equals(symbol))
 			return sigmaField[0];
 		if ("X2".equals(symbol))
-			return sigmaField[0];
+			return sigmaField[1];
 		if ("X3".equals(symbol))
-			return sigmaField[0];
+			return sigmaField[2];
 		if ("X4".equals(symbol))
-			return sigmaField[0];
+			return sigmaField[3];
 		return null;
 	}
 
@@ -176,11 +176,11 @@ class GenericParticlePropertiesPanel extends PropertiesPanel {
 		if ("X1".equals(symbol))
 			return epsilonField[0];
 		if ("X2".equals(symbol))
-			return epsilonField[0];
+			return epsilonField[1];
 		if ("X3".equals(symbol))
-			return epsilonField[0];
+			return epsilonField[2];
 		if ("X4".equals(symbol))
-			return epsilonField[0];
+			return epsilonField[3];
 		return null;
 	}
 
