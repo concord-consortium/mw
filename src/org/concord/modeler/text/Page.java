@@ -1476,7 +1476,9 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 							list.add(attr);
 						}
 						else if (attr instanceof PageTextBox) {
-							list.addAll(((PageTextBox) attr).getEmbeddedComponents(JTextComponent.class));
+							List x = ((PageTextBox) attr).getEmbeddedComponents(JTextComponent.class);
+							if (x != null)
+								list.addAll(x);
 						}
 					}
 					else if (type.equals("Model Container")) {
