@@ -675,6 +675,7 @@ public abstract class MultipleChoice extends JPanel implements HtmlService, Sear
 			for (AbstractButton c : choices) {
 				buttonGroup.add(c);
 			}
+			buttonGroup.add(invisibleButton);
 		}
 		layChoices();
 		return true;
