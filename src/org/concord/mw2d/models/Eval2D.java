@@ -1323,7 +1323,8 @@ class Eval2D extends AbstractEval {
 			else {
 				selection = selectImages(str);
 			}
-			out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0) + " images are selected.");
+			if (!getAsTask())
+				out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0) + " images are selected.");
 			return true;
 		}
 
@@ -1337,7 +1338,9 @@ class Eval2D extends AbstractEval {
 			else {
 				selection = selectTextBoxes(str);
 			}
-			out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0) + " text boxes are selected.");
+			if (!getAsTask())
+				out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0)
+						+ " text boxes are selected.");
 			return true;
 		}
 
@@ -1351,7 +1354,8 @@ class Eval2D extends AbstractEval {
 			else {
 				selection = selectLines(str);
 			}
-			out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0) + " lines are selected.");
+			if (!getAsTask())
+				out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0) + " lines are selected.");
 			return true;
 		}
 
@@ -1365,7 +1369,9 @@ class Eval2D extends AbstractEval {
 			else {
 				selection = selectRectangles(str);
 			}
-			out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0) + " rectangles are selected.");
+			if (!getAsTask())
+				out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0)
+						+ " rectangles are selected.");
 			return true;
 		}
 
@@ -1379,7 +1385,9 @@ class Eval2D extends AbstractEval {
 			else {
 				selection = selectEllipses(str);
 			}
-			out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0) + " ellipses are selected.");
+			if (!getAsTask())
+				out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0)
+						+ " ellipses are selected.");
 			return true;
 		}
 
@@ -1393,7 +1401,8 @@ class Eval2D extends AbstractEval {
 			else {
 				selection = selectParticles(str);
 			}
-			out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0) + " atoms are selected.");
+			if (!getAsTask())
+				out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0) + " atoms are selected.");
 			return true;
 		}
 
@@ -1409,8 +1418,9 @@ class Eval2D extends AbstractEval {
 				else {
 					selection = selectRadialBonds(str);
 				}
-				out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0)
-						+ " radial bonds are selected.");
+				if (!getAsTask())
+					out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0)
+							+ " radial bonds are selected.");
 				return true;
 			}
 
@@ -1424,8 +1434,9 @@ class Eval2D extends AbstractEval {
 				else {
 					selection = selectAngularBonds(str);
 				}
-				out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0)
-						+ " angular bonds are selected.");
+				if (!getAsTask())
+					out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0)
+							+ " angular bonds are selected.");
 				return true;
 			}
 
@@ -1439,8 +1450,9 @@ class Eval2D extends AbstractEval {
 				else {
 					selection = selectMolecules(str);
 				}
-				out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0)
-						+ " molecules are selected.");
+				if (!getAsTask())
+					out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0)
+							+ " molecules are selected.");
 				return true;
 			}
 
@@ -1454,8 +1466,9 @@ class Eval2D extends AbstractEval {
 				else {
 					selection = selectObstacles(str);
 				}
-				out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0)
-						+ " obstacles are selected.");
+				if (!getAsTask())
+					out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0)
+							+ " obstacles are selected.");
 				return true;
 			}
 
@@ -1469,7 +1482,9 @@ class Eval2D extends AbstractEval {
 				else {
 					selection = selectElements(str);
 				}
-				out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0) + " atoms are selected.");
+				if (!getAsTask())
+					out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0)
+							+ " atoms are selected.");
 				return true;
 			}
 

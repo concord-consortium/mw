@@ -852,7 +852,8 @@ class Eval3D extends AbstractEval {
 			else {
 				selection = selectAtoms(str);
 			}
-			out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0) + " atoms are selected.");
+			if (!getAsTask())
+				out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0) + " atoms are selected.");
 			return true;
 		}
 		matcher = ELEMENT.matcher(clause); // select by element
@@ -865,7 +866,8 @@ class Eval3D extends AbstractEval {
 			else {
 				selection = selectElements(str);
 			}
-			out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0) + " atoms are selected.");
+			if (!getAsTask())
+				out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0) + " atoms are selected.");
 			return true;
 		}
 		matcher = RBOND.matcher(clause); // select by radial bond
@@ -878,8 +880,9 @@ class Eval3D extends AbstractEval {
 			else {
 				selection = selectRBonds(str);
 			}
-			out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0)
-					+ " radial bonds are selected.");
+			if (!getAsTask())
+				out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0)
+						+ " radial bonds are selected.");
 			return true;
 		}
 		matcher = ABOND.matcher(clause); // select by angular bond
@@ -892,8 +895,9 @@ class Eval3D extends AbstractEval {
 			else {
 				selection = selectABonds(str);
 			}
-			out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0)
-					+ " angular bonds are selected.");
+			if (!getAsTask())
+				out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0)
+						+ " angular bonds are selected.");
 			return true;
 		}
 		matcher = TBOND.matcher(clause); // select by torsional bond
@@ -906,8 +910,9 @@ class Eval3D extends AbstractEval {
 			else {
 				selection = selectTBonds(str);
 			}
-			out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0)
-					+ " torsional bonds are selected.");
+			if (!getAsTask())
+				out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0)
+						+ " torsional bonds are selected.");
 			return true;
 		}
 		matcher = MOLECULE.matcher(clause); // select by molecule
@@ -920,7 +925,9 @@ class Eval3D extends AbstractEval {
 			else {
 				selection = selectMolecules(str);
 			}
-			out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0) + " molecules are selected.");
+			if (!getAsTask())
+				out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0)
+						+ " molecules are selected.");
 			return true;
 		}
 		out(ScriptEvent.FAILED, "Unrecognized keyword in: " + clause);
