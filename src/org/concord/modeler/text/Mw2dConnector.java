@@ -31,6 +31,7 @@ import java.util.Map;
 import javax.swing.Action;
 import javax.swing.event.ChangeListener;
 
+import org.concord.modeler.ComponentMaker;
 import org.concord.modeler.Model;
 import org.concord.modeler.ModelCanvas;
 import org.concord.modeler.PageBarGraph;
@@ -261,7 +262,7 @@ class Mw2dConnector {
 							if (tooltip != null && !tooltip.trim().equals(""))
 								comboBox.setToolTipText(tooltip);
 							Object o = null;
-							if (name.equals("Execute MW script") || name.equals("Execute Jmol script")) {
+							if (ComponentMaker.isScriptActionKey(name)) {
 								o = comboBox.getClientProperty("Script");
 								if (o instanceof String) {
 									comboBox.setupScripts((String) o);

@@ -187,9 +187,10 @@ public class PageComboBox extends JComboBox implements Embeddable, ModelCommunic
 		Object[] o = (Object[]) a.getValue("options");
 		if (o == null)
 			return;
-		for (int i = 0; i < o.length; i++)
-			addItem(o[i]);
+		for (Object x : o)
+			addItem(x);
 		adjustSize();
+		resetSelectedIndex();
 	}
 
 	private void adjustSize() {
@@ -414,12 +415,29 @@ public class PageComboBox extends JComboBox implements Embeddable, ModelCommunic
 				adjustSize();
 				PageComboBox.super.setAction(a);
 				setToolTipText(tooltip);
+				Object o = PageComboBox.this.getClientProperty("Selected Index");
+				if (o instanceof Integer) {
+					ModelerUtilities.selectWithoutNotifyingListeners(PageComboBox.this, ((Integer) o).intValue());
+				}
+				else {
+					ModelerUtilities.selectWithoutNotifyingListeners(PageComboBox.this, 0);
+				}
 			}
 		});
 	}
 
 	private void enableComboBox(boolean b, Object source) {
 		ComponentMaker.enable(this, b, source, modelID, modelClass, page);
+	}
+
+	private void resetSelectedIndex() {
+		Object o = getClientProperty("Selected Index");
+		if (o instanceof Integer) {
+			ModelerUtilities.selectWithoutNotifyingListeners(this, ((Integer) o).intValue());
+		}
+		else {
+			ModelerUtilities.selectWithoutNotifyingListeners(this, 0);
+		}
 	}
 
 	public void modelUpdate(final ModelEvent e) {
@@ -449,6 +467,9 @@ public class PageComboBox extends JComboBox implements Embeddable, ModelCommunic
 			if (disabledAtRun)
 				enableComboBox(true, src);
 			break;
+		case ModelEvent.MODEL_RESET:
+			resetSelectedIndex();
+			break;
 		case ModelEvent.MODEL_INPUT:
 			Action a = getAction();
 			if (a != null) {
@@ -456,7 +477,7 @@ public class PageComboBox extends JComboBox implements Embeddable, ModelCommunic
 				if (o != null)
 					setSelectedItem(o);
 				String s = (String) a.getValue(Action.SHORT_DESCRIPTION);
-				if (s != null && s.equals("Import a model")) {
+				if ("Import a model".equals(s)) {
 					if (src instanceof PageMolecularViewer) {
 						String fn = FileUtilities.getFileName(((PageMolecularViewer) src).getResourceAddress());
 						String[] option = (String[]) a.getValue("options");

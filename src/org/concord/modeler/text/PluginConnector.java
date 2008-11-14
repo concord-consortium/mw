@@ -29,6 +29,7 @@ import java.util.Map;
 import javax.swing.Action;
 import javax.swing.event.ChangeListener;
 
+import org.concord.modeler.ComponentMaker;
 import org.concord.modeler.ModelCommunicator;
 import org.concord.modeler.PageButton;
 import org.concord.modeler.PageCheckBox;
@@ -162,7 +163,7 @@ class PluginConnector {
 							a.setEnabled(false);
 							comboBox.setAction(a);
 							Object o = null;
-							if (name.equals("Execute native script") || name.equals("Execute MW script")) {
+							if (ComponentMaker.isScriptActionKey(name)) {
 								o = comboBox.getClientProperty("Script");
 								if (o instanceof String) {
 									comboBox.setupScripts((String) o);

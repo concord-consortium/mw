@@ -29,6 +29,7 @@ import java.util.Map;
 import javax.swing.Action;
 import javax.swing.event.ChangeListener;
 
+import org.concord.modeler.ComponentMaker;
 import org.concord.modeler.PageButton;
 import org.concord.modeler.PageCheckBox;
 import org.concord.modeler.PageComboBox;
@@ -170,7 +171,7 @@ class JmolConnector {
 							a.setEnabled(false);
 							comboBox.setAction(a);
 							Object o = null;
-							if (name.equals("Execute MW script") || name.equals("Execute Jmol script")) {
+							if (ComponentMaker.isScriptActionKey(name)) {
 								o = comboBox.getClientProperty("Script");
 								if (o instanceof String) {
 									comboBox.setupScripts((String) o);
