@@ -781,7 +781,7 @@ public class Atom extends Particle {
 			}
 
 			if (model.view.getShowParticleIndex() || isAminoAcid() || isNucleotide()) {
-				g.setFont(SANSSERIF);
+				g.setFont(FONT_ON_TOP);
 				g.setColor(Color.black);
 				String s = model.view.getShowParticleIndex() ? "" + getIndex() : getName();
 				if (!"sp".equalsIgnoreCase(s) && s != null) {
