@@ -69,8 +69,7 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	final static double COS300 = Math.cos(Math.toRadians(300.0));
 	final static double SIN300 = Math.sin(Math.toRadians(300.0));
 	final static double ZERO = 0.000000000000001;
-	final static Font COURIER = new Font("Courier", Font.PLAIN, 10);
-	final static Font SANSSERIF = new Font("SansSerif", Font.PLAIN, 8);
+	final static Font FONT_ON_TOP = new Font("Arial", Font.PLAIN, 8);
 
 	static NumberFormat format;
 	static Color blinkColor;

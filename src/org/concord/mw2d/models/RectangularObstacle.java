@@ -1400,7 +1400,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 
 		if (((MDView) model.getView()).getShowParticleIndex()) {
 			g.setColor(cbg);
-			g.setFont(Particle.SANSSERIF);
+			g.setFont(Particle.FONT_ON_TOP);
 			g.drawString("" + model.getObstacles().indexOf(this), (int) (x + width * 0.5), (int) (y + height * 0.5));
 		}
 

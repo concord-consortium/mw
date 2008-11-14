@@ -631,7 +631,7 @@ public class GayBerneParticle extends UnitedAtom implements Rotatable {
 			}
 
 			if (model.view.getShowParticleIndex()) {
-				g.setFont(SANSSERIF);
+				g.setFont(FONT_ON_TOP);
 				FontMetrics fm = g.getFontMetrics();
 				int sw = fm.stringWidth("" + getIndex());
 				g.drawString("" + getIndex(), (int) (rx - 0.4 * sw), (int) (ry + 0.4 * fm.getHeight()));
