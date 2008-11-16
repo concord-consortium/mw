@@ -413,7 +413,6 @@ public class PageComboBox extends JComboBox implements Embeddable, ModelCommunic
 					putClientProperty("script" + i++, map.get(key));
 				}
 				adjustSize();
-				PageComboBox.super.setAction(a);
 				setToolTipText(tooltip);
 				Object o = PageComboBox.this.getClientProperty("Selected Index");
 				if (o instanceof Integer) {
@@ -422,6 +421,7 @@ public class PageComboBox extends JComboBox implements Embeddable, ModelCommunic
 				else {
 					ModelerUtilities.selectWithoutNotifyingListeners(PageComboBox.this, 0);
 				}
+				PageComboBox.super.setAction(a);
 			}
 		});
 	}
