@@ -692,6 +692,24 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		}
 	}
 
+	private static void openWithNewInstance(String url) {
+		String jarLocation = System.getProperty("java.class.path");
+		if (IS_MAC) {
+			jarLocation = ModelerUtilities.validateJarLocationOnMacOSX(jarLocation);
+		}
+		else if (System.getProperty("os.name").startsWith("Windows")) {
+			jarLocation = "\"" + jarLocation + "\"";
+		}
+		String s = "java -Dmw.newinstance=true -Dmw.window.left=50 -Dmw.window.top=20 -jar " + jarLocation
+				+ (hostIsLocal ? " local" : " remote") + " " + url;
+		try {
+			Runtime.getRuntime().exec(s);
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private static void reboot() {
 		String jarLocation = System.getProperty("java.class.path");
 		if (IS_MAC) {
@@ -2353,7 +2371,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		menuItem.setMnemonic(KeyEvent.VK_O);
 		menuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				openPageInNewWindow(navigator.getHomeDirectory() + "tutorial/index.cml");
+				openWithNewInstance(navigator.getHomeDirectory() + "tutorial/index.cml");
 			}
 		});
 		menu.add(menuItem);
@@ -3126,8 +3144,10 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 
 		checkMinimumJavaVersion();
 
-		// workaround to prevent the app from multiple instances
-		preventMultipleInstances(args);
+		if (!"true".equalsIgnoreCase(System.getProperty("mw.newinstance"))) {
+			// workaround to prevent the app from multiple instances
+			preventMultipleInstances(args);
+		}
 
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -3249,7 +3269,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		}
 
 		ModelerUtilities.testQuicktime();
-		
+
 	}
 
 }
