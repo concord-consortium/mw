@@ -2355,7 +2355,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		editor.addDisabledComponentWhileLoading(menu);
 
 		s = getInternationalText("UserManual");
-		menuItem = new JMenuItem(s != null ? s : "Online User's Manual");
+		menuItem = new JMenuItem(s != null ? s : "Open Online User's Manual in Current Window");
 		menuItem.setMnemonic(KeyEvent.VK_O);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0, true));
 		menuItem.addActionListener(new ActionListener() {
@@ -2367,7 +2367,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		editor.addEnabledComponentWhenNotEditable(menuItem);
 
 		s = getInternationalText("OpenUserManualInNewWindow");
-		menuItem = new JMenuItem(s != null ? s : "Open Online User's Manual in a New Window");
+		menuItem = new JMenuItem(s != null ? s : "Open Online User's Manual in New Window");
 		menuItem.setMnemonic(KeyEvent.VK_O);
 		menuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
