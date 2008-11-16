@@ -339,7 +339,7 @@ abstract public class PagePlugin extends JPanel implements Embeddable, Scriptabl
 			String s = "";
 			for (String name : parameterMap.keySet()) {
 				String value = parameterMap.get(name);
-				s += "{name=\"" + name + "\" value=\"" + value + "\"}";
+				s += "{name=\"" + name + "\" value=\"" + value + "\"}\n";
 			}
 			return s;
 		}
