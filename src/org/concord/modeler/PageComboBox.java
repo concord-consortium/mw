@@ -545,7 +545,7 @@ public class PageComboBox extends JComboBox implements Embeddable, ModelCommunic
 				int n = getItemCount();
 				for (int i = 0; i < n; i++) {
 					script.append("{option=\"" + getItemAt(i) + "\", script=\"" + getClientProperty("script" + i)
-							+ "\"}");
+							+ "\"}\n");
 				}
 			}
 			if (script.length() > 0)
