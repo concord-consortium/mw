@@ -700,7 +700,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		else if (System.getProperty("os.name").startsWith("Windows")) {
 			jarLocation = "\"" + jarLocation + "\"";
 		}
-		String s = "java -Dmw.newinstance=true -Dmw.window.left=50 -Dmw.window.top=20 -jar " + jarLocation
+		String s = "java -Xmx128M -Dmw.newinstance=true -Dmw.window.left=50 -Dmw.window.top=20 -jar " + jarLocation
 				+ (hostIsLocal ? " local" : " remote") + " " + url;
 		try {
 			Runtime.getRuntime().exec(s);
