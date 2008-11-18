@@ -35,6 +35,7 @@ public class QuantumRule implements Serializable {
 
 	private Map<Object, Float> probabilityMap;
 	private boolean disallowIonization;
+	private boolean scatterPhotonIfNotAbsorbed;
 
 	public QuantumRule() {
 		probabilityMap = new HashMap<Object, Float>();
@@ -43,6 +44,14 @@ public class QuantumRule implements Serializable {
 	public void reset() {
 		probabilityMap.clear();
 		disallowIonization = false;
+	}
+
+	public void setScatterPhotonIfNotAbsorbed(boolean b) {
+		scatterPhotonIfNotAbsorbed = b;
+	}
+
+	public boolean getScatterPhotonIfNotAbsorbed() {
+		return scatterPhotonIfNotAbsorbed;
 	}
 
 	public void setIonizationDisallowed(boolean b) {

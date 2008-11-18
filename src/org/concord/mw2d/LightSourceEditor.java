@@ -30,6 +30,7 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.Hashtable;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
@@ -61,8 +62,7 @@ class LightSourceEditor extends JPanel {
 	private JCheckBox lightSwitch;
 	private JRadioButton westButton, eastButton, northButton, southButton, otherButton;
 	private JRadioButton monochromaticButton, whiteButton;
-	private JRadioButton singleBeamButton, multiBeamButton;
-	private JSlider frequencySlider, intensitySlider;
+	private JSlider nbeamSlider, frequencySlider, intensitySlider;
 	private JLabel label, degreeLabel;
 	private IntegerTextField angleField;
 	private JPanel directionPanel;
@@ -204,33 +204,26 @@ class LightSourceEditor extends JPanel {
 		p = new JPanel(new BorderLayout());
 
 		JPanel p1 = new JPanel();
-		p1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Beams"));
-		bg = new ButtonGroup();
-
-		singleBeamButton = new JRadioButton("Single");
-		singleBeamButton.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				if (e.getStateChange() == ItemEvent.SELECTED) {
-					model.getLightSource().setSingleBeam(singleBeamButton.isSelected());
-					model.notifyChange();
-				}
+		p1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Number of Beams"));
+		nbeamSlider = new JSlider(1, 20, 10);
+		Hashtable<Integer, JLabel> tableOfLabels = new Hashtable<Integer, JLabel>();
+		tableOfLabels.put(1, new JLabel("1"));
+		tableOfLabels.put(20, new JLabel("20"));
+		nbeamSlider.setLabelTable(tableOfLabels);
+		nbeamSlider.setPaintLabels(true);
+		nbeamSlider.setSnapToTicks(true);
+		nbeamSlider.setPaintTicks(true);
+		nbeamSlider.setMajorTickSpacing(2);
+		nbeamSlider.setMinorTickSpacing(1);
+		nbeamSlider.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				if (intensitySlider.getValueIsAdjusting())
+					return;
+				model.getLightSource().setNumberOfBeams(nbeamSlider.getValue());
+				model.notifyChange();
 			}
 		});
-		bg.add(singleBeamButton);
-		p1.add(singleBeamButton);
-
-		multiBeamButton = new JRadioButton("Multiple");
-		multiBeamButton.setSelected(true);
-		multiBeamButton.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				if (e.getStateChange() == ItemEvent.SELECTED) {
-					model.getLightSource().setSingleBeam(singleBeamButton.isSelected());
-					model.notifyChange();
-				}
-			}
-		});
-		bg.add(multiBeamButton);
-		p1.add(multiBeamButton);
+		p1.add(nbeamSlider);
 
 		p.add(p1, BorderLayout.NORTH);
 
@@ -285,8 +278,7 @@ class LightSourceEditor extends JPanel {
 		southButton.setEnabled(b);
 		monochromaticButton.setEnabled(b);
 		whiteButton.setEnabled(b);
-		singleBeamButton.setEnabled(b);
-		multiBeamButton.setEnabled(b);
+		nbeamSlider.setEnabled(b);
 		frequencySlider.setEnabled(b);
 		intensitySlider.setEnabled(b);
 		label.setEnabled(b);
@@ -314,9 +306,11 @@ class LightSourceEditor extends JPanel {
 			boolean b1 = model.getLightSource().isMonochromatic();
 			selectWithoutNotifyingListeners(monochromaticButton, b1);
 			selectWithoutNotifyingListeners(whiteButton, !b1);
-			boolean b2 = model.getLightSource().isSingleBeam();
-			selectWithoutNotifyingListeners(singleBeamButton, b2);
-			selectWithoutNotifyingListeners(multiBeamButton, !b2);
+			int nbeam = model.getLightSource().getNumberOfBeams();
+			boolean b2 = model.getLightSource().isSingleBeam(); // backward compatible
+			if (b2)
+				nbeam = 1;
+			nbeamSlider.setValue(nbeam);
 			enableEditor(true);
 			frequencySlider.setEnabled(b1);
 			setupFrequencySlider(model);
