@@ -452,7 +452,7 @@ public final class ModelerUtilities {
 		return false;
 	}
 
-	public static void updateFileChooserUI(JFileChooser fc) {
+	private static void updateFileChooserUI(JFileChooser fc) {
 		if (Modeler.isMac()) {
 			LookAndFeel lnf = UIManager.getLookAndFeel();
 			// JFileChooser on Mac OS X with the native L&F doesn't work well.
