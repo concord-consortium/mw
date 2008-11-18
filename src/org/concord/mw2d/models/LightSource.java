@@ -37,6 +37,7 @@ public class LightSource implements Serializable {
 
 	private boolean monochromatic = true;
 	private boolean singleBeam;
+	private int nBeam;
 	private float frequency = 1.0f;
 	private int radiationPeriod = 1000;
 	private boolean turnOn;
@@ -80,13 +81,13 @@ public class LightSource implements Serializable {
 	}
 
 	public byte getDirection() {
-		if (Math.abs(angle) < 0.001f)
+		if (Math.abs(angle) < 0.001)
 			return WEST;
-		if (Math.abs(angle - Math.PI) < 0.001f)
+		if (Math.abs(angle - Math.PI) < 0.001)
 			return EAST;
-		if (Math.abs(angle - 0.5 * Math.PI) < 0.001f)
+		if (Math.abs(angle - 0.5 * Math.PI) < 0.001)
 			return NORTH;
-		if (Math.abs(angle + 0.5 * Math.PI) < 0.001f)
+		if (Math.abs(angle + 0.5 * Math.PI) < 0.001)
 			return SOUTH;
 		return OTHER;
 	}
@@ -113,6 +114,14 @@ public class LightSource implements Serializable {
 
 	public boolean isSingleBeam() {
 		return singleBeam;
+	}
+
+	public void setNumberOfBeams(int n) {
+		nBeam = n;
+	}
+
+	public int getNumberOfBeams() {
+		return nBeam;
 	}
 
 	public static float getInfraredFrequency() {

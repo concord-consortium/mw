@@ -2358,7 +2358,7 @@ public abstract class AtomicModel extends MDModel {
 					dy = p.y - atom[k].ry;
 					if (dx * dx + dy * dy < s2) {
 						if (photonicExcitor == null)
-							photonicExcitor = new PhotonicExcitor(AtomicModel.this);
+							photonicExcitor = new PhotonicExcitor(this);
 						Photon p2 = photonicExcitor.interact(p, atom[k]);
 						if (p2 == p) {
 							p.setModel(null);
@@ -2371,6 +2371,11 @@ public abstract class AtomicModel extends MDModel {
 							tmpList.add(p2);
 							// notifyModelListeners(new ModelEvent(this, "Photon emitted", null, p2));
 							// postone to be handled by RectangularBoundary when the photon exits
+						}
+						else {
+							// the photon wasn't absorbed. Should it shine through, or should it be scattered?
+							if (quantumRule.getScatterPhotonIfNotAbsorbed())
+								p.setAngle((float) (Math.random() * Math.PI * 2));
 						}
 					}
 				}
@@ -2477,9 +2482,58 @@ public abstract class AtomicModel extends MDModel {
 		}
 	}
 
+	private void shootSingleBeam(int direct, float angle) {
+		float w = (float) boundary.width;
+		float h = (float) boundary.height;
+		switch (direct) {
+		case LightSource.WEST:
+			addPhotonAtAngle(0, h * 0.5f, angle);
+			break;
+		case LightSource.EAST:
+			addPhotonAtAngle(w, h * 0.5f, angle);
+			break;
+		case LightSource.NORTH:
+			addPhotonAtAngle(w * 0.5f, 0, angle);
+			break;
+		case LightSource.SOUTH:
+			addPhotonAtAngle(w * 0.5f, h, angle);
+			break;
+		case LightSource.OTHER:
+			shootAtAngle(0, 0, 0, 0, angle);
+			break;
+		}
+	}
+
+	private void shootAtAngle(int m, int n, float dx, float dy, float angle) {
+		float w = (float) boundary.width;
+		float h = (float) boundary.height;
+		if (angle > 0 && angle < 0.5 * Math.PI) {
+			for (int i = 1; i <= m; i++)
+				addPhotonAtAngle(dx * i, 0, angle);
+			for (int i = 0; i <= n; i++)
+				addPhotonAtAngle(0, dy * i, angle);
+		}
+		else if (angle < 0 && angle > -0.5 * Math.PI) {
+			for (int i = 1; i <= m; i++)
+				addPhotonAtAngle(dx * i, h, angle);
+			for (int i = 0; i <= n; i++)
+				addPhotonAtAngle(0, h - dy * i, angle);
+		}
+		else if (angle < Math.PI && angle > 0.5 * Math.PI) {
+			for (int i = 0; i <= m; i++)
+				addPhotonAtAngle(w - dx * i, 0, angle);
+			for (int i = 1; i <= n; i++)
+				addPhotonAtAngle(w, dy * i, angle);
+		}
+		else if (angle > -Math.PI && angle < -0.5 * Math.PI) {
+			for (int i = 0; i <= m; i++)
+				addPhotonAtAngle(w - dx * i, h, angle);
+			for (int i = 1; i <= n; i++)
+				addPhotonAtAngle(w, h - dy * i, angle);
+		}
+	}
+
 	private void shootPhotons() {
-		double w = boundary.width;
-		double h = boundary.height;
 		float angle = 0;
 		int direct = lightSource.getDirection();
 		switch (direct) {
@@ -2496,80 +2550,87 @@ public abstract class AtomicModel extends MDModel {
 			angle = lightSource.getAngleOfIncidence();
 			break;
 		}
-		if (lightSource.isSingleBeam()) {
+		int nBeam = lightSource.getNumberOfBeams();
+		if (lightSource.isSingleBeam() || nBeam == 1) {
+			shootSingleBeam(direct, angle);
+			return;
+		}
+		float w = (float) boundary.width;
+		float h = (float) boundary.height;
+		if (nBeam > 0) {
+			float spacing;
 			switch (direct) {
 			case LightSource.WEST:
-				addPhotonAtAngle(0, (int) (h * 0.5), angle);
+				spacing = h / (nBeam + 1);
+				for (int i = 1; i <= nBeam; i++)
+					addPhotonAtAngle(0, spacing * i, angle);
 				break;
 			case LightSource.EAST:
-				addPhotonAtAngle((int) w, (int) (h * 0.5), angle);
+				spacing = h / (nBeam + 1);
+				for (int i = 1; i <= nBeam; i++)
+					addPhotonAtAngle(w, spacing * i, angle);
 				break;
 			case LightSource.NORTH:
-				addPhotonAtAngle((int) (w * 0.5), 0, angle);
+				spacing = w / (nBeam + 1);
+				for (int i = 1; i <= nBeam; i++)
+					addPhotonAtAngle(spacing * i, 0, angle);
 				break;
 			case LightSource.SOUTH:
-				addPhotonAtAngle((int) (w * 0.5), (int) h, angle);
+				spacing = w / (nBeam + 1);
+				for (int i = 1; i <= nBeam; i++)
+					addPhotonAtAngle(spacing * i, h, angle);
+				break;
+			case LightSource.OTHER:
+				float s = (float) Math.abs(Math.sin(angle));
+				float c = (float) Math.abs(Math.cos(angle));
+				float length = s * h < c * w ? h / c : w / s;
+				spacing = length / nBeam;
+				float dx = spacing / s;
+				float dy = spacing / c;
+				int m = (int) (w / dx);
+				int n = (int) (h / dy);
+				shootAtAngle(m, n, dx, dy, angle);
 				break;
 			}
 		}
 		else {
-			int spacing = 40;
-			switch (direct) {
-			case LightSource.WEST:
-				int n = (int) (h / spacing);
-				for (int i = 0; i <= n; i++)
-					addPhotonAtAngle(0, spacing * i, angle);
-				break;
-			case LightSource.EAST:
-				n = (int) (h / spacing);
-				for (int i = 0; i <= n; i++)
-					addPhotonAtAngle((int) w, spacing * i, angle);
-				break;
-			case LightSource.NORTH:
-				int m = (int) (w / spacing);
-				for (int i = 0; i <= m; i++)
-					addPhotonAtAngle(spacing * i, 0, angle);
-				break;
-			case LightSource.SOUTH:
-				m = (int) (w / spacing);
-				for (int i = 0; i <= m; i++)
-					addPhotonAtAngle(spacing * i, (int) h, angle);
-				break;
-			case LightSource.OTHER:
-				int dx = (int) (spacing / Math.abs(Math.sin(angle)));
-				int dy = (int) (spacing / Math.abs(Math.cos(angle)));
-				m = (int) (w / dx);
-				n = (int) (h / dy);
-				if (angle > 0 && angle < 0.5 * Math.PI) {
-					for (int i = 1; i <= m; i++)
-						addPhotonAtAngle(dx * i, 0, angle);
+			// backward compatible
+			if (!lightSource.isSingleBeam()) {
+				float spacing = 40;
+				switch (direct) {
+				case LightSource.WEST:
+					int n = (int) (h / spacing);
 					for (int i = 0; i <= n; i++)
-						addPhotonAtAngle(0, dy * i, angle);
-				}
-				else if (angle < 0 && angle > -0.5 * Math.PI) {
-					for (int i = 1; i <= m; i++)
-						addPhotonAtAngle(dx * i, (int) h, angle);
+						addPhotonAtAngle(0, spacing * i, angle);
+					break;
+				case LightSource.EAST:
+					n = (int) (h / spacing);
 					for (int i = 0; i <= n; i++)
-						addPhotonAtAngle(0, (int) (h - dy * i), angle);
-				}
-				else if (angle < Math.PI && angle > 0.5 * Math.PI) {
+						addPhotonAtAngle(w, spacing * i, angle);
+					break;
+				case LightSource.NORTH:
+					int m = (int) (w / spacing);
 					for (int i = 0; i <= m; i++)
-						addPhotonAtAngle((int) (w - dx * i), 0, angle);
-					for (int i = 1; i <= n; i++)
-						addPhotonAtAngle((int) w, dy * i, angle);
-				}
-				else if (angle > -Math.PI && angle < -0.5 * Math.PI) {
+						addPhotonAtAngle(spacing * i, 0, angle);
+					break;
+				case LightSource.SOUTH:
+					m = (int) (w / spacing);
 					for (int i = 0; i <= m; i++)
-						addPhotonAtAngle((int) (w - dx * i), (int) h, angle);
-					for (int i = 1; i <= n; i++)
-						addPhotonAtAngle((int) w, (int) (h - dy * i), angle);
+						addPhotonAtAngle(spacing * i, h, angle);
+					break;
+				case LightSource.OTHER:
+					float dx = (float) (spacing / Math.abs(Math.sin(angle)));
+					float dy = (float) (spacing / Math.abs(Math.cos(angle)));
+					m = (int) (w / dx);
+					n = (int) (h / dy);
+					shootAtAngle(m, n, dx, dy, angle);
+					break;
 				}
-				break;
 			}
 		}
 	}
 
-	private void addPhotonAtAngle(int x, int y, float angle) {
+	private void addPhotonAtAngle(float x, float y, float angle) {
 		float freq = lightSource.isMonochromatic() ? lightSource.getFrequency() : LightSource.getRandomFrequency();
 		Photon p = new Photon(x, y, freq);
 		p.setAngle(angle);
