@@ -561,24 +561,38 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 		double x1 = getMaxX();
 		double y1 = getMaxY();
 		if (p.x < x1 && p.x > x0 && p.y < y1 && p.y > y0) {
-			float ninty = (float) (0.5 * Math.PI);
-			double cos = Math.cos(p.getAngle()) * Photon.getC() * model.getTimeStep();
-			if (p.x - cos < x0) {
-				p.x = (float) x0;
-				p.setAngle(p.getAngle() > 0 ? p.getAngle() + ninty : p.getAngle() - ninty);
+			if (Math.abs(p.getAngle()) < 0.001) {
+				p.setAngle((float) Math.PI);
 			}
-			else if (p.x - cos > x1) {
-				p.x = (float) x1;
-				p.setAngle(p.getAngle() > 0 ? p.getAngle() - ninty : p.getAngle() + ninty);
+			else if (Math.abs(p.getAngle() + Math.PI) < 0.001) {
+				p.setAngle(0);
 			}
-			double sin = Math.sin(p.getAngle()) * Photon.getC() * model.getTimeStep();
-			if (p.y - sin < y0) {
-				p.y = (float) y0;
-				p.setAngle(-p.getAngle());
+			else if (Math.abs(p.getAngle() - Math.PI * 0.5) < 0.001) {
+				p.setAngle(-(float) (Math.PI * 0.5));
 			}
-			else if (p.y - sin > y1) {
-				p.y = (float) y1;
-				p.setAngle(-p.getAngle());
+			else if (Math.abs(p.getAngle() + Math.PI * 0.5) < 0.001) {
+				p.setAngle((float) (Math.PI * 0.5));
+			}
+			else {
+				float ninty = (float) (0.5 * Math.PI);
+				double cos = Math.cos(p.getAngle()) * Photon.getC() * model.getTimeStep();
+				if (p.x - cos < x0) {
+					p.x = (float) x0;
+					p.setAngle(p.getAngle() > 0 ? p.getAngle() + ninty : p.getAngle() - ninty);
+				}
+				else if (p.x - cos > x1) {
+					p.x = (float) x1;
+					p.setAngle(p.getAngle() > 0 ? p.getAngle() - ninty : p.getAngle() + ninty);
+				}
+				double sin = Math.sin(p.getAngle()) * Photon.getC() * model.getTimeStep();
+				if (p.y - sin < y0) {
+					p.y = (float) y0;
+					p.setAngle(-p.getAngle());
+				}
+				else if (p.y - sin > y1) {
+					p.y = (float) y1;
+					p.setAngle(-p.getAngle());
+				}
 			}
 		}
 	}
