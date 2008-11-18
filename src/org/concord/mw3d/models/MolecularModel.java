@@ -754,13 +754,15 @@ public class MolecularModel {
 
 	public void setMoleculeSelectionSet(BitSet set) {
 		view.setAtomSelected(-1);
-		int n = molecules.size();
-		if (n <= 0)
-			return;
-		setExclusiveSelection(false);
-		synchronized (molecules) {
-			for (int i = 0; i < n; i++) {
-				molecules.get(i).setSelected(set.get(i));
+		if (set != null) {
+			int n = molecules.size();
+			if (n <= 0)
+				return;
+			setExclusiveSelection(false);
+			synchronized (molecules) {
+				for (int i = 0; i < n; i++) {
+					molecules.get(i).setSelected(set.get(i));
+				}
 			}
 		}
 	}
