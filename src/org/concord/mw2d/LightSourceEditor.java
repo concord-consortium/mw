@@ -32,7 +32,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Hashtable;
 
-import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.Icon;
@@ -48,6 +47,7 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.concord.modeler.ModelerUtilities;
 import org.concord.modeler.event.AbstractChange;
 import org.concord.modeler.ui.IntegerTextField;
 import org.concord.mw2d.models.LightSource;
@@ -72,7 +72,9 @@ class LightSourceEditor extends JPanel {
 		super(new BorderLayout());
 
 		final JPanel p2 = new JPanel(new GridLayout(2, 1));
-		p2.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Photon Direction"));
+		String s = MDView.getInternationalText("PhotonDirection");
+		p2.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), s != null ? s
+				: "Photon Direction"));
 		add(p2, BorderLayout.NORTH);
 
 		ButtonGroup bg = new ButtonGroup();
@@ -80,7 +82,8 @@ class LightSourceEditor extends JPanel {
 		JPanel p = new JPanel();
 		p2.add(p);
 
-		westButton = new JRadioButton("East");
+		s = MDView.getInternationalText("East");
+		westButton = new JRadioButton(s != null ? s : "East");
 		westButton.setSelected(true);
 		westButton.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
@@ -93,7 +96,8 @@ class LightSourceEditor extends JPanel {
 		bg.add(westButton);
 		p.add(westButton);
 
-		eastButton = new JRadioButton("West");
+		s = MDView.getInternationalText("West");
+		eastButton = new JRadioButton(s != null ? s : "West");
 		eastButton.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -105,7 +109,8 @@ class LightSourceEditor extends JPanel {
 		bg.add(eastButton);
 		p.add(eastButton);
 
-		northButton = new JRadioButton("South");
+		s = MDView.getInternationalText("South");
+		northButton = new JRadioButton(s != null ? s : "South");
 		northButton.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -117,7 +122,8 @@ class LightSourceEditor extends JPanel {
 		bg.add(northButton);
 		p.add(northButton);
 
-		southButton = new JRadioButton("North");
+		s = MDView.getInternationalText("North");
+		southButton = new JRadioButton(s != null ? s : "North");
 		southButton.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -132,7 +138,8 @@ class LightSourceEditor extends JPanel {
 		directionPanel = new JPanel();
 		p2.add(directionPanel);
 
-		otherButton = new JRadioButton("Other:");
+		s = MDView.getInternationalText("Other");
+		otherButton = new JRadioButton((s != null ? s : "Other") + ":");
 		otherButton.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -168,11 +175,14 @@ class LightSourceEditor extends JPanel {
 		degreeLabel = new JLabel("\u00B0");
 
 		p = new JPanel();
-		p.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Monochromaticity"));
+		s = MDView.getInternationalText("Monochromaticity");
+		p.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), s != null ? s
+				: "Monochromaticity"));
 
 		bg = new ButtonGroup();
 
-		monochromaticButton = new JRadioButton("Monochromatic");
+		s = MDView.getInternationalText("Monochromatic");
+		monochromaticButton = new JRadioButton(s != null ? s : "Monochromatic");
 		monochromaticButton.setSelected(true);
 		monochromaticButton.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
@@ -186,7 +196,8 @@ class LightSourceEditor extends JPanel {
 		bg.add(monochromaticButton);
 		p.add(monochromaticButton);
 
-		whiteButton = new JRadioButton("White");
+		s = MDView.getInternationalText("White");
+		whiteButton = new JRadioButton(s != null ? s : "White");
 		whiteButton.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -204,7 +215,9 @@ class LightSourceEditor extends JPanel {
 		p = new JPanel(new BorderLayout());
 
 		JPanel p1 = new JPanel();
-		p1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Number of Beams"));
+		s = MDView.getInternationalText("NumberOfBeams");
+		p1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), s != null ? s
+				: "Number of Beams"));
 		nbeamSlider = new JSlider(1, 20, 10);
 		Hashtable<Integer, JLabel> tableOfLabels = new Hashtable<Integer, JLabel>();
 		tableOfLabels.put(1, new JLabel("1"));
@@ -228,14 +241,16 @@ class LightSourceEditor extends JPanel {
 		p.add(p1, BorderLayout.NORTH);
 
 		p1 = new JPanel();
-		p1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Frequency"));
+		s = MDView.getInternationalText("Frequency");
+		p1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), s != null ? s : "Frequency"));
 		p.add(p1, BorderLayout.CENTER);
 
 		frequencySlider = new JSlider();
 		p1.add(frequencySlider);
 
 		p1 = new JPanel();
-		p1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Intensity"));
+		s = MDView.getInternationalText("Intensity");
+		p1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), s != null ? s : "Intensity"));
 		p.add(p1, BorderLayout.SOUTH);
 
 		intensitySlider = new JSlider(0, 20, 10);
@@ -255,7 +270,8 @@ class LightSourceEditor extends JPanel {
 
 		add(p, BorderLayout.SOUTH);
 
-		lightSwitch = new JCheckBox("On");
+		s = MDView.getInternationalText("On");
+		lightSwitch = new JCheckBox(s != null ? s : "On");
 		lightSwitch.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				boolean b = e.getStateChange() == ItemEvent.SELECTED;
@@ -302,10 +318,10 @@ class LightSourceEditor extends JPanel {
 
 	private void setLightSource() {
 		if (model.getLightSource().isOn()) {
-			selectWithoutNotifyingListeners(lightSwitch, true);
+			ModelerUtilities.selectWithoutNotifyingListeners(lightSwitch, true);
 			boolean b1 = model.getLightSource().isMonochromatic();
-			selectWithoutNotifyingListeners(monochromaticButton, b1);
-			selectWithoutNotifyingListeners(whiteButton, !b1);
+			ModelerUtilities.selectWithoutNotifyingListeners(monochromaticButton, b1);
+			ModelerUtilities.selectWithoutNotifyingListeners(whiteButton, !b1);
 			int nbeam = model.getLightSource().getNumberOfBeams();
 			boolean b2 = model.getLightSource().isSingleBeam(); // backward compatible
 			if (b2)
@@ -318,19 +334,19 @@ class LightSourceEditor extends JPanel {
 					/ 100);
 			switch (model.getLightSource().getDirection()) {
 			case LightSource.WEST:
-				selectWithoutNotifyingListeners(westButton, true);
+				ModelerUtilities.selectWithoutNotifyingListeners(westButton, true);
 				break;
 			case LightSource.EAST:
-				selectWithoutNotifyingListeners(eastButton, true);
+				ModelerUtilities.selectWithoutNotifyingListeners(eastButton, true);
 				break;
 			case LightSource.NORTH:
-				selectWithoutNotifyingListeners(northButton, true);
+				ModelerUtilities.selectWithoutNotifyingListeners(northButton, true);
 				break;
 			case LightSource.SOUTH:
-				selectWithoutNotifyingListeners(southButton, true);
+				ModelerUtilities.selectWithoutNotifyingListeners(southButton, true);
 				break;
 			case LightSource.OTHER:
-				selectWithoutNotifyingListeners(otherButton, true);
+				ModelerUtilities.selectWithoutNotifyingListeners(otherButton, true);
 				angleField.setValue((int) Math.round(Math.toDegrees(model.getLightSource().getAngleOfIncidence())));
 				directionPanel.add(angleField);
 				directionPanel.add(degreeLabel);
@@ -340,7 +356,7 @@ class LightSourceEditor extends JPanel {
 			}
 		}
 		else {
-			selectWithoutNotifyingListeners(lightSwitch, false);
+			ModelerUtilities.selectWithoutNotifyingListeners(lightSwitch, false);
 			enableEditor(false);
 		}
 	}
@@ -354,7 +370,9 @@ class LightSourceEditor extends JPanel {
 
 		setLightSource();
 
-		final JDialog d = new JDialog(JOptionPane.getFrameForComponent(parent), "Edit Light Source", true);
+		String s = MDView.getInternationalText("EditLightSource");
+		final JDialog d = new JDialog(JOptionPane.getFrameForComponent(parent), s != null ? s : "Edit Light Source",
+				true);
 		d.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		d.getContentPane().add(this, BorderLayout.CENTER);
 
@@ -364,7 +382,8 @@ class LightSourceEditor extends JPanel {
 		p.add(label);
 		p.add(lightSwitch);
 
-		JButton b = new JButton("Close");
+		s = MDView.getInternationalText("CloseButton");
+		JButton b = new JButton(s != null ? s : "Close");
 		b.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				d.dispose();
@@ -385,35 +404,6 @@ class LightSourceEditor extends JPanel {
 			return;
 		for (int i = 0; i < cl.length; i++)
 			slider.removeChangeListener(cl[i]);
-	}
-
-	static void selectWithoutNotifyingListeners(AbstractButton ab, boolean selected) {
-
-		if (ab == null)
-			return;
-
-		ItemListener[] il = ab.getItemListeners();
-		if (il != null) {
-			for (int i = 0; i < il.length; i++)
-				ab.removeItemListener(il[i]);
-		}
-		ActionListener[] al = ab.getActionListeners();
-		if (al != null) {
-			for (int i = 0; i < al.length; i++)
-				ab.removeActionListener(al[i]);
-		}
-
-		ab.setSelected(selected);
-
-		if (il != null) {
-			for (int i = 0; i < il.length; i++)
-				ab.addItemListener(il[i]);
-		}
-		if (al != null) {
-			for (int i = 0; i < al.length; i++)
-				ab.addActionListener(al[i]);
-		}
-
 	}
 
 }
