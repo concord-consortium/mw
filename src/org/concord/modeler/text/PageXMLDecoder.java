@@ -3625,10 +3625,6 @@ final class PageXMLDecoder {
 				cb.setName(actionName);
 				actionName = null;
 			}
-			if (toolTip != null) {
-				cb.setToolTipText(toolTip);
-				toolTip = null;
-			}
 			if (selectedIndex > 0) {
 				cb.putClientProperty("Selected Index", new Integer(selectedIndex));
 				selectedIndex = 0;
@@ -3648,6 +3644,10 @@ final class PageXMLDecoder {
 			if (disabledAtScript) {
 				cb.setDisabledAtScript(disabledAtScript);
 				disabledAtScript = false;
+			}
+			if (toolTip != null) {
+				cb.setToolTipText(toolTip);
+				toolTip = null;
 			}
 			cb.setChangable(page.isEditable());
 			return cb;
