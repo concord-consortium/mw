@@ -2374,8 +2374,8 @@ public abstract class AtomicModel extends MDModel {
 						}
 						else {
 							// the photon wasn't absorbed. Should it shine through, or should it be scattered?
-							if (quantumRule.getScatterPhotonIfNotAbsorbed())
-								p.setAngle((float) (Math.random() * Math.PI * 2));
+							if (Math.random() < quantumRule.getScatterProbability())
+								p.setAngle((float) (p.getAngle() + Math.PI * (1 + 0.2 * (0.5 - Math.random()))));
 						}
 					}
 				}

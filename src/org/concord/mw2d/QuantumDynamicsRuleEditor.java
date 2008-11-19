@@ -31,9 +31,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.Hashtable;
 
 import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -42,9 +42,11 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.JRadioButton;
+import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import org.concord.modeler.Modeler;
 import org.concord.modeler.ModelerUtilities;
@@ -59,7 +61,7 @@ class QuantumDynamicsRuleEditor extends JPanel {
 	private PieChart pieChart2;
 	private JComboBox whatIsComboBox;
 	private JCheckBox ionizationCheckBox;
-	private JRadioButton scatterRadioButton, passThroughRadioButton;
+	private JSlider scatterProbSlider;
 
 	QuantumDynamicsRuleEditor() {
 
@@ -118,28 +120,25 @@ class QuantumDynamicsRuleEditor extends JPanel {
 		optionPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10),
 				BorderFactory.createTitledBorder(s != null ? s : "When a photon isn't absorbed")));
 		panel.add(optionPanel, BorderLayout.SOUTH);
-		ButtonGroup bg = new ButtonGroup();
-		s = MDView.getInternationalText("Scatter");
-		scatterRadioButton = new JRadioButton(s != null ? s : "Scatter");
-		scatterRadioButton.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				if (e.getStateChange() == ItemEvent.SELECTED)
-					model.getQuantumRule().setScatterPhotonIfNotAbsorbed(true);
+		scatterProbSlider = new JSlider(0, 100, 0);
+		Hashtable<Integer, JLabel> tableOfLabels = new Hashtable<Integer, JLabel>();
+		s = MDView.getInternationalText("CompletelyPassThrough");
+		tableOfLabels.put(1, new JLabel(s != null ? s : "Completely pass through"));
+		s = MDView.getInternationalText("CompletelyScatter");
+		tableOfLabels.put(100, new JLabel(s != null ? s : "Completely scatter"));
+		scatterProbSlider.setLabelTable(tableOfLabels);
+		scatterProbSlider.setPaintLabels(true);
+		scatterProbSlider.setPreferredSize(new Dimension(320, 80));
+		scatterProbSlider.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				if (scatterProbSlider.getValueIsAdjusting())
+					return;
+				model.getQuantumRule().setScatterProbability(
+						(float) scatterProbSlider.getValue() / (float) scatterProbSlider.getMaximum());
+				model.notifyChange();
 			}
 		});
-		optionPanel.add(scatterRadioButton);
-		bg.add(scatterRadioButton);
-		s = MDView.getInternationalText("PassThrough");
-		passThroughRadioButton = new JRadioButton(s != null ? s : "Pass through");
-		passThroughRadioButton.setSelected(true);
-		passThroughRadioButton.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				if (e.getStateChange() == ItemEvent.SELECTED)
-					model.getQuantumRule().setScatterPhotonIfNotAbsorbed(false);
-			}
-		});
-		bg.add(passThroughRadioButton);
-		optionPanel.add(passThroughRadioButton);
+		optionPanel.add(scatterProbSlider);
 
 		// create panel for de-excitation
 
@@ -206,12 +205,9 @@ class QuantumDynamicsRuleEditor extends JPanel {
 		pieChart2.setPercent(0, 1.0f - x);
 		pieChart2.setPercent(1, x);
 
+		scatterProbSlider.setValue((int) (rule.getScatterProbability() * 100));
 		ModelerUtilities.selectWithoutNotifyingListeners(ionizationCheckBox, !model.getQuantumRule()
 				.isIonizationDisallowed());
-		ModelerUtilities.selectWithoutNotifyingListeners(scatterRadioButton, model.getQuantumRule()
-				.getScatterPhotonIfNotAbsorbed());
-		ModelerUtilities.selectWithoutNotifyingListeners(passThroughRadioButton, !model.getQuantumRule()
-				.getScatterPhotonIfNotAbsorbed());
 
 		String s = MDView.getInternationalText("QuantumDynamicsRules");
 		final JDialog d = new JDialog(JOptionPane.getFrameForComponent(parent), s != null ? s
