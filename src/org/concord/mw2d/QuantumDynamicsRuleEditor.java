@@ -128,7 +128,7 @@ class QuantumDynamicsRuleEditor extends JPanel {
 		tableOfLabels.put(100, new JLabel(s != null ? s : "Completely scatter"));
 		scatterProbSlider.setLabelTable(tableOfLabels);
 		scatterProbSlider.setPaintLabels(true);
-		scatterProbSlider.setPreferredSize(new Dimension(320, 80));
+		scatterProbSlider.setPreferredSize(new Dimension(320, 60));
 		scatterProbSlider.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				if (scatterProbSlider.getValueIsAdjusting())
