@@ -66,7 +66,7 @@ class QuantumDynamicsRuleEditor extends JPanel {
 	QuantumDynamicsRuleEditor() {
 
 		super(new BorderLayout());
-		setPreferredSize(new Dimension(400, 360));
+		setPreferredSize(new Dimension(400, 400));
 
 		String[] str = { "Select an item", "Spontaneous Emission", "Stimulated Emission", "Radiationless Transition" };
 

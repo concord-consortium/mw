@@ -22,6 +22,8 @@ package org.concord.mw2d.models;
 
 import java.io.Serializable;
 
+import org.concord.modeler.util.HashCodeUtil;
+
 /** This class models a quantum energy level. */
 
 public class EnergyLevel implements Serializable, Comparable {
@@ -79,6 +81,21 @@ public class EnergyLevel implements Serializable, Comparable {
 		if (energy > ((EnergyLevel) o).energy)
 			return 1;
 		return 0;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof EnergyLevel)
+			return compareTo(o) == 0;
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		int hash = HashCodeUtil.SEED;
+		hash = HashCodeUtil.hash(hash, energy);
+		hash = HashCodeUtil.hash(hash, lifetime);
+		return hash;
 	}
 
 }
