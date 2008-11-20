@@ -218,7 +218,7 @@ class LightSourceEditor extends JPanel {
 		s = MDView.getInternationalText("NumberOfBeams");
 		p1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), s != null ? s
 				: "Number of Beams"));
-		nbeamSlider = new JSlider(1, 20, 10);
+		nbeamSlider = new JSlider(1, 20, 1);
 		Hashtable<Integer, JLabel> tableOfLabels = new Hashtable<Integer, JLabel>();
 		tableOfLabels.put(1, new JLabel("1"));
 		tableOfLabels.put(20, new JLabel("20"));
@@ -361,9 +361,9 @@ class LightSourceEditor extends JPanel {
 		}
 	}
 
-	public JDialog createDialog(Component parent, MolecularModel model) {
+	public JDialog createDialog(Component parent, MolecularModel mm) {
 
-		this.model = model;
+		model = mm;
 
 		if (model == null)
 			return null;
@@ -386,6 +386,7 @@ class LightSourceEditor extends JPanel {
 		JButton b = new JButton(s != null ? s : "Close");
 		b.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				model.getLightSource().setNumberOfBeams(nbeamSlider.getValue());
 				d.dispose();
 			}
 		});
