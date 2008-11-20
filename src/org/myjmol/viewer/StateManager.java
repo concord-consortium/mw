@@ -518,7 +518,6 @@ class StateManager {
 			}
 		}
 
-		@SuppressWarnings( { "unchecked", "unchecked" })
 		void setPropertyFlag(String key, boolean value) {
 			key = key.toLowerCase();
 			htPropertyFlags.put(key, value ? Boolean.TRUE : Boolean.FALSE);
