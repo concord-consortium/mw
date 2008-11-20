@@ -118,6 +118,8 @@ public class LightSource implements Serializable {
 
 	public void setNumberOfBeams(int n) {
 		nBeam = n;
+		if (nBeam == 1)
+			singleBeam = true;
 	}
 
 	public int getNumberOfBeams() {
