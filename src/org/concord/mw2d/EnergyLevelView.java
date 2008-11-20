@@ -44,6 +44,8 @@ class EnergyLevelView implements Comparable {
 	private static int electronViewMargin = 5;
 
 	EnergyLevelView(EnergyLevel energyLevel) {
+		if (energyLevel == null)
+			throw new IllegalArgumentException("arg cannot be null");
 		this.energyLevel = energyLevel;
 		rect = new Rectangle();
 		if (format == null) {
@@ -210,6 +212,20 @@ class EnergyLevelView implements Comparable {
 			throw new IllegalArgumentException("o must be an EnergyLevelView");
 		EnergyLevel level = ((EnergyLevelView) o).getModel();
 		return energyLevel.compareTo(level);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof EnergyLevelView) {
+			EnergyLevelView x = (EnergyLevelView) o;
+			return x.energyLevel.equals(energyLevel);
+		}
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return 37 + (energyLevel == null ? 0 : energyLevel.hashCode());
 	}
 
 }

@@ -79,8 +79,12 @@ public class ElectronicStructure implements Serializable {
 		return levelList.get(i);
 	}
 
+	public synchronized boolean containsEnergyLevel(EnergyLevel e) {
+		return levelList.contains(e);
+	}
+
 	public synchronized void addEnergyLevel(EnergyLevel e) {
-		if (e == null)
+		if (e == null || levelList.contains(e))
 			return;
 		levelList.add(e);
 		sort();

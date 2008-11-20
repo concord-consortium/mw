@@ -294,8 +294,10 @@ public abstract class ElectronicStructureViewer extends JPanel implements Update
 		for (Float x : scaleMap.keySet()) {
 			level = new EnergyLevel(x);
 			ElectronicStructure es = element.getElectronicStructure();
-			es.addEnergyLevel(level);
-			levelViewList.add(new EnergyLevelView(level));
+			if (!es.containsEnergyLevel(level)) {
+				es.addEnergyLevel(level);
+				levelViewList.add(new EnergyLevelView(level));
+			}
 		}
 		scaleViewer();
 		element.getElectronicStructure().sort();
