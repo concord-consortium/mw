@@ -135,7 +135,7 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	double dy;
 
 	/*
-	 * custom external force applied to this particle. Unit: 10*eV/A
+	 * custom external force applied to this particle. Unit: 10eV/A
 	 */
 	float hx, hy;
 
@@ -286,6 +286,13 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 		return shape.contains(rx, ry);
 	}
 
+	/**
+	 * return true if the center of mass of this particle is contained in the specified rectangular area.
+	 */
+	public boolean isCenterOfMassContained(double x, double y, double w, double h) {
+		return rx >= x && rx < x + w && ry >= y && ry < y + h;
+	}
+
 	/** set the model this particle is associated with */
 	public abstract void setModel(MDModel m);
 
@@ -295,11 +302,10 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	/*
 	 * predict this particle's new state using the second-order Taylor expansion:
 	 * 
-	 * <pre>
-	 * &lt;b&gt;x&lt;/b&gt;(t+dt)=&lt;b&gt;x&lt;/b&gt;(t)+&lt;b&gt;v&lt;/b&gt;(t)*dt+0.5*&lt;b&gt;a&lt;/b&gt;(t)*dt*dt
+	 * <pre> &lt;b&gt;x&lt;/b&gt;(t+dt)=&lt;b&gt;x&lt;/b&gt;(t)+&lt;b&gt;v&lt;/b&gt;(t)dt+0.5&lt;b&gt;a&lt;/b&gt;(t)dtdt
 	 * </pre>
 	 * 
-	 * @param dt the time increment @param dt2 half of the square of the time increment, i.e. 0.5*dt^2. This parameter
+	 * @param dt the time increment @param dt2 half of the square of the time increment, i.e. 0.5dt^2. This parameter
 	 * should be precomputed in order to avoid unnecessary recalculations.
 	 */
 	abstract void predict(double dt, double dt2);
