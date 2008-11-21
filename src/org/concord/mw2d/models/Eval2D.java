@@ -2076,7 +2076,7 @@ class Eval2D extends AbstractEval {
 		String[] t = s.split(",");
 		int n = t.length;
 		switch (n) {
-		case 2:
+		case 2: // nearest(x, y)
 			float[] x = parseArray(2, t);
 			if (x != null) {
 				for (int k = 0; k < x.length; k++)
@@ -2096,7 +2096,7 @@ class Eval2D extends AbstractEval {
 				return "" + imin;
 			}
 			break;
-		case 3:
+		case 3: // nearest(id, x, y)
 			x = parseArray(3, t);
 			if (x != null) {
 				int id = (int) x[0];
@@ -2128,7 +2128,7 @@ class Eval2D extends AbstractEval {
 				return "" + imin;
 			}
 			break;
-		case 4:
+		case 4: // nearest(id, x, y, radius)
 			x = parseArray(4, t);
 			if (x != null) {
 				int id = (int) x[0];
@@ -2153,6 +2153,40 @@ class Eval2D extends AbstractEval {
 					else if (p instanceof GayBerneParticle) {
 						r = distanceSquare(p.rx - x[1], p.ry - x[2]);
 						if (r < x[3] && r < dmin) {
+							dmin = r;
+							imin = k;
+						}
+					}
+				}
+				return "" + imin;
+			}
+			break;
+		case 7: // nearest(id, x, y, xrect, yrect, wrect, hrect)
+			x = parseArray(7, t);
+			if (x != null) {
+				int id = (int) x[0];
+				for (int k = 1; k < x.length; k++)
+					x[k] *= IR_CONVERTER;
+				double dmin = Double.MAX_VALUE;
+				int imin = -1;
+				double r = 0;
+				Particle p = null;
+				for (int k = 0; k < nop; k++) {
+					p = model.getParticle(k);
+					if (!p.isCenterOfMassContained(x[3], x[4], x[5], x[6]))
+						continue;
+					if (p instanceof Atom) {
+						if (((Atom) p).id == id || id == -1) {
+							r = distanceSquare(p.rx - x[1], p.ry - x[2]);
+							if (r < dmin) {
+								dmin = r;
+								imin = k;
+							}
+						}
+					}
+					else if (p instanceof GayBerneParticle) {
+						r = distanceSquare(p.rx - x[1], p.ry - x[2]);
+						if (r < dmin) {
 							dmin = r;
 							imin = k;
 						}
@@ -2235,7 +2269,7 @@ class Eval2D extends AbstractEval {
 		String[] t = s.split(",");
 		int n = t.length;
 		switch (n) {
-		case 3:
+		case 3: // nearesttoatom(id, atom, radius)
 			float[] x = parseArray(3, t);
 			if (x != null) {
 				int id = (int) x[0];
@@ -2265,7 +2299,7 @@ class Eval2D extends AbstractEval {
 				return "" + imin;
 			}
 			break;
-		case 4:
+		case 4: // nearesttoatom(id, atom, radius, option)
 			x = parseArray(4, t);
 			if (x != null) {
 				int id = (int) x[0];
@@ -2307,6 +2341,38 @@ class Eval2D extends AbstractEval {
 								}
 								break;
 							}
+						}
+					}
+				}
+				return "" + imin;
+			}
+			break;
+		case 6: // nearesttoatom(id, atom, rect_x, rect_y, rect_width, rect_height)
+			x = parseArray(6, t);
+			if (x != null) {
+				int id = (int) x[0];
+				int iat = (int) x[1];
+				if (iat < 0 || iat >= noa) {
+					out(ScriptEvent.FAILED, "index of atom out of bound: " + iat + " , in " + clause);
+					return null;
+				}
+				for (int k = 2; k < x.length; k++)
+					x[k] *= IR_CONVERTER;
+				double dmin = Double.MAX_VALUE;
+				int imin = -1;
+				double r = 0;
+				Atom a = null, b = mm.atom[iat];
+				for (int k = 0; k < noa; k++) {
+					a = mm.atom[k];
+					if (a == b)
+						continue;
+					if (!a.isCenterOfMassContained(x[2], x[3], x[4], x[5]))
+						continue;
+					if (a.id == id || id == -1) {
+						r = a.distanceSquare(b);
+						if (r < dmin) {
+							dmin = r;
+							imin = k;
 						}
 					}
 				}
