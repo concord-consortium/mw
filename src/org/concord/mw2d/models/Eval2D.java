@@ -2657,6 +2657,63 @@ class Eval2D extends AbstractEval {
 		return "" + a.getIndex();
 	}
 
+	private String evaluateWhichImageIsAttachedFunction(final String clause) {
+		if (clause == null || clause.equals(""))
+			return null;
+		int nop = model.getNumberOfParticles();
+		if (nop <= 0)
+			return "-1";
+		int i = clause.indexOf("(");
+		int j = clause.lastIndexOf(")");
+		if (i == -1 || j == -1) {
+			out(ScriptEvent.FAILED, "In whichimageisattached: function must be enclosed within parenthesis: " + clause);
+			return null;
+		}
+		String s = clause.substring(i + 1, j);
+		String[] t = s.split(",");
+		int n = t.length;
+		switch (n) {
+		case 2:
+			float[] x = parseArray(2, t);
+			if (x != null) {
+				int index = (int) x[0];
+				ModelComponent mc = null;
+				switch (Math.round(x[1])) {
+				case 0:
+					mc = model.getParticle(index);
+					break;
+				case 1:
+					if (model instanceof MolecularModel) {
+						mc = ((MolecularModel) model).bonds.get(index);
+					}
+					break;
+				case 2:
+					mc = model.obstacles.get(index);
+				}
+				if (mc == null) {
+					out(ScriptEvent.FAILED, "In whichimageisattached: object doesn't exist: " + clause);
+					return "-1";
+				}
+				ImageComponent[] images = view.getImages();
+				if (images != null) {
+					int nimg = images.length;
+					if (nimg != 0) {
+						for (int k = 0; k < nimg; k++) {
+							if (images[k].getHost() == mc)
+								return "" + k;
+						}
+					}
+				}
+				return "-1";
+			}
+			break;
+		default:
+			out(ScriptEvent.FAILED, "In whichimageisattached: argument error: " + clause);
+			return null;
+		}
+		return null;
+	}
+
 	private String evaluateSpeedFunction(final String clause) {
 		if (clause == null || clause.equals(""))
 			return null;
@@ -3374,6 +3431,10 @@ class Eval2D extends AbstractEval {
 			}
 			else if (exp.startsWith("atomofmolecule(")) {
 				exp = evaluateAtomOfMoleculeFunction(exp);
+				storeDefinition(isStatic, var, exp != null ? exp : "-1");
+			}
+			else if (exp.startsWith("whichimageisattached(")) {
+				exp = evaluateWhichImageIsAttachedFunction(exp);
 				storeDefinition(isStatic, var, exp != null ? exp : "-1");
 			}
 			else {
