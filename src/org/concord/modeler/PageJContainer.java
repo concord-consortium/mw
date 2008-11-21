@@ -353,18 +353,22 @@ public class PageJContainer extends PagePlugin {
 			public void finished() {
 				try {
 					plugin.init();
-					loadState();
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							loadState();
+							try {
+								plugin.start();
+							}
+							catch (Throwable e) {
+								e.printStackTrace();
+								setErrorMessage("Errors in starting: " + e);
+							}
+						}
+					});
 				}
 				catch (Throwable e) {
 					e.printStackTrace();
 					setErrorMessage("Errors in initializing: " + e);
-				}
-				try {
-					plugin.start();
-				}
-				catch (Throwable e) {
-					e.printStackTrace();
-					setErrorMessage("Errors in starting: " + e);
 				}
 				addPopupMouseListener();
 			}
