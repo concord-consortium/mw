@@ -2641,11 +2641,11 @@ public class AtomisticView extends MDView implements BondChangeListener {
 
 	private boolean intersects(Atom a, boolean noOverlapTolerance) {
 		if (obstacles != null && !obstacles.isEmpty()) {
-			Rectangle2D.Double r2d;
+			RectangularObstacle obs;
 			synchronized (obstacles.getSynchronizationLock()) {
 				for (Iterator it = obstacles.iterator(); it.hasNext();) {
-					r2d = (RectangularObstacle) it.next();
-					if (r2d.intersects(a.getBounds2D()))
+					obs = (RectangularObstacle) it.next();
+					if (!obs.isPermeable((byte) a.getID()) && obs.intersects(a.getBounds2D()))
 						return true;
 				}
 			}
