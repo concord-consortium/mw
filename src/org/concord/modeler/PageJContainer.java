@@ -176,7 +176,7 @@ public class PageJContainer extends PagePlugin {
 					download.getProcessMonitor().setTitle(
 							(s != null ? s : "Downloading plugin updates") + ": " + u + "...");
 				}
-				download.getProcessMonitor().setLocationRelativeTo(this);
+				download.getProcessMonitor().setLocationRelativeTo(JOptionPane.getFrameForComponent(this));
 				download.downloadWithoutThread(u, f);
 			}
 		}
@@ -295,7 +295,7 @@ public class PageJContainer extends PagePlugin {
 			setErrorMessage(e);
 			return;
 		}
-		
+
 		// set parameters and then initialize the plugin
 		if (o instanceof PluginService) {
 			plugin = (PluginService) o;
@@ -342,7 +342,6 @@ public class PageJContainer extends PagePlugin {
 			return;
 		plugin.getWindow().setPreferredSize(getPreferredSize());
 		add(plugin.getWindow(), BorderLayout.CENTER);
-		validate();
 		SwingWorker worker = new SwingWorker("Cache plugin resources", Thread.MIN_PRIORITY + 1) {
 			public Object construct() {
 				cacheResources();
@@ -353,22 +352,12 @@ public class PageJContainer extends PagePlugin {
 			public void finished() {
 				try {
 					plugin.init();
-					EventQueue.invokeLater(new Runnable() {
-						public void run() {
-							loadState();
-							try {
-								plugin.start();
-							}
-							catch (Throwable e) {
-								e.printStackTrace();
-								setErrorMessage("Errors in starting: " + e);
-							}
-						}
-					});
+					loadState();
+					plugin.start();
 				}
 				catch (Throwable e) {
 					e.printStackTrace();
-					setErrorMessage("Errors in initializing: " + e);
+					setErrorMessage("Errors in init(): " + e);
 				}
 				addPopupMouseListener();
 			}
