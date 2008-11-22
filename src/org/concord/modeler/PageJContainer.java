@@ -295,7 +295,7 @@ public class PageJContainer extends PagePlugin {
 			setErrorMessage(e);
 			return;
 		}
-
+		
 		// set parameters and then initialize the plugin
 		if (o instanceof PluginService) {
 			plugin = (PluginService) o;
