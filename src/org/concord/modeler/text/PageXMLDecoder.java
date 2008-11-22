@@ -645,9 +645,9 @@ final class PageXMLDecoder {
 							mw3dConnector.loadResources();
 							mw2dConnector.loadResources();
 							jmolConnector.loadResources();
-							pluginConnector.start();
 							EventQueue.invokeLater(new Runnable() {
 								public void run() {
+									pluginConnector.start(); // start the plugin constructor in EDT
 									progressBar.setValue(progressBar.getMaximum());
 									page.setTitle(pageTitle);
 									radioButtonConnector.connect();
