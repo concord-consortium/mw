@@ -38,6 +38,7 @@ public class RectangleComponent extends AbstractRectangle implements ModelCompon
 	private VectorField vectorField;
 	private boolean visible = true;
 	private boolean draggable = true;
+	private float viscosity;
 
 	public RectangleComponent() {
 		super();
@@ -56,6 +57,7 @@ public class RectangleComponent extends AbstractRectangle implements ModelCompon
 		setLineColor(r.getLineColor());
 		setLayer(r.layer);
 		setModel(r.model);
+		setViscosity(r.viscosity);
 		setVectorField(VectorFieldFactory.getCopy(r.vectorField));
 	}
 
@@ -89,6 +91,7 @@ public class RectangleComponent extends AbstractRectangle implements ModelCompon
 				setHost(model.getObstacles().get(index));
 			}
 		}
+		setViscosity(d.viscosity);
 		setVectorField(d.vectorField);
 	}
 
@@ -131,6 +134,14 @@ public class RectangleComponent extends AbstractRectangle implements ModelCompon
 				m++;
 		}
 		return m;
+	}
+
+	public void setViscosity(float viscosity) {
+		this.viscosity = viscosity;
+	}
+
+	public float getViscosity() {
+		return viscosity;
 	}
 
 	public void setVectorField(VectorField vectorField) {
@@ -238,6 +249,7 @@ public class RectangleComponent extends AbstractRectangle implements ModelCompon
 		private int alpha = 255;
 		private float angle;
 		private FillMode fillMode = FillMode.getNoFillMode();
+		private float viscosity;
 		private VectorField vectorField;
 
 		public Delegate() {
@@ -269,9 +281,18 @@ public class RectangleComponent extends AbstractRectangle implements ModelCompon
 					hostIndex = r.getHostModel().getObstacles().indexOf(r.getHost());
 				}
 			}
+			viscosity = r.getViscosity();
 			vectorField = r.getVectorField();
 			draggable = r.draggable;
 			visible = r.visible;
+		}
+
+		public void setViscosity(float viscosity) {
+			this.viscosity = viscosity;
+		}
+
+		public float getViscosity() {
+			return viscosity;
 		}
 
 		public void setVectorField(VectorField vectorField) {
