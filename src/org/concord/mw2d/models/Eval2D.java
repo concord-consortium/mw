@@ -5606,6 +5606,11 @@ class Eval2D extends AbstractEval {
 				}
 			}
 		}
+		else if (s == "viscosity") {
+			double x = parseMathExpression(str3);
+			if (!Double.isNaN(x))
+				c[i].setViscosity((float) x);
+		}
 		else if (s == "angle") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
@@ -5722,6 +5727,11 @@ class Eval2D extends AbstractEval {
 					return;
 				}
 			}
+		}
+		else if (s == "viscosity") {
+			double x = parseMathExpression(str3);
+			if (!Double.isNaN(x))
+				c[i].setViscosity((float) x);
 		}
 		else if (s == "angle") {
 			double x = parseMathExpression(str3);
