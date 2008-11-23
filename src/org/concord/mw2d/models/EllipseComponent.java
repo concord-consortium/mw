@@ -143,6 +143,8 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 	}
 
 	public void setViscosity(float viscosity) {
+		if (viscosity < 0)
+			throw new IllegalArgumentException("viscosity cannot be negative");
 		this.viscosity = viscosity;
 	}
 
