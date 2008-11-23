@@ -102,6 +102,7 @@ import org.concord.modeler.util.FileUtilities;
 import org.concord.modeler.util.ImageReader;
 import org.concord.modeler.util.ScreenshotSaver;
 import org.concord.mw2d.models.EllipseComponent;
+import org.concord.mw2d.models.FieldArea;
 import org.concord.mw2d.models.ImageComponent;
 import org.concord.mw2d.models.Layered;
 import org.concord.mw2d.models.LineComponent;
@@ -1679,6 +1680,21 @@ public abstract class MDView extends PrintableComponent {
 		return null;
 	}
 
+	public FieldArea[] getFieldAreas() {
+		int n = getNumberOfInstances(FieldArea.class);
+		if (n == 0)
+			return null;
+		FieldArea[] fa = new FieldArea[n];
+		n = 0;
+		synchronized (layerBasket) {
+			for (Layered c : layerBasket) {
+				if (c instanceof FieldArea)
+					fa[n++] = (FieldArea) c;
+			}
+		}
+		return fa;
+	}
+
 	public Layered[] getLayeredComponents() {
 		int n = layerBasket.size();
 		Layered[] l = new Layered[n];
@@ -3182,7 +3198,9 @@ public abstract class MDView extends PrintableComponent {
 	 * with restrained objects a little bit.
 	 * 
 	 * @param x the x-coordinate of the mouse cursor location @param y the y-coordinate of the mouse cursor location
+	 * 
 	 * @param xc the x-coordinate of the equilibrium position @param yc the y-coordinate of the equilibrium position
+	 * 
 	 * @param r0 the equilibrium length of the spring @param d the maximum displacement
 	 */
 	static Vector2D moveSpring(int x, int y, int xc, int yc, int r0, int d) {

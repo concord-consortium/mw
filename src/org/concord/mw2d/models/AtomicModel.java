@@ -71,21 +71,21 @@ import static org.concord.mw2d.models.Element.*;
  * model:
  * </p>
  * <ol>
- * <li> Initialize the force fields;
- * <li> Compute forces;
- * <li> Do energy minimization;
- * <li> Integrate the classical equations of motion;
- * <li> Return kinetic energy and potential energies;
+ * <li>Initialize the force fields;
+ * <li>Compute forces;
+ * <li>Do energy minimization;
+ * <li>Integrate the classical equations of motion;
+ * <li>Return kinetic energy and potential energies;
  * </ol>
  * <p>
  * The potential energy function includes the following non-bonded interaction terms:
  * </p>
  * <ol>
- * <li> Lennard-Jones potential: All atoms are created with it;
- * <li> Electrostatic potential: Only charged atoms have it;
- * <li> Axilrod-Teller potential: Optional three-body interactomic potential, seldom needed but reserved for academic
+ * <li>Lennard-Jones potential: All atoms are created with it;
+ * <li>Electrostatic potential: Only charged atoms have it;
+ * <li>Axilrod-Teller potential: Optional three-body interactomic potential, seldom needed but reserved for academic
  * interest, if turned on it greatly slows down the engine;
- * <li> Pointwise harmonic restraint: Used to pinpoint an atom around a position;
+ * <li>Pointwise harmonic restraint: Used to pinpoint an atom around a position;
  * </ol>
  * 
  * <p>
@@ -1789,6 +1789,8 @@ public abstract class AtomicModel extends MDModel {
 	 * 
 	 * @GuardedBy("this")
 	 */
+	 
+
 	public synchronized int getNumberOfAtoms() {
 		return numberOfAtoms;
 	}
@@ -1798,6 +1800,8 @@ public abstract class AtomicModel extends MDModel {
 	 * 
 	 * @GuardedBy("this")
 	 */
+	 
+
 	public synchronized void setNumberOfAtoms(int n) {
 		if (n < 0)
 			throw new IllegalArgumentException("# of atoms cannot be negative");
@@ -1870,6 +1874,8 @@ public abstract class AtomicModel extends MDModel {
 	 * 
 	 * @GuardedBy("this")
 	 */
+	 
+
 	public synchronized void setTemperature(double temperature) {
 		if (temperature < ZERO)
 			temperature = 0.0;
@@ -1952,6 +1958,8 @@ public abstract class AtomicModel extends MDModel {
 	 * 
 	 * @GuardedBy("this")
 	 */
+	 
+
 	public synchronized void setTemperature(List<Atom> list, double temperature) {
 		if (list == null || list.isEmpty())
 			return;
@@ -2838,6 +2846,99 @@ public abstract class AtomicModel extends MDModel {
 		return x;
 	}
 
+	// if there is only one atom, we do not need to initiate the balls and chains for multiple atoms.
+	// using this simplified method will save time and resources.
+	private synchronized double computeForceForSingleAtom(final int time) {
+
+		atom[0].fx = atom[0].hx * GF_CONVERSION_CONSTANT / atom[0].mass;
+		atom[0].fy = atom[0].hy * GF_CONVERSION_CONSTANT / atom[0].mass;
+
+		double vsum = 0.0;
+		double etemp;
+
+		if (atom[0].friction > ZERO) {
+			double dmp = GF_CONVERSION_CONSTANT * universe.getViscosity() * atom[0].friction / atom[0].mass;
+			atom[0].fx -= dmp * atom[0].vx;
+			atom[0].fy -= dmp * atom[0].vy;
+		}
+
+		for (VectorField f : fields) {
+			if (f instanceof GravitationalField) {
+				GravitationalField gf = (GravitationalField) f;
+				gf.dyn(atom[0]);
+				etemp = gf.getPotential(atom[0], time);
+				vsum += etemp;
+				if (obstacles != null && !obstacles.isEmpty()) {
+					RectangularObstacle obs = null;
+					synchronized (obstacles.getSynchronizationLock()) {
+						for (int jobs = 0, nobs = obstacles.size(); jobs < nobs; jobs++) {
+							obs = obstacles.get(jobs);
+							gf.dyn(obs);
+							etemp = gf.getPotential(obs, time);
+							vsum += etemp;
+						}
+					}
+				}
+			}
+			else if (f instanceof ElectricField) {
+				if (Math.abs(atom[0].charge) > 0) {
+					ElectricField ef = (ElectricField) f;
+					ef.dyn(universe.getDielectricConstant(), atom[0], time);
+					etemp = ef.getPotential(atom[0], time);
+					vsum += etemp;
+				}
+			}
+			else if (f instanceof MagneticField) {
+				if (Math.abs(atom[0].charge) > 0) {
+					MagneticField mf = (MagneticField) f;
+					mf.dyn(atom[0]);
+				}
+			}
+			else if (f instanceof AccelerationalField) {
+				AccelerationalField af = (AccelerationalField) f;
+				af.dyn(atom[0]);
+				etemp = af.getPotential(atom[0], time);
+				vsum += etemp;
+				if (obstacles != null && !obstacles.isEmpty()) {
+					RectangularObstacle obs = null;
+					synchronized (obstacles.getSynchronizationLock()) {
+						for (int jobs = 0, nobs = obstacles.size(); jobs < nobs; jobs++) {
+							obs = obstacles.get(jobs);
+							af.dyn(obs);
+							etemp = af.getPotential(obs, time);
+							vsum += etemp;
+						}
+					}
+				}
+			}
+		}
+
+		if (atom[0].restraint != null) {
+			atom[0].restraint.dyn(atom[0]);
+			etemp = atom[0].restraint.getEnergy(atom[0]);
+			vsum += etemp;
+		}
+
+		if (atom[0].getUserField() != null) {
+			atom[0].getUserField().dyn(atom[0]);
+		}
+
+		FieldArea[] fa = view.getFieldAreas();
+		if (fa != null) {
+			for (FieldArea x : fa) {
+				x.interact(atom[0]);
+			}
+		}
+
+		if (time < 0) {
+			atom[0].fx *= atom[0].mass;
+			atom[0].fy *= atom[0].mass;
+		}
+
+		return vsum;
+
+	}
+
 	/**
 	 * compute forces on the atoms from the potentials. This is the most expensive part of calculation. This method is
 	 * synchronized so that no intermediate data can be fetched before a round of computation is completed.
@@ -2847,6 +2948,8 @@ public abstract class AtomicModel extends MDModel {
 	 * @return potential energy per atom
 	 * @GuardedBy("this")
 	 */
+	 
+
 	public synchronized double computeForce(final int time) {
 
 		double vsum = 0.0;
@@ -2874,88 +2977,8 @@ public abstract class AtomicModel extends MDModel {
 		vsum += computeForceForElectrons(time);
 		// computeForceForElectrons(time);
 
-		if (numberOfAtoms == 1) {
-
-			atom[0].fx = atom[0].hx * GF_CONVERSION_CONSTANT / atom[0].mass;
-			atom[0].fy = atom[0].hy * GF_CONVERSION_CONSTANT / atom[0].mass;
-
-			double etemp;
-
-			if (atom[0].friction > ZERO) {
-				double dmp = GF_CONVERSION_CONSTANT * universe.getViscosity() * atom[0].friction / atom[0].mass;
-				atom[0].fx -= dmp * atom[0].vx;
-				atom[0].fy -= dmp * atom[0].vy;
-			}
-
-			for (VectorField f : fields) {
-				if (f instanceof GravitationalField) {
-					GravitationalField gf = (GravitationalField) f;
-					gf.dyn(atom[0]);
-					etemp = gf.getPotential(atom[0], time);
-					vsum += etemp;
-					if (obstacles != null && !obstacles.isEmpty()) {
-						RectangularObstacle obs = null;
-						synchronized (obstacles.getSynchronizationLock()) {
-							for (int jobs = 0, nobs = obstacles.size(); jobs < nobs; jobs++) {
-								obs = obstacles.get(jobs);
-								gf.dyn(obs);
-								etemp = gf.getPotential(obs, time);
-								vsum += etemp;
-							}
-						}
-					}
-				}
-				else if (f instanceof ElectricField) {
-					if (Math.abs(atom[0].charge) > 0) {
-						ElectricField ef = (ElectricField) f;
-						ef.dyn(universe.getDielectricConstant(), atom[0], time);
-						etemp = ef.getPotential(atom[0], time);
-						vsum += etemp;
-					}
-				}
-				else if (f instanceof MagneticField) {
-					if (Math.abs(atom[0].charge) > 0) {
-						MagneticField mf = (MagneticField) f;
-						mf.dyn(atom[0]);
-					}
-				}
-				else if (f instanceof AccelerationalField) {
-					AccelerationalField af = (AccelerationalField) f;
-					af.dyn(atom[0]);
-					etemp = af.getPotential(atom[0], time);
-					vsum += etemp;
-					if (obstacles != null && !obstacles.isEmpty()) {
-						RectangularObstacle obs = null;
-						synchronized (obstacles.getSynchronizationLock()) {
-							for (int jobs = 0, nobs = obstacles.size(); jobs < nobs; jobs++) {
-								obs = obstacles.get(jobs);
-								af.dyn(obs);
-								etemp = af.getPotential(obs, time);
-								vsum += etemp;
-							}
-						}
-					}
-				}
-			}
-
-			if (atom[0].restraint != null) {
-				atom[0].restraint.dyn(atom[0]);
-				etemp = atom[0].restraint.getEnergy(atom[0]);
-				vsum += etemp;
-			}
-
-			if (atom[0].getUserField() != null) {
-				atom[0].getUserField().dyn(atom[0]);
-			}
-
-			if (time < 0) {
-				atom[0].fx *= atom[0].mass;
-				atom[0].fy *= atom[0].mass;
-			}
-
-			return vsum;
-
-		}
+		if (numberOfAtoms == 1)
+			return computeForceForSingleAtom(time);
 
 		if (updateParArray) {
 			resetParArray();
@@ -3241,6 +3264,14 @@ public abstract class AtomicModel extends MDModel {
 			}
 		}
 
+		FieldArea[] fa = view.getFieldAreas();
+		if (fa != null) {
+			for (FieldArea x : fa) {
+				for (int i = 0; i < numberOfAtoms; i++)
+					x.interact(atom[i]);
+			}
+		}
+
 		if (time < 0) {
 			for (int i = 0; i < numberOfAtoms; i++) {
 				atom[i].fx *= atom[i].mass;
@@ -3259,6 +3290,8 @@ public abstract class AtomicModel extends MDModel {
 	 * 
 	 * @GuardedBy("this")
 	 */
+	 
+
 	public synchronized void steepestDescent(double stepLength) {
 		if (numberOfAtoms == 1)
 			return;
@@ -3298,6 +3331,8 @@ public abstract class AtomicModel extends MDModel {
 	 * @return average kinetic energy per atom
 	 * @GuardedBy("this")
 	 */
+	 
+
 	public synchronized double getKE() {
 		double x = 0.0;
 		for (int i = 0; i < numberOfAtoms; i++) {
@@ -3499,10 +3534,10 @@ public abstract class AtomicModel extends MDModel {
 	}
 
 	/*
-	 * this method initializes the working arrays to the given capacity. These working arrays are: <p> <ul> <li>The
-	 * atom array; <li>The van der Waals parameter array; <li>The neighbor list array; <li>The neighbor list pointer
-	 * array; <li>The x,y coordinates at last step; <li>The x,y displacements since last step; <li>If the integration
-	 * order is higher, higher derivatives arrays. </ul> </p>
+	 * this method initializes the working arrays to the given capacity. These working arrays are: <p> <ul> <li>The atom
+	 * array; <li>The van der Waals parameter array; <li>The neighbor list array; <li>The neighbor list pointer array;
+	 * <li>The x,y coordinates at last step; <li>The x,y displacements since last step; <li>If the integration order is
+	 * higher, higher derivatives arrays. </ul> </p>
 	 * 
 	 * @param n the capacity of the working arrays
 	 */
