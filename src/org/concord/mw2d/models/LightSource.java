@@ -36,8 +36,8 @@ public class LightSource implements Serializable {
 	private static float ultraviolet = 14.5f;
 
 	private boolean monochromatic = true;
-	private boolean singleBeam;
-	private int nBeam;
+	private boolean singleRay;
+	private int nRay;
 	private float frequency = 1.0f;
 	private int radiationPeriod = 1000;
 	private boolean turnOn;
@@ -109,21 +109,21 @@ public class LightSource implements Serializable {
 	}
 
 	public void setSingleBeam(boolean b) {
-		singleBeam = b;
+		singleRay = b;
 	}
 
 	public boolean isSingleBeam() {
-		return singleBeam;
+		return singleRay;
 	}
 
 	public void setNumberOfBeams(int n) {
-		nBeam = n;
-		if (nBeam == 1)
-			singleBeam = true;
+		nRay = n;
+		if (nRay == 1)
+			singleRay = true;
 	}
 
 	public int getNumberOfBeams() {
-		return nBeam;
+		return nRay;
 	}
 
 	public static float getInfraredFrequency() {
