@@ -62,7 +62,7 @@ class LightSourceEditor extends JPanel {
 	private JCheckBox lightSwitch;
 	private JRadioButton westButton, eastButton, northButton, southButton, otherButton;
 	private JRadioButton monochromaticButton, whiteButton;
-	private JSlider nbeamSlider, frequencySlider, intensitySlider;
+	private JSlider nraySlider, frequencySlider, intensitySlider;
 	private JLabel label, degreeLabel;
 	private IntegerTextField angleField;
 	private JPanel directionPanel;
@@ -215,28 +215,28 @@ class LightSourceEditor extends JPanel {
 		p = new JPanel(new BorderLayout());
 
 		JPanel p1 = new JPanel();
-		s = MDView.getInternationalText("NumberOfBeams");
+		s = MDView.getInternationalText("NumberOfRays");
 		p1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), s != null ? s
-				: "Number of Beams"));
-		nbeamSlider = new JSlider(1, 20, 1);
+				: "Number of Rays"));
+		nraySlider = new JSlider(1, 20, 1);
 		Hashtable<Integer, JLabel> tableOfLabels = new Hashtable<Integer, JLabel>();
 		tableOfLabels.put(1, new JLabel("1"));
 		tableOfLabels.put(20, new JLabel("20"));
-		nbeamSlider.setLabelTable(tableOfLabels);
-		nbeamSlider.setPaintLabels(true);
-		nbeamSlider.setSnapToTicks(true);
-		nbeamSlider.setPaintTicks(true);
-		nbeamSlider.setMajorTickSpacing(2);
-		nbeamSlider.setMinorTickSpacing(1);
-		nbeamSlider.addChangeListener(new ChangeListener() {
+		nraySlider.setLabelTable(tableOfLabels);
+		nraySlider.setPaintLabels(true);
+		nraySlider.setSnapToTicks(true);
+		nraySlider.setPaintTicks(true);
+		nraySlider.setMajorTickSpacing(2);
+		nraySlider.setMinorTickSpacing(1);
+		nraySlider.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				if (intensitySlider.getValueIsAdjusting())
 					return;
-				model.getLightSource().setNumberOfBeams(nbeamSlider.getValue());
+				model.getLightSource().setNumberOfBeams(nraySlider.getValue());
 				model.notifyChange();
 			}
 		});
-		p1.add(nbeamSlider);
+		p1.add(nraySlider);
 
 		p.add(p1, BorderLayout.NORTH);
 
@@ -294,7 +294,7 @@ class LightSourceEditor extends JPanel {
 		southButton.setEnabled(b);
 		monochromaticButton.setEnabled(b);
 		whiteButton.setEnabled(b);
-		nbeamSlider.setEnabled(b);
+		nraySlider.setEnabled(b);
 		frequencySlider.setEnabled(b);
 		intensitySlider.setEnabled(b);
 		label.setEnabled(b);
@@ -322,11 +322,11 @@ class LightSourceEditor extends JPanel {
 			boolean b1 = model.getLightSource().isMonochromatic();
 			ModelerUtilities.selectWithoutNotifyingListeners(monochromaticButton, b1);
 			ModelerUtilities.selectWithoutNotifyingListeners(whiteButton, !b1);
-			int nbeam = model.getLightSource().getNumberOfBeams();
+			int nray = model.getLightSource().getNumberOfBeams();
 			boolean b2 = model.getLightSource().isSingleBeam(); // backward compatible
 			if (b2)
-				nbeam = 1;
-			nbeamSlider.setValue(nbeam);
+				nray = 1;
+			nraySlider.setValue(nray);
 			enableEditor(true);
 			frequencySlider.setEnabled(b1);
 			setupFrequencySlider(model);
@@ -386,7 +386,7 @@ class LightSourceEditor extends JPanel {
 		JButton b = new JButton(s != null ? s : "Close");
 		b.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				model.getLightSource().setNumberOfBeams(nbeamSlider.getValue());
+				model.getLightSource().setNumberOfBeams(nraySlider.getValue());
 				d.dispose();
 			}
 		});
