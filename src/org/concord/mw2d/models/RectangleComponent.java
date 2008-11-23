@@ -124,6 +124,16 @@ public class RectangleComponent extends AbstractRectangle implements ModelCompon
 		host = null;
 	}
 
+	public void interact(Particle p) {
+		if (!contains(p.rx, p.ry))
+			return;
+		if (viscosity > Particle.ZERO) {
+			double dmp = MDModel.GF_CONVERSION_CONSTANT * viscosity / p.getMass();
+			p.fx -= dmp * p.vx;
+			p.fy -= dmp * p.vy;
+		}
+	}
+
 	public int getParticleCount() {
 		int n = model.getNumberOfParticles();
 		Particle p;

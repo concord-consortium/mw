@@ -30,11 +30,13 @@ public interface FieldArea {
 	public void setVectorField(VectorField vectorField);
 
 	public VectorField getVectorField();
-	
+
 	public void setViscosity(float viscosity);
-	
+
 	public float getViscosity();
 
 	public Shape getBounds();
+
+	public void interact(Particle p);
 
 }

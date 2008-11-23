@@ -44,7 +44,7 @@ import org.concord.mw2d.models.FieldArea;
 class FieldAreaViscosityAction {
 
 	private FieldArea area;
-	private float scaleFactor = 10;
+	private float scaleFactor = 100;
 
 	public FieldAreaViscosityAction(FieldArea area) {
 		this.area = area;
@@ -58,17 +58,18 @@ class FieldAreaViscosityAction {
 
 		JPanel p = new JPanel(new BorderLayout());
 		p.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		final JSlider slider = new JSlider(0, 50, (int) (area.getViscosity() * scaleFactor));
+		int i = (int) (area.getViscosity() * scaleFactor);
+		final JSlider slider = new JSlider(0, 100, i > 100 ? 100 : i);
 		slider.setPaintTicks(true);
-		slider.setMajorTickSpacing(10);
-		slider.setMinorTickSpacing(2);
+		slider.setMajorTickSpacing(20);
+		slider.setMinorTickSpacing(1);
 		Hashtable<Integer, JLabel> labels = new Hashtable<Integer, JLabel>();
 		labels.put(0, new JLabel("0"));
-		labels.put(10, new JLabel("1"));
-		labels.put(20, new JLabel("2"));
-		labels.put(30, new JLabel("3"));
-		labels.put(40, new JLabel("4"));
-		labels.put(50, new JLabel("5"));
+		labels.put(20, new JLabel("0.2"));
+		labels.put(40, new JLabel("0.4"));
+		labels.put(60, new JLabel("0.6"));
+		labels.put(80, new JLabel("0.8"));
+		labels.put(100, new JLabel("1"));
 		slider.setLabelTable(labels);
 		slider.setPaintLabels(true);
 		slider.setPreferredSize(new Dimension(300, 80));
