@@ -38,6 +38,7 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 	private VectorField vectorField;
 	private boolean visible = true;
 	private boolean draggable = true;
+	private float viscosity;
 
 	public EllipseComponent() {
 		super();
@@ -56,6 +57,7 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 		setLineColor(e.getLineColor());
 		setLayer(e.layer);
 		setModel(e.model);
+		setViscosity(e.getViscosity());
 		setVectorField(VectorFieldFactory.getCopy(e.vectorField));
 	}
 
@@ -89,6 +91,7 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 				setHost(model.getObstacles().get(index));
 			}
 		}
+		setViscosity(d.viscosity);
 		setVectorField(d.vectorField);
 	}
 
@@ -127,6 +130,14 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 				m++;
 		}
 		return m;
+	}
+
+	public void setViscosity(float viscosity) {
+		this.viscosity = viscosity;
+	}
+
+	public float getViscosity() {
+		return viscosity;
 	}
 
 	public void setVectorField(VectorField vectorField) {
@@ -235,6 +246,7 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 		private short alphaAtEdge = 255;
 		private float angle;
 		private FillMode fillMode = FillMode.getNoFillMode();
+		private float viscosity;
 		private VectorField vectorField;
 
 		public Delegate() {
@@ -266,9 +278,18 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 					hostIndex = e.getHostModel().getObstacles().indexOf(e.getHost());
 				}
 			}
+			viscosity = e.getViscosity();
 			vectorField = e.getVectorField();
 			draggable = e.draggable;
 			visible = e.visible;
+		}
+
+		public void setViscosity(float viscosity) {
+			this.viscosity = viscosity;
+		}
+
+		public float getViscosity() {
+			return viscosity;
 		}
 
 		public void setVectorField(VectorField vectorField) {

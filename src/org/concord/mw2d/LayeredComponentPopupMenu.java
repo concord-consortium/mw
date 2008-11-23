@@ -63,7 +63,7 @@ class LayeredComponentPopupMenu extends JPopupMenu {
 	private JMenuItem eastMI;
 	private JMenuItem westMI;
 	private JMenu physicsMenu;
-	private JMenuItem miEField, miBField, miReflect;
+	private JMenuItem miEField, miBField, miReflect, miViscosity;
 	private JMenuItem miVisible, miDraggable;
 
 	LayeredComponentPopupMenu(final MDView view) {
@@ -133,6 +133,7 @@ class LayeredComponentPopupMenu extends JPopupMenu {
 						attachMI.setEnabled(false);
 					if (view.selectedComponent instanceof FieldArea) {
 						physicsMenu.setEnabled(true);
+						physicsMenu.add(miViscosity);
 						physicsMenu.add(miEField);
 						physicsMenu.add(miBField);
 						physicsMenu.remove(miReflect);
@@ -146,12 +147,15 @@ class LayeredComponentPopupMenu extends JPopupMenu {
 							miBField.setBackground(SystemColor.controlHighlight);
 						}
 						else {
-							miEField.setBackground(miReflect.getBackground());
-							miBField.setBackground(miReflect.getBackground());
+							miEField.setBackground(physicsMenu.getBackground());
+							miBField.setBackground(physicsMenu.getBackground());
 						}
+						miViscosity.setBackground(fa.getViscosity() > 0 ? SystemColor.controlHighlight : physicsMenu
+								.getBackground());
 					}
 					else if (view.selectedComponent instanceof LineComponent) {
 						physicsMenu.setEnabled(true);
+						physicsMenu.remove(miViscosity);
 						physicsMenu.remove(miEField);
 						physicsMenu.remove(miBField);
 						physicsMenu.add(miReflect);
@@ -239,6 +243,19 @@ class LayeredComponentPopupMenu extends JPopupMenu {
 		physicsMenu.setIcon(new ImageIcon(getClass().getResource("images/leftField.gif")));
 		add(physicsMenu);
 		addSeparator();
+
+		miViscosity = new JMenuItem("Viscosity");
+		s = MDView.getInternationalText("MediumViscosityLabel");
+		if (s != null)
+			miViscosity.setText(s);
+		miViscosity.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (view.selectedComponent instanceof FieldArea)
+					new FieldAreaViscosityAction((FieldArea) view.selectedComponent).createDialog(view)
+							.setVisible(true);
+			}
+		});
+		physicsMenu.add(miViscosity);
 
 		miEField = new JMenuItem(new EditEFieldAction(view.getModel(), true));
 		s = MDView.getInternationalText("ElectricFieldLabel");
