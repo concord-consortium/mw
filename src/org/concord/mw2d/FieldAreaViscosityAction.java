@@ -59,7 +59,11 @@ class FieldAreaViscosityAction {
 		JPanel p = new JPanel(new BorderLayout());
 		p.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		int i = (int) (area.getViscosity() * scaleFactor);
-		final JSlider slider = new JSlider(0, 100, i > 100 ? 100 : i);
+		if (i < 0)
+			i = 0;
+		else if (i > 100)
+			i = 100;
+		final JSlider slider = new JSlider(0, 100, i);
 		slider.setPaintTicks(true);
 		slider.setMajorTickSpacing(20);
 		slider.setMinorTickSpacing(1);
