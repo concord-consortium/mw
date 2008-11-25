@@ -2608,19 +2608,19 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		}
 	}
 
-	public boolean intersects(RectangularObstacle newObstacle) {
+	public boolean intersects(RectangularObstacle obs) {
 		if (obstacles != null && !obstacles.isEmpty()) {
-			RectangularObstacle r2d;
+			RectangularObstacle r;
 			synchronized (obstacles.getSynchronizationLock()) {
 				for (Iterator it = obstacles.iterator(); it.hasNext();) {
-					r2d = (RectangularObstacle) it.next();
-					if (!r2d.equals(newObstacle) && r2d.intersects(newObstacle))
+					r = (RectangularObstacle) it.next();
+					if (!r.equals(obs) && r.intersects(obs))
 						return true;
 				}
 			}
 		}
 		for (int i = 0; i < nAtom; i++) {
-			if (atom[i].intersects(newObstacle))
+			if (!obs.isPermeable((byte) atom[i].getID()) && atom[i].intersects(obs))
 				return true;
 		}
 		if (!molecules.isEmpty()) {
@@ -2629,8 +2629,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				for (Iterator it = molecules.iterator(); it.hasNext();) {
 					obj = it.next();
 					if (obj instanceof CurvedSurface) {
-						if (((CurvedSurface) obj).intersects(newObstacle.getX(), newObstacle.getY(), newObstacle
-								.getWidth(), newObstacle.getHeight()))
+						if (((CurvedSurface) obj).intersects(obs.getX(), obs.getY(), obs.getWidth(), obs.getHeight()))
 							return true;
 					}
 				}
