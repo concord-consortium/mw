@@ -1506,7 +1506,7 @@ public class MesoView extends MDView {
 
 		case SELE_ID:
 			if (selectedComponent != null) {
-				if (!selectedComponent.isDraggable()) {
+				if (!isEditable() && !selectedComponent.isDraggable()) {
 					showActionTip("<html><font color=red>The selected object is not draggable!</font></html>", x, y);
 				}
 				else {
