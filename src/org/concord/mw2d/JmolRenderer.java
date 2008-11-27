@@ -162,8 +162,9 @@ class JmolRenderer {
 			synchronized (bondCollection.getSynchronizationLock()) {
 				for (Iterator it = bondCollection.iterator(); it.hasNext();) {
 					bond = (RadialBond) it.next();
-					if (!bond.isVisible())
+					if (!bond.isVisible()){
 						continue;
+					}
 					if (bond.getBondStyle() == RadialBond.STANDARD_STICK_STYLE
 							|| bond.getBondStyle() == RadialBond.UNICOLOR_STICK_STYLE)
 						viewer.addRBond(bond.getAtom1(), bond.getAtom2());
