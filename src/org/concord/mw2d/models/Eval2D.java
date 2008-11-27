@@ -3495,13 +3495,19 @@ class Eval2D extends AbstractEval {
 					if (model instanceof MolecularModel) {
 						MolecularModel mm = (MolecularModel) model;
 						RadialBond rb;
+						boolean rbChanged = false;
 						synchronized (mm.bonds.getSynchronizationLock()) {
 							for (Iterator it = mm.bonds.iterator(); it.hasNext();) {
 								rb = (RadialBond) it.next();
-								if (rb.isSelected())
+								if (rb.isSelected()) {
 									rb.setVisible(b);
+									if (!rbChanged)
+										rbChanged = true;
+								}
 							}
 						}
+						if (rbChanged) // notify the bond change listener so that JmolRender can set visibility
+							mm.notifyBondChangeListeners();
 						RectangularObstacle obs;
 						synchronized (mm.obstacles.getSynchronizationLock()) {
 							for (Iterator it = mm.obstacles.iterator(); it.hasNext();) {
@@ -5184,8 +5190,10 @@ class Eval2D extends AbstractEval {
 		}
 		String s = str2.toLowerCase().intern();
 		boolean b = true;
-		if (s == "visible")
+		if (s == "visible") {
 			m.bonds.get(i).setVisible("on".equalsIgnoreCase(x) || "true".equalsIgnoreCase(x));
+			m.notifyBondChangeListeners();
+		}
 		else if (s == "style") {
 			for (Field f : RadialBond.class.getFields()) {
 				if (f.getName().equalsIgnoreCase(x)) {
