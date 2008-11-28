@@ -60,15 +60,15 @@ import org.myjmol.api.Pair;
 /**
  * For physical units used in the molecular dynamics simulations, we assume the following:
  * <ul>
- * <li> Avogadro's constant = 6 x 10<sup>23</sup> per mole.
- * <li> An electron volt (eV) = 1.6 x 10<sup>-19</sup> joules.
- * <li> Boltzmann's constant = 1.38 x 10<sup>-23</sup> joules/kelvin.
- * <li> Planck's constant (h-bar) = 6.583 x 10<sup>-16</sup> eV*s
- * <li> Coulomb's constant * electron charge ^2 = 14.4 eV*angstrom
- * <li> Unit of mass = g/mol (atomic mass unit)
- * <li> Unit of length = angstrom
- * <li> Unit of time = femtosecond = 10<sup>-15</sup> second.
- * <li> Unit of temperature = kelvin.
+ * <li>Avogadro's constant = 6 x 10<sup>23</sup> per mole.
+ * <li>An electron volt (eV) = 1.6 x 10<sup>-19</sup> joules.
+ * <li>Boltzmann's constant = 1.38 x 10<sup>-23</sup> joules/kelvin.
+ * <li>Planck's constant (h-bar) = 6.583 x 10<sup>-16</sup> eV*s
+ * <li>Coulomb's constant * electron charge ^2 = 14.4 eV*angstrom
+ * <li>Unit of mass = g/mol (atomic mass unit)
+ * <li>Unit of length = angstrom
+ * <li>Unit of time = femtosecond = 10<sup>-15</sup> second.
+ * <li>Unit of temperature = kelvin.
  * </ul>
  * 
  * @TODO need a way to guard the iAtom pointer
@@ -84,7 +84,7 @@ public class MolecularModel {
 	private final static byte GENERIC_PARTICLE_TYPES = 4;
 
 	/*
-	 * convert m*v*v into eV: ( E-3 / 6E23 ) [kg] x ( E-10 / E-15 )^2 [m^2/s^2] / 1.6E-19 [J] divided by 2 (save the
+	 * convert mvv into eV: ( E-3 / 6E23 ) [kg] x ( E-10 / E-15 )^2 [m^2/s^2] / 1.6E-19 [J] divided by 2 (save the
 	 * multiplier prefactor 0.5 for computing kinetic energy)
 	 */
 	private final static float EV_CONVERTER = 100.0f / (1.6f * 1.2f);
@@ -2062,6 +2062,7 @@ public class MolecularModel {
 			atom[i].setMovable(true);
 			atom[i].setCharge(0);
 			atom[i].setDamp(0);
+			atom[i].setRestraint(null);
 			atom[i].zeroVelocity();
 			atom[i].zeroAcceleration();
 			atom[i].clearBondLists();
