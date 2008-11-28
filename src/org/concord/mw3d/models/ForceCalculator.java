@@ -20,6 +20,7 @@
 
 package org.concord.mw3d.models;
 
+import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
 
 import org.myjmol.api.Pair;
@@ -27,7 +28,7 @@ import org.myjmol.api.Pair;
 class ForceCalculator {
 
 	/*
-	 * Coulomb's constant times the square of electron charge (k*e^2), in eV*angstrom. see
+	 * Coulomb's constant times the square of electron charge (ke^2), in eVangstrom. see
 	 * http://hyperphysics.phy-astr.gsu.edu/hbase/electric/elefor.html
 	 */
 	private final static float COULOMB_CONSTANT = 14.4f;
@@ -531,6 +532,7 @@ class ForceCalculator {
 
 		// must be after the above procedure because the mass is divided separately for the following forces
 		// each of the following routines consume much less time than the vdw calculations (for <1000 r, a, t-bonds)
+		vsum += calculateRestraints();
 		vsum += calculateRBonds();
 		vsum += calculateABonds();
 		vsum += calculateTBonds();
@@ -559,6 +561,31 @@ class ForceCalculator {
 		if (model.gField != null)
 			v += model.gField.compute(a);
 		return v;
+	}
+
+	// v(r)=k*(r-r_0)^2/2
+	private float calculateRestraints() {
+		float energy = 0;
+		Atom a = null;
+		float k = 0;
+		for (int i = 0; i < model.iAtom; i++) {
+			a = atom[i];
+			if (!a.isMovable())
+				continue;
+			Restraint r = a.getRestraint();
+			if (r == null)
+				continue;
+			Point3f p = r.getPosition();
+			k = r.getStrength() * GF_CONVERSION_CONSTANT / a.mass;
+			rxij = a.rx - p.x;
+			ryij = a.ry - p.y;
+			rzij = a.rz - p.z;
+			a.fx -= k * rxij;
+			a.fy -= k * ryij;
+			a.fz -= k * rzij;
+			energy += 0.5 * r.getStrength() * (rxij * rxij + ryij * ryij + rzij * rzij);
+		}
+		return energy * 0.5f;
 	}
 
 	// v(r)=k*(r-r_0)^2/2

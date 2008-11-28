@@ -218,7 +218,25 @@ public final class XyzReader extends ColumnDataParser {
 					notifyProgressListeners("Reading torsional bonds: ", (int) (invTb * iTb + 1));
 				}
 			}
+			else if (token == "restraint") {
+				n1 = parseInt(line, ichNextParse) + initialAtomCount;
+				strength = parseFloat(line, ichNextParse);
+				if (strength > MolecularModel.ZERO) {
+					float resx = parseFloat(line, ichNextParse);
+					float resy = parseFloat(line, ichNextParse);
+					float resz = parseFloat(line, ichNextParse);
+					addRestraint(n1, strength, resx, resy, resz);
+				}
+			}
 		}
+	}
+
+	private void addRestraint(int i, float strength, float x, float y, float z) {
+		Atom a = model.getAtom(i);
+		Restraint r = new Restraint(a);
+		r.setStrength(strength);
+		r.setPosition(x, y, z);
+		a.setRestraint(r);
 	}
 
 	private void addRBond(int i, int j, float strength, float length) {

@@ -49,6 +49,7 @@ import org.concord.modeler.ui.HyperlinkLabel;
 import org.concord.modeler.util.DataQueueUtilities;
 import org.concord.mw3d.models.Atom;
 import org.concord.mw3d.models.MolecularModel;
+import org.concord.mw3d.models.Restraint;
 import org.myjmol.api.JmolViewer;
 
 class AtomPropertiesPanel extends PropertiesPanel {
@@ -58,7 +59,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 	private JLabel nameLabel, indexLabel;
 	private FloatNumberTextField massField, sigmaField, epsilonField;
 	private FloatNumberTextField rxField, ryField, rzField, vxField, vyField, vzField;
-	private FloatNumberTextField chargeField, dampField;
+	private FloatNumberTextField chargeField, dampField, restraintField;
 	private HyperlinkLabel leftXLabel;
 	private HyperlinkLabel leftYLabel;
 	private HyperlinkLabel leftZLabel;
@@ -116,6 +117,8 @@ class AtomPropertiesPanel extends PropertiesPanel {
 
 		chargeField = new FloatNumberTextField(atom.getCharge(), -50, 50, 10);
 		dampField = new FloatNumberTextField(atom.getDamp(), 0, 10, 10);
+		Restraint r = atom.getRestraint();
+		restraintField = new FloatNumberTextField(r != null ? r.getStrength() : 0, 0, 1000, 10);
 
 		String s = MolecularContainer.getInternationalText("Movable");
 		final JCheckBox movableCheckBox = new JCheckBox(s != null ? s : "Movable");
@@ -159,6 +162,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 
 				applyBounds(chargeField);
 				applyBounds(dampField);
+				applyBounds(restraintField);
 				applyBounds(vxField);
 				applyBounds(vyField);
 
@@ -177,6 +181,21 @@ class AtomPropertiesPanel extends PropertiesPanel {
 				if (Math.abs(atom.getDamp() - dampField.getValue()) > ZERO) {
 					atom.setDamp(dampField.getValue());
 					changed = true;
+				}
+				Restraint r = atom.getRestraint();
+				if (r != null) {
+					if (Math.abs(r.getStrength() - restraintField.getValue()) > ZERO) {
+						r.setStrength(restraintField.getValue());
+						changed = true;
+					}
+				}
+				else {
+					float x = restraintField.getValue();
+					if (x > ZERO) {
+						r = new Restraint(atom);
+						r.setStrength(x);
+						changed = true;
+					}
 				}
 				if (Math.abs(atom.getRx() - rxField.getValue()) > ZERO) {
 					setRx(atom, rxField.getValue());
@@ -239,6 +258,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		vzField.setAction(okAction);
 		chargeField.setAction(okAction);
 		dampField.setAction(okAction);
+		restraintField.setAction(okAction);
 		okButton.setAction(okAction);
 		s = MolecularContainer.getInternationalText("OK");
 		okButton.setText(s != null ? s : "OK");
@@ -297,6 +317,12 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		panel.add(new JPanel());
 
 		// row 9
+		s = MolecularContainer.getInternationalText("Restraint");
+		panel.add(new JLabel(s != null ? s : "Restraint"));
+		panel.add(restraintField);
+		panel.add(new JPanel());
+
+		// row 10
 		leftXLabel = new HyperlinkLabel(
 				atom.isMovable() ? "<html><font color=\"#0000ff\"><u><em>X</em></u></font></html>" : "X");
 		leftXLabel.setEnabled(atom.isMovable());
@@ -316,7 +342,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		panel.add(rxField);
 		panel.add(new JLabel("<html>&#197;</html>"));
 
-		// row 10
+		// row 11
 		leftYLabel = new HyperlinkLabel(
 				atom.isMovable() ? "<html><font color=\"#0000ff\"><u><em>Y</em></u></font></html>" : "Y");
 		leftYLabel.setEnabled(atom.isMovable());
@@ -336,7 +362,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		panel.add(ryField);
 		panel.add(new JLabel("<html>&#197;</html>"));
 
-		// row 11
+		// row 12
 		leftZLabel = new HyperlinkLabel(
 				atom.isMovable() ? "<html><font color=\"#0000ff\"><u><em>Z</em></u></font></html>" : "Z");
 		leftZLabel.setEnabled(atom.isMovable());
@@ -356,7 +382,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		panel.add(rzField);
 		panel.add(new JLabel("<html>&#197;</html>"));
 
-		// row 12
+		// row 13
 		leftVxLabel = new HyperlinkLabel(
 				atom.isMovable() ? "<html><font color=\"#0000ff\"><u><em>V<sub>x</sub></em></u></font></html>" : "Vx");
 		leftVxLabel.setEnabled(atom.isMovable());
@@ -377,7 +403,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		panel.add(vxField);
 		panel.add(new JLabel("m/s"));
 
-		// row 13
+		// row 14
 		leftVyLabel = new HyperlinkLabel(
 				atom.isMovable() ? "<html><font color=\"#0000ff\"><u><em>V<sub>y</sub></em></u></font></html>" : "Vy");
 		leftVyLabel.setEnabled(atom.isMovable());
@@ -398,7 +424,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		panel.add(vyField);
 		panel.add(new JLabel("m/s"));
 
-		// row 14
+		// row 15
 		leftVzLabel = new HyperlinkLabel(
 				atom.isMovable() ? "<html><font color=\"#0000ff\"><u><em>V<sub>z</sub></em></u></font></html>" : "Vz");
 		leftVzLabel.setEnabled(atom.isMovable());
@@ -419,7 +445,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		panel.add(vzField);
 		panel.add(new JLabel("m/s"));
 
-		makeCompactGrid(panel, 14, 3, 5, 5, 10, 2);
+		makeCompactGrid(panel, 15, 3, 5, 5, 10, 2);
 
 		panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		add(panel, BorderLayout.CENTER);

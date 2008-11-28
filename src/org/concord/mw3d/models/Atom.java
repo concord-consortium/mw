@@ -50,6 +50,7 @@ public class Atom {
 	float mass = 10.0f;
 	float charge;
 	float damp;
+	Restraint restraint;
 	int index;
 	private List<RBond> rbondList;
 	private List<ABond> abondList;
@@ -508,6 +509,14 @@ public class Atom {
 		return damp;
 	}
 
+	public void setRestraint(Restraint restraint) {
+		this.restraint = restraint;
+	}
+
+	public Restraint getRestraint() {
+		return restraint;
+	}
+
 	public Object getProperty(String name) {
 		return null;
 	}
@@ -528,12 +537,11 @@ public class Atom {
 	}
 
 	/*
-	 * correct the position predicted by the <tt>predict</tt> method. <b>Important</b>: <tt>fx, fy, fz</tt> were
-	 * used in the force calculation routine to store the new acceleration data. <tt>ax, ay, az</tt> were used to hold
-	 * the old acceleration data before calling this method. After calling this method, new acceleration data will be
-	 * assigned to <tt>ax, ay, az</tt>, whereas the forces and torques to <tt>fx, fy, fz</tt>. <b>Be aware</b>:
-	 * the acceleration and force properties of a particle are correct ONLY after this correction method has been
-	 * called.
+	 * correct the position predicted by the <tt>predict</tt> method. <b>Important</b>: <tt>fx, fy, fz</tt> were used in
+	 * the force calculation routine to store the new acceleration data. <tt>ax, ay, az</tt> were used to hold the old
+	 * acceleration data before calling this method. After calling this method, new acceleration data will be assigned
+	 * to <tt>ax, ay, az</tt>, whereas the forces and torques to <tt>fx, fy, fz</tt>. <b>Be aware</b>: the acceleration
+	 * and force properties of a particle are correct ONLY after this correction method has been called.
 	 * 
 	 * @param half half of the time increment
 	 */
