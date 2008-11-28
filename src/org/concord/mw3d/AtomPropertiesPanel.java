@@ -182,15 +182,20 @@ class AtomPropertiesPanel extends PropertiesPanel {
 					atom.setDamp(dampField.getValue());
 					changed = true;
 				}
+				float x = restraintField.getValue();
 				Restraint r = atom.getRestraint();
 				if (r != null) {
-					if (Math.abs(r.getStrength() - restraintField.getValue()) > ZERO) {
-						r.setStrength(restraintField.getValue());
+					if (Math.abs(r.getStrength() - x) > ZERO) {
+						if (x > ZERO) {
+							r.setStrength(x);
+						}
+						else {
+							atom.setRestraint(null);
+						}
 						changed = true;
 					}
 				}
 				else {
-					float x = restraintField.getValue();
 					if (x > ZERO) {
 						r = new Restraint(atom);
 						r.setStrength(x);

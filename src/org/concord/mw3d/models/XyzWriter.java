@@ -142,7 +142,8 @@ public final class XyzWriter {
 			for (int i = 0; i < nAtom; i++) {
 				Restraint r = model.getAtom(i).getRestraint();
 				if (r != null && r.getStrength() > MolecularModel.ZERO) {
-					sb.append(r.toString());
+					sb.append(r);
+					sb.append(LINE_SEPARATOR);
 				}
 			}
 

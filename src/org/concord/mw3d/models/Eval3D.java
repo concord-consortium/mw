@@ -592,6 +592,13 @@ class Eval3D extends AbstractEval {
 				return true;
 		}
 
+		// restrain
+		matcher = RESTRAIN.matcher(ci);
+		if (matcher.find()) {
+			if (evaluateRestrainClause(ci.substring(matcher.end()).trim()))
+				return true;
+		}
+
 		// heat
 		matcher = HEAT.matcher(ci);
 		if (matcher.find()) {
@@ -999,6 +1006,35 @@ class Eval3D extends AbstractEval {
 			Atom a = model.getAtom(k);
 			if (a.isSelected())
 				a.setDamp(c);
+		}
+		view.repaint();
+		model.notifyChange();
+		return true;
+	}
+
+	private boolean evaluateRestrainClause(String str) {
+		double x = parseMathExpression(str);
+		if (x < 0) {
+			out(ScriptEvent.FAILED, "Restraint strength cannot be negative: " + str);
+			return false;
+		}
+		int n = model.getAtomCount();
+		if (n <= 0)
+			return true;
+		float c = (float) x;
+		for (int k = 0; k < n; k++) {
+			Atom a = model.getAtom(k);
+			if (a.isSelected()) {
+				if (c > ZERO) {
+					Restraint r = a.getRestraint();
+					if (r == null)
+						r = new Restraint(a);
+					r.setStrength(c);
+				}
+				else {
+					a.setRestraint(null);
+				}
+			}
 		}
 		view.repaint();
 		model.notifyChange();

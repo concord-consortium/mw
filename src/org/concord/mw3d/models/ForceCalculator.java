@@ -563,7 +563,7 @@ class ForceCalculator {
 		return v;
 	}
 
-	// v(r)=k*(r-r_0)^2/2
+	// v(r)=k*(ri-ri_0)^2/2
 	private float calculateRestraints() {
 		float energy = 0;
 		Atom a = null;
@@ -588,7 +588,7 @@ class ForceCalculator {
 		return energy * 0.5f;
 	}
 
-	// v(r)=k*(r-r_0)^2/2
+	// v(r)=k*(rij-rij_0)^2/2
 	private float calculateRBonds() {
 		int n = model.rBonds.size();
 		if (n <= 0)

@@ -171,6 +171,7 @@ class GFieldEditor extends JDialog {
 		s.setMajorTickSpacing(10);
 		s.setMinorTickSpacing(5);
 		s.setPaintLabels(true);
+		s.setPaintTicks(true);
 		Hashtable ht = new Hashtable();
 		ht.put(0, new JLabel("0"));
 		ht.put(-100, new JLabel("-0.001"));
@@ -218,6 +219,7 @@ class GFieldEditor extends JDialog {
 		gSlider.setMajorTickSpacing(10);
 		gSlider.setMinorTickSpacing(5);
 		gSlider.setPaintLabels(true);
+		gSlider.setPaintTicks(true);
 		Hashtable ht = new Hashtable();
 		ht.put(0, new JLabel("0"));
 		ht.put(100, new JLabel("0.001"));
