@@ -29,6 +29,8 @@ import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.Hashtable;
 
 import javax.swing.BorderFactory;
@@ -95,7 +97,7 @@ class ElectricFieldEditor extends JDialog {
 		s = MDView.getInternationalText("DCIntensity");
 		if (fieldIntensity * 100 > 50)
 			fieldIntensity = 0.5;
-		sliderDC = new JSlider(JSlider.HORIZONTAL, 0, 50, (int) (fieldIntensity * intensityScale));
+		sliderDC = new JSlider(JSlider.HORIZONTAL, 1, 50, (int) (fieldIntensity * intensityScale));
 		sliderDC.setToolTipText(s != null ? s : "Change the field intensity");
 		sliderDC.setBorder(BorderFactory.createTitledBorder(s != null ? s : "D.C. Intensity (GV/m)"));
 		sliderDC.setPreferredSize(new Dimension(150, 70));
@@ -113,7 +115,7 @@ class ElectricFieldEditor extends JDialog {
 		JLabel b3 = new JLabel("30");
 		JLabel b2 = new JLabel("20");
 		JLabel b1 = new JLabel("10");
-		JLabel b0 = new JLabel("0");
+		JLabel b0 = new JLabel("1");
 		b0.setFont(smallItalicFont);
 		b1.setFont(smallItalicFont);
 		b2.setFont(smallItalicFont);
@@ -125,40 +127,35 @@ class ElectricFieldEditor extends JDialog {
 		tableOfLabels.put(30, b3);
 		tableOfLabels.put(20, b2);
 		tableOfLabels.put(10, b1);
-		tableOfLabels.put(0, b0);
+		tableOfLabels.put(1, b0);
 
 		sliderDC.setLabelTable(tableOfLabels);
 		sliderDC.addChangeListener(new ChangeListener() {
+			private void setIntensity(double intensity) {
+				tf.setDC(intensity);
+				if (ef != null)
+					ef.setIntensity(intensity);
+			}
+
 			public void stateChanged(ChangeEvent e) {
 				JSlider source = (JSlider) e.getSource();
 				if (!source.getValueIsAdjusting()) {
-					int value = source.getValue();
-					fieldIntensity = value / intensityScale;
-					if (value > 0) {
-						switch (direction) {
-						case ElectricField.EAST:
-							imageLabel.setIcon(eastIcon);
-							break;
-						case ElectricField.WEST:
-							imageLabel.setIcon(westIcon);
-							break;
-						case ElectricField.SOUTH:
-							imageLabel.setIcon(southIcon);
-							break;
-						case ElectricField.NORTH:
-							imageLabel.setIcon(northIcon);
-							break;
-						}
-					}
-					if (direction == ElectricField.EAST || direction == ElectricField.NORTH) {
-						tf.setDC(fieldIntensity);
-					}
-					else if (direction == ElectricField.WEST || direction == ElectricField.SOUTH) {
-						tf.setDC(-fieldIntensity);
+					fieldIntensity = source.getValue() / intensityScale;
+					switch (direction) {
+					case ElectricField.EAST:
+						setIntensity(fieldIntensity);
+						break;
+					case ElectricField.WEST:
+						setIntensity(fieldIntensity);
+						break;
+					case ElectricField.SOUTH:
+						setIntensity(-fieldIntensity);
+						break;
+					case ElectricField.NORTH:
+						setIntensity(fieldIntensity);
+						break;
 					}
 					tf.repaint();
-					if (ef != null)
-						ef.setIntensity(fieldIntensity);
 				}
 			}
 		});
@@ -170,16 +167,16 @@ class ElectricFieldEditor extends JDialog {
 		s = MDView.getInternationalText("Eastward");
 		rbE = new JRadioButton(s != null ? s : "Eastward");
 		rbE.setSelected(true);
-		rbE.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				direction = ElectricField.EAST;
-				if (sliderDC.getValue() == 0)
-					return;
-				imageLabel.setIcon(eastIcon);
-				tf.setDC(Math.abs(fieldIntensity));
-				tf.repaint();
-				if (ef != null)
-					ef.setOrientation(direction);
+		rbE.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+					direction = ElectricField.EAST;
+					imageLabel.setIcon(eastIcon);
+					tf.setDC(Math.abs(fieldIntensity));
+					tf.repaint();
+					if (ef != null)
+						ef.setOrientation(direction);
+				}
 			}
 		});
 		bg.add(rbE);
@@ -187,16 +184,16 @@ class ElectricFieldEditor extends JDialog {
 
 		s = MDView.getInternationalText("Westward");
 		rbW = new JRadioButton(s != null ? s : "Westward");
-		rbW.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				direction = ElectricField.WEST;
-				if (sliderDC.getValue() == 0)
-					return;
-				imageLabel.setIcon(westIcon);
-				tf.setDC(-Math.abs(fieldIntensity));
-				tf.repaint();
-				if (ef != null)
-					ef.setOrientation(direction);
+		rbW.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+					direction = ElectricField.WEST;
+					imageLabel.setIcon(westIcon);
+					tf.setDC(-Math.abs(fieldIntensity));
+					tf.repaint();
+					if (ef != null)
+						ef.setOrientation(direction);
+				}
 			}
 		});
 		bg.add(rbW);
@@ -204,16 +201,16 @@ class ElectricFieldEditor extends JDialog {
 
 		s = MDView.getInternationalText("Northward");
 		rbN = new JRadioButton(s != null ? s : "Northward");
-		rbN.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				direction = ElectricField.NORTH;
-				if (sliderDC.getValue() == 0)
-					return;
-				imageLabel.setIcon(northIcon);
-				tf.setDC(Math.abs(fieldIntensity));
-				tf.repaint();
-				if (ef != null)
-					ef.setOrientation(direction);
+		rbN.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+					direction = ElectricField.NORTH;
+					imageLabel.setIcon(northIcon);
+					tf.setDC(Math.abs(fieldIntensity));
+					tf.repaint();
+					if (ef != null)
+						ef.setOrientation(direction);
+				}
 			}
 		});
 		bg.add(rbN);
@@ -221,16 +218,16 @@ class ElectricFieldEditor extends JDialog {
 
 		s = MDView.getInternationalText("Southward");
 		rbS = new JRadioButton(s != null ? s : "Southward");
-		rbS.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				direction = ElectricField.SOUTH;
-				if (sliderDC.getValue() == 0)
-					return;
-				imageLabel.setIcon(southIcon);
-				tf.setDC(-Math.abs(fieldIntensity));
-				tf.repaint();
-				if (ef != null)
-					ef.setOrientation(direction);
+		rbS.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+					direction = ElectricField.SOUTH;
+					imageLabel.setIcon(southIcon);
+					tf.setDC(-Math.abs(fieldIntensity));
+					tf.repaint();
+					if (ef != null)
+						ef.setOrientation(direction);
+				}
 			}
 		});
 		bg.add(rbS);
@@ -396,10 +393,6 @@ class ElectricFieldEditor extends JDialog {
 		if (ef != null) {
 			enableComponents(true);
 			direction = ef.getOrientation();
-			rbW.setSelected(direction == ElectricField.WEST);
-			rbE.setSelected(direction == ElectricField.EAST);
-			rbS.setSelected(direction == ElectricField.SOUTH);
-			rbN.setSelected(direction == ElectricField.NORTH);
 			sliderDC.setValue((int) (100.0 * Math.abs(ef.getIntensity())));
 			ampSlider.setValue((int) (100.0 * ef.getAmplitude()));
 			double df = (FRQ_MAX - FRQ_MIN) / frqSlider.getMaximum();
@@ -408,15 +401,19 @@ class ElectricFieldEditor extends JDialog {
 			switch (direction) {
 			case ElectricField.WEST:
 				imageLabel.setIcon(westIcon);
+				rbW.setSelected(true);
 				break;
 			case ElectricField.EAST:
 				imageLabel.setIcon(eastIcon);
+				rbE.setSelected(true);
 				break;
 			case ElectricField.NORTH:
 				imageLabel.setIcon(northIcon);
+				rbN.setSelected(true);
 				break;
 			case ElectricField.SOUTH:
 				imageLabel.setIcon(southIcon);
+				rbS.setSelected(true);
 				break;
 			}
 		}
