@@ -638,7 +638,7 @@ public abstract class MultipleChoice extends JPanel implements HtmlService, Sear
 			if (getSingleSelection()) {
 				s2 = new String[n];
 				Arrays.fill(s2, "");
-				System.arraycopy(scripts, 0, s2, 0, choices.length);
+				System.arraycopy(scripts, 0, s2, 0, Math.min(n, scripts.length));
 			}
 			try {
 				for (int i = choices.length; i < n; i++) {
@@ -658,7 +658,8 @@ public abstract class MultipleChoice extends JPanel implements HtmlService, Sear
 			}
 			if (getSingleSelection()) {
 				s2 = new String[n];
-				System.arraycopy(scripts, 0, s2, 0, n);
+				Arrays.fill(s2, "");
+				System.arraycopy(scripts, 0, s2, 0, Math.min(n, scripts.length));
 			}
 		}
 		boolean redoBG = n > choices.length;
