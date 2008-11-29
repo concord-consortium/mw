@@ -755,7 +755,8 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 
 	private void createDefaultPopupMenu() {
 		defaultPopupMenu = new JPopupMenu();
-		JMenuItem mi = new JMenuItem("Customize Tool Bar");
+		String s = getInternationalText("CustomizeToolBar");
+		JMenuItem mi = new JMenuItem(s != null ? s : "Customize Tool Bar");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				showToolBarDialog();
