@@ -145,6 +145,10 @@ public class PageMd3d extends MolecularContainer implements Embeddable, Scriptab
 
 		snapshotAction = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
+				if (e == null) { // for Eval3D
+					SnapshotGallery.sharedInstance().takeSnapshot(page.getAddress(), getMolecularView());
+					return;
+				}
 				if (!(e.getSource() instanceof JMenuItem) && ModelerUtilities.stopFiring(e))
 					return;
 				SnapshotGallery.sharedInstance().takeSnapshot(page.getAddress(), getMolecularView());
@@ -161,6 +165,10 @@ public class PageMd3d extends MolecularContainer implements Embeddable, Scriptab
 
 		snapshotAction2 = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
+				if (e == null) { // for Eval3D
+					SnapshotGallery.sharedInstance().takeSnapshot(page.getAddress(), getMolecularView());
+					return;
+				}
 				if (!(e.getSource() instanceof JMenuItem) && ModelerUtilities.stopFiring(e))
 					return;
 				SnapshotGallery.sharedInstance().takeSnapshot(page.getAddress(), getMolecularView(), false);
