@@ -63,7 +63,6 @@ class ModelProperties extends JDialog {
 	public ModelProperties(Frame owner, MolecularModel m) {
 
 		super(owner, "Model Properties", false);
-		setResizable(false);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		String s = MolecularContainer.getInternationalText("Properties");
 		if (s != null)
