@@ -51,7 +51,7 @@ public abstract class AbstractTriangle implements DrawingElement {
 	private byte lineWeight = 1;
 	private byte lineStyle = LineStyle.STROKE_NUMBER_1;
 	private BasicStroke stroke = new BasicStroke(lineWeight, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
-	private Triangle2D triangle;
+	private Triangle triangle;
 	private float angle;
 	private boolean selected;
 	private boolean selectionDrawn = true;
@@ -59,7 +59,7 @@ public abstract class AbstractTriangle implements DrawingElement {
 	private Component component;
 
 	protected AbstractTriangle() {
-		triangle = new Triangle2D(0, 0, 1, 1, 2, 2);
+		triangle = new Triangle(0, 20, 20, 20, 0, 10);
 	}
 
 	public AbstractTriangle(TriangleState s) {
@@ -173,11 +173,11 @@ public abstract class AbstractTriangle implements DrawingElement {
 		return -1;
 	}
 
-	public void translateTo(float x, float y) {
+	public void translateTo(double x, double y) {
 		Point2D.Float center = triangle.getCenter();
 		x = x - center.x;
 		y = y - center.y;
-		triangle.translate(x, y);
+		triangle.translate((float) x, (float) y);
 		if (selected)
 			setHandles();
 	}
@@ -186,8 +186,8 @@ public abstract class AbstractTriangle implements DrawingElement {
 		translateTo(x, y);
 	}
 
-	public void translateBy(float dx, float dy) {
-		triangle.translate(dx, dy);
+	public void translateBy(double dx, double dy) {
+		triangle.translate((float) dx, (float) dy);
 		if (selected)
 			setHandles();
 	}
@@ -313,12 +313,12 @@ public abstract class AbstractTriangle implements DrawingElement {
 			if (fillMode instanceof FillMode.ColorFill) {
 				if (alpha == 255) {
 					g2.setColor(((FillMode.ColorFill) fillMode).getColor());
-					g2.fill(triangle);
+					g2.fill(triangle.getShape());
 				}
 				else if (alpha > 0) {
 					g2.setColor(new Color((alpha << 24)
 							| (0x00ffffff & ((FillMode.ColorFill) fillMode).getColor().getRGB()), true));
-					g2.fill(triangle);
+					g2.fill(triangle.getShape());
 				}
 			}
 			else if (fillMode instanceof FillMode.ImageFill) {
@@ -351,7 +351,7 @@ public abstract class AbstractTriangle implements DrawingElement {
 			if (lineWeight > 0) {
 				g.setColor(lineColor);
 				g2.setStroke(stroke);
-				g2.draw(triangle);
+				g2.draw(triangle.getShape());
 			}
 		}
 

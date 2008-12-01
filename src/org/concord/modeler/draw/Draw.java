@@ -74,7 +74,8 @@ public abstract class Draw extends PrintableComponent {
 	public final static byte LINE_MODE = 0x01;
 	public final static byte RECT_MODE = 0x02;
 	public final static byte ELLIPSE_MODE = 0x03;
-	public final static byte MEASURE_MODE = 0x04;
+	public final static byte TRIANGLE_MODE = 0x04;
+	public final static byte MEASURE_MODE = 0x05;
 
 	private static PrinterJob printerJob;
 	private static Cursor rulerCursor;
