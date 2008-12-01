@@ -21,23 +21,36 @@ package org.concord.modeler.draw;
 
 import java.awt.Rectangle;
 import java.awt.Shape;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.PathIterator;
+import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 /**
+ * Mutatable implementation of triangle (GeneralPath is not mutatable).
+ * 
  * @author Charles Xie
  * 
  */
-public class Triangle2D implements Shape {
+public class Triangle {
 
 	private Point2D.Float[] vertex = new Point2D.Float[3];
+	private GeneralPath path;
 
-	public Triangle2D(float xA, float yA, float xB, float yB, float xC, float yC) {
+	public Triangle(float xA, float yA, float xB, float yB, float xC, float yC) {
 		setVertex(0, xA, yA);
 		setVertex(1, xB, yB);
 		setVertex(2, xC, yC);
+	}
+
+	public Shape getShape() {
+		if (path == null)
+			path = new GeneralPath();
+		else path.reset();
+		path.moveTo(vertex[0].x, vertex[0].y);
+		path.lineTo(vertex[1].x, vertex[1].y);
+		path.lineTo(vertex[2].x, vertex[2].y);
+		path.closePath();
+		return path;
 	}
 
 	public void setVertex(int i, float x, float y) {
@@ -67,23 +80,64 @@ public class Triangle2D implements Shape {
 	}
 
 	public boolean contains(Point2D p) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public boolean contains(Rectangle2D r) {
-		// TODO Auto-generated method stub
-		return false;
+		return contains(p.getX(), p.getY());
 	}
 
 	public boolean contains(double x, double y) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public boolean contains(double x, double y, double w, double h) {
-		// TODO Auto-generated method stub
-		return false;
+		if (!getBounds().contains(x, y))
+			return false;
+		int hits = 0;
+		float lastx = vertex[2].x;
+		float lasty = vertex[2].y;
+		float curx, cury;
+		// Walk the edges of the triangle
+		for (int i = 0; i < 3; lastx = curx, lasty = cury, i++) {
+			curx = vertex[i].x;
+			cury = vertex[i].y;
+			if (cury == lasty) {
+				continue;
+			}
+			float leftx;
+			if (curx < lastx) {
+				if (x >= lastx) {
+					continue;
+				}
+				leftx = curx;
+			}
+			else {
+				if (x >= curx) {
+					continue;
+				}
+				leftx = lastx;
+			}
+			double test1, test2;
+			if (cury < lasty) {
+				if (y < cury || y >= lasty) {
+					continue;
+				}
+				if (x < leftx) {
+					hits++;
+					continue;
+				}
+				test1 = x - curx;
+				test2 = y - cury;
+			}
+			else {
+				if (y < lasty || y >= cury) {
+					continue;
+				}
+				if (x < leftx) {
+					hits++;
+					continue;
+				}
+				test1 = x - lastx;
+				test2 = y - lasty;
+			}
+			if (test1 < (test2 / (lasty - cury) * (lastx - curx))) {
+				hits++;
+			}
+		}
+		return (hits & 1) != 0;
 	}
 
 	public Rectangle getBounds() {
@@ -105,28 +159,7 @@ public class Triangle2D implements Shape {
 	}
 
 	public Rectangle2D getBounds2D() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public PathIterator getPathIterator(AffineTransform at) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public PathIterator getPathIterator(AffineTransform at, double flatness) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public boolean intersects(Rectangle2D r) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public boolean intersects(double x, double y, double w, double h) {
-		// TODO Auto-generated method stub
-		return false;
+		return getBounds();
 	}
 
 }
