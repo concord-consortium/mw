@@ -482,7 +482,7 @@ public abstract class AbstractRectangle implements DrawingElement {
 
 		AffineTransform at = g2.getTransform();
 		if (angle != 0)
-			g2.rotate(angle * Math.PI / 180.0, rect.x + rect.width * 0.5, rect.y + rect.height * 0.5);
+			g2.rotate(angle * Math.PI / 180.0, getRx(), getRy());
 
 		attachToHost();
 
