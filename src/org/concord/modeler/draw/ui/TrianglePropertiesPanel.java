@@ -261,6 +261,7 @@ public class TrianglePropertiesPanel extends PropertiesPanel {
 			public void actionPerformed(ActionEvent e) {
 				IntegerTextField tf = (IntegerTextField) e.getSource();
 				vertexA.x = tf.getValue();
+				triangle.setSelected(true);
 				triangle.getComponent().repaint();
 			}
 		});
@@ -268,6 +269,7 @@ public class TrianglePropertiesPanel extends PropertiesPanel {
 			public void focusLost(FocusEvent e) {
 				IntegerTextField tf = (IntegerTextField) e.getSource();
 				vertexA.x = tf.getValue();
+				triangle.setSelected(true);
 				triangle.getComponent().repaint();
 			}
 		});
@@ -281,6 +283,7 @@ public class TrianglePropertiesPanel extends PropertiesPanel {
 			public void actionPerformed(ActionEvent e) {
 				IntegerTextField tf = (IntegerTextField) e.getSource();
 				vertexA.y = tf.getValue();
+				triangle.setSelected(true);
 				triangle.getComponent().repaint();
 			}
 		});
@@ -288,6 +291,7 @@ public class TrianglePropertiesPanel extends PropertiesPanel {
 			public void focusLost(FocusEvent e) {
 				IntegerTextField tf = (IntegerTextField) e.getSource();
 				vertexA.y = tf.getValue();
+				triangle.setSelected(true);
 				triangle.getComponent().repaint();
 			}
 		});
@@ -303,6 +307,7 @@ public class TrianglePropertiesPanel extends PropertiesPanel {
 			public void actionPerformed(ActionEvent e) {
 				IntegerTextField tf = (IntegerTextField) e.getSource();
 				vertexB.x = tf.getValue();
+				triangle.setSelected(true);
 				triangle.getComponent().repaint();
 			}
 		});
@@ -310,6 +315,7 @@ public class TrianglePropertiesPanel extends PropertiesPanel {
 			public void focusLost(FocusEvent e) {
 				IntegerTextField tf = (IntegerTextField) e.getSource();
 				vertexB.x = tf.getValue();
+				triangle.setSelected(true);
 				triangle.getComponent().repaint();
 			}
 		});
@@ -323,6 +329,7 @@ public class TrianglePropertiesPanel extends PropertiesPanel {
 			public void actionPerformed(ActionEvent e) {
 				IntegerTextField tf = (IntegerTextField) e.getSource();
 				vertexB.y = tf.getValue();
+				triangle.setSelected(true);
 				triangle.getComponent().repaint();
 			}
 		});
@@ -330,6 +337,7 @@ public class TrianglePropertiesPanel extends PropertiesPanel {
 			public void focusLost(FocusEvent e) {
 				IntegerTextField tf = (IntegerTextField) e.getSource();
 				vertexB.y = tf.getValue();
+				triangle.setSelected(true);
 				triangle.getComponent().repaint();
 			}
 		});
@@ -345,6 +353,7 @@ public class TrianglePropertiesPanel extends PropertiesPanel {
 			public void actionPerformed(ActionEvent e) {
 				IntegerTextField tf = (IntegerTextField) e.getSource();
 				vertexC.x = tf.getValue();
+				triangle.setSelected(true);
 				triangle.getComponent().repaint();
 			}
 		});
@@ -352,6 +361,7 @@ public class TrianglePropertiesPanel extends PropertiesPanel {
 			public void focusLost(FocusEvent e) {
 				IntegerTextField tf = (IntegerTextField) e.getSource();
 				vertexC.x = tf.getValue();
+				triangle.setSelected(true);
 				triangle.getComponent().repaint();
 			}
 		});
@@ -365,6 +375,7 @@ public class TrianglePropertiesPanel extends PropertiesPanel {
 			public void actionPerformed(ActionEvent e) {
 				IntegerTextField tf = (IntegerTextField) e.getSource();
 				vertexC.y = tf.getValue();
+				triangle.setSelected(true);
 				triangle.getComponent().repaint();
 			}
 		});
@@ -372,6 +383,7 @@ public class TrianglePropertiesPanel extends PropertiesPanel {
 			public void focusLost(FocusEvent e) {
 				IntegerTextField tf = (IntegerTextField) e.getSource();
 				vertexC.y = tf.getValue();
+				triangle.setSelected(true);
 				triangle.getComponent().repaint();
 			}
 		});
