@@ -41,12 +41,12 @@ public class TriangleState {
 	}
 
 	public TriangleState(AbstractTriangle t) {
-		xA = t.getVertext(0).x;
-		yA = t.getVertext(0).y;
-		xB = t.getVertext(1).x;
-		yB = t.getVertext(1).y;
-		xC = t.getVertext(2).x;
-		yC = t.getVertext(2).y;
+		xA = t.getVertex(0).x;
+		yA = t.getVertex(0).y;
+		xB = t.getVertex(1).x;
+		yB = t.getVertex(1).y;
+		xC = t.getVertex(2).x;
+		yC = t.getVertex(2).y;
 		angle = t.getAngle();
 		alpha = t.getAlpha();
 		fillMode = t.getFillMode();

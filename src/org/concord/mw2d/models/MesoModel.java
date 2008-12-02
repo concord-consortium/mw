@@ -1354,6 +1354,13 @@ public class MesoModel extends MDModel {
 				rcd[i] = new RectangleComponent.Delegate(rc[i]);
 			vs.setRectangles(rcd);
 		}
+		TriangleComponent[] tc = view.getTriangles();
+		if (tc.length > 0) {
+			TriangleComponent.Delegate[] tcd = new TriangleComponent.Delegate[tc.length];
+			for (int i = 0; i < tc.length; i++)
+				tcd[i] = new TriangleComponent.Delegate(tc[i]);
+			vs.setTriangles(tcd);
+		}
 		EllipseComponent[] ec = view.getEllipses();
 		if (ec.length > 0) {
 			EllipseComponent.Delegate[] ecd = new EllipseComponent.Delegate[ec.length];

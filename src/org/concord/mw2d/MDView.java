@@ -81,7 +81,6 @@ import javax.swing.undo.CannotUndoException;
 import org.concord.modeler.ConnectionManager;
 import org.concord.modeler.ModelerUtilities;
 import org.concord.modeler.VectorFlavor;
-import org.concord.modeler.draw.AbstractRectangle;
 import org.concord.modeler.draw.Draw;
 import org.concord.modeler.draw.FillMode;
 import org.concord.modeler.draw.GradientFactory;
@@ -115,6 +114,7 @@ import org.concord.mw2d.models.RectangleComponent;
 import org.concord.mw2d.models.RectangularBoundary;
 import org.concord.mw2d.models.RectangularObstacle;
 import org.concord.mw2d.models.TextBoxComponent;
+import org.concord.mw2d.models.TriangleComponent;
 import org.concord.mw2d.models.UserField;
 
 import static org.concord.mw2d.UserAction.*;
@@ -844,6 +844,9 @@ public abstract class MDView extends PrintableComponent {
 				else if (c instanceof RectangleComponent) {
 					intersected = ((RectangleComponent) c).intersects(selectedArea);
 				}
+				else if (c instanceof TriangleComponent) {
+					intersected = ((TriangleComponent) c).intersects(selectedArea);
+				}
 				else if (c instanceof EllipseComponent) {
 					intersected = ((EllipseComponent) c).intersects(selectedArea);
 				}
@@ -1378,7 +1381,8 @@ public abstract class MDView extends PrintableComponent {
 		double rmin = 100000000;
 		double rcur = 0;
 		Particle a = null;
-		if (c instanceof ImageComponent || c instanceof RectangleComponent || c instanceof EllipseComponent) {
+		if (c instanceof ImageComponent || c instanceof RectangleComponent || c instanceof EllipseComponent
+				|| c instanceof TriangleComponent || c instanceof LineComponent) {
 			Point p = c.getCenter();
 			for (int i = 0; i < n; i++) {
 				a = getModel().getParticle(i);
@@ -1515,6 +1519,9 @@ public abstract class MDView extends PrintableComponent {
 				}
 				else if (x instanceof RectangleComponent) {
 					y = new RectangleComponent((RectangleComponent) x);
+				}
+				else if (x instanceof TriangleComponent) {
+					y = new TriangleComponent((TriangleComponent) x);
 				}
 				else if (x instanceof EllipseComponent) {
 					y = new EllipseComponent((EllipseComponent) x);
@@ -1673,6 +1680,36 @@ public abstract class MDView extends PrintableComponent {
 				if (o instanceof EllipseComponent) {
 					if (i == n)
 						return (EllipseComponent) o;
+					n++;
+				}
+			}
+		}
+		return null;
+	}
+
+	public TriangleComponent[] getTriangles() {
+		int n = getNumberOfInstances(TriangleComponent.class);
+		TriangleComponent[] l = new TriangleComponent[n];
+		n = 0;
+		synchronized (layerBasket) {
+			for (Layered c : layerBasket) {
+				if (c instanceof TriangleComponent)
+					l[n++] = (TriangleComponent) c;
+			}
+		}
+		return l;
+	}
+
+	/** return the i-th triangle component added to this view */
+	public TriangleComponent getTriangle(int i) {
+		if (layerBasket.isEmpty())
+			return null;
+		int n = 0;
+		synchronized (layerBasket) {
+			for (Layered o : layerBasket) {
+				if (o instanceof TriangleComponent) {
+					if (i == n)
+						return (TriangleComponent) o;
 					n++;
 				}
 			}
@@ -1844,6 +1881,15 @@ public abstract class MDView extends PrintableComponent {
 			return;
 		getModel().setExclusiveSelection(false);
 		EllipseComponent[] t = getEllipses();
+		for (int i = 0; i < t.length; i++)
+			t[i].setSelected(bs == null ? false : bs.get(i));
+	}
+
+	public void setTriangleSelectionSet(BitSet bs) {
+		if (layerBasket == null || layerBasket.isEmpty())
+			return;
+		getModel().setExclusiveSelection(false);
+		TriangleComponent[] t = getTriangles();
 		for (int i = 0; i < t.length; i++)
 			t[i].setSelected(bs == null ? false : bs.get(i));
 	}
@@ -2167,6 +2213,17 @@ public abstract class MDView extends PrintableComponent {
 		}
 	}
 
+	public void loadTriangleComponents(TriangleComponent.Delegate[] tcd) {
+		if (tcd == null)
+			return;
+		for (TriangleComponent.Delegate i : tcd) {
+			TriangleComponent t = new TriangleComponent();
+			t.setModel(getModel());
+			t.set(i);
+			layerBasket.add(t);
+		}
+	}
+
 	/** return the 24-bit color that is in contrast to the background. */
 	public Color contrastBackground() {
 		int i = 0xffffff ^ getBackground().getRGB();
@@ -2341,6 +2398,14 @@ public abstract class MDView extends PrintableComponent {
 			break;
 		case RECT_ID:
 			g.drawRect(selectedArea.x, selectedArea.y, selectedArea.width, selectedArea.height);
+			break;
+		case TRIA_ID:
+			g.drawLine(selectedArea.x + selectedArea.width / 2, selectedArea.y, selectedArea.x, selectedArea.y
+					+ selectedArea.height);
+			g.drawLine(selectedArea.x + selectedArea.width / 2, selectedArea.y, selectedArea.x + selectedArea.width,
+					selectedArea.y + selectedArea.height);
+			g.drawLine(selectedArea.x, selectedArea.y + selectedArea.height, selectedArea.x + selectedArea.width,
+					selectedArea.y + selectedArea.height);
 			break;
 		case ELLI_ID:
 			g.drawOval(selectedArea.x, selectedArea.y, selectedArea.width, selectedArea.height);
@@ -2680,6 +2745,16 @@ public abstract class MDView extends PrintableComponent {
 				ec.storeCurrentState();
 			return i >= 0;
 		}
+		else if (selectedComponent instanceof TriangleComponent) {
+			TriangleComponent tc = (TriangleComponent) selectedComponent;
+			byte i = tc.nearHandle(x, y);
+			tc.setSelectedHandle(i);
+			Rectangle rt = tc.getBounds();
+			setAnchorPointForRectangularShape(i, rt.x, rt.y, rt.width, rt.height);
+			if (i >= 0)
+				tc.storeCurrentState();
+			return i >= 0;
+		}
 		return false;
 	}
 
@@ -2757,6 +2832,12 @@ public abstract class MDView extends PrintableComponent {
 					.nearHandle(x, y)))
 				return true;
 		}
+		else if (selectedComponent instanceof TriangleComponent) {
+			if (((TriangleComponent) selectedComponent).nearHandle(x, y) != -1) {
+				setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+				return true;
+			}
+		}
 		setCursor(UserAction.getCursor(actionID));
 		return false;
 	}
@@ -2823,7 +2904,7 @@ public abstract class MDView extends PrintableComponent {
 					rc.setX(Math.min(x, anchorPoint.x));
 					rc.setWidth(Math.abs(x - anchorPoint.x));
 					break;
-				case AbstractRectangle.ARC_HANDLE:
+				case RectangleComponent.ARC_HANDLE:
 					float arc = x - rc.getX();
 					if (arc < 0)
 						arc = 0;
@@ -2876,6 +2957,22 @@ public abstract class MDView extends PrintableComponent {
 				return true;
 			}
 		}
+		else if (selectedComponent instanceof TriangleComponent) {
+			TriangleComponent tc = (TriangleComponent) selectedComponent;
+			byte i = tc.getSelectedHandle();
+			if (i != -1) {
+				tc.setVertex(i, x, y);
+				repaint();
+				getModel().notifyChange();
+				if (!doNotFireUndoEvent) {
+					getModel().getUndoManager().undoableEditHappened(
+							new UndoableEditEvent(getModel(), new UndoableLayeredComponentOperation(
+									UndoAction.RESIZE_TRIANGLE, tc)));
+					updateUndoUIComponents();
+				}
+				return true;
+			}
+		}
 		return false;
 	}
 
@@ -2892,9 +2989,9 @@ public abstract class MDView extends PrintableComponent {
 			if (dragging) {
 				if (selectedComponent != null)
 					selectedComponent.setSelected(false);
-				LineComponent l = new LineComponent();
-				l.setLine(mousePressedPoint.x, mousePressedPoint.y, dragPoint.x, dragPoint.y);
-				addLayeredComponent(l);
+				LineComponent lc = new LineComponent();
+				lc.setLine(mousePressedPoint.x, mousePressedPoint.y, dragPoint.x, dragPoint.y);
+				addLayeredComponent(lc);
 				repaint();
 				dragging = false;
 			}
@@ -2903,9 +3000,9 @@ public abstract class MDView extends PrintableComponent {
 			if (selectedArea.width > 0 && selectedArea.height > 0) {
 				if (selectedComponent != null)
 					selectedComponent.setSelected(false);
-				RectangleComponent r = new RectangleComponent();
-				r.setRect(selectedArea.x, selectedArea.y, selectedArea.width, selectedArea.height);
-				addLayeredComponent(r);
+				RectangleComponent rc = new RectangleComponent();
+				rc.setRect(selectedArea.x, selectedArea.y, selectedArea.width, selectedArea.height);
+				addLayeredComponent(rc);
 				selectedArea.setSize(0, 0);
 				repaint();
 			}
@@ -2914,9 +3011,22 @@ public abstract class MDView extends PrintableComponent {
 			if (selectedArea.width > 0 && selectedArea.height > 0) {
 				if (selectedComponent != null)
 					selectedComponent.setSelected(false);
-				EllipseComponent r = new EllipseComponent();
-				r.setOval(selectedArea.x, selectedArea.y, selectedArea.width, selectedArea.height);
-				addLayeredComponent(r);
+				EllipseComponent ec = new EllipseComponent();
+				ec.setOval(selectedArea.x, selectedArea.y, selectedArea.width, selectedArea.height);
+				addLayeredComponent(ec);
+				selectedArea.setSize(0, 0);
+				repaint();
+			}
+			break;
+		case TRIA_ID:
+			if (selectedArea.width > 0 && selectedArea.height > 0) {
+				if (selectedComponent != null)
+					selectedComponent.setSelected(false);
+				TriangleComponent tc = new TriangleComponent();
+				tc.setVertex(0, selectedArea.x + selectedArea.width / 2, selectedArea.y);
+				tc.setVertex(1, selectedArea.x, selectedArea.y + selectedArea.height);
+				tc.setVertex(2, selectedArea.x + selectedArea.width, selectedArea.y + selectedArea.height);
+				addLayeredComponent(tc);
 				selectedArea.setSize(0, 0);
 				repaint();
 			}
@@ -3076,6 +3186,9 @@ public abstract class MDView extends PrintableComponent {
 		else if (selectedComponent instanceof EllipseComponent) {
 			pasteBuffer = new EllipseComponent((EllipseComponent) selectedComponent);
 		}
+		else if (selectedComponent instanceof TriangleComponent) {
+			pasteBuffer = new TriangleComponent((TriangleComponent) selectedComponent);
+		}
 	}
 
 	protected void pasteBufferedComponent(int x, int y) {
@@ -3112,6 +3225,11 @@ public abstract class MDView extends PrintableComponent {
 			EllipseComponent e = new EllipseComponent((EllipseComponent) pasteBuffer);
 			e.setLocation(x, y);
 			addLayeredComponent(e);
+		}
+		else if (pasteBuffer instanceof TriangleComponent) {
+			TriangleComponent t = new TriangleComponent((TriangleComponent) pasteBuffer);
+			t.setLocation(x, y);
+			addLayeredComponent(t);
 		}
 	}
 
@@ -3435,6 +3553,7 @@ public abstract class MDView extends PrintableComponent {
 		private LineComponent.Delegate[] lcds;
 		private RectangleComponent.Delegate[] rcds;
 		private EllipseComponent.Delegate[] ecds;
+		private TriangleComponent.Delegate[] tcds;
 
 		public State() {
 			super();
@@ -3507,6 +3626,14 @@ public abstract class MDView extends PrintableComponent {
 
 		public EllipseComponent.Delegate[] getEllipses() {
 			return ecds;
+		}
+
+		public void setTriangles(TriangleComponent.Delegate[] tcds) {
+			this.tcds = tcds;
+		}
+
+		public TriangleComponent.Delegate[] getTriangles() {
+			return tcds;
 		}
 
 		public void setBackground(Color c) {
@@ -3748,7 +3875,7 @@ public abstract class MDView extends PrintableComponent {
 		private Layered lc;
 		private int undoID;
 		private String presentationName = "";
-		private float x1, y1, x2, y2;
+		private float x1, y1, x2, y2, x3, y3;
 
 		UndoableLayeredComponentOperation(int undoID, Layered lc) {
 			this.lc = lc;
@@ -3763,6 +3890,8 @@ public abstract class MDView extends PrintableComponent {
 					presentationName = "Inserting Line";
 				else if (lc instanceof RectangleComponent)
 					presentationName = "Inserting Rectangle";
+				else if (lc instanceof TriangleComponent)
+					presentationName = "Inserting Triangle";
 				else if (lc instanceof EllipseComponent)
 					presentationName = "Inserting Ellipse";
 				break;
@@ -3775,6 +3904,8 @@ public abstract class MDView extends PrintableComponent {
 					presentationName = "Removing Line";
 				else if (lc instanceof RectangleComponent)
 					presentationName = "Removing Rectangle";
+				else if (lc instanceof TriangleComponent)
+					presentationName = "Removing Triangle";
 				else if (lc instanceof EllipseComponent)
 					presentationName = "Removing Ellipse";
 				break;
@@ -3787,6 +3918,8 @@ public abstract class MDView extends PrintableComponent {
 					presentationName = "Sending Back Line";
 				else if (lc instanceof RectangleComponent)
 					presentationName = "Sending Back Rectangle";
+				else if (lc instanceof TriangleComponent)
+					presentationName = "Sending Back Triangle";
 				else if (lc instanceof EllipseComponent)
 					presentationName = "Sending Back Ellipse";
 				break;
@@ -3799,6 +3932,8 @@ public abstract class MDView extends PrintableComponent {
 					presentationName = "Bringing Up Line";
 				else if (lc instanceof RectangleComponent)
 					presentationName = "Bringing Up Rectangle";
+				else if (lc instanceof TriangleComponent)
+					presentationName = "Bringing Up Triangle";
 				else if (lc instanceof EllipseComponent)
 					presentationName = "Bringing Up Ellipse";
 				break;
@@ -3811,6 +3946,8 @@ public abstract class MDView extends PrintableComponent {
 					presentationName = "Bringing Line in Front of Objects";
 				else if (lc instanceof RectangleComponent)
 					presentationName = "Bringing Rectangle in Front of Objects";
+				else if (lc instanceof TriangleComponent)
+					presentationName = "Bringing Triangle in Front of Objects";
 				else if (lc instanceof EllipseComponent)
 					presentationName = "Bringing Ellipse in Front of Objects";
 				break;
@@ -3823,6 +3960,8 @@ public abstract class MDView extends PrintableComponent {
 					presentationName = "Sending Line Behind Objects";
 				else if (lc instanceof RectangleComponent)
 					presentationName = "Sending Rectangle Behind Objects";
+				else if (lc instanceof TriangleComponent)
+					presentationName = "Sending Triangle Behind Objects";
 				else if (lc instanceof EllipseComponent)
 					presentationName = "Sending Ellipse Behind Objects";
 				break;
@@ -3833,6 +3972,8 @@ public abstract class MDView extends PrintableComponent {
 					presentationName = "Attaching Text Box";
 				else if (lc instanceof RectangleComponent)
 					presentationName = "Attaching Rectangle";
+				else if (lc instanceof TriangleComponent)
+					presentationName = "Attaching Triangle";
 				else if (lc instanceof EllipseComponent)
 					presentationName = "Attaching Ellipse";
 				mc = lc.getHost();
@@ -3844,6 +3985,8 @@ public abstract class MDView extends PrintableComponent {
 					presentationName = "Detaching Text Box";
 				else if (lc instanceof RectangleComponent)
 					presentationName = "Detaching Rectangle";
+				else if (lc instanceof TriangleComponent)
+					presentationName = "Detaching Triangle";
 				else if (lc instanceof EllipseComponent)
 					presentationName = "Detaching Ellipse";
 				mc = lc.getHost();
@@ -3864,6 +4007,18 @@ public abstract class MDView extends PrintableComponent {
 					y1 = ((RectangleComponent) lc).getY();
 					x2 = ((RectangleComponent) lc).getWidth();
 					y2 = ((RectangleComponent) lc).getHeight();
+				}
+				break;
+			case UndoAction.RESIZE_TRIANGLE:
+				if (lc instanceof TriangleComponent) {
+					presentationName = "Resizing Triangle";
+					TriangleComponent tc = (TriangleComponent) lc;
+					x1 = tc.getVertex(0).x;
+					y1 = tc.getVertex(0).y;
+					x2 = tc.getVertex(1).x;
+					y2 = tc.getVertex(1).y;
+					x3 = tc.getVertex(2).x;
+					y3 = tc.getVertex(2).y;
 				}
 				break;
 			case UndoAction.RESIZE_ELLIPSE:
@@ -3923,6 +4078,10 @@ public abstract class MDView extends PrintableComponent {
 				if (lc instanceof RectangleComponent)
 					((RectangleComponent) lc).restoreState();
 				break;
+			case UndoAction.RESIZE_TRIANGLE:
+				if (lc instanceof TriangleComponent)
+					((TriangleComponent) lc).restoreState();
+				break;
 			case UndoAction.RESIZE_ELLIPSE:
 				if (lc instanceof EllipseComponent)
 					((EllipseComponent) lc).restoreState();
@@ -3965,19 +4124,24 @@ public abstract class MDView extends PrintableComponent {
 				lc.setHost(null);
 				break;
 			case UndoAction.RESIZE_LINE:
-				if (lc instanceof LineComponent) {
+				if (lc instanceof LineComponent)
 					((LineComponent) lc).setLine(x1, y1, x2, y2);
-				}
 				break;
 			case UndoAction.RESIZE_RECTANGLE:
-				if (lc instanceof RectangleComponent) {
+				if (lc instanceof RectangleComponent)
 					((RectangleComponent) lc).setRect(x1, y1, x2, y2);
+				break;
+			case UndoAction.RESIZE_TRIANGLE:
+				if (lc instanceof TriangleComponent) {
+					TriangleComponent tc = (TriangleComponent) lc;
+					tc.setVertex(0, x1, y1);
+					tc.setVertex(1, x2, y2);
+					tc.setVertex(2, x3, y3);
 				}
 				break;
 			case UndoAction.RESIZE_ELLIPSE:
-				if (lc instanceof EllipseComponent) {
+				if (lc instanceof EllipseComponent)
 					((EllipseComponent) lc).setOval(x1, y1, x2, y2);
-				}
 				break;
 			}
 			doNotFireUndoEvent = false;

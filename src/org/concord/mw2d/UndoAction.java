@@ -50,5 +50,6 @@ final class UndoAction {
 	final static short RESIZE_LINE = 4020;
 	final static short RESIZE_RECTANGLE = 4021;
 	final static short RESIZE_ELLIPSE = 4022;
+	final static short RESIZE_TRIANGLE = 4023;
 
 }
