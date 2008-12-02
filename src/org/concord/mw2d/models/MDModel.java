@@ -98,14 +98,14 @@ import org.concord.mw2d.event.UpdateListener;
 /**
  * For physical units used in the molecular dynamics simulations, we assume the following:
  * <ul>
- * <li> Avogadro's constant = 6 x 10<sup>23</sup> per mole.
- * <li> An electron volt (eV) = 1.6 x 10<sup>-19</sup> joules.
- * <li> Boltzmann's constant = 1.38 x 10<sup>-23</sup> joules/kelvin.
- * <li> Planck's constant (h-bar) = 6.583 x 10<sup>-16</sup> eV*s
- * <li> Unit of mass = 120 g/mol (about 10 times of that of a carbon atom).
- * <li> Unit of length (which maps to a pixel) = 0.1 angstrom = 10<sup>-11</sup> meter.
- * <li> Unit of time = femtosecond = 10<sup>-15</sup> second.
- * <li> Unit of temperature = kelvin.
+ * <li>Avogadro's constant = 6 x 10<sup>23</sup> per mole.
+ * <li>An electron volt (eV) = 1.6 x 10<sup>-19</sup> joules.
+ * <li>Boltzmann's constant = 1.38 x 10<sup>-23</sup> joules/kelvin.
+ * <li>Planck's constant (h-bar) = 6.583 x 10<sup>-16</sup> eV*s
+ * <li>Unit of mass = 120 g/mol (about 10 times of that of a carbon atom).
+ * <li>Unit of length (which maps to a pixel) = 0.1 angstrom = 10<sup>-11</sup> meter.
+ * <li>Unit of time = femtosecond = 10<sup>-15</sup> second.
+ * <li>Unit of temperature = kelvin.
  * </ul>
  * <p>
  * <b>Note to the API users</b>: The reason that the unit of mass is taken as 120 g/mol is because of an old mistake in
@@ -137,13 +137,13 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	public static final short DEFAULT_HEIGHT = 250;
 
 	/*
-	 * converts energy gradient unit into force unit: 1.6E-19 [J] / ( E-11 [m] x 120E-3 / 6E23 [kg] ) / ( E-11 / ( E-15 ) ^
-	 * 2 ) [m/s^2]
+	 * converts energy gradient unit into force unit: 1.6E-19 [J] / ( E-11 [m] x 120E-3 / 6E23 [kg] ) / ( E-11 / ( E-15
+	 * ) ^ 2 ) [m/s^2]
 	 */
 	final static float GF_CONVERSION_CONSTANT = 0.008f;
 
 	/*
-	 * convert m*v*v into eV: ( 120E-3 / 6E23 ) [kg] x ( E-11 / E-15 )^2 [m^2/s^2] / 1.6E-19 [J] divided by 2 (save the
+	 * convert mvv into eV: ( 120E-3 / 6E23 ) [kg] x ( E-11 / E-15 )^2 [m^2/s^2] / 1.6E-19 [J] divided by 2 (save the
 	 * multiplier prefactor 0.5 for computing kinetic energy)
 	 */
 	final static float EV_CONVERTER = 100.0f / 1.6f;
@@ -2383,6 +2383,11 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			view.loadRectangleComponents(rcd);
 			cap += rcd.length;
 		}
+		TriangleComponent.Delegate[] tcd = vs.getTriangles();
+		if (tcd != null) {
+			view.loadTriangleComponents(tcd);
+			cap += tcd.length;
+		}
 		EllipseComponent.Delegate[] ecd = vs.getEllipses();
 		if (ecd != null) {
 			view.loadEllipseComponents(ecd);
@@ -2410,6 +2415,11 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 				RectangleComponent[] rc = view.getRectangles();
 				for (int i = 0; i < rc.length; i++)
 					x[rcd[i].getLayerPosition()] = rc[i];
+			}
+			if (tcd != null) {
+				TriangleComponent[] tc = view.getTriangles();
+				for (int i = 0; i < tc.length; i++)
+					x[tcd[i].getLayerPosition()] = tc[i];
 			}
 			if (ecd != null) {
 				EllipseComponent[] ec = view.getEllipses();

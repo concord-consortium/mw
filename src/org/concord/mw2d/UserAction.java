@@ -947,4 +947,16 @@ public final class UserAction {
 						"<html><p><b><i>Specify a rectangular area and fill it with Ck(#4 fictitious element) atoms.</i></b></p>Atoms will be aligned on a lattice, and can be randomized.</html>");
 	}
 
+	/** action ID for drawing a triangle */
+	public final static short TRIA_ID = 0x1f79;
+	static {
+		Short i = new Short(TRIA_ID);
+		name.put(i, "Draw Triangle");
+		icon.put(i, IconPool.getIcon("triangletool"));
+		cursor.put(i, Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+		String s = getInternationalText("DrawTriangle");
+		description.put(i, s != null ? s : "Draw a triangle");
+		longDescription.put(i, "<html><p><b><i>Draw a triangle.</i></b></p></html>");
+	}
+
 }

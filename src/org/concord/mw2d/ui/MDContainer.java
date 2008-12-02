@@ -1528,6 +1528,7 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 		AbstractButton whatisButton;
 		AbstractButton lineToolButton;
 		AbstractButton rectToolButton;
+		AbstractButton triangleToolButton;
 		AbstractButton ellipseToolButton;
 		AbstractButton markButton;
 		AbstractButton measureButton;
@@ -1563,6 +1564,9 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 
 			rectToolButton = createButton(UserAction.getAction(UserAction.RECT_ID, getModel()));
 			toolBarButtonGroup.add(rectToolButton);
+
+			triangleToolButton = createButton(UserAction.getAction(UserAction.TRIA_ID, getModel()));
+			toolBarButtonGroup.add(triangleToolButton);
 
 			ellipseToolButton = createButton(UserAction.getAction(UserAction.ELLI_ID, getModel()));
 			toolBarButtonGroup.add(ellipseToolButton);
@@ -1737,6 +1741,7 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 			list.add(lineToolButton);
 			list.add(rectToolButton);
 			list.add(ellipseToolButton);
+			list.add(triangleToolButton);
 			list.add(markButton);
 			list.add(countButton);
 			list.add(measureButton);

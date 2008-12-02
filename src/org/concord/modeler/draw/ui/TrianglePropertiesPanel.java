@@ -255,7 +255,7 @@ public class TrianglePropertiesPanel extends PropertiesPanel {
 		label = new JLabel("X1 (" + (s != null ? s : "pixels") + ")", JLabel.LEFT);
 		label.setBorder(margin);
 		p.add(label);
-		final Point2D.Float vertexA = triangle.getVertext(0);
+		final Point2D.Float vertexA = triangle.getVertex(0);
 		IntegerTextField tf = new IntegerTextField((int) vertexA.x, 0, 1000);
 		tf.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -301,7 +301,7 @@ public class TrianglePropertiesPanel extends PropertiesPanel {
 		label = new JLabel("X2 (" + (s != null ? s : "pixels") + ")", JLabel.LEFT);
 		label.setBorder(margin);
 		p.add(label);
-		final Point2D.Float vertexB = triangle.getVertext(1);
+		final Point2D.Float vertexB = triangle.getVertex(1);
 		tf = new IntegerTextField((int) vertexB.x, 0, 1000);
 		tf.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -347,7 +347,7 @@ public class TrianglePropertiesPanel extends PropertiesPanel {
 		label = new JLabel("X3 (" + (s != null ? s : "pixels") + ")", JLabel.LEFT);
 		label.setBorder(margin);
 		p.add(label);
-		final Point2D.Float vertexC = triangle.getVertext(2);
+		final Point2D.Float vertexC = triangle.getVertex(2);
 		tf = new IntegerTextField((int) vertexC.x, 0, 1000);
 		tf.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

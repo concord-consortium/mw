@@ -19,6 +19,7 @@
  * END LICENSE */
 package org.concord.modeler.draw;
 
+import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.GeneralPath;
@@ -81,6 +82,13 @@ public class Triangle {
 
 	public boolean contains(Point2D p) {
 		return contains(p.getX(), p.getY());
+	}
+
+	public boolean intersects(Rectangle r) {
+		Polygon polygon = new Polygon();
+		for (int i = 0; i < 3; i++)
+			polygon.addPoint((int) vertex[i].x, (int) vertex[i].y);
+		return polygon.intersects(r);
 	}
 
 	public boolean contains(double x, double y) {

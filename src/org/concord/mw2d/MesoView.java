@@ -63,6 +63,7 @@ import org.concord.mw2d.models.RectangleComponent;
 import org.concord.mw2d.models.RectangularBoundary;
 import org.concord.mw2d.models.RectangularObstacle;
 import org.concord.mw2d.models.TextBoxComponent;
+import org.concord.mw2d.models.TriangleComponent;
 import org.concord.mw2d.models.UserField;
 import org.concord.mw2d.ui.GayBerneConfigure;
 
@@ -983,6 +984,9 @@ public class MesoView extends MDView {
 			else if (mc instanceof RectangleComponent) {
 				str = "Rectangle #" + getLayeredComponentIndex((RectangleComponent) mc);
 			}
+			else if (mc instanceof TriangleComponent) {
+				str = "Triangle #" + getLayeredComponentIndex((TriangleComponent) mc);
+			}
 			else if (mc instanceof EllipseComponent) {
 				str = "Ellipse #" + getLayeredComponentIndex((EllipseComponent) mc);
 			}
@@ -1080,6 +1084,12 @@ public class MesoView extends MDView {
 
 		case RECT_ID:
 			showActionTip("Drag the mouse to draw a rectangle", x + 10, y + 10);
+			if (clickCount == 1)
+				selectedArea.setLocation(x, y);
+			break;
+
+		case TRIA_ID:
+			showActionTip("Drag the mouse to draw a triangle", x + 10, y + 10);
 			if (clickCount == 1)
 				selectedArea.setLocation(x, y);
 			break;
@@ -1326,6 +1336,13 @@ public class MesoView extends MDView {
 				rc.setLocation(x - 10 - clickPoint.x, y - 10 - clickPoint.y);
 				addLayeredComponent(rc);
 			}
+			else if (mc instanceof TriangleComponent) {
+				showActionTip("Drag the selected triangle to duplicate one", x + 10, y + 10);
+				TriangleComponent tc = new TriangleComponent((TriangleComponent) mc);
+				tc.setSelected(true);
+				tc.setLocation(x - 10 - clickPoint.x, y - 10 - clickPoint.y);
+				addLayeredComponent(tc);
+			}
 			else if (mc instanceof EllipseComponent) {
 				showActionTip("Drag the selected ellipse to duplicate one", x + 10, y + 10);
 				EllipseComponent ec = new EllipseComponent((EllipseComponent) mc);
@@ -1555,6 +1572,12 @@ public class MesoView extends MDView {
 						dragSelected = true;
 						moveHostTo(rc.getHost(), rc.getRx(), rc.getRy());
 					}
+					else if (selectedComponent instanceof TriangleComponent) {
+						TriangleComponent tc = (TriangleComponent) selectedComponent;
+						tc.translateTo(x - clickPoint.x, y - clickPoint.y);
+						dragSelected = true;
+						moveHostTo(tc.getHost(), tc.getRx(), tc.getRy());
+					}
 					else if (selectedComponent instanceof EllipseComponent) {
 						EllipseComponent ec = (EllipseComponent) selectedComponent;
 						ec.translateTo(x - clickPoint.x, y - clickPoint.y);
@@ -1573,6 +1596,7 @@ public class MesoView extends MDView {
 		case MARK_ID:
 		case DELE_ID:
 		case RECT_ID:
+		case TRIA_ID:
 		case ELLI_ID:
 			dragRect(x, y);
 			break;

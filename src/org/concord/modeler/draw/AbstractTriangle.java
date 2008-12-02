@@ -159,6 +159,10 @@ public abstract class AbstractTriangle implements DrawingElement {
 		return triangle.contains(x, y);
 	}
 
+	public boolean intersects(Rectangle r) {
+		return triangle.intersects(r);
+	}
+
 	/**
 	 * @return the handle that is within 4 pixels of the input coordinate (0,1,2). If the coordinate is close to none,
 	 *         return -1.
@@ -182,7 +186,7 @@ public abstract class AbstractTriangle implements DrawingElement {
 			setHandles();
 	}
 
-	public void setLocation(float x, float y) {
+	public void setLocation(double x, double y) {
 		translateTo(x, y);
 	}
 
@@ -278,6 +282,16 @@ public abstract class AbstractTriangle implements DrawingElement {
 		return triangle.getBounds();
 	}
 
+	/** return the width of the bounding box */
+	public int getWidth() {
+		return getBounds().width;
+	}
+
+	/** return the height of the bounding box */
+	public int getHeight() {
+		return getBounds().height;
+	}
+
 	public Point getCenter() {
 		return new Point((int) getRx(), (int) getRy());
 	}
@@ -290,7 +304,7 @@ public abstract class AbstractTriangle implements DrawingElement {
 		return angle;
 	}
 
-	public Point2D.Float getVertext(int i) {
+	public Point2D.Float getVertex(int i) {
 		return triangle.getVertex(i);
 	}
 
@@ -362,11 +376,11 @@ public abstract class AbstractTriangle implements DrawingElement {
 
 		if (selected && selectionDrawn) {
 			g2.setStroke(THIN);
-			for (int i = 0; i < 3; i++) {
+			for (Rectangle i : handle) {
 				g2.setColor(Color.yellow);
-				g2.fill(handle[i]);
+				g2.fill(i);
 				g2.setColor(Color.black);
-				g2.draw(handle[i]);
+				g2.draw(i);
 			}
 		}
 
