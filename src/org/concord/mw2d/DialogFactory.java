@@ -39,6 +39,7 @@ import org.concord.mw2d.models.RadialBond;
 import org.concord.mw2d.models.RectangleComponent;
 import org.concord.mw2d.models.RectangularObstacle;
 import org.concord.mw2d.models.TextBoxComponent;
+import org.concord.mw2d.models.TriangleComponent;
 
 public final class DialogFactory {
 
@@ -81,6 +82,9 @@ public final class DialogFactory {
 				}
 				else if (obj instanceof RectangleComponent) {
 					createDialog((RectangleComponent) obj).setVisible(true);
+				}
+				else if (obj instanceof TriangleComponent) {
+					createDialog((TriangleComponent) obj).setVisible(true);
 				}
 				else if (obj instanceof EllipseComponent) {
 					createDialog((EllipseComponent) obj).setVisible(true);
@@ -290,6 +294,38 @@ public final class DialogFactory {
 		}
 		else {
 			dialog.setLocation(RectangleComponentPropertiesPanel.getOffset());
+		}
+		return dialog;
+	}
+
+	/* create a dialog box for a triangle component */
+	private static JDialog createDialog(final TriangleComponent c) {
+		final JDialog dialog = new JDialog(JOptionPane.getFrameForComponent(c.getHostModel().getView()),
+				"Triangle Properties", true);
+		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		final TriangleComponentPropertiesPanel p = new TriangleComponentPropertiesPanel(c) {
+			public int getIndex() {
+				return ((MDView) c.getHostModel().getView()).getLayeredComponentIndex(c);
+			}
+		};
+		dialog.setContentPane(p);
+		p.setDialog(dialog);
+		String s = MDView.getInternationalText("TriangleProperties");
+		if (s != null)
+			dialog.setTitle(s);
+		dialog.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				p.destroy();
+				TriangleComponentPropertiesPanel.setOffset(dialog.getLocationOnScreen());
+				dialog.dispose();
+			}
+		});
+		dialog.pack();
+		if (TriangleComponentPropertiesPanel.getOffset() == null) {
+			dialog.setLocationRelativeTo(JOptionPane.getFrameForComponent(c.getHostModel().getView()));
+		}
+		else {
+			dialog.setLocation(TriangleComponentPropertiesPanel.getOffset());
 		}
 		return dialog;
 	}
