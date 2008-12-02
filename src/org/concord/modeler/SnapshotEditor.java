@@ -203,6 +203,18 @@ class SnapshotEditor extends JPanel {
 		toolBar.add(button);
 		bg.add(button);
 
+		button = new JToggleButton(IconPool.getIcon("triangletool"));
+		button.setToolTipText("Draw a triangle");
+		if (!Modeler.isMac())
+			button.setMargin(margin);
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				annotater.setMode(ImageAnnotater.TRIANGLE_MODE);
+			}
+		});
+		toolBar.add(button);
+		bg.add(button);
+
 		gridButton = new JToggleButton(new ImageIcon(getClass().getResource("images/GridLines.gif")));
 		gridButton.setToolTipText("Toggle grid lines (double-click to change color)");
 		if (!Modeler.isMac())

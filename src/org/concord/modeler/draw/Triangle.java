@@ -74,8 +74,8 @@ public class Triangle {
 
 	public void translate(float dx, float dy) {
 		for (int i = 0; i < vertex.length; i++) {
-			vertex[0].x += dx;
-			vertex[0].y += dy;
+			vertex[i].x += dx;
+			vertex[i].y += dy;
 		}
 	}
 

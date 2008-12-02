@@ -29,8 +29,8 @@ public class DefaultTriangle extends AbstractTriangle {
 	public DefaultTriangle(float xA, float yA, float xB, float yB, float xC, float yC) {
 		super();
 		setVertex(0, xA, yA);
-		setVertex(1, xA, yA);
-		setVertex(2, xA, yA);
+		setVertex(1, xB, yB);
+		setVertex(2, xC, yC);
 	}
 
 	public DefaultTriangle(TriangleState s) {
