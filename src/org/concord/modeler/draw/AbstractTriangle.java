@@ -339,18 +339,16 @@ public abstract class AbstractTriangle implements DrawingElement {
 				FillMode.GradientFill gfm = (FillMode.GradientFill) fillMode;
 				Color c1 = new Color((alpha << 24) | (0x00ffffff & gfm.getColor1().getRGB()), true);
 				Color c2 = new Color((alpha << 24) | (0x00ffffff & gfm.getColor2().getRGB()), true);
-				Rectangle rect = triangle.getBounds();
-				GradientFactory.paintRect(g2, gfm.getStyle(), gfm.getVariant(), c1, c2, rect.x, rect.y, rect.width,
-						rect.height);
+				GradientFactory.paintTriangle(g2, gfm.getStyle(), gfm.getVariant(), c1, c2, triangle.getVertex(0),
+						triangle.getVertex(1), triangle.getVertex(2), triangle.getBounds());
 			}
 			else if (fillMode instanceof FillMode.PatternFill) {
 				FillMode.PatternFill tfm = (FillMode.PatternFill) fillMode;
 				Color c1 = new Color((alpha << 24) | (0x00ffffff & tfm.getForeground()), true);
 				Color c2 = new Color((alpha << 24) | (0x00ffffff & tfm.getBackground()), true);
-				Rectangle rect = triangle.getBounds();
 				g2.setPaint(PatternFactory.createPattern(tfm.getStyle(), tfm.getCellWidth(), tfm.getCellHeight(), c1,
 						c2));
-				g2.fill(rect);
+				g2.fill(triangle.getShape());
 			}
 
 			if (lineWeight > 0) {
@@ -376,5 +374,4 @@ public abstract class AbstractTriangle implements DrawingElement {
 		g2.setStroke(oldStroke);
 
 	}
-
 }

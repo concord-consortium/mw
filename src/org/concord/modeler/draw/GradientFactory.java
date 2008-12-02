@@ -27,8 +27,10 @@ import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Paint;
+import java.awt.Rectangle;
 import java.awt.Transparency;
 import java.awt.geom.GeneralPath;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
@@ -442,6 +444,123 @@ public class GradientFactory {
 				gp = new GradientPaint(x + 0.5f * w, y + 0.5f * h, color2, x + w, y + 0.5f * h, color1);
 				g.setPaint(gp);
 				g.fill(triangle);
+				break;
+			case VARIANT3:
+				break;
+			case VARIANT4:
+				break;
+			}
+			break;
+		}
+
+	}
+
+	public static void paintTriangle(Graphics2D g, int style, int variant, Color color1, Color color2, Point2D p1,
+			Point2D p2, Point2D p3, Rectangle bounds) {
+
+		if (triangle == null)
+			triangle = new GeneralPath();
+		else triangle.reset();
+		triangle.moveTo((float) p1.getX(), (float) p1.getY());
+		triangle.lineTo((float) p2.getX(), (float) p2.getY());
+		triangle.lineTo((float) p3.getX(), (float) p3.getY());
+		triangle.closePath();
+		int x = bounds.x;
+		int y = bounds.y;
+		int w = bounds.width;
+		int h = bounds.height;
+
+		GradientPaint gp;
+		switch (style) {
+		case HORIZONTAL:
+			switch (variant) {
+			case VARIANT1:
+				gp = new GradientPaint(x, y, color1, x, y + h, color2);
+				g.setPaint(gp);
+				g.fill(triangle);
+				break;
+			case VARIANT2:
+				gp = new GradientPaint(x, y, color2, x, y + h, color1);
+				g.setPaint(gp);
+				g.fill(triangle);
+				break;
+			case VARIANT3:
+				break;
+			case VARIANT4:
+				break;
+			}
+			break;
+		case VERTICAL:
+			switch (variant) {
+			case VARIANT1:
+				gp = new GradientPaint(x, y, color1, x + w, y, color2);
+				g.setPaint(gp);
+				g.fill(triangle);
+				break;
+			case VARIANT2:
+				gp = new GradientPaint(x, y, color2, x + w, y, color1);
+				g.setPaint(gp);
+				g.fill(triangle);
+				break;
+			case VARIANT3:
+				break;
+			case VARIANT4:
+				break;
+			}
+			break;
+		case DIAGONAL_UP:
+			switch (variant) {
+			case VARIANT1:
+				gp = new GradientPaint(x, y, color1, x + w, y + h, color2);
+				g.setPaint(gp);
+				g.fill(triangle);
+				break;
+			case VARIANT2:
+				gp = new GradientPaint(x, y, color2, x + w, y + h, color1);
+				g.setPaint(gp);
+				g.fill(triangle);
+				break;
+			case VARIANT3:
+				break;
+			case VARIANT4:
+				break;
+			}
+			break;
+		case DIAGONAL_DOWN:
+			switch (variant) {
+			case VARIANT1:
+				gp = new GradientPaint(x, y + h, color1, x + w, y, color2);
+				g.setPaint(gp);
+				g.fill(triangle);
+				break;
+			case VARIANT2:
+				gp = new GradientPaint(x, y + h, color2, x + w, y, color1);
+				g.setPaint(gp);
+				g.fill(triangle);
+				break;
+			case VARIANT3:
+				break;
+			case VARIANT4:
+				break;
+			}
+			break;
+		case FROM_CORNER:
+			switch (variant) {
+			case VARIANT1:
+				break;
+			case VARIANT2:
+				break;
+			case VARIANT3:
+				break;
+			case VARIANT4:
+				break;
+			}
+			break;
+		case FROM_CENTER:
+			switch (variant) {
+			case VARIANT1:
+				break;
+			case VARIANT2:
 				break;
 			case VARIANT3:
 				break;
