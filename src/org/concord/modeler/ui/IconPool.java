@@ -163,6 +163,9 @@ public final class IconPool {
 		icon = new ImageIcon(c.getResource("images/recttool.gif"));
 		map.put("recttool", icon);
 
+		icon = new ImageIcon(c.getResource("images/triangletool.gif"));
+		map.put("triangletool", icon);
+
 		icon = new ImageIcon(c.getResource("images/view.gif"));
 		map.put("view", icon);
 

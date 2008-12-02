@@ -67,6 +67,7 @@ import org.concord.modeler.draw.ui.EllipsePropertiesPanel;
 import org.concord.modeler.draw.ui.LinePropertiesPanel;
 import org.concord.modeler.draw.ui.RectanglePropertiesPanel;
 import org.concord.modeler.draw.ui.TextBoxPanel;
+import org.concord.modeler.draw.ui.TrianglePropertiesPanel;
 
 public abstract class Draw extends PrintableComponent {
 
@@ -350,6 +351,7 @@ public abstract class Draw extends PrintableComponent {
 		case LINE_MODE:
 		case RECT_MODE:
 		case ELLIPSE_MODE:
+		case TRIANGLE_MODE:
 			setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 			break;
 		case MEASURE_MODE:
@@ -418,6 +420,12 @@ public abstract class Draw extends PrintableComponent {
 			if (selectHandleCursorForRectangularShape(this, ((AbstractEllipse) selectedElement).nearHandle(x, y)))
 				return;
 		}
+		else if (selectedElement instanceof AbstractTriangle) {
+			if (((AbstractTriangle) selectedElement).nearHandle(x, y) != -1) {
+				setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+				return;
+			}
+		}
 		if (!above) {
 			for (DrawingElement d : componentList) {
 				if (d.contains(x, y)) {
@@ -426,7 +434,7 @@ public abstract class Draw extends PrintableComponent {
 				}
 			}
 		}
-		setCursor(Cursor.getPredefinedCursor(above ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
+		setCursor(Cursor.getPredefinedCursor(above ? Cursor.MOVE_CURSOR : Cursor.DEFAULT_CURSOR));
 	}
 
 	public static boolean selectHandleCursorForRectangularShape(Component c, byte i) {
@@ -548,6 +556,17 @@ public abstract class Draw extends PrintableComponent {
 					r.setSelected(false);
 					selectedElement = null;
 				}
+				else if (selectedElement instanceof AbstractTriangle) {
+					AbstractTriangle r = (AbstractTriangle) selectedElement;
+					byte i = r.nearHandle(x, y);
+					r.setSelectedHandle(i);
+					Rectangle rt = r.getBounds();
+					setAnchorPointForRectangularShape(i, rt.x, rt.y, rt.width, rt.height);
+					if (i >= 0)
+						return;
+					r.setSelected(false);
+					selectedElement = null;
+				}
 				if (!e.isShiftDown()) {
 					int n = componentList.size();
 					if (n > 0) {
@@ -582,6 +601,7 @@ public abstract class Draw extends PrintableComponent {
 			break;
 		case RECT_MODE:
 		case ELLIPSE_MODE:
+		case TRIANGLE_MODE:
 			if (editable) {
 				selectedArea.setLocation(x, y);
 				anchorPoint.setLocation(x, y);
@@ -701,6 +721,17 @@ public abstract class Draw extends PrintableComponent {
 					}
 					repaint();
 				}
+				else if (selectedElement instanceof AbstractTriangle) {
+					AbstractTriangle r = (AbstractTriangle) selectedElement;
+					byte i = r.getSelectedHandle();
+					if (i != -1) {
+						r.setVertex(i, x, y);
+					}
+					else {
+						r.translateTo(x - clickPoint.x, y - clickPoint.y);
+					}
+					repaint();
+				}
 			}
 			else {
 				if (Math.abs(x - dragPoint.x) > 1) {
@@ -731,6 +762,7 @@ public abstract class Draw extends PrintableComponent {
 			break;
 		case RECT_MODE:
 		case ELLIPSE_MODE:
+		case TRIANGLE_MODE:
 			if (editable)
 				dragSelectedArea(x, y);
 			break;
@@ -783,6 +815,21 @@ public abstract class Draw extends PrintableComponent {
 					selectedElement.setSelected(false);
 				DefaultEllipse r = new DefaultEllipse(selectedArea.x, selectedArea.y, selectedArea.width,
 						selectedArea.height);
+				r.setSelected(true);
+				r.setComponent(this);
+				selectedElement = r;
+				addElement(r);
+				selectedArea.setSize(0, 0);
+				repaint();
+			}
+			break;
+		case TRIANGLE_MODE:
+			if (selectedArea.width > 0 && selectedArea.height > 0) {
+				if (selectedElement != null)
+					selectedElement.setSelected(false);
+				DefaultTriangle r = new DefaultTriangle(selectedArea.x + selectedArea.width / 2, selectedArea.y,
+						selectedArea.x, selectedArea.y + selectedArea.height, selectedArea.x + selectedArea.width,
+						selectedArea.y + selectedArea.height);
 				r.setSelected(true);
 				r.setComponent(this);
 				selectedElement = r;
@@ -1035,6 +1082,17 @@ public abstract class Draw extends PrintableComponent {
 				g.drawOval(selectedArea.x, selectedArea.y, selectedArea.width, selectedArea.height);
 			}
 			break;
+		case TRIANGLE_MODE:
+			if (editable) {
+				g.setColor(Color.red);
+				g.drawLine(selectedArea.x + selectedArea.width / 2, selectedArea.y, selectedArea.x, selectedArea.y
+						+ selectedArea.height);
+				g.drawLine(selectedArea.x + selectedArea.width / 2, selectedArea.y,
+						selectedArea.x + selectedArea.width, selectedArea.y + selectedArea.height);
+				g.drawLine(selectedArea.x, selectedArea.y + selectedArea.height, selectedArea.x + selectedArea.width,
+						selectedArea.y + selectedArea.height);
+			}
+			break;
 		case MEASURE_MODE:
 			if (dragging) {
 				g.setColor(measureLineColor);
@@ -1071,6 +1129,8 @@ public abstract class Draw extends PrintableComponent {
 			d = createDialog((AbstractRectangle) e);
 		else if (e instanceof AbstractEllipse)
 			d = createDialog((AbstractEllipse) e);
+		else if (e instanceof AbstractTriangle)
+			d = createDialog((AbstractTriangle) e);
 		else if (e instanceof TextContainer)
 			d = createDialog((TextContainer) e);
 		if (d != null)
@@ -1143,6 +1203,29 @@ public abstract class Draw extends PrintableComponent {
 		if (EllipsePropertiesPanel.getOffset() == null)
 			dialog.setLocationRelativeTo(JOptionPane.getFrameForComponent(this));
 		else dialog.setLocation(EllipsePropertiesPanel.getOffset());
+		return dialog;
+	}
+
+	private JDialog createDialog(final AbstractTriangle r) {
+		final JDialog dialog = new JDialog(JOptionPane.getFrameForComponent(this), "Triangle Properties", true);
+		final TrianglePropertiesPanel p = new TrianglePropertiesPanel(r) {
+			public int getIndex() {
+				return componentList.indexOf(r);
+			}
+		};
+		dialog.setContentPane(p);
+		p.setDialog(dialog);
+		dialog.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				dialog.getContentPane().removeAll();
+				TrianglePropertiesPanel.setOffset(dialog.getLocationOnScreen());
+				dialog.dispose();
+			}
+		});
+		dialog.pack();
+		if (TrianglePropertiesPanel.getOffset() == null)
+			dialog.setLocationRelativeTo(JOptionPane.getFrameForComponent(this));
+		else dialog.setLocation(TrianglePropertiesPanel.getOffset());
 		return dialog;
 	}
 

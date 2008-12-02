@@ -148,7 +148,7 @@ public abstract class AbstractTriangle implements DrawingElement {
 
 	private void setHandles() {
 		if (handle == null)
-			handle = new Rectangle[] { new Rectangle(), new Rectangle(), new Rectangle() };
+			handle = new Rectangle[] { new Rectangle(0, 0, 6, 6), new Rectangle(0, 0, 6, 6), new Rectangle(0, 0, 6, 6) };
 		for (int i = 0; i < 3; i++) {
 			handle[i].x = Math.round(triangle.getVertex(i).x - 3);
 			handle[i].y = Math.round(triangle.getVertex(i).y - 3);
@@ -274,6 +274,10 @@ public abstract class AbstractTriangle implements DrawingElement {
 		return (triangle.getVertex(0).y + triangle.getVertex(1).y + triangle.getVertex(2).y) / 3;
 	}
 
+	public Rectangle getBounds() {
+		return triangle.getBounds();
+	}
+
 	public Point getCenter() {
 		return new Point((int) getRx(), (int) getRy());
 	}
@@ -304,6 +308,7 @@ public abstract class AbstractTriangle implements DrawingElement {
 		Stroke oldStroke = g2.getStroke();
 
 		AffineTransform at = g2.getTransform();
+
 		if (angle != 0)
 			g2.rotate(angle * Math.PI / 180.0, getRx(), getRy());
 
