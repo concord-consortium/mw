@@ -21,6 +21,7 @@
 package org.concord.mw2d.models;
 
 import java.awt.Color;
+import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 
 import org.concord.modeler.draw.AbstractTriangle;
@@ -138,6 +139,44 @@ public class TriangleComponent extends AbstractTriangle implements ModelComponen
 			p.fx -= dmp * p.vx;
 			p.fy -= dmp * p.vy;
 		}
+		if (p instanceof Atom) {
+			switch (reflectionType) {
+			case EXTERNAL_REFLECTION:
+				externalReflection((Atom) p);
+				break;
+			case INTERNAL_REFLECTION:
+				break;
+			}
+		}
+	}
+
+	private void externalReflection(Atom a) {
+		Point2D.Float vA = getVertex(0);
+		Point2D.Float vB = getVertex(1);
+		if (reflect(a, vA, vB))
+			return;
+		Point2D.Float vC = getVertex(2);
+		if (reflect(a, vA, vC))
+			return;
+		reflect(a, vB, vC);
+	}
+
+	private boolean reflect(Atom a, Point2D.Float p1, Point2D.Float p2) {
+		double contactSq = (getLineWeight() + a.sigma) * 0.5;
+		contactSq = contactSq * contactSq;
+		double lineSegSq = Line2D.ptSegDistSq(p1.x, p1.y, p2.x, p2.y, a.rx, a.ry);
+		if (lineSegSq < contactSq) { // in contact
+			System.out.println(">>>>" + lineSegSq + "<<<" + contactSq);
+			double r12 = p1.distance(p2);
+			double cos = (p2.x - p1.x) / r12;
+			double sin = (p2.y - p1.y) / r12;
+			double u = a.vx * cos + a.vy * sin;
+			double w = -a.vx * sin + a.vy * cos;
+			a.vx = u * cos + w * sin;
+			a.vy = u * sin - w * cos;
+			return true;
+		}
+		return false;
 	}
 
 	public int getParticleCount() {
