@@ -40,25 +40,27 @@ public class TriangleComponent extends AbstractTriangle implements ModelComponen
 	private boolean visible = true;
 	private boolean draggable = true;
 	private float viscosity;
+	private byte reflectionType = NO_REFLECTION;
 
 	public TriangleComponent() {
 		super();
 		setLineColor(Color.black);
 	}
 
-	public TriangleComponent(TriangleComponent r) {
+	public TriangleComponent(TriangleComponent t) {
 		this();
 		for (int i = 0; i < 3; i++)
-			setVertex(i, r.getVertex(i).x, r.getVertex(i).y);
-		setFillMode(r.getFillMode());
-		setAlpha(r.getAlpha());
-		setLineStyle(r.getLineStyle());
-		setLineWeight(r.getLineWeight());
-		setLineColor(r.getLineColor());
-		setLayer(r.layer);
-		setModel(r.model);
-		setViscosity(r.viscosity);
-		setVectorField(VectorFieldFactory.getCopy(r.vectorField));
+			setVertex(i, t.getVertex(i).x, t.getVertex(i).y);
+		setFillMode(t.getFillMode());
+		setAlpha(t.getAlpha());
+		setLineStyle(t.getLineStyle());
+		setLineWeight(t.getLineWeight());
+		setLineColor(t.getLineColor());
+		setLayer(t.layer);
+		setModel(t.model);
+		setReflectionType(t.reflectionType);
+		setViscosity(t.viscosity);
+		setVectorField(VectorFieldFactory.getCopy(t.vectorField));
 	}
 
 	public void set(Delegate d) {
@@ -91,6 +93,7 @@ public class TriangleComponent extends AbstractTriangle implements ModelComponen
 				setHost(model.getObstacles().get(index));
 			}
 		}
+		setReflectionType(d.reflectionType);
 		setViscosity(d.viscosity);
 		setVectorField(d.vectorField);
 	}
@@ -147,6 +150,14 @@ public class TriangleComponent extends AbstractTriangle implements ModelComponen
 				m++;
 		}
 		return m;
+	}
+
+	public void setReflectionType(byte type) {
+		reflectionType = type;
+	}
+
+	public byte getReflectionType() {
+		return reflectionType;
 	}
 
 	public void setViscosity(float viscosity) {
@@ -265,40 +276,50 @@ public class TriangleComponent extends AbstractTriangle implements ModelComponen
 		private FillMode fillMode = FillMode.getNoFillMode();
 		private float viscosity;
 		private VectorField vectorField;
+		private byte reflectionType = NO_REFLECTION;
 
 		public Delegate() {
 		}
 
-		public Delegate(TriangleComponent r) {
-			if (r == null)
+		public Delegate(TriangleComponent t) {
+			if (t == null)
 				throw new IllegalArgumentException("arg can't be null");
-			xA = r.getVertex(0).x;
-			yA = r.getVertex(0).y;
-			xB = r.getVertex(1).x;
-			yB = r.getVertex(1).y;
-			xC = r.getVertex(2).x;
-			yC = r.getVertex(2).y;
-			angle = r.getAngle();
-			alpha = r.getAlpha();
-			fillMode = r.getFillMode();
-			lineColor = r.getLineColor();
-			lineWeight = r.getLineWeight();
-			lineStyle = r.getLineStyle();
-			layer = r.getLayer();
-			layerPosition = (byte) ((MDView) r.getHostModel().getView()).getLayerPosition(r);
-			if (r.getHost() != null) {
-				hostType = r.getHost().getClass().toString();
-				if (r.getHost() instanceof Particle) {
-					hostIndex = ((Particle) r.getHost()).getIndex();
+			xA = t.getVertex(0).x;
+			yA = t.getVertex(0).y;
+			xB = t.getVertex(1).x;
+			yB = t.getVertex(1).y;
+			xC = t.getVertex(2).x;
+			yC = t.getVertex(2).y;
+			angle = t.getAngle();
+			alpha = t.getAlpha();
+			fillMode = t.getFillMode();
+			lineColor = t.getLineColor();
+			lineWeight = t.getLineWeight();
+			lineStyle = t.getLineStyle();
+			layer = t.getLayer();
+			layerPosition = (byte) ((MDView) t.getHostModel().getView()).getLayerPosition(t);
+			if (t.getHost() != null) {
+				hostType = t.getHost().getClass().toString();
+				if (t.getHost() instanceof Particle) {
+					hostIndex = ((Particle) t.getHost()).getIndex();
 				}
-				else if (r.getHost() instanceof RectangularObstacle) {
-					hostIndex = r.getHostModel().getObstacles().indexOf(r.getHost());
+				else if (t.getHost() instanceof RectangularObstacle) {
+					hostIndex = t.getHostModel().getObstacles().indexOf(t.getHost());
 				}
 			}
-			viscosity = r.getViscosity();
-			vectorField = r.getVectorField();
-			draggable = r.draggable;
-			visible = r.visible;
+			reflectionType = t.getReflectionType();
+			viscosity = t.getViscosity();
+			vectorField = t.getVectorField();
+			draggable = t.draggable;
+			visible = t.visible;
+		}
+
+		public void setReflectionType(byte type) {
+			reflectionType = type;
+		}
+
+		public byte getReflectionType() {
+			return reflectionType;
 		}
 
 		public void setViscosity(float viscosity) {
