@@ -867,10 +867,10 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 	byte borderCross(double rd, double rx, double ry, double dx, double dy, double x0, double y0, double x1, double y1) {
 
 		if (ballRect == null) {
-			ballRect = new Rectangle2D.Double(rx - rd, ry - rd, rx + rd, ry + rd);
+			ballRect = new Rectangle2D.Double(rx - rd, ry - rd, rd * 2, rd * 2);
 		}
 		else {
-			ballRect.setFrame(rx - rd, ry - rd, rd + rd, rd + rd);
+			ballRect.setFrame(rx - rd, ry - rd, rd * 2, rd * 2);
 		}
 		if (intersectRect == null)
 			intersectRect = new Rectangle2D.Double();
@@ -1015,8 +1015,8 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 	}
 
 	/**
-	 * create a new rectangular obstacle with the same properties. Override <tt>RectangularShape.clone()</tt> because
-	 * it will not draw the stripes, an action requiring "deep copy" operations.
+	 * create a new rectangular obstacle with the same properties. Override <tt>RectangularShape.clone()</tt> because it
+	 * will not draw the stripes, an action requiring "deep copy" operations.
 	 */
 	public Object clone() {
 		RectangularObstacle r = new RectangularObstacle(x, y, width, height);
