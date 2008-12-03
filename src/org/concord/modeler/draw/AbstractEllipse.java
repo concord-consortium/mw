@@ -293,6 +293,26 @@ public abstract class AbstractEllipse implements DrawingElement {
 		translateTo(x, y);
 	}
 
+	public void snapPosition(byte positionCode) {
+		switch (positionCode) {
+		case SNAP_TO_CENTER:
+			setLocation(component.getWidth() * 0.5, component.getHeight() * 0.5);
+			break;
+		case SNAP_TO_NORTH_SIDE:
+			setLocation(component.getWidth() * 0.5, height * 0.5);
+			break;
+		case SNAP_TO_SOUTH_SIDE:
+			setLocation(component.getWidth() * 0.5, component.getHeight() - height * 0.5);
+			break;
+		case SNAP_TO_EAST_SIDE:
+			setLocation(component.getWidth() - width * 0.5, component.getHeight() * 0.5);
+			break;
+		case SNAP_TO_WEST_SIDE:
+			setLocation(width * 0.5, component.getHeight() * 0.5);
+			break;
+		}
+	}
+
 	public void translateBy(double dx, double dy) {
 		x += (int) dx;
 		y += (int) dy;

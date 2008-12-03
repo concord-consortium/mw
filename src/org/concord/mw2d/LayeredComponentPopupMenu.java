@@ -36,6 +36,7 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
 import org.concord.modeler.ModelerUtilities;
+import org.concord.modeler.draw.DrawingElement;
 import org.concord.modeler.process.Executable;
 import org.concord.modeler.ui.IconPool;
 import org.concord.mw2d.models.ElectricField;
@@ -44,6 +45,7 @@ import org.concord.mw2d.models.ImageComponent;
 import org.concord.mw2d.models.Layered;
 import org.concord.mw2d.models.LineComponent;
 import org.concord.mw2d.models.MagneticField;
+import org.concord.mw2d.models.TriangleComponent;
 
 class LayeredComponentPopupMenu extends JPopupMenu {
 
@@ -127,7 +129,8 @@ class LayeredComponentPopupMenu extends JPopupMenu {
 					boolean b = ((Layered) view.selectedComponent).getLayer() == Layered.IN_FRONT_OF_PARTICLES;
 					bringFrontMI.setEnabled(!b);
 					sendBehindMI.setEnabled(b);
-					b = view.selectedComponent instanceof LineComponent;
+					b = view.selectedComponent instanceof LineComponent
+							|| view.selectedComponent instanceof TriangleComponent;
 					positionMenu.setEnabled(!b);
 					if (b)
 						attachMI.setEnabled(false);
@@ -389,10 +392,18 @@ class LayeredComponentPopupMenu extends JPopupMenu {
 
 		a = new DefaultModelAction(view.getModel(), new Executable() {
 			public void execute() {
-				if (view.selectedComponent instanceof Layered) {
+				if (view.selectedComponent instanceof DrawingElement) {
 					view.selectedComponent.storeCurrentState();
-					Layered c = (Layered) view.selectedComponent;
-					c.setLocation((view.getWidth() - c.getWidth()) * 0.5, (view.getHeight() - c.getHeight()) * 0.5);
+					DrawingElement c = (DrawingElement) view.selectedComponent;
+					c.snapPosition(DrawingElement.SNAP_TO_CENTER);
+					view.getModel().notifyChange();
+					view.prepareToUndoPositioning();
+					view.repaint();
+				}
+				else if (view.selectedComponent instanceof ImageComponent) {
+					view.selectedComponent.storeCurrentState();
+					ImageComponent c = (ImageComponent) view.selectedComponent;
+					c.snapPosition(DrawingElement.SNAP_TO_CENTER);
 					view.getModel().notifyChange();
 					view.prepareToUndoPositioning();
 					view.repaint();
@@ -410,10 +421,18 @@ class LayeredComponentPopupMenu extends JPopupMenu {
 
 		a = new DefaultModelAction(view.getModel(), new Executable() {
 			public void execute() {
-				if (view.selectedComponent instanceof Layered) {
+				if (view.selectedComponent instanceof DrawingElement) {
 					view.selectedComponent.storeCurrentState();
-					Layered c = (Layered) view.selectedComponent;
-					c.setLocation((view.getWidth() - c.getWidth()) * 0.5, 0);
+					DrawingElement c = (DrawingElement) view.selectedComponent;
+					c.snapPosition(DrawingElement.SNAP_TO_NORTH_SIDE);
+					view.getModel().notifyChange();
+					view.prepareToUndoPositioning();
+					view.repaint();
+				}
+				else if (view.selectedComponent instanceof ImageComponent) {
+					view.selectedComponent.storeCurrentState();
+					ImageComponent c = (ImageComponent) view.selectedComponent;
+					c.snapPosition(DrawingElement.SNAP_TO_NORTH_SIDE);
 					view.getModel().notifyChange();
 					view.prepareToUndoPositioning();
 					view.repaint();
@@ -431,10 +450,18 @@ class LayeredComponentPopupMenu extends JPopupMenu {
 
 		a = new DefaultModelAction(view.getModel(), new Executable() {
 			public void execute() {
-				if (view.selectedComponent instanceof Layered) {
+				if (view.selectedComponent instanceof DrawingElement) {
 					view.selectedComponent.storeCurrentState();
-					Layered c = (Layered) view.selectedComponent;
-					c.setLocation((view.getWidth() - c.getWidth()) * 0.5, view.getHeight() - c.getHeight());
+					DrawingElement c = (DrawingElement) view.selectedComponent;
+					c.snapPosition(DrawingElement.SNAP_TO_SOUTH_SIDE);
+					view.getModel().notifyChange();
+					view.prepareToUndoPositioning();
+					view.repaint();
+				}
+				else if (view.selectedComponent instanceof ImageComponent) {
+					view.selectedComponent.storeCurrentState();
+					ImageComponent c = (ImageComponent) view.selectedComponent;
+					c.snapPosition(DrawingElement.SNAP_TO_SOUTH_SIDE);
 					view.getModel().notifyChange();
 					view.prepareToUndoPositioning();
 					view.repaint();
@@ -452,10 +479,18 @@ class LayeredComponentPopupMenu extends JPopupMenu {
 
 		a = new DefaultModelAction(view.getModel(), new Executable() {
 			public void execute() {
-				if (view.selectedComponent instanceof Layered) {
+				if (view.selectedComponent instanceof DrawingElement) {
 					view.selectedComponent.storeCurrentState();
-					Layered c = (Layered) view.selectedComponent;
-					c.setLocation(view.getWidth() - c.getWidth(), (view.getHeight() - c.getHeight()) * 0.5);
+					DrawingElement c = (DrawingElement) view.selectedComponent;
+					c.snapPosition(DrawingElement.SNAP_TO_EAST_SIDE);
+					view.getModel().notifyChange();
+					view.prepareToUndoPositioning();
+					view.repaint();
+				}
+				else if (view.selectedComponent instanceof ImageComponent) {
+					view.selectedComponent.storeCurrentState();
+					ImageComponent c = (ImageComponent) view.selectedComponent;
+					c.snapPosition(DrawingElement.SNAP_TO_EAST_SIDE);
 					view.getModel().notifyChange();
 					view.prepareToUndoPositioning();
 					view.repaint();
@@ -473,10 +508,18 @@ class LayeredComponentPopupMenu extends JPopupMenu {
 
 		a = new DefaultModelAction(view.getModel(), new Executable() {
 			public void execute() {
-				if (view.selectedComponent instanceof Layered) {
+				if (view.selectedComponent instanceof DrawingElement) {
 					view.selectedComponent.storeCurrentState();
-					Layered c = (Layered) view.selectedComponent;
-					c.setLocation(0, (view.getHeight() - c.getHeight()) * 0.5);
+					DrawingElement c = (DrawingElement) view.selectedComponent;
+					c.snapPosition(DrawingElement.SNAP_TO_WEST_SIDE);
+					view.getModel().notifyChange();
+					view.prepareToUndoPositioning();
+					view.repaint();
+				}
+				if (view.selectedComponent instanceof ImageComponent) {
+					view.selectedComponent.storeCurrentState();
+					ImageComponent c = (ImageComponent) view.selectedComponent;
+					c.snapPosition(DrawingElement.SNAP_TO_WEST_SIDE);
 					view.getModel().notifyChange();
 					view.prepareToUndoPositioning();
 					view.repaint();
