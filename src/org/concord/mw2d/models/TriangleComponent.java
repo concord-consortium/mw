@@ -41,7 +41,8 @@ public class TriangleComponent extends AbstractTriangle implements ModelComponen
 	private boolean visible = true;
 	private boolean draggable = true;
 	private float viscosity;
-	private byte reflectionType = NO_REFLECTION;
+	private boolean reflection;
+	private double previousSegDistSq = Double.MAX_VALUE;
 
 	public TriangleComponent() {
 		super();
@@ -59,7 +60,7 @@ public class TriangleComponent extends AbstractTriangle implements ModelComponen
 		setLineColor(t.getLineColor());
 		setLayer(t.layer);
 		setModel(t.model);
-		setReflectionType(t.reflectionType);
+		setReflection(t.reflection);
 		setViscosity(t.viscosity);
 		setVectorField(VectorFieldFactory.getCopy(t.vectorField));
 	}
@@ -94,7 +95,7 @@ public class TriangleComponent extends AbstractTriangle implements ModelComponen
 				setHost(model.getObstacles().get(index));
 			}
 		}
-		setReflectionType(d.reflectionType);
+		setReflection(d.reflection);
 		setViscosity(d.viscosity);
 		setVectorField(d.vectorField);
 	}
@@ -132,25 +133,29 @@ public class TriangleComponent extends AbstractTriangle implements ModelComponen
 	}
 
 	public void interact(Particle p) {
-		if (!contains(p.rx, p.ry))
-			return;
-		if (viscosity > Particle.ZERO) {
-			double dmp = MDModel.GF_CONVERSION_CONSTANT * viscosity / p.getMass();
-			p.fx -= dmp * p.vx;
-			p.fy -= dmp * p.vy;
+		boolean contained = contains(p.rx, p.ry);
+		if (contained) {
+			if (viscosity > Particle.ZERO) {
+				double dmp = MDModel.GF_CONVERSION_CONSTANT * viscosity / p.getMass();
+				p.fx -= dmp * p.vx;
+				p.fy -= dmp * p.vy;
+			}
+			if (reflection) {
+				if (p instanceof Atom) {
+					internalReflection((Atom) p);
+				}
+			}
 		}
-		if (p instanceof Atom) {
-			switch (reflectionType) {
-			case EXTERNAL_REFLECTION:
-				externalReflection((Atom) p);
-				break;
-			case INTERNAL_REFLECTION:
-				break;
+		else {
+			if (reflection) {
+				if (p instanceof Atom) {
+					externalReflection((Atom) p);
+				}
 			}
 		}
 	}
 
-	private void externalReflection(Atom a) {
+	private void internalReflection(Atom a) {
 		Point2D.Float vA = getVertex(0);
 		Point2D.Float vB = getVertex(1);
 		if (reflect(a, vA, vB))
@@ -165,8 +170,8 @@ public class TriangleComponent extends AbstractTriangle implements ModelComponen
 		double contactSq = (getLineWeight() + a.sigma) * 0.5;
 		contactSq = contactSq * contactSq;
 		double lineSegSq = Line2D.ptSegDistSq(p1.x, p1.y, p2.x, p2.y, a.rx, a.ry);
+		// System.out.println(">>>>" + lineSegSq + "<<<" + contactSq);
 		if (lineSegSq < contactSq) { // in contact
-			System.out.println(">>>>" + lineSegSq + "<<<" + contactSq);
 			double r12 = p1.distance(p2);
 			double cos = (p2.x - p1.x) / r12;
 			double sin = (p2.y - p1.y) / r12;
@@ -174,6 +179,38 @@ public class TriangleComponent extends AbstractTriangle implements ModelComponen
 			double w = -a.vx * sin + a.vy * cos;
 			a.vx = u * cos + w * sin;
 			a.vy = u * sin - w * cos;
+			return true;
+		}
+		return false;
+	}
+
+	private void externalReflection(Atom a) {
+		Point2D.Float vA = getVertex(0);
+		Point2D.Float vB = getVertex(1);
+		if (reflect2(a, vA, vB))
+			return;
+		Point2D.Float vC = getVertex(2);
+		if (reflect2(a, vA, vC))
+			return;
+		reflect2(a, vB, vC);
+	}
+
+	private boolean reflect2(Atom a, Point2D.Float p1, Point2D.Float p2) {
+		double contactSq = (getLineWeight() + a.sigma) * 0.5;
+		contactSq = contactSq * contactSq;
+		double lineSegSq = Line2D.ptSegDistSq(p1.x, p1.y, p2.x, p2.y, a.rx, a.ry);
+		// System.out.println(">>>>" + lineSegSq + "<<<" + contactSq);
+		if (lineSegSq < contactSq) { // in contact
+			if (lineSegSq < previousSegDistSq) {
+				double r12 = p1.distance(p2);
+				double cos = (p2.x - p1.x) / r12;
+				double sin = (p2.y - p1.y) / r12;
+				double u = a.vx * cos + a.vy * sin;
+				double w = -a.vx * sin + a.vy * cos;
+				a.vx = u * cos + w * sin;
+				a.vy = u * sin - w * cos;
+			}
+			previousSegDistSq = lineSegSq;
 			return true;
 		}
 		return false;
@@ -191,12 +228,12 @@ public class TriangleComponent extends AbstractTriangle implements ModelComponen
 		return m;
 	}
 
-	public void setReflectionType(byte type) {
-		reflectionType = type;
+	public void setReflection(boolean b) {
+		reflection = b;
 	}
 
-	public byte getReflectionType() {
-		return reflectionType;
+	public boolean getReflection() {
+		return reflection;
 	}
 
 	public void setViscosity(float viscosity) {
@@ -315,7 +352,7 @@ public class TriangleComponent extends AbstractTriangle implements ModelComponen
 		private FillMode fillMode = FillMode.getNoFillMode();
 		private float viscosity;
 		private VectorField vectorField;
-		private byte reflectionType = NO_REFLECTION;
+		private boolean reflection;
 
 		public Delegate() {
 		}
@@ -346,19 +383,19 @@ public class TriangleComponent extends AbstractTriangle implements ModelComponen
 					hostIndex = t.getHostModel().getObstacles().indexOf(t.getHost());
 				}
 			}
-			reflectionType = t.getReflectionType();
+			reflection = t.getReflection();
 			viscosity = t.getViscosity();
 			vectorField = t.getVectorField();
 			draggable = t.draggable;
 			visible = t.visible;
 		}
 
-		public void setReflectionType(byte type) {
-			reflectionType = type;
+		public void setReflection(boolean b) {
+			reflection = b;
 		}
 
-		public byte getReflectionType() {
-			return reflectionType;
+		public boolean getReflection() {
+			return reflection;
 		}
 
 		public void setViscosity(float viscosity) {

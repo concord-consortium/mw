@@ -25,13 +25,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 
 import org.concord.mw2d.models.FieldArea;
 
@@ -56,31 +55,10 @@ class FieldAreaShapeReflectionAction {
 		JPanel p = new JPanel();
 		p.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-		ButtonGroup bg = new ButtonGroup();
-		s = MDView.getInternationalText("None");
-		final JRadioButton rb1 = new JRadioButton(s != null ? s : "None");
-		bg.add(rb1);
-		p.add(rb1);
-		s = MDView.getInternationalText("ExternalReflection");
-		final JRadioButton rb2 = new JRadioButton(s != null ? s : "External Reflection");
-		bg.add(rb2);
-		p.add(rb2);
-		s = MDView.getInternationalText("InternalReflection");
-		final JRadioButton rb3 = new JRadioButton(s != null ? s : "Internal Reflection");
-		bg.add(rb3);
-		p.add(rb3);
-
-		switch (area.getReflectionType()) {
-		case FieldArea.NO_REFLECTION:
-			rb1.setSelected(true);
-			break;
-		case FieldArea.EXTERNAL_REFLECTION:
-			rb2.setSelected(true);
-			break;
-		case FieldArea.INTERNAL_REFLECTION:
-			rb3.setSelected(true);
-			break;
-		}
+		s = MDView.getInternationalText("ReflectionEnabled");
+		final JCheckBox cb = new JCheckBox(s != null ? s : "Reflection Enabled");
+		cb.setSelected(area.getReflection());
+		p.add(cb);
 
 		dialog.getContentPane().add(p, BorderLayout.CENTER);
 
@@ -89,15 +67,7 @@ class FieldAreaShapeReflectionAction {
 		JButton b = new JButton(s != null ? s : "OK");
 		b.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (rb1.isSelected()) {
-					area.setReflectionType(FieldArea.NO_REFLECTION);
-				}
-				else if (rb2.isSelected()) {
-					area.setReflectionType(FieldArea.EXTERNAL_REFLECTION);
-				}
-				else if (rb3.isSelected()) {
-					area.setReflectionType(FieldArea.INTERNAL_REFLECTION);
-				}
+				area.setReflection(cb.isSelected());
 				dialog.dispose();
 			}
 		});

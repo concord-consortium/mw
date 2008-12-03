@@ -156,9 +156,8 @@ class LayeredComponentPopupMenu extends JPopupMenu {
 						}
 						miViscosity.setBackground(fa.getViscosity() > 0 ? SystemColor.controlHighlight : physicsMenu
 								.getBackground());
-						miShapeReflect
-								.setBackground(fa.getReflectionType() != FieldArea.NO_REFLECTION ? SystemColor.controlHighlight
-										: physicsMenu.getBackground());
+						miShapeReflect.setBackground(fa.getReflection() ? SystemColor.controlHighlight : physicsMenu
+								.getBackground());
 					}
 					else if (view.selectedComponent instanceof LineComponent) {
 						physicsMenu.setEnabled(true);
