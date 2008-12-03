@@ -165,7 +165,7 @@ public class TriangleComponent extends AbstractTriangle implements ModelComponen
 		}
 		this.vectorField = vectorField;
 		if (this.vectorField != null)
-			this.vectorField.setBounds(getBounds());
+			this.vectorField.setBounds(getShape());
 	}
 
 	public VectorField getVectorField() {

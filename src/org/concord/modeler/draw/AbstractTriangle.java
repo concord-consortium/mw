@@ -28,6 +28,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
@@ -300,6 +301,10 @@ public abstract class AbstractTriangle implements DrawingElement {
 
 	public Rectangle getBounds() {
 		return triangle.getBounds();
+	}
+
+	public Shape getShape() {
+		return triangle.getShape();
 	}
 
 	/** return the width of the bounding box */
