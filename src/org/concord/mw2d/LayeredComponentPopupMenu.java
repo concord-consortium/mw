@@ -65,7 +65,7 @@ class LayeredComponentPopupMenu extends JPopupMenu {
 	private JMenuItem eastMI;
 	private JMenuItem westMI;
 	private JMenu physicsMenu;
-	private JMenuItem miEField, miBField, miReflect, miViscosity;
+	private JMenuItem miEField, miBField, miLineReflect, miViscosity, miShapeReflect;
 	private JMenuItem miVisible, miDraggable;
 
 	LayeredComponentPopupMenu(final MDView view) {
@@ -136,17 +136,18 @@ class LayeredComponentPopupMenu extends JPopupMenu {
 						attachMI.setEnabled(false);
 					if (view.selectedComponent instanceof FieldArea) {
 						physicsMenu.setEnabled(true);
+						physicsMenu.add(miShapeReflect);
 						physicsMenu.add(miViscosity);
 						physicsMenu.add(miEField);
 						physicsMenu.add(miBField);
-						physicsMenu.remove(miReflect);
+						physicsMenu.remove(miLineReflect);
 						FieldArea fa = (FieldArea) view.selectedComponent;
 						if (fa.getVectorField() instanceof ElectricField) {
 							miEField.setBackground(SystemColor.controlHighlight);
-							miBField.setBackground(miReflect.getBackground());
+							miBField.setBackground(miLineReflect.getBackground());
 						}
 						else if (fa.getVectorField() instanceof MagneticField) {
-							miEField.setBackground(miReflect.getBackground());
+							miEField.setBackground(miLineReflect.getBackground());
 							miBField.setBackground(SystemColor.controlHighlight);
 						}
 						else {
@@ -155,14 +156,18 @@ class LayeredComponentPopupMenu extends JPopupMenu {
 						}
 						miViscosity.setBackground(fa.getViscosity() > 0 ? SystemColor.controlHighlight : physicsMenu
 								.getBackground());
+						miShapeReflect
+								.setBackground(fa.getReflectionType() != FieldArea.NO_REFLECTION ? SystemColor.controlHighlight
+										: physicsMenu.getBackground());
 					}
 					else if (view.selectedComponent instanceof LineComponent) {
 						physicsMenu.setEnabled(true);
+						physicsMenu.remove(miShapeReflect);
 						physicsMenu.remove(miViscosity);
 						physicsMenu.remove(miEField);
 						physicsMenu.remove(miBField);
-						physicsMenu.add(miReflect);
-						miReflect.setSelected(((LineComponent) view.selectedComponent).isReflector());
+						physicsMenu.add(miLineReflect);
+						miLineReflect.setSelected(((LineComponent) view.selectedComponent).isReflector());
 					}
 					else {
 						physicsMenu.setEnabled(false);
@@ -247,6 +252,19 @@ class LayeredComponentPopupMenu extends JPopupMenu {
 		add(physicsMenu);
 		addSeparator();
 
+		miShapeReflect = new JMenuItem("Reflection");
+		s = MDView.getInternationalText("Reflection");
+		if (s != null)
+			miShapeReflect.setText(s);
+		miShapeReflect.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (view.selectedComponent instanceof FieldArea)
+					new FieldAreaShapeReflectionAction((FieldArea) view.selectedComponent).createDialog(view)
+							.setVisible(true);
+			}
+		});
+		physicsMenu.add(miShapeReflect);
+
 		miViscosity = new JMenuItem("Viscosity");
 		s = MDView.getInternationalText("MediumViscosityLabel");
 		if (s != null)
@@ -273,15 +291,15 @@ class LayeredComponentPopupMenu extends JPopupMenu {
 		physicsMenu.add(miBField);
 
 		s = MDView.getInternationalText("Reflection");
-		miReflect = new JCheckBoxMenuItem(s != null ? s : "Reflection");
-		miReflect.addItemListener(new ItemListener() {
+		miLineReflect = new JCheckBoxMenuItem(s != null ? s : "Reflection");
+		miLineReflect.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (view.selectedComponent instanceof LineComponent) {
 					((LineComponent) view.selectedComponent).setReflector(e.getStateChange() == ItemEvent.SELECTED);
 				}
 			}
 		});
-		physicsMenu.add(miReflect);
+		physicsMenu.add(miLineReflect);
 
 		// order
 

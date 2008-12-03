@@ -27,6 +27,10 @@ import java.awt.Shape;
  */
 public interface FieldArea {
 
+	public final static byte NO_REFLECTION = -1;
+	public final static byte EXTERNAL_REFLECTION = 0;
+	public final static byte INTERNAL_REFLECTION = 1;
+
 	public void setVectorField(VectorField vectorField);
 
 	public VectorField getVectorField();
@@ -38,5 +42,9 @@ public interface FieldArea {
 	public Shape getBounds();
 
 	public void interact(Particle p);
+
+	public void setReflectionType(byte type);
+
+	public byte getReflectionType();
 
 }

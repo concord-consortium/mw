@@ -39,6 +39,7 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 	private boolean visible = true;
 	private boolean draggable = true;
 	private float viscosity;
+	private byte reflectionType = NO_REFLECTION;
 
 	public EllipseComponent() {
 		super();
@@ -57,6 +58,7 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 		setLineColor(e.getLineColor());
 		setLayer(e.layer);
 		setModel(e.model);
+		setReflectionType(e.reflectionType);
 		setViscosity(e.getViscosity());
 		setVectorField(VectorFieldFactory.getCopy(e.vectorField));
 	}
@@ -91,6 +93,7 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 				setHost(model.getObstacles().get(index));
 			}
 		}
+		setReflectionType(d.reflectionType);
 		setViscosity(d.viscosity);
 		setVectorField(d.vectorField);
 	}
@@ -140,6 +143,14 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 				m++;
 		}
 		return m;
+	}
+
+	public void setReflectionType(byte type) {
+		reflectionType = type;
+	}
+
+	public byte getReflectionType() {
+		return reflectionType;
 	}
 
 	public void setViscosity(float viscosity) {
@@ -260,6 +271,7 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 		private FillMode fillMode = FillMode.getNoFillMode();
 		private float viscosity;
 		private VectorField vectorField;
+		private byte reflectionType = NO_REFLECTION;
 
 		public Delegate() {
 		}
@@ -290,10 +302,19 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 					hostIndex = e.getHostModel().getObstacles().indexOf(e.getHost());
 				}
 			}
+			reflectionType = e.getReflectionType();
 			viscosity = e.getViscosity();
 			vectorField = e.getVectorField();
 			draggable = e.draggable;
 			visible = e.visible;
+		}
+
+		public void setReflectionType(byte type) {
+			reflectionType = type;
+		}
+
+		public byte getReflectionType() {
+			return reflectionType;
 		}
 
 		public void setViscosity(float viscosity) {
