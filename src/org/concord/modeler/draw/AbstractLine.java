@@ -228,6 +228,26 @@ public abstract class AbstractLine implements DrawingElement {
 		translateTo(x, y);
 	}
 
+	public void snapPosition(byte positionCode) {
+		switch (positionCode) {
+		case SNAP_TO_CENTER:
+			setLocation(component.getWidth() * 0.5, component.getHeight() * 0.5);
+			break;
+		case SNAP_TO_NORTH_SIDE:
+			setLocation(component.getWidth() * 0.5, getHeight() * 0.5);
+			break;
+		case SNAP_TO_SOUTH_SIDE:
+			setLocation(component.getWidth() * 0.5, component.getHeight() - 0.5 * getHeight());
+			break;
+		case SNAP_TO_EAST_SIDE:
+			setLocation(component.getWidth() - 0.5 * getWidth(), component.getHeight() * 0.5);
+			break;
+		case SNAP_TO_WEST_SIDE:
+			setLocation(0.5 * getWidth(), component.getHeight() * 0.5);
+			break;
+		}
+	}
+
 	public void translateBy(double dx, double dy) {
 		line.x1 += (float) dx;
 		line.y1 += (float) dy;

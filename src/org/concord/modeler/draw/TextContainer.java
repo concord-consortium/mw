@@ -358,6 +358,26 @@ public abstract class TextContainer implements DrawingElement {
 		setRy(y);
 	}
 
+	public void snapPosition(byte positionCode) {
+		switch (positionCode) {
+		case SNAP_TO_CENTER:
+			setLocation((component.getWidth() - getWidth()) * 0.5, (component.getHeight() - getHeight()) * 0.5);
+			break;
+		case SNAP_TO_NORTH_SIDE:
+			setLocation((component.getWidth() - getWidth()) * 0.5, 0);
+			break;
+		case SNAP_TO_SOUTH_SIDE:
+			setLocation((component.getWidth() - getWidth()) * 0.5, component.getHeight() - getHeight());
+			break;
+		case SNAP_TO_EAST_SIDE:
+			setLocation(component.getWidth() - getWidth(), (component.getHeight() - getHeight()) * 0.5);
+			break;
+		case SNAP_TO_WEST_SIDE:
+			setLocation(0, (component.getHeight() - getHeight()) * 0.5);
+			break;
+		}
+	}
+
 	/** same as <code>setLocation(double, double)</code> */
 	public void translateTo(double x, double y) {
 		setLocation(x, y);

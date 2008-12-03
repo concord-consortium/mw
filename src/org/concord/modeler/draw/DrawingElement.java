@@ -25,12 +25,18 @@ import java.awt.Graphics;
 
 public interface DrawingElement {
 
+	public final static byte SNAP_TO_CENTER = 0;
+	public final static byte SNAP_TO_NORTH_SIDE = 1;
+	public final static byte SNAP_TO_EAST_SIDE = 2;
+	public final static byte SNAP_TO_SOUTH_SIDE = 3;
+	public final static byte SNAP_TO_WEST_SIDE = 4;
+
 	public void setSelected(boolean b);
 
 	public boolean isSelected();
 
 	public void setSelectionDrawn(boolean b);
-	
+
 	public boolean isSelectionDrawn();
 
 	public void paint(Graphics g);
@@ -46,5 +52,7 @@ public interface DrawingElement {
 	public double getRy();
 
 	public void setComponent(Component c);
+
+	public void snapPosition(byte positionCode);
 
 }

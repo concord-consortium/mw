@@ -37,6 +37,7 @@ import javax.swing.ImageIcon;
 
 import org.concord.modeler.ConnectionManager;
 import org.concord.modeler.Modeler;
+import org.concord.modeler.draw.DrawingElement;
 import org.concord.modeler.text.XMLCharacterEncoder;
 import org.concord.modeler.util.FileUtilities;
 import org.concord.modeler.util.GifDecoder;
@@ -417,6 +418,27 @@ public class ImageComponent implements ModelComponent, Layered, Rotatable {
 	/** return the current y coordinate of this image */
 	public double getRy() {
 		return y;
+	}
+
+	public void snapPosition(byte positionCode) {
+		switch (positionCode) {
+		case DrawingElement.SNAP_TO_CENTER:
+			setLocation((model.getView().getWidth() - getWidth()) * 0.5,
+					(model.getView().getHeight() - getHeight()) * 0.5);
+			break;
+		case DrawingElement.SNAP_TO_NORTH_SIDE:
+			setLocation((model.getView().getWidth() - getWidth()) * 0.5, 0);
+			break;
+		case DrawingElement.SNAP_TO_SOUTH_SIDE:
+			setLocation((model.getView().getWidth() - getWidth()) * 0.5, model.getView().getHeight() - getHeight());
+			break;
+		case DrawingElement.SNAP_TO_EAST_SIDE:
+			setLocation(model.getView().getWidth() - getWidth(), (model.getView().getHeight() - getHeight()) * 0.5);
+			break;
+		case DrawingElement.SNAP_TO_WEST_SIDE:
+			setLocation(0, (model.getView().getHeight() - getHeight()) * 0.5);
+			break;
+		}
 	}
 
 	/** set the location of this image */

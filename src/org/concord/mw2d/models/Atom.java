@@ -742,7 +742,7 @@ public class Atom extends Particle {
 	}
 
 	public void render(Graphics2D g) {
-
+		
 		if (outOfView())
 			return;
 
