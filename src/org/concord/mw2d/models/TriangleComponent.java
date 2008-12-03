@@ -149,7 +149,8 @@ public class TriangleComponent extends AbstractTriangle implements ModelComponen
 		else {
 			if (reflection) {
 				if (p instanceof Atom) {
-					externalReflection((Atom) p);
+					if (intersects(p.getBounds2D().getBounds()))
+						externalReflection((Atom) p);
 				}
 			}
 		}
@@ -170,13 +171,12 @@ public class TriangleComponent extends AbstractTriangle implements ModelComponen
 		double contactSq = (getLineWeight() + a.sigma) * 0.5;
 		contactSq = contactSq * contactSq;
 		double lineSegSq = Line2D.ptSegDistSq(p1.x, p1.y, p2.x, p2.y, a.rx, a.ry);
-		// System.out.println(">>>>" + lineSegSq + "<<<" + contactSq);
 		if (lineSegSq < contactSq) { // in contact
 			double r12 = p1.distance(p2);
 			double cos = (p2.x - p1.x) / r12;
 			double sin = (p2.y - p1.y) / r12;
 			double u = a.vx * cos + a.vy * sin;
-			double w = -a.vx * sin + a.vy * cos;
+			double w = a.vy * cos - a.vx * sin;
 			a.vx = u * cos + w * sin;
 			a.vy = u * sin - w * cos;
 			return true;
@@ -199,14 +199,16 @@ public class TriangleComponent extends AbstractTriangle implements ModelComponen
 		double contactSq = (getLineWeight() + a.sigma) * 0.5;
 		contactSq = contactSq * contactSq;
 		double lineSegSq = Line2D.ptSegDistSq(p1.x, p1.y, p2.x, p2.y, a.rx, a.ry);
-		// System.out.println(">>>>" + lineSegSq + "<<<" + contactSq);
 		if (lineSegSq < contactSq) { // in contact
+			// System.out.println(">>>>" + lineSegSq + "<<<" + contactSq);
 			if (lineSegSq < previousSegDistSq) {
 				double r12 = p1.distance(p2);
 				double cos = (p2.x - p1.x) / r12;
 				double sin = (p2.y - p1.y) / r12;
 				double u = a.vx * cos + a.vy * sin;
 				double w = -a.vx * sin + a.vy * cos;
+				if (Math.abs(w) < Particle.ZERO || Math.abs(u / w) > 10)
+					return false; // if velocity is parallel or nearly parallel to this side, skip
 				a.vx = u * cos + w * sin;
 				a.vy = u * sin - w * cos;
 			}
