@@ -39,7 +39,7 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 	private boolean visible = true;
 	private boolean draggable = true;
 	private float viscosity;
-	private byte reflectionType = NO_REFLECTION;
+	private boolean reflection;
 
 	public EllipseComponent() {
 		super();
@@ -58,7 +58,7 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 		setLineColor(e.getLineColor());
 		setLayer(e.layer);
 		setModel(e.model);
-		setReflectionType(e.reflectionType);
+		setReflection(e.reflection);
 		setViscosity(e.getViscosity());
 		setVectorField(VectorFieldFactory.getCopy(e.vectorField));
 	}
@@ -93,7 +93,7 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 				setHost(model.getObstacles().get(index));
 			}
 		}
-		setReflectionType(d.reflectionType);
+		setReflection(d.reflection);
 		setViscosity(d.viscosity);
 		setVectorField(d.vectorField);
 	}
@@ -145,12 +145,12 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 		return m;
 	}
 
-	public void setReflectionType(byte type) {
-		reflectionType = type;
+	public void setReflection(boolean b) {
+		reflection = b;
 	}
 
-	public byte getReflectionType() {
-		return reflectionType;
+	public boolean getReflection() {
+		return reflection;
 	}
 
 	public void setViscosity(float viscosity) {
@@ -271,7 +271,7 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 		private FillMode fillMode = FillMode.getNoFillMode();
 		private float viscosity;
 		private VectorField vectorField;
-		private byte reflectionType = NO_REFLECTION;
+		private boolean reflection;
 
 		public Delegate() {
 		}
@@ -302,19 +302,19 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 					hostIndex = e.getHostModel().getObstacles().indexOf(e.getHost());
 				}
 			}
-			reflectionType = e.getReflectionType();
+			reflection = e.getReflection();
 			viscosity = e.getViscosity();
 			vectorField = e.getVectorField();
 			draggable = e.draggable;
 			visible = e.visible;
 		}
 
-		public void setReflectionType(byte type) {
-			reflectionType = type;
+		public void setReflection(boolean b) {
+			reflection = b;
 		}
 
-		public byte getReflectionType() {
-			return reflectionType;
+		public boolean getReflection() {
+			return reflection;
 		}
 
 		public void setViscosity(float viscosity) {
