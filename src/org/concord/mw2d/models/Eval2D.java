@@ -159,6 +159,7 @@ class Eval2D extends AbstractEval {
 		s = replaceAll(s, "%number_of_textboxes", view.getNumberOfInstances(TextBoxComponent.class));
 		s = replaceAll(s, "%number_of_lines", view.getNumberOfInstances(LineComponent.class));
 		s = replaceAll(s, "%number_of_rectangles", view.getNumberOfInstances(RectangleComponent.class));
+		s = replaceAll(s, "%number_of_triangles", view.getNumberOfInstances(TriangleComponent.class));
 		s = replaceAll(s, "%number_of_ellipses", view.getNumberOfInstances(EllipseComponent.class));
 		s = replaceAll(s, "%width", model.boundary.getView().getBounds().width * R_CONVERTER);
 		s = replaceAll(s, "%height", model.boundary.getView().getBounds().height * R_CONVERTER);
@@ -655,6 +656,53 @@ class Eval2D extends AbstractEval {
 		return s;
 	}
 
+	private String useTriangleVariables(String s) {
+		int n = view.getNumberOfInstances(TriangleComponent.class);
+		if (n <= 0)
+			return s;
+		int lb = s.indexOf("%triangle[");
+		int rb = s.indexOf("].", lb);
+		int lb0 = -1;
+		String v;
+		int i;
+		TriangleComponent triangle;
+		while (lb != -1 && rb != -1) {
+			v = s.substring(lb + 10, rb);
+			double x = parseMathExpression(v);
+			if (Double.isNaN(x))
+				break;
+			i = (int) Math.round(x);
+			if (i < 0 || i >= n) {
+				out(ScriptEvent.FAILED, "Triangle " + i + " does not exist.");
+				break;
+			}
+			v = escapeMetaCharacters(v);
+			triangle = view.getTriangle(i);
+			s = replaceAll(s, "%triangle\\[" + v + "\\]\\.x1", triangle.getVertex(0).x * R_CONVERTER);
+			s = replaceAll(s, "%triangle\\[" + v + "\\]\\.y1", triangle.getVertex(0).y * R_CONVERTER);
+			s = replaceAll(s, "%triangle\\[" + v + "\\]\\.x2", triangle.getVertex(1).x * R_CONVERTER);
+			s = replaceAll(s, "%triangle\\[" + v + "\\]\\.y2", triangle.getVertex(1).y * R_CONVERTER);
+			s = replaceAll(s, "%triangle\\[" + v + "\\]\\.x3", triangle.getVertex(2).x * R_CONVERTER);
+			s = replaceAll(s, "%triangle\\[" + v + "\\]\\.y3", triangle.getVertex(2).y * R_CONVERTER);
+			s = replaceAll(s, "%triangle\\[" + v + "\\]\\.particlecount", triangle.getParticleCount());
+			VectorField vf = triangle.getVectorField();
+			if (vf instanceof ElectricField)
+				s = replaceAll(s, "%triangle\\[" + v + "\\]\\.efield", vf.getIntensity());
+			else if (vf instanceof MagneticField)
+				s = replaceAll(s, "%triangle\\[" + v + "\\]\\.bfield", vf.getIntensity());
+			else {
+				s = replaceAll(s, "%triangle\\[" + v + "\\]\\.efield", 0);
+				s = replaceAll(s, "%triangle\\[" + v + "\\]\\.bfield", 0);
+			}
+			lb0 = lb;
+			lb = s.indexOf("%triangle[");
+			if (lb0 == lb) // infinite loop
+				break;
+			rb = s.indexOf("].", lb);
+		}
+		return s;
+	}
+
 	private String useEllipseVariables(String s) {
 		int n = view.getNumberOfInstances(EllipseComponent.class);
 		if (n <= 0)
@@ -747,6 +795,7 @@ class Eval2D extends AbstractEval {
 		s = useTextBoxVariables(s);
 		s = useLineVariables(s);
 		s = useRectangleVariables(s);
+		s = useTriangleVariables(s);
 		s = useEllipseVariables(s);
 		s = super.useDefinitions(s);
 		// user-definition should go last (e.g. for set %model_time 0; not to override system variables)
@@ -3338,6 +3387,19 @@ class Eval2D extends AbstractEval {
 			return true;
 		}
 
+		// triangle field
+		matcher = TRIANGLE_FIELD.matcher(str);
+		if (matcher.find()) {
+			int end = matcher.end();
+			s = str.substring(end).trim().split(REGEX_WHITESPACE + "+");
+			if (s.length < 2) {
+				out(ScriptEvent.FAILED, "Argument error: " + str);
+				return false;
+			}
+			setTriangleField(str.substring(0, end - 1), s[0], s[1]);
+			return true;
+		}
+
 		// ellipse field
 		matcher = ELLIPSE_FIELD.matcher(str);
 		if (matcher.find()) {
@@ -5623,6 +5685,128 @@ class Eval2D extends AbstractEval {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
 				c[i].setAngle((float) x);
+		}
+		else if (s == "stroke") {
+			double x = parseMathExpression(str3);
+			if (!Double.isNaN(x)) {
+				if (x >= 0 && x < LineStyle.STROKES.length)
+					c[i].setLineStyle((byte) x);
+			}
+		}
+		else if (s == "color") {
+			Color color = parseRGBColor(str3);
+			if (color != null)
+				c[i].setFillMode(new FillMode.ColorFill(color));
+		}
+		else if (s == "visible") {
+			c[i].setVisible("on".equalsIgnoreCase(str3));
+		}
+		else if (s == "draggable") {
+			c[i].setDraggable("on".equalsIgnoreCase(str3));
+		}
+		else if (s == "layer") {
+			if ("in_front_of_particles".equalsIgnoreCase(str3)) {
+				c[i].setLayer(Layered.IN_FRONT_OF_PARTICLES);
+			}
+			else if ("behind_particles".equalsIgnoreCase(str3)) {
+				c[i].setLayer(Layered.BEHIND_PARTICLES);
+			}
+			else if ("back".equalsIgnoreCase(str3)) {
+				view.sendLayerToBack(c[i]);
+			}
+			else if ("front".equalsIgnoreCase(str3)) {
+				view.bringLayerToFront(c[i]);
+			}
+		}
+		else {
+			out(ScriptEvent.FAILED, "Cannot set propery: " + str2);
+			b = false;
+		}
+		if (b) {
+			notifyChange();
+			view.repaint();
+		}
+	}
+
+	private void setTriangleField(String str1, String str2, String str3) {
+		int lb = str1.indexOf("[");
+		int rb = str1.indexOf("]");
+		double z = parseMathExpression(str1.substring(lb + 1, rb));
+		if (Double.isNaN(z))
+			return;
+		int i = (int) Math.round(z);
+		TriangleComponent[] c = view.getTriangles();
+		if (i < 0 || i >= c.length) {
+			out(ScriptEvent.FAILED, "Triangle " + i + " doesn't exisit.");
+			return;
+		}
+		String s = str2.toLowerCase().intern();
+		boolean b = true;
+		if (s == "alpha") {
+			double x = parseMathExpression(str3);
+			if (!Double.isNaN(x))
+				c[i].setAlpha((short) x);
+		}
+		else if (s == "x1") {
+			double x = parseMathExpression(str3);
+			if (!Double.isNaN(x))
+				c[i].getVertex(0).x = (float) (x * IR_CONVERTER);
+		}
+		else if (s == "y1") {
+			double x = parseMathExpression(str3);
+			if (!Double.isNaN(x))
+				c[i].getVertex(0).y = (float) (x * IR_CONVERTER);
+		}
+		else if (s == "x2") {
+			double x = parseMathExpression(str3);
+			if (!Double.isNaN(x))
+				c[i].getVertex(1).x = (float) (x * IR_CONVERTER);
+		}
+		else if (s == "y2") {
+			double x = parseMathExpression(str3);
+			if (!Double.isNaN(x))
+				c[i].getVertex(1).y = (float) (x * IR_CONVERTER);
+		}
+		else if (s == "x3") {
+			double x = parseMathExpression(str3);
+			if (!Double.isNaN(x))
+				c[i].getVertex(2).x = (float) (x * IR_CONVERTER);
+		}
+		else if (s == "y3") {
+			double x = parseMathExpression(str3);
+			if (!Double.isNaN(x))
+				c[i].getVertex(2).y = (float) (x * IR_CONVERTER);
+		}
+		else if (s == "efield") {
+			double x = parseMathExpression(str3);
+			if (!Double.isNaN(x)) {
+				VectorField vf = c[i].getVectorField();
+				if (vf instanceof ElectricField) {
+					vf.setIntensity(x);
+				}
+				else {
+					out(ScriptEvent.FAILED, "Please turn on the efield for triangle " + i + " and set its direction.");
+					return;
+				}
+			}
+		}
+		else if (s == "bfield") {
+			double x = parseMathExpression(str3);
+			if (!Double.isNaN(x)) {
+				VectorField vf = c[i].getVectorField();
+				if (vf instanceof MagneticField) {
+					vf.setIntensity(x);
+				}
+				else {
+					out(ScriptEvent.FAILED, "Please turn on the bfield for triangle " + i + " and set its direction.");
+					return;
+				}
+			}
+		}
+		else if (s == "viscosity") {
+			double x = parseMathExpression(str3);
+			if (!Double.isNaN(x))
+				c[i].setViscosity((float) x);
 		}
 		else if (s == "stroke") {
 			double x = parseMathExpression(str3);

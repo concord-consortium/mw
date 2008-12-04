@@ -182,6 +182,8 @@ public class Compiler {
 			+ REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
 	public final static Pattern RECTANGLE_FIELD = compile("^%?((?i)rectangle){1}(\\[){1}" + REGEX_WHITESPACE + "*"
 			+ REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
+	public final static Pattern TRIANGLE_FIELD = compile("^%?((?i)triangle){1}(\\[){1}" + REGEX_WHITESPACE + "*"
+			+ REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
 	public final static Pattern ELLIPSE_FIELD = compile("^%?((?i)ellipse){1}(\\[){1}" + REGEX_WHITESPACE + "*"
 			+ REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
 	public final static Pattern TEXTBOX_FIELD = compile("^%?((?i)textbox){1}(\\[){1}" + REGEX_WHITESPACE + "*"
