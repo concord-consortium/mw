@@ -85,6 +85,7 @@ class Eval2D extends AbstractEval {
 	private final static byte BY_LINE = 19;
 	private final static byte BY_RECTANGLE = 20;
 	private final static byte BY_ELLIPSE = 21;
+	private final static byte BY_TRIANGLE = 22;
 
 	private final static Pattern PCF = compile("(^(?i)pcf\\b){1}");
 	private final static Pattern TCF = compile("(^(?i)tcf\\b){1}");
@@ -243,6 +244,7 @@ class Eval2D extends AbstractEval {
 				s = replaceAll(s, "%particle\\[" + v + "\\]\\.hx", p.hx * IR_CONVERTER);
 				s = replaceAll(s, "%particle\\[" + v + "\\]\\.hy", p.hy * IR_CONVERTER);
 				s = replaceAll(s, "%particle\\[" + v + "\\]\\.gamma", p.gamma);
+				s = replaceAll(s, "%particle\\[" + v + "\\]\\.custom", p.custom);
 				if (frame < 0) {
 					s = replaceAll(s, "%particle\\[" + v + "\\]\\.rx", p.rx * R_CONVERTER);
 					s = replaceAll(s, "%particle\\[" + v + "\\]\\.ry", p.ry * R_CONVERTER);
@@ -274,6 +276,7 @@ class Eval2D extends AbstractEval {
 				s = replaceAll(s, "%particle\\[" + v + "\\]\\.mass", a.mass * M_CONVERTER);
 				s = replaceAll(s, "%particle\\[" + v + "\\]\\.hx", a.hx * IR_CONVERTER);
 				s = replaceAll(s, "%particle\\[" + v + "\\]\\.hy", a.hy * IR_CONVERTER);
+				s = replaceAll(s, "%particle\\[" + v + "\\]\\.custom", a.custom);
 				if (frame < 0) {
 					s = replaceAll(s, "%particle\\[" + v + "\\]\\.rx", a.rx * R_CONVERTER);
 					s = replaceAll(s, "%particle\\[" + v + "\\]\\.ry", a.ry * R_CONVERTER);
@@ -322,6 +325,7 @@ class Eval2D extends AbstractEval {
 				s = replaceAll(s, "%atom\\[" + v + "\\]\\.restraint", a.restraint != null ? a.restraint.k * 100 : 0);
 				s = replaceAll(s, "%atom\\[" + v + "\\]\\.hx", a.hx * IR_CONVERTER);
 				s = replaceAll(s, "%atom\\[" + v + "\\]\\.hy", a.hy * IR_CONVERTER);
+				s = replaceAll(s, "%atom\\[" + v + "\\]\\.custom", a.custom);
 				if (frame < 0) {
 					s = replaceAll(s, "%atom\\[" + v + "\\]\\.rx", a.rx * R_CONVERTER);
 					s = replaceAll(s, "%atom\\[" + v + "\\]\\.ry", a.ry * R_CONVERTER);
@@ -378,6 +382,7 @@ class Eval2D extends AbstractEval {
 			s = replaceAll(s, "%rbond\\[" + v + "\\]\\.bondlength", bond.getBondLength() * R_CONVERTER);
 			s = replaceAll(s, "%rbond\\[" + v + "\\]\\.atom1", bond.atom1.getIndex());
 			s = replaceAll(s, "%rbond\\[" + v + "\\]\\.atom2", bond.atom2.getIndex());
+			s = replaceAll(s, "%rbond\\[" + v + "\\]\\.custom", bond.custom);
 			lb0 = lb;
 			lb = s.indexOf("%rbond[");
 			if (lb0 == lb) // infinite loop
@@ -474,6 +479,7 @@ class Eval2D extends AbstractEval {
 			s = replaceAll(s, "%obstacle\\[" + v + "\\]\\.hy", o.getHy() * 1000);
 			s = replaceAll(s, "%obstacle\\[" + v + "\\]\\.externalfx", o.getHx() * 1000); // deprecated
 			s = replaceAll(s, "%obstacle\\[" + v + "\\]\\.externalfy", o.getHy() * 1000); // deprecated
+			s = replaceAll(s, "%obstacle\\[" + v + "\\]\\.custom", o.custom);
 			lb0 = lb;
 			lb = s.indexOf("%obstacle[");
 			if (lb0 == lb) // infinite loop
@@ -566,6 +572,7 @@ class Eval2D extends AbstractEval {
 			s = replaceAll(s, "%image\\[" + v + "\\]\\.angle", Math.toDegrees(ic.getAngle()));
 			s = replaceAll(s, "%image\\[" + v + "\\]\\.width", ic.getWidth() * R_CONVERTER);
 			s = replaceAll(s, "%image\\[" + v + "\\]\\.height", ic.getHeight() * R_CONVERTER);
+			s = replaceAll(s, "%image\\[" + v + "\\]\\.custom", ic.custom);
 			lb0 = lb;
 			lb = s.indexOf("%image[");
 			if (lb0 == lb) // infinite loop
@@ -1421,6 +1428,22 @@ class Eval2D extends AbstractEval {
 			if (!getAsTask())
 				out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0)
 						+ " rectangles are selected.");
+			return true;
+		}
+
+		matcher = TRIANGLE.matcher(clause); // select by triangle
+		if (matcher.find()) {
+			String str = clause.substring(matcher.end()).trim();
+			BitSet selection = null;
+			if (LOGICAL_OPERATOR.matcher(str).find()) { // logical expressions
+				selection = parseLogicalExpression(str, BY_TRIANGLE);
+			}
+			else {
+				selection = selectTriangles(str);
+			}
+			if (!getAsTask())
+				out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0)
+						+ " triangles are selected.");
 			return true;
 		}
 
@@ -5024,6 +5047,8 @@ class Eval2D extends AbstractEval {
 		boolean b = true;
 		if (s == "color")
 			m.gb[i].color = new Color((int) x);
+		else if (s == "custom")
+			m.gb[i].custom = (float) x;
 		else if (s == "rx")
 			m.gb[i].rx = x * IR_CONVERTER;
 		else if (s == "ry")
@@ -5103,6 +5128,8 @@ class Eval2D extends AbstractEval {
 		boolean b = true;
 		if (s == "color")
 			m.atom[i].color = new Color((int) x);
+		else if (s == "custom")
+			m.atom[i].custom = (float) x;
 		else if (s == "id")
 			m.atom[i].setElement(m.getElement((int) x));
 		else if (s == "rx")
@@ -5196,9 +5223,8 @@ class Eval2D extends AbstractEval {
 		}
 		String s = str2.toLowerCase().intern();
 		boolean b = true;
-		if (s == "color") {
+		if (s == "color")
 			m.bonds.get(i).setBondColor(new Color((int) x));
-		}
 		else if (s == "strength") {
 			if (Math.abs(x) < ZERO) {
 				m.bonds.remove(m.bonds.get(i));
@@ -5208,18 +5234,16 @@ class Eval2D extends AbstractEval {
 				m.bonds.get(i).setBondStrength(x);
 			}
 		}
-		else if (s == "bondlength") {
+		else if (s == "custom")
+			m.bonds.get(i).custom = (float) x;
+		else if (s == "bondlength")
 			m.bonds.get(i).setBondLength(x * IR_CONVERTER);
-		}
-		else if (s == "amplitude") {
+		else if (s == "amplitude")
 			m.bonds.get(i).setAmplitude(0.001f * (float) x);
-		}
-		else if (s == "period") {
+		else if (s == "period")
 			m.bonds.get(i).setPeriod((int) x);
-		}
-		else if (s == "phase") {
+		else if (s == "phase")
 			m.bonds.get(i).setPhase((float) (x * Math.PI / 180));
-		}
 		else if (s == "torque") {
 			if (Math.abs(x) < ZERO) {
 				m.bonds.get(i).setTorque(0);
@@ -5390,6 +5414,8 @@ class Eval2D extends AbstractEval {
 			obs.setVx(x * IV_CONVERTER);
 		else if (s == "vy")
 			obs.setVy(x * IV_CONVERTER);
+		else if (s == "custom")
+			obs.custom = (float) x;
 		else if (s == "density")
 			obs.setDensity(x * 0.01);
 		else if (s == "friction")
@@ -5464,11 +5490,14 @@ class Eval2D extends AbstractEval {
 		}
 		String s = str2.toLowerCase().intern();
 		boolean b = true;
-		if (s == "visible") {
+		if (s == "visible")
 			ic[i].setVisible("on".equalsIgnoreCase(str3));
-		}
-		else if (s == "draggable") {
+		else if (s == "draggable")
 			ic[i].setDraggable("on".equalsIgnoreCase(str3));
+		else if (s == "custom") {
+			double x = parseMathExpression(str3);
+			if (!Double.isNaN(x))
+				ic[i].custom = (float) x;
 		}
 		else if (s == "x") {
 			double x = parseMathExpression(str3);
@@ -6887,6 +6916,37 @@ class Eval2D extends AbstractEval {
 		return null;
 	}
 
+	private BitSet selectTriangles(String str) {
+		int n = view.getNumberOfInstances(TriangleComponent.class);
+		if (n == 0)
+			return null;
+		BitSet bs = new BitSet(n);
+		if ("selected".equalsIgnoreCase(str)) {
+			for (int i = 0; i < n; i++) {
+				if (view.getTriangle(i).isSelected())
+					bs.set(i);
+			}
+			return bs;
+		}
+		if (selectFromCollection(str, n, bs)) {
+			view.setTriangleSelectionSet(bs);
+			return bs;
+		}
+		Matcher matcher = WITHIN_RECTANGLE.matcher(str);
+		if (matcher.find()) {
+			Rectangle2D area = getWithinArea(str);
+			for (int i = 0; i < n; i++) {
+				if (area.contains(view.getTriangle(i).getCenter())) {
+					bs.set(i);
+				}
+			}
+			view.setTriangleSelectionSet(bs);
+			return bs;
+		}
+		out(ScriptEvent.FAILED, "Unrecognized expression: " + str);
+		return null;
+	}
+
 	private BitSet selectEllipses(String str) {
 		int n = view.getNumberOfInstances(EllipseComponent.class);
 		if (n == 0)
@@ -7005,6 +7065,9 @@ class Eval2D extends AbstractEval {
 					break;
 				case BY_RECTANGLE:
 					bs = selectRectangles(s);
+					break;
+				case BY_TRIANGLE:
+					bs = selectTriangles(s);
 					break;
 				case BY_ELLIPSE:
 					bs = selectEllipses(s);

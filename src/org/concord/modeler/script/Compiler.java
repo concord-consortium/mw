@@ -77,6 +77,7 @@ public class Compiler {
 	public final static Pattern TEXTBOX = compile("(^(?i)textbox\\b){1}");
 	public final static Pattern LINE = compile("(^(?i)line\\b){1}");
 	public final static Pattern RECTANGLE = compile("(^(?i)rectangle\\b){1}");
+	public final static Pattern TRIANGLE = compile("(^(?i)triangle\\b){1}");
 	public final static Pattern ELLIPSE = compile("(^(?i)ellipse\\b){1}");
 	public final static Pattern BACKGROUND = compile("(^(?i)background\\b){1}");
 	public final static Pattern MESSAGE = compile("(^(?i)message\\b){1}");

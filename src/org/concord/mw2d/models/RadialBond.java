@@ -67,6 +67,7 @@ public class RadialBond implements ModelComponent {
 	float amplitude;
 	int period = 100;
 	float phase;
+	float custom;
 
 	/*
 	 * Chemical energy stored in this bond. This energy is always set positive, though in the total energy calculation
@@ -306,8 +307,8 @@ public class RadialBond implements ModelComponent {
 
 	/**
 	 * return true if the coordinate is inside the hot spot of this bond. Note: This is different from the base class
-	 * <tt>Line2D</tt>'s <tt>contains</tt> method's "always-return-false" behavior. Be aware of that this method
-	 * can return true.
+	 * <tt>Line2D</tt>'s <tt>contains</tt> method's "always-return-false" behavior. Be aware of that this method can
+	 * return true.
 	 */
 	public boolean contains(double x, double y) {
 		setAxis();
@@ -316,8 +317,8 @@ public class RadialBond implements ModelComponent {
 
 	/**
 	 * return true if the rectangular area is inside the hot spot of this bond. Note: This is different from the base
-	 * class <tt>Line2D</tt>'s <tt>contains</tt> method's "always-return-false" behavior. Be aware of that this
-	 * method can return true.
+	 * class <tt>Line2D</tt>'s <tt>contains</tt> method's "always-return-false" behavior. Be aware of that this method
+	 * can return true.
 	 */
 	public boolean contains(double x, double y, double w, double h) {
 		setAxis();
@@ -326,8 +327,8 @@ public class RadialBond implements ModelComponent {
 
 	/**
 	 * return true if the point is inside the hot spot of this bond. Note: This is different from the base class
-	 * <tt>Line2D</tt>'s <tt>contains</tt> method's "always-return-false" behavior. Be aware of that this method
-	 * can return true.
+	 * <tt>Line2D</tt>'s <tt>contains</tt> method's "always-return-false" behavior. Be aware of that this method can
+	 * return true.
 	 */
 	public boolean contains(Point2D p) {
 		setAxis();
@@ -336,8 +337,8 @@ public class RadialBond implements ModelComponent {
 
 	/**
 	 * return true if the rectangle is inside the hot spot of this bond. Note: This is different from the base class
-	 * <tt>Line2D</tt>'s <tt>contains</tt> method's "always-return-false" behavior. Be aware of that this method
-	 * can return true.
+	 * <tt>Line2D</tt>'s <tt>contains</tt> method's "always-return-false" behavior. Be aware of that this method can
+	 * return true.
 	 */
 	public boolean contains(Rectangle2D r) {
 		setAxis();
@@ -635,6 +636,14 @@ public class RadialBond implements ModelComponent {
 
 	public Molecule getMolecule() {
 		return model.molecules.getMolecule(atom1);
+	}
+
+	public void setCustom(float custom) {
+		this.custom = custom;
+	}
+
+	public float getCustom() {
+		return custom;
 	}
 
 	public Atom getAtom1() {
@@ -990,6 +999,7 @@ public class RadialBond implements ModelComponent {
 		private byte torqueType;
 		private float amplitude, phase;
 		private int period = 100;
+		private float custom;
 
 		public Delegate() {
 		}
@@ -1011,6 +1021,7 @@ public class RadialBond implements ModelComponent {
 			color = rb.bondColor;
 			style = rb.bondStyle;
 			visible = rb.visible;
+			custom = rb.custom;
 		}
 
 		public Delegate(int atom1, int atom2, double bondLength, double bondStrength, boolean smart, boolean solid,
@@ -1024,6 +1035,14 @@ public class RadialBond implements ModelComponent {
 			this.smart = smart;
 			this.solid = solid;
 			this.closed = closed;
+		}
+
+		public void setCustom(float custom) {
+			this.custom = custom;
+		}
+
+		public float getCustom() {
+			return custom;
 		}
 
 		public void setVisible(boolean b) {

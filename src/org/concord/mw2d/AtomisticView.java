@@ -1673,6 +1673,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		}
 		d.setTorqueType(r.getTorqueType());
 		d.setTorque(r.getTorque());
+		d.setCustom(r.getCustom());
 		deadBonds.add(d);
 		return d;
 	}

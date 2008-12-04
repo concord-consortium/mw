@@ -112,6 +112,9 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	/* the y velocity of the center of mass */
 	volatile double vy;
 
+	/* the custom property */
+	volatile float custom;
+
 	/* the x acceleration of the center of mass */
 	transient double ax;
 
@@ -424,6 +427,14 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 		vy = d;
 	}
 
+	public void setCustom(float custom) {
+		this.custom = custom;
+	}
+
+	public float getCustom() {
+		return custom;
+	}
+
 	public double getAx() {
 		return ax;
 	}
@@ -707,6 +718,7 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 
 	/** This method just erases the properties but, unlike erase(), does not remove the movie queues. */
 	public void eraseProperties() {
+		custom = 0;
 		vx = vy = 0;
 		ax = ay = 0;
 		fx = fy = 0;
@@ -741,6 +753,7 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 		vy = p.vy;
 		hx = p.hx;
 		hy = p.hy;
+		custom = p.custom;
 		name = p.name;
 		charge = p.charge;
 		friction = p.friction;

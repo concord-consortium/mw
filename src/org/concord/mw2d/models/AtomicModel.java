@@ -3499,6 +3499,7 @@ public abstract class AtomicModel extends MDModel {
 	public void clear() {
 		super.clear();
 		for (Atom a : atom) {
+			a.custom = 0;
 			a.setMovable(true);
 			a.setVisible(true);
 			a.setCharge(0.0);
