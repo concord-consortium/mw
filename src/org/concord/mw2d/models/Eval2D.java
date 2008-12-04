@@ -2786,6 +2786,73 @@ class Eval2D extends AbstractEval {
 		return null;
 	}
 
+	private String evaluateFindIndexByCustomFunction(final String clause) {
+		if (clause == null || clause.equals(""))
+			return null;
+		int i = clause.indexOf("(");
+		int j = clause.lastIndexOf(")");
+		if (i == -1 || j == -1) {
+			out(ScriptEvent.FAILED, "In findIndexByCustom: function must be enclosed within parenthesis: " + clause);
+			return null;
+		}
+		String s = clause.substring(i + 1, j);
+		String[] t = s.split(",");
+		int n = t.length;
+		if (n != 2) {
+			out(ScriptEvent.FAILED, "In findIndexByCustom: argument error: " + clause);
+			return null;
+		}
+		double x = parseMathExpression(t[1]);
+		if (Double.isNaN(x)) {
+			out(ScriptEvent.FAILED, "In findIndexByCustom: cannot parse : " + t[1]);
+			return null;
+		}
+		float custom = (float) x;
+		if ("PARTICLE".equalsIgnoreCase(t[0]) || "ATOM".equalsIgnoreCase(t[0])) {
+			int m = model.getNumberOfParticles();
+			if (m <= 0)
+				return "-1";
+			for (i = 0; i < m; i++) {
+				if (Math.abs(custom - model.getParticle(i).custom) < ZERO)
+					return "" + i;
+			}
+		}
+		else if ("IMAGE".equalsIgnoreCase(t[0])) {
+			int m = view.getNumberOfInstances(ImageComponent.class);
+			if (m <= 0)
+				return "-1";
+			for (i = 0; i < m; i++) {
+				if (Math.abs(custom - view.getImage(i).custom) < ZERO)
+					return "" + i;
+			}
+		}
+		else if ("OBSTACLE".equalsIgnoreCase(t[0])) {
+			if (model instanceof AtomicModel) {
+				AtomicModel am = (AtomicModel) model;
+				int m = am.obstacles.size();
+				if (m <= 0)
+					return "-1";
+				for (i = 0; i < m; i++) {
+					if (Math.abs(custom - am.obstacles.get(i).custom) < ZERO)
+						return "" + i;
+				}
+			}
+		}
+		else if ("RADIAL_BOND".equalsIgnoreCase(t[0])) {
+			if (model instanceof MolecularModel) {
+				MolecularModel mm = (MolecularModel) model;
+				int m = mm.bonds.size();
+				if (m <= 0)
+					return "-1";
+				for (i = 0; i < m; i++) {
+					if (Math.abs(custom - mm.bonds.get(i).custom) < ZERO)
+						return "" + i;
+				}
+			}
+		}
+		return null;
+	}
+
 	private String evaluateSpeedFunction(final String clause) {
 		if (clause == null || clause.equals(""))
 			return null;
@@ -3520,6 +3587,10 @@ class Eval2D extends AbstractEval {
 			}
 			else if (exp.startsWith("whichimageisattached(")) {
 				exp = evaluateWhichImageIsAttachedFunction(exp);
+				storeDefinition(isStatic, var, exp != null ? exp : "-1");
+			}
+			else if (exp.startsWith("findindexbycustom(")) {
+				exp = evaluateFindIndexByCustomFunction(exp);
 				storeDefinition(isStatic, var, exp != null ? exp : "-1");
 			}
 			else {
