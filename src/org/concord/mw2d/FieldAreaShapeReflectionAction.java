@@ -60,6 +60,7 @@ class FieldAreaShapeReflectionAction {
 		cb.setSelected(area.getReflection());
 		p.add(cb);
 
+		
 		dialog.getContentPane().add(p, BorderLayout.CENTER);
 
 		p = new JPanel(new FlowLayout(FlowLayout.RIGHT));
