@@ -2047,6 +2047,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			o.setUserField(d.getUserField());
 			o.setBounced(d.isBounced());
 			o.permeable = d.getPermeability();
+			o.custom = d.getCustom();
 			o.setVisible(d.isVisible());
 			o.setDraggable(d.isDraggable());
 			o.setPhotonPermeable(d.isPhotonPermeable());
@@ -2815,6 +2816,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 				rod.setElectronPermeable(o.isElectronPermeable());
 				rod.setRoundCornered(o.getRoundCornerRadius() > 0);
 				rod.setFillMode(o.getFillMode());
+				rod.setCustom(o.custom);
 				obstacles.add(rod);
 			}
 		}

@@ -75,6 +75,7 @@ public class ImageComponent implements ModelComponent, Layered, Rotatable {
 	private boolean selectedToRotate;
 	private boolean visible = true;
 	private boolean draggable = true;
+	float custom;
 
 	public ImageComponent(String address) throws IOException {
 		if (address == null)
@@ -95,14 +96,15 @@ public class ImageComponent implements ModelComponent, Layered, Rotatable {
 	public ImageComponent(ImageComponent ic) throws IOException {
 		if (ic.address != null)
 			init(ic.address);
-		this.model = ic.model;
-		this.loopCount = ic.loopCount;
-		this.angle = ic.angle;
-		this.offsetAngle = ic.offsetAngle;
-		this.layer = ic.layer;
+		model = ic.model;
+		loopCount = ic.loopCount;
+		angle = ic.angle;
+		offsetAngle = ic.offsetAngle;
+		layer = ic.layer;
 	}
 
 	public void set(Delegate d) {
+		custom = d.custom;
 		setVisible(d.visible);
 		setDraggable(d.draggable);
 		setLoopCount(d.getLoopCount());
@@ -199,6 +201,14 @@ public class ImageComponent implements ModelComponent, Layered, Rotatable {
 		model = null;
 		host = null;
 		images = null;
+	}
+
+	public void setCustom(float custom) {
+		this.custom = custom;
+	}
+
+	public float getCustom() {
+		return custom;
 	}
 
 	public void setVisible(boolean b) {
@@ -708,6 +718,7 @@ public class ImageComponent implements ModelComponent, Layered, Rotatable {
 		private String uri;
 		private int loopCount = 1000;
 		private float angle, offsetAngle;
+		private float custom;
 
 		public Delegate() {
 		}
@@ -737,6 +748,15 @@ public class ImageComponent implements ModelComponent, Layered, Rotatable {
 			}
 			draggable = ic.draggable;
 			visible = ic.visible;
+			custom = ic.custom;
+		}
+
+		public void setCustom(float custom) {
+			this.custom = custom;
+		}
+
+		public float getCustom() {
+			return custom;
 		}
 
 		public void setLoopCount(int i) {

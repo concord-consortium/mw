@@ -713,9 +713,9 @@ public class MolecularModel extends AtomicModel {
 			 * mol=(Molecule)molecules.get(im); if(mol instanceof Polypeptide) { synchronized(mol){ for(Iterator
 			 * j=mol.iterator(); j.hasNext();){ at=(Atom)j.next(); partner=bonds.getBondedPartners(at);
 			 * if(partner.length==2){ x12=partner[0].rx-partner[1].rx; y12=partner[0].ry-partner[1].ry;
-			 * r12=Math.sqrt(x12*x12+y12*y12); at.fx-=at.hydrophobic*solvent.getType()*
-			 * GF_CONVERSION_CONSTANT*y12/(r12*at.mass); at.fy+=at.hydrophobic*solvent.getType()*
-			 * GF_CONVERSION_CONSTANT*x12/(r12*at.mass); } } } } } } }
+			 * r12=Math.sqrt(x12x12+y12y12); at.fx-=at.hydrophobicsolvent.getType()
+			 * GF_CONVERSION_CONSTANTy12/(r12at.mass); at.fy+=at.hydrophobicsolvent.getType()
+			 * GF_CONVERSION_CONSTANTx12/(r12at.mass); } } } } } } }
 			 */
 
 			if (solvent != null && solvent.getType() != Solvent.VACUUM) {
@@ -752,7 +752,7 @@ public class MolecularModel extends AtomicModel {
 						 * This was previously for ensuring that the net force on the molecule sums to zero. But this
 						 * violates the energy conservation law. if(mol.size()>1){ double molsize=1.0/mol.size();
 						 * synchronized(mol){ for(j=mol.iterator(); j.hasNext();){ a=(Atom)j.next(); a.fx +=
-						 * sumx*molsize; a.fy += sumy*molsize; } } }
+						 * sumxmolsize; a.fy += sumymolsize; } } }
 						 */
 					}
 				}
@@ -900,6 +900,7 @@ public class MolecularModel extends AtomicModel {
 			rBond.setClosed(rbd.isClosed());
 			rBond.setBondColor(rbd.getColor());
 			rBond.setBondStyle(rbd.getStyle());
+			rBond.custom = rbd.getCustom();
 			rBond.setModel(this);
 			bonds.add(rBond);
 		}
@@ -987,8 +988,8 @@ public class MolecularModel extends AtomicModel {
 	}
 
 	/**
-	 * Delegate of the state of this model, <b>augmented</b> to the <tt>AtomicModel</tt> (Notice that this class is
-	 * not derived from <tt>AtomicModel.State</tt>).
+	 * Delegate of the state of this model, <b>augmented</b> to the <tt>AtomicModel</tt> (Notice that this class is not
+	 * derived from <tt>AtomicModel.State</tt>).
 	 */
 	public static class State extends MDState {
 

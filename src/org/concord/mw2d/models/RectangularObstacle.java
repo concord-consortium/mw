@@ -99,6 +99,9 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 	/* the y velocity of the center of mass */
 	volatile double vy;
 
+	/* the custom property */
+	volatile float custom;
+
 	/* the x acceleration of the center of mass */
 	transient double ax;
 
@@ -297,6 +300,14 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 
 	public int getRoundCornerRadius() {
 		return cornerArcRadius;
+	}
+
+	public void setCustom(float custom) {
+		this.custom = custom;
+	}
+
+	public float getCustom() {
+		return custom;
 	}
 
 	public void setElasticity(float f) {
@@ -1934,6 +1945,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 		private boolean[] permeableArray = new boolean[4];
 		private boolean photonPermeable, electronPermeable;
 		private UserField userField;
+		private float custom;
 
 		public Delegate() {
 			Arrays.fill(permeableArray, false);
@@ -1953,6 +1965,14 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 			this.eastProbe = eastProbe;
 			this.southProbe = southProbe;
 			this.northProbe = northProbe;
+		}
+
+		public void setCustom(float custom) {
+			this.custom = custom;
+		}
+
+		public float getCustom() {
+			return custom;
 		}
 
 		public void setPermeability(boolean[] b) {

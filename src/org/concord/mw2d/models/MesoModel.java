@@ -943,6 +943,7 @@ public class MesoModel extends MDModel {
 			p.setVisible(true);
 			p.setRestraint(null);
 			p.setCharge(0.0);
+			p.custom = 0;
 			p.setUserField(null);
 			p.setShowRTraj(false);
 			p.setShowRMean(false);
