@@ -307,6 +307,16 @@ class PageMultipleChoiceMaker extends ComponentMaker {
 		});
 		downPanel.add(button);
 
+		s = Modeler.getInternationalText("Help");
+		button = new JButton(s != null ? s : "Help");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Modeler.openWithNewInstance(pageMultipleChoice.getPage().getNavigator().getHomeDirectory()
+						+ "tutorial/choice.cml");
+			}
+		});
+		downPanel.add(button);
+
 		final JTabbedPane tabbedPane = new JTabbedPane();
 		tabbedPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		tabbedPane.addChangeListener(new ChangeListener() {

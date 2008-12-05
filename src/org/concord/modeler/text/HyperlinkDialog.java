@@ -313,7 +313,7 @@ class HyperlinkDialog extends JDialog {
 			}
 		});
 		c.anchor = GridBagConstraints.SOUTH; // anchor north
-		c.gridy = 5;
+		c.gridy = 4;
 		panel.add(button, c);
 
 		s = Modeler.getInternationalText("CancelButton");
@@ -331,6 +331,16 @@ class HyperlinkDialog extends JDialog {
 						page.requestFocus();
 					}
 				});
+			}
+		});
+		c.gridy = 5;
+		panel.add(button, c);
+
+		s = Modeler.getInternationalText("Help");
+		button = new JButton(s != null ? s : "Help");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Modeler.openWithNewInstance(page.getNavigator().getHomeDirectory() + "tutorial/hyperlink.cml");
 			}
 		});
 		c.gridy = 6;

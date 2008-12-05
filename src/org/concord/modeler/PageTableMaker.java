@@ -209,6 +209,16 @@ class PageTableMaker extends ComponentMaker {
 		});
 		p.add(b);
 
+		s = Modeler.getInternationalText("Help");
+		b = new JButton(s != null ? s : "Help");
+		b.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Modeler.openWithNewInstance(pageTable.getPage().getNavigator().getHomeDirectory()
+						+ "tutorial/table.cml");
+			}
+		});
+		p.add(b);
+
 		p = new JPanel(new SpringLayout());
 		p.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		contentPane.add(p, BorderLayout.NORTH);

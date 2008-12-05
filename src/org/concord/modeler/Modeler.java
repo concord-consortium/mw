@@ -652,8 +652,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 	 * returns. For example, this is done in the Page.saveAndClose() method. When the WindowListener is signified by the
 	 * window dispatching event fired at the time the writing thread expires, it calls this method again, and the
 	 * options are checked once again. It is IMPORTANT that the save reminder be set to the proper status. For instance,
-	 * if nothing has been changed since last save, it should declare that fact in the <code>isChanged()</code>
-	 * method.
+	 * if nothing has been changed since last save, it should declare that fact in the <code>isChanged()</code> method.
 	 * 
 	 * @see org.concord.modeler.text.Page#saveAndClose;
 	 */
@@ -692,7 +691,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		}
 	}
 
-	private static void openWithNewInstance(String url) {
+	public static void openWithNewInstance(String url) {
 		String jarLocation = System.getProperty("java.class.path");
 		if (IS_MAC) {
 			jarLocation = ModelerUtilities.validateJarLocationOnMacOSX(jarLocation);

@@ -344,6 +344,16 @@ class PageJContainerMaker extends ComponentMaker {
 		});
 		p.add(button);
 
+		s = Modeler.getInternationalText("Help");
+		button = new JButton(s != null ? s : "Help");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Modeler.openWithNewInstance(pageJContainer.getPage().getNavigator().getHomeDirectory()
+						+ "tutorial/plugin.cml");
+			}
+		});
+		p.add(button);
+
 		JPanel p2 = new JPanel(new BorderLayout());
 		tabbedPane = new JTabbedPane();
 		tabbedPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));

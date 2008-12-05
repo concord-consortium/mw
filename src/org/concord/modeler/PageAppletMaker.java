@@ -272,6 +272,16 @@ class PageAppletMaker extends ComponentMaker {
 		});
 		p.add(button);
 
+		s = Modeler.getInternationalText("Help");
+		button = new JButton(s != null ? s : "Help");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Modeler.openWithNewInstance(pageApplet.getPage().getNavigator().getHomeDirectory()
+						+ "tutorial/applet.cml");
+			}
+		});
+		p.add(button);
+
 		p = new JPanel(new SpringLayout());
 		p.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		contentPane.add(p, BorderLayout.NORTH);

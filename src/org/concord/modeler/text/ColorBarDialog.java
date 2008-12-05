@@ -110,6 +110,15 @@ class ColorBarDialog extends JDialog {
 		});
 		p.add(button);
 
+		s = Modeler.getInternationalText("Help");
+		button = new JButton(s != null ? s : "Help");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Modeler.openWithNewInstance(page.getNavigator().getHomeDirectory() + "tutorial/ColorBar.cml");
+			}
+		});
+		p.add(button);
+
 		JPanel panel = new JPanel(new BorderLayout(5, 5));
 		getContentPane().add(panel, BorderLayout.NORTH);
 

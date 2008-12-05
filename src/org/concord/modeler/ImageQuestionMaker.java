@@ -172,6 +172,16 @@ class ImageQuestionMaker extends ComponentMaker {
 		});
 		p.add(button);
 
+		s = Modeler.getInternationalText("Help");
+		button = new JButton(s != null ? s : "Help");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Modeler.openWithNewInstance(imageQuestion.getPage().getNavigator().getHomeDirectory()
+						+ "tutorial/imagequestion.cml");
+			}
+		});
+		p.add(button);
+
 		p = new JPanel(new BorderLayout(10, 10));
 		p.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		contentPane.add(p, BorderLayout.NORTH);
