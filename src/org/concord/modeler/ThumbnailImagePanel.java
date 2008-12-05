@@ -134,7 +134,7 @@ class ThumbnailImagePanel extends JPanel implements SnapshotListener {
 		Insets insets = getInsets();
 		int x = insets.left;
 		int n = SnapshotGallery.sharedInstance().size();
-		for (int i = 0; i < n; i++) {
+		for (int i = n - 1; i >= 0; i--) {
 			image = SnapshotGallery.sharedInstance().getThumbnail(i);
 			w = image.getWidth(this);
 			if (ex > x && ex < x + w && ey > insets.top && ey < insets.top + IMAGE_HEIGHT) {
@@ -181,7 +181,7 @@ class ThumbnailImagePanel extends JPanel implements SnapshotListener {
 		ImageIcon icon = null;
 		Image image = null;
 		float r = 1;
-		for (int i = 0; i < n; i++) {
+		for (int i = n - 1; i >= 0; i--) {
 			name = SnapshotGallery.sharedInstance().getImageName(i);
 			image = SnapshotGallery.sharedInstance().getThumbnail(i);
 			if (image == null || name.equals(nameOfChangedImage)) {
@@ -232,7 +232,7 @@ class ThumbnailImagePanel extends JPanel implements SnapshotListener {
 		int x = insets.left;
 		int n = SnapshotGallery.sharedInstance().size();
 		Image image;
-		for (int i = 0; i < n; i++) {
+		for (int i = n - 1; i >= 0; i--) {
 			image = SnapshotGallery.sharedInstance().getThumbnail(i);
 			if (image == null)
 				continue;

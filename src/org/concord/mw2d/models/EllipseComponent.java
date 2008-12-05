@@ -147,7 +147,6 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 	}
 
 	private void externalReflection(Atom a) {
-
 	}
 
 	public int getParticleCount() {
