@@ -1138,7 +1138,7 @@ public abstract class AbstractEval {
 			String[] s = str.split("-");
 			int start = Float.valueOf(s[0].trim()).intValue();
 			int end = Float.valueOf(s[1].trim()).intValue();
-			if (start < n) {
+			if (start < n && start >= 0 && end > 0) {
 				end = Math.min(end, n - 1);
 				for (int k = start; k <= end; k++)
 					bs.set(k);
@@ -1150,14 +1150,14 @@ public abstract class AbstractEval {
 			int index;
 			for (int m = 0; m < s.length; m++) {
 				index = Float.valueOf(s[m]).intValue();
-				if (index < n)
+				if (index < n && index >= 0)
 					bs.set(index);
 			}
 			return true;
 		}
 		if (INDEX.matcher(str).find()) {
 			int index = Float.valueOf(str.trim()).intValue();
-			if (index < n)
+			if (index < n && index >= 0)
 				bs.set(index);
 			return true;
 		}

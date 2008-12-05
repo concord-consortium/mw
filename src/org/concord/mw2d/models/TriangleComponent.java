@@ -133,8 +133,7 @@ public class TriangleComponent extends AbstractTriangle implements ModelComponen
 	}
 
 	public void interact(Particle p) {
-		boolean contained = contains(p.rx, p.ry);
-		if (contained) {
+		if (contains(p.rx, p.ry)) {
 			if (viscosity > Particle.ZERO) {
 				double dmp = MDModel.GF_CONVERSION_CONSTANT * viscosity / p.getMass();
 				p.fx -= dmp * p.vx;
