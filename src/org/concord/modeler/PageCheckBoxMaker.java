@@ -332,6 +332,16 @@ class PageCheckBoxMaker extends ComponentMaker {
 		});
 		p.add(button);
 
+		s = Modeler.getInternationalText("Help");
+		button = new JButton(s != null ? s : "Help");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Modeler.openWithNewInstance(pageCheckBox.getPage().getNavigator().getHomeDirectory()
+						+ "tutorial/insertCheckBox.cml");
+			}
+		});
+		p.add(button);
+
 		p = new JPanel(new SpringLayout());
 		p.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		contentPane.add(p, BorderLayout.NORTH);

@@ -462,6 +462,16 @@ class PageGaugeMaker extends ComponentMaker {
 		});
 		p.add(button);
 
+		s = Modeler.getInternationalText("Help");
+		button = new JButton(s != null ? s : "Help");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Modeler.openWithNewInstance(pageGauge.getPage().getNavigator().getHomeDirectory()
+						+ "tutorial/insertGauge.cml");
+			}
+		});
+		p.add(button);
+
 		Box box = new Box(BoxLayout.X_AXIS);
 		box.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		contentPane.add(box, BorderLayout.CENTER);

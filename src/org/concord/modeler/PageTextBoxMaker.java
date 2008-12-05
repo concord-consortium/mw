@@ -208,6 +208,16 @@ class PageTextBoxMaker extends ComponentMaker {
 		});
 		downPanel.add(button);
 
+		s = Modeler.getInternationalText("Help");
+		button = new JButton(s != null ? s : "Help");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Modeler.openWithNewInstance(pageTextBox.getPage().getNavigator().getHomeDirectory()
+						+ "tutorial/textbox.cml");
+			}
+		});
+		downPanel.add(button);
+
 		JPanel topPanel = new JPanel(new BorderLayout(5, 5));
 		topPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		contentPane.add(topPanel, BorderLayout.NORTH);
