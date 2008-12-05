@@ -23,13 +23,13 @@ package org.concord.modeler;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -43,6 +43,7 @@ import org.concord.modeler.event.ModelEvent;
 import org.concord.modeler.event.ScriptEvent;
 import org.concord.modeler.event.ScriptListener;
 import org.concord.modeler.text.Page;
+import org.concord.modeler.ui.IconPool;
 import org.concord.modeler.util.FileUtilities;
 
 public class PageScriptConsole extends JPanel implements Embeddable, ModelCommunicator, EnterListener, ScriptListener {
@@ -71,10 +72,21 @@ public class PageScriptConsole extends JPanel implements Embeddable, ModelCommun
 		console.setPrompt();
 		add(new JScrollPane(console), BorderLayout.CENTER);
 
-		JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT, 1, 1));
+		JPanel p = new JPanel(new BorderLayout());
 		add(p, BorderLayout.SOUTH);
+
 		label = new JLabel(new ImageIcon(getClass().getResource("images/script.gif")), SwingConstants.LEFT);
-		p.add(label);
+		p.add(label, BorderLayout.WEST);
+
+		JButton button = new JButton(IconPool.getIcon("erase"));
+		button.setPreferredSize(new Dimension(20, 20));
+		button.setToolTipText("Clear the console");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				clear();
+			}
+		});
+		p.add(button, BorderLayout.EAST);
 
 		popupMouseListener = new PopupMouseListener(this);
 		addMouseListener(popupMouseListener);
@@ -301,15 +313,19 @@ public class PageScriptConsole extends JPanel implements Embeddable, ModelCommun
 			console.outputError(strMsg);
 	}
 
+	private void clear() {
+		console.clearContent();
+		console.appendNewline();
+		console.setPrompt();
+	}
+
 	private void executeCommand() {
 		String strCommand = console.getCommandString().trim();
 		if (strCommand.length() == 0)
 			return;
 		console.requestFocus();
 		if (strCommand.equalsIgnoreCase("clear") || strCommand.equalsIgnoreCase("cls")) {
-			console.clearContent();
-			console.appendNewline();
-			console.setPrompt();
+			clear();
 			return;
 		}
 		console.appendNewline();
