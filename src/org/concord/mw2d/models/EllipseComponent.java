@@ -124,13 +124,30 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 	}
 
 	public void interact(Particle p) {
-		if (!contains(p.rx, p.ry))
-			return;
-		if (viscosity > Particle.ZERO) {
-			double dmp = MDModel.GF_CONVERSION_CONSTANT * viscosity / p.getMass();
-			p.fx -= dmp * p.vx;
-			p.fy -= dmp * p.vy;
+		if (contains(p.rx, p.ry)) {
+			if (viscosity > Particle.ZERO) {
+				double dmp = MDModel.GF_CONVERSION_CONSTANT * viscosity / p.getMass();
+				p.fx -= dmp * p.vx;
+				p.fy -= dmp * p.vy;
+			}
+			if (reflection) {
+				if (p instanceof Atom)
+					internalReflection((Atom) p);
+			}
 		}
+		else {
+			if (reflection) {
+				if (p instanceof Atom)
+					externalReflection((Atom) p);
+			}
+		}
+	}
+
+	private void internalReflection(Atom a) {
+	}
+
+	private void externalReflection(Atom a) {
+
 	}
 
 	public int getParticleCount() {
