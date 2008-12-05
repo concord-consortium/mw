@@ -541,7 +541,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 		double y1 = getMaxY();
 		if (e.rx - Electron.radius < x1 && e.rx + Electron.radius > x0 && e.ry - Electron.radius < y1
 				&& e.ry + Electron.radius > y0) {
-			byte xing = borderCross(Electron.radius, e.rx, e.ry, e.dx, e.dy, x0, y0, x1, y1);
+			byte xing = borderCross(this, Electron.radius, e.rx, e.ry, e.dx, e.dy, x0, y0, x1, y1);
 			switch (xing) {
 			case NORTH:
 				e.vy = -elasticity * Math.abs(e.vy);
@@ -670,7 +670,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 			if ((a.rx - radius < x1 && a.rx + radius > x0) && (a.ry - radius < y1 && a.ry + radius > y0)) {
 				if (!isFixed)
 					colList.add((int) i);
-				xing = borderCross(radius, a.rx, a.ry, a.dx, a.dy, x0, y0, x1, y1);
+				xing = borderCross(this, radius, a.rx, a.ry, a.dx, a.dy, x0, y0, x1, y1);
 				if (fireCollisionEvents)
 					faceColList.add(new FaceCollision(xing, i, a.rx, a.ry, a.vx, a.vy));
 				switch (xing) {
@@ -875,7 +875,8 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 		}
 	}
 
-	byte borderCross(double rd, double rx, double ry, double dx, double dy, double x0, double y0, double x1, double y1) {
+	static byte borderCross(Rectangle2D rect, double rd, double rx, double ry, double dx, double dy, double x0,
+			double y0, double x1, double y1) {
 
 		if (ballRect == null) {
 			ballRect = new Rectangle2D.Double(rx - rd, ry - rd, rd * 2, rd * 2);
@@ -885,7 +886,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 		}
 		if (intersectRect == null)
 			intersectRect = new Rectangle2D.Double();
-		Rectangle2D.intersect(this, ballRect, intersectRect);
+		Rectangle2D.intersect(rect, ballRect, intersectRect);
 
 		double xc = intersectRect.getCenterX();
 		double yc = intersectRect.getCenterY();

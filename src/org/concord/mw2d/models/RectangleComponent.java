@@ -128,12 +128,68 @@ public class RectangleComponent extends AbstractRectangle implements ModelCompon
 	}
 
 	public void interact(Particle p) {
-		if (!contains(p.rx, p.ry))
-			return;
-		if (viscosity > Particle.ZERO) {
-			double dmp = MDModel.GF_CONVERSION_CONSTANT * viscosity / p.getMass();
-			p.fx -= dmp * p.vx;
-			p.fy -= dmp * p.vy;
+		if (contains(p.rx, p.ry)) {
+			if (viscosity > Particle.ZERO) {
+				double dmp = MDModel.GF_CONVERSION_CONSTANT * viscosity / p.getMass();
+				p.fx -= dmp * p.vx;
+				p.fy -= dmp * p.vy;
+			}
+			if (reflection) {
+				if (p instanceof Atom)
+					internalReflection((Atom) p);
+			}
+		}
+		else {
+			if (reflection) {
+				if (p instanceof Atom)
+					externalReflection((Atom) p);
+			}
+		}
+	}
+
+	private void internalReflection(Atom a) {
+		double radius = a.sigma * 0.5;
+		byte hit = 0;
+		if (a.rx + radius > getX() + getWidth()) // hit east side
+			hit |= 1;
+		else if (a.rx - radius < getX()) // hit west side
+			hit |= 2;
+		if (a.ry + radius > getY() + getHeight()) // hit south side
+			hit |= 4;
+		else if (a.ry - radius < getY()) // hit north side
+			hit |= 8;
+		if ((hit & 1) == 1)
+			a.vx = -Math.abs(a.vx);
+		if ((hit & 2) == 2)
+			a.vx = Math.abs(a.vx);
+		if ((hit & 4) == 4)
+			a.vy = -Math.abs(a.vy);
+		if ((hit & 8) == 8)
+			a.vy = Math.abs(a.vy);
+	}
+
+	private void externalReflection(Atom a) {
+		double x0 = getX();
+		double x1 = getX() + getWidth();
+		double y0 = getY();
+		double y1 = getY() + getHeight();
+		double radius = a.sigma * 0.5;
+		if (a.rx - radius < x1 && a.rx + radius > x0 && a.ry - radius < y1 && a.ry + radius > y0) {
+			switch (RectangularObstacle.borderCross(getBounds().getBounds2D(), radius, a.rx, a.ry, a.dx, a.dy, x0, y0,
+					x1, y1)) {
+			case RectangularObstacle.EAST:
+				a.vx = Math.abs(a.vx);
+				break;
+			case RectangularObstacle.WEST:
+				a.vx = -Math.abs(a.vx);
+				break;
+			case RectangularObstacle.SOUTH:
+				a.vy = Math.abs(a.vy);
+				break;
+			case RectangularObstacle.NORTH:
+				a.vy = -Math.abs(a.vy);
+				break;
+			}
 		}
 	}
 
