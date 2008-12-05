@@ -583,12 +583,8 @@ public abstract class AbstractEval {
 				int lp = ci.indexOf("(");
 				int rp = ci.lastIndexOf(")");
 				String ifExpression = ci.substring(lp + 1, rp);
-				if (ifLevel > 0) {
-					ifTrue[ifLevel] = skipIf() ? false : evaluateLogicalExpression(ifExpression);
-				}
-				else {
-					ifTrue[ifLevel] = evaluateLogicalExpression(ifExpression);
-				}
+				ifTrue[ifLevel] = skipIf() ? false : evaluateLogicalExpression(ifExpression);
+				// ifTrue[ifLevel] = evaluateLogicalExpression(ifExpression);
 				ifLevel++;
 				continue;
 			}
@@ -640,6 +636,8 @@ public abstract class AbstractEval {
 	}
 
 	private boolean skipIf() {
+		if (ifLevel < 1)
+			return false;
 		for (int i = 0; i < ifLevel; i++) {
 			if ((foundIf[i] && !ifTrue[i]) || (foundElse[i] && ifTrue[i]))
 				return true;

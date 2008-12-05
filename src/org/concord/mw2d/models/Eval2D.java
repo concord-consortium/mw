@@ -139,8 +139,8 @@ class Eval2D extends AbstractEval {
 
 	protected synchronized void out(byte status, String description) {
 		if (status == ScriptEvent.FAILED) {
-			stop();
 			notifyScriptListener(new ScriptEvent(model, status, "Aborted: " + description));
+			stop();
 		}
 		else {
 			notifyScriptListener(new ScriptEvent(model, status, description));
