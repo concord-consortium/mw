@@ -2711,7 +2711,7 @@ class Eval2D extends AbstractEval {
 		}
 		i = Math.round((float) x);
 		if (i < 0 || i >= nmol) {
-			out(ScriptEvent.FAILED, "Index of molecule out of bound : " + i + " in " + clause);
+			// out(ScriptEvent.FAILED, "Index of molecule out of bound : " + i + " in " + clause);
 			return null;
 		}
 		x = parseMathExpression(t[1]);
@@ -2722,7 +2722,7 @@ class Eval2D extends AbstractEval {
 		j = Math.round((float) x);
 		Molecule mol = mm.molecules.get(i);
 		if (j < 0 || j >= mol.size()) {
-			out(ScriptEvent.FAILED, "Index of atom out of bound : " + j + " in " + clause);
+			// out(ScriptEvent.FAILED, "Index of atom out of bound : " + j + " in " + clause);
 			return null;
 		}
 		Atom a = mol.getAtom(j);

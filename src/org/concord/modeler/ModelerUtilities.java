@@ -434,11 +434,11 @@ public final class ModelerUtilities {
 	/**
 	 * On Windows and Linux, if the user right-clicks on a button, no <code>ActionEvent</code> is fired. Some Mac
 	 * computers, however, do not have a two-button mouse. Windows right-click on Mac OS is usually mimicked with
-	 * CTRL+Click (or Meta+Click). Unfortunately, when CTRL+Click is pressed, an <code>ActionEvent</code> will be
-	 * fired. For the Mac CTRL+Click action to have the same behavior as Windows right-click, this method should be
-	 * called at the beginning of the <code>actionPerformed(ActionEvent e)</code> method of the
-	 * <code>ActionListener</code> associated with the button. If CTRL+Click is pressed, the method will return
-	 * immediately without executing the rest of the code in the method body.
+	 * CTRL+Click (or Meta+Click). Unfortunately, when CTRL+Click is pressed, an <code>ActionEvent</code> will be fired.
+	 * For the Mac CTRL+Click action to have the same behavior as Windows right-click, this method should be called at
+	 * the beginning of the <code>actionPerformed(ActionEvent e)</code> method of the <code>ActionListener</code>
+	 * associated with the button. If CTRL+Click is pressed, the method will return immediately without executing the
+	 * rest of the code in the method body.
 	 */
 	public static boolean stopFiring(ActionEvent e) {
 		if (!Modeler.isMac())
@@ -1083,9 +1083,9 @@ public final class ModelerUtilities {
 	}
 
 	/**
-	 * Aligns the first <code>rows</code> <code>cols</code> components of <code>parent</code> in a grid. Each
-	 * component in a column is as wide as the maximum preferred width of the components in that column; height is
-	 * similarly determined for each row. The parent is made just big enough to fit them all.
+	 * Aligns the first <code>rows</code> <code>cols</code> components of <code>parent</code> in a grid. Each component
+	 * in a column is as wide as the maximum preferred width of the components in that column; height is similarly
+	 * determined for each row. The parent is made just big enough to fit them all.
 	 * 
 	 * @param rows
 	 *            number of rows
