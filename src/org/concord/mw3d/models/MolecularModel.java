@@ -2172,10 +2172,7 @@ public class MolecularModel {
 	void predictor() {
 		applyBoundary();
 		synchronized (forceCalculator) {
-			if (iAtom == 0) {
-				atom[0].predict(timeStep, timeStep2);
-			}
-			else if (iAtom > 0) {
+			if (iAtom > 0) {
 				for (int i = 0; i < iAtom; i++) {
 					if (atom[i].isMovable())
 						atom[i].predict(timeStep, timeStep2);
@@ -2186,15 +2183,7 @@ public class MolecularModel {
 
 	void corrector() {
 		synchronized (forceCalculator) {
-			if (iAtom == 0) {
-				atom[0].ax = atom[0].fx;
-				atom[0].ay = atom[0].fy;
-				atom[0].az = atom[0].fz;
-				atom[0].fx *= atom[0].mass;
-				atom[0].fy *= atom[0].mass;
-				atom[0].fz *= atom[0].mass;
-			}
-			else if (iAtom > 0) {
+			if (iAtom > 0) {
 				float halfTimeStep = timeStep * 0.5f;
 				for (int i = 0; i < iAtom; i++) {
 					if (atom[i].isMovable())
@@ -2307,10 +2296,7 @@ public class MolecularModel {
 		float sumVy = 0.0f;
 		float sumVz = 0.0f;
 		float sumMass = 0.0f;
-		if (iAtom == 0) {
-			// atom[0].setRandomVelocity(rtemp);
-		}
-		else {
+		if (iAtom > 0) {
 			if (random == null)
 				random = new Random();
 			for (int i = 0; i < iAtom; i++) {
