@@ -4499,7 +4499,7 @@ class Eval2D extends AbstractEval {
 		String lcStr = str.toLowerCase();
 		if (lcStr.startsWith("line")) {
 			str = lcStr.substring(4).trim();
-			String[] s = str.split("\\s");
+			String[] s = str.split("\\s+");
 			if (s.length < 4)
 				return false;
 			for (int i = 0; i < s.length; i++)
@@ -4533,7 +4533,7 @@ class Eval2D extends AbstractEval {
 		}
 		else if (lcStr.startsWith("rectangle")) {
 			str = lcStr.substring(9).trim();
-			String[] s = str.split("\\s");
+			String[] s = str.split("\\s+");
 			if (s.length < 4)
 				return false;
 			for (int i = 0; i < s.length; i++)
@@ -4558,7 +4558,7 @@ class Eval2D extends AbstractEval {
 		}
 		else if (lcStr.startsWith("ellipse")) {
 			str = lcStr.substring(7).trim();
-			String[] s = str.split("\\s");
+			String[] s = str.split("\\s+");
 			if (s.length < 4)
 				return false;
 			for (int i = 0; i < s.length; i++)
@@ -4583,7 +4583,7 @@ class Eval2D extends AbstractEval {
 		}
 		else if (lcStr.startsWith("image")) {
 			str = lcStr.substring(5).trim();
-			String[] s = str.split("\\s");
+			String[] s = str.split("\\s+");
 			if (s.length < 4)
 				return false;
 			for (int i = 0; i < s.length; i++)
@@ -4614,7 +4614,7 @@ class Eval2D extends AbstractEval {
 		}
 		else if (lcStr.startsWith("textbox")) {
 			str = lcStr.substring(7).trim();
-			String[] s = str.split("\\s");
+			String[] s = str.split("\\s+");
 			if (s.length < 4)
 				return false;
 			for (int i = 0; i < s.length; i++)
