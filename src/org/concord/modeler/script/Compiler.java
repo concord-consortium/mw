@@ -52,6 +52,7 @@ public class Compiler {
 	public final static String QUADRUPLE = "\\(" + REGEX_WHITESPACE + "*((-?)" + REGEX_NONNEGATIVE_DECIMAL
 			+ REGEX_SEPARATOR + "+){3}(-?)" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*\\)";
 
+	public final static Pattern DEFINED_VARIABLE = compile("%\\w+");
 	public final static Pattern COMMAND_BREAK = compile("(;|\\r?\\n|\\r)+");
 	public final static Pattern COMMENT = compile("^(//|/\\*)");
 	public final static Pattern INCREMENT_DECREMENT = compile("(%(.+)(((\\+){2}|(\\-){2}){1}))|((((\\+){2}|(\\-){2}){1})\\s*%(.+))");

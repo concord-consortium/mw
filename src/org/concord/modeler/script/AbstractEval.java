@@ -1019,7 +1019,22 @@ public abstract class AbstractEval {
 	protected String useDefinitions(String s) {
 		if (s.indexOf("%") == -1)
 			return s;
-		s = s.toLowerCase();
+		if (s.startsWith("add image")) {
+			StringBuilder sb = new StringBuilder();
+			Matcher matcher = DEFINED_VARIABLE.matcher(s);
+			int beg = 0;
+			int end = 0;
+			while (matcher.find()) {
+				beg = matcher.start();
+				sb.append(s.substring(end, beg));
+				end = matcher.end();
+				sb.append(s.substring(beg, end).toLowerCase());
+			}
+			sb.append(s.substring(end));
+		}
+		else {
+			s = s.toLowerCase();
+		}
 		if (!definition.isEmpty()) {
 			synchronized (definition) {
 				for (String variable : definition.keySet()) {
