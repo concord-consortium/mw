@@ -1031,6 +1031,7 @@ public abstract class AbstractEval {
 				sb.append(s.substring(beg, end).toLowerCase());
 			}
 			sb.append(s.substring(end));
+			s = sb.toString();
 		}
 		else {
 			s = s.toLowerCase();
