@@ -256,7 +256,8 @@ class GbPopupMenu extends JPopupMenu {
 						}
 					}
 					if (!b)
-						view.showFrictionOptions(true);
+						if (view.showFrictionOptions(true))
+							return;
 					((GayBerneParticle) view.selectedComponent).setUserField(new UserField(0, view.getBounds()));
 					view.repaint();
 				}
@@ -279,7 +280,8 @@ class GbPopupMenu extends JPopupMenu {
 						}
 					}
 					if (!b)
-						view.showFrictionOptions(false);
+						if (view.showFrictionOptions(false))
+							return;
 					view.repaint();
 				}
 			}

@@ -1657,7 +1657,7 @@ public class MesoView extends MDView {
 
 		super.processMouseReleased(e);
 		if (model.getJob() != null && !model.getJob().isStopped()) {
-			unsteerObjects();
+			processUserFieldsUponKeyOrMouseReleased();
 			return;
 		}
 		if (ModelerUtilities.isRightClick(e))

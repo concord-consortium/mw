@@ -5145,7 +5145,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		super.processMouseReleased(e);
 
 		if (model.getJob() != null && !model.getJob().isStopped()) {
-			unsteerObjects();
+			processUserFieldsUponKeyOrMouseReleased();
 			return;
 		}
 		if (ModelerUtilities.isRightClick(e))
@@ -5738,7 +5738,8 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				uf = atom[i].getUserField();
 				if (uf != null) {
 					uf.setAngle(dx, dy);
-					uf.setIntensity(UserField.INCREMENT * uf.getGear());
+					if (uf.getMode() == UserField.FORCE_MODE)
+						uf.setIntensity(UserField.INCREMENT * uf.getGear());
 				}
 			}
 			if (obstacles != null && !obstacles.isEmpty()) {
@@ -5749,7 +5750,8 @@ public class AtomisticView extends MDView implements BondChangeListener {
 						uf = obs.getUserField();
 						if (uf != null) {
 							uf.setAngle(dx, dy);
-							uf.setIntensity(UserField.INCREMENT * uf.getGear());
+							if (uf.getMode() == UserField.FORCE_MODE)
+								uf.setIntensity(UserField.INCREMENT * uf.getGear());
 						}
 					}
 				}
