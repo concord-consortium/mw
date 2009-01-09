@@ -3076,7 +3076,7 @@ public abstract class MDView extends PrintableComponent {
 			break;
 		}
 		if (b) {
-			unsteerObjects();
+			processUserFieldsUponKeyOrMouseReleased();
 		}
 		if (getModel().getJob() == null || getModel().getJob().isStopped())
 			repaint();
@@ -3130,12 +3130,22 @@ public abstract class MDView extends PrintableComponent {
 		}
 	}
 
-	void unsteerObjects() {
+	void processUserFieldsUponKeyOrMouseReleased() {
+		UserField uf = null;
 		Particle p = null;
 		for (int i = 0, n = getModel().getNumberOfParticles(); i < n; i++) {
 			p = getModel().getParticle(i);
-			if (p.getUserField() != null)
-				p.getUserField().setIntensity(0.0);
+			uf = p.getUserField();
+			if (uf != null) {
+				switch (uf.getMode()) {
+				case UserField.FORCE_MODE:
+					uf.setIntensity(0.0);
+					break;
+				case UserField.IMPULSE_MODE:
+					uf.addImpulse(p);
+					break;
+				}
+			}
 		}
 		ObstacleCollection oc = getModel().getObstacles();
 		if (oc != null && !oc.isEmpty()) {
@@ -3143,8 +3153,17 @@ public abstract class MDView extends PrintableComponent {
 			synchronized (oc.getSynchronizationLock()) {
 				for (Iterator it = oc.iterator(); it.hasNext();) {
 					obs = (RectangularObstacle) it.next();
-					if (obs.getUserField() != null)
-						obs.getUserField().setIntensity(0.0);
+					uf = obs.getUserField();
+					if (uf != null) {
+						switch (uf.getMode()) {
+						case UserField.FORCE_MODE:
+							uf.setIntensity(0.0);
+							break;
+						case UserField.IMPULSE_MODE:
+							uf.addImpulse(obs);
+							break;
+						}
+					}
 				}
 			}
 		}
@@ -3153,8 +3172,8 @@ public abstract class MDView extends PrintableComponent {
 
 	abstract void refreshForces();
 
-	void showFrictionOptions(boolean on) {
-		new FrictionDialog(this).show(on);
+	boolean showFrictionOptions(boolean on) {
+		return new FrictionDialog(this).show(on);
 	}
 
 	public void removeSelectedComponent() {

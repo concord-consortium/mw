@@ -30,14 +30,20 @@ import org.concord.mw2d.ViewAttribute;
 
 public class UserField implements VectorField, Serializable {
 
+	public final static byte FORCE_MODE = 0;
+	public final static byte IMPULSE_MODE = 1;
 	public final static float INCREMENT = 0.025f;
+
 	private static final int GEAR_MAX = 20;
+	private static final float IMPULSE_STRENGTH = 0.01f;
 	private static boolean renderable = true;
 
 	private double u = INCREMENT;
-	Shape bounds;
 	private int gear = 1;
 	private double costheta, sintheta;
+	private byte mode = IMPULSE_MODE;
+
+	Shape bounds;
 
 	/**
 	 * Don't call this constructor. This constructor is for XML-encoding beans. The user has to know exactly where he
@@ -49,6 +55,14 @@ public class UserField implements VectorField, Serializable {
 	public UserField(double u, Rectangle d) throws IllegalArgumentException {
 		this.u = u;
 		bounds = d;
+	}
+
+	public void setMode(byte mode) {
+		this.mode = mode;
+	}
+
+	public byte getMode() {
+		return mode;
 	}
 
 	public void setLocal(boolean b) {
@@ -75,8 +89,9 @@ public class UserField implements VectorField, Serializable {
 	}
 
 	public void setAngle(double costheta, double sintheta) {
-		this.costheta = costheta;
-		this.sintheta = sintheta;
+		double r = Math.hypot(costheta, sintheta);
+		this.costheta = costheta / r;
+		this.sintheta = sintheta / r;
 	}
 
 	public int getOrientation() {
@@ -117,18 +132,36 @@ public class UserField implements VectorField, Serializable {
 			gear--;
 	}
 
-	synchronized void dyn(Particle p) {
-		if (Math.abs(u) < Particle.ZERO)
-			return;
-		p.fx += u * costheta / p.getMass() * MDModel.GF_CONVERSION_CONSTANT;
-		p.fy += u * sintheta / p.getMass() * MDModel.GF_CONVERSION_CONSTANT;
+	public void addImpulse(Particle p) {
+		if (mode == IMPULSE_MODE) {
+			p.vx += costheta * gear * IMPULSE_STRENGTH / p.getMass();
+			p.vy += sintheta * gear * IMPULSE_STRENGTH / p.getMass();
+		}
 	}
 
-	synchronized void dyn(RectangularObstacle obs) {
-		if (Math.abs(u) < Particle.ZERO)
-			return;
-		obs.ax += u * costheta / obs.getMass() * AtomicModel.GF_CONVERSION_CONSTANT;
-		obs.ay += u * sintheta / obs.getMass() * AtomicModel.GF_CONVERSION_CONSTANT;
+	public void addImpulse(RectangularObstacle obs) {
+		if (mode == IMPULSE_MODE) {
+			obs.vx += costheta * gear * IMPULSE_STRENGTH / obs.getMass();
+			obs.vy += sintheta * gear * IMPULSE_STRENGTH / obs.getMass();
+		}
+	}
+
+	void dyn(Particle p) {
+		if (mode == FORCE_MODE) {
+			if (Math.abs(u) < Particle.ZERO)
+				return;
+			p.fx += u * costheta / p.getMass() * MDModel.GF_CONVERSION_CONSTANT;
+			p.fy += u * sintheta / p.getMass() * MDModel.GF_CONVERSION_CONSTANT;
+		}
+	}
+
+	void dyn(RectangularObstacle obs) {
+		if (mode == FORCE_MODE) {
+			if (Math.abs(u) < Particle.ZERO)
+				return;
+			obs.ax += u * costheta / obs.getMass() * MDModel.GF_CONVERSION_CONSTANT;
+			obs.ay += u * sintheta / obs.getMass() * MDModel.GF_CONVERSION_CONSTANT;
+		}
 	}
 
 	void render(Graphics2D g, Object p, boolean b) {
@@ -181,7 +214,7 @@ public class UserField implements VectorField, Serializable {
 		if (!b)
 			return;
 
-		if (u > 0) {
+		if (mode == FORCE_MODE && u > 0) {
 			double finc = 0.5 * gd + Math.log(gear) * 10;
 			double endx = x + finc * costheta;
 			double endy = y + finc * sintheta;

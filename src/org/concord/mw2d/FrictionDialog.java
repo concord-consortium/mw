@@ -39,12 +39,13 @@ import org.concord.modeler.ui.RealNumberTextField;
 class FrictionDialog {
 
 	private MDView view;
+	private boolean isCancelled;
 
 	FrictionDialog(MDView view) {
 		this.view = view;
 	}
 
-	void show(boolean on) {
+	boolean show(boolean on) {
 
 		JOptionPane op = new JOptionPane();
 		op.setLayout(new BorderLayout(5, 5));
@@ -52,11 +53,8 @@ class FrictionDialog {
 
 		if (on) {
 
-			op
-					.add(
-							new JLabel(
-									"<html>A friction field will be turned on to counterbalance<br>your steering forces, to prevent too much energy<br>from pumping into the system. You may specify or<br>change the friction field intensity:"),
-							BorderLayout.NORTH);
+			String s = "<html>A friction field will be turned on to counterbalance<br>the steering forces to prevent too much energy<br>input into the system. You may specify or change<br>the friction coefficient:";
+			op.add(new JLabel(s), BorderLayout.NORTH);
 
 			final RealNumberTextField ntf = new RealNumberTextField(view.steerFriction, 0.0, 100.0, 10);
 			ntf.setPreferredSize(new Dimension(100, 20));
@@ -71,7 +69,7 @@ class FrictionDialog {
 
 			JPanel p = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
-			String s = MDView.getInternationalText("OKButton");
+			s = MDView.getInternationalText("OKButton");
 			JButton b = new JButton(s != null ? s : "OK");
 			b.setMnemonic(KeyEvent.VK_O);
 			b.setPreferredSize(new Dimension(80, 20));
@@ -90,6 +88,7 @@ class FrictionDialog {
 			b.setMnemonic(KeyEvent.VK_C);
 			b.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					isCancelled = true;
 					d.dispose();
 				}
 			});
@@ -98,17 +97,15 @@ class FrictionDialog {
 			op.add(p, BorderLayout.SOUTH);
 
 		}
+
 		else {
 
-			op
-					.add(
-							new JLabel(
-									"<html>The friction field you turned on to counterbalance<br>the steering forces will be turned off.</html>"),
-							BorderLayout.CENTER);
+			String s = "<html>The friction field you turned on to counterbalance<br>the steering forces will be turned off.</html>";
+			op.add(new JLabel(s), BorderLayout.CENTER);
 
 			JPanel p = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
-			String s = MDView.getInternationalText("OKButton");
+			s = MDView.getInternationalText("OKButton");
 			JButton b = new JButton(s != null ? s : "OK");
 			b.setMnemonic(KeyEvent.VK_O);
 			b.setPreferredSize(new Dimension(80, 20));
@@ -134,6 +131,7 @@ class FrictionDialog {
 		d.pack();
 		d.setVisible(true);
 
-	}
+		return isCancelled;
 
+	}
 }
