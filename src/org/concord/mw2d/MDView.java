@@ -214,7 +214,7 @@ public abstract class MDView extends PrintableComponent {
 	List<Layered> layerBasket;
 
 	/* a friction field to counter the steering force on a particle. */
-	double steerFriction = 1.0;
+	double steerFriction = 0.1;
 
 	private boolean editable;
 	private boolean clockPainted = true;
@@ -3172,8 +3172,8 @@ public abstract class MDView extends PrintableComponent {
 
 	abstract void refreshForces();
 
-	boolean showFrictionOptions(boolean on) {
-		return new FrictionDialog(this).show(on);
+	byte showFrictionOptions(boolean on) {
+		return new SteeringDialog(this).show(on);
 	}
 
 	public void removeSelectedComponent() {

@@ -25,36 +25,72 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 
 import org.concord.modeler.ui.RealNumberTextField;
+import org.concord.mw2d.models.UserField;
 
-class FrictionDialog {
+class SteeringDialog {
 
 	private MDView view;
-	private boolean isCancelled;
+	private byte returnedValue;
 
-	FrictionDialog(MDView view) {
+	SteeringDialog(MDView view) {
 		this.view = view;
 	}
 
-	boolean show(boolean on) {
+	byte show(boolean on) {
 
 		JOptionPane op = new JOptionPane();
 		op.setLayout(new BorderLayout(5, 5));
-		final JDialog d = op.createDialog(view, "Friction Field");
+		final JDialog d = op.createDialog(view, "Steering Options");
 
 		if (on) {
 
+			JPanel p = new JPanel();
+			p.setBorder(BorderFactory.createTitledBorder("Interaction Mode"));
+			op.add(p, BorderLayout.NORTH);
+
+			ButtonGroup bg = new ButtonGroup();
+			JRadioButton rb = new JRadioButton("Force");
+			rb.setSelected(true);
+			rb.addItemListener(new ItemListener() {
+				public void itemStateChanged(ItemEvent e) {
+					if (e.getStateChange() == ItemEvent.SELECTED)
+						returnedValue = UserField.FORCE_MODE;
+				}
+			});
+			bg.add(rb);
+			p.add(rb);
+
+			rb = new JRadioButton("Impulse");
+			rb.addItemListener(new ItemListener() {
+				public void itemStateChanged(ItemEvent e) {
+					if (e.getStateChange() == ItemEvent.SELECTED)
+						returnedValue = UserField.IMPULSE_MODE;
+				}
+			});
+			bg.add(rb);
+			p.add(rb);
+
+			p = new JPanel(new BorderLayout());
+			op.add(p, BorderLayout.CENTER);
+
 			String s = "<html>A friction field will be turned on to counterbalance<br>the steering forces to prevent too much energy<br>input into the system. You may specify or change<br>the friction coefficient:";
-			op.add(new JLabel(s), BorderLayout.NORTH);
+			p.add(new JLabel(s), BorderLayout.NORTH);
 
 			final RealNumberTextField ntf = new RealNumberTextField(view.steerFriction, 0.0, 100.0, 10);
 			ntf.setPreferredSize(new Dimension(100, 20));
@@ -65,9 +101,9 @@ class FrictionDialog {
 					d.dispose();
 				}
 			});
-			op.add(ntf, BorderLayout.CENTER);
+			p.add(ntf, BorderLayout.CENTER);
 
-			JPanel p = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+			p = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
 			s = MDView.getInternationalText("OKButton");
 			JButton b = new JButton(s != null ? s : "OK");
@@ -88,7 +124,7 @@ class FrictionDialog {
 			b.setMnemonic(KeyEvent.VK_C);
 			b.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					isCancelled = true;
+					returnedValue = -1;
 					d.dispose();
 				}
 			});
@@ -131,7 +167,7 @@ class FrictionDialog {
 		d.pack();
 		d.setVisible(true);
 
-		return isCancelled;
+		return returnedValue;
 
 	}
 }

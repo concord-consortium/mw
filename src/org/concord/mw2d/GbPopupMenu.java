@@ -248,17 +248,16 @@ class GbPopupMenu extends JPopupMenu {
 		miSteer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (view.selectedComponent instanceof GayBerneParticle) {
-					boolean b = false;
-					for (int i = 0; i < view.model.getNumberOfParticles(); i++) {
-						if (view.gb[i].getUserField() != null) {
-							b = true;
-							break;
-						}
-					}
-					if (!b)
-						if (view.showFrictionOptions(true))
+					view.setAction(UserAction.SELE_ID);
+					byte interactMode = UserField.FORCE_MODE;
+					if (!view.model.heatBathActivated()) {
+						interactMode = view.showFrictionOptions(true);
+						if (interactMode == -1)
 							return;
-					((GayBerneParticle) view.selectedComponent).setUserField(new UserField(0, view.getBounds()));
+					}
+					UserField uf = new UserField(0, view.getBounds());
+					uf.setMode(interactMode);
+					((GayBerneParticle) view.selectedComponent).setUserField(uf);
 					view.repaint();
 				}
 			}
@@ -280,8 +279,7 @@ class GbPopupMenu extends JPopupMenu {
 						}
 					}
 					if (!b)
-						if (view.showFrictionOptions(false))
-							return;
+						view.showFrictionOptions(false);
 					view.repaint();
 				}
 			}
@@ -350,5 +348,4 @@ class GbPopupMenu extends JPopupMenu {
 		pack();
 
 	}
-
 }
