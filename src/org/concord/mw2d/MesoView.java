@@ -1972,7 +1972,14 @@ public class MesoView extends MDView {
 						break;
 					}
 					if (keyIsRight) {
-						uf.setIntensity(UserField.INCREMENT * uf.getGear());
+						switch (uf.getMode()) {
+						case UserField.FORCE_MODE:
+							uf.setIntensity(UserField.INCREMENT * uf.getGear());
+							break;
+						case UserField.IMPULSE_MODE:
+							uf.increaseGear();
+							break;
+						}
 					}
 				}
 			}
