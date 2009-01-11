@@ -5738,8 +5738,14 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				uf = atom[i].getUserField();
 				if (uf != null) {
 					uf.setAngle(dx, dy);
-					if (uf.getMode() == UserField.FORCE_MODE)
+					switch (uf.getMode()) {
+					case UserField.FORCE_MODE:
 						uf.setIntensity(UserField.INCREMENT * uf.getGear());
+						break;
+					case UserField.IMPULSE_MODE:
+						uf.increaseGear();
+						break;
+					}
 				}
 			}
 			if (obstacles != null && !obstacles.isEmpty()) {
@@ -5750,8 +5756,14 @@ public class AtomisticView extends MDView implements BondChangeListener {
 						uf = obs.getUserField();
 						if (uf != null) {
 							uf.setAngle(dx, dy);
-							if (uf.getMode() == UserField.FORCE_MODE)
+							switch (uf.getMode()) {
+							case UserField.FORCE_MODE:
 								uf.setIntensity(UserField.INCREMENT * uf.getGear());
+								break;
+							case UserField.IMPULSE_MODE:
+								uf.increaseGear();
+								break;
+							}
 						}
 					}
 				}

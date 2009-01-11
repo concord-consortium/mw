@@ -3143,6 +3143,7 @@ public abstract class MDView extends PrintableComponent {
 					break;
 				case UserField.IMPULSE_MODE:
 					uf.addImpulse(p);
+					uf.setGear(1);
 					break;
 				}
 			}
@@ -3161,6 +3162,7 @@ public abstract class MDView extends PrintableComponent {
 							break;
 						case UserField.IMPULSE_MODE:
 							uf.addImpulse(obs);
+							uf.setGear(1);
 							break;
 						}
 					}
@@ -3538,9 +3540,9 @@ public abstract class MDView extends PrintableComponent {
 			g.draw(incrButton);
 			g.draw(decrButton);
 			g.setColor(contrastBackground());
-			g.drawRect(incrButton.x + 10, incrButton.y, 80, 10);
+			g.drawRect(incrButton.x + 10, incrButton.y, 85, 10);
 			g.setFont(ViewAttribute.LITTLE_FONT);
-			g.drawString("Steering force", incrButton.x + 15, incrButton.y + 8);
+			g.drawString("Steering strength", incrButton.x + 15, incrButton.y + 8);
 
 		}
 
