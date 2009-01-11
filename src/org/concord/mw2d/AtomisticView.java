@@ -5743,7 +5743,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 						uf.setIntensity(UserField.INCREMENT * uf.getGear());
 						break;
 					case UserField.IMPULSE_MODE:
-						uf.increaseGear();
+						uf.increaseGear(1);
 						break;
 					}
 				}
@@ -5761,7 +5761,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 								uf.setIntensity(UserField.INCREMENT * uf.getGear());
 								break;
 							case UserField.IMPULSE_MODE:
-								uf.increaseGear();
+								uf.increaseGear(1);
 								break;
 							}
 						}

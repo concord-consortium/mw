@@ -39,9 +39,9 @@ public class UserField implements VectorField, Serializable {
 	private static boolean renderable = true;
 
 	private double u = INCREMENT;
-	private int gear = 1;
+	private float gear = 1;
 	private double costheta, sintheta;
-	private byte mode = IMPULSE_MODE;
+	private byte mode = FORCE_MODE;
 
 	Shape bounds;
 
@@ -119,17 +119,17 @@ public class UserField implements VectorField, Serializable {
 	}
 
 	public synchronized int getGear() {
-		return gear;
+		return (int) gear;
 	}
 
-	public void increaseGear() {
+	public void increaseGear(float increment) {
 		if (gear < GEAR_MAX)
-			gear++;
+			gear += increment;
 	}
 
-	public void decreaseGear() {
+	public void decreaseGear(float increment) {
 		if (gear >= 2)
-			gear--;
+			gear -= increment;
 	}
 
 	public void addImpulse(Particle p) {

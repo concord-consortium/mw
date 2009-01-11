@@ -3091,8 +3091,8 @@ public abstract class MDView extends PrintableComponent {
 			uf = getModel().getParticle(i).getUserField();
 			if (uf != null) {
 				if (increase)
-					uf.increaseGear();
-				else uf.decreaseGear();
+					uf.increaseGear(1);
+				else uf.decreaseGear(1);
 				if (Math.abs(uf.getIntensity()) > ZERO) { // currently steering
 					uf.setIntensity(UserField.INCREMENT * uf.getGear());
 				}
@@ -3105,8 +3105,8 @@ public abstract class MDView extends PrintableComponent {
 					uf = ((RectangularObstacle) it.next()).getUserField();
 					if (uf != null) {
 						if (increase)
-							uf.increaseGear();
-						else uf.decreaseGear();
+							uf.increaseGear(1);
+						else uf.decreaseGear(1);
 						if (Math.abs(uf.getIntensity()) > ZERO) {// currently steering
 							uf.setIntensity(UserField.INCREMENT * uf.getGear());
 						}
@@ -3125,7 +3125,14 @@ public abstract class MDView extends PrintableComponent {
 			if (uf != null) {
 				double r = 1.0 / Math.hypot(dx, dy);
 				uf.setAngle(dx * r, dy * r);
-				uf.setIntensity(UserField.INCREMENT * uf.getGear());
+				switch (uf.getMode()) {
+				case UserField.FORCE_MODE:
+					uf.setIntensity(UserField.INCREMENT * uf.getGear());
+					break;
+				case UserField.IMPULSE_MODE:
+					uf.increaseGear(0.1f);
+					break;
+				}
 			}
 		}
 	}
