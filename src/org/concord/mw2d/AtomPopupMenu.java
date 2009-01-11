@@ -257,20 +257,15 @@ class AtomPopupMenu extends JPopupMenu {
 			public void actionPerformed(ActionEvent e) {
 				if (view.selectedComponent instanceof Atom) {
 					view.setAction(UserAction.SELE_ID);
+					byte interactMode = UserField.FORCE_MODE;
 					if (!view.model.heatBathActivated()) {
-						boolean b = false;
-						int n = view.model.getNumberOfAtoms();
-						for (int i = 0; i < n; i++) {
-							if (view.atom[i].getUserField() != null) {
-								b = true;
-								break;
-							}
-						}
-						if (!b)
-							if (view.showFrictionOptions(true))
-								return;
+						interactMode = view.showFrictionOptions(true);
+						if (interactMode == -1)
+							return;
 					}
-					((Atom) view.selectedComponent).setUserField(new UserField(0, view.getBounds()));
+					UserField uf = new UserField(0, view.getBounds());
+					uf.setMode(interactMode);
+					((Atom) view.selectedComponent).setUserField(uf);
 					view.repaint();
 				}
 			}
@@ -294,8 +289,7 @@ class AtomPopupMenu extends JPopupMenu {
 							}
 						}
 						if (!b)
-							if (view.showFrictionOptions(false))
-								return;
+							view.showFrictionOptions(false);
 					}
 					view.repaint();
 				}
