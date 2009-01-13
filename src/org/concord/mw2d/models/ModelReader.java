@@ -110,7 +110,7 @@ public class ModelReader extends AbstractAction {
 		if (latestPath != null)
 			fileChooser.setCurrentDirectory(new File(latestPath));
 		if (lastFile != null && !lastFile.isDirectory())
-			fileChooser.recallLastFile(lastFile);
+			fileChooser.handleFileTypeSwitching(lastFile);
 		fileChooser.setAccessory(null);
 		if (fileChooser.showOpenDialog(JOptionPane.getFrameForComponent(model.getView())) == JFileChooser.APPROVE_OPTION) {
 			File selectedFile = fileChooser.getSelectedFile();

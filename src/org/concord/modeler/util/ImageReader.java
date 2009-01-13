@@ -150,7 +150,7 @@ public class ImageReader extends AbstractAction {
 		if (latestPath != null)
 			fileChooser.setCurrentDirectory(new File(latestPath));
 		if (lastFile != null && !lastFile.isDirectory())
-			fileChooser.recallLastFile(lastFile);
+			fileChooser.handleFileTypeSwitching(lastFile);
 		if (imagePreview != null) {
 			fileChooser.setAccessory(imagePreview);
 			imagePreview.setFile(lastFile);
