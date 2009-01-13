@@ -2884,7 +2884,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		if (latestPath != null)
 			fileChooser.setCurrentDirectory(new File(latestPath));
 		if (lastFile != null && !lastFile.isDirectory())
-			fileChooser.recallLastFile(lastFile);
+			fileChooser.handleFileTypeSwitching(lastFile);
 		fileChooser.setAccessory(null);
 		if (fileChooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
 			final File file = fileChooser.getSelectedFile();
@@ -2934,7 +2934,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		if (latestPath != null)
 			fileChooser.setCurrentDirectory(new File(latestPath));
 		if (lastFile != null && !lastFile.isDirectory())
-			fileChooser.recallLastFile(lastFile);
+			fileChooser.handleFileTypeSwitching(lastFile);
 		fileChooser.setAccessory(null);
 		if (fileChooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
 			File file = fileChooser.getSelectedFile();

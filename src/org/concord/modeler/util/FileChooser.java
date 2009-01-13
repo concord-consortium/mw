@@ -80,8 +80,11 @@ public class FileChooser extends JFileChooser {
 			addChoosableFileFilter(FileFilterFactory.getFilter(s));
 	}
 
-	/** remember the last opened file */
-	public void recallLastFile(File file) {
+	/**
+	 * when reusing this filechooser to open other type of file, the input text field needs to be cleared to avoid
+	 * confusion.
+	 */
+	public void handleFileTypeSwitching(File file) {
 		if (file != null) {
 			FileFilter ff = getFileFilter();
 			if (ff == null || !ff.accept(file)) {

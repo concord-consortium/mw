@@ -159,7 +159,7 @@ public class ScreenshotSaver extends AbstractAction {
 		if (latestPath != null)
 			fileChooser.setCurrentDirectory(new File(latestPath));
 		if (lastFile != null && !lastFile.isDirectory())
-			fileChooser.recallLastFile(lastFile);
+			fileChooser.handleFileTypeSwitching(lastFile);
 		fileChooser.setAccessory(imagePreview);
 
 		if (fileChooser.showSaveDialog(JOptionPane.getFrameForComponent(component)) == JFileChooser.APPROVE_OPTION) {
