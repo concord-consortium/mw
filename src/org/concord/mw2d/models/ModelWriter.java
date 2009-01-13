@@ -122,13 +122,6 @@ public class ModelWriter extends AbstractAction {
 		String latestPath = fileChooser.getLastVisitedPath();
 		if (latestPath != null)
 			fileChooser.setCurrentDirectory(new File(latestPath));
-		File lastFile = fileChooser.getSelectedFile();
-		if (lastFile != null) {
-			fileChooser.recallLastFile(lastFile);
-		}
-		else {
-			fileChooser.resetTextField();
-		}
 		/*
 		 * It is determined that recalling the last file is more important than setting the file name to be the current
 		 * one. else { String url=(String)model.getProperty("url"); System.out.println(url); if(url==null) {

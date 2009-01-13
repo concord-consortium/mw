@@ -2874,7 +2874,6 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	private boolean importFile() {
 		boolean success = false;
 		final Frame frame = JOptionPane.getFrameForComponent(this);
-		final File lastFile = fileChooser.getSelectedFile();
 		fileChooser.setAcceptAllFileFilterUsed(false);
 		fileChooser.addChoosableFileFilters(new String[] { "html", "txt" });
 		fileChooser.setDialogType(JFileChooser.OPEN_DIALOG);
@@ -2883,7 +2882,6 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		String latestPath = fileChooser.getLastVisitedPath();
 		if (latestPath != null)
 			fileChooser.setCurrentDirectory(new File(latestPath));
-		fileChooser.recallLastFile(lastFile);
 		fileChooser.setAccessory(null);
 		if (fileChooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
 			final File file = fileChooser.getSelectedFile();
@@ -2921,7 +2919,6 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	private boolean openPage() {
 		boolean success = false;
 		Frame frame = JOptionPane.getFrameForComponent(this);
-		File lastFile = fileChooser.getSelectedFile();
 		fileChooser.setAcceptAllFileFilterUsed(false);
 		fileChooser.addChoosableFileFilters(new String[] { "png", "gif", "jpg", "txt", "mws", "pdb", "xyz", "cml" });
 		fileChooser.setFileFilter(FileFilterFactory.getFilter("cml"));
@@ -2932,8 +2929,6 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		String latestPath = fileChooser.getLastVisitedPath();
 		if (latestPath != null)
 			fileChooser.setCurrentDirectory(new File(latestPath));
-		if (lastFile != null && !lastFile.isDirectory())
-			fileChooser.recallLastFile(lastFile);
 		fileChooser.setAccessory(null);
 		if (fileChooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
 			File file = fileChooser.getSelectedFile();

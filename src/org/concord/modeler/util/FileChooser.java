@@ -39,7 +39,6 @@ import java.util.Map;
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import javax.swing.filechooser.FileFilter;
 
 import org.concord.modeler.FileFilterFactory;
 
@@ -80,27 +79,11 @@ public class FileChooser extends JFileChooser {
 			addChoosableFileFilter(FileFilterFactory.getFilter(s));
 	}
 
-	/** remember the last opened file */
-	public void recallLastFile(File file) {
-		if (file != null) {
-			FileFilter ff = getFileFilter();
-			if (ff != null && ff.accept(file)) {
-				setSelectedFile(file);
-			}
-			else {
-				resetTextField();
-			}
-		}
-		else {
-			resetTextField();
-		}
-	}
-
 	/* Why did we reset the text field to "Untitled.", appended by the current extension before? */
 	public void resetTextField() {
 		/*
-		 * File dir = getCurrentDirectory(); if (dir != null) { String fn = "Untitled"; if (getFileFilter() != null) fn +=
-		 * "." + getFileFilter().getDescription().toLowerCase(); setSelectedFile(new File(dir, fn)); } else {
+		 * File dir = getCurrentDirectory(); if (dir != null) { String fn = "Untitled"; if (getFileFilter() != null) fn
+		 * += "." + getFileFilter().getDescription().toLowerCase(); setSelectedFile(new File(dir, fn)); } else {
 		 * clearTextField(); }
 		 */
 		clearTextField();
