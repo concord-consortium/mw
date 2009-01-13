@@ -139,8 +139,6 @@ public class ScreenshotSaver extends AbstractAction {
 
 		// if(!(e.getSource() instanceof AbstractButton) && !component.hasFocus()) return;
 
-		File lastFile = fileChooser.getSelectedFile();
-
 		List list = Arrays.asList(ImageIO.getWriterFormatNames());
 		if (list == null || list.isEmpty()) {
 			fileChooser.setAcceptAllFileFilterUsed(true);
@@ -160,7 +158,6 @@ public class ScreenshotSaver extends AbstractAction {
 		if (latestPath != null)
 			fileChooser.setCurrentDirectory(new File(latestPath));
 		fileChooser.setAccessory(imagePreview);
-		fileChooser.recallLastFile(lastFile);
 
 		if (fileChooser.showSaveDialog(JOptionPane.getFrameForComponent(component)) == JFileChooser.APPROVE_OPTION) {
 			final File file = fileChooser.getSelectedFile();

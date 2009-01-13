@@ -93,7 +93,6 @@ public class JNLPSaver {
 					fn += "." + ext;
 			}
 		}
-		fileChooser.recallLastFile(new File(latestPath, FileUtilities.changeExtension(fn, "jnlp")));
 
 		int returnValue = fileChooser.showSaveDialog(parent);
 		if (returnValue == JFileChooser.APPROVE_OPTION) {
