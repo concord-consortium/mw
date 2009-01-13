@@ -273,8 +273,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 
 	/*
 	 * <code>PrintPreview</code> acts like a mediator between <code>Page</code> and printer. Any printing job should
-	 * pass through the <code>PrintPreview</code> gateway to get to a printer, even if the user does not mean to
-	 * preview pages before printing.
+	 * pass through the <code>PrintPreview</code> gateway to get to a printer, even if the user does not mean to preview
+	 * pages before printing.
 	 */
 	private PrintPreview printPreview;
 	private static PrintParameters printParam = new PrintParameters();
@@ -1611,9 +1611,9 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 
 	/**
 	 * override this method to provide cut/copy/paste with more <code>DataFlavor</code>. The original implemention of
-	 * this method with <code>JTextComponent</code> deals only with <code>DataFlavor.stringFlavor</code>. FIXME:
-	 * Pasting a component to a different page will fail, because the content of the component is destroyed when leaving
-	 * a page (in order to prevent memory leak). As a result, the content cannot be copied.
+	 * this method with <code>JTextComponent</code> deals only with <code>DataFlavor.stringFlavor</code>. FIXME: Pasting
+	 * a component to a different page will fail, because the content of the component is destroyed when leaving a page
+	 * (in order to prevent memory leak). As a result, the content cannot be copied.
 	 */
 	public void paste() {
 		if (!isEditable())
@@ -2068,8 +2068,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	}
 
 	/**
-	 * store the embedded components, which is of the specified class, in a <code>TreeMap</code>, with the start
-	 * offset (<code>Integer</code>) as the key
+	 * store the embedded components, which is of the specified class, in a <code>TreeMap</code>, with the start offset
+	 * (<code>Integer</code>) as the key
 	 */
 	public Map<Integer, Object> getEmbeddedComponent(Class c) {
 		if (c == null)
@@ -2406,8 +2406,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	}
 
 	/**
-	 * <code>clearAllContent()</code> MUST be called in prior to this method to empty the document tree first. It
-	 * cannot be put into the same thread, for it may cause deadlock.
+	 * <code>clearAllContent()</code> MUST be called in prior to this method to empty the document tree first. It cannot
+	 * be put into the same thread, for it may cause deadlock.
 	 */
 	private void readPage(final String uri) {
 		synchronized (lock) {
@@ -2872,6 +2872,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 
 	/* insert a html file to the caret's position */
 	private boolean importFile() {
+		File lastFile = fileChooser.getSelectedFile();
 		boolean success = false;
 		final Frame frame = JOptionPane.getFrameForComponent(this);
 		fileChooser.setAcceptAllFileFilterUsed(false);
@@ -2882,6 +2883,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		String latestPath = fileChooser.getLastVisitedPath();
 		if (latestPath != null)
 			fileChooser.setCurrentDirectory(new File(latestPath));
+		if (lastFile != null && !lastFile.isDirectory())
+			fileChooser.recallLastFile(lastFile);
 		fileChooser.setAccessory(null);
 		if (fileChooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
 			final File file = fileChooser.getSelectedFile();
@@ -2917,6 +2920,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 
 	/* read a page from a file chooser */
 	private boolean openPage() {
+		File lastFile = fileChooser.getSelectedFile();
 		boolean success = false;
 		Frame frame = JOptionPane.getFrameForComponent(this);
 		fileChooser.setAcceptAllFileFilterUsed(false);
@@ -2929,6 +2933,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		String latestPath = fileChooser.getLastVisitedPath();
 		if (latestPath != null)
 			fileChooser.setCurrentDirectory(new File(latestPath));
+		if (lastFile != null && !lastFile.isDirectory())
+			fileChooser.recallLastFile(lastFile);
 		fileChooser.setAccessory(null);
 		if (fileChooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
 			File file = fileChooser.getSelectedFile();
@@ -3022,8 +3028,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 
 	/*
 	 * this method MUST be called by a <code>SwingWorker</code>'s <code>construct()</code> method. Depending on the
-	 * situation, call <code>SwingWorker.finished()</code> method to decide on what to do immediately following the
-	 * save action. This method should NOT be directly used by another class other than a subclass of this class.
+	 * situation, call <code>SwingWorker.finished()</code> method to decide on what to do immediately following the save
+	 * action. This method should NOT be directly used by another class other than a subclass of this class.
 	 */
 	private void saveTo(File file) {
 		if (file == null)
@@ -4106,8 +4112,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 
 	/**
 	 * Warning: This method works only when an image containing a map of hyperlinks is clicked. In all other cases,
-	 * <code>HyperlinkEvent</code>s are processed in <code>hotlinkUpdate</code>. This is a workaround for solving
-	 * the image map problem.
+	 * <code>HyperlinkEvent</code>s are processed in <code>hotlinkUpdate</code>. This is a workaround for solving the
+	 * image map problem.
 	 * 
 	 * @see org.concord.modeler.event.HotlinkListener
 	 */

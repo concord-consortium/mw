@@ -99,6 +99,7 @@ public class ModelReader extends AbstractAction {
 
 	protected boolean read(FileFilter filter) {
 
+		File lastFile = fileChooser.getSelectedFile();
 		fileChooser.setAcceptAllFileFilterUsed(false);
 		fileChooser.addChoosableFileFilter(filter);
 		fileChooser.setDialogType(JFileChooser.OPEN_DIALOG);
@@ -108,6 +109,8 @@ public class ModelReader extends AbstractAction {
 		String latestPath = fileChooser.getLastVisitedPath();
 		if (latestPath != null)
 			fileChooser.setCurrentDirectory(new File(latestPath));
+		if (lastFile != null && !lastFile.isDirectory())
+			fileChooser.recallLastFile(lastFile);
 		fileChooser.setAccessory(null);
 		if (fileChooser.showOpenDialog(JOptionPane.getFrameForComponent(model.getView())) == JFileChooser.APPROVE_OPTION) {
 			File selectedFile = fileChooser.getSelectedFile();
@@ -125,7 +128,6 @@ public class ModelReader extends AbstractAction {
 				}
 			}.start();
 			fileChooser.rememberPath(fileChooser.getCurrentDirectory().toString());
-			// fileChooser.rememberFile(file.getAbsolutePath());
 		}
 
 		fileChooser.resetChoosableFileFilters();
