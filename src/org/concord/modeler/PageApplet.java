@@ -355,12 +355,16 @@ public class PageApplet extends PagePlugin {
 		}
 	}
 
-	public void destroy() {
-		super.destroy();
+	void destroyApplet() {
 		if (applet != null) {
 			applet.stop();
 			applet.destroy();
 		}
+	}
+
+	public void destroy() {
+		super.destroy();
+		destroyApplet();
 		page = null;
 		if (maker != null)
 			maker.setApplet(null);

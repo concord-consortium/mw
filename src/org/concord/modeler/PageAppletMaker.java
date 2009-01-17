@@ -101,6 +101,7 @@ class PageAppletMaker extends ComponentMaker {
 	void confirm() {
 		if (jarList.isSelectionEmpty())
 			return;
+		pageApplet.destroyApplet();
 		if (pageApplet.jarName == null)
 			pageApplet.jarName = new ArrayList<String>();
 		else pageApplet.jarName.clear();
