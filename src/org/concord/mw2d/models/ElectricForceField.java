@@ -29,9 +29,11 @@ public class ElectricForceField {
 
 	private int width, height, cellSize = 10, nx, ny;
 	private float[] fx, fy;
-	private double x1, y1, x2, y2, wingx, wingy, cosx, sinx; // reuse to reduce heap allocation while painting
+	private double intensity, x1, y1, x2, y2, wingx, wingy, cosx, sinx, distance;
 	private int m;
-	private double distance;
+	private double fmin, fmax;
+	private Color bgColor, fgColor;
+	private int red, green, blue;
 
 	public void setWindow(int width, int height) {
 		if (width == this.width && height == this.height)
@@ -68,6 +70,14 @@ public class ElectricForceField {
 			return;
 		if (model.numberOfAtoms <= 0)
 			return;
+
+		fmin = Double.MAX_VALUE;
+		fmax = -Double.MAX_VALUE;
+		bgColor = model.view.getBackground();
+		fgColor = model.view.contrastBackground();
+		red = fgColor.getRed() - bgColor.getRed();
+		green = fgColor.getGreen() - bgColor.getGreen();
+		blue = fgColor.getBlue() - bgColor.getBlue();
 
 		synchronized (lock) {
 
@@ -131,6 +141,11 @@ public class ElectricForceField {
 						}
 					}
 
+					intensity = Math.sqrt(fx[m] * fx[m] + fy[m] * fy[m]);
+					if (fmin > intensity)
+						fmin = intensity;
+					if (fmax < intensity)
+						fmax = intensity;
 					m++;
 
 				}
@@ -141,13 +156,19 @@ public class ElectricForceField {
 
 	}
 
-	public void render(Graphics g, Color c) {
-		g.setColor(c);
+	public void render(Graphics g) {
+		if (fmax == fmin)
+			return;
+		distance = 1.0 / (fmax - fmin);
 		synchronized (lock) {
 			for (int i = 0; i < ny; i++) {
 				for (int j = 0; j < nx; j++) {
 					m = i * nx + j;
-					x1 = 1.0 / Math.sqrt(fx[m] * fx[m] + fy[m] * fy[m]);
+					intensity = Math.sqrt(fx[m] * fx[m] + fy[m] * fy[m]);
+					x2 = (intensity - fmin) * distance;
+					g.setColor(new Color((int) (bgColor.getRed() + x2 * red), (int) (bgColor.getGreen() + x2 * green),
+							(int) (bgColor.getBlue() + x2 * blue)));
+					x1 = 1.0 / intensity;
 					cosx = fx[m] * x1;
 					sinx = fy[m] * x1;
 					x1 = (j + 0.5 * (1.0 - cosx)) * cellSize;
@@ -165,5 +186,4 @@ public class ElectricForceField {
 			}
 		}
 	}
-
 }
