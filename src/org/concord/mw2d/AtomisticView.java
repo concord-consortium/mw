@@ -3445,7 +3445,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 						eField = new ElectricForceField();
 					eField.setWindow(getWidth(), getHeight());
 					eField.computeForceGrid(model);
-					eField.render(g, Color.gray);
+					eField.render(g);
 				}
 			}
 
