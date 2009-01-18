@@ -1976,7 +1976,7 @@ public class MesoView extends MDView {
 						case UserField.FORCE_MODE:
 							uf.setIntensity(UserField.INCREMENT * uf.getGear());
 							break;
-						case UserField.IMPULSE_MODE:
+						case UserField.IMPULSE1_MODE:
 							uf.increaseGear(1);
 							break;
 						}

@@ -76,17 +76,28 @@ class SteeringDialog {
 			bg.add(rb);
 			p.add(rb);
 
-			rb = new JRadioButton("Impulse");
+			rb = new JRadioButton("Impulse 1");
 			rb.addItemListener(new ItemListener() {
 				public void itemStateChanged(ItemEvent e) {
 					if (e.getStateChange() == ItemEvent.SELECTED)
-						returnedValue = UserField.IMPULSE_MODE;
+						returnedValue = UserField.IMPULSE1_MODE;
+				}
+			});
+			bg.add(rb);
+			p.add(rb);
+
+			rb = new JRadioButton("Impulse 2");
+			rb.addItemListener(new ItemListener() {
+				public void itemStateChanged(ItemEvent e) {
+					if (e.getStateChange() == ItemEvent.SELECTED)
+						returnedValue = UserField.IMPULSE2_MODE;
 				}
 			});
 			bg.add(rb);
 			p.add(rb);
 
 			p = new JPanel(new BorderLayout());
+			p.setBorder(BorderFactory.createTitledBorder("Friction Option"));
 			op.add(p, BorderLayout.CENTER);
 
 			String s = "<html>A friction field will be turned on to counterbalance<br>the steering forces to prevent too much energy<br>input into the system. You may specify or change<br>the friction coefficient:";

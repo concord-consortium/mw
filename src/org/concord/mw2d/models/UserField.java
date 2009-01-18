@@ -31,7 +31,8 @@ import org.concord.mw2d.ViewAttribute;
 public class UserField implements VectorField, Serializable {
 
 	public final static byte FORCE_MODE = 0;
-	public final static byte IMPULSE_MODE = 1;
+	public final static byte IMPULSE1_MODE = 1;
+	public final static byte IMPULSE2_MODE = 2;
 	public final static float INCREMENT = 0.025f;
 
 	private static final int GEAR_MAX = 20;
@@ -133,14 +134,14 @@ public class UserField implements VectorField, Serializable {
 	}
 
 	public void addImpulse(Particle p) {
-		if (mode == IMPULSE_MODE) {
+		if (mode == IMPULSE1_MODE || mode == IMPULSE2_MODE) {
 			p.vx += costheta * gear * IMPULSE_STRENGTH / p.getMass();
 			p.vy += sintheta * gear * IMPULSE_STRENGTH / p.getMass();
 		}
 	}
 
 	public void addImpulse(RectangularObstacle obs) {
-		if (mode == IMPULSE_MODE) {
+		if (mode == IMPULSE1_MODE || mode == IMPULSE2_MODE) {
 			obs.vx += costheta * gear * IMPULSE_STRENGTH / obs.getMass();
 			obs.vy += sintheta * gear * IMPULSE_STRENGTH / obs.getMass();
 		}
