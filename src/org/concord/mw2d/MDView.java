@@ -3129,7 +3129,7 @@ public abstract class MDView extends PrintableComponent {
 				case UserField.FORCE_MODE:
 					uf.setIntensity(UserField.INCREMENT * uf.getGear());
 					break;
-				case UserField.IMPULSE_MODE:
+				case UserField.IMPULSE1_MODE:
 					uf.increaseGear(0.1f);
 					break;
 				}
@@ -3148,9 +3148,12 @@ public abstract class MDView extends PrintableComponent {
 				case UserField.FORCE_MODE:
 					uf.setIntensity(0.0);
 					break;
-				case UserField.IMPULSE_MODE:
+				case UserField.IMPULSE1_MODE:
 					uf.addImpulse(p);
 					uf.setGear(1);
+					break;
+				case UserField.IMPULSE2_MODE:
+					uf.addImpulse(p);
 					break;
 				}
 			}
@@ -3167,9 +3170,12 @@ public abstract class MDView extends PrintableComponent {
 						case UserField.FORCE_MODE:
 							uf.setIntensity(0.0);
 							break;
-						case UserField.IMPULSE_MODE:
+						case UserField.IMPULSE1_MODE:
 							uf.addImpulse(obs);
 							uf.setGear(1);
+							break;
+						case UserField.IMPULSE2_MODE:
+							uf.addImpulse(obs);
 							break;
 						}
 					}
