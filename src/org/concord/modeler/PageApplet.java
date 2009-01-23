@@ -38,6 +38,8 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.swing.JApplet;
 import javax.swing.JMenuItem;
@@ -52,6 +54,7 @@ import org.concord.modeler.util.SwingWorker;
 public class PageApplet extends PagePlugin {
 
 	Applet applet;
+	private ExecutorService executorService;
 	private boolean cachingAllowed;
 	private static PageAppletMaker maker;
 	private AppletScripter scripter;
@@ -265,6 +268,7 @@ public class PageApplet extends PagePlugin {
 				SwingWorker worker = new SwingWorker("Applet Starter", Thread.MIN_PRIORITY + 1) {
 					public Object construct() {
 						try {
+							setupExecutorService();
 							applet.init();
 							loadState();
 							applet.start();
@@ -296,6 +300,34 @@ public class PageApplet extends PagePlugin {
 				return true;
 		}
 		return false;
+	}
+
+	private void setupExecutorService() {
+		if (!implementMwService())
+			return;
+		Method method;
+		Object o = null;
+		try {
+			method = applet.getClass().getMethod("needExecutorService", (Class[]) null);
+			if (method != null) {
+				o = method.invoke(applet, (Object[]) null);
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return;
+		}
+		if (Boolean.TRUE.equals(o)) {
+			executorService = Executors.newCachedThreadPool();
+			try {
+				method = applet.getClass().getMethod("setExecutorService", new Class[] { ExecutorService.class });
+				if (method != null)
+					method.invoke(applet, new Object[] { executorService });
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	void loadState(InputStream is) throws Exception {
@@ -370,6 +402,8 @@ public class PageApplet extends PagePlugin {
 	public void destroy() {
 		super.destroy();
 		destroyApplet();
+		if (executorService != null)
+			executorService.shutdownNow();
 		page = null;
 		if (maker != null)
 			maker.setApplet(null);
