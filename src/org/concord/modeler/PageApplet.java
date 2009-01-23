@@ -357,8 +357,13 @@ public class PageApplet extends PagePlugin {
 
 	void destroyApplet() {
 		if (applet != null) {
-			applet.stop();
-			applet.destroy();
+			try {
+				applet.stop();
+				applet.destroy();
+			}
+			catch (Throwable e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
