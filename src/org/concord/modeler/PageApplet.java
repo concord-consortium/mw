@@ -401,9 +401,9 @@ public class PageApplet extends PagePlugin {
 
 	public void destroy() {
 		super.destroy();
-		destroyApplet();
 		if (executorService != null)
 			executorService.shutdownNow();
+		destroyApplet();
 		page = null;
 		if (maker != null)
 			maker.setApplet(null);
