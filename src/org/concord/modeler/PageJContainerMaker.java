@@ -529,7 +529,7 @@ class PageJContainerMaker extends ComponentMaker {
 		contentPane.add(p, BorderLayout.CENTER);
 
 		JPanel p1 = new JPanel(new BorderLayout(4, 4));
-		p.add(p1, BorderLayout.CENTER);
+		p.add(p1, BorderLayout.NORTH);
 
 		s = Modeler.getInternationalText("CacheFiles");
 		p1.add(new JLabel((s != null ? s : "Cache Files") + ":", SwingConstants.LEFT), BorderLayout.NORTH);
@@ -540,7 +540,7 @@ class PageJContainerMaker extends ComponentMaker {
 		p1.add(new JScrollPane(resourceArea), BorderLayout.CENTER);
 
 		p1 = new JPanel(new BorderLayout(4, 4));
-		p.add(p1, BorderLayout.SOUTH);
+		p.add(p1, BorderLayout.CENTER);
 
 		s = Modeler.getInternationalText("EnterParametersInNameValuePairs");
 		p1.add(new JLabel(s != null ? s : "Enter parameters in name-value pairs:"), BorderLayout.NORTH);

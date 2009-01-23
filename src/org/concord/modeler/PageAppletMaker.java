@@ -359,7 +359,7 @@ class PageAppletMaker extends ComponentMaker {
 		contentPane.add(p, BorderLayout.CENTER);
 
 		JPanel p1 = new JPanel(new BorderLayout(4, 4));
-		p.add(p1, BorderLayout.SOUTH);
+		p.add(p1, BorderLayout.CENTER);
 
 		s = Modeler.getInternationalText("EnterParametersInNameValuePairs");
 		p1.add(new JLabel(s != null ? s : "Enter parameters in name-value pairs:"), BorderLayout.NORTH);
@@ -373,7 +373,7 @@ class PageAppletMaker extends ComponentMaker {
 		p1.add(ep, BorderLayout.SOUTH);
 
 		p1 = new JPanel();
-		p.add(p1, BorderLayout.CENTER);
+		p.add(p1, BorderLayout.NORTH);
 		p1.add(new JLabel("If the applet doesn't read files, select this:"));
 		cachingCheckBox = new JCheckBox("Allow caching");
 		p1.add(cachingCheckBox);
