@@ -45,6 +45,13 @@ public interface MwService {
 
 	public void saveState(OutputStream os) throws IOException;
 
+	/**
+	 * An untrusted applet will not be able to shutdown its thread service when it is not needed any more and ought to
+	 * be destroyed. A workaround is to "borrow" a thread service from MW. An applet that needs to do this should return
+	 * true in the implementation of this method. When it is initiated, MW will create an ExecutorService and pass it to
+	 * the applet. When it is destroyed, MW will shutdown the "lent" ExecutorService immediately. Hence, memory leak is
+	 * prevented.
+	 */
 	public boolean needExecutorService();
 
 	public void setExecutorService(ExecutorService service);
