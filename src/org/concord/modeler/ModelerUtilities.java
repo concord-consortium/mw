@@ -215,7 +215,6 @@ public final class ModelerUtilities {
 			return true;
 		}
 		catch (Throwable e) {
-			e.printStackTrace();
 			return false;
 		}
 	}

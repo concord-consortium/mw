@@ -728,15 +728,13 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				selectedComponent = null;
 			}
 		}
-		if (actionID == ROTA_ID) {
-			if (selectedComponent instanceof Rotatable) {
+		if (selectedComponent instanceof Rotatable) {
+			if (actionID == ROTA_ID) {
 				// calling the following method should cause the positions of the rotation handles to be re-calculated
 				selectedComponent.setSelected(true);
 				((Rotatable) selectedComponent).setSelectedToRotate(true);
 			}
-		}
-		else {
-			if (selectedComponent instanceof Rotatable) {
+			else {
 				((Rotatable) selectedComponent).setSelectedToRotate(false);
 			}
 		}
@@ -4032,19 +4030,9 @@ public class AtomisticView extends MDView implements BondChangeListener {
 					r.setSelectedToRotate(false);
 					setCursor(rotateCursor2);
 					selectRotatable(x, y);
-					if (r instanceof Molecule) {
-						Molecule m = (Molecule) r;
-						if (!m.contains(x, y)) {
-							showActionTip("Drag the small handle of the selected molecule to rotate", x + 10, y + 10);
-						}
-					}
-					else {
-						showActionTip("Drag the small handles of the selected object to rotate", x + 10, y + 10);
-					}
 				}
 			}
 			else {
-				showActionTip("Click to select an object to rotate", x + 10, y + 10);
 				selectRotatable(x, y);
 			}
 			repaint();
@@ -4949,7 +4937,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		case ROTA_ID:
 			if (selectedComponent instanceof Rotatable) {
 				Rotatable r = (Rotatable) selectedComponent;
-				if (r.isSelectedToRotate()) {
+				if (r.isSelectedToRotate() && rotationHandle >= 0) {
 					r.rotateTo(x, y, rotationHandle);
 					if (r instanceof Molecule)
 						refreshForces();
@@ -5326,7 +5314,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 					if (r.isSelectedToRotate()) {
 						if (finalizeRotation()) {
 							model.notifyChange();
-							r.setSelectedToRotate(false);
+							// r.setSelectedToRotate(false);
 							if (selectedComponent != null && !doNotFireUndoEvent) {
 								model.getUndoManager().undoableEditHappened(
 										new UndoableEditEvent(model, new UndoableMoving(selectedComponent)));
@@ -5404,6 +5392,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 					updateUndoUIComponents();
 				}
 			}
+			setSelectedComponent(null);
 			break;
 
 		case MARK_ID:
