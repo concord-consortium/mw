@@ -221,8 +221,7 @@ public abstract class MDView extends PrintableComponent {
 	private String colorCoding = "None";
 	private boolean energizerOn;
 	private JComponent toolBar;
-	private boolean actionTipEnabled = true, shouldDisappear;
-	private int remainingTime = 3000;
+	private boolean actionTipEnabled = true;
 	private final Object updateLock = new Object();
 
 	public MDView() {
@@ -1145,32 +1144,12 @@ public abstract class MDView extends PrintableComponent {
 		return actionID;
 	}
 
-	/** should an action tip disappear after some time? */
-	public void setActionTipShouldDisappear(boolean b) {
-		shouldDisappear = b;
-	}
-
-	/** should an action tip disappear after some time? */
-	public boolean getActionTipShouldDisappear() {
-		return shouldDisappear;
-	}
-
 	public void setActionTipEnabled(boolean b) {
 		actionTipEnabled = b;
 	}
 
 	public boolean actionTipIsEnabled() {
 		return actionTipEnabled;
-	}
-
-	/** set the time that an action tip should remain visible */
-	public void setActionTipRemainingTime(int i) {
-		remainingTime = i;
-	}
-
-	/** get the time that an action tip should remain visible */
-	public int getActionTipRemainingTime() {
-		return remainingTime;
 	}
 
 	/**
@@ -2252,17 +2231,15 @@ public abstract class MDView extends PrintableComponent {
 		l.setRequestFocusEnabled(false);
 		menu.add(l);
 		menu.show(this, x, y);
-		if (shouldDisappear) {
-			Timer timer = new Timer(remainingTime, new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					menu.setVisible(false);
-					MDView.this.requestFocus();
-				}
-			});
-			timer.setRepeats(false);
-			timer.setInitialDelay(remainingTime);
-			timer.start();
-		}
+		Timer timer = new Timer(1000, new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				menu.setVisible(false);
+				MDView.this.requestFocusInWindow();
+			}
+		});
+		timer.setRepeats(false);
+		timer.setInitialDelay(1000);
+		timer.start();
 	}
 
 	public void setClockPainted(boolean b) {
