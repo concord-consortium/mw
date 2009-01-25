@@ -5309,7 +5309,6 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		case ROTA_ID:
 			if (selectedComponent instanceof Rotatable) {
 				if (rotationHandle >= 0) {
-					rotationHandle = -1;
 					Rotatable r = (Rotatable) selectedComponent;
 					if (r.isSelectedToRotate()) {
 						if (finalizeRotation()) {
@@ -5322,6 +5321,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 							}
 						}
 					}
+					rotationHandle = -1;
 				}
 				else {
 					if (selectedComponent instanceof Molecule) {
