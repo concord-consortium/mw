@@ -591,11 +591,11 @@ public class ImageComponent implements ModelComponent, Layered, Rotatable {
 		theta0 = ry > 0.0 ? Math.acos(theta0) - Math.PI : Math.PI - Math.acos(theta0);
 		theta0 += offsetAngle;
 		setAngle((float) (theta - theta0));
-		locateRotationHandles();
 		if (host instanceof RadialBond) {
 			Molecule m = ((RadialBond) host).getMolecule();
 			m.rotateBondToAngle((RadialBond) host, angle);
 		}
+		locateRotationHandles();
 		model.getView().repaint();
 	}
 
