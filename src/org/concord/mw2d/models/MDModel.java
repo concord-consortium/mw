@@ -1672,7 +1672,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		}
 		if (ask && actionReminder.show(ActionReminder.RESET_TO_SAVED_STATE) == JOptionPane.NO_OPTION)
 			return;
-		//if (job != null) job.removeAllNonSystemTasks();
+		// if (job != null) job.removeAllNonSystemTasks();
 		new SwingWorker("Model Resetter", Thread.NORM_PRIORITY) {
 			public Object construct() {
 				File file = null;
@@ -1903,6 +1903,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		// haltScriptExecution();
 		// if we halt scripts, then the scripts that may call this method will not be able to run
 		initializationScript = null;
+		clearMouseScripts();
 		tot = 0;
 		kin = 0;
 		pot = 0;

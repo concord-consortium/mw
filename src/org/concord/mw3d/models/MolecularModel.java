@@ -2077,6 +2077,7 @@ public class MolecularModel {
 		molecules.clear();
 		activateHeatBath(false);
 		clearScriptQueue();
+		clearMouseScripts();
 	}
 
 	public void transferKE(float amount) {
