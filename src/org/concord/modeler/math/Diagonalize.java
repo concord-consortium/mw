@@ -24,30 +24,40 @@ package org.concord.modeler.math;
 
 public class Diagonalize {
 
-    private Diagonalize(){}
-    
-    /** <p>solve linear system with tridiagonal <tt>nxn</tt> matrix using Gaussian elimination without pivoting.
-	<p>Credit to Tobias von Petersdorff</p>
-	@param n NOTE: 1...n is used in all arrays, 0 is unused.
-	@param sub   a(i,i-1) = sub[i]  for 2<=i<=n
-	@param diag  a(i,i)   = diag[i] for 1<=i<=n
-	@param sup a(i,i+1) = sup[i]  for 1<=i<=n-1 (the values sub[1], sup[n] are ignored)
-	@param b right hand side vector b[1:n] is overwritten with solution 
-    */
-    public static void solveTridiag(float[] sub, float[] diag, float[] sup, float[] b, int n){
-
-	int i;
-	for(i=2; i<=n; i++){
-	    sub[i] = sub[i]/diag[i-1];
-	    diag[i] = diag[i] - sub[i]*sup[i-1];
-	    b[i] = b[i] - sub[i]*b[i-1];
-	}
-	b[n] = b[n]/diag[n];
-	for(i=n-1; i>=1; i--){
-	    b[i] = (b[i] - sup[i]*b[i+1])/diag[i];
+	private Diagonalize() {
 	}
 
-    }
+	/**
+	 * <p>
+	 * solve linear system with tridiagonal <tt>nxn</tt> matrix using Gaussian elimination without pivoting.
+	 * <p>
+	 * Credit to Tobias von Petersdorff
+	 * </p>
+	 * 
+	 * @param n
+	 *            NOTE: 1...n is used in all arrays, 0 is unused.
+	 * @param sub
+	 *            a(i,i-1) = sub[i] for 2<=i<=n
+	 * @param diag
+	 *            a(i,i) = diag[i] for 1<=i<=n
+	 * @param sup
+	 *            a(i,i+1) = sup[i] for 1<=i<=n-1 (the values sub[1], sup[n] are ignored)
+	 * @param b
+	 *            right hand side vector b[1:n] is overwritten with solution
+	 */
+	public static void solveTridiag(float[] sub, float[] diag, float[] sup, float[] b, int n) {
 
+		int i;
+		for (i = 2; i <= n; i++) {
+			sub[i] = sub[i] / diag[i - 1];
+			diag[i] = diag[i] - sub[i] * sup[i - 1];
+			b[i] = b[i] - sub[i] * b[i - 1];
+		}
+		b[n] = b[n] / diag[n];
+		for (i = n - 1; i >= 1; i--) {
+			b[i] = (b[i] - sup[i] * b[i + 1]) / diag[i];
+		}
+
+	}
 
 }

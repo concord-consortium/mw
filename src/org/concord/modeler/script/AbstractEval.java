@@ -1019,7 +1019,7 @@ public abstract class AbstractEval {
 	protected String useDefinitions(String s) {
 		if (s.indexOf("%") == -1)
 			return s;
-		if (s.startsWith("add image")) {
+		if (s.startsWith("add image")) { // FIXME: should we generate to all commands?
 			StringBuilder sb = new StringBuilder();
 			Matcher matcher = DEFINED_VARIABLE.matcher(s);
 			int beg = 0;

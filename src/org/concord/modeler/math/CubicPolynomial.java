@@ -22,17 +22,17 @@ package org.concord.modeler.math;
 
 public class CubicPolynomial {
 
-    private double a,b,c,d;
+	private double a, b, c, d;
 
-    public CubicPolynomial(double a, double b, double c, double d){
-	this.a = a;
-	this.b = b;
-	this.c = c;
-	this.d = d;
-    }
+	public CubicPolynomial(double a, double b, double c, double d) {
+		this.a = a;
+		this.b = b;
+		this.c = c;
+		this.d = d;
+	}
 
-    public double getValue(double u) {
-	return (((d*u) + c)*u + b)*u + a;
-    }
+	public double getValue(double u) {
+		return (((d * u) + c) * u + b) * u + a;
+	}
 
 }

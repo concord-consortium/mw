@@ -30,7 +30,6 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 
-import org.concord.modeler.math.SimpleMath;
 import org.concord.modeler.util.FloatQueue;
 import org.concord.mw2d.ViewAttribute;
 
@@ -578,7 +577,7 @@ public abstract class UnitedAtom extends Particle {
 	}
 
 	void setOHotSpot() {
-		double kin = inertia * omega * omega * 20000 * SimpleMath.sign(omega) / 180 * Math.PI;
+		double kin = inertia * omega * omega * 20000 * Math.signum(omega) / 180 * Math.PI;
 		oHotSpot.setRect(rx + arcSize * Math.cos(kin) - 3, ry + arcSize * Math.sin(kin) - 3, 6, 6);
 	}
 

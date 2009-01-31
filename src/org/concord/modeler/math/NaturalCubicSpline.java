@@ -21,9 +21,8 @@
 package org.concord.modeler.math;
 
 /**
- * calculates the natural cubic spline that interpolates y[0], y[1], ... * y[n]
- * The first segment is returned as C[0].a + C[0].b*u + * C[0].c*u^2 +
- * C[0].d*u^3 0<=u <1 the other segments are in C[1], * C[2], ... C[n-1]
+ * calculates the natural cubic spline that interpolates y[0], y[1], ... * y[n] The first segment is returned as C[0].a
+ * + C[0].b*u + * C[0].c*u^2 + C[0].d*u^3 0<=u <1 the other segments are in C[1], * C[2], ... C[n-1]
  */
 
 public class NaturalCubicSpline {
@@ -36,12 +35,11 @@ public class NaturalCubicSpline {
 		int i;
 
 		/*
-		 * We solve the equation [2 1 ] [D[0]] [3(x[1] - x[0]) ] |1 4 1 | |D[1]|
-		 * |3(x[2] - x[0]) | | 1 4 1 | | . | = | . | | ..... | | . | | . | | 1 4
-		 * 1| | . | |3(x[n] - x[n-2])| [ 1 2] [D[n]] [3(x[n] - x[n-1])]
+		 * We solve the equation [2 1 ] [D[0]] [3(x[1] - x[0]) ] |1 4 1 | |D[1]| |3(x[2] - x[0]) | | 1 4 1 | | . | = | .
+		 * | | ..... | | . | | . | | 1 4 1| | . | |3(x[n] - x[n-2])| [ 1 2] [D[n]] [3(x[n] - x[n-1])]
 		 * 
-		 * by using row operations to convert the matrix to upper triangular and
-		 * then back sustitution. The D[i] are the derivatives at the knots.
+		 * by using row operations to convert the matrix to upper triangular and then back sustitution. The D[i] are the
+		 * derivatives at the knots.
 		 */
 
 		gamma[0] = 1.0f / 2.0f;
@@ -97,8 +95,8 @@ public class NaturalCubicSpline {
 
 		CubicPolynomial[] C = new CubicPolynomial[n];
 		for (i = 0; i < n; i++) {
-			C[i] = new CubicPolynomial(x[i], D[i], 3 * (x[i + 1] - x[i]) - 2 * D[i] - D[i + 1], 2
-					* (x[i] - x[i + 1]) + D[i] + D[i + 1]);
+			C[i] = new CubicPolynomial(x[i], D[i], 3 * (x[i + 1] - x[i]) - 2 * D[i] - D[i + 1], 2 * (x[i] - x[i + 1])
+					+ D[i] + D[i + 1]);
 		}
 		return C;
 

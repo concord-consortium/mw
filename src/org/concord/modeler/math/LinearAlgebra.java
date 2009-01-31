@@ -21,8 +21,7 @@
 package org.concord.modeler.math;
 
 /**
- * Methods from Hang T. Lau, "A numerical library in Java for scientists and
- * engineers".*
+ * Methods from Hang T. Lau, "A numerical library in Java for scientists and engineers".
  */
 
 public final class LinearAlgebra {
