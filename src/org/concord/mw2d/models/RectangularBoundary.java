@@ -37,7 +37,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.concord.modeler.event.ModelEvent;
-import org.concord.modeler.math.SimpleMath;
 import org.concord.modeler.util.ObjectQueue;
 import org.concord.mw2d.MDView;
 import org.concord.mw2d.UserAction;
@@ -721,7 +720,7 @@ public class RectangularBoundary extends Rectangle2D.Double implements Boundary 
 						else {
 							if (!inelasticByRescaling) {
 								double theta = Math.random() * Math.PI * 2.0;
-								at.vx = -SimpleMath.sign(at.vx) * Math.sqrt(wall.getTemperature(Wall.WEST))
+								at.vx = -Math.signum(at.vx) * Math.sqrt(wall.getTemperature(Wall.WEST))
 										* AtomicModel.VT_CONVERSION_CONSTANT * magnifier * Math.cos(theta);
 								at.vy = Math.sqrt(wall.getTemperature(Wall.WEST)) * AtomicModel.VT_CONVERSION_CONSTANT
 										* magnifier * Math.sin(theta);
@@ -741,7 +740,7 @@ public class RectangularBoundary extends Rectangle2D.Double implements Boundary 
 						else {
 							if (!inelasticByRescaling) {
 								double theta = Math.random() * Math.PI * 2.0;
-								at.vx = -SimpleMath.sign(at.vx) * Math.sqrt(wall.getTemperature(Wall.EAST))
+								at.vx = -Math.signum(at.vx) * Math.sqrt(wall.getTemperature(Wall.EAST))
 										* AtomicModel.VT_CONVERSION_CONSTANT * magnifier * Math.cos(theta);
 								at.vy = Math.sqrt(wall.getTemperature(Wall.EAST)) * AtomicModel.VT_CONVERSION_CONSTANT
 										* magnifier * Math.sin(theta);
@@ -761,7 +760,7 @@ public class RectangularBoundary extends Rectangle2D.Double implements Boundary 
 						else {
 							if (!inelasticByRescaling) {
 								double theta = Math.random() * Math.PI * 2.0;
-								at.vy = -SimpleMath.sign(at.vy) * Math.sqrt(wall.getTemperature(Wall.NORTH))
+								at.vy = -Math.signum(at.vy) * Math.sqrt(wall.getTemperature(Wall.NORTH))
 										* AtomicModel.VT_CONVERSION_CONSTANT * magnifier * Math.sin(theta);
 								at.vx = Math.sqrt(wall.getTemperature(Wall.NORTH)) * AtomicModel.VT_CONVERSION_CONSTANT
 										* magnifier * Math.cos(theta);
@@ -781,7 +780,7 @@ public class RectangularBoundary extends Rectangle2D.Double implements Boundary 
 						else {
 							if (!inelasticByRescaling) {
 								double theta = Math.random() * Math.PI * 2.0;
-								at.vy = -SimpleMath.sign(at.vy) * Math.sqrt(wall.getTemperature(Wall.SOUTH))
+								at.vy = -Math.signum(at.vy) * Math.sqrt(wall.getTemperature(Wall.SOUTH))
 										* AtomicModel.VT_CONVERSION_CONSTANT * magnifier * Math.sin(theta);
 								at.vx = Math.sqrt(wall.getTemperature(Wall.SOUTH)) * AtomicModel.VT_CONVERSION_CONSTANT
 										* magnifier * Math.cos(theta);

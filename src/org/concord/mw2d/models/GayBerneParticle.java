@@ -33,7 +33,6 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import javax.swing.SwingUtilities;
 
-import org.concord.modeler.math.SimpleMath;
 import org.concord.mw2d.ViewAttribute;
 import org.concord.mw2d.ui.GayBerneConfigure;
 
@@ -764,28 +763,28 @@ public class GayBerneParticle extends UnitedAtom implements Rotatable {
 			dipLine[2].setLine(rx + half * length, ry, rx + half * length - half * 10, ry - 5);
 		}
 		if (dipLine[3] == null) {
-			dipLine[3] = new Line2D.Double(rx + half * length + 3 * SimpleMath.sign(half), ry, rx + half * length + 9
-					* SimpleMath.sign(half), ry);
+			dipLine[3] = new Line2D.Double(rx + half * length + 3 * Math.signum(half), ry, rx + half * length + 9
+					* Math.signum(half), ry);
 		}
 		else {
-			dipLine[3].setLine(rx + half * length + 3 * SimpleMath.sign(half), ry, rx + half * length + 9
-					* SimpleMath.sign(half), ry);
+			dipLine[3].setLine(rx + half * length + 3 * Math.signum(half), ry, rx + half * length + 9
+					* Math.signum(half), ry);
 		}
 		if (dipLine[4] == null) {
-			dipLine[4] = new Line2D.Double(rx + half * length + 6 * SimpleMath.sign(half), ry + 3, rx + half * length
-					+ 6 * SimpleMath.sign(half), ry - 3);
+			dipLine[4] = new Line2D.Double(rx + half * length + 6 * Math.signum(half), ry + 3, rx + half * length + 6
+					* Math.signum(half), ry - 3);
 		}
 		else {
-			dipLine[4].setLine(rx + half * length + 6 * SimpleMath.sign(half), ry + 3, rx + half * length + 6
-					* SimpleMath.sign(half), ry - 3);
+			dipLine[4].setLine(rx + half * length + 6 * Math.signum(half), ry + 3, rx + half * length + 6
+					* Math.signum(half), ry - 3);
 		}
 		if (dipLine[5] == null) {
-			dipLine[5] = new Line2D.Double(rx - half * length - 3 * SimpleMath.sign(half), ry, rx - half * length - 9
-					* SimpleMath.sign(half), ry);
+			dipLine[5] = new Line2D.Double(rx - half * length - 3 * Math.signum(half), ry, rx - half * length - 9
+					* Math.signum(half), ry);
 		}
 		else {
-			dipLine[5].setLine(rx - half * length - 3 * SimpleMath.sign(half), ry, rx - half * length - 9
-					* SimpleMath.sign(half), ry);
+			dipLine[5].setLine(rx - half * length - 3 * Math.signum(half), ry, rx - half * length - 9
+					* Math.signum(half), ry);
 		}
 	}
 

@@ -22,77 +22,78 @@ package org.concord.modeler.math;
 
 import java.io.Serializable;
 
-/** This is an implementation of 2D vector.
- **
- ** @author Charles Xie
- **/
+/**
+ * This is an implementation of 2D vector.
+ * 
+ * @author Charles Xie
+ */
 
 public class Vector2D implements Serializable {
 
-    private double x, y;
+	private double x, y;
 
-    /** By default, construct a unit vector pointing in the abscissa
-     ** direction.
-     **/
-    public Vector2D(){
-	x=1.0;
-    }
+	/**
+	 * By default, construct a unit vector pointing in the abscissa direction.
+	 */
+	public Vector2D() {
+		x = 1.0;
+	}
 
-    public Vector2D(double x, double y){
-	setX(x);
-	setY(y);
-    }
+	public Vector2D(double x, double y) {
+		setX(x);
+		setY(y);
+	}
 
-    public void setX(double x){
-	this.x=x;
-    }
+	public void setX(double x) {
+		this.x = x;
+	}
 
-    public double getX(){
-	return x;
-    }
+	public double getX() {
+		return x;
+	}
 
-    public void setY(double y){
-	this.y=y;
-    }
+	public void setY(double y) {
+		this.y = y;
+	}
 
-    public double getY(){
-	return y;
-    }
-    
-    public double length(){
-	return Math.sqrt(x*x+y*y);
-    }
+	public double getY() {
+		return y;
+	}
 
-    public boolean equals(Object o){
-	if(!(o instanceof Vector2D)) return false;
-	Vector2D v=(Vector2D)o;
-	return
-	    Double.doubleToLongBits(x)==Double.doubleToLongBits(v.x) &&
-	    Double.doubleToLongBits(y)==Double.doubleToLongBits(v.y);
-    }
+	public double length() {
+		return Math.hypot(x, y);
+	}
 
-    public int hashCode(){
-	return new Double(x).hashCode()^new Double(y).hashCode();
-    }
+	public boolean equals(Object o) {
+		if (!(o instanceof Vector2D))
+			return false;
+		Vector2D v = (Vector2D) o;
+		return Double.doubleToLongBits(x) == Double.doubleToLongBits(v.x)
+				&& Double.doubleToLongBits(y) == Double.doubleToLongBits(v.y);
+	}
 
-    public Vector2D unit(){
-	double invlen=1.0/length();
-	return new Vector2D(x*invlen, y*invlen);
-    }
+	public int hashCode() {
+		return new Double(x).hashCode() ^ new Double(y).hashCode();
+	}
 
-    public double dot(Vector2D v){
-	return x*v.x+y*v.y;
-    }
-    
-    public double angle(){
-	return Math.atan2(y,x);
-    }
+	public Vector2D unit() {
+		double invlen = 1.0 / length();
+		return new Vector2D(x * invlen, y * invlen);
+	}
 
-    /** substract the passed vector <code>v</code> from the current vector,
-     ** and return the result.
-     **/
-    public Vector2D substract(Vector2D v){
-	return new Vector2D(x-v.x, y-v.y);
-    }
+	public double dot(Vector2D v) {
+		return x * v.x + y * v.y;
+	}
+
+	public double angle() {
+		return Math.atan2(y, x);
+	}
+
+	/**
+	 * substract the passed vector <code>v</code> from the current vector, and return the result.
+	 */
+	public Vector2D substract(Vector2D v) {
+		return new Vector2D(x - v.x, y - v.y);
+	}
 
 }

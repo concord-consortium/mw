@@ -22,34 +22,34 @@ package org.concord.modeler.math;
 
 public class CatmullRom {
 
-    private CatmullRom(){}
-
-    public final static double getBendingFunction
-	(int i, double u, double tension){
-
-	if(i<-2 || i>1) throw new IllegalArgumentException
-	    ("i cannot be "+i);
-	if(u<0.0 || u>1.0) throw new IllegalArgumentException
-	    ("u="+u+" is outside [0,1]");
-
-	switch(i){
-
-	case -2:
-	    return u*tension*(-1+u*(2-u));
-
-	case -1:
-	    return 1+u*u*((tension-3)+(2-tension)*u);
-
-	case 0:
-	    return u*(tension+u*((3-2*tension)+(tension-2)*u));
-
-	case 1:
-	    return tension*u*u*(-1+u);
-	
+	private CatmullRom() {
 	}
 
-	return 0.0;
+	public final static double getBendingFunction(int i, double u, double tension) {
 
-    }
+		if (i < -2 || i > 1)
+			throw new IllegalArgumentException("i cannot be " + i);
+		if (u < 0.0 || u > 1.0)
+			throw new IllegalArgumentException("u=" + u + " is outside [0,1]");
+
+		switch (i) {
+
+		case -2:
+			return u * tension * (-1 + u * (2 - u));
+
+		case -1:
+			return 1 + u * u * ((tension - 3) + (2 - tension) * u);
+
+		case 0:
+			return u * (tension + u * ((3 - 2 * tension) + (tension - 2) * u));
+
+		case 1:
+			return tension * u * u * (-1 + u);
+
+		}
+
+		return 0.0;
+
+	}
 
 }
