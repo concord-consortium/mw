@@ -52,6 +52,7 @@ import javax.swing.undo.CannotUndoException;
 import org.concord.modeler.ConnectionManager;
 import org.concord.modeler.draw.FillMode;
 import org.concord.modeler.draw.LineStyle;
+import org.concord.modeler.draw.Triangle;
 import org.concord.modeler.event.ModelEvent;
 import org.concord.modeler.event.PageComponentEvent;
 import org.concord.modeler.event.ScriptEvent;
@@ -2109,6 +2110,15 @@ class Eval2D extends AbstractEval {
 				for (int k = 1; k < 5; k++)
 					x[k] *= IR_CONVERTER;
 				Shape shape = new Rectangle2D.Float(x[1], x[2], x[3], x[4]);
+				return "" + model.getParticleCount((byte) x[0], shape);
+			}
+			break;
+		case 7:
+			x = parseArray(7, t);
+			if (x != null) {
+				for (int k = 1; k < 7; k++)
+					x[k] *= IR_CONVERTER;
+				Shape shape = new Triangle(x[1], x[2], x[3], x[4], x[5], x[6]).getShape();
 				return "" + model.getParticleCount((byte) x[0], shape);
 			}
 			break;
