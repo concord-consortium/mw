@@ -931,9 +931,9 @@ public abstract class AbstractEval {
 				int end = matcher.end();
 				String variable = ci.substring(ci.indexOf("%"), end).toLowerCase();
 				String value = ci.substring(end).trim().toLowerCase();
-				if (value.startsWith("<t>") || value.startsWith("<T>")) {
+				if (value.startsWith("<t>")) {
 					String s;
-					if (value.endsWith("</t>") || value.endsWith("</T>")) {
+					if (value.endsWith("</t>")) {
 						s = value.substring(3, value.length() - 4);
 					}
 					else {
@@ -946,6 +946,16 @@ public abstract class AbstractEval {
 						definition.put(variable, s);
 					}
 				}
+				else if (value.startsWith("array")) {
+					String size = value.substring(5).trim();
+					size = size.substring(1, size.length() - 1);
+					double x = parseMathExpression(size);
+					if (Double.isNaN(x))
+						return;
+					int n = (int) Math.round(x);
+					for (int i = 0; i < n; i++)
+						definition.put(variable + "[" + i + "]", "0");
+				}
 				else {
 					evaluateDefineMathexClause(isStatic, variable, value);
 				}
@@ -954,6 +964,18 @@ public abstract class AbstractEval {
 	}
 
 	public void storeDefinition(boolean isStatic, String variable, String value) {
+		int i1 = variable.indexOf("[");
+		if (i1 != -1) {
+			int i2 = variable.indexOf("]");
+			if (i2 != -1) {
+				String index = variable.substring(i1 + 1, i2).trim();
+				String s = definition.get(index);
+				if (s != null) {
+					int ix = (int) Double.parseDouble(s);
+					variable = variable.substring(0, i1 + 1) + ix + variable.substring(i2);
+				}
+			}
+		}
 		if (isStatic) {
 			storeSharedDefinition(variable, value);
 		}
@@ -1006,10 +1028,38 @@ public abstract class AbstractEval {
 			double x = parseMathExpression(expression);
 			if (Double.isNaN(x))
 				return;
-			boolean isInteger = expression.startsWith("int(") || expression.startsWith("round(");
-			String result = isInteger ? String.format("%d", (int) x) : (x + "");
+			String result;
+			if (Math.abs(x - Math.round(x)) < 0.000000001 || expression.startsWith("round(")) {
+				result = String.format("%d", Math.round(x));
+			}
+			else if (expression.startsWith("int(")) {
+				result = String.format("%d", (int) x);
+			}
+			else {
+				result = x + "";
+			}
 			storeDefinition(isStatic, variable, result);
 		}
+	}
+
+	// when we use a defined array element, we have to evaluate the indices first.
+	private String evaluateIndicesOfArrayElements(String s) {
+		int lq = s.indexOf('[');
+		int rq = s.indexOf(']', lq + 1);
+		while (lq != -1 && rq != -1 && lq != rq) {
+			double x = parseMathExpression(s.substring(lq + 1, rq).trim());
+			if (Double.isNaN(x)) {
+				lq = s.indexOf('[', rq + 1);
+				rq = s.indexOf(']', lq + 1);
+				continue;
+			}
+			s = s.substring(0, lq + 1) + Math.round(x) + s.substring(rq);
+			lq = s.indexOf('[', lq + 1);
+			rq = s.indexOf(']', lq + 1);
+			if (lq != -1 && rq == -1)
+				out(ScriptEvent.FAILED, "Unbalanced square bracket.");
+		}
+		return s;
 	}
 
 	/**
@@ -1036,11 +1086,18 @@ public abstract class AbstractEval {
 		else {
 			s = s.toLowerCase();
 		}
+		s = evaluateIndicesOfArrayElements(s);
 		if (!definition.isEmpty()) {
 			synchronized (definition) {
 				for (String variable : definition.keySet()) {
-					s = s.replaceAll(variable + "\\b", definition.get(variable));
-					// \\b is for avoiding errors when %xx and %x are both present
+					if (variable.indexOf("[") != -1) {
+						// variable is an element of an array
+						s = s.replace(variable, definition.get(variable));
+					}
+					else {
+						// \\b is for avoiding errors when %xx and %x are both present
+						s = s.replaceAll(variable + "\\b", definition.get(variable));
+					}
 				}
 			}
 		}
