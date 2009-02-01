@@ -28,6 +28,7 @@ import java.awt.EventQueue;
 import java.awt.Shape;
 import java.awt.Toolkit;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
@@ -3008,6 +3009,24 @@ class Eval2D extends AbstractEval {
 		return null;
 	}
 
+	private String evaluatePtSegDistSqFunction(final String clause) {
+		if (clause == null || clause.equals(""))
+			return null;
+		int i = clause.indexOf("(");
+		int j = clause.lastIndexOf(")");
+		if (i == -1 || j == -1) {
+			out(ScriptEvent.FAILED, "function must be enclosed within parenthesis: " + clause);
+			return null;
+		}
+		String s = clause.substring(i + 1, j).trim();
+		String[] t = s.split(",");
+		float[] x = parseArray(6, t);
+		if (x != null) {
+			return "" + Line2D.ptSegDistSq(x[0], x[1], x[2], x[3], x[4], x[5]);
+		}
+		return null;
+	}
+
 	private Rectangle2D getWithinArea(String within) {
 		int lp = within.indexOf("(");
 		if (lp == -1)
@@ -3601,6 +3620,10 @@ class Eval2D extends AbstractEval {
 			}
 			else if (exp.startsWith("findindexbycustom(")) {
 				exp = evaluateFindIndexByCustomFunction(exp);
+				storeDefinition(isStatic, var, exp != null ? exp : "-1");
+			}
+			else if (exp.startsWith("ptsegdistsq(")) {
+				exp = evaluatePtSegDistSqFunction(exp);
 				storeDefinition(isStatic, var, exp != null ? exp : "-1");
 			}
 			else {
