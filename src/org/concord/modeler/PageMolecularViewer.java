@@ -763,6 +763,7 @@ public class PageMolecularViewer extends JmolContainer implements BasicModel, Em
 			}
 			matcher = Compiler.LOAD.matcher(ci); // load command is standard jmol script
 			if (matcher.find()) {
+				setCustomInitializationScript(null); // Dan wants the custom initialization script to be removed here
 				String oldAddress = ci.substring(matcher.end()).trim();
 				if (FileUtilities.isRelative(oldAddress)) {
 					String newAddress = FileUtilities.getCodeBase(page.getAddress()) + oldAddress;

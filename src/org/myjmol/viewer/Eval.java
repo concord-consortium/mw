@@ -1118,7 +1118,7 @@ class Eval { // implements Runnable {
 				propertyBitSet = atom.getAtomSymmetry();
 				if (bitsetBaseValue >= 1000) {
 					/*
-					 * symop>=1000 indicates symop*1000 + lattice_translation(555) for this the comparision is only with
+					 * symop>=1000 indicates symop1000 + lattice_translation(555) for this the comparision is only with
 					 * the translational component; the symop itself must match thus: select symop!=1655 selects all
 					 * symop=1 and translation !=655 select symo >=2555 selects all symop=2 and translation >555
 					 * 
@@ -2086,7 +2086,6 @@ class Eval { // implements Runnable {
 		int nDistances = 0;
 		/*
 		 * connect [<=2 distance parameters] [<=2 atom sets] [<=1 bond type] [<=1 operation]
-		 * 
 		 */
 
 		if (statementLength == 1) {
@@ -2819,8 +2818,6 @@ class Eval { // implements Runnable {
 		 * TransformManager. All the centering stuff has been carefully inspected are reorganized as well.
 		 * 
 		 * Bob Hanson 5/21/06
-		 * 
-		 * 
 		 */
 
 		if (statementLength == 2)
@@ -5049,7 +5046,6 @@ class Eval { // implements Runnable {
 		 * OR else:
 		 * 
 		 * polyhedra [at most one selection set] [type-and/or-edge or on/off/delete]
-		 * 
 		 */
 		boolean needsGenerating = false;
 		boolean onOffDelete = false;
@@ -5461,7 +5457,6 @@ class Eval { // implements Runnable {
 				 * "color" now is just used as an equivalent to "sign" and as an introduction to "absolute" any other
 				 * use is superfluous; it has been replaced with MAP for indicating "use the current surface" because
 				 * the term COLOR is too general.
-				 * 
 				 */
 				if (i + 1 == statementLength)
 					invalidArgument(i, " COLOR keyword not in context");
@@ -5755,7 +5750,6 @@ class Eval { // implements Runnable {
 				 * jmolSurfaceInfo jmolMappedDataInfo
 				 * 
 				 * Both can be present, but if jmolMappedDataInfo is missing, then jmolSurfaceInfo is used by default.
-				 * 
 				 */
 				String filename = (String) token.value;
 				if (filename.length() == 0) {
