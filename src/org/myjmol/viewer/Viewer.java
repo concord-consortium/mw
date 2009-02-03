@@ -2258,8 +2258,7 @@ public class Viewer extends JmolViewer {
 
 	public void openClientFile(String fullPathName, final String fileName, Object clientFile) {
 		// maybe there needs to be a call to clear()
-		// or something like that here
-		// for when CdkEditBus calls this directly
+		// or something like that here for when CdkEditBus calls this directly
 		setStatusFileLoaded(2, fullPathName, fileName, modelManager.getModelSetName(), clientFile, null);
 		pushHoldRepaint();
 		modelManager.setClientFile(fullPathName, fileName, modelAdapter, clientFile);
@@ -3682,8 +3681,8 @@ public class Viewer extends JmolViewer {
 		// many local
 
 		/*
-		 * Logger.debug("JmolViewer.setShapeProperty("+ JmolConstants.shapeClassBases[shapeID]+ "," + propertyName + "," +
-		 * value + ")");
+		 * Logger.debug("JmolViewer.setShapeProperty("+ JmolConstants.shapeClassBases[shapeID]+ "," + propertyName + ","
+		 * + value + ")");
 		 */
 		if (shapeID < 0)
 			return; // not applicable
@@ -5300,7 +5299,6 @@ public class Viewer extends JmolViewer {
 	 * and the consoles are really just a mechanism for getting user input and sending results, not saving a history of
 	 * it all. Ultimately I hope to integrate the mouse picking and possibly periodic updates of position into this
 	 * history to get a full history. We'll see! BH 9/2006
-	 * 
 	 */
 
 	/**

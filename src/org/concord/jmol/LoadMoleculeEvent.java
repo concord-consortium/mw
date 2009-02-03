@@ -22,17 +22,17 @@ package org.concord.jmol;
 
 import java.util.EventObject;
 
-public class LoadMoleculeEvent extends EventObject{
-    
-    private Object moleculeLoaded;
-    
-    public LoadMoleculeEvent(Object source, Object moleculeSelected){
-	super(source);
-	this.moleculeLoaded=moleculeSelected;
-    }
+public class LoadMoleculeEvent extends EventObject {
 
-    public Object getMoleculeLoaded() {
-	return moleculeLoaded;
-    }
-    
+	private Object moleculeLoaded;
+
+	public LoadMoleculeEvent(Object source, Object moleculeSelected) {
+		super(source);
+		this.moleculeLoaded = moleculeSelected;
+	}
+
+	public Object getMoleculeLoaded() {
+		return moleculeLoaded;
+	}
+
 }

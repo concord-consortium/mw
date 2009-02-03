@@ -25,51 +25,47 @@
 package org.myjmol.api;
 
 public interface JmolStatusListener {
-/*
- * These methods specifically provide notification from 
- * Viewer.StatusManager to the two main classes, applet or app.
- * so that they can handle them slightly differently. This might be
- * a callback for the applet, for example, but not for the app.
- * ALL viewer-type processing, including status queue writing
- * has been done PRIOR to these functions being called.   Bob Hanson
- * 
- */
-  public void handlePopupMenu(int x, int y);
+	/*
+	 * These methods specifically provide notification from Viewer.StatusManager to the two main classes, applet or app.
+	 * so that they can handle them slightly differently. This might be a callback for the applet, for example, but not
+	 * for the app. ALL viewer-type processing, including status queue writing has been done PRIOR to these functions
+	 * being called. Bob Hanson
+	 */
+	public void handlePopupMenu(int x, int y);
 
-  public void notifyAtomPicked(int atomIndex, String strInfo);
+	public void notifyAtomPicked(int atomIndex, String strInfo);
 
-  public void notifyAtomHovered(int atomIndex, String strInfo);
+	public void notifyAtomHovered(int atomIndex, String strInfo);
 
-  public void notifyFileLoaded(String fullPathName, String fileName,
-      String modelName, Object clientFile,
-      String errorMessage);
+	public void notifyFileLoaded(String fullPathName, String fileName, String modelName, Object clientFile,
+			String errorMessage);
 
-  public void notifyFrameChanged(int frameNo);
+	public void notifyFrameChanged(int frameNo);
 
-  public void notifyNewDefaultModeMeasurement(int count, String strInfo);
+	public void notifyNewDefaultModeMeasurement(int count, String strInfo);
 
-  public void notifyNewPickingModeMeasurement(int iatom, String strMeasure);
+	public void notifyNewPickingModeMeasurement(int iatom, String strMeasure);
 
-  public void notifyScriptStart(String statusMessage, String additionalInfo);
-  
-  public void notifyScriptTermination(String statusMessage, int msWalltime);
+	public void notifyScriptStart(String statusMessage, String additionalInfo);
 
-  public void sendConsoleEcho(String strEcho);
+	public void notifyScriptTermination(String statusMessage, int msWalltime);
 
-  public void sendConsoleMessage(String strStatus);
+	public void sendConsoleEcho(String strEcho);
 
-  public void sendSyncScript(String script, String appletName);
+	public void sendConsoleMessage(String strStatus);
 
-  public void showUrl(String url);
+	public void sendSyncScript(String script, String appletName);
 
-  public void showConsole(boolean showConsole);
-  
-  public float functionXY(String functionName, int x, int y);
-  
-  public String eval(String strEval);
-  
-  public void setCallbackFunction(String callbackType, String callbackFunction);
-  
-  public void createImage(String file, String type, int quality);
-  
+	public void showUrl(String url);
+
+	public void showConsole(boolean showConsole);
+
+	public float functionXY(String functionName, int x, int y);
+
+	public String eval(String strEval);
+
+	public void setCallbackFunction(String callbackType, String callbackFunction);
+
+	public void createImage(String file, String type, int quality);
+
 }
