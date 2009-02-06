@@ -35,6 +35,10 @@ class ColorManager {
 	final static int NEUTRAL_CHARGE_COLOR = 0xffffff;
 	final static int HYDROPHOBIC_COLOR = 0xffafaf;
 	final static int HYDROPHILIC_COLOR = 0x00ffff;
+	private final static int LEGO_HYDROPHOBIC_COLOR = 0xf5cd2f;
+	private final static int LEGO_UNCHARGED_POLAR_COLOR = 0x287f46;
+	private final static int LEGO_ACID_COLOR = 0xc4281b;
+	private final static int LEGO_BASIC_COLOR = 0x0d69ab;
 
 	private final static int WHITE_ARGB = 0xffffff;
 
@@ -96,6 +100,17 @@ class ColorManager {
 					return HYDROPHOBIC_COLOR;
 				if (a.getHydrophobicity() < -0.000001)
 					return HYDROPHILIC_COLOR;
+			}
+			else if ("Lego".equals(s)) {
+				Aminoacid a = AminoAcidAdapter.getAminoAcid((byte) atom.getID());
+				if (a.getCharge() > 0.000001)
+					return LEGO_BASIC_COLOR;
+				if (a.getCharge() < -0.000001)
+					return LEGO_ACID_COLOR;
+				if (a.getHydrophobicity() > 0.000001)
+					return LEGO_HYDROPHOBIC_COLOR;
+				if (a.getHydrophobicity() < -0.000001)
+					return LEGO_UNCHARGED_POLAR_COLOR;
 			}
 		}
 		return elementColors[atom.getID()];

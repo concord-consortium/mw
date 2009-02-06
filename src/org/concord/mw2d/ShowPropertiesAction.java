@@ -27,7 +27,7 @@ import javax.swing.JComboBox;
 class ShowPropertiesAction extends AbstractAction {
 
 	private AtomisticView view;
-	private final static String[] TYPE = new String[] { "None", "Charge", "Hydrophobicity" };
+	private final static String[] TYPE = new String[] { "None", "Charge", "Hydrophobicity", "Lego" };
 
 	ShowPropertiesAction(AtomisticView view) {
 		super();
@@ -69,6 +69,9 @@ class ShowPropertiesAction extends AbstractAction {
 				break;
 			case 2:
 				s = "Hydrophobicity";
+				break;
+			case 3:
+				s = "Lego";
 				break;
 			}
 			if (s != null) {
