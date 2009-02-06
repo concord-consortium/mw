@@ -174,27 +174,3 @@ public class AminoacidBundle extends ResourceBundle {
 	String[] keys = { "Ala", "Arg", "Asn", "Asp", "Cys", "Gln", "Glu", "Gly", "His", "Ile", "Leu", "Lys", "Met", "Phe",
 			"Pro", "Ser", "Thr", "Trp", "Tyr", "Val" };
 }
-// PropertyResourceBundle.java
-// ResourceBundle.java
-/*
- * aminoacidsName.put("alanine" ,new Aminoacid("Alanine", "ALA",'A',new float[]{ 89.09f, 0,1, 0f}));
- * aminoacidsName.put("arginine" ,new Aminoacid("Arginine", "ARG",'R',new float[]{174.20f, 1,0,12.0f}));
- * aminoacidsName.put("asparagine" ,new Aminoacid("Asparagine", "ASN",'N',new float[]{132.12f, 0,0, 0f}));
- * aminoacidsName.put("aspartic acid",new Aminoacid("Aspartic acid","ASP",'D',new float[]{133.10f,-1,0, 4.4f}));
- * aminoacidsName.put("cysteine" ,new Aminoacid("Cysteine", "CYS",'C',new float[]{121.15f, 0,1, 8.5f}));
- * aminoacidsName.put("glutamine" ,new Aminoacid("Glutamine", "GLN",'Q',new float[]{146.15f, 0,0, 0f}));
- * aminoacidsName.put("glutamic acid",new Aminoacid("Glutamic acid","GLU",'E',new float[]{147.13f,-1,0, 4.4f}));
- * aminoacidsName.put("glycine" ,new Aminoacid("Glycine", "GLY",'G',new float[]{ 75.07f, 0,1, 0f}));
- * aminoacidsName.put("histidine" ,new Aminoacid("Histidine", "HIS",'H',new float[]{155.16f, 0,0,6.5f}));
- * aminoacidsName.put("isoleucine" ,new Aminoacid("Isoleucine", "ILE",'I',new float[]{131.17f, 0,1, 0f}));
- * aminoacidsName.put("leucine" ,new Aminoacid("Leucine", "LEU",'L',new float[]{131.17f, 0,1,10.0f}));
- * aminoacidsName.put("lysine" ,new Aminoacid("Lysine", "LYS",'K',new float[]{146.19f, 1,0, 0f}));
- * aminoacidsName.put("methionine" ,new Aminoacid("Methionine", "MET",'M',new float[]{149.21f, 0,1, 0f}));
- * aminoacidsName.put("phenylalanine",new Aminoacid("Phenylalanine","PHE",'F',new float[]{165.19f, 0,1, 0f}));
- * aminoacidsName.put("proline" ,new Aminoacid("Proline", "PRO",'P',new float[]{115.13f, 0,0, 0f}));
- * aminoacidsName.put("serine" ,new Aminoacid("Serine", "SER",'S',new float[]{105.09f, 0,0, 0f}));
- * aminoacidsName.put("threonone" ,new Aminoacid("Threonone", "THR",'T',new float[]{119.12f, 0,0, 0f}));
- * aminoacidsName.put("tryptophan" ,new Aminoacid("Tryptophan", "TRP",'W',new float[]{204.23f, 0,1, 0f}));
- * aminoacidsName.put("tyrosine" ,new Aminoacid("Tyrosine", "TYR",'Y',new float[]{181.19f, 0,1,10.0f}));
- * aminoacidsName.put("valine" ,new Aminoacid("Valine", "VAL",'V',new float[]{117.15f, 0,1, 0f}));
- */

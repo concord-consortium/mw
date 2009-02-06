@@ -390,7 +390,7 @@ public class Atom extends Particle {
 			codon = new String(Codon.getComplementaryCode(Aminoacid.getByAbbreviation(e.getName()).encode()));
 			Aminoacid aa = Codon.expressFromDNA(codon.toCharArray());
 			if (aa != null) {
-				setName("" + aa.getLetter());
+				setName("" + aa.getAbbreviation());
 				setCharge(aa.getCharge());
 				setHydrophobicity((int) aa.getHydrophobicity());
 			}
@@ -786,7 +786,7 @@ public class Atom extends Particle {
 				String s = model.view.getShowParticleIndex() ? "" + getIndex() : getName();
 				if (!"sp".equalsIgnoreCase(s) && s != null) {
 					FontMetrics fm = g.getFontMetrics();
-					g.drawString(s, (int) (rx - 0.4 * fm.stringWidth(s)), (int) (ry + 0.4 * fm.getHeight()));
+					g.drawString(s, (int) (rx - 0.5 * fm.stringWidth(s)), (int) (ry + 0.4 * fm.getHeight()));
 				}
 			}
 

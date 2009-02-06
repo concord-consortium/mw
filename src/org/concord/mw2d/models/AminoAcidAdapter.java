@@ -42,7 +42,7 @@ public class AminoAcidAdapter {
 			// acid[i].putProperty("mass", new Float(5*acid[i].getMolWeight()/acid[0].getMolWeight()));
 			acid[i].putProperty("mass", new Float(acid[i].getMolWeight() / 120));
 			// NOTE: >>> 120 is due to the fact that the unit of mass in MW is 120 gram per mole.
-			acid[i].putProperty("sigma", new Double(15 * Math.pow(acid[i].getVolume() / acid[0].getVolume(),
+			acid[i].putProperty("sigma", new Double(18 * Math.pow(acid[i].getVolume() / acid[0].getVolume(),
 					0.3333333333333)));
 		}
 	}
