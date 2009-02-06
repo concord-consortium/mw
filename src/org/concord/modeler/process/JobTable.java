@@ -201,7 +201,7 @@ class JobTable {
 						}
 					}
 				}
-				if (e.getClickCount() >= 2) {
+				if (j != 3 && e.getClickCount() >= 2) {
 					editTaskButton.doClick();
 				}
 			}
