@@ -20,7 +20,8 @@
 
 package org.concord.molbio.ui;
 
-public interface DNAScrollerDrawer{
-    void draw(java.awt.Graphics g);
-}
+public interface DNAScrollerDrawer {
 
+	void draw(java.awt.Graphics g);
+
+}

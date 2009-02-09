@@ -26,10 +26,10 @@ import java.util.regex.Pattern;
 
 public class DNA implements Cloneable {
 
-	public final static int DNA_STRAND_BASE = 0;// 53
-	public final static int DNA_STRAND_COMPL = 1;// 35
-	public final static int DNA_STRAND_53 = DNA_STRAND_BASE;// 53
-	public final static int DNA_STRAND_35 = DNA_STRAND_COMPL;// 35
+	public final static byte DNA_STRAND_BASE = 0;// 53
+	public final static byte DNA_STRAND_COMPL = 1;// 35
+	public final static byte DNA_STRAND_53 = DNA_STRAND_BASE;// 53
+	public final static byte DNA_STRAND_35 = DNA_STRAND_COMPL;// 35
 
 	private final static String END_FRAGMENT_STR = "TGANTAGNTAA";
 	private final static String END_FRAGMENT_REG_STR = "TGA[A,T,C,G]TAG[A,T,C,G]TAA";
@@ -70,8 +70,7 @@ public class DNA implements Cloneable {
 		initMixedMutatorProbabilities();
 	}
 
-	// [ACGTX ]+
-	// ACTG GGG
+	// [ACGTX ]+ ACTG GGG
 	public DNA(String dna) throws IllegalArgumentException {
 		this(dna, false);
 	}

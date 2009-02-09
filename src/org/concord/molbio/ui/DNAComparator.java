@@ -20,28 +20,60 @@
 
 package org.concord.molbio.ui;
 
-import java.util.*;
-import java.text.*;
-import java.awt.*;
-import java.awt.geom.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.geom.Rectangle2D;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Stack;
 
-import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.BoundedRangeModel;
+import javax.swing.Box;
+import javax.swing.ImageIcon;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollBar;
+import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-import org.concord.molbio.engine.*;
-import org.concord.molbio.event.*;
+import org.concord.molbio.engine.Aminoacid;
+import org.concord.molbio.engine.DNA;
+import org.concord.molbio.engine.DNAScrollerModel;
+import org.concord.molbio.engine.Nucleotide;
+import org.concord.molbio.engine.Protein;
+import org.concord.molbio.engine.RNA;
+import org.concord.molbio.event.DNAHistoryEvent;
+import org.concord.molbio.event.DNAHistoryListener;
 
-public class DNAComparator extends JPanel implements DNAHistoryListener {
-	protected JScrollBar scrollBar;
-	protected Dimension pPreferredSize = null;
+class DNAComparator extends JPanel implements DNAHistoryListener {
 
-	DNALetters upDNALetters;
-	DNALetters downDNALetters;
+	private JScrollBar scrollBar;
+	private Dimension pPreferredSize;
 
-	DNAScrollerModel dnaModel;
+	private DNALetters upDNALetters;
+	private DNALetters downDNALetters;
 
-	public DNAComparator(DNAScrollerModel dnaModel) {
+	private DNAScrollerModel dnaModel;
+
+	DNAComparator(DNAScrollerModel dnaModel) {
 		setLayout(new BorderLayout());
 		scrollBar = new JScrollBar(JScrollBar.HORIZONTAL) {
 			public void paint(Graphics g) {
@@ -105,28 +137,6 @@ public class DNAComparator extends JPanel implements DNAHistoryListener {
 	public void setPreferredSize(Dimension d) {
 		super.setPreferredSize(d);
 		pPreferredSize = d;
-	}
-
-	public static void main(String[] args) {
-		JFrame f = new JFrame("DNAComparator");
-		String mainDNAString = "CCCGGGCGGGTCGGAGTTGGCGTAGATTTTCAAATGGCG";
-		DNA scrollerDNA = new DNA(mainDNAString, false);
-		DNAScrollerModel scrollerModel = new DNAScrollerModel(scrollerDNA);
-		scrollerModel.mutateWithSubstitution(0.3f);
-		scrollerModel.mutateWithSubstitution(0.3f);
-		scrollerModel.mutateWithSubstitution(0.3f);
-		scrollerModel.mutateWithSubstitution(0.3f);
-		DNAComparator dnaComparator = new DNAComparator(scrollerModel);
-		f.getContentPane().setLayout(new BorderLayout());
-		f.getContentPane().add(dnaComparator, BorderLayout.CENTER);
-		f.setResizable(false);
-		f.pack();
-		f.setVisible(true);
-		f.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent evt) {
-				System.exit(0);
-			}
-		});
 	}
 
 	public void historyChanged(DNAHistoryEvent evt) {
@@ -437,7 +447,6 @@ class DNALetterLayer extends JPanel {
 				createRectangles();
 			}
 		});
-		// System.out.println(dnaLetters);
 	}
 
 	public void setDNA(DNA dna) {
@@ -692,4 +701,5 @@ class DNAAminoLayer extends JPanel {
 		g.setColor(oldColor);
 		g.setFont(oldFont);
 	}
+
 }

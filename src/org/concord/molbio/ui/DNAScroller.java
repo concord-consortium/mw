@@ -106,26 +106,26 @@ import org.concord.molbio.event.MutationListener;
 
 public class DNAScroller extends JPanel implements ItemSelectable, PropertyChangeListener, Printable, DNAScrollerDrawer {
 
-	static final int M_SUBSTITUTION_A = 0;
-	static final int M_SUBSTITUTION_C = 1;
-	static final int M_SUBSTITUTION_G = 2;
-	static final int M_SUBSTITUTION_T = 3;
-	static final int M_SUBSTITUTION_RANDOM = 4;
-	static final int M_INSERTION_A = 5;
-	static final int M_INSERTION_C = 6;
-	static final int M_INSERTION_G = 7;
-	static final int M_INSERTION_T = 8;
-	static final int M_INSERTION_RANDOM = 9;
-	static final int M_DELETION = 10;
-	static final int M_MIXED = 11;
+	private static final byte M_SUBSTITUTION_A = 0;
+	private static final byte M_SUBSTITUTION_C = 1;
+	private static final byte M_SUBSTITUTION_G = 2;
+	private static final byte M_SUBSTITUTION_T = 3;
+	private static final byte M_SUBSTITUTION_RANDOM = 4;
+	private static final byte M_INSERTION_A = 5;
+	private static final byte M_INSERTION_C = 6;
+	private static final byte M_INSERTION_G = 7;
+	private static final byte M_INSERTION_T = 8;
+	private static final byte M_INSERTION_RANDOM = 9;
+	private static final byte M_DELETION = 10;
+	private static final byte M_MIXED = 11;
 
-	static final Color A_COLOR = Nucleotide.A_COLOR;
-	static final Color T_COLOR = Nucleotide.T_COLOR;
-	static final Color U_COLOR = Nucleotide.U_COLOR;
-	static final Color G_COLOR = Nucleotide.G_COLOR;
-	static final Color C_COLOR = Nucleotide.C_COLOR;
+	private static final Color A_COLOR = Nucleotide.A_COLOR;
+	private static final Color T_COLOR = Nucleotide.T_COLOR;
+	private static final Color U_COLOR = Nucleotide.U_COLOR;
+	private static final Color G_COLOR = Nucleotide.G_COLOR;
+	private static final Color C_COLOR = Nucleotide.C_COLOR;
 
-	static final int DEFAULT_CODON_DISTANCE = 2;
+	private static final int DEFAULT_CODON_DISTANCE = 2;
 	static final int DEFAULT_CURRENT_BASE_OFFSETY = 5;
 
 	DNAScrollerModel model;
