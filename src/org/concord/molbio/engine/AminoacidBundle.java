@@ -29,12 +29,14 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 
-public class AminoacidBundle extends ResourceBundle {
+class AminoacidBundle extends ResourceBundle {
 
-	Properties p;
-	Hashtable<String, Aminoacid> aminoCache = new Hashtable<String, Aminoacid>();
-	String[] names = null;
-	String[] units = null;
+	private Properties p;
+	private Hashtable<String, Aminoacid> aminoCache = new Hashtable<String, Aminoacid>();
+	private String[] names;
+	private String[] units;
+	private static String[] keys = { "Ala", "Arg", "Asn", "Asp", "Cys", "Gln", "Glu", "Gly", "His", "Ile", "Leu",
+			"Lys", "Met", "Phe", "Pro", "Ser", "Thr", "Trp", "Tyr", "Val" };
 
 	public AminoacidBundle() {
 		p = new Properties();
@@ -171,6 +173,4 @@ public class AminoacidBundle extends ResourceBundle {
 		return units;
 	}
 
-	String[] keys = { "Ala", "Arg", "Asn", "Asp", "Cys", "Gln", "Glu", "Gly", "His", "Ile", "Leu", "Lys", "Met", "Phe",
-			"Pro", "Ser", "Thr", "Trp", "Tyr", "Val" };
 }

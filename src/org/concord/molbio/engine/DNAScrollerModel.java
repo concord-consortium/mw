@@ -39,29 +39,28 @@ public class DNAScrollerModel implements MutationListener {
 	public static final int RNA_STRAND_AVAILABLE_NONE = -1;
 	public static final int RNA_STRAND_AVAILABLE = 0;
 
-	int startWindowIndex = 0;
-	int currIndex = 0;
-	String dnaString53;
-	String dnaString35;
-	String rnaString;
+	private int startWindowIndex = 0;
+	private int currIndex = 0;
+	private String dnaString53;
+	private String dnaString35;
+	private String rnaString;
 
-	DNA dna;
-	RNA rna;
+	private DNA dna;
+	private RNA rna;
 
-	Codon[] codons53;
-	Codon[] codons35;
-	int nbaseinwindow;
-	PropertyChangeSupport changeSupport;
-	boolean unfinishedCodon = false;
+	private Codon[] codons53;
+	private Codon[] codons35;
+	private int nbaseinwindow;
+	private PropertyChangeSupport changeSupport;
+	private boolean unfinishedCodon = false;
 
-	int strandAvailability = DNA_STRAND_AVAILABLE_BOTH;
-	int rnaAvailability = RNA_STRAND_AVAILABLE;
-	String originalDNAString;
-	int runNumber = 0;
-	Stack<DNA> historyStack;
-	Vector<DNAHistoryListener> historyListeners;
-	DNAHistoryEvent modifiedHistoryEvent = null;
-	DNAHistoryEvent clearedHistoryEvent = null;
+	private int strandAvailability = DNA_STRAND_AVAILABLE_BOTH;
+	private String originalDNAString;
+	private int runNumber = 0;
+	private Stack<DNA> historyStack;
+	private Vector<DNAHistoryListener> historyListeners;
+	private DNAHistoryEvent modifiedHistoryEvent = null;
+	private DNAHistoryEvent clearedHistoryEvent = null;
 
 	public DNAScrollerModel(DNA dna) {
 		setDNA(dna);
@@ -112,11 +111,11 @@ public class DNAScrollerModel implements MutationListener {
 			l.historyChanged(evt);
 	}
 
-	protected void pushIntoHistoryStack(DNA lDNA) {
+	private void pushIntoHistoryStack(DNA lDNA) {
 		pushIntoHistoryStack(lDNA, true);
 	}
 
-	protected void pushIntoHistoryStack(DNA lDNA, boolean notifyListeners) {
+	private void pushIntoHistoryStack(DNA lDNA, boolean notifyListeners) {
 		if (lDNA != null) {
 			historyStack.push(new DNA(lDNA.getFragmentAsString(), false));
 			if (notifyListeners)
@@ -124,7 +123,7 @@ public class DNAScrollerModel implements MutationListener {
 		}
 	}
 
-	protected void initHistoryStack() {
+	private void initHistoryStack() {
 		if (historyStack == null) {
 			historyStack = new Stack<DNA>();
 		}
@@ -162,7 +161,7 @@ public class DNAScrollerModel implements MutationListener {
 		return rna;
 	}
 
-	void reinit() {
+	private void reinit() {
 		rna = (dna != null) ? dna.transcript(DNA.DNA_STRAND_COMPL) : null;
 		createDNAStrings();
 		createCodons();
@@ -197,7 +196,7 @@ public class DNAScrollerModel implements MutationListener {
 		createDNAStrings();
 	}
 
-	void checkStartWindowIndex() {
+	private void checkStartWindowIndex() {
 		if (dna == null)
 			return;
 		if (startWindowIndex < 0)
@@ -234,7 +233,7 @@ public class DNAScrollerModel implements MutationListener {
 		return true;
 	}
 
-	void checkCurrIndex() {
+	private void checkCurrIndex() {
 		if (dna == null)
 			return;
 		if (currIndex > dna.getLength() - 3)
@@ -244,10 +243,10 @@ public class DNAScrollerModel implements MutationListener {
 	}
 
 	public int getDNALength() {
-		return (dna == null) ? 0 : dna.getLength();
+		return dna == null ? 0 : dna.getLength();
 	}
 
-	public void createCodons() {
+	private void createCodons() {
 		if (dna == null) {
 			codons53 = null;
 			codons35 = null;
@@ -330,7 +329,7 @@ public class DNAScrollerModel implements MutationListener {
 		return codons35[index / 3];
 	}
 
-	void createDNAStrings() {
+	private void createDNAStrings() {
 		if (dna == null) {
 			dnaString53 = "";
 			dnaString35 = "";
@@ -488,8 +487,6 @@ public class DNAScrollerModel implements MutationListener {
 	}
 
 	public void mutate(int strand, int mutatorKind, int index, Nucleotide nucleotideTo) {
-		// System.out.println("strand "+strand+" mutatorKind "+mutatorKind+"
-		// index "+index+" to "+nucleotideTo+" exclude "+nucleotideExclude);
 		if (dna != null)
 			dna.mutate(strand, mutatorKind, index, nucleotideTo);
 		if (rna != null) {

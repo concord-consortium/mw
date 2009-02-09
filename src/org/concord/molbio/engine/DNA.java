@@ -20,15 +20,9 @@
 
 package org.concord.molbio.engine;
 
-// 050-8839174
-// www.ceeo.tufts.edu
-// legoeducation.com mindstorm?
-// slkboUkdh$56cd#8
-
 import org.concord.molbio.event.MutationListener;
-import java.util.regex.*;
-
-// CDS == CoDing Sequence
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DNA implements Cloneable {
 
@@ -36,41 +30,41 @@ public class DNA implements Cloneable {
 	public final static int DNA_STRAND_COMPL = 1;// 35
 	public final static int DNA_STRAND_53 = DNA_STRAND_BASE;// 53
 	public final static int DNA_STRAND_35 = DNA_STRAND_COMPL;// 35
-	protected final static String END_FRAGMENT_STR = "TGANTAGNTAA";
-	public final static String END_FRAGMENT_REG_STR = "TGA[A,T,C,G]TAG[A,T,C,G]TAA";
-	public final static String END_FRAGMENT_REG_STR2 = END_FRAGMENT_REG_STR + "[A,T,C,G]";
-	protected final static DNA endFragment = new DNA(END_FRAGMENT_STR, false);
-	protected final static String PROMOTER_FRAGMENT_STR = "TTGACANNNNNNNNNNNNNNNNNNTATAATNNNNNN";
-	protected final static String PROMOTER_FRAGMENT_REG_STR = "TTGACA[A,T,C,G]{18}TATAAT[A,T,C,G]{6}";
-	protected final static DNA promoterFragment = new DNA(PROMOTER_FRAGMENT_STR, false);
-	protected final static String TERMINATOR_FRAGMENT_STR = "NCCACAGGCCGCCAGTTCCGCTGGCGGCATTTT";
-	protected final static String TERMINATOR_FRAGMENT_REG_STR = "[A,T,C,G]CCACAGGCCGCCAGTTCCGCTGGCGGCATTTT";
-	protected final static DNA terminatorFragment = new DNA(TERMINATOR_FRAGMENT_STR, false);
-	protected final static String START_FRAGMENT_STR = "ATG";
-	protected final static DNA startFragment = new DNA(START_FRAGMENT_STR, false);
-	protected final static DNA exampleFragment = new DNA("TAC TAG CCG ATT CTA GCC GAT TCT AGC CGA TTC", false);
+
+	private final static String END_FRAGMENT_STR = "TGANTAGNTAA";
+	private final static String END_FRAGMENT_REG_STR = "TGA[A,T,C,G]TAG[A,T,C,G]TAA";
+	private final static String END_FRAGMENT_REG_STR2 = END_FRAGMENT_REG_STR + "[A,T,C,G]";
+	final static DNA endFragment = new DNA(END_FRAGMENT_STR, false);
+	private final static String PROMOTER_FRAGMENT_STR = "TTGACANNNNNNNNNNNNNNNNNNTATAATNNNNNN";
+	private final static String PROMOTER_FRAGMENT_REG_STR = "TTGACA[A,T,C,G]{18}TATAAT[A,T,C,G]{6}";
+	private final static DNA promoterFragment = new DNA(PROMOTER_FRAGMENT_STR, false);
+	private final static String TERMINATOR_FRAGMENT_STR = "NCCACAGGCCGCCAGTTCCGCTGGCGGCATTTT";
+	private final static String TERMINATOR_FRAGMENT_REG_STR = "[A,T,C,G]CCACAGGCCGCCAGTTCCGCTGGCGGCATTTT";
+	private final static DNA terminatorFragment = new DNA(TERMINATOR_FRAGMENT_STR, false);
+	private final static String START_FRAGMENT_STR = "ATG";
+	private final static DNA startFragment = new DNA(START_FRAGMENT_STR, false);
 
 	public final static int PROMOTER_LENGTH = PROMOTER_FRAGMENT_STR.length();
 	public final static int TERMINATOR_LENGTH = TERMINATOR_FRAGMENT_STR.length();
 	public final static int START_LENGTH = START_FRAGMENT_STR.length();
 	public final static int END_LENGTH = END_FRAGMENT_STR.length() + 1;
 
-	final static Pattern PROMOTER_PATTERN = Pattern.compile("^" + PROMOTER_FRAGMENT_REG_STR);
-	final static Pattern TERMINATOR_PATTERN = Pattern.compile(TERMINATOR_FRAGMENT_REG_STR + "$");
-	final static Pattern PROMOTER_START_PATTERN = Pattern.compile("^" + PROMOTER_FRAGMENT_REG_STR + START_FRAGMENT_STR);
-	final static Pattern END_PATTERN = Pattern.compile(END_FRAGMENT_REG_STR2 + "$");
-	protected final static String PROMOTER_START_FRAGMENT_STR = PROMOTER_FRAGMENT_STR + START_FRAGMENT_STR;
+	private final static Pattern PROMOTER_PATTERN = Pattern.compile("^" + PROMOTER_FRAGMENT_REG_STR);
+	private final static Pattern TERMINATOR_PATTERN = Pattern.compile(TERMINATOR_FRAGMENT_REG_STR + "$");
+	private final static Pattern PROMOTER_START_PATTERN = Pattern.compile("^" + PROMOTER_FRAGMENT_REG_STR
+			+ START_FRAGMENT_STR);
+	private final static Pattern END_PATTERN = Pattern.compile(END_FRAGMENT_REG_STR2 + "$");
+	private final static String PROMOTER_START_FRAGMENT_STR = PROMOTER_FRAGMENT_STR + START_FRAGMENT_STR;
 
-	Strand[] strands = new Strand[2];
-	int[] probabilities = new int[Mutator.NUMB_POSSIBLE_MUTATORS];
-	boolean stopProduceRNAonStopCodon = true;
+	private Strand[] strands = new Strand[2];
+	private int[] probabilities = new int[Mutator.NUMB_POSSIBLE_MUTATORS];
+	private boolean stopProduceRNAonStopCodon = true;
 
-	boolean endFragmentExists = false;
-	boolean startFragmentExists = false;
-	boolean terminatorFragmentExists = false;
-	boolean promoterFragmentExists = false;
-
-	boolean needVerifyFragments = true;
+	private boolean endFragmentExists = false;
+	private boolean startFragmentExists = false;
+	private boolean terminatorFragmentExists = false;
+	private boolean promoterFragmentExists = false;
+	private boolean needVerifyFragments = true;
 
 	protected DNA() {
 		initMixedMutatorProbabilities();
@@ -162,12 +156,12 @@ public class DNA implements Cloneable {
 		return new DNA(dna);
 	}
 
-	void initMixedMutatorProbabilities() {
+	private void initMixedMutatorProbabilities() {
 		for (int i = 0; i < probabilities.length; i++)
 			probabilities[i] = 1;
 	}
 
-	synchronized void verifyFragments() {
+	private synchronized void verifyFragments() {
 		promoterFragmentExists = false;
 		endFragmentExists = false;
 		startFragmentExists = false;
@@ -229,27 +223,11 @@ public class DNA implements Cloneable {
 		return promoterFragmentExists;
 	}
 
-	boolean startWithPromoter0() {
-		String str = getFragmentAsString();
-		if (str == null)
-			return false;
-		Matcher matcher = PROMOTER_PATTERN.matcher(str);
-		return matcher.find();
-	}
-
 	public boolean endWithTerminator() {
 		if (needVerifyFragments) {
 			verifyFragments();
 		}
 		return terminatorFragmentExists;
-	}
-
-	boolean endWithTerminator0() {
-		String str = getFragmentAsString();
-		if (str == null)
-			return false;
-		Matcher matcher = TERMINATOR_PATTERN.matcher(str);
-		return matcher.find();
 	}
 
 	public boolean hasStartFragment() {
@@ -259,15 +237,6 @@ public class DNA implements Cloneable {
 		return startFragmentExists;
 	}
 
-	boolean hasStartFragment0() {
-		String str = getFragmentAsString();
-		boolean hasPromoter = startWithPromoter();
-		if (!hasPromoter)
-			return str.startsWith(START_FRAGMENT_STR);
-		Matcher matcher = PROMOTER_START_PATTERN.matcher(str);
-		return matcher.find();
-	}
-
 	public boolean hasEndFragment() {
 		if (needVerifyFragments) {
 			verifyFragments();
@@ -275,16 +244,7 @@ public class DNA implements Cloneable {
 		return endFragmentExists;
 	}
 
-	boolean hasEndFragment0() {
-		String str = getFragmentAsString();
-		boolean hasTerminator = endWithTerminator();
-		if (hasTerminator)
-			str = str.substring(0, getLength() - TERMINATOR_LENGTH);
-		Matcher matcher = END_PATTERN.matcher(str);
-		return matcher.find();
-	}
-
-	void checkForPredefinedFragments() {
+	private void checkForPredefinedFragments() {
 		String str = getFragmentAsString();
 		if (str == null)
 			return;
@@ -338,11 +298,11 @@ public class DNA implements Cloneable {
 		return dnas;
 	}
 
-	public void appendEndDNAFragment() {
+	private void appendEndDNAFragment() {
 		appendEndDNAFragment(getLength());
 	}
 
-	public void appendEndDNAFragment(int offset) {
+	private void appendEndDNAFragment(int offset) {
 		Nucleotide randomNucleotide = Nucleotide.getRandomNucleotide();
 		char randomNucleotideChar = randomNucleotide.toString().charAt(0);
 		StringBuffer sb = new StringBuffer(END_FRAGMENT_STR.replace('N', randomNucleotideChar));
@@ -350,29 +310,29 @@ public class DNA implements Cloneable {
 		insertDNA(offset, sb.toString());
 	}
 
-	public void appendTerminatorDNAFragment() {
+	private void appendTerminatorDNAFragment() {
 		Nucleotide randomNucleotide = Nucleotide.getRandomNucleotide();
 		char randomNucleotideChar = randomNucleotide.toString().charAt(0);
 		StringBuffer sb = new StringBuffer(TERMINATOR_FRAGMENT_STR.replace('N', randomNucleotideChar));
 		insertDNA(getLength(), sb.toString());
 	}
 
-	public void appendStartDNAFragment() {
+	private void appendStartDNAFragment() {
 		appendStartDNAFragment(0);
 	}
 
-	public void appendStartDNAFragment(int offset) {
+	private void appendStartDNAFragment(int offset) {
 		insertDNA(offset, START_FRAGMENT_STR);
 	}
 
-	public void appendPromoterDNAFragment() {
+	private void appendPromoterDNAFragment() {
 		Nucleotide randomNucleotide = Nucleotide.getRandomNucleotide();
 		char randomNucleotideChar = randomNucleotide.toString().charAt(0);
 		StringBuffer sb = new StringBuffer(PROMOTER_FRAGMENT_STR.replace('N', randomNucleotideChar));
 		insertDNA(0, sb.toString());
 	}
 
-	public void insertDNA(int index, String str) {
+	private void insertDNA(int index, String str) {
 		if (strands == null || strands[DNA_STRAND_BASE] == null || strands[DNA_STRAND_COMPL] == null)
 			return;
 		if (str == null || str.length() < 1)
@@ -391,36 +351,7 @@ public class DNA implements Cloneable {
 		}
 	}
 
-	public void removeDNA(int index, int length) {
-		if (length == 0 || strands == null || strands[DNA_STRAND_BASE] == null || strands[DNA_STRAND_COMPL] == null)
-			return;
-		if (index < 0)
-			index = 0;
-		if (index > getLength() - 1)
-			index = getLength() - 1;
-		if (length > 0) {
-			if (index + length > getLength() - 1)
-				length = getLength() - 1 - index;
-			while (length > 0) {
-				strands[DNA_STRAND_BASE].removeNucleotide(index);
-				strands[DNA_STRAND_COMPL].removeNucleotide(index);
-				index++;
-				length--;
-			}
-		}
-		else {
-			if (index + length < 0)
-				length = -index;
-			while (length < 0) {
-				strands[DNA_STRAND_BASE].removeNucleotide(index);
-				strands[DNA_STRAND_COMPL].removeNucleotide(index);
-				index--;
-				length++;
-			}
-		}
-	}
-
-	public Strand getStrand(int index) {
+	Strand getStrand(int index) {
 		if (index == DNA_STRAND_BASE)
 			return strands[DNA_STRAND_BASE];
 		if (index == DNA_STRAND_COMPL)
@@ -428,7 +359,7 @@ public class DNA implements Cloneable {
 		return null;
 	}
 
-	public Strand getComplimentaryStrand(int index) {
+	Strand getComplimentaryStrand(int index) {
 		if (index == DNA_STRAND_BASE)
 			return strands[DNA_STRAND_COMPL];
 		if (index == DNA_STRAND_COMPL)
@@ -442,25 +373,7 @@ public class DNA implements Cloneable {
 		return strands[DNA_STRAND_BASE].getLength();
 	}
 
-	public Strand setStrand(int index, Strand strand) {
-		Strand oldStrand = null;
-		if (index == DNA_STRAND_BASE) {
-			oldStrand = strands[DNA_STRAND_BASE];
-			strands[DNA_STRAND_BASE] = strand;
-		}
-		else if (index == DNA_STRAND_COMPL) {
-			oldStrand = strands[DNA_STRAND_COMPL];
-			strands[DNA_STRAND_COMPL] = strand;
-		}
-		return oldStrand;
-	}
-
-	public void setStrand(Strand baseStrand, Strand complStrand) {
-		strands[DNA_STRAND_BASE] = baseStrand;
-		strands[DNA_STRAND_COMPL] = complStrand;
-	}
-
-	public boolean checkStrandComplementarity() {
+	boolean checkStrandComplementarity() {
 		if (strands[DNA_STRAND_BASE] == null || strands[DNA_STRAND_COMPL] == null)
 			return false;
 		if (strands[DNA_STRAND_BASE].getLength() != strands[DNA_STRAND_COMPL].getLength())
@@ -538,8 +451,8 @@ public class DNA implements Cloneable {
 			}
 			/*
 			 * for(int i = endIndex; i > startIndex; i-=3){ boolean endStrand = false; for(int n = 0; n < 3; n++){
-			 * endStrand = (i - n <= startIndex); if(endStrand) break; nc[n] = (Nucleotide)strand.bases.elementAt(i-n); }
-			 * if(endStrand) break; Codon codon = new Codon(nc[0],nc[1],nc[2]); if(stopProduceRNAonStopCodon &&
+			 * endStrand = (i - n <= startIndex); if(endStrand) break; nc[n] = (Nucleotide)strand.bases.elementAt(i-n);
+			 * } if(endStrand) break; Codon codon = new Codon(nc[0],nc[1],nc[2]); if(stopProduceRNAonStopCodon &&
 			 * codon.getTranscripted().isCodonStop()) break; for(int n = 0; n < 3; n++)
 			 * rna.addNucleotide(nc[n].getComplimentaryNucleotide(true)); }
 			 */
@@ -551,39 +464,24 @@ public class DNA implements Cloneable {
 		return rna;
 	}
 
-	public void setStopProduceRNAonStopCodon(boolean val) {
+	void setStopProduceRNAonStopCodon(boolean val) {
 		stopProduceRNAonStopCodon = val;
 	}
-
-	// protected Object clone(){
-	// if(strands == null || strands[DNA_STRAND_BASE] == null) return null;
-	// return new DNA(strands[DNA_STRAND_BASE].toString());
-	// }
 
 	public String getFragmentAsString() throws IllegalArgumentException {
 		return getFragmentAsString(0, getLength());
 	}
 
-	protected String getFragmentAsString(int startIndex, int endIndex) throws IllegalArgumentException {
+	String getFragmentAsString(int startIndex, int endIndex) throws IllegalArgumentException {
 		return getFragmentAsString(startIndex, endIndex, DNA_STRAND_BASE);
 	}
 
-	protected String getFragmentAsString(int startIndex, int endIndex, int strandIndex) throws IllegalArgumentException {
+	private String getFragmentAsString(int startIndex, int endIndex, int strandIndex) throws IllegalArgumentException {
 		if (strandIndex != DNA_STRAND_BASE && strandIndex != DNA_STRAND_COMPL)
 			throw new IllegalArgumentException("DNA.getFragmentAsString strandIndex isn't correct " + strandIndex);
 		if (strands == null || strands[strandIndex] == null)
 			return null;
 		return strands[strandIndex].getFragmentAsString(startIndex, endIndex);
-	}
-
-	public DNA concatenate(DNA dna) {
-		if (dna == null)
-			return this;
-		if (strands[DNA_STRAND_BASE] != null)
-			strands[DNA_STRAND_BASE].concatenate(dna.getStrand(DNA_STRAND_BASE));
-		if (strands[DNA_STRAND_COMPL] != null)
-			strands[DNA_STRAND_COMPL].concatenate(dna.getStrand(DNA_STRAND_COMPL));
-		return this;
 	}
 
 	public String toString() {
@@ -681,21 +579,11 @@ public class DNA implements Cloneable {
 		verifyFragments();
 	}
 
-	public void setProbabilitiesForMixedMutator(int ident, int subst, int insert, int delet) {
+	void setProbabilitiesForMixedMutator(int ident, int subst, int insert, int delet) {
 		probabilities[Mutator.MUTATOR_IDENTITY] = ident;
 		probabilities[Mutator.MUTATOR_SUBSTITUTION] = subst;
 		probabilities[Mutator.MUTATOR_INSERTION] = insert;
 		probabilities[Mutator.MUTATOR_DELETION] = delet;
-	}
-
-	protected int encoderTest = 5;
-
-	public void setEncoderTest(int encoderTest) {
-		this.encoderTest = encoderTest;
-	}
-
-	public int getEncoderTest() {
-		return encoderTest;
 	}
 
 }

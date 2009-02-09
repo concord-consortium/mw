@@ -22,7 +22,7 @@ package org.concord.molbio.engine;
 
 import java.util.Vector;
 
-public class Chromosome {
+class Chromosome {
 
 	DNA dna;
 	Vector<Gene> genes = new Vector<Gene>();
