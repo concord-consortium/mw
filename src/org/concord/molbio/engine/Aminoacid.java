@@ -194,13 +194,6 @@ public class Aminoacid {
 	public final static int EXPRESS_TO_RNA = 2;
 
 	public String getCodon(int expressStyle) throws IllegalArgumentException {
-		/*
-		 * if(expressStyle < EXPRESS_FROM_53DNA_STRAND || expressStyle > EXPRESS_FROM_RNA) throw new
-		 * IllegalArgumentException("Aminoacid.express: expressStyle should be >= 0 and <= 2"); if(expressStyle ==
-		 * EXPRESS_FROM_RNA) return getCodon(true); String codonStr = getCodon(false); if(expressStyle ==
-		 * EXPRESS_FROM_35DNA_STRAND) getCodon(false); return
-		 * getCodon(true).replace(Nucleotide.URACIL_NAME,Nucleotide.THYMINE_NAME);
-		 */
 		if (expressStyle < EXPRESS_FROM_53DNA_STRAND || expressStyle > EXPRESS_FROM_RNA)
 			throw new IllegalArgumentException("Aminoacid.express: expressStyle should be >= 0 and <= 2");
 		String codonStr = getCodon(true);
@@ -291,22 +284,12 @@ public class Aminoacid {
 	}
 
 	public char[] encode() {// Charles compatible
-		String cd = getDNA35Codon();
-		/*
-		 * if(cd == null || cd.length() < 1) return null; char []ret = new char[cd.length()]; for(int i = 0; i <
-		 * ret.length; i++) ret[i] = cd.charAt(i);
-		 */
-		return cd.toCharArray();
+		return getDNA35Codon().toCharArray();
 
 	}
 
 	public char[] encodeRandomly() {
-		String cd = getCodonRandom(EXPRESS_TO_53DNA_STRAND);
-		/*
-		 * if(cd == null || cd.length() < 1) return null; char []ret = new char[cd.length()]; for(int i = 0; i <
-		 * ret.length; i++) ret[i] = cd.charAt(i);
-		 */
-		return cd.toCharArray();
+		return getCodonRandom(EXPRESS_TO_53DNA_STRAND).toCharArray();
 	}
 
 	// that equivalent to second method with expressStyle = EXPRESS_FROM_53DNA_STRAND
@@ -634,11 +617,11 @@ public class Aminoacid {
 			allAminoacids[7] = getByAbbreviation("Trp");
 			allAminoacids[8] = getByAbbreviation("Met");
 			allAminoacids[9] = getByAbbreviation("Cys");
-			allAminoacids[10] = getByAbbreviation("Asn");
-			allAminoacids[11] = getByAbbreviation("Gln");
-			allAminoacids[12] = getByAbbreviation("Ser");
-			allAminoacids[13] = getByAbbreviation("Thr");
-			allAminoacids[14] = getByAbbreviation("Tyr");
+			allAminoacids[10] = getByAbbreviation("Tyr");
+			allAminoacids[11] = getByAbbreviation("Asn");
+			allAminoacids[12] = getByAbbreviation("Gln");
+			allAminoacids[13] = getByAbbreviation("Ser");
+			allAminoacids[14] = getByAbbreviation("Thr");
 			allAminoacids[15] = getByAbbreviation("Asp");
 			allAminoacids[16] = getByAbbreviation("Glu");
 			allAminoacids[17] = getByAbbreviation("Lys");

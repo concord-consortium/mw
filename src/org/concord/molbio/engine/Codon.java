@@ -23,16 +23,16 @@ package org.concord.molbio.engine;
 public class Codon {
 
 	Nucleotide[] bases = new Nucleotide[3];
-	String nameStr;
-	char[] code;// Charles compatibility
+	private String nameStr;
+	private char[] code;// Charles compatibility
 	public static final int CODON_STATE_NONE = 0;
 	public static final int CODON_STATE_START = 1;
 	public static final int CODON_STATE_STOP = 2;
 
-	protected static final String MITOCHONDRIA_SUFFIX = "_M";
+	static final String MITOCHONDRIA_SUFFIX = "_M";
 
-	int codonState = CODON_STATE_NONE;
-	boolean inMitochondria = false;
+	private int codonState = CODON_STATE_NONE;
+	private boolean inMitochondria = false;
 
 	protected Codon(char b1, char b2, char b3, boolean inMitochondria) throws IllegalArgumentException {
 		init(b1, b2, b3, inMitochondria);
@@ -117,11 +117,11 @@ public class Codon {
 	}
 
 	public boolean isCodonStart() {
-		return (codonState == CODON_STATE_START);
+		return codonState == CODON_STATE_START;
 	}
 
 	public boolean isCodonStop() {
-		return (codonState == CODON_STATE_STOP);
+		return codonState == CODON_STATE_STOP;
 	}
 
 	protected void setInMitochondria(boolean inMitochondria) {
