@@ -567,6 +567,10 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 
 	public void setDNAString(String s) {
 		dnaString = s;
+		if (dnaScroller != null) {
+			dnaScroller.setColorScheme(view.getColorCoding());
+			dnaScroller.repaint();
+		}
 	}
 
 	public String getDNAString() {
