@@ -50,7 +50,7 @@ public class RadialBond implements ModelComponent {
 	public final static byte UNICOLOR_STICK_STYLE = 0x69;
 	public final static byte SHORT_SPRING_STYLE = 0x6a;
 
-	public final static float PEPTIDE_BOND_LENGTH_PARAMETER = 0.6f;
+	public final static float PEPTIDE_BOND_LENGTH_PARAMETER = 0.55f;
 
 	public final static byte TORQUE_AROUND_ATOM1 = 1;
 	public final static byte TORQUE_AROUND_ATOM2 = 2;

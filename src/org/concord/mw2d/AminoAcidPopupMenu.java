@@ -54,7 +54,7 @@ class AminoAcidPopupMenu extends JPopupMenu {
 
 		ButtonGroup bg = new ButtonGroup();
 		for (int i = 0; i < AMINO_ACID.length; i++) {
-			mi[i] = new JRadioButtonMenuItem(AMINO_ACID[i].getFullName() + " (" + AMINO_ACID[i].getLetter() + ")");
+			mi[i] = new JRadioButtonMenuItem(AMINO_ACID[i].getFullName() + " (" + AMINO_ACID[i].getAbbreviation() + ")");
 			final int ii = i;
 			mi[i].addItemListener(new ItemListener() {
 				public void itemStateChanged(ItemEvent e) {

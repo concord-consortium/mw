@@ -35,9 +35,9 @@ class ColorManager {
 	final static int HYDROPHOBIC_COLOR = 0xffafaf;
 	final static int HYDROPHILIC_COLOR = 0x00ffff;
 	final static int LEGO_HYDROPHOBIC_COLOR = 0xf5cd2f;
-	final static int LEGO_UNCHARGED_POLAR_COLOR = 0x287f46;
-	final static int LEGO_ACID_COLOR = 0xc4281b;
-	final static int LEGO_BASIC_COLOR = 0x0d69ab;
+	final static int LEGO_UNCHARGED_POLAR_COLOR = 0x37ae60;
+	final static int LEGO_ACID_COLOR = 0xe64638;
+	final static int LEGO_BASIC_COLOR = 0x4098d7;
 
 	private final static int WHITE_ARGB = 0xffffff;
 
