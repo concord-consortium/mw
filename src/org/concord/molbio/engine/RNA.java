@@ -22,10 +22,8 @@ package org.concord.molbio.engine;
 
 public class RNA extends Strand {
 
-	Codon[] codons;
-	int[] indexes;
-	int startIndex;
-	int endIndex;
+	private Codon[] codons;
+	private int[] indexes;
 
 	public RNA() {
 	}
@@ -100,10 +98,8 @@ public class RNA extends Strand {
 		addNucleotide0(index, b);
 	}
 
-	protected void setIndexes(int[] indexes, int startIndex, int endIndex) {
+	void setIndexes(int[] indexes, int startIndex, int endIndex) {
 		this.indexes = indexes;
-		this.startIndex = startIndex;
-		this.endIndex = endIndex;
 	}
 
 	public RNA createMRNA() {

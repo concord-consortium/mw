@@ -20,29 +20,30 @@
 
 package org.concord.molbio.engine;
 
+public final class MutatorFactory {
 
-public final class MutatorFactory{
-    public synchronized static Mutator getIdentityMutator(){
-        return new IdentityMutator();
-    }
+	public synchronized static Mutator getIdentityMutator() {
+		return new IdentityMutator();
+	}
 
-    public synchronized static Mutator getSubstitutionMutator(){
-        return new SubstitutionMutator();
-    }
+	public synchronized static Mutator getSubstitutionMutator() {
+		return new SubstitutionMutator();
+	}
 
-    public synchronized static Mutator getDeletionMutator(){
-        return new DeletionMutator();
-    }
+	public synchronized static Mutator getDeletionMutator() {
+		return new DeletionMutator();
+	}
 
-    public synchronized static Mutator getInsertionMutator(){
-        return new InsertionMutator();
-    }
+	public synchronized static Mutator getInsertionMutator() {
+		return new InsertionMutator();
+	}
 
-    public synchronized static Mutator getMixedMutator(int ident,int subst,int insert,int delet){
-        return new MixedMutator(ident,subst,insert,delet);
-    }
+	public synchronized static Mutator getMixedMutator(int ident, int subst, int insert, int delet) {
+		return new MixedMutator(ident, subst, insert, delet);
+	}
 
-    public synchronized static Mutator getMixedMutator(){
-        return new MixedMutator();
-    }
+	public synchronized static Mutator getMixedMutator() {
+		return new MixedMutator();
+	}
+
 }

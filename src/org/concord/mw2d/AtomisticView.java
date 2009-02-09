@@ -3797,7 +3797,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 
 		case SELE_ID:
 
-			/* the special popup menus that do not use right-click */
+			/* FIXME: the special popup menus that do not use right-click. This will be removed in 2010. */
 			if (e.isAltDown()) {
 				final Atom at = whichAtom(x, y);
 				if (at != null) {

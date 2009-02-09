@@ -24,7 +24,7 @@ import java.awt.Color;
 
 public final class Nucleotide {
 
-	protected static final char UNDEFINE_NAME = ' ';
+	private static final char UNDEFINE_NAME = ' ';
 
 	public static final Color A_COLOR = new Color(0x7da7d9);
 	public static final Color T_COLOR = new Color(0xfff699);
@@ -47,13 +47,12 @@ public final class Nucleotide {
 	private char name = UNDEFINE_NAME;
 	private String fullName;
 	private String nameStr;
-	String pdbFile = null;
 
-	protected static final Nucleotide ADENINE = new Nucleotide(ADENINE_NAME, ADENINE_FULL_NAME);
-	protected static final Nucleotide THYMINE = new Nucleotide(THYMINE_NAME, THYMINE_FULL_NAME);
-	protected static final Nucleotide GUANINE = new Nucleotide(GUANINE_NAME, GUANINE_FULL_NAME);
-	protected static final Nucleotide CYTOSINE = new Nucleotide(CYTOSINE_NAME, CYTOSINE_FULL_NAME);
-	protected static final Nucleotide URACIL = new Nucleotide(URACIL_NAME, URACIL_FULL_NAME);
+	static final Nucleotide ADENINE = new Nucleotide(ADENINE_NAME, ADENINE_FULL_NAME);
+	static final Nucleotide THYMINE = new Nucleotide(THYMINE_NAME, THYMINE_FULL_NAME);
+	static final Nucleotide GUANINE = new Nucleotide(GUANINE_NAME, GUANINE_FULL_NAME);
+	static final Nucleotide CYTOSINE = new Nucleotide(CYTOSINE_NAME, CYTOSINE_FULL_NAME);
+	static final Nucleotide URACIL = new Nucleotide(URACIL_NAME, URACIL_FULL_NAME);
 
 	private Nucleotide(char name, String fullName) {
 		this.fullName = fullName;

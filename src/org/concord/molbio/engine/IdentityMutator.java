@@ -22,20 +22,22 @@ package org.concord.molbio.engine;
 
 import org.concord.molbio.event.MutationEvent;
 
-public class IdentityMutator extends Mutator{
-    
-    protected IdentityMutator(){
-        mutatorType = MUTATOR_IDENTITY;
-    }
-    
-    public void setMutationParam(Object []params){
-    }
-    protected void mutate(DNA dna,int strandIndex,int nucleotideIndex){
-        org.concord.molbio.engine.Nucleotide n = dna.getStrand(strandIndex).getNucleotide(nucleotideIndex);
-        notifyMutationListeners(new MutationEvent(this,strandIndex,nucleotideIndex,n,n));
-    }
-    protected void mutate(Strand strand, int nucleotideIndex){
-        org.concord.molbio.engine.Nucleotide n =strand.getNucleotide(nucleotideIndex);
-        notifyMutationListeners(new MutationEvent(this,nucleotideIndex,n,n));
-    }
+public class IdentityMutator extends Mutator {
+
+	protected IdentityMutator() {
+		mutatorType = MUTATOR_IDENTITY;
+	}
+
+	public void setMutationParam(Object[] params) {
+	}
+
+	protected void mutate(DNA dna, int strandIndex, int nucleotideIndex) {
+		org.concord.molbio.engine.Nucleotide n = dna.getStrand(strandIndex).getNucleotide(nucleotideIndex);
+		notifyMutationListeners(new MutationEvent(this, strandIndex, nucleotideIndex, n, n));
+	}
+
+	protected void mutate(Strand strand, int nucleotideIndex) {
+		org.concord.molbio.engine.Nucleotide n = strand.getNucleotide(nucleotideIndex);
+		notifyMutationListeners(new MutationEvent(this, nucleotideIndex, n, n));
+	}
 }

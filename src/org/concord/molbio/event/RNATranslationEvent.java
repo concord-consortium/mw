@@ -26,40 +26,72 @@ import java.awt.Rectangle;
 import org.concord.molbio.engine.Aminoacid;
 import org.concord.molbio.engine.Codon;
 
-public class RNATranslationEvent extends EventObject{
-Point       where;
-Rectangle   ribosomeRect;
-int         mode = RNATranslationListener.MODE_UNKNOWN;
-Aminoacid   aminoacid;
-boolean     consumed;
-Codon       codon;
-    public RNATranslationEvent(Object src,Aminoacid aminoacid,Codon codon,Point where,Rectangle ribosomeRect,int mode){
-        super(src);
-        this.where = where;
-        this.ribosomeRect = ribosomeRect;
-        this.mode = mode;
-        this.aminoacid = aminoacid;
-        this.codon = codon;
-        consumed = false;
-    }
-    
-    public Point getWhere(){return where;}
-    public Rectangle getRibosomeRect(){return ribosomeRect;}
-    public int   getMode(){return mode;}
-    public Aminoacid   getAminoacid(){
-        return aminoacid;
-    }
+public class RNATranslationEvent extends EventObject {
 
-    public Codon   getCodon(){
-        return codon;
-    }
+	private Point where;
+	private Rectangle ribosomeRect;
+	private int mode = RNATranslationListener.MODE_UNKNOWN;
+	private Aminoacid aminoacid;
+	private boolean consumed;
+	private Codon codon;
 
-    public void     setRibosomeRect(Rectangle ribosomeRect){this.ribosomeRect = ribosomeRect;}
-    public void     setWhere(Point where){this.where = where;}
-    public void     setMode(int mode){this.mode = mode;}
-    public void     setAminoacid(Aminoacid aminoacid){this.aminoacid = aminoacid;}
-    public void     setCodon(Codon codon){this.codon = codon;}
-    
-    public boolean  isConsumed(){return consumed;}
-    public void     setConsumed(boolean consumed){this.consumed = consumed;}
+	public RNATranslationEvent(Object src, Aminoacid aminoacid, Codon codon, Point where, Rectangle ribosomeRect,
+			int mode) {
+		super(src);
+		this.where = where;
+		this.ribosomeRect = ribosomeRect;
+		this.mode = mode;
+		this.aminoacid = aminoacid;
+		this.codon = codon;
+		consumed = false;
+	}
+
+	public Point getWhere() {
+		return where;
+	}
+
+	public Rectangle getRibosomeRect() {
+		return ribosomeRect;
+	}
+
+	public int getMode() {
+		return mode;
+	}
+
+	public Aminoacid getAminoacid() {
+		return aminoacid;
+	}
+
+	public Codon getCodon() {
+		return codon;
+	}
+
+	public void setRibosomeRect(Rectangle ribosomeRect) {
+		this.ribosomeRect = ribosomeRect;
+	}
+
+	public void setWhere(Point where) {
+		this.where = where;
+	}
+
+	public void setMode(int mode) {
+		this.mode = mode;
+	}
+
+	public void setAminoacid(Aminoacid aminoacid) {
+		this.aminoacid = aminoacid;
+	}
+
+	public void setCodon(Codon codon) {
+		this.codon = codon;
+	}
+
+	public boolean isConsumed() {
+		return consumed;
+	}
+
+	public void setConsumed(boolean consumed) {
+		this.consumed = consumed;
+	}
+
 }

@@ -23,38 +23,39 @@ package org.concord.molbio.event;
 import java.util.EventObject;
 import org.concord.molbio.engine.Nucleotide;
 
-public class MutationEvent extends EventObject{
-int strandIndex;
-int nucleotideIndex;
-Nucleotide oldNucleotide;
-Nucleotide newNucleotide;
+public class MutationEvent extends EventObject {
 
-    public MutationEvent(Object source,int strandIndex,int nucleotideIndex,Nucleotide oldNucleotide,Nucleotide newNucleotide){
-        super(source);
-        this.strandIndex = strandIndex;
-        this.nucleotideIndex = nucleotideIndex;
-        this.oldNucleotide = oldNucleotide;
-        this.newNucleotide = newNucleotide;
-    }   
-     
-    public MutationEvent(Object source,int nucleotideIndex,Nucleotide oldNucleotide,Nucleotide newNucleotide){
-        this(source,0,nucleotideIndex,oldNucleotide,newNucleotide);
-    }   
-     
-    public int getNucleotideIndex(){
-        return nucleotideIndex;
-    }
-    
-    public int getStrandIndex(){
-        return strandIndex;
-    }
-    
-    public Nucleotide getOldNucleotide(){
-        return oldNucleotide;
-    }
-    
-    public Nucleotide getNewNucleotide(){
-        return newNucleotide;
-    }
+	private int strandIndex;
+	private int nucleotideIndex;
+	private Nucleotide oldNucleotide;
+	private Nucleotide newNucleotide;
+
+	public MutationEvent(Object source, int strandIndex, int nucleotideIndex, Nucleotide oldNucleotide,
+			Nucleotide newNucleotide) {
+		super(source);
+		this.strandIndex = strandIndex;
+		this.nucleotideIndex = nucleotideIndex;
+		this.oldNucleotide = oldNucleotide;
+		this.newNucleotide = newNucleotide;
+	}
+
+	public MutationEvent(Object source, int nucleotideIndex, Nucleotide oldNucleotide, Nucleotide newNucleotide) {
+		this(source, 0, nucleotideIndex, oldNucleotide, newNucleotide);
+	}
+
+	public int getNucleotideIndex() {
+		return nucleotideIndex;
+	}
+
+	public int getStrandIndex() {
+		return strandIndex;
+	}
+
+	public Nucleotide getOldNucleotide() {
+		return oldNucleotide;
+	}
+
+	public Nucleotide getNewNucleotide() {
+		return newNucleotide;
+	}
 }
-

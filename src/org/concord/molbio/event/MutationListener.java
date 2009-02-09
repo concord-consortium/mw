@@ -20,7 +20,8 @@
 
 package org.concord.molbio.event;
 
-public interface MutationListener{
-    void mutationOccurred(MutationEvent evt);
-}
+public interface MutationListener {
 
+	void mutationOccurred(MutationEvent evt);
+
+}

@@ -21,8 +21,9 @@
 package org.concord.molbio.engine;
 
 public final class MutatorRandomizer {
-	double[] params = new double[Mutator.NUMB_POSSIBLE_MUTATORS];
-	double[] limits = new double[Mutator.NUMB_POSSIBLE_MUTATORS + 1];
+
+	private double[] params = new double[Mutator.NUMB_POSSIBLE_MUTATORS];
+	private double[] limits = new double[Mutator.NUMB_POSSIBLE_MUTATORS + 1];
 
 	public MutatorRandomizer(int ident, int subst, int insert, int delet) {
 		params[0] = ident;
@@ -59,10 +60,6 @@ public final class MutatorRandomizer {
 		if (n == Mutator.MUTATOR_INSERTION)
 			return Mutator.MUTATOR_INSERTION;
 		return Mutator.MUTATOR_UNKNOWN;
-	}
-
-	public void printParams() {
-		System.out.println("" + params[0] + " " + params[1] + " " + params[2] + " " + params[3]);
 	}
 
 }
