@@ -33,7 +33,7 @@ import org.concord.modeler.process.Executable;
 import org.concord.modeler.util.SwingWorker;
 import org.concord.mw2d.ModelAction;
 
-class ResetProteinAction extends ModelAction {
+class GenerateProteinAction extends ModelAction {
 
 	private MolecularModel model;
 	private int k;
@@ -42,7 +42,7 @@ class ResetProteinAction extends ModelAction {
 	private WalkGenerator walkGenerator;
 	private Walk walk;
 
-	ResetProteinAction(MolecularModel m) {
+	GenerateProteinAction(MolecularModel m) {
 
 		super(m);
 		model = m;
@@ -94,9 +94,9 @@ class ResetProteinAction extends ModelAction {
 				break;
 			}
 		}
-		for (int i = 0, na = model.atom.length; i < na; i++) {
-			if (model.atom[i].isAminoAcid())
-				model.atom[i].setRestraint(null);
+		for (Atom a : model.atom) {
+			if (a.isAminoAcid())
+				a.setRestraint(null);
 		}
 
 		/* reset solvent */
@@ -128,10 +128,13 @@ class ResetProteinAction extends ModelAction {
 					dx = model.atom[n - 1].rx - p[m].x;
 					dy = model.atom[n - 1].ry - p[m].y;
 					sq = dx * dx + dy * dy;
-					dij = (model.atom[n - 1].getSigma() + model.atom[n].getSigma()) * 0.6;
+					dij = (model.atom[n - 1].getSigma() + model.atom[n].getSigma())
+							* RadialBond.PEPTIDE_BOND_LENGTH_PARAMETER;
 					if (sq >= dij * dij) {
 						model.atom[n].setRx(p[m].x);
 						model.atom[n].setRy(p[m].y);
+						RadialBond rb = model.bonds.getBond(model.atom[n], model.atom[n - 1]);
+						rb.setBondLength(dij);
 						n++;
 						if (n >= k)
 							break;

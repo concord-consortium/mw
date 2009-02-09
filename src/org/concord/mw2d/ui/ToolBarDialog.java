@@ -303,6 +303,7 @@ class ToolBarDialog extends JDialog {
 					else if (e.getStateChange() == ItemEvent.DESELECTED) {
 						container.removeToolBarButton(button);
 					}
+					container.getToolBar().validate();
 				}
 			});
 			buttonList.add(c);

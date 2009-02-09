@@ -470,7 +470,7 @@ public class MolecularModel extends AtomicModel {
 
 		Action a = new SolventTypeAction(this);
 		choiceMap.put(a.toString(), a);
-		a = new ResetProteinAction(this);
+		a = new GenerateProteinAction(this);
 		actionMap.put(a.toString(), a);
 
 	}
