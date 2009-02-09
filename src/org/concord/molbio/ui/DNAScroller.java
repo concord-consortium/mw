@@ -92,6 +92,12 @@ import org.concord.molbio.engine.Nucleotide;
 import org.concord.molbio.engine.Protein;
 import org.concord.molbio.event.MutationListener;
 
+import static org.concord.molbio.engine.Nucleotide.A_COLOR;
+import static org.concord.molbio.engine.Nucleotide.C_COLOR;
+import static org.concord.molbio.engine.Nucleotide.G_COLOR;
+import static org.concord.molbio.engine.Nucleotide.T_COLOR;
+import static org.concord.molbio.engine.Nucleotide.U_COLOR;
+
 /**
  * Colors:
  * 
@@ -118,12 +124,6 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 	private static final byte M_INSERTION_RANDOM = 9;
 	private static final byte M_DELETION = 10;
 	private static final byte M_MIXED = 11;
-
-	private static final Color A_COLOR = Nucleotide.A_COLOR;
-	private static final Color T_COLOR = Nucleotide.T_COLOR;
-	private static final Color U_COLOR = Nucleotide.U_COLOR;
-	private static final Color G_COLOR = Nucleotide.G_COLOR;
-	private static final Color C_COLOR = Nucleotide.C_COLOR;
 
 	private static final int DEFAULT_CODON_DISTANCE = 2;
 	static final int DEFAULT_CURRENT_BASE_OFFSETY = 5;
@@ -1223,10 +1223,10 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 			return;
 		poly.translate(r.x, r.y);
 		if (currentBaseBoolean && highlightCurrentBase()) {
-			g.setColor((forceColor == null) ? getRectColor(n) : forceColor);
+			g.setColor((forceColor == null) ? getCodonColor(n, colorScheme) : forceColor);
 		}
 		else {
-			g.setColor((forceColor == null) ? getRectColor(n) : forceColor);
+			g.setColor((forceColor == null) ? getCodonColor(n, colorScheme) : forceColor);
 		}
 		g.fillPolygon(poly);
 		g.setColor(Color.black);
@@ -1967,44 +1967,50 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 		else super.setBorder(BorderFactory.createCompoundBorder(border, emptyBorder));
 	}
 
-	Color getRectColor(char n) {
-		switch (n) {
-		case 'A':
-		case 'a':
-			return A_COLOR;
-		case 'U':
-		case 'u':
-			return U_COLOR;
-		case 'G':
-		case 'g':
-			return G_COLOR;
-		case 'T':
-		case 't':
-			return T_COLOR;
-		case 'C':
-		case 'c':
-			return C_COLOR;
-		}
-		return Color.white;
+	private String colorScheme;
+
+	public void setColorScheme(String s) {
+		colorScheme = s;
 	}
 
-	public static Color getCodonColor(char n) {
-		switch (n) {
-		case 'A':
-		case 'a':
-			return A_COLOR;
-		case 'U':
-		case 'u':
-			return U_COLOR;
-		case 'G':
-		case 'g':
-			return G_COLOR;
-		case 'T':
-		case 't':
-			return T_COLOR;
-		case 'C':
-		case 'c':
-			return C_COLOR;
+	public static Color getCodonColor(char n, String scheme) {
+		if ("Lego".equals(scheme)) {
+			switch (n) {
+			case 'A':
+			case 'a':
+				return new Color(0xf5cd2f);
+			case 'U':
+			case 'u':
+				return new Color(0xCD9B9B);
+			case 'G':
+			case 'g':
+				return new Color(0x4098d7);
+			case 'T':
+			case 't':
+				return new Color(0xe64638);
+			case 'C':
+			case 'c':
+				return new Color(0x37ae60);
+			}
+		}
+		else {
+			switch (n) {
+			case 'A':
+			case 'a':
+				return A_COLOR;
+			case 'U':
+			case 'u':
+				return U_COLOR;
+			case 'G':
+			case 'g':
+				return G_COLOR;
+			case 'T':
+			case 't':
+				return T_COLOR;
+			case 'C':
+			case 'c':
+				return C_COLOR;
+			}
 		}
 		return Color.white;
 	}

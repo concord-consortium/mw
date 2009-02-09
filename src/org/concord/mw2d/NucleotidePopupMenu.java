@@ -66,35 +66,30 @@ class NucleotidePopupMenu extends JPopupMenu {
 		ButtonGroup bg = new ButtonGroup();
 
 		miA = new JRadioButtonMenuItem("A");
-		miA.setBackground(DNAScroller.getCodonColor(Nucleotide.ADENINE_NAME));
 		miA.setToolTipText(Nucleotide.getAdenine().getFullName());
 		miA.addItemListener(itemListener);
 		add(miA);
 		bg.add(miA);
 
 		miC = new JRadioButtonMenuItem("C");
-		miC.setBackground(DNAScroller.getCodonColor(Nucleotide.CYTOSINE_NAME));
 		miC.setToolTipText(Nucleotide.getCytosine().getFullName());
 		miC.addItemListener(itemListener);
 		add(miC);
 		bg.add(miC);
 
 		miG = new JRadioButtonMenuItem("G");
-		miG.setBackground(DNAScroller.getCodonColor(Nucleotide.GUANINE_NAME));
 		miG.setToolTipText(Nucleotide.getGuanine().getFullName());
 		miG.addItemListener(itemListener);
 		add(miG);
 		bg.add(miG);
 
 		miT = new JRadioButtonMenuItem("T");
-		miT.setBackground(DNAScroller.getCodonColor(Nucleotide.THYMINE_NAME));
 		miT.setToolTipText(Nucleotide.getThymine().getFullName());
 		miT.addItemListener(itemListener);
 		add(miT);
 		bg.add(miT);
 
 		miU = new JRadioButtonMenuItem("U");
-		miU.setBackground(DNAScroller.getCodonColor(Nucleotide.URACIL_NAME));
 		miU.setToolTipText(Nucleotide.getUracil().getFullName());
 		miU.addItemListener(itemListener);
 		add(miU);
@@ -120,6 +115,12 @@ class NucleotidePopupMenu extends JPopupMenu {
 			miT.setSelected(true);
 		else if (s.equals("U"))
 			miU.setSelected(true);
+		s = ((AtomisticView) atom.getHostModel().getView()).getColorCoding();
+		miA.setBackground(DNAScroller.getCodonColor(Nucleotide.ADENINE_NAME, s));
+		miC.setBackground(DNAScroller.getCodonColor(Nucleotide.CYTOSINE_NAME, s));
+		miG.setBackground(DNAScroller.getCodonColor(Nucleotide.GUANINE_NAME, s));
+		miT.setBackground(DNAScroller.getCodonColor(Nucleotide.THYMINE_NAME, s));
+		miU.setBackground(DNAScroller.getCodonColor(Nucleotide.URACIL_NAME, s));
 		super.show(invoker, x, y);
 	}
 
