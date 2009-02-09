@@ -32,7 +32,7 @@ public class AminoAcidAdapter {
 	private final static Map<Byte, Aminoacid> ELEMENT_AMINO_ACID_MAP = new HashMap<Byte, Aminoacid>();
 
 	private final static byte[] ELEMENTS = { ID_GLY, ID_ALA, ID_VAL, ID_LEU, ID_ILE, ID_PHE, ID_PRO, ID_TRP, ID_MET,
-			ID_CYS, ID_ASN, ID_GLN, ID_SER, ID_THR, ID_TYR, ID_ASP, ID_GLU, ID_LYS, ID_ARG, ID_HIS };
+			ID_CYS, ID_TYR, ID_ASN, ID_GLN, ID_SER, ID_THR, ID_ASP, ID_GLU, ID_LYS, ID_ARG, ID_HIS };
 
 	static {
 		Aminoacid[] acid = Aminoacid.getAllAminoacids();

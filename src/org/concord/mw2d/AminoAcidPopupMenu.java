@@ -55,21 +55,6 @@ class AminoAcidPopupMenu extends JPopupMenu {
 		ButtonGroup bg = new ButtonGroup();
 		for (int i = 0; i < AMINO_ACID.length; i++) {
 			mi[i] = new JRadioButtonMenuItem(AMINO_ACID[i].getFullName() + " (" + AMINO_ACID[i].getLetter() + ")");
-			if (AMINO_ACID[i].getCharge() > 0) {
-				mi[i].setBackground(new Color(ColorManager.POSITIVE_CHARGE_COLOR));
-			}
-			else if (AMINO_ACID[i].getCharge() < 0) {
-				mi[i].setBackground(new Color(ColorManager.NEGATIVE_CHARGE_COLOR));
-			}
-			else {
-				mi[i].setBackground(new Color(ColorManager.NEUTRAL_CHARGE_COLOR));
-				if (AMINO_ACID[i].getHydrophobicity() > 0) {
-					mi[i].setBackground(new Color(ColorManager.HYDROPHOBIC_COLOR));
-				}
-				else {
-					mi[i].setBackground(new Color(ColorManager.HYDROPHILIC_COLOR));
-				}
-			}
 			final int ii = i;
 			mi[i].addItemListener(new ItemListener() {
 				public void itemStateChanged(ItemEvent e) {
@@ -127,13 +112,50 @@ class AminoAcidPopupMenu extends JPopupMenu {
 		if (code == null)
 			return;
 		Aminoacid a = Codon.expressFromDNA(code);
-		if (a == null)
-			return;
 		for (int i = 0; i < AMINO_ACID.length; i++) {
+			setBackgroundColor(i);
 			if (a == AMINO_ACID[i])
 				mi[i].setSelected(true);
 		}
 		super.show(invoker, x, y);
+	}
+
+	private void setBackgroundColor(int i) {
+		if (atom == null)
+			return;
+		String s = ((AtomisticView) atom.getHostModel().getView()).getColorCoding();
+		if ("Lego".equals(s)) {
+			if (AMINO_ACID[i].getCharge() > 0) {
+				mi[i].setBackground(new Color(ColorManager.LEGO_BASIC_COLOR));
+			}
+			else if (AMINO_ACID[i].getCharge() < 0) {
+				mi[i].setBackground(new Color(ColorManager.LEGO_ACID_COLOR));
+			}
+			else {
+				if (AMINO_ACID[i].getHydrophobicity() > 0) {
+					mi[i].setBackground(new Color(ColorManager.LEGO_HYDROPHOBIC_COLOR));
+				}
+				else {
+					mi[i].setBackground(new Color(ColorManager.LEGO_UNCHARGED_POLAR_COLOR));
+				}
+			}
+		}
+		else {
+			if (AMINO_ACID[i].getCharge() > 0) {
+				mi[i].setBackground(new Color(ColorManager.POSITIVE_CHARGE_COLOR));
+			}
+			else if (AMINO_ACID[i].getCharge() < 0) {
+				mi[i].setBackground(new Color(ColorManager.NEGATIVE_CHARGE_COLOR));
+			}
+			else {
+				if (AMINO_ACID[i].getHydrophobicity() > 0) {
+					mi[i].setBackground(new Color(ColorManager.HYDROPHOBIC_COLOR));
+				}
+				else {
+					mi[i].setBackground(new Color(ColorManager.HYDROPHILIC_COLOR));
+				}
+			}
+		}
 	}
 
 	public void setAtom(Atom a) {

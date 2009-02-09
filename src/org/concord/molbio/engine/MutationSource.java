@@ -19,10 +19,13 @@
  * END LICENSE */
 
 package org.concord.molbio.engine;
+
 import org.concord.molbio.event.MutationListener;
 
-public interface MutationSource{
-    void addMutationListener(MutationListener l);
-    void removeMutationListener(MutationListener l);
-}
+public interface MutationSource {
 
+	void addMutationListener(MutationListener l);
+
+	void removeMutationListener(MutationListener l);
+
+}

@@ -26,9 +26,9 @@ import org.concord.molbio.event.MutationListener;
 
 public class Strand {
 
-	Mutator[] mutators = new Mutator[Mutator.MUTATOR_MIXED + 1];
+	private Mutator[] mutators = new Mutator[Mutator.MUTATOR_MIXED + 1];
 	Vector<Nucleotide> bases = new Vector<Nucleotide>();
-	boolean mutatorWasCreated = false;
+	private boolean mutatorWasCreated = false;
 
 	public Strand() {
 		createDefaultMutators();
@@ -271,7 +271,7 @@ public class Strand {
 		return mutators[mutatorKind];
 	}
 
-	public void setMutationDirection(int direction) {
+	void setMutationDirection(int direction) {
 		if (direction == 0 || mutators == null)
 			return;
 		int dir = (direction < 0) ? -1 : 1;
@@ -281,7 +281,7 @@ public class Strand {
 		}
 	}
 
-	synchronized void createDefaultMutators() {
+	private synchronized void createDefaultMutators() {
 		if (mutatorWasCreated)
 			return;
 		mutators[Mutator.MUTATOR_IDENTITY] = MutatorFactory.getIdentityMutator();

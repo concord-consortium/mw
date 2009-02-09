@@ -20,7 +20,8 @@
 
 package org.concord.molbio.event;
 
-public interface DNAHistoryListener{
-    void historyChanged(DNAHistoryEvent evt);
-}
+public interface DNAHistoryListener {
 
+	void historyChanged(DNAHistoryEvent evt);
+
+}

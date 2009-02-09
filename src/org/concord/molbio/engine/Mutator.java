@@ -34,18 +34,14 @@ public abstract class Mutator implements MutationSource {
 	public final static int MUTATOR_DELETION = 2;
 	public final static int MUTATOR_INSERTION = 3;
 	public final static int MUTATOR_MIXED = 4;
-
 	public final static int NUMB_POSSIBLE_MUTATORS = 4;
 
 	int mutatorType = MUTATOR_UNKNOWN;
 	int fragmentLength = 1;
-	int mutationDirection = 1;
-	Vector<MutationListener> mutationListeners = new Vector<MutationListener>();
-
-	static Hashtable<Integer, Mutator> mutators = new Hashtable<Integer, Mutator>();
-	IdentityMutator identityMutator;
-
-	boolean eventNotificationEnabled = true;
+	private int mutationDirection = 1;
+	private Vector<MutationListener> mutationListeners = new Vector<MutationListener>();
+	private static Hashtable<Integer, Mutator> mutators = new Hashtable<Integer, Mutator>();
+	private boolean eventNotificationEnabled = true;
 
 	public final static Mutator getInstance(int mutatorType) {
 		Mutator mutator = mutators.get(mutatorType);

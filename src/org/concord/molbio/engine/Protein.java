@@ -24,7 +24,7 @@ import java.util.Vector;
 
 public class Protein {
 
-	Vector<Aminoacid> amino = new Vector<Aminoacid>();
+	private Vector<Aminoacid> amino = new Vector<Aminoacid>();
 
 	protected Protein() {
 	}

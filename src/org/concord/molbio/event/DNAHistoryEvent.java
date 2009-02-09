@@ -22,22 +22,21 @@ package org.concord.molbio.event;
 
 import java.util.EventObject;
 
-public class DNAHistoryEvent extends EventObject{
+public class DNAHistoryEvent extends EventObject {
 
-public static final int HISTORY_UNKNOWN_EVENT   = 0;
-public static final int HISTORY_MODIFIED_EVENT  = 1;
-public static final int HISTORY_CLEARED_EVENT   = 2;
+	public static final byte HISTORY_UNKNOWN_EVENT = 0;
+	public static final byte HISTORY_MODIFIED_EVENT = 1;
+	public static final byte HISTORY_CLEARED_EVENT = 2;
 
-int id = HISTORY_UNKNOWN_EVENT;
+	private int id = HISTORY_UNKNOWN_EVENT;
 
-    public DNAHistoryEvent(Object source,int id){
-        super(source);
-        this.id = id;
-    }   
-    
-    public int getID(){
-        return id;
-    }
-     
+	public DNAHistoryEvent(Object source, int id) {
+		super(source);
+		this.id = id;
+	}
+
+	public int getID() {
+		return id;
+	}
+
 }
-

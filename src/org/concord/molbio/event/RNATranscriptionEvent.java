@@ -22,23 +22,41 @@ package org.concord.molbio.event;
 
 import java.util.EventObject;
 
-public class RNATranscriptionEvent extends EventObject{
-int         mode = RNATranscriptionListener.MODE_UNKNOWN;
-int         baseIndex;
-boolean     consumed;
-    public RNATranscriptionEvent(Object src,int baseIndex,int mode){
-        super(src);
-        this.mode = mode;
-        this.baseIndex = baseIndex;
-        consumed = false;
-    }
-    
-    public int      getBaseIndex(){return baseIndex;}
-    public int      getMode(){return mode;}
+public class RNATranscriptionEvent extends EventObject {
 
-    public void     setBaseIndex(int baseIndex){this.baseIndex = baseIndex;}
-    public void     setMode(int mode){this.mode = mode;}
-    
-    public boolean  isConsumed(){return consumed;}
-    public void     setConsumed(boolean consumed){this.consumed = consumed;}
+	private int mode = RNATranscriptionListener.MODE_UNKNOWN;
+	private int baseIndex;
+	private boolean consumed;
+
+	public RNATranscriptionEvent(Object src, int baseIndex, int mode) {
+		super(src);
+		this.mode = mode;
+		this.baseIndex = baseIndex;
+		consumed = false;
+	}
+
+	public int getBaseIndex() {
+		return baseIndex;
+	}
+
+	public int getMode() {
+		return mode;
+	}
+
+	public void setBaseIndex(int baseIndex) {
+		this.baseIndex = baseIndex;
+	}
+
+	public void setMode(int mode) {
+		this.mode = mode;
+	}
+
+	public boolean isConsumed() {
+		return consumed;
+	}
+
+	public void setConsumed(boolean consumed) {
+		this.consumed = consumed;
+	}
+
 }

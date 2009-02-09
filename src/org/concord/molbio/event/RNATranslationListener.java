@@ -20,12 +20,14 @@
 
 package org.concord.molbio.event;
 
-public interface RNATranslationListener{
-    public static final int MODE_UNKNOWN                = 0;
-    public static final int MODE_TRANSLATION_START      = 1;
-    public static final int MODE_TRANSLATION_NEW_AMINO  = 2;
-    public static final int MODE_TRANSLATION_STOP       = 3;
-    public static final int MODE_TRANSLATION_END        = 4;
+public interface RNATranslationListener {
 
-    void aminoacidAdded(RNATranslationEvent evt);
+	public static final byte MODE_UNKNOWN = 0;
+	public static final byte MODE_TRANSLATION_START = 1;
+	public static final byte MODE_TRANSLATION_NEW_AMINO = 2;
+	public static final byte MODE_TRANSLATION_STOP = 3;
+	public static final byte MODE_TRANSLATION_END = 4;
+
+	void aminoacidAdded(RNATranslationEvent evt);
+
 }

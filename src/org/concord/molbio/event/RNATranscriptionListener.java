@@ -20,12 +20,13 @@
 
 package org.concord.molbio.event;
 
-public interface RNATranscriptionListener{
-    public static final int MODE_UNKNOWN                  = 0;
-    public static final int MODE_TRANSCRIPTION_START      = 1;
-    public static final int MODE_TRANSCRIPTION_BASE       = 2;
-    public static final int MODE_TRANSCRIPTION_STOP       = 3;
-    public static final int MODE_TRANSCRIPTION_END        = 4;
+public interface RNATranscriptionListener {
 
-    void baseTranscripted(RNATranscriptionEvent evt);
+	public static final byte MODE_UNKNOWN = 0;
+	public static final byte MODE_TRANSCRIPTION_START = 1;
+	public static final byte MODE_TRANSCRIPTION_BASE = 2;
+	public static final byte MODE_TRANSCRIPTION_STOP = 3;
+	public static final byte MODE_TRANSCRIPTION_END = 4;
+
+	void baseTranscripted(RNATranscriptionEvent evt);
 }
