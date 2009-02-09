@@ -37,8 +37,8 @@ class MagnifyGlassOp implements BufferedImageOp {
 
 	private BasicStroke stroke = new BasicStroke(4);
 
-	public final static int GLASS_AS_CIRCLE = 0;
-	public final static int GLASS_AS_RECTANGLE = 1;
+	public final static byte GLASS_AS_CIRCLE = 0;
+	public final static byte GLASS_AS_RECTANGLE = 1;
 
 	private int drawMode = GLASS_AS_CIRCLE;
 

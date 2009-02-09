@@ -31,15 +31,15 @@ import java.util.Vector;
 
 public class Aminoacid {
 
-	public static final int MWEIGHT_AMINO_PARAM = 0;
-	public static final int CHARGE_AMINO_PARAM = 1;
-	public static final int PHOB_RB_AMINO_PARAM = 2;
-	public static final int PK_AMINO_PARAM = 3;
-	public static final int SURFACE_AMINO_PARAM = 4;
-	public static final int VOLUME_AMINO_PARAM = 5;
-	public static final int SOLUBILITY_AMINO_PARAM = 6;
-	public static final int PHOB_AMINO_PARAM = 7;
-	public static final int NUMB_AMINO_PARAM = 8;
+	public static final byte MWEIGHT_AMINO_PARAM = 0;
+	public static final byte CHARGE_AMINO_PARAM = 1;
+	public static final byte PHOB_RB_AMINO_PARAM = 2;
+	public static final byte PK_AMINO_PARAM = 3;
+	public static final byte SURFACE_AMINO_PARAM = 4;
+	public static final byte VOLUME_AMINO_PARAM = 5;
+	public static final byte SOLUBILITY_AMINO_PARAM = 6;
+	public static final byte PHOB_AMINO_PARAM = 7;
+	public static final byte NUMB_AMINO_PARAM = 8;
 
 	private static Aminoacid[] allAminoacids;
 	private static AminoacidBundle bundle = new AminoacidBundle();

@@ -1106,9 +1106,8 @@ public class DNAScrollerWithRNA extends DNAScroller {
 	}
 
 	public DNAComparator getDNAComparator() {
-		if (dnaComparator == null) {
+		if (dnaComparator == null)
 			dnaComparator = new DNAComparator(getModel());
-		}
 		return dnaComparator;
 	}
 
@@ -1233,7 +1232,6 @@ public class DNAScrollerWithRNA extends DNAScroller {
 	/*
 	 * mutate dna with given percent of number of nucleotide to be mutated @param ratioToMutate how many nucleotides to
 	 * be mutated should be less than 1 and more that 0
-	 * 
 	 */
 	public void mutateWithSubstitution(float ratioToMutate) {
 		if (getModel() != null)
@@ -1244,7 +1242,6 @@ public class DNAScrollerWithRNA extends DNAScroller {
 	/*
 	 * mutate dna with given percent of number of nucleotide to be mutated @param ratioToMutate probability of
 	 * insertion/deletion for every transcription
-	 * 
 	 */
 	public void mutateWithDeletionInsertion(float ratioToMutate) {
 		if (getModel() != null)

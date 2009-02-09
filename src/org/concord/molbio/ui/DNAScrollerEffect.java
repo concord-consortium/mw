@@ -56,15 +56,15 @@ interface DNAScrollerEffect {
 
 class BeginTranscriptionEffect implements DNAScrollerEffect {
 
-	Thread effectThread;
-	DNAScrollerWithRNA owner;
-	int effectDelay = DEFAULT_EFFECT_TIME_DELAY;
-	int maximumStep = DEFAULT_EFFECT_MAX_STEP;
-	boolean effectDone = false;
-	int initialState;
-	int finalState;
-	int currentStep;
-	boolean effectForcedToEnd = false;
+	private Thread effectThread;
+	private DNAScrollerWithRNA owner;
+	private int effectDelay = DEFAULT_EFFECT_TIME_DELAY;
+	private int maximumStep = DEFAULT_EFFECT_MAX_STEP;
+	private boolean effectDone = false;
+	private int initialState;
+	private int finalState;
+	private int currentStep;
+	private boolean effectForcedToEnd = false;
 
 	BeginTranscriptionEffect(DNAScrollerWithRNA owner, int initialState, int finalState) {
 		this.owner = owner;
@@ -165,15 +165,15 @@ class BeginTranscriptionEffect implements DNAScrollerEffect {
 
 class EndTranscriptionEffect implements DNAScrollerEffect {
 
-	Thread effectThread;
-	DNAScrollerWithRNA owner;
-	int effectDelay = DEFAULT_EFFECT_TIME_DELAY;
-	int maximumStep = DEFAULT_EFFECT_MAX_STEP;
-	boolean effectDone = false;
-	int initialState;
-	int finalState;
-	int currentStep;
-	boolean effectForcedToEnd = false;
+	private Thread effectThread;
+	private DNAScrollerWithRNA owner;
+	private int effectDelay = DEFAULT_EFFECT_TIME_DELAY;
+	private int maximumStep = DEFAULT_EFFECT_MAX_STEP;
+	private boolean effectDone = false;
+	private int initialState;
+	private int finalState;
+	private int currentStep;
+	private boolean effectForcedToEnd = false;
 
 	EndTranscriptionEffect(DNAScrollerWithRNA owner, int initialState, int finalState) {
 		this.owner = owner;
