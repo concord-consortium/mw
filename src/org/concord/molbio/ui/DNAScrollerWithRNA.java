@@ -962,10 +962,10 @@ public class DNAScrollerWithRNA extends DNAScroller {
 			Color forceColor = null;
 			if (inPredefinedFragment(i + startIndex)) {
 				if (codonTranscripted.isCodonStart() || inPromoterInterestingPlace(i + startIndex)) {
-					forceColor = new Color(127, 127, 127, 127);
+					forceColor = Color.lightGray;
 				}
 				else {
-					forceColor = new Color(127, 127, 127, 127);
+					forceColor = Color.lightGray;
 				}
 			}
 			else if (colorSchemeByUsage)
@@ -1013,10 +1013,10 @@ public class DNAScrollerWithRNA extends DNAScroller {
 			Color forceColor = null;
 			if (inPredefinedFragment(i + startIndex)) {
 				if (codon.isCodonStart() || inPromoterInterestingPlace(i + startIndex)) {
-					forceColor = new Color(127, 127, 127, 127);
+					forceColor = Color.lightGray;
 				}
 				else {
-					forceColor = new Color(127, 127, 127, 127);
+					forceColor = Color.lightGray;
 				}
 			}
 			else if (colorSchemeByUsage)

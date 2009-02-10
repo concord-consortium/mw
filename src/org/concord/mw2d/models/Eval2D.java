@@ -3639,6 +3639,9 @@ class Eval2D extends AbstractEval {
 						storeDefinition(isStatic, var + "[" + i + "]", array[i] != null ? array[i] : "-1");
 					}
 				}
+				else {
+					storeDefinition(isStatic, var + ".length", "0");
+				}
 			}
 			else if (exp.startsWith("nearest(")) {
 				exp = evaluateNearestParticleFunction(exp);
