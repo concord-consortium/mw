@@ -38,6 +38,7 @@ import java.util.BitSet;
 import java.util.Collections;
 import java.util.EmptyStackException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -952,9 +953,7 @@ public abstract class AbstractEval {
 					double x = parseMathExpression(size);
 					if (Double.isNaN(x))
 						return;
-					int n = (int) Math.round(x);
-					for (int i = 0; i < n; i++)
-						definition.put(variable + "[" + i + "]", "0");
+					createArray(variable, (int) Math.round(x));
 				}
 				else {
 					evaluateDefineMathexClause(isStatic, variable, value);
@@ -963,16 +962,48 @@ public abstract class AbstractEval {
 		}
 	}
 
+	protected void createArray(String variable, int length) {
+		for (int i = 0; i < length; i++)
+			definition.put(variable + "[" + i + "]", "0");
+		definition.put(variable + ".length", "" + length);
+	}
+
+	public int getArraySize(String variable) {
+		String x = definition.get(variable + ".length");
+		if (x == null)
+			return 0;
+		return Integer.parseInt(x);
+	}
+
+	public void removeDefinition(String variable) {
+		definition.remove(variable);
+		String key = null;
+		for (Iterator<String> it = definition.keySet().iterator(); it.hasNext();) {
+			key = it.next();
+			if (key.startsWith(variable + "[") || key.equals(variable + ".length"))
+				it.remove();
+		}
+	}
+
 	public void storeDefinition(boolean isStatic, String variable, String value) {
 		int i1 = variable.indexOf("[");
 		if (i1 != -1) {
 			int i2 = variable.indexOf("]");
 			if (i2 != -1) {
+				int size = getArraySize(variable.substring(0, i1));
 				String index = variable.substring(i1 + 1, i2).trim();
+				int ix = 0;
 				String s = definition.get(index);
 				if (s != null) {
-					int ix = (int) Double.parseDouble(s);
+					ix = (int) Double.parseDouble(s);
 					variable = variable.substring(0, i1 + 1) + ix + variable.substring(i2);
+				}
+				else {
+					ix = (int) Double.parseDouble(index);
+				}
+				if (ix >= size) {
+					out(ScriptEvent.FAILED, "Array index out of bound (" + size + "): " + ix + " in " + variable);
+					return;
 				}
 			}
 		}

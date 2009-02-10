@@ -2143,6 +2143,58 @@ class Eval2D extends AbstractEval {
 		return dx * dx + dy * dy;
 	}
 
+	private String[] evaluateWithinFunction(final String clause) {
+		if (clause == null || clause.equals(""))
+			return null;
+		int i = clause.indexOf("(");
+		int j = clause.lastIndexOf(")");
+		if (i == -1 || j == -1) {
+			out(ScriptEvent.FAILED, "function must be enclosed within parenthesis: " + clause);
+			return null;
+		}
+		String s = clause.substring(i + 1, j);
+		String[] t = s.split(",");
+		int n = t.length;
+		if (n != 4) {
+			out(ScriptEvent.FAILED, "argument error: " + clause);
+			return null;
+		}
+		double z = 0;
+		float[] x = new float[3];
+		for (i = 1; i < 4; i++) {
+			z = parseMathExpression(t[i]);
+			if (Double.isNaN(z)) {
+				out(ScriptEvent.FAILED, "Cannot parse : " + t[i]);
+				return null;
+			}
+			x[i - 1] = (float) z * IR_CONVERTER;
+		}
+		if (t[0].trim().equalsIgnoreCase("RECTANGLE")) {
+			List<Integer> result = getRectanglesWithin(x[0], x[1], x[2]);
+			if (result == null || result.isEmpty())
+				return null;
+			t = new String[result.size()];
+			for (i = 0; i < t.length; i++)
+				t[i] = "" + result.get(i);
+			return t;
+		}
+		return null;
+	}
+
+	private List<Integer> getRectanglesWithin(float x, float y, float r) {
+		RectangleComponent[] rc = view.getRectangles();
+		if (rc == null || rc.length == 0)
+			return null;
+		List<Integer> list = new ArrayList<Integer>();
+		Rectangle2D.Float rect = new Rectangle2D.Float(x - r, y - r, 2 * r, 2 * r);
+		for (int i = 0; i < rc.length; i++) {
+			if (rc[i].getBounds().intersects(rect)) {
+				list.add(i);
+			}
+		}
+		return list;
+	}
+
 	private String evaluateNearestParticleFunction(final String clause) {
 		if (clause == null || clause.equals(""))
 			return null;
@@ -3577,6 +3629,16 @@ class Eval2D extends AbstractEval {
 			else if (exp.startsWith("count(")) {
 				exp = evaluateCountFunction(exp);
 				storeDefinition(isStatic, var, exp != null ? exp : "0");
+			}
+			else if (exp.startsWith("within(")) {
+				removeDefinition(var);
+				String[] array = evaluateWithinFunction(exp);
+				if (array != null) {
+					createArray(var, array.length);
+					for (int i = 0; i < array.length; i++) {
+						storeDefinition(isStatic, var + "[" + i + "]", array[i] != null ? array[i] : "-1");
+					}
+				}
 			}
 			else if (exp.startsWith("nearest(")) {
 				exp = evaluateNearestParticleFunction(exp);
