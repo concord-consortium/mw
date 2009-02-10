@@ -2169,16 +2169,41 @@ class Eval2D extends AbstractEval {
 			}
 			x[i - 1] = (float) z * IR_CONVERTER;
 		}
-		if (t[0].trim().equalsIgnoreCase("RECTANGLE")) {
-			List<Integer> result = getRectanglesWithin(x[0], x[1], x[2]);
-			if (result == null || result.isEmpty())
-				return null;
-			t = new String[result.size()];
-			for (i = 0; i < t.length; i++)
-				t[i] = "" + result.get(i);
-			return t;
+		t[0] = t[0].trim();
+		List<Integer> result = null;
+		if (t[0].equalsIgnoreCase("PARTICLE")) {
+			result = getParticlesWithin(x[0], x[1], x[2]);
 		}
-		return null;
+		else if (t[0].equalsIgnoreCase("RECTANGLE")) {
+			result = getRectanglesWithin(x[0], x[1], x[2]);
+		}
+		else if (t[0].equalsIgnoreCase("TRIANGLE")) {
+			result = getTrianglesWithin(x[0], x[1], x[2]);
+		}
+		if (result == null || result.isEmpty())
+			return null;
+		t = new String[result.size()];
+		for (i = 0; i < t.length; i++)
+			t[i] = "" + result.get(i);
+		return t;
+	}
+
+	private List<Integer> getParticlesWithin(float x, float y, float r) {
+		int n = model.getNumberOfParticles();
+		if (n == 0)
+			return null;
+		List<Integer> list = new ArrayList<Integer>();
+		Particle p = null;
+		double dx, dy;
+		for (int i = 0; i < n; i++) {
+			p = model.getParticle(i);
+			dx = p.getRx() - x;
+			dy = p.getRy() - y;
+			if (dx * dx + dy * dy < r * r) {
+				list.add(i);
+			}
+		}
+		return list;
 	}
 
 	private List<Integer> getRectanglesWithin(float x, float y, float r) {
@@ -2189,6 +2214,20 @@ class Eval2D extends AbstractEval {
 		Rectangle2D.Float rect = new Rectangle2D.Float(x - r, y - r, 2 * r, 2 * r);
 		for (int i = 0; i < rc.length; i++) {
 			if (rc[i].getBounds().intersects(rect)) {
+				list.add(i);
+			}
+		}
+		return list;
+	}
+
+	private List<Integer> getTrianglesWithin(float x, float y, float r) {
+		TriangleComponent[] tc = view.getTriangles();
+		if (tc == null || tc.length == 0)
+			return null;
+		List<Integer> list = new ArrayList<Integer>();
+		Rectangle2D.Float rect = new Rectangle2D.Float(x - r, y - r, 2 * r, 2 * r);
+		for (int i = 0; i < tc.length; i++) {
+			if (tc[i].getShape().intersects(rect)) {
 				list.add(i);
 			}
 		}
