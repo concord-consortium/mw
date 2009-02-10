@@ -158,7 +158,8 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 
 	Color disableColor = Color.lightGray;
 	Color stopCodonColor = Color.red;
-	Color[] codonColors = new Color[] { Color.black, Color.darkGray };
+	// do not use color to differentiate triplets
+	final Color[] codonColors = new Color[] { Color.black, Color.black };
 
 	private DNA needSetDNA;
 	private boolean wasFirstPainting;
