@@ -1788,8 +1788,12 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 					if (m instanceof AtomContainer) {
 						String dnaString = ((AtomContainer) m).getDNAString();
 						((AtomContainer) m).enableDNAScroller(dnaString != null);
-						if (dnaString == null)
+						if (dnaString == null) {
 							m.enableRecorder(!m.getModel().getRecorderDisabled());
+						}
+						else {
+							((AtomContainer) m).setDNAScrollerColorScheme();
+						}
 					}
 					else {
 						m.enableRecorder(!m.getModel().getRecorderDisabled());
