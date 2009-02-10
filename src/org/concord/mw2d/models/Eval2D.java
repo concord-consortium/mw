@@ -2171,7 +2171,7 @@ class Eval2D extends AbstractEval {
 		}
 		t[0] = t[0].trim();
 		List<Integer> result = null;
-		if (t[0].equalsIgnoreCase("PARTICLE")) {
+		if (t[0].equalsIgnoreCase("PARTICLE") || t[0].equalsIgnoreCase("ATOM")) {
 			result = getParticlesWithin(x[0], x[1], x[2]);
 		}
 		else if (t[0].equalsIgnoreCase("RECTANGLE")) {
