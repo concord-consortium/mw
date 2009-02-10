@@ -24,6 +24,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JComboBox;
 
+import org.concord.mw2d.ui.AtomContainer;
+
 class ShowPropertiesAction extends AbstractAction {
 
 	private AtomisticView view;
@@ -78,6 +80,10 @@ class ShowPropertiesAction extends AbstractAction {
 				view.setColorCoding(s);
 				if (view.getUseJmol())
 					view.refreshJmol();
+				if (view.getParent() instanceof AtomContainer) {
+					AtomContainer ac = (AtomContainer) view.getParent();
+					ac.setDNAScrollerColorScheme();
+				}
 				view.repaint();
 				view.model.notifyChange();
 			}

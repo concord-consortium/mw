@@ -1223,10 +1223,10 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 			return;
 		poly.translate(r.x, r.y);
 		if (currentBaseBoolean && highlightCurrentBase()) {
-			g.setColor((forceColor == null) ? getCodonColor(n, colorScheme) : forceColor);
+			g.setColor(forceColor == null ? getCodonColor(n, codonColorScheme) : forceColor);
 		}
 		else {
-			g.setColor((forceColor == null) ? getCodonColor(n, colorScheme) : forceColor);
+			g.setColor(forceColor == null ? getCodonColor(n, codonColorScheme) : forceColor);
 		}
 		g.fillPolygon(poly);
 		g.setColor(Color.black);
@@ -1967,10 +1967,10 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 		else super.setBorder(BorderFactory.createCompoundBorder(border, emptyBorder));
 	}
 
-	private String colorScheme;
+	private String codonColorScheme;
 
 	public void setColorScheme(String s) {
-		colorScheme = s;
+		codonColorScheme = s;
 	}
 
 	public static Color getCodonColor(char n, String scheme) {

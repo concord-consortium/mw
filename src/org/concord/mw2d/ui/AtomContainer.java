@@ -439,6 +439,13 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 		return view;
 	}
 
+	public void setDNAScrollerColorScheme() {
+		if (dnaScroller != null) {
+			dnaScroller.setColorScheme(view.getColorCoding());
+			dnaScroller.repaint();
+		}
+	}
+
 	public MDModel getModel() {
 		return model;
 	}
@@ -567,10 +574,6 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 
 	public void setDNAString(String s) {
 		dnaString = s;
-		if (dnaScroller != null) {
-			dnaScroller.setColorScheme(view.getColorCoding());
-			dnaScroller.repaint();
-		}
 	}
 
 	public String getDNAString() {

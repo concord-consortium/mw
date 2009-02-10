@@ -40,10 +40,6 @@ import static org.concord.mw2d.models.Element.*;
 
 public class MolecularModel extends AtomicModel {
 
-	final static short SHOW_NONE = 3101;
-	final static short SHOW_CHARGE = 3102;
-	final static short SHOW_HYDROPHOBICITY = 3103;
-
 	RadialBondCollection bonds;
 	AngularBondCollection bends;
 	MoleculeCollection molecules;
