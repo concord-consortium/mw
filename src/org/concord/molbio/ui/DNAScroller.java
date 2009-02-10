@@ -1981,7 +1981,7 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 				return new Color(0xf5cd2f);
 			case 'U':
 			case 'u':
-				return new Color(0xCD9B9B);
+				return new Color(0x97694F);
 			case 'G':
 			case 'g':
 				return new Color(0x4098d7);
