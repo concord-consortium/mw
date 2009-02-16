@@ -2354,13 +2354,17 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		editor.addDisabledComponentWhileLoading(menu);
 
 		s = getInternationalText("UserManual");
-		menuItem = new JMenuItem(s != null ? s : "Open Online User's Manual in Current Window");
+		menuItem = new JMenuItem(s != null ? s : "Open Online User's Manual");
 		menuItem.setMnemonic(KeyEvent.VK_O);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0, true));
 		menuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				openWithNewInstance(navigator.getHomeDirectory() + "tutorial/index.cml");
-				// navigator.visitLocation(navigator.getHomeDirectory() + "tutorial/index.cml");
+				if (e.getModifiers() > 0) {
+					navigator.visitLocation(navigator.getHomeDirectory() + "tutorial/index.cml");
+				}
+				else {
+					openWithNewInstance(navigator.getHomeDirectory() + "tutorial/index.cml");
+				}
 			}
 		});
 		menu.add(menuItem);
