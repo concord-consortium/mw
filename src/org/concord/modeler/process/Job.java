@@ -348,6 +348,10 @@ public abstract class Job implements Runnable {
 		}
 	}
 
+	public void setInitTaskAction(Runnable r) {
+		jobTable.setInitTaskAction(r);
+	}
+
 	public void show(final Component owner) {
 		if (EventQueue.isDispatchThread()) {
 			jobTable.show(owner);

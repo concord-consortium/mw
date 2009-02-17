@@ -106,6 +106,8 @@ abstract class ModelProperties extends JDialog {
 
 	abstract void confirm();
 
+	abstract void selectInitializationScriptTab();
+
 	public abstract void setModel(MDModel m);
 
 }
