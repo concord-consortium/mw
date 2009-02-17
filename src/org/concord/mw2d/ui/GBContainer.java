@@ -264,7 +264,6 @@ public class GBContainer extends MDContainer {
 			s = getInternationalText("ShowActionTip");
 			JMenuItem menuItem = new JCheckBoxMenuItem(s != null ? s : "Show Action Tip");
 			menuItem.setMnemonic(KeyEvent.VK_A);
-			menuItem.setSelected(true);
 			menuItem.addItemListener(new ItemListener() {
 				public void itemStateChanged(ItemEvent e) {
 					view.setActionTipEnabled(e.getStateChange() == ItemEvent.SELECTED);

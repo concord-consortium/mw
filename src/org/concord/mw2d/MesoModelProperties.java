@@ -61,6 +61,7 @@ class MesoModelProperties extends ModelProperties {
 	private MesoModel model;
 	private JTextArea scriptArea;
 	private RealNumberTextField widthField, heightField, viscosityField, stepField;
+	private JPanel scriptPanel;
 
 	public MesoModelProperties(Frame owner) {
 		super(owner);
@@ -91,6 +92,10 @@ class MesoModelProperties extends ModelProperties {
 
 	public void setModel(MDModel m) {
 		setModel2((MesoModel) m);
+	}
+
+	void selectInitializationScriptTab() {
+		tabbedPane.setSelectedComponent(scriptPanel);
 	}
 
 	private void setModel2(MesoModel m) {
@@ -312,14 +317,14 @@ class MesoModelProperties extends ModelProperties {
 
 		/* script */
 
-		panel = new JPanel(new BorderLayout(5, 5));
-		panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory
+		scriptPanel = new JPanel(new BorderLayout(5, 5));
+		scriptPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory
 				.createEmptyBorder(8, 8, 8, 8)));
 		s = MDView.getInternationalText("ScriptTab");
-		tabbedPane.add(s != null ? s : "Script", panel);
+		tabbedPane.add(s != null ? s : "Script", scriptPanel);
 
 		p = new JPanel(new BorderLayout(10, 10));
-		p.setPreferredSize(new Dimension(300, 150));
+		p.setPreferredSize(new Dimension(400, 150));
 		s = MDView.getInternationalText("ScriptToRunAfterLoadingModelLabel");
 		p.setBorder(new TitledBorder(BorderFactory.createEtchedBorder(), s != null ? s
 				: "Script to run right after loading page", 0, 0));
@@ -338,7 +343,7 @@ class MesoModelProperties extends ModelProperties {
 										+ ":</b><br>(a) These scripts won't run if the model is not loaded via page loading.<br>(b) Long-running scripts can interfer with authoring.<br>(c) Don't use motion scripts if the model won't be seen upon loading.</font></body></html>"),
 						BorderLayout.SOUTH);
 
-		panel.add(p, BorderLayout.CENTER);
+		scriptPanel.add(p, BorderLayout.CENTER);
 
 		pack();
 

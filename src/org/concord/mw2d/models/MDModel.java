@@ -1491,6 +1491,11 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 				}
 
 			};
+			job.setInitTaskAction(new Runnable() {
+				public void run() {
+					getView().getActionMap().get("Properties").actionPerformed(null);
+				}
+			});
 		}
 		if (!recorderDeactivated && !job.contains(movieUpdater))
 			job.add(movieUpdater);

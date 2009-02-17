@@ -66,6 +66,7 @@ class JobTable {
 	private Job job;
 	private TaskCreator taskCreator;
 	private JButton removeTaskButton, editTaskButton;
+	private Runnable initTaskAction;
 
 	JobTable(Job job) {
 		this.job = job;
@@ -94,6 +95,10 @@ class JobTable {
 			t = null;
 		}
 		return t;
+	}
+
+	void setInitTaskAction(Runnable r) {
+		initTaskAction = r;
 	}
 
 	/* create a dialog box showing the subtasks */
@@ -166,7 +171,7 @@ class JobTable {
 
 		JPanel panel = new JPanel(new BorderLayout(0, 10));
 		panel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
-		panel.setPreferredSize(new Dimension(450, 320));
+		panel.setPreferredSize(new Dimension(600, 320));
 		dialog.setContentPane(panel);
 
 		Vector<String> columnNames = new Vector<String>();
@@ -262,7 +267,7 @@ class JobTable {
 		});
 
 		table.getColumnModel().getColumn(0).setMaxWidth(24);
-		table.getColumnModel().getColumn(1).setMinWidth(160);
+		table.getColumnModel().getColumn(1).setMinWidth(300);
 		table.setShowGrid(false);
 		table.setRowHeight(24);
 		table.setRowMargin(2);
@@ -270,12 +275,12 @@ class JobTable {
 		table.setBackground(Color.white);
 
 		JScrollPane scroll = new JScrollPane(table);
-		scroll.setPreferredSize(new Dimension(300, 150));
+		scroll.setPreferredSize(new Dimension(400, 150));
 		scroll.getViewport().setBackground(Color.white);
 
 		JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		splitPane.setTopComponent(scroll);
-		splitPane.setPreferredSize(new Dimension(300, 230));
+		splitPane.setPreferredSize(new Dimension(400, 230));
 		splitPane.setOneTouchExpandable(true);
 
 		panel.add(splitPane, BorderLayout.NORTH);
@@ -306,6 +311,16 @@ class JobTable {
 		p.add(p1, BorderLayout.SOUTH);
 
 		JButton button;
+
+		s = getInternationalText("InitializationTask");
+		button = new JButton(s != null ? s : "Initialization Task");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (initTaskAction != null)
+					initTaskAction.run();
+			}
+		});
+		p1.add(button);
 
 		s = getInternationalText("AddTask");
 		button = new JButton(s != null ? s : "Add Task");

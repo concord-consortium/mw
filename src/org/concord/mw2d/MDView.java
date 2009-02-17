@@ -221,7 +221,7 @@ public abstract class MDView extends PrintableComponent {
 	private String colorCoding = "None";
 	private boolean energizerOn;
 	private JComponent toolBar;
-	private boolean actionTipEnabled = true;
+	private boolean actionTipEnabled;
 	private final Object updateLock = new Object();
 
 	public MDView() {
@@ -502,6 +502,8 @@ public abstract class MDView extends PrintableComponent {
 					}
 				}
 				modelProp.setModel(getModel());
+				if (e == null)
+					modelProp.selectInitializationScriptTab();
 				modelProp.setLocationRelativeTo(MDView.this);
 				modelProp.setVisible(true);
 			}

@@ -78,6 +78,7 @@ class MolecularModelProperties extends ModelProperties {
 	private JCheckBox ljCheckBox;
 	private JCheckBox interCoulombCheckBox;
 	private static BoundarySetup boundarySetup;
+	private JPanel scriptPanel;
 
 	public MolecularModelProperties(Frame owner) {
 		super(owner);
@@ -123,6 +124,10 @@ class MolecularModelProperties extends ModelProperties {
 		else {
 			setModel2((MolecularModel) m);
 		}
+	}
+
+	void selectInitializationScriptTab() {
+		tabbedPane.setSelectedComponent(scriptPanel);
 	}
 
 	private void setModel2(ReactionModel m) {
@@ -475,18 +480,18 @@ class MolecularModelProperties extends ModelProperties {
 
 		/* script */
 
-		panel = new JPanel(new BorderLayout(2, 2));
-		panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory
+		scriptPanel = new JPanel(new BorderLayout(2, 2));
+		scriptPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory
 				.createEmptyBorder(8, 8, 8, 8)));
 		s = MDView.getInternationalText("ScriptTab");
-		tabbedPane.add(s != null ? s : "Script", panel);
+		tabbedPane.add(s != null ? s : "Script", scriptPanel);
 
 		p = new JPanel(new BorderLayout(10, 10));
 		p.setPreferredSize(new Dimension(360, 200));
 		s = MDView.getInternationalText("ScriptToRunAfterLoadingModelLabel");
 		p.setBorder(new TitledBorder(BorderFactory.createEtchedBorder(), s != null ? s
 				: "Script to run right after loading page", 0, 0));
-		panel.add(p, BorderLayout.CENTER);
+		scriptPanel.add(p, BorderLayout.CENTER);
 
 		scriptArea = new PastableTextArea(model.getInitializationScript());
 		JScrollPane scrollPane = new JScrollPane(scriptArea);
