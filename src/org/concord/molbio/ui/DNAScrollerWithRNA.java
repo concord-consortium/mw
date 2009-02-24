@@ -726,7 +726,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 				super.createMagnifyGlassOp();
 			}
 			else {
-				op = new MagnifyGlassOp(1f, xop, yop, (charw + 2 * getCodonDistance()), rh,
+				op = new MagnifyGlassOp(1f, xop, yop, charw + 2 * getCodonDistance(), rh,
 						MagnifyGlassOp.GLASS_AS_RECTANGLE);
 			}
 		}
@@ -755,8 +755,8 @@ public class DNAScrollerWithRNA extends DNAScroller {
 
 		float xop = getLeftOffset() + (model.getCurrIndex() - model.getStartWindowIndex()) * getCodonWidth() / 3
 				+ charw / 2 + getCodonDistance();
-		int reminder = (currentBase % 3);
-		xop += (reminder * getCodonWidth() / 3);
+		int reminder = currentBase % 3;
+		xop += reminder * getCodonWidth() / 3;
 		op.setX(xop);
 	}
 

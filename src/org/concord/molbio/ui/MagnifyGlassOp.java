@@ -74,13 +74,13 @@ class MagnifyGlassOp implements BufferedImageOp {
 			dest = createCompatibleDestImage(src, null);
 		float xc = mx;
 		float yc = my;
-		float r0 = rw - 2;
+		float r0 = rw;
 		float rrh = rh;
 		Graphics2D g2d = dest.createGraphics();
 		g2d.drawImage(src, null, 0, 0);
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2d.setStroke(stroke);
-		g2d.setPaint(new Color(red, green, blue, 0.2f));
+		g2d.setPaint(rw > 30 ? new Color(red, green, blue, 0.2f) : new Color(1, 0, 1, 0.2f));
 		Shape oldClip = g2d.getClip();
 		g2d.setClip(needClip);
 		if (drawImage && internalImage != null && (drawMode == GLASS_AS_RECTANGLE)) {
@@ -93,15 +93,15 @@ class MagnifyGlassOp implements BufferedImageOp {
 		}
 		else {
 			if (drawMode == GLASS_AS_RECTANGLE) {
-				g2d.fillRoundRect(Math.round(xc - r0), Math.round(yc - rrh - 1), Math.round(2 * r0), Math
+				g2d.fillRoundRect(Math.round(xc - 2 * r0), Math.round(yc - rrh - 1), Math.round(3 * r0), Math
 						.round(2 * rrh), 2, 2);
 			}
 			else {
 				g2d.fillOval(Math.round(xc - r0), Math.round(yc - r0), 2 * Math.round(r0), 2 * Math.round(r0));
 			}
-			g2d.setPaint(new Color(red2, green2, blue2, 0.5f));
+			g2d.setPaint(rw > 30 ? new Color(red2, green2, blue2, 0.5f) : new Color(0.7f, 0f, 0.7f, 0.5f));
 			if (drawMode == GLASS_AS_RECTANGLE) {
-				g2d.drawRoundRect(Math.round(xc - r0), Math.round(yc - rrh - 1), Math.round(2 * r0), Math
+				g2d.drawRoundRect(Math.round(xc - 2 * r0), Math.round(yc - rrh - 1), Math.round(3 * r0), Math
 						.round(2 * rrh), 2, 2);
 			}
 			else {
