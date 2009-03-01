@@ -311,6 +311,7 @@ public class ComponentPool {
 				final MDContainer c = mc.getContainer();
 				c.getModel().stop();
 				c.getModel().clearMouseScripts();
+				c.getModel().clearKeyScripts();
 				mc.setUsed(false);
 				mc.showBorder(true);
 				mc.getContainer().setStatusBarShown(true);

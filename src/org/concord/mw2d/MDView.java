@@ -3014,6 +3014,7 @@ public abstract class MDView extends PrintableComponent {
 	}
 
 	void processKeyPressed(KeyEvent e) {
+		getModel().runKeyScript(KeyEvent.KEY_PRESSED, e.getKeyCode());
 		switch (e.getKeyChar()) {
 		case 'z':
 			if (energizerOn)
@@ -3035,6 +3036,7 @@ public abstract class MDView extends PrintableComponent {
 	}
 
 	void processKeyReleased(KeyEvent e) {
+		getModel().runKeyScript(KeyEvent.KEY_RELEASED, e.getKeyCode());
 		boolean b = false;
 		switch (e.getKeyCode()) {
 		case KeyEvent.VK_UP:
