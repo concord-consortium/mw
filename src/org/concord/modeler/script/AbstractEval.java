@@ -24,6 +24,7 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.EventQueue;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileInputStream;
@@ -100,8 +101,9 @@ public abstract class AbstractEval {
 	protected List<String[]> loopList;
 	protected Map<String, String> withinMap;
 	protected Map<Byte, String> externalScripts;
-	protected Map<Integer, String> mouseScripts;
+	protected Map<Integer, String> mouseScripts, keyScripts;
 	protected Point mouseLocation;
+	protected int keyCode;
 	protected static Map<String, Integer> cursorIDMap;
 	protected LinkedList<String> scriptQueue;
 
@@ -140,6 +142,7 @@ public abstract class AbstractEval {
 		externalScripts = Collections.synchronizedMap(new TreeMap<Byte, String>());
 		commentedOutScripts = Collections.synchronizedList(new ArrayList<String>());
 		mouseScripts = Collections.synchronizedMap(new HashMap<Integer, String>());
+		keyScripts = Collections.synchronizedMap(new HashMap<Integer, String>());
 		mouseLocation = new Point();
 	}
 
@@ -875,6 +878,39 @@ public abstract class AbstractEval {
 
 	public void setMouseLocation(int x, int y) {
 		mouseLocation.setLocation(x, y);
+	}
+
+	private String storeKeyScript(int eventType, String beginkey, String endkey, String script) {
+		String lowerCase = script.toLowerCase();
+		int beg = lowerCase.lastIndexOf(beginkey);
+		int end = lowerCase.lastIndexOf(endkey);
+		if (beg != -1 && end != -1 && end > beg) {
+			String s = script.substring(beg + beginkey.length() + 1, end).trim();
+			keyScripts.put(eventType, s);
+			return script.substring(0, beg) + script.substring(end + endkey.length() + 1);
+		}
+		return script;
+	}
+
+	/** store keyboard scripts */
+	protected String storeKeyScripts(String s) {
+		if (s == null)
+			return null;
+		s = storeKeyScript(KeyEvent.KEY_PRESSED, "beginkey:pressed", "endkey:pressed", s);
+		s = storeKeyScript(KeyEvent.KEY_RELEASED, "beginkey:released", "endkey:released", s);
+		return s;
+	}
+
+	public void clearKeyScripts() {
+		keyScripts.clear();
+	}
+
+	public String getKeyScript(int eventType) {
+		return keyScripts.get(eventType);
+	}
+
+	public void setKeyCode(int keyCode) {
+		this.keyCode = keyCode;
 	}
 
 	/** format string */
@@ -1622,7 +1658,7 @@ public abstract class AbstractEval {
 	}
 
 	protected boolean evaluateIncrementOperator(String ci) {
-		String s = ci.replaceFirst("(\\+\\+)|(\\-\\-)", "").trim();
+		String s = ci.replaceFirst("(\\+\\+)|(\\-\\-)", "").trim().toLowerCase();
 		String t = definition.get(s);
 		if (t == null) {
 			out(ScriptEvent.FAILED, "Undefined variable: " + s);

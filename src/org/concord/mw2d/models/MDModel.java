@@ -863,6 +863,21 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			evalAction.clearMouseScripts();
 	}
 
+	public void runKeyScript(int eventType, int keyCode) {
+		initEvalAction();
+		String s = evalAction.getKeyScript(eventType);
+		if (s == null)
+			return;
+		evalAction.setNotifySaver(false);
+		evalAction.setKeyCode(keyCode);
+		runScript2(s);
+	}
+
+	public void clearKeyScripts() {
+		if (evalAction != null)
+			evalAction.clearKeyScripts();
+	}
+
 	public String runScript(String script) {
 		initEvalAction();
 		evalAction.setNotifySaver(!initializationScriptToRun);
@@ -1909,6 +1924,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		// if we halt scripts, then the scripts that may call this method will not be able to run
 		initializationScript = null;
 		clearMouseScripts();
+		clearKeyScripts();
 		tot = 0;
 		kin = 0;
 		pot = 0;

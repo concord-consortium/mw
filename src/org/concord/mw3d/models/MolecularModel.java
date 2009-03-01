@@ -473,6 +473,21 @@ public class MolecularModel {
 			evalAction.clearMouseScripts();
 	}
 
+	public void runKeyScript(int eventType, int keyCode) {
+		initEvalAction();
+		String s = evalAction.getKeyScript(eventType);
+		if (s == null)
+			return;
+		evalAction.setNotifySaver(false);
+		evalAction.setKeyCode(keyCode);
+		runScript2(s);
+	}
+
+	public void clearKeyScripts() {
+		if (evalAction != null)
+			evalAction.clearKeyScripts();
+	}
+
 	public void setExternalScriptCallback(ScriptCallback c) {
 		externalScriptCallback = c;
 	}

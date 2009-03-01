@@ -153,6 +153,7 @@ class Eval2D extends AbstractEval {
 		int iosp = model.getIndexOfSelectedParticle();
 		s = replaceAll(s, "%mouse_x", mouseLocation.x);
 		s = replaceAll(s, "%mouse_y", mouseLocation.y);
+		s = replaceAll(s, "%keycode", keyCode);
 		s = replaceAll(s, "%model_time", model.modelTime);
 		s = replaceAll(s, "%temperature", model.getTemperature());
 		s = replaceAll(s, "%index_of_selected_particle", iosp);
@@ -847,6 +848,7 @@ class Eval2D extends AbstractEval {
 		script = removeCommentedOutScripts(script);
 		script = separateExternalScripts(script);
 		script = storeMouseScripts(script);
+		script = storeKeyScripts(script);
 		String[] command = COMMAND_BREAK.split(script);
 		if (command.length < 1) {
 			out(ScriptEvent.FAILED, "No script.");

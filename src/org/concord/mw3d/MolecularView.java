@@ -3486,6 +3486,7 @@ public class MolecularView extends Draw {
 
 	protected void processKeyPressed(KeyEvent e) {
 		super.processKeyPressed(e);
+		model.runKeyScript(KeyEvent.KEY_PRESSED, e.getKeyCode());
 		if (!e.isControlDown()) {
 			isKeyNavigation = true;
 			if ((keyCode = keyManager.keyPressed(e)) != 0) {
@@ -3518,6 +3519,7 @@ public class MolecularView extends Draw {
 
 	protected void processKeyReleased(KeyEvent e) {
 		super.processKeyReleased(e);
+		model.runKeyScript(KeyEvent.KEY_RELEASED, e.getKeyCode());
 		// remove pressed bits
 		if (isKeyNavigation) {
 			navigator.keyReleased(e);
