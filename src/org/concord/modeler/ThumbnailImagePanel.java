@@ -74,6 +74,8 @@ class ThumbnailImagePanel extends JPanel implements SnapshotListener {
 
 	void destroy() {
 		SnapshotGallery.sharedInstance().removeSnapshotListener(this);
+		if (transferListeners != null)
+			transferListeners.clear();
 	}
 
 	void addTransferListener(TransferListener listener) {

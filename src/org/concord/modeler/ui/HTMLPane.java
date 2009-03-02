@@ -170,6 +170,15 @@ public class HTMLPane extends MyEditorPane {
 
 	};
 
+	public void destroy() {
+		if (selfScriptListeners != null)
+			selfScriptListeners.clear();
+		if (componentList != null)
+			componentList.clear();
+		if (formList != null)
+			formList.clear();
+	}
+
 	public void addSelfScriptListener(SelfScriptListener l) {
 		if (selfScriptListeners == null)
 			selfScriptListeners = new ArrayList<SelfScriptListener>();
