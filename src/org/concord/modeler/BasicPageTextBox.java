@@ -279,6 +279,7 @@ public abstract class BasicPageTextBox extends TextBox implements AutoResizable,
 
 	public void destroy() {
 		textBody.removeHyperlinkListener(page);
+		textBody.destroy();
 		removeHotlinkListener(page);
 		page = null;
 	}

@@ -331,11 +331,14 @@ public class ImageQuestion extends JPanel implements Embeddable, TransferListene
 	}
 
 	public void destroy() {
+		SnapshotGallery.sharedInstance().removeSnapshotListener(imageContainer);
 		questionArea.destroy();
 		page = null;
 		thumbnailPanel.removeTransferListener(this);
 		thumbnailPanel.destroy();
 		imageContainer.destroy();
+		if (inputListeners != null)
+			inputListeners.clear();
 		if (maker != null)
 			maker.setObject(null);
 	}
