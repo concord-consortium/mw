@@ -1203,7 +1203,8 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 			if (s != null)
 				menuItem.setText(s);
 			menuItem.setMnemonic(KeyEvent.VK_X);
-			menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_MASK));
+			if (directMW)
+				menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_MASK));
 		}
 
 		// create the Edit Menu
@@ -3144,6 +3145,8 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 
 	public static void main(String[] args) {
 
+		directMW = true;
+
 		// ModelerUtilities.printSystemProperties();
 
 		checkMinimumJavaVersion();
@@ -3262,8 +3265,6 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 			});
 
 		}
-
-		directMW = true;
 
 		// signify the web launcher who is monitoring this process
 		if (mwLauncher)
