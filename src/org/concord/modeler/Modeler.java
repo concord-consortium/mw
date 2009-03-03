@@ -376,7 +376,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 
 		windowCount++;
 
-		if (IS_MAC) {
+		if (IS_MAC && directMW) {
 			Application anApp = new Application();
 			anApp.setEnabledPreferencesMenu(true);
 			anApp.addApplicationListener(new ApplicationAdapter() {
