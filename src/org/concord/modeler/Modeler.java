@@ -2252,7 +2252,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		menuItem = new JMenuItem(s != null ? s : "My MW Space");
 		menuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				navigator.visitLocation(getContextRoot() + "myhome.jsp?client=mw");
+				navigator.visitLocation(getContextRoot() + "home.jsp?client=mw");
 			}
 		});
 		menu.add(menuItem);

@@ -4742,7 +4742,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 
 			if (selectedComponent != null) {
 				if (!isEditable() && !selectedComponent.isDraggable()) {
-					showActionTip("<html><font color=red>The selected object is not draggable!</font></html>", x, y);
+					showTip("<html><font color=red>The selected object is not draggable!</font></html>", x, y);
 				}
 				else {
 					if (selectedComponent instanceof RectangularObstacle) {

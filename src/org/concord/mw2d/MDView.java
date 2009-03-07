@@ -2223,6 +2223,10 @@ public abstract class MDView extends PrintableComponent {
 	void showActionTip(String msg, int x, int y) {
 		if (!actionTipEnabled && actionID != WHAT_ID)
 			return;
+		showTip(msg, x, y);
+	}
+
+	void showTip(String msg, int x, int y) {
 		final JPopupMenu menu = new JPopupMenu();
 		menu.setRequestFocusEnabled(false);
 		menu.setBorder(BorderFactory.createLineBorder(Color.black));
