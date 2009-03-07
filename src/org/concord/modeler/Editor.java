@@ -1108,7 +1108,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		mwSpaceButton.setRequestFocusEnabled(false);
 		mwSpaceButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				page.getNavigator().visitLocation(Modeler.getContextRoot() + "myhome.jsp?client=mw");
+				page.getNavigator().visitLocation(Modeler.getContextRoot() + "home.jsp?client=mw");
 			}
 		});
 		if (Modeler.showToolBarText) {
