@@ -2223,10 +2223,10 @@ public abstract class MDView extends PrintableComponent {
 	void showActionTip(String msg, int x, int y) {
 		if (!actionTipEnabled && actionID != WHAT_ID)
 			return;
-		showTip(msg, x, y);
+		showTip(msg, x, y, 1000);
 	}
 
-	void showTip(String msg, int x, int y) {
+	void showTip(String msg, int x, int y, int time) {
 		final JPopupMenu menu = new JPopupMenu();
 		menu.setRequestFocusEnabled(false);
 		menu.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -2237,14 +2237,14 @@ public abstract class MDView extends PrintableComponent {
 		l.setRequestFocusEnabled(false);
 		menu.add(l);
 		menu.show(this, x, y);
-		Timer timer = new Timer(1000, new ActionListener() {
+		Timer timer = new Timer(time, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				menu.setVisible(false);
 				MDView.this.requestFocusInWindow();
 			}
 		});
 		timer.setRepeats(false);
-		timer.setInitialDelay(1000);
+		timer.setInitialDelay(time);
 		timer.start();
 	}
 

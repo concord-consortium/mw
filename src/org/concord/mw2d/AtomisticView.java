@@ -4013,7 +4013,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				str = "(" + ViewAttribute.ANGSTROM_FORMAT.format(x * 0.1) + ", "
 						+ ViewAttribute.ANGSTROM_FORMAT.format(y * 0.1) + ")";
 			}
-			showActionTip(str, x + 10, y + 10);
+			showTip(str, x + 10, y + 10, 1000);
 			repaint();
 			break;
 
@@ -4742,7 +4742,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 
 			if (selectedComponent != null) {
 				if (!isEditable() && !selectedComponent.isDraggable()) {
-					showTip("<html><font color=red>The selected object is not draggable!</font></html>", x, y);
+					// showTip("<html><font color=red>The selected object is not draggable!</font></html>", x, y);
 				}
 				else {
 					if (selectedComponent instanceof RectangularObstacle) {
