@@ -806,12 +806,16 @@ class Eval3D extends AbstractEval {
 		}
 		if (strLC.startsWith("reset")) {
 			if ("reset".equals(strLC)) { // reset
+				copyMouseAndKeyScripts();
 				evaluateLoadClause(view.getResourceAddress(), true);
 				notifyExecution("reset");
+				readdMouseAndKeyScripts();
 				return true;
 			}
 			if ("silently".equals(strLC.substring(5).trim())) { // reset silently
+				copyMouseAndKeyScripts();
 				evaluateLoadClause(view.getResourceAddress(), true);
+				readdMouseAndKeyScripts();
 				return true;
 			}
 		}

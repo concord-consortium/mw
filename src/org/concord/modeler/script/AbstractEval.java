@@ -101,7 +101,7 @@ public abstract class AbstractEval {
 	protected List<String[]> loopList;
 	protected Map<String, String> withinMap;
 	protected Map<Byte, String> externalScripts;
-	protected Map<Integer, String> mouseScripts, keyScripts;
+	protected Map<Integer, String> mouseScripts, keyScripts, savedMouseScripts, savedKeyScripts;
 	protected Point mouseLocation;
 	protected int keyCode;
 	protected static Map<String, Integer> cursorIDMap;
@@ -878,6 +878,33 @@ public abstract class AbstractEval {
 
 	public void setMouseLocation(int x, int y) {
 		mouseLocation.setLocation(x, y);
+	}
+
+	/**
+	 * make a copy of the mouse and key scripts in case some actions cause the removal of them (e.g., the reset
+	 * command).
+	 */
+	public void copyMouseAndKeyScripts() {
+		if (mouseScripts != null && !mouseScripts.isEmpty()) {
+			if (savedMouseScripts == null)
+				savedMouseScripts = new HashMap<Integer, String>();
+			else savedMouseScripts.clear();
+			savedMouseScripts.putAll(mouseScripts);
+		}
+		if (keyScripts != null && !keyScripts.isEmpty()) {
+			if (savedKeyScripts == null)
+				savedKeyScripts = new HashMap<Integer, String>();
+			else savedKeyScripts.clear();
+			savedKeyScripts.putAll(keyScripts);
+		}
+	}
+
+	/** put the mouse and key scripts back in case some actions cause the removal of them (e.g., the reset command). */
+	public void readdMouseAndKeyScripts() {
+		if (savedMouseScripts != null && !savedMouseScripts.isEmpty())
+			mouseScripts.putAll(savedMouseScripts);
+		if (savedKeyScripts != null && !savedKeyScripts.isEmpty())
+			keyScripts.putAll(savedKeyScripts);
 	}
 
 	private String storeKeyScript(int eventType, String beginkey, String endkey, String script) {
