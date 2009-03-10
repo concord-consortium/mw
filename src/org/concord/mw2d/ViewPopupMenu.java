@@ -36,8 +36,6 @@ class ViewPopupMenu extends JPopupMenu {
 		super(name);
 		addPopupMenuListener(new PopupMenuListener() {
 			public void popupMenuCanceled(PopupMenuEvent e) {
-				if (view.hasFocus())
-					return;
 				Point p = view.getMousePosition();
 				if (p != null) {
 					MouseEvent me = new MouseEvent(view, 0, System.currentTimeMillis(), MouseEvent.BUTTON1_DOWN_MASK,
@@ -47,9 +45,6 @@ class ViewPopupMenu extends JPopupMenu {
 			}
 
 			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-				if (view.hasFocus())
-					return;
-				view.requestFocusInWindow();
 			}
 
 			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
