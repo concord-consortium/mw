@@ -24,11 +24,10 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
 
 import org.concord.modeler.ui.IconPool;
 
-class DefaultPopupMenu extends JPopupMenu {
+class DefaultPopupMenu extends ViewPopupMenu {
 
 	private AtomisticView view;
 
@@ -43,7 +42,7 @@ class DefaultPopupMenu extends JPopupMenu {
 
 	DefaultPopupMenu(AtomisticView v) {
 
-		super("Default");
+		super("Default", v);
 		this.view = v;
 
 		JMenuItem mi = new JMenuItem(view.getActionMap().get(AtomisticView.PASTE));

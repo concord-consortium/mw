@@ -25,7 +25,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 import javax.swing.ButtonGroup;
-import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 
 import org.concord.molbio.engine.Nucleotide;
@@ -34,7 +33,7 @@ import org.concord.mw2d.models.Atom;
 import org.concord.mw2d.models.Element;
 import org.concord.mw2d.models.MolecularModel;
 
-class NucleotidePopupMenu extends JPopupMenu {
+class NucleotidePopupMenu extends ViewPopupMenu {
 
 	private JRadioButtonMenuItem miA;
 	private JRadioButtonMenuItem miC;
@@ -43,9 +42,9 @@ class NucleotidePopupMenu extends JPopupMenu {
 	private JRadioButtonMenuItem miU;
 	private Atom atom;
 
-	public NucleotidePopupMenu() {
+	public NucleotidePopupMenu(AtomisticView v) {
 
-		super("Nucleotide");
+		super("Nucleotide", v);
 
 		ItemListener itemListener = new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {

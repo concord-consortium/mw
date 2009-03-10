@@ -2944,7 +2944,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					if (acidPopupMenu == null)
-						acidPopupMenu = new AminoAcidPopupMenu();
+						acidPopupMenu = new AminoAcidPopupMenu(AtomisticView.this);
 					acidPopupMenu.setAtom(at);
 					acidPopupMenu.show(AtomisticView.this, (int) at.getRx(), (int) at.getRy());
 				}
@@ -2954,7 +2954,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					if (nucleotidePopupMenu == null)
-						nucleotidePopupMenu = new NucleotidePopupMenu();
+						nucleotidePopupMenu = new NucleotidePopupMenu(AtomisticView.this);
 					nucleotidePopupMenu.setAtom(at);
 					nucleotidePopupMenu.show(AtomisticView.this, (int) at.getRx(), (int) at.getRy());
 				}
@@ -2964,7 +2964,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					if (atomMutationPopupMenu == null)
-						atomMutationPopupMenu = new AtomMutationPopupMenu();
+						atomMutationPopupMenu = new AtomMutationPopupMenu(AtomisticView.this);
 					atomMutationPopupMenu.setAtom(at);
 					atomMutationPopupMenu.show(AtomisticView.this, (int) at.getRx(), (int) at.getRy());
 				}
@@ -3804,14 +3804,14 @@ public class AtomisticView extends MDView implements BondChangeListener {
 					if (at.isAminoAcid()) {
 						at.setSelected(true);
 						if (acidPopupMenu == null)
-							acidPopupMenu = new AminoAcidPopupMenu();
+							acidPopupMenu = new AminoAcidPopupMenu(AtomisticView.this);
 						acidPopupMenu.setAtom(at);
 						acidPopupMenu.show(this, x, y);
 					}
 					else if (at.isNucleotide() && at.getID() != Element.ID_SP) {
 						at.setSelected(true);
 						if (nucleotidePopupMenu == null)
-							nucleotidePopupMenu = new NucleotidePopupMenu();
+							nucleotidePopupMenu = new NucleotidePopupMenu(AtomisticView.this);
 						nucleotidePopupMenu.setAtom(at);
 						nucleotidePopupMenu.show(this, x, y);
 					}

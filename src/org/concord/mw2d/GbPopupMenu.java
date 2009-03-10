@@ -30,7 +30,6 @@ import java.awt.event.ItemListener;
 import javax.swing.Action;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
 
 import org.concord.modeler.ModelerUtilities;
 import org.concord.modeler.process.Executable;
@@ -38,7 +37,7 @@ import org.concord.modeler.ui.IconPool;
 import org.concord.mw2d.models.GayBerneParticle;
 import org.concord.mw2d.models.UserField;
 
-class GbPopupMenu extends JPopupMenu {
+class GbPopupMenu extends ViewPopupMenu {
 
 	private MesoView view;
 	private JMenuItem miRelease, miSteer, miUnsteer, miTraj, miRMean, miFMean;
@@ -79,7 +78,7 @@ class GbPopupMenu extends JPopupMenu {
 
 	GbPopupMenu(MesoView v) {
 
-		super("Gay-Berne");
+		super("Gay-Berne", v);
 		view = v;
 
 		JMenuItem mi = new JMenuItem(view.getActionMap().get(MDView.COPY));

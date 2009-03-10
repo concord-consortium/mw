@@ -25,12 +25,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Action;
 import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
 
 import org.concord.modeler.process.Executable;
 import org.concord.modeler.ui.IconPool;
 
-class RadialBondPopupMenu extends JPopupMenu {
+class RadialBondPopupMenu extends ViewPopupMenu {
 
 	private AtomisticView view;
 
@@ -44,7 +43,7 @@ class RadialBondPopupMenu extends JPopupMenu {
 
 	RadialBondPopupMenu(AtomisticView v) {
 
-		super("Radial Bond");
+		super("Radial Bond", v);
 		view = v;
 
 		String s = MDView.getInternationalText("Properties");
