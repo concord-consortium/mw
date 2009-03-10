@@ -1082,19 +1082,26 @@ public class MesoView extends MDView {
 				selectedArea.setLocation(x, y);
 			break;
 
+		case LINE_ID:
+			setSelectedComponent(null);
+			break;
+
 		case RECT_ID:
+			setSelectedComponent(null);
 			showActionTip("Drag the mouse to draw a rectangle", x + 10, y + 10);
 			if (clickCount == 1)
 				selectedArea.setLocation(x, y);
 			break;
 
 		case TRIA_ID:
+			setSelectedComponent(null);
 			showActionTip("Drag the mouse to draw a triangle", x + 10, y + 10);
 			if (clickCount == 1)
 				selectedArea.setLocation(x, y);
 			break;
 
 		case ELLI_ID:
+			setSelectedComponent(null);
 			showActionTip("Drag the mouse to draw an ellipse", x + 10, y + 10);
 			if (clickCount == 1)
 				selectedArea.setLocation(x, y);
