@@ -19,7 +19,9 @@
  * END LICENSE */
 package org.concord.mw2d;
 
-import javax.swing.JComponent;
+import java.awt.Point;
+import java.awt.event.MouseEvent;
+
 import javax.swing.JPopupMenu;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
@@ -30,17 +32,24 @@ import javax.swing.event.PopupMenuListener;
  */
 class ViewPopupMenu extends JPopupMenu {
 
-	ViewPopupMenu(String name, final JComponent view) {
+	ViewPopupMenu(String name, final MDView view) {
 		super(name);
 		addPopupMenuListener(new PopupMenuListener() {
 			public void popupMenuCanceled(PopupMenuEvent e) {
-				view.requestFocusInWindow();
-				System.out.println("xxx");
+				if (view.hasFocus())
+					return;
+				Point p = view.getMousePosition();
+				if (p != null) {
+					MouseEvent me = new MouseEvent(view, 0, System.currentTimeMillis(), MouseEvent.BUTTON1_DOWN_MASK,
+							p.x, p.y, 1, false);
+					view.processMousePressed(me);
+				}
 			}
 
 			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+				if (view.hasFocus())
+					return;
 				view.requestFocusInWindow();
-				System.out.println("rrrr");
 			}
 
 			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {

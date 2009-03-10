@@ -3915,7 +3915,12 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				selectedArea.setLocation(x, y);
 			break;
 
+		case LINE_ID:
+			setSelectedComponent(null);
+			break;
+
 		case RECT_ID:
+			setSelectedComponent(null);
 			showActionTip("Drag the mouse to draw a rectangle", x + 10, y + 10);
 			if (clickCount == 1) {
 				selectedArea.setLocation(x, y);
@@ -3924,6 +3929,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			break;
 
 		case TRIA_ID:
+			setSelectedComponent(null);
 			showActionTip("Drag the mouse to draw a triangle", x + 10, y + 10);
 			if (clickCount == 1) {
 				selectedArea.setLocation(x, y);
@@ -3932,6 +3938,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			break;
 
 		case ELLI_ID:
+			setSelectedComponent(null);
 			showActionTip("Drag the mouse to draw an ellipse", x + 10, y + 10);
 			if (clickCount == 1) {
 				selectedArea.setLocation(x, y);
@@ -4013,7 +4020,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				str = "(" + ViewAttribute.ANGSTROM_FORMAT.format(x * 0.1) + ", "
 						+ ViewAttribute.ANGSTROM_FORMAT.format(y * 0.1) + ")";
 			}
-			showTip(str, x + 10, y + 10, 1000);
+			showTip(str, x + 10, y + 10, 2000);
 			repaint();
 			break;
 
@@ -4742,7 +4749,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 
 			if (selectedComponent != null) {
 				if (!isEditable() && !selectedComponent.isDraggable()) {
-					// showTip("<html><font color=red>The selected object is not draggable!</font></html>", x, y);
+					showTip("<html><font color=red>The selected object is not draggable!</font></html>", x, y, 500);
 				}
 				else {
 					if (selectedComponent instanceof RectangularObstacle) {
