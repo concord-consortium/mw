@@ -410,14 +410,9 @@ public class MolecularModel {
 		initializationScriptToRun = b;
 	}
 
-	public void copyMouseAndKeyScripts() {
-		if (evalAction != null)
-			evalAction.copyMouseAndKeyScripts();
-	}
-
 	public void readdMouseAndKeyScripts() {
 		if (evalAction != null)
-			evalAction.readdMouseAndKeyScripts();
+			evalAction.readdMouseAndKeyScripts(initializationScript);
 	}
 
 	private void initEvalTask() {

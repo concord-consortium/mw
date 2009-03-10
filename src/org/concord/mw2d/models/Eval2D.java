@@ -1278,11 +1278,10 @@ class Eval2D extends AbstractEval {
 		}
 		if (strLC.startsWith("reset")) {
 			if ("reset".equals(strLC)) { // reset
-				copyMouseAndKeyScripts();
 				evaluateLoadClause((String) model.getProperty("url"));
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
-						readdMouseAndKeyScripts();
+						readdMouseAndKeyScripts(model.getInitializationScript());
 						model.notifyModelListeners(new ModelEvent(model, ModelEvent.MODEL_RESET));
 						model.notifyPageComponentListeners(new PageComponentEvent(model,
 								PageComponentEvent.COMPONENT_RESET));

@@ -1266,7 +1266,6 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 					if (actionReminder.show(ActionReminder.RESET_TO_SAVED_STATE) == JOptionPane.NO_OPTION)
 						return;
 				}
-				model.copyMouseAndKeyScripts();
 				if (resourceAddress != null)
 					input(resourceAddress, true);
 				else reset();
