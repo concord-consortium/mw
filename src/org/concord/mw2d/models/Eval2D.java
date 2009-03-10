@@ -1291,6 +1291,7 @@ class Eval2D extends AbstractEval {
 			}
 			if ("silently".equals(strLC.substring(5).trim())) { // reset silently
 				evaluateLoadClause((String) model.getProperty("url"));
+				readdMouseAndKeyScripts(model.getInitializationScript());
 				return true;
 			}
 		}

@@ -2227,20 +2227,17 @@ public abstract class MDView extends PrintableComponent {
 	}
 
 	void showTip(String msg, int x, int y, int time) {
-		final JPopupMenu menu = new JPopupMenu();
-		menu.setRequestFocusEnabled(false);
+		final JPopupMenu menu = new ViewPopupMenu("Tip", this);
 		menu.setBorder(BorderFactory.createLineBorder(Color.black));
 		menu.setBackground(SystemColor.info);
 		JLabel l = new JLabel(msg);
 		l.setFont(ViewAttribute.SMALL_FONT);
 		l.setBorder(BorderFactory.createEmptyBorder(2, 4, 2, 4));
-		l.setRequestFocusEnabled(false);
 		menu.add(l);
 		menu.show(this, x, y);
 		Timer timer = new Timer(time, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				menu.setVisible(false);
-				MDView.this.requestFocusInWindow();
 			}
 		});
 		timer.setRepeats(false);

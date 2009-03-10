@@ -72,6 +72,7 @@ class LayeredComponentPopupMenu extends JPopupMenu {
 
 		addPopupMenuListener(new PopupMenuListener() {
 			public void popupMenuCanceled(PopupMenuEvent e) {
+				view.requestFocusInWindow();
 			}
 
 			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
@@ -177,6 +178,7 @@ class LayeredComponentPopupMenu extends JPopupMenu {
 			}
 
 			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+				view.requestFocusInWindow();
 			}
 		});
 

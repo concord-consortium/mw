@@ -30,14 +30,13 @@ import javax.swing.Action;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
 
 import org.concord.modeler.ModelerUtilities;
 import org.concord.modeler.process.Executable;
 import org.concord.modeler.ui.IconPool;
 import org.concord.mw2d.models.Molecule;
 
-class MoleculePopupMenu extends JPopupMenu {
+class MoleculePopupMenu extends ViewPopupMenu {
 
 	AtomisticView view;
 	int xpos, ypos;
@@ -61,7 +60,7 @@ class MoleculePopupMenu extends JPopupMenu {
 
 	MoleculePopupMenu(AtomisticView v) {
 
-		super("Molecule");
+		super("Molecule", v);
 		view = v;
 
 		JMenuItem mi = new JMenuItem(view.getActionMap().get(AtomisticView.COPY));

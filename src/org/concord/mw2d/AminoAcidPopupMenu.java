@@ -28,7 +28,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.ButtonGroup;
-import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 
 import org.concord.modeler.event.ModelEvent;
@@ -40,15 +39,15 @@ import org.concord.mw2d.models.MolecularModel;
 import org.concord.mw2d.models.Molecule;
 import org.concord.mw2d.models.RadialBond;
 
-class AminoAcidPopupMenu extends JPopupMenu {
+class AminoAcidPopupMenu extends ViewPopupMenu {
 
 	private final static Aminoacid[] AMINO_ACID = Aminoacid.getAllAminoacids();
 	private JRadioButtonMenuItem[] mi;
 	private Atom atom;
 
-	public AminoAcidPopupMenu() {
+	public AminoAcidPopupMenu(AtomisticView v) {
 
-		super("Amino Acid");
+		super("Amino Acid", v);
 
 		mi = new JRadioButtonMenuItem[AMINO_ACID.length];
 
