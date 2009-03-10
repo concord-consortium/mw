@@ -4020,7 +4020,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				str = "(" + ViewAttribute.ANGSTROM_FORMAT.format(x * 0.1) + ", "
 						+ ViewAttribute.ANGSTROM_FORMAT.format(y * 0.1) + ")";
 			}
-			showTip(str, x + 10, y + 10, 2000);
+			showTip(str, x + 10, y + 10, -1);
 			repaint();
 			break;
 

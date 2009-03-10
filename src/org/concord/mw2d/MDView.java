@@ -196,6 +196,7 @@ public abstract class MDView extends PrintableComponent {
 	byte trajectoryStyle = StyleConstant.TRAJECTORY_LINE_STYLE;
 	ModelComponent selectedComponent;
 	AbstractButton undoUIComponent, redoUIComponent;
+	private ViewPopupMenu tipPopupMenu;
 	private List<ActionStateListener> actionStateListeners;
 
 	/*
@@ -2227,22 +2228,29 @@ public abstract class MDView extends PrintableComponent {
 	}
 
 	void showTip(String msg, int x, int y, int time) {
-		final JPopupMenu menu = new ViewPopupMenu("Tip", this);
-		menu.setBorder(BorderFactory.createLineBorder(Color.black));
-		menu.setBackground(SystemColor.info);
-		JLabel l = new JLabel(msg);
-		l.setFont(ViewAttribute.SMALL_FONT);
-		l.setBorder(BorderFactory.createEmptyBorder(2, 4, 2, 4));
-		menu.add(l);
-		menu.show(this, x, y);
-		Timer timer = new Timer(time, new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				menu.setVisible(false);
-			}
-		});
-		timer.setRepeats(false);
-		timer.setInitialDelay(time);
-		timer.start();
+		if (tipPopupMenu == null) {
+			tipPopupMenu = new ViewPopupMenu("Tip", this);
+			tipPopupMenu.setBorder(BorderFactory.createLineBorder(Color.black));
+			tipPopupMenu.setBackground(SystemColor.info);
+			JLabel l = new JLabel(msg);
+			l.setFont(ViewAttribute.SMALL_FONT);
+			l.setBorder(BorderFactory.createEmptyBorder(2, 4, 2, 4));
+			tipPopupMenu.add(l);
+		}
+		else {
+			((JLabel) tipPopupMenu.getComponent(0)).setText(msg);
+		}
+		tipPopupMenu.show(this, x, y);
+		if (time > 0) {
+			Timer timer = new Timer(time, new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					tipPopupMenu.setVisible(false);
+				}
+			});
+			timer.setRepeats(false);
+			timer.setInitialDelay(time);
+			timer.start();
+		}
 	}
 
 	public void setClockPainted(boolean b) {
@@ -2965,6 +2973,10 @@ public abstract class MDView extends PrintableComponent {
 			((TextBoxComponent) selectedComponent).setChangingCallOut(false);
 		}
 		switch (actionID) {
+		case WHAT_ID:
+			if (tipPopupMenu != null)
+				tipPopupMenu.setVisible(false);
+			break;
 		case LINE_ID:
 			if (dragging) {
 				if (selectedComponent != null)
