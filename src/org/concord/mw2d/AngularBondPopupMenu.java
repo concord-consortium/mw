@@ -24,10 +24,11 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 
 import org.concord.modeler.ui.IconPool;
 
-class AngularBondPopupMenu extends ViewPopupMenu {
+class AngularBondPopupMenu extends JPopupMenu {
 
 	private AtomisticView view;
 
@@ -41,7 +42,7 @@ class AngularBondPopupMenu extends ViewPopupMenu {
 
 	AngularBondPopupMenu(AtomisticView v) {
 
-		super("Angular Bond", v);
+		super("Angular Bond");
 		view = v;
 
 		String s = MDView.getInternationalText("Properties");
