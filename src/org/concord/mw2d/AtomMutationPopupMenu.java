@@ -26,13 +26,14 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 
 import org.concord.mw2d.models.Atom;
 import org.concord.mw2d.models.Element;
 import org.concord.mw2d.models.MolecularModel;
 
-class AtomMutationPopupMenu extends ViewPopupMenu {
+class AtomMutationPopupMenu extends JPopupMenu {
 
 	private JRadioButtonMenuItem miNt;
 	private JRadioButtonMenuItem miPl;
@@ -40,9 +41,9 @@ class AtomMutationPopupMenu extends ViewPopupMenu {
 	private JRadioButtonMenuItem miCk;
 	private Atom atom;
 
-	public AtomMutationPopupMenu(AtomisticView v) {
+	public AtomMutationPopupMenu() {
 
-		super("Atom Mutation", v);
+		super("Atom Mutation");
 
 		ItemListener itemListener = new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {

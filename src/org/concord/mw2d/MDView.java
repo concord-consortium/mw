@@ -196,7 +196,7 @@ public abstract class MDView extends PrintableComponent {
 	byte trajectoryStyle = StyleConstant.TRAJECTORY_LINE_STYLE;
 	ModelComponent selectedComponent;
 	AbstractButton undoUIComponent, redoUIComponent;
-	private ViewPopupMenu tipPopupMenu;
+	private JPopupMenu tipPopupMenu;
 	private List<ActionStateListener> actionStateListeners;
 
 	/*
@@ -2229,7 +2229,7 @@ public abstract class MDView extends PrintableComponent {
 
 	void showTip(String msg, int x, int y, int time) {
 		if (tipPopupMenu == null) {
-			tipPopupMenu = new ViewPopupMenu("Tip", this);
+			tipPopupMenu = new JPopupMenu("Tip");
 			tipPopupMenu.setBorder(BorderFactory.createLineBorder(Color.black));
 			tipPopupMenu.setBackground(SystemColor.info);
 			JLabel l = new JLabel(msg);

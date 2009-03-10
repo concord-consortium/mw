@@ -31,6 +31,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.Action;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 
 import org.concord.modeler.ModelerUtilities;
 import org.concord.modeler.process.Executable;
@@ -38,7 +39,7 @@ import org.concord.modeler.ui.IconPool;
 import org.concord.mw2d.models.Atom;
 import org.concord.mw2d.models.UserField;
 
-class AtomPopupMenu extends ViewPopupMenu {
+class AtomPopupMenu extends JPopupMenu {
 
 	private AtomisticView view;
 	private JMenuItem miSteer, miUnsteer, miTraj, miRMean, miFMean, miDraggable;
@@ -112,7 +113,7 @@ class AtomPopupMenu extends ViewPopupMenu {
 
 	AtomPopupMenu(AtomisticView v) {
 
-		super("Atom", v);
+		super("Atom");
 		view = v;
 
 		JMenuItem mi = new JMenuItem(view.getActionMap().get(AtomisticView.COPY));

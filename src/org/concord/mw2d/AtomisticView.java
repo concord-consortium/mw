@@ -2944,7 +2944,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					if (acidPopupMenu == null)
-						acidPopupMenu = new AminoAcidPopupMenu(AtomisticView.this);
+						acidPopupMenu = new AminoAcidPopupMenu();
 					acidPopupMenu.setAtom(at);
 					acidPopupMenu.show(AtomisticView.this, (int) at.getRx(), (int) at.getRy());
 				}
@@ -2954,7 +2954,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					if (nucleotidePopupMenu == null)
-						nucleotidePopupMenu = new NucleotidePopupMenu(AtomisticView.this);
+						nucleotidePopupMenu = new NucleotidePopupMenu();
 					nucleotidePopupMenu.setAtom(at);
 					nucleotidePopupMenu.show(AtomisticView.this, (int) at.getRx(), (int) at.getRy());
 				}
@@ -2964,7 +2964,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					if (atomMutationPopupMenu == null)
-						atomMutationPopupMenu = new AtomMutationPopupMenu(AtomisticView.this);
+						atomMutationPopupMenu = new AtomMutationPopupMenu();
 					atomMutationPopupMenu.setAtom(at);
 					atomMutationPopupMenu.show(AtomisticView.this, (int) at.getRx(), (int) at.getRy());
 				}
@@ -3687,112 +3687,6 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		if (handleMousePressed(x, y))
 			return;
 
-		/* right-click is for invoking popup menus ONLY. */
-		if (ModelerUtilities.isRightClick(e)) {
-			if (!popupMenuEnabled)
-				return;
-			if (e.isShiftDown()) {
-				Atom at = whichAtom(x, y);
-				if (at != null) {
-					if (selectedComponent != null && selectedComponent != at)
-						selectedComponent.setSelected(false);
-					at.setSelected(true);
-					repaint();
-					if (atomPopupMenu == null)
-						atomPopupMenu = new AtomPopupMenu(this);
-					atomPopupMenu.setTrajSelected(at.getShowRTraj());
-					atomPopupMenu.setRMeanSelected(at.getShowRMean());
-					atomPopupMenu.setFMeanSelected(at.getShowFMean());
-					atomPopupMenu.setCoor(x, y);
-					atomPopupMenu.show(this, x, y);
-					return;
-				}
-				RectangularObstacle obs = whichObstacle(x, y);
-				if (obs != null) {
-					obs.setSelected(true);
-					if (obstaclePopupMenu == null)
-						obstaclePopupMenu = new ObstaclePopupMenu(this);
-					obstaclePopupMenu.setCoor(x, y);
-					obstaclePopupMenu.show(this, x, y);
-					return;
-				}
-				selectedComponent = null;
-				defaultPopupMenu.setCoor(x, y);
-				defaultPopupMenu.show(this, x, y);
-				return;
-			}
-			if (selectedComponent != null)
-				selectedComponent.setSelected(false);
-			if (openLayeredComponentPopupMenus(x, y, Layered.IN_FRONT_OF_PARTICLES))
-				return;
-			final Atom at = whichAtom(x, y);
-			if (at != null) {
-				Molecule mol = molecules.getMolecule(at);
-				if (mol == null) {
-					at.setSelected(true);
-					if (atomPopupMenu == null)
-						atomPopupMenu = new AtomPopupMenu(this);
-					atomPopupMenu.setTrajSelected(at.getShowRTraj());
-					atomPopupMenu.setRMeanSelected(at.getShowRMean());
-					atomPopupMenu.setFMeanSelected(at.getShowFMean());
-					atomPopupMenu.setCoor(x, y);
-					atomPopupMenu.show(this, x, y);
-					return;
-				}
-				if (!(mol instanceof MolecularObject)) {
-					mol.setSelected(true);
-					if (moleculePopupMenu == null)
-						moleculePopupMenu = new MoleculePopupMenu(this);
-					moleculePopupMenu.setCoor(x, y);
-					moleculePopupMenu.show(this, x, y);
-					return;
-				}
-			}
-			MolecularObject ss = whichMolecularObject(x, y);
-			if (ss != null) {
-				ss.setSelected(true);
-				if (molecularObjectPopupMenu == null)
-					molecularObjectPopupMenu = new MolecularObjectPopupMenu(this);
-				molecularObjectPopupMenu.setCoor(x, y);
-				molecularObjectPopupMenu.pack();
-				molecularObjectPopupMenu.show(this, x, y);
-				return;
-			}
-			RectangularObstacle obs = whichObstacle(x, y);
-			if (obs != null) {
-				obs.setSelected(true);
-				if (obstaclePopupMenu == null)
-					obstaclePopupMenu = new ObstaclePopupMenu(this);
-				obstaclePopupMenu.setCoor(x, y);
-				obstaclePopupMenu.show(this, x, y);
-				return;
-			}
-			RadialBond rBond = whichBond(x, y);
-			if (rBond != null) {
-				rBond.setSelected(true);
-				if (radialBondPopupMenu == null)
-					radialBondPopupMenu = new RadialBondPopupMenu(this);
-				radialBondPopupMenu.setCoor(x, y);
-				radialBondPopupMenu.show(this, x, y);
-				return;
-			}
-			AngularBond aBond = whichAngle(x, y);
-			if (aBond != null) {
-				aBond.setSelected(true);
-				if (angularBondPopupMenu == null)
-					angularBondPopupMenu = new AngularBondPopupMenu(this);
-				angularBondPopupMenu.setCoor(x, y);
-				angularBondPopupMenu.show(this, x, y);
-				return;
-			}
-			if (openLayeredComponentPopupMenus(x, y, Layered.BEHIND_PARTICLES))
-				return;
-			selectedComponent = null;
-			defaultPopupMenu.setCoor(x, y);
-			defaultPopupMenu.show(this, x, y);
-			return;
-		}
-
 		switch (actionID) {
 
 		case SELE_ID:
@@ -3804,14 +3698,14 @@ public class AtomisticView extends MDView implements BondChangeListener {
 					if (at.isAminoAcid()) {
 						at.setSelected(true);
 						if (acidPopupMenu == null)
-							acidPopupMenu = new AminoAcidPopupMenu(AtomisticView.this);
+							acidPopupMenu = new AminoAcidPopupMenu();
 						acidPopupMenu.setAtom(at);
 						acidPopupMenu.show(this, x, y);
 					}
 					else if (at.isNucleotide() && at.getID() != Element.ID_SP) {
 						at.setSelected(true);
 						if (nucleotidePopupMenu == null)
-							nucleotidePopupMenu = new NucleotidePopupMenu(AtomisticView.this);
+							nucleotidePopupMenu = new NucleotidePopupMenu();
 						nucleotidePopupMenu.setAtom(at);
 						nucleotidePopupMenu.show(this, x, y);
 					}
@@ -5135,6 +5029,113 @@ public class AtomisticView extends MDView implements BondChangeListener {
 
 	}
 
+	/* right-click is for invoking popup menus ONLY. */
+	private void popup(MouseEvent e) {
+		if (!popupMenuEnabled)
+			return;
+		int x = e.getX();
+		int y = e.getY();
+		if (e.isShiftDown()) {
+			Atom at = whichAtom(x, y);
+			if (at != null) {
+				if (selectedComponent != null && selectedComponent != at)
+					selectedComponent.setSelected(false);
+				at.setSelected(true);
+				repaint();
+				if (atomPopupMenu == null)
+					atomPopupMenu = new AtomPopupMenu(this);
+				atomPopupMenu.setTrajSelected(at.getShowRTraj());
+				atomPopupMenu.setRMeanSelected(at.getShowRMean());
+				atomPopupMenu.setFMeanSelected(at.getShowFMean());
+				atomPopupMenu.setCoor(x, y);
+				atomPopupMenu.show(this, x, y);
+				return;
+			}
+			RectangularObstacle obs = whichObstacle(x, y);
+			if (obs != null) {
+				obs.setSelected(true);
+				if (obstaclePopupMenu == null)
+					obstaclePopupMenu = new ObstaclePopupMenu(this);
+				obstaclePopupMenu.setCoor(x, y);
+				obstaclePopupMenu.show(this, x, y);
+				return;
+			}
+			selectedComponent = null;
+			defaultPopupMenu.setCoor(x, y);
+			defaultPopupMenu.show(this, x, y);
+			return;
+		}
+		if (selectedComponent != null)
+			selectedComponent.setSelected(false);
+		if (openLayeredComponentPopupMenus(x, y, Layered.IN_FRONT_OF_PARTICLES))
+			return;
+		final Atom at = whichAtom(x, y);
+		if (at != null) {
+			Molecule mol = molecules.getMolecule(at);
+			if (mol == null) {
+				at.setSelected(true);
+				if (atomPopupMenu == null)
+					atomPopupMenu = new AtomPopupMenu(this);
+				atomPopupMenu.setTrajSelected(at.getShowRTraj());
+				atomPopupMenu.setRMeanSelected(at.getShowRMean());
+				atomPopupMenu.setFMeanSelected(at.getShowFMean());
+				atomPopupMenu.setCoor(x, y);
+				atomPopupMenu.show(this, x, y);
+				return;
+			}
+			if (!(mol instanceof MolecularObject)) {
+				mol.setSelected(true);
+				if (moleculePopupMenu == null)
+					moleculePopupMenu = new MoleculePopupMenu(this);
+				moleculePopupMenu.setCoor(x, y);
+				moleculePopupMenu.show(this, x, y);
+				return;
+			}
+		}
+		MolecularObject ss = whichMolecularObject(x, y);
+		if (ss != null) {
+			ss.setSelected(true);
+			if (molecularObjectPopupMenu == null)
+				molecularObjectPopupMenu = new MolecularObjectPopupMenu(this);
+			molecularObjectPopupMenu.setCoor(x, y);
+			molecularObjectPopupMenu.pack();
+			molecularObjectPopupMenu.show(this, x, y);
+			return;
+		}
+		RectangularObstacle obs = whichObstacle(x, y);
+		if (obs != null) {
+			obs.setSelected(true);
+			if (obstaclePopupMenu == null)
+				obstaclePopupMenu = new ObstaclePopupMenu(this);
+			obstaclePopupMenu.setCoor(x, y);
+			obstaclePopupMenu.show(this, x, y);
+			return;
+		}
+		RadialBond rBond = whichBond(x, y);
+		if (rBond != null) {
+			rBond.setSelected(true);
+			if (radialBondPopupMenu == null)
+				radialBondPopupMenu = new RadialBondPopupMenu(this);
+			radialBondPopupMenu.setCoor(x, y);
+			radialBondPopupMenu.show(this, x, y);
+			return;
+		}
+		AngularBond aBond = whichAngle(x, y);
+		if (aBond != null) {
+			aBond.setSelected(true);
+			if (angularBondPopupMenu == null)
+				angularBondPopupMenu = new AngularBondPopupMenu(this);
+			angularBondPopupMenu.setCoor(x, y);
+			angularBondPopupMenu.show(this, x, y);
+			return;
+		}
+		if (openLayeredComponentPopupMenus(x, y, Layered.BEHIND_PARTICLES))
+			return;
+		selectedComponent = null;
+		defaultPopupMenu.setCoor(x, y);
+		defaultPopupMenu.show(this, x, y);
+	}
+
 	void processMouseReleased(MouseEvent e) {
 
 		super.processMouseReleased(e);
@@ -5143,8 +5144,10 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			processUserFieldsUponKeyOrMouseReleased();
 			return;
 		}
-		if (ModelerUtilities.isRightClick(e))
+		if (ModelerUtilities.isRightClick(e)) {
+			popup(e);
 			return;
+		}
 		int x = e.getX();
 		int y = e.getY();
 

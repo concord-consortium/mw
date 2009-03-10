@@ -923,44 +923,6 @@ public class MesoView extends MDView {
 		if (handleMousePressed(x, y))
 			return;
 
-		if (ModelerUtilities.isRightClick(e)) {
-			if (!popupMenuEnabled)
-				return;
-			if (e.isShiftDown()) {
-				GayBerneParticle p = whichParticle(x, y);
-				if (p != null) {
-					if (selectedComponent != null && selectedComponent != p)
-						selectedComponent.setSelected(false);
-					p.setSelected(true);
-					repaint();
-					showGbPopupMenu(p, x, y);
-					return;
-				}
-				if (selectedComponent != null) {
-					selectedComponent.setSelected(false);
-					selectedComponent = null;
-				}
-				defaultPopupMenu.setCoor(x, y);
-				defaultPopupMenu.show(this, x, y);
-				return;
-			}
-			if (openLayeredComponentPopupMenus(x, y, Layered.IN_FRONT_OF_PARTICLES))
-				return;
-			if (getSelectedComponent(e.getModifiersEx(), x, y) instanceof GayBerneParticle) {
-				GayBerneParticle p = (GayBerneParticle) selectedComponent;
-				p.setSelected(true);
-				p.storeCurrentState();
-				repaint();
-				showGbPopupMenu(p, x, y);
-				return;
-			}
-			if (openLayeredComponentPopupMenus(x, y, Layered.BEHIND_PARTICLES))
-				return;
-			defaultPopupMenu.setCoor(x, y);
-			defaultPopupMenu.show(this, x, y);
-			return;
-		}
-
 		switch (actionID) {
 
 		case WHAT_ID:
@@ -1660,6 +1622,46 @@ public class MesoView extends MDView {
 
 	}
 
+	/* right-click is for invoking popup menus ONLY. */
+	private void popup(MouseEvent e) {
+		if (!popupMenuEnabled)
+			return;
+		int x = e.getX();
+		int y = e.getY();
+		if (e.isShiftDown()) {
+			GayBerneParticle p = whichParticle(x, y);
+			if (p != null) {
+				if (selectedComponent != null && selectedComponent != p)
+					selectedComponent.setSelected(false);
+				p.setSelected(true);
+				repaint();
+				showGbPopupMenu(p, x, y);
+				return;
+			}
+			if (selectedComponent != null) {
+				selectedComponent.setSelected(false);
+				selectedComponent = null;
+			}
+			defaultPopupMenu.setCoor(x, y);
+			defaultPopupMenu.show(this, x, y);
+			return;
+		}
+		if (openLayeredComponentPopupMenus(x, y, Layered.IN_FRONT_OF_PARTICLES))
+			return;
+		if (getSelectedComponent(e.getModifiersEx(), x, y) instanceof GayBerneParticle) {
+			GayBerneParticle p = (GayBerneParticle) selectedComponent;
+			p.setSelected(true);
+			p.storeCurrentState();
+			repaint();
+			showGbPopupMenu(p, x, y);
+			return;
+		}
+		if (openLayeredComponentPopupMenus(x, y, Layered.BEHIND_PARTICLES))
+			return;
+		defaultPopupMenu.setCoor(x, y);
+		defaultPopupMenu.show(this, x, y);
+	}
+
 	void processMouseReleased(MouseEvent e) {
 
 		super.processMouseReleased(e);
@@ -1667,8 +1669,10 @@ public class MesoView extends MDView {
 			processUserFieldsUponKeyOrMouseReleased();
 			return;
 		}
-		if (ModelerUtilities.isRightClick(e))
+		if (ModelerUtilities.isRightClick(e)) {
+			popup(e);
 			return;
+		}
 
 		int x = e.getX();
 		int y = e.getY();

@@ -28,13 +28,14 @@ import java.awt.event.ItemListener;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 
 import org.concord.modeler.ModelerUtilities;
 import org.concord.modeler.ui.IconPool;
 import org.concord.mw2d.models.RectangularObstacle;
 import org.concord.mw2d.models.UserField;
 
-class ObstaclePopupMenu extends ViewPopupMenu {
+class ObstaclePopupMenu extends JPopupMenu {
 
 	private AtomisticView view;
 	private JMenuItem miSteer, miUnsteer, miDraggable;
@@ -60,7 +61,7 @@ class ObstaclePopupMenu extends ViewPopupMenu {
 
 	ObstaclePopupMenu(AtomisticView v) {
 
-		super("Obstacle", v);
+		super("Obstacle");
 
 		view = v;
 

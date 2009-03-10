@@ -25,10 +25,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 
 import org.concord.modeler.ui.IconPool;
 
-class DefaultMesoPopupMenu extends ViewPopupMenu {
+class DefaultMesoPopupMenu extends JPopupMenu {
 
 	private MesoView view;
 
@@ -43,7 +44,7 @@ class DefaultMesoPopupMenu extends ViewPopupMenu {
 
 	DefaultMesoPopupMenu(MesoView v) {
 
-		super("Default", v);
+		super("Default");
 		view = v;
 
 		JMenuItem mi = new JMenuItem(view.getActionMap().get(MesoView.PASTE));
