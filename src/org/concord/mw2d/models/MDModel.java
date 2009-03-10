@@ -1715,18 +1715,12 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 						}
 					}
 					if (file == null) {
-						if (evalAction != null) {
-							evalAction.copyMouseAndKeyScripts();
-						}
 						input(u);
 						return url;
 					}
 				}
 				else {
 					file = new File(url);
-				}
-				if (evalAction != null) {
-					evalAction.copyMouseAndKeyScripts();
 				}
 				input(file);
 				return url;
@@ -1737,7 +1731,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 				stop.setEnabled(false);
 				setProgress(0, "Done");
 				if (evalAction != null) {
-					evalAction.readdMouseAndKeyScripts();
+					evalAction.readdMouseAndKeyScripts(initializationScript);
 				}
 				notifyModelListeners(new ModelEvent(MDModel.this, ModelEvent.MODEL_RESET));
 				notifyPageComponentListeners(new PageComponentEvent(MDModel.this, PageComponentEvent.COMPONENT_RESET));
