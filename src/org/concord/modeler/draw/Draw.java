@@ -510,7 +510,7 @@ public abstract class Draw extends PrintableComponent {
 	}
 
 	protected void processMousePressed(MouseEvent e) {
-		requestFocus();
+		requestFocusInWindow();
 		int x = e.getX();
 		int y = e.getY();
 		pressPoint.x = x;
@@ -593,8 +593,10 @@ public abstract class Draw extends PrintableComponent {
 			}
 			break;
 		case LINE_MODE:
-			if (editable)
+			if (editable) {
+				setSelectedElement(null);
 				clickPoint.setLocation(x, y);
+			}
 			break;
 		case MEASURE_MODE:
 			clickPoint.setLocation(x, y);
@@ -603,11 +605,13 @@ public abstract class Draw extends PrintableComponent {
 		case ELLIPSE_MODE:
 		case TRIANGLE_MODE:
 			if (editable) {
+				setSelectedElement(null);
 				selectedArea.setLocation(x, y);
 				anchorPoint.setLocation(x, y);
 			}
 			break;
 		}
+		repaint();
 	}
 
 	private void dragSelectedArea(int x, int y) {
@@ -951,6 +955,16 @@ public abstract class Draw extends PrintableComponent {
 			r.setRect((DefaultRectangle) bufferedElement);
 			return r;
 		}
+		else if (bufferedElement instanceof DefaultEllipse) {
+			DefaultEllipse e = new DefaultEllipse((DefaultEllipse) bufferedElement);
+			e.setOval((DefaultEllipse) bufferedElement);
+			return e;
+		}
+		else if (bufferedElement instanceof DefaultTriangle) {
+			DefaultTriangle t = new DefaultTriangle((DefaultTriangle) bufferedElement);
+			t.setVertices((DefaultTriangle) bufferedElement);
+			return t;
+		}
 		else if (bufferedElement instanceof TextContainer) {
 			DefaultTextContainer c = new DefaultTextContainer((TextContainer) bufferedElement);
 			c.setLocation(((TextContainer) bufferedElement).getRx(), ((TextContainer) bufferedElement).getRy());
@@ -981,6 +995,9 @@ public abstract class Draw extends PrintableComponent {
 	}
 
 	public void setSelectedElement(DrawingElement e) {
+		if (selectedElement != e && selectedElement != null) {
+			selectedElement.setSelected(false);
+		}
 		selectedElement = e;
 		if (selectedElement != null && !selectedElement.isSelected())
 			selectedElement.setSelected(true);

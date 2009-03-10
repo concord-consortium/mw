@@ -93,10 +93,10 @@ public abstract class AbstractTriangle implements DrawingElement {
 		stroke = r.stroke;
 	}
 
-	private void setVertices(AbstractTriangle r) {
+	void setVertices(AbstractTriangle r) {
 		for (int i = 0; i < 3; i++) {
 			Point2D.Float p = r.triangle.getVertex(i);
-			triangle.setVertex(0, p.x, p.y);
+			triangle.setVertex(i, p.x, p.y);
 		}
 	}
 

@@ -41,8 +41,7 @@ import org.concord.mw2d.models.UserField;
 class AtomPopupMenu extends ViewPopupMenu {
 
 	private AtomisticView view;
-	private JMenuItem miSteer, miUnsteer, miTraj, miRMean, miFMean;
-	private JMenuItem miDraggable;
+	private JMenuItem miSteer, miUnsteer, miTraj, miRMean, miFMean, miDraggable;
 	private Action releaseAction;
 
 	void setCoor(int x, int y) {
