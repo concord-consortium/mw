@@ -188,18 +188,6 @@ abstract class MouseManager {
 
 		// viewer.setStatusUserAction("mousePressed: " + modifiers);
 
-		switch (modifiers & BUTTON_MODIFIER_MASK) {
-		/*
-		 * mth 2004 03 17 this isPopupTrigger stuff just doesn't work reliably for me and I don't have a Mac to test out
-		 * CTRL-CLICK behavior Therefore ... we are going to implement both gestures to bring up the popup menu The fact
-		 * that we are using CTRL_LEFT may interfere with other platforms if/when we need to support multiple
-		 * selections, but we will cross that bridge when we come to it
-		 */
-		case CTRL_LEFT: // on MacOSX this brings up popup
-		case RIGHT: // with multi-button mice, this will too
-			viewer.popupMenu(x, y);
-			return;
-		}
 	}
 
 	void mouseEntered(long time, int x, int y) {
@@ -229,6 +217,18 @@ abstract class MouseManager {
 		if (logMouseEvents)
 			Logger.debug("mouseReleased(" + x + "," + y + "," + modifiers + ")");
 		viewer.setInMotion(false);
+		switch (modifiers & BUTTON_MODIFIER_MASK) {
+		/*
+		 * mth 2004 03 17 this isPopupTrigger stuff just doesn't work reliably for me and I don't have a Mac to test out
+		 * CTRL-CLICK behavior Therefore ... we are going to implement both gestures to bring up the popup menu The fact
+		 * that we are using CTRL_LEFT may interfere with other platforms if/when we need to support multiple
+		 * selections, but we will cross that bridge when we come to it
+		 */
+		case CTRL_LEFT: // on MacOSX this brings up popup
+		case RIGHT: // with multi-button mice, this will too
+			viewer.popupMenu(x, y);
+			return;
+		}
 	}
 
 	int previousClickX, previousClickY;
@@ -392,7 +392,7 @@ abstract class MouseManager {
 			break;
 		case CTRL_ALT_LEFT:
 			/*
-			 * miguel 2004 11 23 CTRL_ALT_LEFT *should* work on the mac however, Apple has a bug in that mouseDragged
+			 * miguel 2004 11 23 CTRL_ALT_LEFTshould work on the mac however, Apple has a bug in that mouseDragged
 			 * events do not get passed through if the CTL button is held down
 			 * 
 			 * I submitted a bug to apple

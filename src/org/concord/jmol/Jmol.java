@@ -190,6 +190,7 @@ class Jmol extends Draw {
 		super();
 
 		container = c;
+		setPopupMenuEnabled(false);
 
 		viewer = JmolViewer.allocateViewer(this, new SmarterJmolAdapter(null));
 		viewer.setBackgroundArgb(Color.black.getRGB());

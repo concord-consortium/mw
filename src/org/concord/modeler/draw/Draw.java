@@ -104,6 +104,7 @@ public abstract class Draw extends PrintableComponent {
 	private boolean lineHasArrowByDefault;
 
 	private JPopupMenu popupMenu;
+	private boolean popupMenuEnabled = true;
 	private CallOut callOutWindow;
 	private boolean isCallOutWindowShown;
 	private List<DrawListener> drawListenerList;
@@ -803,9 +804,11 @@ public abstract class Draw extends PrintableComponent {
 		case DEFAULT_MODE:
 			if (isRightClick(e) && !e.isShiftDown() && !e.isControlDown()) {
 				select(x, y);
-				if (popupMenu == null)
-					createPopupMenu();
-				popupMenu.show(this, x + 5, y + 5);
+				if (popupMenuEnabled) {
+					if (popupMenu == null)
+						createPopupMenu();
+					popupMenu.show(this, x + 5, y + 5);
+				}
 				return;
 			}
 			if (selectedElement != null && e.getClickCount() >= 2)
@@ -1343,6 +1346,10 @@ public abstract class Draw extends PrintableComponent {
 				getSelectedElement().setSelected(false);
 			setSelectedElement(c);
 		}
+	}
+
+	public void setPopupMenuEnabled(boolean b) {
+		popupMenuEnabled = b;
 	}
 
 	public JPopupMenu getPopupMenu() {
