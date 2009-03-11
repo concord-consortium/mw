@@ -1583,79 +1583,6 @@ public class MolecularView extends Draw {
 		int y = e.getY();
 		int clickCount = e.getClickCount();
 
-		if (ModelerUtilities.isRightClick(e)) {
-			if (getSelectedElement() == null || e.isShiftDown()) {
-				selectAtom(-1);
-				selectRBond(-1);
-				selectABond(-1);
-				selectTBond(-1);
-				if (obstacleIndexAndFace != null)
-					obstacleIndexAndFace[0] = obstacleIndexAndFace[1] = -1;
-				int i = viewer.findNearestAtomIndex(x, y);
-				if (i >= 0) {
-					viewer.setHighlightPlaneVisible(false);
-					Atom at = model.getAtom(i);
-					Molecule mol = model.getMolecule(at);
-					if (e.isShiftDown() || mol == null) {
-						selectAtom(i);
-						if (atomPopupMenu == null)
-							atomPopupMenu = new AtomPopupMenu(this);
-						atomPopupMenu.setVeloSelected(velocityShown(i));
-						atomPopupMenu.setTrajSelected(hasTrajectory(i));
-						atomPopupMenu.setCameraAttached(cameraAtom == i);
-						atomPopupMenu.show(this, x, y);
-					}
-					else {
-						selectedComponent = mol;
-						multiselectionBitSet.clear();
-						int n = mol.getAtomCount();
-						for (int k = 0; k < n; k++) {
-							multiselectionBitSet.set(mol.getAtom(k).getIndex());
-						}
-						viewer.setSelectionSet(multiselectionBitSet);
-						if (moleculePopupMenu == null)
-							moleculePopupMenu = new MoleculePopupMenu(this);
-						moleculePopupMenu.show(this, x, y);
-					}
-				}
-				else if ((i = viewer.findNearestBondIndex(x, y)) >= 0) {
-					selectRBond(i);
-					if (rbondPopupMenu == null)
-						rbondPopupMenu = new RBondPopupMenu(this);
-					rbondPopupMenu.show(this, x, y);
-				}
-				else if ((i = viewer.findNearestABondIndex(x, y)) >= 0) {
-					selectABond(i);
-					if (abondPopupMenu == null)
-						abondPopupMenu = new ABondPopupMenu(this);
-					abondPopupMenu.show(this, x, y);
-				}
-				else if ((i = viewer.findNearestTBondIndex(x, y)) >= 0) {
-					selectTBond(i);
-					if (tbondPopupMenu == null)
-						tbondPopupMenu = new TBondPopupMenu(this);
-					tbondPopupMenu.show(this, x, y);
-				}
-				else {
-					obstacleIndexAndFace = viewer.findNearestObstacleIndexAndFace(x, y);
-					if (obstacleIndexAndFace != null && obstacleIndexAndFace[0] >= 0 && obstacleIndexAndFace[1] >= 0) {
-						selectAtom(-1);
-						selectedComponent = model.getObstacle(obstacleIndexAndFace[0]);
-						if (obstaclePopupMenu == null)
-							obstaclePopupMenu = new ObstaclePopupMenu(this);
-						obstaclePopupMenu.setObstacle(model.getObstacle(obstacleIndexAndFace[0]));
-						obstaclePopupMenu.show(this, x, y);
-					}
-					else {
-						defaultPopupMenu.show(this, x + 5, y + 5);
-					}
-				}
-				if (rightClickJob != null)
-					rightClickJob.run();
-				return;
-			}
-		}
-
 		if (viewer.getNavigationMode()) {
 			if (navigator.navigate(x, y))
 				return;
@@ -2204,8 +2131,87 @@ public class MolecularView extends Draw {
 		repaint();
 	}
 
+	private void popup(MouseEvent e) {
+		int x = e.getX();
+		int y = e.getY();
+		if (getSelectedElement() == null || e.isShiftDown()) {
+			selectAtom(-1);
+			selectRBond(-1);
+			selectABond(-1);
+			selectTBond(-1);
+			if (obstacleIndexAndFace != null)
+				obstacleIndexAndFace[0] = obstacleIndexAndFace[1] = -1;
+			int i = viewer.findNearestAtomIndex(x, y);
+			if (i >= 0) {
+				viewer.setHighlightPlaneVisible(false);
+				Atom at = model.getAtom(i);
+				Molecule mol = model.getMolecule(at);
+				if (e.isShiftDown() || mol == null) {
+					selectAtom(i);
+					if (atomPopupMenu == null)
+						atomPopupMenu = new AtomPopupMenu(this);
+					atomPopupMenu.setVeloSelected(velocityShown(i));
+					atomPopupMenu.setTrajSelected(hasTrajectory(i));
+					atomPopupMenu.setCameraAttached(cameraAtom == i);
+					atomPopupMenu.show(this, x, y);
+				}
+				else {
+					selectedComponent = mol;
+					multiselectionBitSet.clear();
+					int n = mol.getAtomCount();
+					for (int k = 0; k < n; k++) {
+						multiselectionBitSet.set(mol.getAtom(k).getIndex());
+					}
+					viewer.setSelectionSet(multiselectionBitSet);
+					if (moleculePopupMenu == null)
+						moleculePopupMenu = new MoleculePopupMenu(this);
+					moleculePopupMenu.show(this, x, y);
+				}
+			}
+			else if ((i = viewer.findNearestBondIndex(x, y)) >= 0) {
+				selectRBond(i);
+				if (rbondPopupMenu == null)
+					rbondPopupMenu = new RBondPopupMenu(this);
+				rbondPopupMenu.show(this, x, y);
+			}
+			else if ((i = viewer.findNearestABondIndex(x, y)) >= 0) {
+				selectABond(i);
+				if (abondPopupMenu == null)
+					abondPopupMenu = new ABondPopupMenu(this);
+				abondPopupMenu.show(this, x, y);
+			}
+			else if ((i = viewer.findNearestTBondIndex(x, y)) >= 0) {
+				selectTBond(i);
+				if (tbondPopupMenu == null)
+					tbondPopupMenu = new TBondPopupMenu(this);
+				tbondPopupMenu.show(this, x, y);
+			}
+			else {
+				obstacleIndexAndFace = viewer.findNearestObstacleIndexAndFace(x, y);
+				if (obstacleIndexAndFace != null && obstacleIndexAndFace[0] >= 0 && obstacleIndexAndFace[1] >= 0) {
+					selectAtom(-1);
+					selectedComponent = model.getObstacle(obstacleIndexAndFace[0]);
+					if (obstaclePopupMenu == null)
+						obstaclePopupMenu = new ObstaclePopupMenu(this);
+					obstaclePopupMenu.setObstacle(model.getObstacle(obstacleIndexAndFace[0]));
+					obstaclePopupMenu.show(this, x, y);
+				}
+				else {
+					defaultPopupMenu.show(this, x + 5, y + 5);
+				}
+			}
+			if (rightClickJob != null)
+				rightClickJob.run();
+			return;
+		}
+	}
+
 	protected void processMouseReleased(MouseEvent e) {
 		super.processMouseReleased(e);
+		if (ModelerUtilities.isRightClick(e)) {
+			popup(e);
+			return;
+		}
 		model.runMouseScript(MouseEvent.MOUSE_RELEASED, e.getX(), e.getY());
 		int x = e.getX();
 		int y = e.getY();
