@@ -49,6 +49,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JToggleButton;
 
+import org.concord.modeler.draw.Draw;
+import org.concord.modeler.draw.DrawEvent;
+import org.concord.modeler.draw.DrawListener;
 import org.concord.modeler.draw.DrawingElement;
 import org.concord.modeler.ui.ColorArrayEvent;
 import org.concord.modeler.ui.ColorArrayListener;
@@ -56,7 +59,7 @@ import org.concord.modeler.ui.ColorArrayPane;
 import org.concord.modeler.ui.IconPool;
 import org.concord.modeler.ui.PastableTextArea;
 
-class SnapshotEditor extends JPanel {
+class SnapshotEditor extends JPanel implements DrawListener {
 
 	SnapshotGallery gallery;
 	ImageAnnotater annotater;
@@ -99,6 +102,7 @@ class SnapshotEditor extends JPanel {
 		add(panel, BorderLayout.CENTER);
 
 		annotater = new ImageAnnotater();
+		annotater.addDrawListener(this);
 		annotater.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		scroller = new JScrollPane();
 		scroller.getViewport().setView(annotater);
@@ -117,7 +121,7 @@ class SnapshotEditor extends JPanel {
 			selectButton.setMargin(margin);
 		selectButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				annotater.setMode(ImageAnnotater.DEFAULT_MODE);
+				annotater.setMode(Draw.DEFAULT_MODE);
 			}
 		});
 		toolBar.add(selectButton);
@@ -129,7 +133,7 @@ class SnapshotEditor extends JPanel {
 			button.setMargin(margin);
 		button.addMouseListener(new MouseAdapter() {
 			public void mouseReleased(MouseEvent e) {
-				annotater.setMode(ImageAnnotater.MEASURE_MODE);
+				annotater.setMode(Draw.MEASURE_MODE);
 				if (e.getClickCount() < 2)
 					return;
 				if (measureLineColorArrayPane == null) {
@@ -160,7 +164,7 @@ class SnapshotEditor extends JPanel {
 			button.setMargin(margin);
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				annotater.setMode(ImageAnnotater.DEFAULT_MODE);
+				annotater.setMode(Draw.DEFAULT_MODE);
 				annotater.inputTextBox();
 			}
 		});
@@ -173,7 +177,7 @@ class SnapshotEditor extends JPanel {
 			button.setMargin(margin);
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				annotater.setMode(ImageAnnotater.LINE_MODE);
+				annotater.setMode(Draw.LINE_MODE);
 			}
 		});
 		toolBar.add(button);
@@ -185,7 +189,7 @@ class SnapshotEditor extends JPanel {
 			button.setMargin(margin);
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				annotater.setMode(ImageAnnotater.RECT_MODE);
+				annotater.setMode(Draw.RECT_MODE);
 			}
 		});
 		toolBar.add(button);
@@ -197,7 +201,7 @@ class SnapshotEditor extends JPanel {
 			button.setMargin(margin);
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				annotater.setMode(ImageAnnotater.ELLIPSE_MODE);
+				annotater.setMode(Draw.ELLIPSE_MODE);
 			}
 		});
 		toolBar.add(button);
@@ -209,7 +213,7 @@ class SnapshotEditor extends JPanel {
 			button.setMargin(margin);
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				annotater.setMode(ImageAnnotater.TRIANGLE_MODE);
+				annotater.setMode(Draw.TRIANGLE_MODE);
 			}
 		});
 		toolBar.add(button);
@@ -561,6 +565,11 @@ class SnapshotEditor extends JPanel {
 
 		return flash;
 
+	}
+
+	public void eventOccurred(DrawEvent e) {
+		if (e.getType() == DrawEvent.OBJECT_ADDED)
+			selectButton.doClick();
 	}
 
 }
