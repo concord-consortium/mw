@@ -123,8 +123,10 @@ abstract class ReportFormatter {
 			doc.insertString(doc.getLength(), (s != null ? s : "Student name") + ": ", answerStyle);
 			String fullName = null;
 			String school = null;
+			String classID = null;
 			if (Modeler.user != null && !Modeler.user.isEmpty()) {
 				fullName = Modeler.user.getFullName();
+				classID = Modeler.user.getKlass();
 				school = Modeler.user.getInstitution();
 			}
 			if (fullName == null)
@@ -143,6 +145,14 @@ abstract class ReportFormatter {
 			doc.insertString(doc.getLength(),
 					fullName == null || fullName.trim().equals("") ? "(Your teacher's name)\n" : fullName + "\n",
 					highlightStyle);
+
+			if (classID != null) {
+				s = Modeler.getInternationalText("Class");
+				doc.insertString(doc.getLength(), (s != null ? s : "Class") + ": ", answerStyle);
+				doc.insertString(doc.getLength(),
+						classID.trim().equals("") || "null".equals(classID) ? "(Your class)\n" : classID + "\n",
+						highlightStyle);
+			}
 
 			if (school == null)
 				school = System.getProperty("school name");

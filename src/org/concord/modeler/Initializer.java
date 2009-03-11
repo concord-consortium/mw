@@ -189,6 +189,7 @@ public class Initializer {
 		Modeler.user.setEmailAddress(prop.getProperty("Email"));
 		Modeler.user.setFirstName(prop.getProperty("FirstName"));
 		Modeler.user.setLastName(prop.getProperty("LastName"));
+		Modeler.user.setKlass(prop.getProperty("Klass"));
 		Modeler.user.setInstitution(prop.getProperty("Institution"));
 		Modeler.user.setState(prop.getProperty("State"));
 		Modeler.user.setCountry(prop.getProperty("Country"));
