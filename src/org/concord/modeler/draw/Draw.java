@@ -106,6 +106,7 @@ public abstract class Draw extends PrintableComponent {
 	private JPopupMenu popupMenu;
 	private CallOut callOutWindow;
 	private boolean isCallOutWindowShown;
+	private List<DrawListener> drawListenerList;
 
 	public Draw() {
 
@@ -256,6 +257,31 @@ public abstract class Draw extends PrintableComponent {
 			s = null;
 		}
 		return s;
+	}
+
+	public void addDrawListener(DrawListener listener) {
+		if (drawListenerList == null)
+			drawListenerList = new ArrayList<DrawListener>();
+		if (!drawListenerList.contains(listener))
+			drawListenerList.add(listener);
+	}
+
+	public void removeDrawListener(DrawListener listener) {
+		if (drawListenerList != null)
+			drawListenerList.remove(listener);
+	}
+
+	private void notifyDrawListener(final DrawEvent e) {
+		if (drawListenerList == null || drawListenerList.isEmpty())
+			return;
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				if (e.getType() == DrawEvent.OBJECT_ADDED) {
+					for (DrawListener x : drawListenerList)
+						x.eventOccurred(e);
+				}
+			}
+		});
 	}
 
 	public void clear() {
@@ -566,10 +592,11 @@ public abstract class Draw extends PrintableComponent {
 				t = componentList.get(i);
 				if (t.contains(x, y) && t != selectedElement) {
 					setSelectedElement(t);
-					clickPoint.setLocation(x - t.getRx(), y - t.getRy());
 					break;
 				}
 			}
+			if (selectedElement != null)
+				clickPoint.setLocation(x - selectedElement.getRx(), y - selectedElement.getRy());
 		}
 		repaint();
 	}
@@ -770,11 +797,11 @@ public abstract class Draw extends PrintableComponent {
 	protected void processMouseReleased(MouseEvent e) {
 		if (!editable)
 			return;
+		int x = e.getX();
+		int y = e.getY();
 		switch (mode) {
 		case DEFAULT_MODE:
 			if (isRightClick(e) && !e.isShiftDown() && !e.isControlDown()) {
-				int x = e.getX();
-				int y = e.getY();
 				select(x, y);
 				if (popupMenu == null)
 					createPopupMenu();
@@ -797,6 +824,7 @@ public abstract class Draw extends PrintableComponent {
 				addElement(l);
 				repaint();
 				dragging = false;
+				notifyDrawListener(new DrawEvent(this, DrawEvent.OBJECT_ADDED));
 			}
 			break;
 		case RECT_MODE:
@@ -811,6 +839,7 @@ public abstract class Draw extends PrintableComponent {
 				addElement(r);
 				selectedArea.setSize(0, 0);
 				repaint();
+				notifyDrawListener(new DrawEvent(this, DrawEvent.OBJECT_ADDED));
 			}
 			break;
 		case ELLIPSE_MODE:
@@ -825,6 +854,7 @@ public abstract class Draw extends PrintableComponent {
 				addElement(r);
 				selectedArea.setSize(0, 0);
 				repaint();
+				notifyDrawListener(new DrawEvent(this, DrawEvent.OBJECT_ADDED));
 			}
 			break;
 		case TRIANGLE_MODE:
@@ -840,6 +870,7 @@ public abstract class Draw extends PrintableComponent {
 				addElement(r);
 				selectedArea.setSize(0, 0);
 				repaint();
+				notifyDrawListener(new DrawEvent(this, DrawEvent.OBJECT_ADDED));
 			}
 			break;
 		}

@@ -53,12 +53,12 @@ class ImageAnnotater extends Draw {
 	}
 
 	public void update(Graphics g) {
+		int w = getWidth();
+		int h = getHeight();
 		g.setColor(Color.white);
-		g.fillRect(0, 0, getWidth(), getHeight());
+		g.fillRect(0, 0, w, h);
 		if (image != null) {
-			image
-					.paintIcon(this, g, (getWidth() - image.getIconWidth()) / 2,
-							(getHeight() - image.getIconHeight()) / 2);
+			image.paintIcon(this, g, (w - image.getIconWidth()) / 2, (h - image.getIconHeight()) / 2);
 		}
 		super.update(g);
 	}
