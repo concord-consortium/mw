@@ -3979,16 +3979,8 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			}
 			break;
 
-		case MUTA_ID:
-			Atom at = whichAtom(x, y);
-			if (at != null) {
-				at.setSelected(true);
-				mutateSelectedAtom();
-			}
-			break;
-
 		case TRAJ_ID:
-			at = whichAtom(x, y);
+			Atom at = whichAtom(x, y);
 			if (at != null) {
 				at.setSelected(true);
 				at.setShowRTraj(!at.getShowRTraj());
@@ -5525,6 +5517,14 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				}
 				selectedArea.setSize(0, 0);
 				repaint();
+			}
+			break;
+
+		case MUTA_ID:
+			Atom at = whichAtom(x, y);
+			if (at != null) {
+				at.setSelected(true);
+				mutateSelectedAtom();
 			}
 			break;
 
