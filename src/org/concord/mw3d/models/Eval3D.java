@@ -755,6 +755,11 @@ class Eval3D extends AbstractEval {
 			view.paintImmediately(0, 0, view.getWidth(), view.getHeight());
 			return true;
 		}
+		if ("init".equals(strLC)) { // cause the initialization script to be executed, if any
+			if (model.getInitializationScript() != null)
+				model.runScript(model.getInitializationScript());
+			return true;
+		}
 		if ("snapshot".equals(strLC)) { // snapshot
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {

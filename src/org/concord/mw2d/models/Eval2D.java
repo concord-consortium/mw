@@ -47,8 +47,6 @@ import java.util.regex.Pattern;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
-import javax.swing.undo.CannotRedoException;
-import javax.swing.undo.CannotUndoException;
 
 import org.concord.modeler.ConnectionManager;
 import org.concord.modeler.draw.FillMode;
@@ -1295,34 +1293,9 @@ class Eval2D extends AbstractEval {
 				return true;
 			}
 		}
-		if ("undo".equals(strLC)) { // undo
-			EventQueue.invokeLater(new Runnable() {
-				public void run() {
-					if (model.getUndoManager().canUndo()) {
-						try {
-							model.getUndoManager().undo();
-						}
-						catch (CannotUndoException ex) {
-							ex.printStackTrace();
-						}
-					}
-				}
-			});
-			return true;
-		}
-		if ("redo".equals(strLC)) { // redo
-			EventQueue.invokeLater(new Runnable() {
-				public void run() {
-					if (model.getUndoManager().canRedo()) {
-						try {
-							model.getUndoManager().redo();
-						}
-						catch (CannotRedoException ex) {
-							ex.printStackTrace();
-						}
-					}
-				}
-			});
+		if ("init".equals(strLC)) { // cause the initialization script to be executed, if any
+			if (model.getInitializationScript() != null)
+				model.runScript(model.getInitializationScript());
 			return true;
 		}
 		if ("mark".equals(strLC)) { // mark
