@@ -34,6 +34,7 @@ public class Person implements Serializable {
 	private String password;
 	private String firstName;
 	private String lastName;
+	private String klass;
 	private String institution;
 	private String state;
 	private String country;
@@ -70,6 +71,14 @@ public class Person implements Serializable {
 
 	public String getLastName() {
 		return lastName;
+	}
+
+	public void setKlass(String klass) {
+		this.klass = klass;
+	}
+
+	public String getKlass() {
+		return klass;
 	}
 
 	public void setInstitution(String s) {
@@ -197,9 +206,9 @@ public class Person implements Serializable {
 
 	public String toString() {
 		return (userID == null ? "" : userID + ", ") + (firstName == null ? "" : firstName + " ")
-				+ (lastName == null ? "" : lastName) + (institution == null ? "" : ", " + institution)
-				+ (state == null ? "" : ", " + state) + (country == null ? "" : ", " + country)
-				+ (emailAddress == null ? "" : ", " + emailAddress);
+				+ (lastName == null ? "" : lastName) + (klass == null ? "" : ", " + klass)
+				+ (institution == null ? "" : ", " + institution) + (state == null ? "" : ", " + state)
+				+ (country == null ? "" : ", " + country) + (emailAddress == null ? "" : ", " + emailAddress);
 	}
 
 }
