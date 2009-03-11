@@ -117,16 +117,13 @@ public class PageMolecularViewer extends JmolContainer implements BasicModel, Em
 
 	private MouseAdapter mouseAdapter = new MouseAdapter() {
 		public void mouseReleased(MouseEvent e) {
-			if (!ModelerUtilities.isRightClick(e)) {
+			if (ModelerUtilities.isRightClick(e)) {
+				invokePopupMenu(e.getX(), e.getY());
+			}
+			else {
 				if (e.getClickCount() < 2) {
 					handlePopupText(e.getX(), e.getY());
 				}
-			}
-		}
-
-		public void mousePressed(MouseEvent e) {
-			if (ModelerUtilities.isRightClick(e)) {
-				invokePopupMenu(e.getX(), e.getY());
 			}
 		}
 	};
