@@ -548,7 +548,7 @@ class SnapshotEditor extends JPanel {
 
 			public void windowActivated(WindowEvent e) {
 				if (inputDescription)
-					textArea.requestFocus();
+					textArea.requestFocusInWindow();
 			}
 		});
 		dialog.pack();

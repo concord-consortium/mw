@@ -509,6 +509,71 @@ public abstract class Draw extends PrintableComponent {
 	protected void processMouseExited(MouseEvent e) {
 	}
 
+	private void select(int x, int y) {
+		if (selectedElement instanceof TextContainer) {
+			TextContainer t = (TextContainer) selectedElement;
+			boolean b = t.nearCallOutPoint(x, y);
+			t.setChangingCallOut(b);
+			if (b)
+				return;
+			t.setSelected(false);
+			selectedElement = null;
+		}
+		else if (selectedElement instanceof AbstractLine) {
+			AbstractLine l = (AbstractLine) selectedElement;
+			int i = l.nearEndPoint(x, y);
+			l.setSelectedEndPoint(i);
+			if (i > 0)
+				return;
+			l.setSelected(false);
+			selectedElement = null;
+		}
+		else if (selectedElement instanceof AbstractRectangle) {
+			AbstractRectangle r = (AbstractRectangle) selectedElement;
+			byte i = r.nearHandle(x, y);
+			r.setSelectedHandle(i);
+			setAnchorPointForRectangularShape(i, r.getX(), r.getY(), r.getWidth(), r.getHeight());
+			if (i >= 0)
+				return;
+			r.setSelected(false);
+			selectedElement = null;
+		}
+		else if (selectedElement instanceof AbstractEllipse) {
+			AbstractEllipse r = (AbstractEllipse) selectedElement;
+			byte i = r.nearHandle(x, y);
+			r.setSelectedHandle(i);
+			setAnchorPointForRectangularShape(i, r.getX(), r.getY(), r.getWidth(), r.getHeight());
+			if (i >= 0)
+				return;
+			r.setSelected(false);
+			selectedElement = null;
+		}
+		else if (selectedElement instanceof AbstractTriangle) {
+			AbstractTriangle r = (AbstractTriangle) selectedElement;
+			byte i = r.nearHandle(x, y);
+			r.setSelectedHandle(i);
+			Rectangle rt = r.getBounds();
+			setAnchorPointForRectangularShape(i, rt.x, rt.y, rt.width, rt.height);
+			if (i >= 0)
+				return;
+			r.setSelected(false);
+			selectedElement = null;
+		}
+		int n = componentList.size();
+		if (n > 0) {
+			DrawingElement t;
+			for (int i = n - 1; i >= 0; i--) {
+				t = componentList.get(i);
+				if (t.contains(x, y) && t != selectedElement) {
+					setSelectedElement(t);
+					clickPoint.setLocation(x - t.getRx(), y - t.getRy());
+					break;
+				}
+			}
+		}
+		repaint();
+	}
+
 	protected void processMousePressed(MouseEvent e) {
 		requestFocusInWindow();
 		int x = e.getX();
@@ -518,78 +583,7 @@ public abstract class Draw extends PrintableComponent {
 		switch (mode) {
 		case DEFAULT_MODE:
 			if (editable) {
-				if (selectedElement instanceof TextContainer) {
-					TextContainer t = (TextContainer) selectedElement;
-					boolean b = t.nearCallOutPoint(x, y);
-					t.setChangingCallOut(b);
-					if (b)
-						return;
-					t.setSelected(false);
-					selectedElement = null;
-				}
-				else if (selectedElement instanceof AbstractLine) {
-					AbstractLine l = (AbstractLine) selectedElement;
-					int i = l.nearEndPoint(x, y);
-					l.setSelectedEndPoint(i);
-					if (i > 0)
-						return;
-					l.setSelected(false);
-					selectedElement = null;
-				}
-				else if (selectedElement instanceof AbstractRectangle) {
-					AbstractRectangle r = (AbstractRectangle) selectedElement;
-					byte i = r.nearHandle(x, y);
-					r.setSelectedHandle(i);
-					setAnchorPointForRectangularShape(i, r.getX(), r.getY(), r.getWidth(), r.getHeight());
-					if (i >= 0)
-						return;
-					r.setSelected(false);
-					selectedElement = null;
-				}
-				else if (selectedElement instanceof AbstractEllipse) {
-					AbstractEllipse r = (AbstractEllipse) selectedElement;
-					byte i = r.nearHandle(x, y);
-					r.setSelectedHandle(i);
-					setAnchorPointForRectangularShape(i, r.getX(), r.getY(), r.getWidth(), r.getHeight());
-					if (i >= 0)
-						return;
-					r.setSelected(false);
-					selectedElement = null;
-				}
-				else if (selectedElement instanceof AbstractTriangle) {
-					AbstractTriangle r = (AbstractTriangle) selectedElement;
-					byte i = r.nearHandle(x, y);
-					r.setSelectedHandle(i);
-					Rectangle rt = r.getBounds();
-					setAnchorPointForRectangularShape(i, rt.x, rt.y, rt.width, rt.height);
-					if (i >= 0)
-						return;
-					r.setSelected(false);
-					selectedElement = null;
-				}
-				if (!e.isShiftDown()) {
-					int n = componentList.size();
-					if (n > 0) {
-						DrawingElement t;
-						for (int i = n - 1; i >= 0; i--) {
-							t = componentList.get(i);
-							if (t.contains(x, y)) {
-								if (selectedElement != null)
-									selectedElement.setSelected(false);
-								t.setSelected(true);
-								selectedElement = t;
-								clickPoint.setLocation(x - t.getRx(), y - t.getRy());
-								break;
-							}
-						}
-					}
-				}
-				repaint();
-				if (isRightClick(e) && !e.isShiftDown() && !e.isControlDown()) {
-					if (popupMenu == null)
-						createPopupMenu();
-					popupMenu.show(this, x + 5, y + 5);
-				}
+				select(x, y);
 			}
 			break;
 		case LINE_MODE:
@@ -778,10 +772,16 @@ public abstract class Draw extends PrintableComponent {
 			return;
 		switch (mode) {
 		case DEFAULT_MODE:
-			// setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-			if (selectedElement == null)
+			if (isRightClick(e) && !e.isShiftDown() && !e.isControlDown()) {
+				int x = e.getX();
+				int y = e.getY();
+				select(x, y);
+				if (popupMenu == null)
+					createPopupMenu();
+				popupMenu.show(this, x + 5, y + 5);
 				return;
-			if (e.getClickCount() >= 2)
+			}
+			if (selectedElement != null && e.getClickCount() >= 2)
 				showDialog(selectedElement);
 			break;
 		case LINE_MODE:
@@ -1322,7 +1322,8 @@ public abstract class Draw extends PrintableComponent {
 
 	private void createPopupMenu() {
 
-		popupMenu = new JPopupMenu();
+		popupMenu = new JPopupMenu("Default Draw");
+		popupMenu.setInvoker(this);
 
 		String s = getInternationalText("BringForward");
 		final JMenuItem bringForwardMI = new JMenuItem(s != null ? s : "Bring Forward");
@@ -1394,6 +1395,7 @@ public abstract class Draw extends PrintableComponent {
 			}
 
 			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+				Draw.this.requestFocusInWindow();
 			}
 
 		});
