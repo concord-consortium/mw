@@ -120,7 +120,6 @@ public class PageTextField extends JPanel implements Embeddable, HtmlService, Se
 		setPage(parent);
 		setTitle(t.getTitle());
 		setQuestionPosition(t.getQuestionPosition());
-		setColumns(t.getColumns());
 		setPreferredSize(t.getPreferredSize());
 		setOpaque(t.isOpaque());
 		setBackground(t.getBackground());

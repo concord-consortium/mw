@@ -118,8 +118,6 @@ public class PageTextArea extends JPanel implements Embeddable, HtmlService, Sea
 		this();
 		setPage(parent);
 		setTitle(t.getTitle());
-		setRows(t.getRows());
-		setColumns(t.getColumns());
 		setPreferredSize(t.getPreferredSize());
 		setOpaque(t.isOpaque());
 		setBackground(t.getBackground());
