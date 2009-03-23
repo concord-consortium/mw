@@ -88,10 +88,10 @@ public class PageElectronicStructureViewer extends ElectronicStructureViewer imp
 		setPreferredSize(viewer.getPreferredSize());
 		ModelCanvas mc = page.getComponentPool().get(modelID);
 		if (mc != null) {
-			mc.getContainer().getModel().addModelListener(this);
-			mc.getContainer().getModel().addUpdateListener(this);
-			setElement(((MolecularModel) mc.getContainer().getModel()).getElement(getElementID()));
-			addParameterChangeListener(mc.getContainer().getModel());
+			mc.getMdContainer().getModel().addModelListener(this);
+			mc.getMdContainer().getModel().addUpdateListener(this);
+			setElement(((MolecularModel) mc.getMdContainer().getModel()).getElement(getElementID()));
+			addParameterChangeListener(mc.getMdContainer().getModel());
 			scaleViewer();
 		}
 		setChangable(page.isEditable());
@@ -108,7 +108,7 @@ public class PageElectronicStructureViewer extends ElectronicStructureViewer imp
 		if (modelID != -1) {
 			ModelCanvas mc = page.getComponentPool().get(modelID);
 			if (mc != null) {
-				mc.getContainer().getModel().removeModelListener(this);
+				mc.getMdContainer().getModel().removeModelListener(this);
 			}
 		}
 		page = null;

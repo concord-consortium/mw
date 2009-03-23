@@ -1636,7 +1636,7 @@ public class MolecularModel {
 
 	void record() {
 		if (modelTimeQueue.getPointer() > 0) {
-			view.getContainer().notifyModelListeners(new ModelEvent(view.getContainer(), ModelEvent.MODEL_CHANGED));
+			view.getMolecularContainer().notifyModelListeners(new ModelEvent(view.getMolecularContainer(), ModelEvent.MODEL_CHANGED));
 		}
 		modelTimeQueue.update(getModelTime());
 		kin = getKin();

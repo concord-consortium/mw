@@ -1863,11 +1863,11 @@ class Eval3D extends AbstractEval {
 			}
 			if (url != null) {
 				ConnectionManager.sharedInstance().setCheckUpdate(true);
-				view.getContainer().input(url, reset);
+				view.getMolecularContainer().input(url, reset);
 			}
 		}
 		else {
-			view.getContainer().input(new File(address), reset);
+			view.getMolecularContainer().input(new File(address), reset);
 		}
 		/* Do we really need to sleep in the following? */
 		try {

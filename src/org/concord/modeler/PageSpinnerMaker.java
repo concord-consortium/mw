@@ -209,7 +209,7 @@ class PageSpinnerMaker extends ComponentMaker {
 		synchronized (componentPool) {
 			for (ModelCanvas mc : componentPool.getModels()) {
 				if (mc.isUsed()) {
-					modelComboBox.addItem(mc.getContainer().getModel());
+					modelComboBox.addItem(mc.getMdContainer().getModel());
 				}
 			}
 		}
@@ -244,7 +244,7 @@ class PageSpinnerMaker extends ComponentMaker {
 		else {
 			if (pageSpinner.modelID != -1) {
 				ModelCanvas mc = componentPool.get(pageSpinner.modelID);
-				modelComboBox.setSelectedItem(mc.getContainer().getModel());
+				modelComboBox.setSelectedItem(mc.getMdContainer().getModel());
 			}
 			else {
 				BasicModel m = (BasicModel) modelComboBox.getSelectedItem();

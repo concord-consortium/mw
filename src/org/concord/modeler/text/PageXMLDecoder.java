@@ -4022,20 +4022,20 @@ final class PageXMLDecoder {
 				}
 				page.getProperties().put(mc, resourceURL);
 				if (recorderDisabled) { // backward compatible
-					mc.getContainer().getModel().setRecorderDisabled(recorderDisabled);
+					mc.getMdContainer().getModel().setRecorderDisabled(recorderDisabled);
 					recorderDisabled = false;
 				}
 				else {
 					if (recorderless) {
-						mc.getContainer().getModel().setRecorderDisabled(true);
+						mc.getMdContainer().getModel().setRecorderDisabled(true);
 						recorderless = false;
 					}
 					else {
-						mc.getContainer().getModel().setRecorderDisabled(false);
+						mc.getMdContainer().getModel().setRecorderDisabled(false);
 					}
 				}
-				if (mc.getContainer() instanceof AtomContainer) {
-					AtomContainer x = (AtomContainer) mc.getContainer();
+				if (mc.getMdContainer() instanceof AtomContainer) {
+					AtomContainer x = (AtomContainer) mc.getMdContainer();
 					x.setDNAString(dnaString);
 					x.setDNAContextEnabled(dnaContext);
 					if (dnaString != null) {
@@ -4051,7 +4051,7 @@ final class PageXMLDecoder {
 						x.createDNAPanel();
 					}
 				}
-				mc.getContainer().setStatusBarShown(showStatusBar);
+				mc.getMdContainer().setStatusBarShown(showStatusBar);
 				if (!showStatusBar)
 					showStatusBar = true;
 				if (showMenuBar) {

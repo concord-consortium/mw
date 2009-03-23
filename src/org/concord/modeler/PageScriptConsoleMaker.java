@@ -139,7 +139,7 @@ class PageScriptConsoleMaker extends ComponentMaker {
 		synchronized (componentPool) {
 			for (ModelCanvas mc : componentPool.getModels()) {
 				if (mc.isUsed()) {
-					modelComboBox.addItem(mc.getContainer().getModel());
+					modelComboBox.addItem(mc.getMdContainer().getModel());
 				}
 			}
 		}
@@ -175,7 +175,7 @@ class PageScriptConsoleMaker extends ComponentMaker {
 		else {
 			if (pageScriptConsole.modelID != -1) {
 				ModelCanvas mc = componentPool.get(pageScriptConsole.modelID);
-				modelComboBox.setSelectedItem(mc.getContainer().getModel());
+				modelComboBox.setSelectedItem(mc.getMdContainer().getModel());
 			}
 			else {
 				BasicModel m = (BasicModel) modelComboBox.getSelectedItem();

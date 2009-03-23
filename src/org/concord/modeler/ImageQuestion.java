@@ -171,6 +171,7 @@ public class ImageQuestion extends JPanel implements Embeddable, TransferListene
 		setBorderType(iq.borderType);
 		setPreferredSize(iq.getPreferredSize());
 		setQuestion(iq.getQuestion());
+		setOpaque(iq.isOpaque());
 		setBackground(iq.getBackground());
 		setChangable(page.isEditable());
 		setId(iq.id);

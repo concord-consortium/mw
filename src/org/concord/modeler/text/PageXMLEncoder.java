@@ -466,7 +466,7 @@ final class PageXMLEncoder {
 
 						if (attr instanceof ModelCanvas) {
 							final ModelCanvas mc = (ModelCanvas) attr;
-							final MDModel model = mc.getContainer().getModel();
+							final MDModel model = mc.getMdContainer().getModel();
 							final String filename = (String) model.getProperty("filename");
 							final File modelFile = createFile(file, filename);
 							if (page.isRemote()) {

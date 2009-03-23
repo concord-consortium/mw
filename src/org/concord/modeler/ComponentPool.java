@@ -308,13 +308,13 @@ public class ComponentPool {
 			for (ModelCanvas mc : map.values()) {
 				if (!mc.isUsed())
 					continue;
-				final MDContainer c = mc.getContainer();
+				final MDContainer c = mc.getMdContainer();
 				c.getModel().stop();
 				c.getModel().clearMouseScripts();
 				c.getModel().clearKeyScripts();
 				mc.setUsed(false);
 				mc.showBorder(true);
-				mc.getContainer().setStatusBarShown(true);
+				mc.getMdContainer().setStatusBarShown(true);
 				List list = c.getModel().getModelListeners();
 				if (list != null)
 					list.clear();
@@ -349,7 +349,7 @@ public class ComponentPool {
 		synchronized (map) {
 			for (Integer key : map.keySet()) {
 				ModelCanvas mc = map.get(key);
-				if (mc.getContainer().getModel() == m)
+				if (mc.getMdContainer().getModel() == m)
 					return key.intValue();
 			}
 		}
@@ -365,7 +365,7 @@ public class ComponentPool {
 		int count = 0;
 		synchronized (map) {
 			for (ModelCanvas mc : map.values()) {
-				if (mc.getContainer().getRepresentationName().equals(type)) {
+				if (mc.getMdContainer().getRepresentationName().equals(type)) {
 					if (!mc.isUsed())
 						return mc;
 					count++;
@@ -454,7 +454,7 @@ public class ComponentPool {
 			return;
 		synchronized (map) {
 			for (ModelCanvas canvas : map.values()) {
-				Model model = canvas.getContainer().getModel();
+				Model model = canvas.getMdContainer().getModel();
 				if (model != null)
 					model.stopInput();
 			}
@@ -467,11 +467,11 @@ public class ComponentPool {
 			return;
 		synchronized (map) {
 			for (ModelCanvas mc : map.values()) {
-				if (mc.getContainer() instanceof AtomContainer) {
-					if (((AtomContainer) mc.getContainer()).hasDNAScroller())
-						((AtomContainer) mc.getContainer()).stopDNAAnimation();
+				if (mc.getMdContainer() instanceof AtomContainer) {
+					if (((AtomContainer) mc.getMdContainer()).hasDNAScroller())
+						((AtomContainer) mc.getMdContainer()).stopDNAAnimation();
 				}
-				Model model = mc.getContainer().getModel();
+				Model model = mc.getMdContainer().getModel();
 				model.haltScriptExecution();
 				if (model.getJob() != null) {
 					if (!model.getJob().isStopped()) {

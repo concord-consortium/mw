@@ -83,7 +83,7 @@ class Mw2dConnector {
 		MDContainer c;
 		synchronized (mdList) {
 			for (ModelCanvas mc : mdList) {
-				c = mc.getContainer();
+				c = mc.getMdContainer();
 				removeOldListeners(c.getModel());
 				c.setMenuEnabled(false);
 				c.setLoading(true);
@@ -98,10 +98,10 @@ class Mw2dConnector {
 		synchronized (mdList) {
 			for (ModelCanvas mc : mdList) {
 				mc.loadToolBarButtons();
-				mc.getContainer().setMenuEnabled(true);
-				mc.getContainer().setLoading(false);
-				if (mc.getContainer() instanceof AtomContainer) {
-					final AtomContainer ac = (AtomContainer) mc.getContainer();
+				mc.getMdContainer().setMenuEnabled(true);
+				mc.getMdContainer().setLoading(false);
+				if (mc.getMdContainer() instanceof AtomContainer) {
+					final AtomContainer ac = (AtomContainer) mc.getMdContainer();
 					EventQueue.invokeLater(new Runnable() {
 						public void run() {
 							if (ac.hasDNAScroller()) {
@@ -143,7 +143,7 @@ class Mw2dConnector {
 
 			if (id == -1)
 				continue;
-			model = page.getComponentPool().get(id).getContainer().getModel();
+			model = page.getComponentPool().get(id).getMdContainer().getModel();
 			listenerList = listenerMap.get(id);
 
 			for (ModelListener listener : listenerList) {

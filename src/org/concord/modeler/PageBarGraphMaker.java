@@ -289,7 +289,7 @@ class PageBarGraphMaker extends ComponentMaker {
 		synchronized (componentPool) {
 			for (ModelCanvas mc : componentPool.getModels()) {
 				if (mc.isUsed()) {
-					modelComboBox.addItem(mc.getContainer().getModel());
+					modelComboBox.addItem(mc.getMdContainer().getModel());
 				}
 			}
 		}
@@ -323,8 +323,8 @@ class PageBarGraphMaker extends ComponentMaker {
 		else {
 			if (pageBarGraph.modelID != -1) {
 				ModelCanvas mc = componentPool.get(pageBarGraph.modelID);
-				modelComboBox.setSelectedItem(mc.getContainer().getModel());
-				mc.getContainer().getModel().addModelListener(pageBarGraph);
+				modelComboBox.setSelectedItem(mc.getMdContainer().getModel());
+				mc.getMdContainer().getModel().addModelListener(pageBarGraph);
 			}
 			else {
 				Model m = (Model) modelComboBox.getSelectedItem();

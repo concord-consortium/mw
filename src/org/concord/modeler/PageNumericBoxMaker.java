@@ -206,7 +206,7 @@ class PageNumericBoxMaker extends ComponentMaker {
 		synchronized (componentPool) {
 			for (ModelCanvas mc : componentPool.getModels()) {
 				if (mc.isUsed()) {
-					modelComboBox.addItem(mc.getContainer().getModel());
+					modelComboBox.addItem(mc.getMdContainer().getModel());
 				}
 			}
 		}
@@ -241,8 +241,8 @@ class PageNumericBoxMaker extends ComponentMaker {
 		else {
 			if (pageNumericBox.modelID != -1) {
 				ModelCanvas mc = componentPool.get(pageNumericBox.modelID);
-				modelComboBox.setSelectedItem(mc.getContainer().getModel());
-				mc.getContainer().getModel().addModelListener(pageNumericBox);
+				modelComboBox.setSelectedItem(mc.getMdContainer().getModel());
+				mc.getMdContainer().getModel().addModelListener(pageNumericBox);
 			}
 			else {
 				Model m = (Model) modelComboBox.getSelectedItem();

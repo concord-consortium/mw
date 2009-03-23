@@ -179,13 +179,13 @@ class PageElectronicStructureViewerMaker extends ComponentMaker {
 			synchronized (componentPool) {
 				for (ModelCanvas mc : componentPool.getModels()) {
 					if (mc.isUsed()) {
-						modelComboBox.addItem(mc.getContainer().getModel());
+						modelComboBox.addItem(mc.getMdContainer().getModel());
 					}
 				}
 			}
 			if (pageElectronicStructureViewer.modelID != -1) {
 				ModelCanvas mc = componentPool.get(pageElectronicStructureViewer.modelID);
-				modelComboBox.setSelectedItem(mc.getContainer().getModel());
+				modelComboBox.setSelectedItem(mc.getMdContainer().getModel());
 			}
 			else {
 				Model m = (Model) modelComboBox.getSelectedItem();

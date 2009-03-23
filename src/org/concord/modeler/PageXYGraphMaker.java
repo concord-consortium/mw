@@ -395,7 +395,7 @@ class PageXYGraphMaker extends ComponentMaker {
 		synchronized (componentPool) {
 			for (ModelCanvas mc : componentPool.getModels()) {
 				if (mc.isUsed()) {
-					modelComboBox.addItem(mc.getContainer().getModel());
+					modelComboBox.addItem(mc.getMdContainer().getModel());
 				}
 			}
 		}
@@ -429,8 +429,8 @@ class PageXYGraphMaker extends ComponentMaker {
 		else {
 			if (pageXYGraph.modelID != -1) {
 				ModelCanvas mc = componentPool.get(pageXYGraph.modelID);
-				modelComboBox.setSelectedItem(mc.getContainer().getModel());
-				mc.getContainer().getModel().addModelListener(pageXYGraph);
+				modelComboBox.setSelectedItem(mc.getMdContainer().getModel());
+				mc.getMdContainer().getModel().addModelListener(pageXYGraph);
 			}
 			else {
 				Model m = (Model) modelComboBox.getSelectedItem();

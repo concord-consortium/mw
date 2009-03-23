@@ -108,7 +108,7 @@ public class PagePotentialHill extends PotentialHill implements Embeddable, Mode
 		setPreferredSize(hill.getPreferredSize());
 		ModelCanvas mc = page.getComponentPool().get(modelID);
 		if (mc != null) {
-			Model m = mc.getContainer().getModel();
+			Model m = mc.getMdContainer().getModel();
 			m.addModelListener(this);
 			if (m instanceof ReactionModel) {
 				((ReactionModel) m).getType().addPropertyChangeListener(this);
@@ -122,7 +122,7 @@ public class PagePotentialHill extends PotentialHill implements Embeddable, Mode
 		if (modelID != -1) {
 			ModelCanvas mc = page.getComponentPool().get(modelID);
 			if (mc != null) {
-				mc.getContainer().getModel().removeModelListener(this);
+				mc.getMdContainer().getModel().removeModelListener(this);
 			}
 		}
 		page = null;
@@ -469,13 +469,13 @@ public class PagePotentialHill extends PotentialHill implements Embeddable, Mode
 			synchronized (componentPool) {
 				for (ModelCanvas mc : componentPool.getModels()) {
 					if (mc.isUsed()) {
-						modelComboBox.addItem(mc.getContainer().getModel());
+						modelComboBox.addItem(mc.getMdContainer().getModel());
 					}
 				}
 			}
 			if (modelID != -1) {
 				ModelCanvas mc = componentPool.get(modelID);
-				modelComboBox.setSelectedItem(mc.getContainer().getModel());
+				modelComboBox.setSelectedItem(mc.getMdContainer().getModel());
 			}
 			else {
 				Model m = (Model) modelComboBox.getSelectedItem();
@@ -543,8 +543,8 @@ public class PagePotentialHill extends PotentialHill implements Embeddable, Mode
 		if (isHandleSelected()) {
 			if (modelID != -1) {
 				ModelCanvas mc = page.getComponentPool().get(modelID);
-				if (mc.getContainer().getModel() instanceof ReactionModel) {
-					ReactionModel m = (ReactionModel) mc.getContainer().getModel();
+				if (mc.getMdContainer().getModel() instanceof ReactionModel) {
+					ReactionModel m = (ReactionModel) mc.getMdContainer().getModel();
 					m.getType().putParameter(getOwner(), new Double(getActivationEnergy()));
 				}
 			}
@@ -606,7 +606,7 @@ public class PagePotentialHill extends PotentialHill implements Embeddable, Mode
 	public void propertyChange(PropertyChangeEvent e) {
 		if (modelID != -1) {
 			try {
-				Reaction r = ((ReactionModel) page.getComponentPool().get(modelID).getContainer().getModel()).getType();
+				Reaction r = ((ReactionModel) page.getComponentPool().get(modelID).getMdContainer().getModel()).getType();
 				adjustReactionHeat(r);
 			}
 			catch (Exception exception) {
