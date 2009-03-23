@@ -68,7 +68,7 @@ public class PagePhotonSpectrometer extends PhotonSpectrometer implements Script
 		setPreferredSize(pps.getPreferredSize());
 		ModelCanvas mc = page.getComponentPool().get(modelID);
 		if (mc != null)
-			mc.getContainer().getModel().addModelListener(this);
+			mc.getMdContainer().getModel().addModelListener(this);
 		setChangable(page.isEditable());
 		setId(pps.id);
 	}
@@ -83,7 +83,7 @@ public class PagePhotonSpectrometer extends PhotonSpectrometer implements Script
 		if (modelID != -1) {
 			ModelCanvas mc = page.getComponentPool().get(modelID);
 			if (mc != null) {
-				mc.getContainer().getModel().removeModelListener(this);
+				mc.getMdContainer().getModel().removeModelListener(this);
 			}
 		}
 		page = null;
@@ -300,7 +300,7 @@ public class PagePhotonSpectrometer extends PhotonSpectrometer implements Script
 					if (modelID != -1) {
 						ModelCanvas mc = page.getComponentPool().get(modelID);
 						if (mc != null) {
-							if (mc.getContainer().getModel() == e.getSource()) {
+							if (mc.getMdContainer().getModel() == e.getSource()) {
 								receivePhoton((Photon) e.getCurrentState());
 							}
 						}
@@ -312,7 +312,7 @@ public class PagePhotonSpectrometer extends PhotonSpectrometer implements Script
 					if (modelID != -1) {
 						ModelCanvas mc = page.getComponentPool().get(modelID);
 						if (mc != null) {
-							if (mc.getContainer().getModel() == e.getSource()) {
+							if (mc.getMdContainer().getModel() == e.getSource()) {
 								Photon p = (Photon) e.getCurrentState();
 								if (p.isFromLightSource())
 									receivePhoton(p);

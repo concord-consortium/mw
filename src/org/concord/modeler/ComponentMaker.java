@@ -77,7 +77,7 @@ public abstract class ComponentMaker {
 			}
 		}
 		else { // backward compatible
-			m = page.getComponentPool().get(modelID).getContainer().getModel();
+			m = page.getComponentPool().get(modelID).getMdContainer().getModel();
 		}
 		return m;
 	}
@@ -99,7 +99,7 @@ public abstract class ComponentMaker {
 			}
 			else {
 				ModelCanvas mc = page.getComponentPool().get(modelID);
-				if (mc != null && mc.getContainer().getModel() == source)
+				if (mc != null && mc.getMdContainer().getModel() == source)
 					yes = true;
 			}
 		}

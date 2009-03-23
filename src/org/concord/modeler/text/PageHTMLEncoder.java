@@ -361,7 +361,7 @@ final class PageHTMLEncoder {
 					else if (name.equals(StyleConstants.ComponentAttribute)) {
 						/* if there is a model, create a JNLP link to it */
 						if (attr instanceof ModelCanvas) {
-							Model model = ((ModelCanvas) attr).getContainer().getModel();
+							Model model = ((ModelCanvas) attr).getMdContainer().getModel();
 							String modelName = (String) model.getProperty("filename");
 							String path = file.getParent() + FILE_SEPARATOR + modelName;
 							jnlpURL = FileUtilities.changeExtension(path, "jnlp");

@@ -401,7 +401,7 @@ public class MolecularView extends Draw {
 		molecularContainer = mc;
 	}
 
-	public MolecularContainer getContainer() {
+	public MolecularContainer getMolecularContainer() {
 		return molecularContainer;
 	}
 

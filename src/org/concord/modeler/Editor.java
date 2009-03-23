@@ -1765,7 +1765,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 			for (ModelCanvas c : componentPool.getModels()) {
 				if (!c.isUsed())
 					continue;
-				m = c.getContainer();
+				m = c.getMdContainer();
 				if (m.getModel() == src) {
 					// prepare to rearrange tool bar buttons
 					Component[] but = null;
@@ -1821,7 +1821,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 					c.validate();
 					if (!c.getSize().equals(c.getPreferredSize()))
 						page.settleComponentSize();
-					((MDView) c.getContainer().getModel().getView()).clearEditor(true);
+					((MDView) c.getMdContainer().getModel().getView()).clearEditor(true);
 					onPage = true;
 				}
 			}

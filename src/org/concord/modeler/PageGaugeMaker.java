@@ -289,7 +289,7 @@ class PageGaugeMaker extends ComponentMaker {
 		synchronized (componentPool) {
 			for (ModelCanvas mc : componentPool.getModels()) {
 				if (mc.isUsed()) {
-					modelComboBox.addItem(mc.getContainer().getModel());
+					modelComboBox.addItem(mc.getMdContainer().getModel());
 				}
 			}
 		}
@@ -323,8 +323,8 @@ class PageGaugeMaker extends ComponentMaker {
 		else {
 			if (pageGauge.modelID != -1) {
 				ModelCanvas mc = componentPool.get(pageGauge.modelID);
-				modelComboBox.setSelectedItem(mc.getContainer().getModel());
-				mc.getContainer().getModel().addModelListener(pageGauge);
+				modelComboBox.setSelectedItem(mc.getMdContainer().getModel());
+				mc.getMdContainer().getModel().addModelListener(pageGauge);
 			}
 			else {
 				Model m = (Model) modelComboBox.getSelectedItem();

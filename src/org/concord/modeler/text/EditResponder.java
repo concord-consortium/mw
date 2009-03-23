@@ -182,10 +182,10 @@ class EditResponder implements DocumentListener {
 
 		if (!inserted) {
 			if (engine instanceof ModelCanvas) {
-				BasicModel model = ((ModelCanvas) engine).getContainer().getModel();
+				BasicModel model = ((ModelCanvas) engine).getMdContainer().getModel();
 				((ModelCanvas) engine).setUsed(false);
 				page.getComponentPool().processInsertionOrRemoval(false,
-						((ModelCanvas) engine).getContainer().getRepresentationName());
+						((ModelCanvas) engine).getMdContainer().getRepresentationName());
 				page.nameModels();
 				List list = model.getModelListeners();
 				if (list != null)
@@ -216,7 +216,7 @@ class EditResponder implements DocumentListener {
 			if (comm.getModelClass() == null || comm.getModelClass().indexOf("org.concord.mw2d") != -1) {
 				ModelCanvas mc = page.getComponentPool().get(comm.getModelID());
 				if (mc != null) {
-					BasicModel m = mc.getContainer().getModel();
+					BasicModel m = mc.getMdContainer().getModel();
 					if (m != null) {
 						m.removeModelListener(comm);
 					}

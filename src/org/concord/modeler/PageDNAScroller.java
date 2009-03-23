@@ -137,7 +137,7 @@ public class PageDNAScroller extends DNAScroller implements Embeddable, ModelCom
 		fillDNA();
 		ModelCanvas mc = page.getComponentPool().get(modelID);
 		if (mc != null)
-			mc.getContainer().getModel().addModelListener(this);
+			mc.getMdContainer().getModel().addModelListener(this);
 		setChangable(page.isEditable());
 		setId(s.id);
 	}
@@ -146,7 +146,7 @@ public class PageDNAScroller extends DNAScroller implements Embeddable, ModelCom
 		if (modelID != -1) {
 			ModelCanvas mc = page.getComponentPool().get(modelID);
 			if (mc != null) {
-				mc.getContainer().getModel().removeModelListener(this);
+				mc.getMdContainer().getModel().removeModelListener(this);
 			}
 		}
 		page = null;
@@ -242,7 +242,7 @@ public class PageDNAScroller extends DNAScroller implements Embeddable, ModelCom
 		ModelCanvas mc = page.getComponentPool().get(modelID);
 		if (mc == null)
 			return;
-		MoleculeCollection c = ((MolecularModel) mc.getContainer().getModel()).getMolecules();
+		MoleculeCollection c = ((MolecularModel) mc.getMdContainer().getModel()).getMolecules();
 		if (c.isEmpty() || proteinID >= c.size()) {
 			setDNA(null);
 			return;
@@ -507,13 +507,13 @@ public class PageDNAScroller extends DNAScroller implements Embeddable, ModelCom
 			synchronized (componentPool) {
 				for (ModelCanvas mc : componentPool.getModels()) {
 					if (mc.isUsed()) {
-						modelComboBox.addItem(mc.getContainer().getModel());
+						modelComboBox.addItem(mc.getMdContainer().getModel());
 					}
 				}
 			}
 			if (modelID != -1) {
 				ModelCanvas mc = componentPool.get(modelID);
-				modelComboBox.setSelectedItem(mc.getContainer().getModel());
+				modelComboBox.setSelectedItem(mc.getMdContainer().getModel());
 			}
 			else {
 				Model m = (Model) modelComboBox.getSelectedItem();
@@ -584,7 +584,7 @@ public class PageDNAScroller extends DNAScroller implements Embeddable, ModelCom
 	public void itemStateChanged(ItemEvent e) {
 		int i = e.getStateChange();
 		if (i == ItemEvent.SELECTED) {
-			MolecularModel model = (MolecularModel) page.getComponentPool().get(modelID).getContainer().getModel();
+			MolecularModel model = (MolecularModel) page.getComponentPool().get(modelID).getMdContainer().getModel();
 			if (model.getMolecules().isEmpty())
 				return;
 			Molecule m = model.getMolecules().get(proteinID);
@@ -594,7 +594,7 @@ public class PageDNAScroller extends DNAScroller implements Embeddable, ModelCom
 	}
 
 	public void mutationOccurred(MutationEvent e) {
-		MolecularModel model = (MolecularModel) page.getComponentPool().get(modelID).getContainer().getModel();
+		MolecularModel model = (MolecularModel) page.getComponentPool().get(modelID).getMdContainer().getModel();
 		if (model.getMolecules().isEmpty())
 			return;
 		Molecule m = model.getMolecules().get(proteinID);
@@ -733,7 +733,7 @@ public class PageDNAScroller extends DNAScroller implements Embeddable, ModelCom
 			}
 		}
 		else if (src instanceof Atom) {
-			MolecularModel model = (MolecularModel) page.getComponentPool().get(modelID).getContainer().getModel();
+			MolecularModel model = (MolecularModel) page.getComponentPool().get(modelID).getMdContainer().getModel();
 			if (proteinID >= model.getMolecules().size())
 				return;
 			Molecule m = model.getMolecules().get(proteinID);

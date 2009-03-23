@@ -151,14 +151,14 @@ class PageDiffractionInstrumentMaker extends ComponentMaker {
 			synchronized (componentPool) {
 				for (ModelCanvas mc : componentPool.getModels()) {
 					if (mc.isUsed()) {
-						modelComboBox.addItem(mc.getContainer().getModel());
+						modelComboBox.addItem(mc.getMdContainer().getModel());
 					}
 				}
 			}
 			if (pageDiffractionInstrument.modelID != -1) {
 				ModelCanvas mc = componentPool.get(pageDiffractionInstrument.modelID);
-				mc.getContainer().getModel().addModelListener(pageDiffractionInstrument);
-				modelComboBox.setSelectedItem(mc.getContainer().getModel());
+				mc.getMdContainer().getModel().addModelListener(pageDiffractionInstrument);
+				modelComboBox.setSelectedItem(mc.getMdContainer().getModel());
 			}
 			else {
 				Model m = (Model) modelComboBox.getSelectedItem();

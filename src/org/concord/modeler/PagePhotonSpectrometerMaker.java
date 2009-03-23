@@ -146,14 +146,14 @@ class PagePhotonSpectrometerMaker extends ComponentMaker {
 			synchronized (componentPool) {
 				for (ModelCanvas mc : componentPool.getModels()) {
 					if (mc.isUsed()) {
-						modelComboBox.addItem(mc.getContainer().getModel());
+						modelComboBox.addItem(mc.getMdContainer().getModel());
 					}
 				}
 			}
 			if (pagePhotonSpectrometer.modelID != -1) {
 				ModelCanvas mc = componentPool.get(pagePhotonSpectrometer.modelID);
-				mc.getContainer().getModel().addModelListener(pagePhotonSpectrometer);
-				modelComboBox.setSelectedItem(mc.getContainer().getModel());
+				mc.getMdContainer().getModel().addModelListener(pagePhotonSpectrometer);
+				modelComboBox.setSelectedItem(mc.getMdContainer().getModel());
 			}
 			else {
 				Model m = (Model) modelComboBox.getSelectedItem();

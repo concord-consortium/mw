@@ -487,7 +487,7 @@ public class ModelCanvas extends JComponent implements Embeddable, Scriptable, E
 		return name;
 	}
 
-	public MDContainer getContainer() {
+	public MDContainer getMdContainer() {
 		return container;
 	}
 

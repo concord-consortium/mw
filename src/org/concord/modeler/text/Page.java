@@ -756,7 +756,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 							((IconWrapper) e).showBoundary(b);
 					}
 					else if (e instanceof ModelCanvas) {
-						((ModelCanvas) e).getContainer().getView().setEditable(b);
+						((ModelCanvas) e).getMdContainer().getView().setEditable(b);
 					}
 				}
 			}
@@ -1074,7 +1074,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				Object val = map.get(key);
 				if (val instanceof ModelCanvas) {
 					ModelCanvas canvas = (ModelCanvas) val;
-					if (canvas.getContainer().getRepresentationName().equals(type)) {
+					if (canvas.getMdContainer().getRepresentationName().equals(type)) {
 						int caret = getCaretPosition();
 						if (caret <= key) {
 							componentPool.processInsertionOrRemoval(true, type);
@@ -1089,18 +1089,18 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			mc.setUsed(true);
 			mc.addMenuBar();
 			mc.setResourceAddress("Inserted model");
-			MDModel model = mc.getContainer().getModel();
+			MDModel model = mc.getMdContainer().getModel();
 			model.clear();
 			if (model.getModelListeners() != null)
 				model.getModelListeners().clear();
-			mc.getContainer().getView().setEnergizer(true);
+			mc.getMdContainer().getView().setEnergizer(true);
 			if (model.getRecorderDisabled())
 				model.activateEmbeddedMovie(false);
-			if (mc.getContainer() instanceof AtomContainer) {
-				((AtomContainer) mc.getContainer()).enableDNAScroller(false);
+			if (mc.getMdContainer() instanceof AtomContainer) {
+				((AtomContainer) mc.getMdContainer()).enableDNAScroller(false);
 			}
-			mc.getContainer().enableRecorder(true);
-			mc.getContainer().addDefaultToolBar();
+			mc.getMdContainer().enableRecorder(true);
+			mc.getMdContainer().addDefaultToolBar();
 			insertComponent(mc);
 			if (reorder)
 				nameModels();
@@ -1123,16 +1123,16 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 					mc.setUsed(true);
 					mc.removeMenuBar();
 					mc.setResourceAddress("Inserted model");
-					MolecularModel model = (MolecularModel) mc.getContainer().getModel();
+					MolecularModel model = (MolecularModel) mc.getMdContainer().getModel();
 					model.clear();
 					if (model.getModelListeners() != null)
 						model.getModelListeners().clear();
 					model.activateEmbeddedMovie(false);
-					mc.getContainer().removeToolbar();
-					((AtomContainer) mc.getContainer()).setDNAString("AAAAAAAAACCCCCCCCCGGGGGGGGGTTTTTTTTT");
-					((AtomContainer) mc.getContainer()).setDNAContextEnabled(context);
-					((AtomContainer) mc.getContainer()).enableDNAScroller(true);
-					((AtomContainer) mc.getContainer()).resetScrollerParameters();
+					mc.getMdContainer().removeToolbar();
+					((AtomContainer) mc.getMdContainer()).setDNAString("AAAAAAAAACCCCCCCCCGGGGGGGGGTTTTTTTTT");
+					((AtomContainer) mc.getMdContainer()).setDNAContextEnabled(context);
+					((AtomContainer) mc.getMdContainer()).enableDNAScroller(true);
+					((AtomContainer) mc.getMdContainer()).resetScrollerParameters();
 					model.activateHeatBath(true);
 					model.getHeatBath().setExpectedTemperature(300);
 					model.setSolvent(new Solvent(Solvent.WATER));
@@ -2672,9 +2672,9 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		new SwingWorker("Page:loadMDModel()", LOADER_THREAD_PRIORITY, new DisasterHandler(DisasterHandler.LOAD_ERROR,
 				null, null, Page.this)) {
 			public Object construct() {
-				Model model = mc.getContainer().getModel();
+				Model model = mc.getMdContainer().getModel();
 				mc.setResourceAddress(uri);
-				mc.getContainer().setLoading(true);
+				mc.getMdContainer().setLoading(true);
 				if (!FileUtilities.isRemote(uri)) {
 					model.input(new File(uri));
 				}
@@ -2693,7 +2693,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			}
 
 			public void finished() {
-				mc.getContainer().setLoading(false);
+				mc.getMdContainer().setLoading(false);
 				if (!b)
 					setEditable(false);
 				setTitle(uri);
@@ -2977,7 +2977,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		synchronized (componentPool) {
 			for (ModelCanvas c : componentPool.getModels()) {
 				if (c.isUsed()) {
-					m = c.getContainer().getModel();
+					m = c.getMdContainer().getModel();
 					if (m instanceof MolecularModel) {
 						m.putProperty("old url", m.getProperty("url"));
 						ext = "mml";
@@ -3064,7 +3064,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			Object o = getEmbeddedComponent(ModelCanvas.class, 0);
 			if (o instanceof ModelCanvas) {
 				ModelCanvas mc = (ModelCanvas) o;
-				Model model = mc.getContainer().getModel();
+				Model model = mc.getMdContainer().getModel();
 				model.output(file);
 				properties.put(mc, mc.getURL());
 			}

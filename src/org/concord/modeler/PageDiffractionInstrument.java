@@ -64,7 +64,7 @@ public class PageDiffractionInstrument extends DiffractionInstrument implements 
 		setModelID(di.modelID);
 		ModelCanvas mc = page.getComponentPool().get(modelID);
 		if (mc != null)
-			mc.getContainer().getModel().addModelListener(this);
+			mc.getMdContainer().getModel().addModelListener(this);
 		setChangable(page.isEditable());
 		setId(di.id);
 	}
@@ -73,7 +73,7 @@ public class PageDiffractionInstrument extends DiffractionInstrument implements 
 		if (modelID != -1) {
 			ModelCanvas mc = page.getComponentPool().get(modelID);
 			if (mc != null) {
-				mc.getContainer().getModel().removeModelListener(this);
+				mc.getMdContainer().getModel().removeModelListener(this);
 			}
 		}
 		page = null;
@@ -187,7 +187,7 @@ public class PageDiffractionInstrument extends DiffractionInstrument implements 
 		if (modelID != -1) {
 			ModelCanvas mc = page.getComponentPool().get(modelID);
 			if (mc != null) {
-				Model m = mc.getContainer().getModel();
+				Model m = mc.getMdContainer().getModel();
 				if (m instanceof MesoModel) {
 					// no meso model yet
 					return;
@@ -263,7 +263,7 @@ public class PageDiffractionInstrument extends DiffractionInstrument implements 
 			if (modelID != -1) {
 				ModelCanvas mc = page.getComponentPool().get(modelID);
 				if (mc != null) {
-					if (mc.getContainer().getModel() == e.getSource()) {
+					if (mc.getMdContainer().getModel() == e.getSource()) {
 						EventQueue.invokeLater(new Runnable() {
 							public void run() {
 								enableScan(false);
@@ -277,7 +277,7 @@ public class PageDiffractionInstrument extends DiffractionInstrument implements 
 			if (modelID != -1) {
 				ModelCanvas mc = page.getComponentPool().get(modelID);
 				if (mc != null) {
-					if (mc.getContainer().getModel() == e.getSource()) {
+					if (mc.getMdContainer().getModel() == e.getSource()) {
 						EventQueue.invokeLater(new Runnable() {
 							public void run() {
 								enableScan(true);

@@ -107,7 +107,7 @@ public class PagePotentialWell extends PotentialWell implements Embeddable, Mode
 		setPreferredSize(well.getPreferredSize());
 		ModelCanvas mc = page.getComponentPool().get(modelID);
 		if (mc != null)
-			mc.getContainer().getModel().addModelListener(this);
+			mc.getMdContainer().getModel().addModelListener(this);
 		setChangable(page.isEditable());
 		setId(well.id);
 	}
@@ -116,7 +116,7 @@ public class PagePotentialWell extends PotentialWell implements Embeddable, Mode
 		if (modelID != -1) {
 			ModelCanvas mc = page.getComponentPool().get(modelID);
 			if (mc != null) {
-				mc.getContainer().getModel().removeModelListener(this);
+				mc.getMdContainer().getModel().removeModelListener(this);
 			}
 		}
 		page = null;
@@ -444,13 +444,13 @@ public class PagePotentialWell extends PotentialWell implements Embeddable, Mode
 			synchronized (componentPool) {
 				for (ModelCanvas mc : componentPool.getModels()) {
 					if (mc.isUsed()) {
-						modelComboBox.addItem(mc.getContainer().getModel());
+						modelComboBox.addItem(mc.getMdContainer().getModel());
 					}
 				}
 			}
 			if (modelID != -1) {
 				ModelCanvas mc = componentPool.get(modelID);
-				modelComboBox.setSelectedItem(mc.getContainer().getModel());
+				modelComboBox.setSelectedItem(mc.getMdContainer().getModel());
 			}
 			else {
 				Model m = (Model) modelComboBox.getSelectedItem();
@@ -522,8 +522,8 @@ public class PagePotentialWell extends PotentialWell implements Embeddable, Mode
 		if (isHandleSelected()) {
 			if (modelID != -1) {
 				ModelCanvas mc = page.getComponentPool().get(modelID);
-				if (mc.getContainer().getModel() instanceof ReactionModel) {
-					ReactionModel m = (ReactionModel) mc.getContainer().getModel();
+				if (mc.getMdContainer().getModel() instanceof ReactionModel) {
+					ReactionModel m = (ReactionModel) mc.getMdContainer().getModel();
 					m.getType().putParameter(getOwner(), new Double(getDissociationEnergy()));
 					m.changeChemicalEnergies();
 				}
