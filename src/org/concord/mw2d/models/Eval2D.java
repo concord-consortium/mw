@@ -56,6 +56,7 @@ import org.concord.modeler.event.ModelEvent;
 import org.concord.modeler.event.PageComponentEvent;
 import org.concord.modeler.event.ScriptEvent;
 import org.concord.modeler.process.DelayModelTimeLoadable;
+import org.concord.modeler.process.Loadable;
 import org.concord.modeler.script.AbstractEval;
 import org.concord.modeler.script.Compiler;
 import org.concord.modeler.text.XMLCharacterDecoder;
@@ -1296,6 +1297,16 @@ class Eval2D extends AbstractEval {
 		if ("init".equals(strLC)) { // cause the initialization script to be executed, if any
 			if (model.getInitializationScript() != null)
 				model.runScript(model.getInitializationScript());
+			return true;
+		}
+		if (strLC.startsWith("runtask")) { // run the task with the specified name
+			String taskName = str.substring(7).trim();
+			Loadable task = model.getJob().getTaskByName(taskName);
+			if (task == null) {
+				out(ScriptEvent.FAILED, "Task not found: " + taskName);
+				return false;
+			}
+			task.execute();
 			return true;
 		}
 		if ("mark".equals(strLC)) { // mark

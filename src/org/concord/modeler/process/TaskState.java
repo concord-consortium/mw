@@ -36,6 +36,7 @@ public class TaskState implements Serializable {
 	private String name;
 	private String description;
 	private String script;
+	private boolean enabled = true;
 
 	public TaskState() {
 	}
@@ -49,6 +50,15 @@ public class TaskState implements Serializable {
 		name = l.getName();
 		description = l.getDescription();
 		script = l.getScript();
+		enabled = l.isEnabled();
+	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean b) {
+		enabled = b;
 	}
 
 	public String getScript() {

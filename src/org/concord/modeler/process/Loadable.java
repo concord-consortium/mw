@@ -65,6 +65,10 @@ public interface Loadable extends Executable {
 	public void setSystemTask(boolean b);
 
 	public boolean isSystemTask();
+	
+	public boolean isEnabled();
+	
+	public void setEnabled(boolean b);
 
 	public String getName();
 

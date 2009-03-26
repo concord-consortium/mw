@@ -20,7 +20,6 @@
 package org.concord.modeler.process;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -37,6 +36,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
@@ -50,6 +50,10 @@ import org.concord.modeler.ui.PastableTextArea;
  */
 class TaskCreator {
 
+	private final static byte NAME_OK = 0;
+	private final static byte NAME_ERROR = 1;
+	private final static byte NAME_EXISTS = 2;
+
 	private JPanel contentPane;
 	private JTextArea scriptArea;
 	private JTextField nameField, descriptionField;
@@ -60,6 +64,8 @@ class TaskCreator {
 	private JDialog dialog;
 	private Job job;
 	private Loadable task;
+	private JTable table;
+	private int row;
 
 	TaskCreator(Job j) {
 
@@ -71,7 +77,7 @@ class TaskCreator {
 		String s = JobTable.getInternationalText("TaskScripts");
 		scriptArea.setBorder(BorderFactory.createTitledBorder((s != null ? s : "Scripts") + ":"));
 		JScrollPane scroller = new JScrollPane(scriptArea);
-		scroller.setPreferredSize(new Dimension(450, 300));
+		scroller.setPreferredSize(new Dimension(600, 400));
 		contentPane.add(scroller, BorderLayout.CENTER);
 
 		JPanel topPanel = new JPanel(new BorderLayout());
@@ -89,7 +95,7 @@ class TaskCreator {
 		s = JobTable.getInternationalText("TaskDescription");
 		p1.add(new JLabel((s != null ? s : "Description") + ": "));
 		descriptionField = new JTextField();
-		descriptionField.setColumns(30);
+		descriptionField.setColumns(50);
 		p1.add(descriptionField);
 
 		final JPanel p2 = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 2));
@@ -136,13 +142,20 @@ class TaskCreator {
 		JButton button = new JButton(s != null ? s : "OK");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (ok()) {
+				switch (ok()) {
+				case NAME_OK:
 					job.notifyChange();
 					dialog.dispose();
-				}
-				else {
+					break;
+				case NAME_EXISTS:
 					JOptionPane.showMessageDialog(dialog, "A task with the name \"" + nameField.getText()
-							+ "\" already exists.", "Duplicate Task Name Error", JOptionPane.ERROR_MESSAGE);
+							+ "\" already exists.", "Duplicate Task Name", JOptionPane.ERROR_MESSAGE);
+					break;
+				case NAME_ERROR:
+					JOptionPane.showMessageDialog(dialog,
+							"A task name must contain at least four characters in [a-zA-Z_0-9] (no space allowed): \""
+									+ nameField.getText() + "\".", "Task Name Error", JOptionPane.ERROR_MESSAGE);
+					break;
 				}
 			}
 		});
@@ -159,12 +172,15 @@ class TaskCreator {
 
 	}
 
-	private boolean ok() {
+	private byte ok() {
 
+		String name = nameField.getText();
+		if (!name.matches("\\w{4,}")) {
+			return NAME_ERROR;
+		}
 		if (task == null) {
-			String name = nameField.getText();
 			if (job.containsName(name))
-				return false;
+				return NAME_EXISTS;
 			Loadable l = new AbstractLoadable(intervalField.getValue()) {
 				public void execute() {
 					job.runScript(getScript());
@@ -186,20 +202,25 @@ class TaskCreator {
 			task.setPriority((Integer) prioritySpinner.getValue());
 			task.setInterval(intervalField.getValue());
 			task.setLifetime(permanentCheckBox.isSelected() ? Loadable.ETERNAL : lifetimeField.getValue());
-			task.setName(nameField.getText());
 			task.setDescription(descriptionField.getText());
 			task.setScript(scriptArea.getText());
+			if (!task.getName().equals(name)) {
+				task.setName(name);
+				table.setValueAt(name, row, 2);
+			}
 		}
-		return true;
+		return NAME_OK;
 
 	}
 
-	void show(Component parent, Loadable l) {
+	void show(JTable table, Loadable l, int row) {
+		this.table = table;
+		this.row = row;
 		if (dialog == null) {
-			dialog = new JDialog(JOptionPane.getFrameForComponent(parent), "Creating a Task", true);
+			dialog = new JDialog(JOptionPane.getFrameForComponent(table), "Creating a Task", true);
 			dialog.setContentPane(contentPane);
 			dialog.pack();
-			dialog.setLocationRelativeTo(parent);
+			dialog.setLocationRelativeTo(table);
 		}
 		if (l != null) {
 			dialog.setTitle("Edit a Task");
