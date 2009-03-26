@@ -1636,7 +1636,8 @@ public class MolecularModel {
 
 	void record() {
 		if (modelTimeQueue.getPointer() > 0) {
-			view.getMolecularContainer().notifyModelListeners(new ModelEvent(view.getMolecularContainer(), ModelEvent.MODEL_CHANGED));
+			view.getMolecularContainer().notifyModelListeners(
+					new ModelEvent(view.getMolecularContainer(), ModelEvent.MODEL_CHANGED));
 		}
 		modelTimeQueue.update(getModelTime());
 		kin = getKin();
@@ -1802,6 +1803,7 @@ public class MolecularModel {
 					}
 				}
 			};
+			l.setEnabled(a.isEnabled());
 			l.setName(a.getName());
 			l.setDescription(a.getDescription());
 			l.setScript(a.getScript());

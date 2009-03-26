@@ -1539,6 +1539,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 					}
 				}
 			};
+			l.setEnabled(a.isEnabled());
 			l.setName(a.getName());
 			l.setDescription(a.getDescription());
 			l.setScript(a.getScript());

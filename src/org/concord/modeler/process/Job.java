@@ -99,7 +99,7 @@ public abstract class Job implements Runnable {
 
 	/** get customer tasks */
 	public List<Loadable> getCustomTasks() {
-		List list = new ArrayList();
+		List<Loadable> list = new ArrayList<Loadable>();
 		synchronized (taskPool) {
 			for (Loadable l : taskPool) {
 				if (!l.isSystemTask())
@@ -178,7 +178,7 @@ public abstract class Job implements Runnable {
 	}
 
 	/** search a loadable subtask by name. */
-	public Loadable getTask(String s) {
+	public Loadable getTaskByName(String s) {
 		synchronized (taskPool) {
 			for (Loadable l : taskPool) {
 				if (l.getName().equals(s))
@@ -260,7 +260,7 @@ public abstract class Job implements Runnable {
 				if (off || isStopped())
 					return;
 				task = (AbstractLoadable) it.next();
-				if (task == null)
+				if (task == null || !task.isEnabled())
 					continue;
 				if (task.isCompleted()) {
 					remove(task);

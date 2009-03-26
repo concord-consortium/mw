@@ -67,6 +67,7 @@ class JobTable {
 	private TaskCreator taskCreator;
 	private JButton removeTaskButton, editTaskButton;
 	private Runnable initTaskAction;
+	private int editableCol = 4;
 
 	JobTable(Job job) {
 		this.job = job;
@@ -112,10 +113,10 @@ class JobTable {
 		int n = table.getRowCount();
 		String name;
 		for (int i = 0; i < n; i++) {
-			name = (String) table.getValueAt(i, 1);
+			name = (String) table.getValueAt(i, 2);
 			if (name != null && name.equals(s)) {
 				table.setRowSelectionInterval(i, i);
-				table.setEditingColumn(3);
+				table.setEditingColumn(editableCol);
 				table.setEditingRow(i);
 			}
 		}
@@ -135,6 +136,7 @@ class JobTable {
 		initIcons();
 		Vector<Object> v = new Vector<Object>();
 		v.add(l.getLifetime() == Loadable.ETERNAL ? taskIcon : clockIcon);
+		v.add(l.isEnabled());
 		v.add(l.getName());
 		v.add(Integer.toString(l.getPriority()));
 		v.add(Integer.toString(l.getInterval()));
@@ -150,7 +152,7 @@ class JobTable {
 		if (l == null)
 			return;
 		for (Vector v : rowData) {
-			if (v.elementAt(1).equals(l.getName())) {
+			if (v.elementAt(2).equals(l.getName())) {
 				rowData.remove(v);
 				l.setCompleted(false);
 				if (table != null)
@@ -176,6 +178,8 @@ class JobTable {
 
 		Vector<String> columnNames = new Vector<String>();
 		columnNames.add("");
+		s = getInternationalText("Run");
+		columnNames.add(s != null ? s : "Run");
 		s = getInternationalText("Task");
 		columnNames.add(s != null ? s : "Task");
 		s = getInternationalText("Priority");
@@ -206,7 +210,7 @@ class JobTable {
 						}
 					}
 				}
-				if (j != 3 && e.getClickCount() >= 2) {
+				if (j != editableCol && j != 1 && e.getClickCount() >= 2) {
 					editTaskButton.doClick();
 				}
 			}
@@ -223,11 +227,10 @@ class JobTable {
 			}
 
 			public boolean isCellEditable(int row, int col) {
-				if (col < 3)
+				Loadable l = job.getTaskByName((String) table.getValueAt(row, 2));
+				if (l.isSystemTask() && col == 1)
 					return false;
-				if ("Permanent".equals(getValueAt(row, col)))
-					return false;
-				return true;
+				return col == editableCol || col == 1;
 			}
 		};
 		table.setModel(tm);
@@ -235,16 +238,19 @@ class JobTable {
 			public void tableChanged(TableModelEvent e) {
 				DefaultTableModel t = (DefaultTableModel) e.getSource();
 				int col = e.getColumn();
-				int row = e.getFirstRow();
-				Loadable l = job.getTask((String) t.getValueAt(row, 1));
-				if (col == 3) {
+				if (col == editableCol) {
+					int row = e.getFirstRow();
+					Loadable l = job.getTaskByName((String) t.getValueAt(row, 2));
 					String s = (String) t.getValueAt(row, col);
 					if (s != null)
 						l.setInterval(Integer.parseInt(s));
 				}
-				else if (col == 4) {
-					String s = (String) t.getValueAt(row, col);
-					l.setLifetime("Permanent".equals(s) ? Loadable.ETERNAL : Integer.parseInt(s));
+				else if (col == 1) {
+					int row = e.getFirstRow();
+					Loadable l = job.getTaskByName((String) t.getValueAt(row, 2));
+					Boolean b = (Boolean) t.getValueAt(row, col);
+					if (b != null)
+						l.setEnabled(b.booleanValue());
 				}
 			}
 		});
@@ -257,7 +263,7 @@ class JobTable {
 				ListSelectionModel sm = (ListSelectionModel) e.getSource();
 				if (!sm.isSelectionEmpty()) {
 					int row = sm.getMinSelectionIndex();
-					Loadable l = job.getTask((String) table.getValueAt(row, 1));
+					Loadable l = job.getTaskByName((String) table.getValueAt(row, 2));
 					note.setText(l.getDescription());
 					boolean b = !l.isSystemTask();
 					removeTaskButton.setEnabled(b);
@@ -267,7 +273,8 @@ class JobTable {
 		});
 
 		table.getColumnModel().getColumn(0).setMaxWidth(24);
-		table.getColumnModel().getColumn(1).setMinWidth(300);
+		table.getColumnModel().getColumn(1).setMaxWidth(36);
+		table.getColumnModel().getColumn(2).setMinWidth(200);
 		table.setShowGrid(false);
 		table.setRowHeight(24);
 		table.setRowMargin(2);
@@ -328,7 +335,7 @@ class JobTable {
 			public void actionPerformed(ActionEvent e) {
 				if (taskCreator == null)
 					taskCreator = new TaskCreator(job);
-				taskCreator.show(table, null);
+				taskCreator.show(table, null, -1);
 			}
 		});
 		p1.add(button);
@@ -341,7 +348,7 @@ class JobTable {
 				ListSelectionModel sm = table.getSelectionModel();
 				if (!sm.isSelectionEmpty()) {
 					int row = sm.getMinSelectionIndex();
-					Loadable l = job.getTask((String) table.getValueAt(row, 1));
+					Loadable l = job.getTaskByName((String) table.getValueAt(row, 2));
 					if (l != null) {
 						job.remove(l);
 						job.processPendingRequests();
@@ -359,20 +366,21 @@ class JobTable {
 				ListSelectionModel sm = table.getSelectionModel();
 				if (!sm.isSelectionEmpty()) {
 					int row = sm.getMinSelectionIndex();
-					Loadable l = job.getTask((String) table.getValueAt(row, 1));
+					Loadable l = job.getTaskByName((String) table.getValueAt(row, 2));
 					if (l != null) {
 						if (l.isSystemTask())
 							return;
 						if (taskCreator == null)
 							taskCreator = new TaskCreator(job);
-						taskCreator.show(table, l);
+						taskCreator.show(table, l, row);
 						note.setText(l.getDescription());
 						table.setValueAt(l.getLifetime() == Loadable.ETERNAL ? taskIcon : clockIcon, row, 0);
-						table.setValueAt(l.getName(), row, 1);
-						table.setValueAt(l.getPriority() + "", row, 2);
-						table.setValueAt(l.getInterval() + "", row, 3);
+						table.setValueAt(l.isEnabled(), row, 1);
+						table.setValueAt(l.getName(), row, 2);
+						table.setValueAt(l.getPriority() + "", row, 3);
+						table.setValueAt(l.getInterval() + "", row, 4);
 						table.setValueAt(l.getLifetime() == Loadable.ETERNAL ? "Permanent" : l.getLifetime() + "", row,
-								4);
+								5);
 						table.repaint();
 					}
 				}

@@ -38,7 +38,8 @@ public abstract class AbstractLoadable implements Loadable {
 	private int minLifetime = 100;
 	private int maxLifetime = 1000;
 	private String name = "Unknown";
-	private String description = "No comment.";
+	private String description;
+	private boolean enabled = true;
 	private boolean completed;
 	private boolean systemTask = true;
 	private String script;
@@ -69,6 +70,14 @@ public abstract class AbstractLoadable implements Loadable {
 		this();
 		setInterval(i);
 		setLifetime(j);
+	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean b) {
+		enabled = b;
 	}
 
 	public void setSystemTask(boolean b) {

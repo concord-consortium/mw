@@ -110,7 +110,7 @@ class MolecularModelProperties extends ModelProperties {
 
 		if (reactionIntervalField != null && (model instanceof ReactionModel)) {
 			int i = reactionIntervalField.getValue();
-			model.getJob().getTask(ReactionModel.REACT).setInterval(i);
+			model.getJob().getTaskByName(ReactionModel.REACT).setInterval(i);
 		}
 
 		model.notifyPageComponentListeners(new PageComponentEvent(model, PageComponentEvent.COMPONENT_CHANGED));
@@ -142,7 +142,7 @@ class MolecularModelProperties extends ModelProperties {
 
 		panel.add(new JLabel("Reaction Interval", SwingConstants.LEFT));
 		try {
-			reactionIntervalField = new IntegerTextField(m.getJob().getTask(ReactionModel.REACT).getInterval(), 1, 100);
+			reactionIntervalField = new IntegerTextField(m.getJob().getTaskByName(ReactionModel.REACT).getInterval(), 1, 100);
 		}
 		catch (Exception e) {
 			reactionIntervalField = new IntegerTextField(10, 1, 100);
