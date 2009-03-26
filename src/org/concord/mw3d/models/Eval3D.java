@@ -766,7 +766,7 @@ class Eval3D extends AbstractEval {
 			Loadable task = model.getJob().getTaskByName(taskName);
 			if (task == null) {
 				out(ScriptEvent.FAILED, "Task not found: " + taskName);
-				return false;
+				return true;
 			}
 			task.execute();
 			return true;
