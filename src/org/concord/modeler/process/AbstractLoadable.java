@@ -62,7 +62,7 @@ public abstract class AbstractLoadable implements Loadable {
 
 	/**
 	 * @param i
-	 *            interval for executing this subtask *
+	 *            interval for executing this subtask
 	 * @param j
 	 *            total steps for executing this subtask
 	 */

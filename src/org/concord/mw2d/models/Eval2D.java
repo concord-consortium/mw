@@ -148,6 +148,34 @@ class Eval2D extends AbstractEval {
 		}
 	}
 
+	protected String useTaskScripts(String script) {
+		int i = script.indexOf("runtask");
+		if (i == -1)
+			return script;
+		int j = 0;
+		List<String> list = new ArrayList<String>();
+		String taskName;
+		while (i != -1) {
+			list.add(script.substring(j, i));
+			i += 7;
+			j = script.indexOf(";", i);
+			taskName = script.substring(i, j).trim();
+			Loadable task = model.getJob().getTaskByName(taskName);
+			if (task == null) {
+				out(ScriptEvent.FAILED, "Task not found: " + taskName);
+			}
+			else {
+				list.add(task.getScript());
+			}
+			j++;
+			i = script.indexOf("runtask", j);
+		}
+		script = "";
+		for (String s : list)
+			script += s;
+		return script;
+	}
+
 	private String useSystemVariables(String s) {
 		int iosp = model.getIndexOfSelectedParticle();
 		s = replaceAll(s, "%mouse_x", mouseLocation.x);
@@ -845,6 +873,7 @@ class Eval2D extends AbstractEval {
 			return;
 		}
 		script = removeCommentedOutScripts(script);
+		script = useTaskScripts(script);
 		script = separateExternalScripts(script);
 		script = storeMouseScripts(script);
 		script = storeKeyScripts(script);
@@ -1297,16 +1326,6 @@ class Eval2D extends AbstractEval {
 		if ("init".equals(strLC)) { // cause the initialization script to be executed, if any
 			if (model.getInitializationScript() != null)
 				model.runScript(model.getInitializationScript());
-			return true;
-		}
-		if (strLC.startsWith("runtask")) { // run the task with the specified name
-			String taskName = str.substring(7).trim();
-			Loadable task = model.getJob().getTaskByName(taskName);
-			if (task == null) {
-				out(ScriptEvent.FAILED, "Task not found: " + taskName);
-				return true;
-			}
-			task.execute();
 			return true;
 		}
 		if ("mark".equals(strLC)) { // mark
