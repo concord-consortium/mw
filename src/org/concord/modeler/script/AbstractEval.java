@@ -750,6 +750,8 @@ public abstract class AbstractEval {
 				|| (le && x <= 0) || (lt && x < 0);
 	}
 
+	protected abstract String useTaskScripts(String script);
+
 	protected String removeCommentedOutScripts(String script) {
 		commentedOutScripts.clear();
 		if (script == null)

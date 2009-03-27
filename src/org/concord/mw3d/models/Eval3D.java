@@ -142,6 +142,34 @@ class Eval3D extends AbstractEval {
 		}
 	}
 
+	protected String useTaskScripts(String script) {
+		int i = script.indexOf("runtask");
+		if (i == -1)
+			return script;
+		int j = 0;
+		List<String> list = new ArrayList<String>();
+		String taskName;
+		while (i != -1) {
+			list.add(script.substring(j, i));
+			i += 7;
+			j = script.indexOf(";", i);
+			taskName = script.substring(i, j).trim();
+			Loadable task = model.getJob().getTaskByName(taskName);
+			if (task == null) {
+				out(ScriptEvent.FAILED, "Task not found: " + taskName);
+			}
+			else {
+				list.add(task.getScript());
+			}
+			j++;
+			i = script.indexOf("runtask", j);
+		}
+		script = "";
+		for (String s : list)
+			script += s;
+		return script;
+	}
+
 	private String useSystemVariables(String s) {
 		s = replaceAll(s, "%model_time", model.modelTime);
 		s = replaceAll(s, "%number_of_atoms", model.getAtomCount());
@@ -470,6 +498,7 @@ class Eval3D extends AbstractEval {
 			return;
 		}
 		script = removeCommentedOutScripts(script);
+		script = useTaskScripts(script);
 		script = separateExternalScripts(script);
 		script = storeMouseScripts(script);
 		script = storeKeyScripts(script);

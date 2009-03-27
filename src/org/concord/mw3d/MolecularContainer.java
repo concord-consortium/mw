@@ -1417,7 +1417,11 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 		else {
 			topPanel.remove(toolBar);
 		}
-		validate();
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				validate();
+			}
+		});
 		view.updateSize();
 	}
 
@@ -1455,7 +1459,11 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 				remove(moviePanel);
 			}
 		}
-		validate();
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				validate();
+			}
+		});
 		view.updateSize();
 	}
 

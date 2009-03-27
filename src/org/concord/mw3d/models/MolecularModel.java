@@ -2100,6 +2100,7 @@ public class MolecularModel {
 		activateHeatBath(false);
 		clearScriptQueue();
 		clearMouseScripts();
+		initializationScript = null;
 	}
 
 	public void transferKE(float amount) {
