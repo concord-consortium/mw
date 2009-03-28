@@ -826,7 +826,7 @@ public abstract class AbstractEval {
 		}
 		script = "";
 		for (String s : split) {
-			script += s;
+			script += s + "\n";
 		}
 		return script;
 	}
