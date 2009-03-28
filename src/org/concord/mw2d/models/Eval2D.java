@@ -170,6 +170,7 @@ class Eval2D extends AbstractEval {
 			j++;
 			i = script.indexOf("runtask", j);
 		}
+		list.add(script.substring(j));
 		script = "";
 		for (String s : list)
 			script += s;
