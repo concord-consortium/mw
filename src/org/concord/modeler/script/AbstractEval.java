@@ -757,27 +757,70 @@ public abstract class AbstractEval {
 		if (script == null)
 			return null;
 		int beg = script.indexOf("/*");
-		int end = script.indexOf("*/");
+		if (beg != -1) {
+			int end = script.indexOf("*/", beg + 1);
+			int beg0 = -1;
+			while (beg != -1 && end != -1) {
+				String s = script.substring(beg + 2, end).trim();
+				commentedOutScripts.add(s);
+				beg0 = beg;
+				beg = script.indexOf("/*", end);
+				if (beg0 == beg) // infinite loop
+					break;
+				end = script.indexOf("*/", beg);
+			}
+			String[] split = script.split("(/\\*|\\*/)");
+			int n = split.length;
+			for (int i = 0; i < n; i++)
+				split[i] = split[i].trim();
+			int m = 0;
+			for (String s : commentedOutScripts) {
+				for (int i = m; i < n; i++) {
+					if (split[i].equals(s)) {
+						split[i] = "";
+						m = i + 1;
+						break;
+					}
+				}
+			}
+			script = "";
+			for (String s : split) {
+				script += s;
+			}
+		}
+		return removeCommentedOutScripts2(script);
+	}
+
+	private String removeCommentedOutScripts2(String script) {
+		commentedOutScripts.clear();
+		if (script == null)
+			return null;
+		int beg = script.indexOf("//");
+		if (beg == -1)
+			return script;
+		int end = script.indexOf("\n", beg + 2);
 		int beg0 = -1;
 		while (beg != -1 && end != -1) {
 			String s = script.substring(beg + 2, end).trim();
 			commentedOutScripts.add(s);
 			beg0 = beg;
-			beg = script.indexOf("/*", end);
+			beg = script.indexOf("//", end);
 			if (beg0 == beg) // infinite loop
 				break;
-			end = script.indexOf("*/", beg);
+			end = script.indexOf("\n", beg);
 		}
-		String[] split = script.split("(/\\*|\\*/)");
+		String[] split = script.split("(//|\n)");
 		int n = split.length;
-		for (int i = 0; i < n; i++)
+		for (int i = 0; i < n; i++) {
 			split[i] = split[i].trim();
+		}
 		int m = 0;
 		for (String s : commentedOutScripts) {
 			for (int i = m; i < n; i++) {
 				if (split[i].equals(s)) {
 					split[i] = "";
 					m = i + 1;
+					break;
 				}
 			}
 		}
