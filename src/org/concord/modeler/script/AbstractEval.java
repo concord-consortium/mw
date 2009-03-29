@@ -1082,15 +1082,27 @@ public abstract class AbstractEval {
 				String s = definition.get(index);
 				if (s != null) {
 					ix = (int) Double.parseDouble(s);
-					variable = variable.substring(0, i1 + 1) + ix + variable.substring(i2);
 				}
 				else {
-					ix = (int) Double.parseDouble(index);
+					index = index.trim();
+					if (index.startsWith("\"")) {
+						index = index.substring(1);
+					}
+					if (index.endsWith("\"")) {
+						index = index.substring(0, index.length() - 1);
+					}
+					double ixd = parseMathExpression(index);
+					if (Double.isNaN(ixd)) {
+						out(ScriptEvent.FAILED, "Array index error: " + variable);
+						return;
+					}
+					ix = (int) ixd;
 				}
 				if (ix >= size) {
 					out(ScriptEvent.FAILED, "Array index out of bound (" + size + "): " + ix + " in " + variable);
 					return;
 				}
+				variable = variable.substring(0, i1 + 1) + ix + variable.substring(i2);
 			}
 		}
 		if (isStatic) {
