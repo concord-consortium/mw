@@ -785,50 +785,44 @@ public abstract class AbstractEval {
 			}
 			script = "";
 			for (String s : split) {
-				script += s;
+				script += s + "\n";
 			}
 		}
 		return removeCommentedOutScripts2(script);
 	}
 
 	private String removeCommentedOutScripts2(String script) {
-		commentedOutScripts.clear();
 		if (script == null)
 			return null;
 		int beg = script.indexOf("//");
 		if (beg == -1)
 			return script;
+		List<int[]> list = new ArrayList<int[]>();
 		int end = script.indexOf("\n", beg + 2);
 		int beg0 = -1;
 		while (beg != -1 && end != -1) {
-			String s = script.substring(beg + 2, end).trim();
-			commentedOutScripts.add(s);
+			list.add(new int[] { beg, end });
 			beg0 = beg;
 			beg = script.indexOf("//", end);
 			if (beg0 == beg) // infinite loop
 				break;
 			end = script.indexOf("\n", beg);
 		}
-		String[] split = script.split("(//|\n)");
-		int n = split.length;
-		for (int i = 0; i < n; i++) {
-			split[i] = split[i].trim();
+		if (beg != -1) {
+			list.add(new int[] { beg, script.length() });
 		}
-		int m = 0;
-		for (String s : commentedOutScripts) {
-			for (int i = m; i < n; i++) {
-				if (split[i].equals(s)) {
-					split[i] = "";
-					m = i + 1;
-					break;
-				}
-			}
+		int n = list.size();
+		if (n == 0)
+			return script;
+		int[] curr = list.get(0), prev;
+		String x = script.substring(0, curr[0]);
+		for (int i = 1; i < n; i++) {
+			curr = list.get(i);
+			prev = list.get(i - 1);
+			x += script.substring(prev[1], curr[0]);
 		}
-		script = "";
-		for (String s : split) {
-			script += s + "\n";
-		}
-		return script;
+		x += script.substring(curr[1]);
+		return x.trim();
 	}
 
 	protected void evaluateExternalClause(String s) {
