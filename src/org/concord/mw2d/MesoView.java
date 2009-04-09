@@ -1443,7 +1443,7 @@ public class MesoView extends MDView {
 
 		if (ModelerUtilities.isRightClick(e))
 			return;
-		if (System.currentTimeMillis() - mouseHeldTime < MINIMUM_MOUSE_DRAG_RESPONSE_INTERVAL)
+		if (System.currentTimeMillis() - mousePressedTime < MINIMUM_MOUSE_DRAG_RESPONSE_INTERVAL)
 			return;
 		int x = e.getX();
 		int y = e.getY();
