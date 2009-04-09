@@ -126,7 +126,7 @@ public abstract class MDView extends PrintableComponent {
 	final static int LEFT_PRESSED = 4;
 	final static int RIGHT_PRESSED = 8;
 	final static double ZERO = 0.000000001;
-	final static long MINIMUM_MOUSE_DRAG_RESPONSE_INTERVAL = 20L;
+	final static int MINIMUM_MOUSE_DRAG_RESPONSE_INTERVAL = 20;
 	final static int SPEED_RENDERING = 1;
 	final static int ANTIALIASING_OFF = 2;
 
@@ -175,7 +175,7 @@ public abstract class MDView extends PrintableComponent {
 	int indexOfSelectedMeasurement = -1;
 	boolean repaintBlocked;
 	int keyPressedCode;
-	long mouseHeldTime;
+	long mousePressedTime;
 	int mouseHeldX, mouseHeldY;
 	boolean popupMenuEnabled = true;
 	boolean drawString = true;
@@ -2593,7 +2593,7 @@ public abstract class MDView extends PrintableComponent {
 		mouseHeldX = e.getX();
 		mouseHeldY = e.getY();
 		getModel().runMouseScript(MouseEvent.MOUSE_PRESSED, mouseHeldX, mouseHeldY);
-		mouseHeldTime = System.currentTimeMillis();
+		mousePressedTime = System.currentTimeMillis();
 		if (mousePressedPoint == null) {
 			mousePressedPoint = new Point(mouseHeldX, mouseHeldY);
 		}
@@ -2757,7 +2757,7 @@ public abstract class MDView extends PrintableComponent {
 	void processMouseDragged(MouseEvent e) {
 		mouseHeldX = e.getX();
 		mouseHeldY = e.getY();
-		mouseHeldTime = System.currentTimeMillis();
+		mousePressedTime = System.currentTimeMillis();
 		switch (actionID) {
 		case LINE_ID:
 			dragging = true;
