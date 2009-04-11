@@ -3498,15 +3498,19 @@ final class PageXMLDecoder {
 				b.setText(actionName);
 			}
 			if (imageFileName != null) {
-				b.setImageFileNameSelected(imageFileName);
-				if (b.isSelected())
-					b.setIcon(page.loadImage(imageFileName));
+				if (!imageFileName.trim().equals("")) {
+					b.setImageFileNameSelected(imageFileName);
+					if (b.isSelected())
+						b.setIcon(page.loadImage(imageFileName));
+				}
 				imageFileName = null;
 			}
 			if (imageFileDeselected != null) {
-				b.setImageFileNameDeselected(imageFileDeselected);
-				if (!b.isSelected())
-					b.setIcon(page.loadImage(imageFileDeselected));
+				if (!imageFileDeselected.trim().equals("")) {
+					b.setImageFileNameDeselected(imageFileDeselected);
+					if (!b.isSelected())
+						b.setIcon(page.loadImage(imageFileDeselected));
+				}
 				imageFileDeselected = null;
 			}
 			if (toolTip != null) {
@@ -3573,15 +3577,19 @@ final class PageXMLDecoder {
 				b.setText(actionName);
 			}
 			if (imageFileName != null) {
-				b.setImageFileNameSelected(imageFileName);
-				if (b.isSelected())
-					b.setIcon(page.loadImage(imageFileName));
+				if (!imageFileName.trim().equals("")) {
+					b.setImageFileNameSelected(imageFileName);
+					if (b.isSelected())
+						b.setIcon(page.loadImage(imageFileName));
+				}
 				imageFileName = null;
 			}
 			if (imageFileDeselected != null) {
-				b.setImageFileNameDeselected(imageFileDeselected);
-				if (!b.isSelected())
-					b.setIcon(page.loadImage(imageFileDeselected));
+				if (!imageFileDeselected.trim().equals("")) {
+					b.setImageFileNameDeselected(imageFileDeselected);
+					if (!b.isSelected())
+						b.setIcon(page.loadImage(imageFileDeselected));
+				}
 				imageFileDeselected = null;
 			}
 			if (toolTip != null) {
@@ -3672,7 +3680,8 @@ final class PageXMLDecoder {
 				b.setText(actionName);
 			}
 			if (imageFileName != null) {
-				b.setIcon(page.loadImage(imageFileName));
+				if (!imageFileName.trim().equals(""))
+					b.setIcon(page.loadImage(imageFileName));
 				imageFileName = null;
 			}
 			if (toolTip != null) {

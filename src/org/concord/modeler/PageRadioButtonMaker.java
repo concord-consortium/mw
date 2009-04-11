@@ -137,8 +137,24 @@ class PageRadioButtonMaker extends ComponentMaker {
 		pageRadioButton.setText(nameField.getText());
 		pageRadioButton.setImageFileNameSelected(imageSelectedField.getText());
 		pageRadioButton.setImageFileNameDeselected(imageDeselectedField.getText());
-		pageRadioButton.setIcon(loadLocalImage(pageRadioButton.page, pageRadioButton.isSelected() ? imageSelectedField
-				.getText() : imageDeselectedField.getText()));
+		if (pageRadioButton.isSelected()) {
+			String s = pageRadioButton.getImageFileNameSelected();
+			if (s != null && !s.trim().equals("")) {
+				pageRadioButton.setIcon(loadLocalImage(pageRadioButton.page, s));
+			}
+			else {
+				pageRadioButton.setIcon(null);
+			}
+		}
+		else {
+			String s = pageRadioButton.getImageFileNameDeselected();
+			if (s != null && !s.trim().equals("")) {
+				pageRadioButton.setIcon(loadLocalImage(pageRadioButton.page, s));
+			}
+			else {
+				pageRadioButton.setIcon(null);
+			}
+		}
 		pageRadioButton.setToolTipText(toolTipField.getText());
 		pageRadioButton.putClientProperty("script", scriptArea.getText());
 		pageRadioButton.setDisabledAtRun(disabledAtRunCheckBox.isSelected());
