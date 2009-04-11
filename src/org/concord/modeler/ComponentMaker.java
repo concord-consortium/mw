@@ -19,13 +19,16 @@
  * END LICENSE */
 package org.concord.modeler;
 
+import java.awt.Toolkit;
 import java.util.Map;
 
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.SwingUtilities;
 
 import org.concord.modeler.text.Page;
+import org.concord.modeler.util.FileUtilities;
 
 /**
  * @author Charles Xie
@@ -42,6 +45,13 @@ public abstract class ComponentMaker {
 	public static boolean isScriptActionKey(String s) {
 		return EXECUTE_MW_SCRIPT.equals(s) || EXECUTE_JMOL_SCRIPT.equals(s) || EXECUTE_NATIVE_SCRIPT.equals(s)
 				|| "Script".equals(s);
+	}
+
+	static ImageIcon loadLocalImage(Page page, String fileName) {
+		ImageIcon icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(
+				FileUtilities.getCodeBase(page.getAddress()) + fileName));
+		icon.setDescription(fileName);
+		return icon;
 	}
 
 	static boolean isTargetClass(String modelClass) {

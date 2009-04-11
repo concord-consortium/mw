@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.Action;
+import javax.swing.Icon;
 import javax.swing.event.ChangeListener;
 
 import org.concord.modeler.ComponentMaker;
@@ -152,12 +153,15 @@ class Mw3dConnector {
 						Action a = model.getActions().get(name);
 						if (a != null) {
 							String text = button.getText();
+							Icon icon = button.getIcon();
 							String tooltip = button.getToolTipText();
 							button.setAction(a);
 							button.setText(text);
-							model.addModelListener(button);
+							if (icon != null)
+								button.setIcon(icon);
 							if (tooltip != null && !tooltip.trim().equals(""))
 								button.setToolTipText(tooltip);
+							model.addModelListener(button);
 						}
 					}
 				}
@@ -169,12 +173,15 @@ class Mw3dConnector {
 						Action a = model.getSwitches().get(name);
 						if (a != null) {
 							String text = checkBox.getText();
+							Icon icon = checkBox.getIcon();
 							String tooltip = checkBox.getToolTipText();
 							checkBox.setAction(a);
 							checkBox.setText(text);
-							model.addModelListener(checkBox);
+							if (icon != null)
+								checkBox.setIcon(icon);
 							if (tooltip != null && !tooltip.trim().equals(""))
 								checkBox.setToolTipText(tooltip);
+							model.addModelListener(checkBox);
 						}
 					}
 				}
@@ -186,12 +193,15 @@ class Mw3dConnector {
 						Action a = model.getMultiSwitches().get(name);
 						if (a != null) {
 							String text = radioButton.getText();
+							Icon icon = radioButton.getIcon();
 							String tooltip = radioButton.getToolTipText();
 							radioButton.setAction(a);
 							radioButton.setText(text);
-							model.addModelListener(radioButton);
+							if (icon != null)
+								radioButton.setIcon(icon);
 							if (tooltip != null && !tooltip.trim().equals(""))
 								radioButton.setToolTipText(tooltip);
+							model.addModelListener(radioButton);
 						}
 					}
 				}

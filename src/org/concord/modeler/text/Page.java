@@ -3572,6 +3572,47 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		((RedoAction) getAction(REDO)).updateState();
 	}
 
+	public Icon loadImage(String path) {
+		Icon icon = null;
+		if (isRemote()) {
+			String fileName = FileUtilities.httpEncode(FileUtilities.getFileName(path));
+			URL baseURL = null, url = null;
+			boolean urlIsCorrect = true;
+			try {
+				baseURL = new URL(FileUtilities.httpEncode(FileUtilities.getCodeBase(getAddress())));
+				url = new URL(baseURL, fileName);
+			}
+			catch (MalformedURLException mue) {
+				mue.printStackTrace();
+				urlIsCorrect = false;
+			}
+			if (urlIsCorrect) {
+				icon = ConnectionManager.sharedInstance().loadImage(url);
+				if (icon == null) {
+					icon = BulletIcon.ImageNotFoundIcon.sharedInstance();
+				}
+				else {
+					if (icon.getIconWidth() <= 0 || icon.getIconHeight() <= 0) {
+						icon = BulletIcon.ImageNotFoundIcon.sharedInstance();
+					}
+				}
+			}
+			else {
+				icon = BulletIcon.ImageNotFoundIcon.sharedInstance();
+			}
+		}
+		else {
+			String fileName = FileUtilities.getFileName(path);
+			icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(
+					FileUtilities.getCodeBase(getAddress()) + fileName));
+			((ImageIcon) icon).setDescription(fileName);
+			if (icon.getIconWidth() <= 0 || icon.getIconHeight() <= 0) {
+				icon = BulletIcon.ImageNotFoundIcon.sharedInstance();
+			}
+		}
+		return icon;
+	}
+
 	public void setFillMode(FillMode fm) {
 		fillMode = fm;
 		if (fillMode == FillMode.getNoFillMode()) {

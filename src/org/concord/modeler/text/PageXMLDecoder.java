@@ -24,7 +24,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.awt.Toolkit;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -46,7 +45,6 @@ import java.util.StringTokenizer;
 
 import javax.swing.Action;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JProgressBar;
 import javax.swing.SwingConstants;
 import javax.swing.text.AttributeSet;
@@ -384,44 +382,7 @@ final class PageXMLDecoder {
 			StyleConstants.setIcon(style, BulletIcon.ImageNotFoundIcon.sharedInstance());
 			return;
 		}
-		Icon icon = null;
-		if (page.isRemote()) {
-			String fileName = FileUtilities.httpEncode(FileUtilities.getFileName(path));
-			URL baseURL = null, url = null;
-			boolean urlIsCorrect = true;
-			try {
-				baseURL = new URL(FileUtilities.httpEncode(FileUtilities.getCodeBase(page.getAddress())));
-				url = new URL(baseURL, fileName);
-			}
-			catch (MalformedURLException mue) {
-				mue.printStackTrace();
-				urlIsCorrect = false;
-			}
-			if (urlIsCorrect) {
-				icon = ConnectionManager.sharedInstance().loadImage(url);
-				if (icon == null) {
-					icon = BulletIcon.ImageNotFoundIcon.sharedInstance();
-				}
-				else {
-					if (icon.getIconWidth() <= 0 || icon.getIconHeight() <= 0) {
-						icon = BulletIcon.ImageNotFoundIcon.sharedInstance();
-					}
-				}
-			}
-			else {
-				icon = BulletIcon.ImageNotFoundIcon.sharedInstance();
-			}
-		}
-		else {
-			String fileName = FileUtilities.getFileName(path);
-			icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(
-					FileUtilities.getCodeBase(page.getAddress()) + fileName));
-			((ImageIcon) icon).setDescription(fileName);
-			if (icon.getIconWidth() <= 0 || icon.getIconHeight() <= 0) {
-				icon = BulletIcon.ImageNotFoundIcon.sharedInstance();
-			}
-		}
-		setWrappedIcon(style, icon, null);
+		setWrappedIcon(style, page.loadImage(path), null);
 		page.setEmbeddedImageFound(true);
 	}
 
@@ -474,7 +435,7 @@ final class PageXMLDecoder {
 		List<String> jarNames;
 		String parameter;
 		String titleText, toolTip, actionName, changeName;
-		String description;
+		String imageFileName, imageFileDeselected, description;
 		String format;
 		String modelClass;
 		int modelIndex;
@@ -1635,6 +1596,14 @@ final class PageXMLDecoder {
 
 			else if (qName == "title") {
 				titleText = str;
+			}
+
+			else if (qName == "imagefile") {
+				imageFileName = str;
+			}
+
+			else if (qName == "imagefiledeselected") {
+				imageFileDeselected = str;
 			}
 
 			else if (qName == "tooltip") {
@@ -3528,6 +3497,18 @@ final class PageXMLDecoder {
 			else {
 				b.setText(actionName);
 			}
+			if (imageFileName != null) {
+				b.setImageFileNameSelected(imageFileName);
+				if (b.isSelected())
+					b.setIcon(page.loadImage(imageFileName));
+				imageFileName = null;
+			}
+			if (imageFileDeselected != null) {
+				b.setImageFileNameDeselected(imageFileDeselected);
+				if (!b.isSelected())
+					b.setIcon(page.loadImage(imageFileDeselected));
+				imageFileDeselected = null;
+			}
 			if (toolTip != null) {
 				b.setToolTipText(toolTip);
 				toolTip = null;
@@ -3590,6 +3571,18 @@ final class PageXMLDecoder {
 			}
 			else {
 				b.setText(actionName);
+			}
+			if (imageFileName != null) {
+				b.setImageFileNameSelected(imageFileName);
+				if (b.isSelected())
+					b.setIcon(page.loadImage(imageFileName));
+				imageFileName = null;
+			}
+			if (imageFileDeselected != null) {
+				b.setImageFileNameDeselected(imageFileDeselected);
+				if (!b.isSelected())
+					b.setIcon(page.loadImage(imageFileDeselected));
+				imageFileDeselected = null;
 			}
 			if (toolTip != null) {
 				b.setToolTipText(toolTip);
@@ -3677,6 +3670,10 @@ final class PageXMLDecoder {
 			}
 			else {
 				b.setText(actionName);
+			}
+			if (imageFileName != null) {
+				b.setIcon(page.loadImage(imageFileName));
+				imageFileName = null;
 			}
 			if (toolTip != null) {
 				b.setToolTipText(toolTip);

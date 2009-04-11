@@ -34,6 +34,7 @@ import java.awt.event.MouseListener;
 
 import javax.swing.Action;
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -129,6 +130,7 @@ public class PageButton extends JButton implements Embeddable, ModelCommunicator
 		setModelID(button.modelID);
 		setName(button.getName());
 		setAction(button.getAction());
+		setIcon(button.getIcon());
 		setText(button.getText());
 		setToolTipText(button.getToolTipText());
 		setContinuousFire(button.continuousFire);
@@ -391,7 +393,7 @@ public class PageButton extends JButton implements Embeddable, ModelCommunicator
 	}
 
 	// old setText method
-	public void setText2(String text) {
+	public void setText__OLD(String text) {
 		super.setText(text);
 		if (!autoSize)
 			return;
@@ -411,7 +413,8 @@ public class PageButton extends JButton implements Embeddable, ModelCommunicator
 		setPreferredSize(new Dimension(w, h));
 	}
 
-	public void setIconOLD(Icon icon) {
+	// old setIcon method
+	public void setIcon__OLD(Icon icon) {
 		super.setIcon(icon);
 		if (!autoSize)
 			return;
@@ -478,6 +481,11 @@ public class PageButton extends JButton implements Embeddable, ModelCommunicator
 		Action a = getAction();
 		StringBuffer sb = new StringBuffer("<class>" + getClass().getName() + "</class>\n");
 		sb.append("<title>" + XMLCharacterEncoder.encode(getText()) + "</title>\n");
+		Icon icon = getIcon();
+		if (icon instanceof ImageIcon) {
+			String imageFileName = ((ImageIcon) icon).getDescription();
+			sb.append("<imagefile>" + imageFileName + "</imagefile>\n");
+		}
 		String toolTip = getToolTipText();
 		if (toolTip != null) {
 			if (a != null && !toolTip.equals(a.getValue(Action.SHORT_DESCRIPTION))) {
