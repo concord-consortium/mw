@@ -139,6 +139,24 @@ class PageCheckBoxMaker extends ComponentMaker {
 		pageCheckBox.setText(nameField.getText());
 		pageCheckBox.setImageFileNameSelected(imageSelectedField.getText());
 		pageCheckBox.setImageFileNameDeselected(imageDeselectedField.getText());
+		if (pageCheckBox.isSelected()) {
+			String s = pageCheckBox.getImageFileNameSelected();
+			if (s != null && !s.trim().equals("")) {
+				pageCheckBox.setIcon(loadLocalImage(pageCheckBox.page, s));
+			}
+			else {
+				pageCheckBox.setIcon(null);
+			}
+		}
+		else {
+			String s = pageCheckBox.getImageFileNameDeselected();
+			if (s != null && !s.trim().equals("")) {
+				pageCheckBox.setIcon(loadLocalImage(pageCheckBox.page, s));
+			}
+			else {
+				pageCheckBox.setIcon(null);
+			}
+		}
 		pageCheckBox.setIcon(loadLocalImage(pageCheckBox.page, pageCheckBox.isSelected() ? imageSelectedField.getText()
 				: imageDeselectedField.getText()));
 		pageCheckBox.setToolTipText(toolTipField.getText());
