@@ -399,7 +399,7 @@ class PageRadioButtonMaker extends ComponentMaker {
 		p.add(imageSelectedField);
 
 		// row 5
-		s = Modeler.getInternationalText("ImageFileNameDeSelected");
+		s = Modeler.getInternationalText("ImageFileNameDeselected");
 		p.add(new JLabel(s != null ? s : "Image to show while not selected", SwingConstants.LEFT));
 		imageDeselectedField = new JTextField();
 		imageDeselectedField
