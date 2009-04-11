@@ -64,6 +64,7 @@ class PageCheckBoxMaker extends ComponentMaker {
 	private JCheckBox transparentCheckBox, autoSizeCheckBox, disabledAtRunCheckBox, disabledAtScriptCheckBox;
 	private ColorComboBox bgComboBox;
 	private JTextField nameField;
+	private JTextField imageSelectedField, imageDeselectedField;
 	private JTextField toolTipField;
 	private IntegerTextField widthField, heightField;
 	private JTextArea scriptAreaSelected, scriptAreaDeselected;
@@ -136,6 +137,10 @@ class PageCheckBoxMaker extends ComponentMaker {
 		}
 		pageCheckBox.setAction((Action) actionComboBox.getSelectedItem());
 		pageCheckBox.setText(nameField.getText());
+		pageCheckBox.setImageFileNameSelected(imageSelectedField.getText());
+		pageCheckBox.setImageFileNameDeselected(imageDeselectedField.getText());
+		pageCheckBox.setIcon(loadLocalImage(pageCheckBox.page, pageCheckBox.isSelected() ? imageSelectedField.getText()
+				: imageDeselectedField.getText()));
 		pageCheckBox.setToolTipText(toolTipField.getText());
 		if (!pageCheckBox.autoSize) {
 			pageCheckBox.setPreferredSize(new Dimension(widthField.getValue(), heightField.getValue()));
@@ -236,6 +241,8 @@ class PageCheckBoxMaker extends ComponentMaker {
 		String t = pageCheckBox.getText();
 		nameField.setText(t != null && !t.trim().equals("") ? t
 				: (actionComboBox.getSelectedItem() != null ? actionComboBox.getSelectedItem().toString() : null));
+		imageSelectedField.setText(pageCheckBox.getImageFileNameSelected());
+		imageDeselectedField.setText(pageCheckBox.getImageFileNameDeselected());
 		toolTipField.setText(pageCheckBox.getToolTipText());
 		transparentCheckBox.setSelected(pageCheckBox.isTransparent());
 		disabledAtRunCheckBox.setSelected(pageCheckBox.disabledAtRun);
@@ -376,6 +383,24 @@ class PageCheckBoxMaker extends ComponentMaker {
 		p.add(nameField);
 
 		// row 4
+		s = Modeler.getInternationalText("ImageFileNameSelected");
+		p.add(new JLabel(s != null ? s : "Image to show while selected", SwingConstants.LEFT));
+		imageSelectedField = new JTextField();
+		imageSelectedField
+				.setToolTipText("Type in the file name of the image that will appear on this check box while it is selected.");
+		imageSelectedField.addActionListener(okListener);
+		p.add(imageSelectedField);
+
+		// row 5
+		s = Modeler.getInternationalText("ImageFileNameDeSelected");
+		p.add(new JLabel(s != null ? s : "Image to show while not selected", SwingConstants.LEFT));
+		imageDeselectedField = new JTextField();
+		imageDeselectedField
+				.setToolTipText("Type in the file name of the image that will appear on this check box while it is not selected.");
+		imageDeselectedField.addActionListener(okListener);
+		p.add(imageDeselectedField);
+
+		// row 6
 		s = Modeler.getInternationalText("ToolTipLabel");
 		p.add(new JLabel(s != null ? s : "Tool tip", SwingConstants.LEFT));
 		toolTipField = new JTextField();
@@ -383,7 +408,7 @@ class PageCheckBoxMaker extends ComponentMaker {
 		toolTipField.addActionListener(okListener);
 		p.add(toolTipField);
 
-		// row 5
+		// row 7
 		s = Modeler.getInternationalText("WidthLabel");
 		p.add(new JLabel(s != null ? s : "Width", SwingConstants.LEFT));
 		widthField = new IntegerTextField(pageCheckBox.getWidth() <= 0 ? 100 : pageCheckBox.getWidth(), 10, 400);
@@ -393,7 +418,7 @@ class PageCheckBoxMaker extends ComponentMaker {
 		widthField.addActionListener(okListener);
 		p.add(widthField);
 
-		// row 6
+		// row 8
 		s = Modeler.getInternationalText("HeightLabel");
 		p.add(new JLabel(s != null ? s : "Height", SwingConstants.LEFT));
 		heightField = new IntegerTextField(pageCheckBox.getHeight() <= 0 ? 24 : pageCheckBox.getHeight(), 10, 400);
@@ -403,7 +428,7 @@ class PageCheckBoxMaker extends ComponentMaker {
 		heightField.addActionListener(okListener);
 		p.add(heightField);
 
-		// row 7
+		// row 9
 		s = Modeler.getInternationalText("BackgroundColorLabel");
 		p.add(new JLabel(s != null ? s : "Background color", SwingConstants.LEFT));
 		bgComboBox = new ColorComboBox(pageCheckBox);
@@ -411,7 +436,7 @@ class PageCheckBoxMaker extends ComponentMaker {
 		bgComboBox.setToolTipText("Select the background color for this check box, if it is not transparent.");
 		p.add(bgComboBox);
 
-		ModelerUtilities.makeCompactGrid(p, 7, 2, 5, 5, 10, 2);
+		ModelerUtilities.makeCompactGrid(p, 9, 2, 5, 5, 10, 2);
 
 		p = new JPanel(new BorderLayout(10, 10));
 		p.setBorder(BorderFactory.createEmptyBorder(2, 10, 2, 10));

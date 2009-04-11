@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.Action;
+import javax.swing.Icon;
 import javax.swing.event.ChangeListener;
 
 import org.concord.modeler.ComponentMaker;
@@ -200,9 +201,12 @@ class Mw2dConnector {
 						if (act != null) {
 							/* restore the original text because setAction() may change the text */
 							String text = button.getText();
+							Icon icon = button.getIcon();
 							String tooltip = button.getToolTipText();
 							button.setAction(act);
 							button.setText(text);
+							if (icon != null)
+								button.setIcon(icon);
 							if (tooltip != null && !tooltip.trim().equals("")) {
 								button.setToolTipText(tooltip);
 							}
@@ -221,9 +225,12 @@ class Mw2dConnector {
 						Action a = model.getSwitches().get(name);
 						if (a != null) {
 							String text = checkBox.getText();
+							Icon icon = checkBox.getIcon();
 							String tooltip = checkBox.getToolTipText();
 							checkBox.setAction(a);
 							checkBox.setText(text);
+							if (icon != null)
+								checkBox.setIcon(icon);
 							if (tooltip != null && !tooltip.trim().equals("")) {
 								checkBox.setToolTipText(tooltip);
 							}
@@ -240,8 +247,11 @@ class Mw2dConnector {
 						if (act != null) {
 							String text = radioButton.getText();
 							String tooltip = radioButton.getToolTipText();
+							Icon icon = radioButton.getIcon();
 							radioButton.setAction(act);
 							radioButton.setText(text);
+							if (icon != null)
+								radioButton.setIcon(icon);
 							if (tooltip != null && !tooltip.trim().equals("")) {
 								radioButton.setToolTipText(tooltip);
 							}

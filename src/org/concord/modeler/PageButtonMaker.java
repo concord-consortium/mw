@@ -35,6 +35,8 @@ import java.util.Map;
 
 import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -75,6 +77,7 @@ class PageButtonMaker extends ComponentMaker {
 	private IntegerTextField widthField, heightField;
 	private JButton okButton;
 	private JTextField nameField;
+	private JTextField imageFileNameField;
 	private JTextField toolTipField;
 	private JTextArea scriptArea;
 	private JLabel scriptLabel;
@@ -146,6 +149,7 @@ class PageButtonMaker extends ComponentMaker {
 			pageButton.setAction((Action) o);
 		pageButton.putClientProperty("script", scriptArea.getText());
 		pageButton.setText(nameField.getText());
+		pageButton.setIcon(loadLocalImage(pageButton.page, imageFileNameField.getText()));
 		pageButton.setToolTipText(toolTipField.getText());
 		pageButton.getAction().putValue("source", this);
 		if (incrementField.isEnabled() && !incrementField.getText().trim().equals("")) {
@@ -242,8 +246,10 @@ class PageButtonMaker extends ComponentMaker {
 		actionComboBox.addItemListener(actionSelectionListener);
 
 		String t = pageButton.getText();
-		nameField.setText(t != null && !t.trim().equals("") ? t
-				: (actionComboBox.getSelectedItem() != null ? actionComboBox.getSelectedItem().toString() : null));
+		nameField.setText(t != null ? t : (actionComboBox.getSelectedItem() != null ? actionComboBox.getSelectedItem()
+				.toString() : null));
+		Icon icon = pageButton.getIcon();
+		imageFileNameField.setText(icon instanceof ImageIcon ? ((ImageIcon) icon).getDescription() : null);
 		toolTipField.setText(pageButton.getToolTipText());
 		if (!Page.isNativeLookAndFeelUsed()) {
 			transparentCheckBox.setSelected(!pageButton.isOpaque());
@@ -434,6 +440,14 @@ class PageButtonMaker extends ComponentMaker {
 		p.add(nameField);
 
 		// row 4
+		s = Modeler.getInternationalText("ImageFileName");
+		p.add(new JLabel(s != null ? s : "Image file name", SwingConstants.LEFT));
+		imageFileNameField = new JTextField();
+		imageFileNameField.setToolTipText("Type in the file name of the image that will appear on this button.");
+		imageFileNameField.addActionListener(okListener);
+		p.add(imageFileNameField);
+
+		// row 5
 		s = Modeler.getInternationalText("ToolTipLabel");
 		p.add(new JLabel(s != null ? s : "Tool tip", SwingConstants.LEFT));
 		toolTipField = new JTextField();
@@ -441,7 +455,7 @@ class PageButtonMaker extends ComponentMaker {
 		toolTipField.addActionListener(okListener);
 		p.add(toolTipField);
 
-		// row 5
+		// row 6
 		s = Modeler.getInternationalText("WidthLabel");
 		p.add(new JLabel(s != null ? s : "Width", SwingConstants.LEFT));
 		widthField = new IntegerTextField(pageButton.getWidth() <= 0 ? 100 : pageButton.getWidth(), 10, 400);
@@ -450,7 +464,7 @@ class PageButtonMaker extends ComponentMaker {
 		widthField.addActionListener(okListener);
 		p.add(widthField);
 
-		// row 6
+		// row 7
 		s = Modeler.getInternationalText("HeightLabel");
 		p.add(new JLabel(s != null ? s : "Height", SwingConstants.LEFT));
 		heightField = new IntegerTextField(pageButton.getHeight() <= 0 ? 24 : pageButton.getHeight(), 10, 400);
@@ -460,7 +474,7 @@ class PageButtonMaker extends ComponentMaker {
 		heightField.addActionListener(okListener);
 		p.add(heightField);
 
-		// row 7
+		// row 8
 		s = Modeler.getInternationalText("BackgroundColorLabel");
 		JLabel label = new JLabel(s != null ? s : "Background color", SwingConstants.LEFT);
 		label.setEnabled(!Page.isNativeLookAndFeelUsed());
@@ -471,7 +485,7 @@ class PageButtonMaker extends ComponentMaker {
 		bgComboBox.setEnabled(!Page.isNativeLookAndFeelUsed());
 		p.add(bgComboBox);
 
-		// row 8
+		// row 9
 		s = Modeler.getInternationalText("BorderLabel");
 		label = new JLabel(s != null ? s : "Border", SwingConstants.LEFT);
 		label.setEnabled(!Page.isNativeLookAndFeelUsed());
@@ -483,7 +497,7 @@ class PageButtonMaker extends ComponentMaker {
 		borderComboBox.setEnabled(!Page.isNativeLookAndFeelUsed());
 		p.add(borderComboBox);
 
-		// row 9
+		// row 10
 		incrementLabel = new JLabel("Increment", SwingConstants.LEFT);
 		incrementLabel.setEnabled(false);
 		p.add(incrementLabel);
@@ -494,7 +508,7 @@ class PageButtonMaker extends ComponentMaker {
 				.setToolTipText("For some actions, type in the increment to be added each time this button is clicked.");
 		p.add(incrementField);
 
-		ModelerUtilities.makeCompactGrid(p, 9, 2, 5, 5, 10, 2);
+		ModelerUtilities.makeCompactGrid(p, 10, 2, 5, 5, 10, 2);
 
 		p = new JPanel(new BorderLayout(10, 10));
 		p.setBorder(BorderFactory.createEmptyBorder(10, 10, 2, 10));

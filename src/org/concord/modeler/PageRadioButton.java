@@ -28,6 +28,7 @@ import java.awt.FontMetrics;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseListener;
 
@@ -52,6 +53,7 @@ public class PageRadioButton extends JRadioButton implements Embeddable, ModelCo
 	private long groupID = -1;
 	private int index;
 	private String id;
+	private String imageSelected, imageDeselected;
 	private boolean marked;
 	private boolean wasOpaque;
 	private Color radioButtonBackground;
@@ -95,6 +97,9 @@ public class PageRadioButton extends JRadioButton implements Embeddable, ModelCo
 			((ButtonGroup) o).add(this);
 		}
 		setText(radioButton.getText());
+		setIcon(radioButton.getIcon());
+		setImageFileNameSelected(radioButton.imageSelected);
+		setImageFileNameDeselected(radioButton.imageDeselected);
 		setToolTipText(radioButton.getToolTipText());
 		BasicModel m = getBasicModel();
 		if (m != null)
@@ -144,6 +149,20 @@ public class PageRadioButton extends JRadioButton implements Embeddable, ModelCo
 		addMouseListener(popupMouseListener);
 		setOpaque(false);
 		setFont(new Font(null, Font.PLAIN, Page.getDefaultFontSize() - 1));
+		addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				switch (e.getStateChange()) {
+				case ItemEvent.SELECTED:
+					if (imageSelected != null)
+						setIcon(page.loadImage(imageSelected));
+					break;
+				case ItemEvent.DESELECTED:
+					if (imageDeselected != null)
+						setIcon(page.loadImage(imageDeselected));
+					break;
+				}
+			}
+		});
 	}
 
 	public JPopupMenu getPopupMenu() {
@@ -208,6 +227,22 @@ public class PageRadioButton extends JRadioButton implements Embeddable, ModelCo
 
 	public long getGroupID() {
 		return groupID;
+	}
+
+	public void setImageFileNameSelected(String imageSelected) {
+		this.imageSelected = imageSelected;
+	}
+
+	public String getImageFileNameSelected() {
+		return imageSelected;
+	}
+
+	public void setImageFileNameDeselected(String imageDeselected) {
+		this.imageDeselected = imageDeselected;
+	}
+
+	public String getImageFileNameDeselected() {
+		return imageDeselected;
 	}
 
 	public void setOpaque(boolean b) {
@@ -433,6 +468,12 @@ public class PageRadioButton extends JRadioButton implements Embeddable, ModelCo
 		Action a = getAction();
 		StringBuffer sb = new StringBuffer("<class>" + getClass().getName() + "</class>\n");
 		sb.append("<title>" + XMLCharacterEncoder.encode(getText()) + "</title>\n");
+		if (imageSelected != null) {
+			sb.append("<imagefile>" + imageSelected + "</imagefile>\n");
+		}
+		if (imageDeselected != null) {
+			sb.append("<imagefiledeselected>" + imageDeselected + "</imagefiledeselected>\n");
+		}
 		String toolTip = getToolTipText();
 		if (toolTip != null) {
 			if (a != null && !toolTip.equals(a.getValue(Action.SHORT_DESCRIPTION))) {

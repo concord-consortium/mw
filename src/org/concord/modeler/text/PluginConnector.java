@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.Action;
+import javax.swing.Icon;
 import javax.swing.event.ChangeListener;
 
 import org.concord.modeler.ComponentMaker;
@@ -127,8 +128,11 @@ class PluginConnector {
 						if (a != null) {
 							String text = button.getText();
 							String tooltip = button.getToolTipText();
+							Icon icon = button.getIcon();
 							button.setAction(a);
 							button.setText(text);
+							if (icon != null)
+								button.setIcon(icon);
 							if (tooltip != null && !tooltip.trim().equals(""))
 								button.setToolTipText(tooltip);
 							model.addModelListener(button);
@@ -144,8 +148,11 @@ class PluginConnector {
 						if (a != null) {
 							String text = checkBox.getText();
 							String tooltip = checkBox.getToolTipText();
+							Icon icon = checkBox.getIcon();
 							checkBox.setAction(a);
 							checkBox.setText(text);
+							if (icon != null)
+								checkBox.setIcon(icon);
 							if (tooltip != null && !tooltip.trim().equals(""))
 								checkBox.setToolTipText(tooltip);
 							model.addModelListener(checkBox);
@@ -188,8 +195,11 @@ class PluginConnector {
 						if (a != null) {
 							String text = radioButton.getText();
 							String tooltip = radioButton.getToolTipText();
+							Icon icon = radioButton.getIcon();
 							radioButton.setAction(a);
 							radioButton.setText(text);
+							if (icon != null)
+								radioButton.setIcon(icon);
 							if (tooltip != null && !tooltip.trim().equals(""))
 								radioButton.setToolTipText(tooltip);
 							model.addModelListener(radioButton);
