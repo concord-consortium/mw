@@ -257,8 +257,8 @@ class PageCheckBoxMaker extends ComponentMaker {
 		actionComboBox.addItemListener(actionSelectionListener);
 
 		String t = pageCheckBox.getText();
-		nameField.setText(t != null && !t.trim().equals("") ? t
-				: (actionComboBox.getSelectedItem() != null ? actionComboBox.getSelectedItem().toString() : null));
+		nameField.setText(t != null ? t : (actionComboBox.getSelectedItem() != null ? actionComboBox.getSelectedItem()
+				.toString() : null));
 		imageSelectedField.setText(pageCheckBox.getImageFileNameSelected());
 		imageDeselectedField.setText(pageCheckBox.getImageFileNameDeselected());
 		toolTipField.setText(pageCheckBox.getToolTipText());
