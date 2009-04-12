@@ -3756,6 +3756,11 @@ final class PageXMLDecoder {
 			else {
 				b.setText(actionName);
 			}
+			if (imageFileName != null) {
+				if (!imageFileName.trim().equals(""))
+					b.setIcon(page.loadImage(imageFileName));
+				imageFileName = null;
+			}
 			if (toolTip != null) {
 				b.setToolTipText(toolTip);
 				toolTip = null;

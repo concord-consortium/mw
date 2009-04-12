@@ -31,6 +31,7 @@ import java.awt.event.MouseListener;
 
 import javax.swing.Action;
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -76,6 +77,7 @@ public class ActivityButton extends JButton implements Embeddable {
 		}
 		setAction(button.getAction());
 		setText(button.getText());
+		setIcon(button.getIcon());
 		setId(button.getId());
 		setToolTipText(button.getToolTipText());
 		setAutoSize(button.autoSize);
@@ -365,6 +367,12 @@ public class ActivityButton extends JButton implements Embeddable {
 	public String toString() {
 		StringBuffer sb = new StringBuffer("<class>" + getClass().getName() + "</class>\n");
 		sb.append("<title>" + XMLCharacterEncoder.encode(getText()) + "</title>\n");
+		Icon icon = getIcon();
+		if (icon instanceof ImageIcon) {
+			String imageFileName = ((ImageIcon) icon).getDescription();
+			if (imageFileName.indexOf(":") == -1)
+				sb.append("<imagefile>" + imageFileName + "</imagefile>\n");
+		}
 		String toolTip = getToolTipText();
 		if (toolTip != null) {
 			if (!toolTip.equals(getAction().getValue(Action.SHORT_DESCRIPTION))) {

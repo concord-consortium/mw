@@ -109,7 +109,14 @@ class PageButtonMaker extends ComponentMaker {
 		public void itemStateChanged(ItemEvent e) {
 			if (e.getStateChange() == ItemEvent.DESELECTED)
 				return;
-			pageButton.setAction((Action) actionComboBox.getSelectedItem());
+			Action a = (Action) actionComboBox.getSelectedItem();
+			Icon icon = null;
+			if (a.getValue(Action.SMALL_ICON) == null) {
+				icon = pageButton.getIcon();
+			}
+			pageButton.setAction(a);
+			if (icon != null)
+				pageButton.setIcon(icon);
 			setScriptArea();
 			setIncrementParameter();
 			nameField.setText(pageButton.getAction().toString());
@@ -255,7 +262,18 @@ class PageButtonMaker extends ComponentMaker {
 		nameField.setText(t != null ? t : (actionComboBox.getSelectedItem() != null ? actionComboBox.getSelectedItem()
 				.toString() : null));
 		Icon icon = pageButton.getIcon();
-		imageFileNameField.setText(icon instanceof ImageIcon ? ((ImageIcon) icon).getDescription() : null);
+		if (icon instanceof ImageIcon) {
+			String s = ((ImageIcon) icon).getDescription();
+			if (s != null && s.indexOf(":") != -1) {
+				imageFileNameField.setText(null);
+			}
+			else {
+				imageFileNameField.setText(s);
+			}
+		}
+		else {
+			imageFileNameField.setText(null);
+		}
 		toolTipField.setText(pageButton.getToolTipText());
 		if (!Page.isNativeLookAndFeelUsed()) {
 			transparentCheckBox.setSelected(!pageButton.isOpaque());

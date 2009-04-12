@@ -34,6 +34,8 @@ import java.util.Map;
 
 import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -67,6 +69,7 @@ class ActivityButtonMaker extends ComponentMaker {
 	private ColorComboBox bgComboBox;
 	private IntegerTextField widthField, heightField;
 	private JTextField nameField, toolTipField;
+	private JTextField imageFileNameField;
 	private JLabel pageGroupLabel;
 	private JTextField pageGroupField;
 	private JLabel descriptionLabel;
@@ -79,7 +82,8 @@ class ActivityButtonMaker extends ComponentMaker {
 		public void itemStateChanged(ItemEvent e) {
 			if (e.getStateChange() == ItemEvent.DESELECTED)
 				return;
-			activityButton.setAction((Action) actionComboBox.getSelectedItem());
+			Action a = (Action) actionComboBox.getSelectedItem();
+			activityButton.setAction(a);
 			boolean b = needPageGroupInput(activityButton.getAction().toString());
 			pageGroupField.setEnabled(b);
 			pageGroupLabel.setEnabled(b);
@@ -117,6 +121,16 @@ class ActivityButtonMaker extends ComponentMaker {
 		activityButton.setAction((Action) actionComboBox.getSelectedItem());
 		activityButton.getAction().putValue("source", this);
 		activityButton.setText(nameField.getText());
+		Icon icon = activityButton.getIcon();
+		if (icon == null) {
+			String imageFileName = imageFileNameField.getText();
+			if (imageFileName != null && !imageFileName.trim().equals("")) {
+				activityButton.setIcon(loadLocalImage(activityButton.page, imageFileName));
+			}
+			else {
+				activityButton.setIcon(null);
+			}
+		}
 		String toolTip = toolTipField.getText();
 		if (toolTip != null && !toolTip.trim().equals(""))
 			activityButton.setToolTipText(toolTip);
@@ -190,8 +204,21 @@ class ActivityButtonMaker extends ComponentMaker {
 		actionComboBox.addItemListener(actionSelectionListener);
 
 		String t = activityButton.getText();
-		nameField.setText(t != null && !t.trim().equals("") ? t
-				: (actionComboBox.getSelectedItem() != null ? actionComboBox.getSelectedItem().toString() : null));
+		nameField.setText(t != null ? t : (actionComboBox.getSelectedItem() != null ? actionComboBox.getSelectedItem()
+				.toString() : null));
+		Icon icon = activityButton.getIcon();
+		if (icon instanceof ImageIcon) {
+			String s = ((ImageIcon) icon).getDescription();
+			if (s != null && s.indexOf(":") != -1) {
+				imageFileNameField.setText(null);
+			}
+			else {
+				imageFileNameField.setText(s);
+			}
+		}
+		else {
+			imageFileNameField.setText(null);
+		}
 		toolTipField.setText(activityButton.getToolTipText());
 		if (needPageGroupInput(actionComboBox.getSelectedItem().toString())) {
 			pageGroupField.setText(activityButton.pageNameGroup);
@@ -324,6 +351,14 @@ class ActivityButtonMaker extends ComponentMaker {
 		p.add(nameField);
 
 		// row 3
+		s = Modeler.getInternationalText("ImageFileName");
+		p.add(new JLabel(s != null ? s : "Image file name", SwingConstants.LEFT));
+		imageFileNameField = new JTextField();
+		imageFileNameField.setToolTipText("Type in the file name of the image that will appear on this button.");
+		imageFileNameField.addActionListener(okListener);
+		p.add(imageFileNameField);
+
+		// row 4
 		s = Modeler.getInternationalText("ToolTipLabel");
 		p.add(new JLabel(s != null ? s : "Tool tip", SwingConstants.LEFT));
 		toolTipField = new JTextField();
@@ -331,7 +366,7 @@ class ActivityButtonMaker extends ComponentMaker {
 		toolTipField.addActionListener(okListener);
 		p.add(toolTipField);
 
-		// row 4
+		// row 5
 		s = Modeler.getInternationalText("WidthLabel");
 		p.add(new JLabel(s != null ? s : "Width", SwingConstants.LEFT));
 		widthField = new IntegerTextField(activityButton.getWidth() <= 0 ? 100 : activityButton.getWidth(), 10, 400);
@@ -340,7 +375,7 @@ class ActivityButtonMaker extends ComponentMaker {
 		widthField.addActionListener(okListener);
 		p.add(widthField);
 
-		// row 5
+		// row 6
 		s = Modeler.getInternationalText("HeightLabel");
 		p.add(new JLabel(s != null ? s : "Height", SwingConstants.LEFT));
 		heightField = new IntegerTextField(activityButton.getHeight() <= 0 ? 24 : activityButton.getHeight(), 10, 400);
@@ -350,7 +385,7 @@ class ActivityButtonMaker extends ComponentMaker {
 		heightField.addActionListener(okListener);
 		p.add(heightField);
 
-		// row 6
+		// row 7
 		s = Modeler.getInternationalText("BackgroundColorLabel");
 		JLabel label = new JLabel(s != null ? s : "Background color", SwingConstants.LEFT);
 		label.setEnabled(!Page.isNativeLookAndFeelUsed());
@@ -362,7 +397,7 @@ class ActivityButtonMaker extends ComponentMaker {
 		bgComboBox.setEnabled(!Page.isNativeLookAndFeelUsed());
 		p.add(bgComboBox);
 
-		// row 7
+		// row 8
 		s = Modeler.getInternationalText("BorderLabel");
 		label = new JLabel(s != null ? s : "Border", SwingConstants.LEFT);
 		label.setEnabled(!Page.isNativeLookAndFeelUsed());
@@ -375,7 +410,7 @@ class ActivityButtonMaker extends ComponentMaker {
 		p.add(borderComboBox);
 		borderComboBox.setEnabled(!Page.isNativeLookAndFeelUsed());
 
-		// row 8
+		// row 9
 		s = Modeler.getInternationalText("CollectDataFromPagesLabel");
 		pageGroupLabel = new JLabel(s != null ? s : "Collect data from pages:", SwingConstants.LEFT);
 		pageGroupLabel.setEnabled(false);
@@ -387,7 +422,7 @@ class ActivityButtonMaker extends ComponentMaker {
 		pageGroupField.addActionListener(okListener);
 		p.add(pageGroupField);
 
-		// row 9
+		// row 10
 		s = Modeler.getInternationalText("MultipageReportTitleLabel");
 		descriptionLabel = new JLabel(s != null ? s : "Title on multipage report:", SwingConstants.LEFT);
 		descriptionLabel.setEnabled(false);
@@ -398,7 +433,7 @@ class ActivityButtonMaker extends ComponentMaker {
 		descriptionField.addActionListener(okListener);
 		p.add(descriptionField);
 
-		ModelerUtilities.makeCompactGrid(p, 9, 2, 5, 5, 10, 2);
+		ModelerUtilities.makeCompactGrid(p, 10, 2, 5, 5, 10, 2);
 
 		p = new JPanel(new BorderLayout(10, 10));
 		p.setBorder(BorderFactory.createEmptyBorder(10, 10, 2, 10));
