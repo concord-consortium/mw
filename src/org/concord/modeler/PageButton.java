@@ -484,7 +484,8 @@ public class PageButton extends JButton implements Embeddable, ModelCommunicator
 		Icon icon = getIcon();
 		if (icon instanceof ImageIcon) {
 			String imageFileName = ((ImageIcon) icon).getDescription();
-			sb.append("<imagefile>" + imageFileName + "</imagefile>\n");
+			if (imageFileName.indexOf(":") == -1)
+				sb.append("<imagefile>" + imageFileName + "</imagefile>\n");
 		}
 		String toolTip = getToolTipText();
 		if (toolTip != null) {
