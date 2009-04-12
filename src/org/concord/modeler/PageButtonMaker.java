@@ -110,13 +110,7 @@ class PageButtonMaker extends ComponentMaker {
 			if (e.getStateChange() == ItemEvent.DESELECTED)
 				return;
 			Action a = (Action) actionComboBox.getSelectedItem();
-			Icon icon = null;
-			if (a.getValue(Action.SMALL_ICON) == null) {
-				icon = pageButton.getIcon();
-			}
 			pageButton.setAction(a);
-			if (icon != null)
-				pageButton.setIcon(icon);
 			setScriptArea();
 			setIncrementParameter();
 			nameField.setText(pageButton.getAction().toString());
@@ -156,12 +150,15 @@ class PageButtonMaker extends ComponentMaker {
 			pageButton.setAction((Action) o);
 		pageButton.putClientProperty("script", scriptArea.getText());
 		pageButton.setText(nameField.getText());
-		String s = imageFileNameField.getText();
-		if (s != null && !s.trim().equals("")) {
-			pageButton.setIcon(loadLocalImage(pageButton.page, s));
-		}
-		else {
-			pageButton.setIcon(null);
+		Icon icon = pageButton.getIcon();
+		if (icon == null) {
+			String imageFileName = imageFileNameField.getText();
+			if (imageFileName != null && !imageFileName.trim().equals("")) {
+				pageButton.setIcon(loadLocalImage(pageButton.page, imageFileName));
+			}
+			else {
+				pageButton.setIcon(null);
+			}
 		}
 		pageButton.setToolTipText(toolTipField.getText());
 		pageButton.getAction().putValue("source", this);
