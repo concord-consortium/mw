@@ -582,7 +582,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 							return "Terminator";
 						}
 					}
-					String tooltip53 = dnamodel.get53ToolTipString(i, true);
+					String tooltip53 = dnamodel.get53ToolTipString(i);
 					if (tooltip53 != null) {
 						text += "(5')" + tooltip53 + "(3') ";
 						break;
