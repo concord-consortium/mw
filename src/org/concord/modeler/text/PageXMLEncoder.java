@@ -47,9 +47,12 @@ import org.concord.modeler.ModelCanvas;
 import org.concord.modeler.Modeler;
 import org.concord.modeler.ModelerUtilities;
 import org.concord.modeler.PageApplet;
+import org.concord.modeler.PageButton;
+import org.concord.modeler.PageCheckBox;
 import org.concord.modeler.PageJContainer;
 import org.concord.modeler.PageMd3d;
 import org.concord.modeler.PageMolecularViewer;
+import org.concord.modeler.PageRadioButton;
 import org.concord.modeler.draw.FillMode;
 import org.concord.modeler.util.FileUtilities;
 import org.concord.mw2d.models.MDModel;
@@ -530,6 +533,39 @@ final class PageXMLEncoder {
 							pjc.saveJars(file.getParentFile());
 							pjc.saveState(file);
 						}
+						else if (attr instanceof PageButton) {
+							PageButton pb = (PageButton) attr;
+							Icon icon = pb.getIcon();
+							if (icon instanceof ImageIcon) {
+								String image = ((ImageIcon) icon).getDescription();
+								if (image != null && image.indexOf(":") == -1) {
+									saveResource(page, page.getPathBase() + FileUtilities.getFileName(image), file
+											.getParentFile());
+								}
+							}
+						}
+						else if (attr instanceof PageCheckBox) {
+							PageCheckBox pcb = (PageCheckBox) attr;
+							String imageFileName = pcb.getImageFileNameSelected();
+							if (imageFileName != null)
+								saveResource(page, page.getPathBase() + FileUtilities.getFileName(imageFileName), file
+										.getParentFile());
+							imageFileName = pcb.getImageFileNameDeselected();
+							if (imageFileName != null)
+								saveResource(page, page.getPathBase() + FileUtilities.getFileName(imageFileName), file
+										.getParentFile());
+						}
+						else if (attr instanceof PageRadioButton) {
+							PageRadioButton prb = (PageRadioButton) attr;
+							String imageFileName = prb.getImageFileNameSelected();
+							if (imageFileName != null)
+								saveResource(page, page.getPathBase() + FileUtilities.getFileName(imageFileName), file
+										.getParentFile());
+							imageFileName = prb.getImageFileNameDeselected();
+							if (imageFileName != null)
+								saveResource(page, page.getPathBase() + FileUtilities.getFileName(imageFileName), file
+										.getParentFile());
+						}
 
 						// do not write the convenient JButtons
 						if (attr.getClass() != JButton.class) {
@@ -635,7 +671,7 @@ final class PageXMLEncoder {
 		icon.setDescription(new File(parentFile, fn).toString());
 	}
 
-	/* save the images embedded in html body of these text components * */
+	/* save the images embedded in html body of these text components */
 	private void saveLinkedFilesInHTML(HtmlService c, File parentFile) {
 		String href = c.getAttribute("link", "href");
 		if (href != null) {
