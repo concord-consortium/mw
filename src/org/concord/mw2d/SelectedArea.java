@@ -45,7 +45,7 @@ class SelectedArea extends Rectangle {
 		setOrigin(x, y);
 	}
 
-	public void setOrigin(int x, int y) {
+	private void setOrigin(int x, int y) {
 		x0 = x;
 		y0 = y;
 	}
@@ -56,6 +56,11 @@ class SelectedArea extends Rectangle {
 
 	public int getY0() {
 		return y0;
+	}
+
+	@Override
+	public String toString() {
+		return super.toString() + ":(" + x0 + ", " + y0 + ")";
 	}
 
 }
