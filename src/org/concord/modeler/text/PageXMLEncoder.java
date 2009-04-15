@@ -41,6 +41,7 @@ import javax.swing.text.Document;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.html.HTML;
 
+import org.concord.modeler.ActivityButton;
 import org.concord.modeler.AudioPlayer;
 import org.concord.modeler.HtmlService;
 import org.concord.modeler.ModelCanvas;
@@ -533,9 +534,9 @@ final class PageXMLEncoder {
 							pjc.saveJars(file.getParentFile());
 							pjc.saveState(file);
 						}
-						else if (attr instanceof PageButton) {
-							PageButton pb = (PageButton) attr;
-							Icon icon = pb.getIcon();
+						else if (attr instanceof ActivityButton || attr instanceof PageButton) {
+							JButton button = (JButton) attr;
+							Icon icon = button.getIcon();
 							if (icon instanceof ImageIcon) {
 								String image = ((ImageIcon) icon).getDescription();
 								if (image != null && image.indexOf(":") == -1) {
