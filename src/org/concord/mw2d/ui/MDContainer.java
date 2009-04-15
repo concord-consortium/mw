@@ -381,6 +381,11 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 						buttonMenu.setInvoker(c);
 					}
 				}
+				else {
+					if (expandMenu != null && expandMenu.isShowing()) {
+						expandMenu.setVisible(false);
+					}
+				}
 			}
 		});
 		return b;
@@ -945,8 +950,10 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 					if (!hasToolbarButton(expandButton))
 						getToolBar().add(expandButton);
 				}
-				if (expandMenu == null)
+				if (expandMenu == null) {
 					expandMenu = new JPopupMenu();
+					expandMenu.setInvoker(getView());
+				}
 				int n1 = expandMenu.getComponentCount();
 				if (n1 > 1) {
 					int n2 = (int) Math.sqrt(n1) + 1;
