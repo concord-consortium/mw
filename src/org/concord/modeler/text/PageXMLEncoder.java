@@ -548,22 +548,22 @@ final class PageXMLEncoder {
 						else if (attr instanceof PageCheckBox) {
 							PageCheckBox pcb = (PageCheckBox) attr;
 							String imageFileName = pcb.getImageFileNameSelected();
-							if (imageFileName != null)
+							if (imageFileName != null && !imageFileName.trim().equals(""))
 								saveResource(page, page.getPathBase() + FileUtilities.getFileName(imageFileName), file
 										.getParentFile());
 							imageFileName = pcb.getImageFileNameDeselected();
-							if (imageFileName != null)
+							if (imageFileName != null && !imageFileName.trim().equals(""))
 								saveResource(page, page.getPathBase() + FileUtilities.getFileName(imageFileName), file
 										.getParentFile());
 						}
 						else if (attr instanceof PageRadioButton) {
 							PageRadioButton prb = (PageRadioButton) attr;
 							String imageFileName = prb.getImageFileNameSelected();
-							if (imageFileName != null)
+							if (imageFileName != null && !imageFileName.trim().equals(""))
 								saveResource(page, page.getPathBase() + FileUtilities.getFileName(imageFileName), file
 										.getParentFile());
 							imageFileName = prb.getImageFileNameDeselected();
-							if (imageFileName != null)
+							if (imageFileName != null && !imageFileName.trim().equals(""))
 								saveResource(page, page.getPathBase() + FileUtilities.getFileName(imageFileName), file
 										.getParentFile());
 						}
