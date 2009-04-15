@@ -45,6 +45,7 @@ import java.util.StringTokenizer;
 
 import javax.swing.Action;
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JProgressBar;
 import javax.swing.SwingConstants;
 import javax.swing.text.AttributeSet;
@@ -3680,8 +3681,13 @@ final class PageXMLDecoder {
 				b.setText(actionName);
 			}
 			if (imageFileName != null) {
-				if (!imageFileName.trim().equals(""))
-					b.setIcon(page.loadImage(imageFileName));
+				if (!imageFileName.trim().equals("")) {
+					Icon icon = page.loadImage(imageFileName);
+					b.setIcon(icon);
+					if (icon instanceof ImageIcon) {
+						((ImageIcon) icon).setDescription(imageFileName);
+					}
+				}
 				imageFileName = null;
 			}
 			if (toolTip != null) {
@@ -3757,8 +3763,13 @@ final class PageXMLDecoder {
 				b.setText(actionName);
 			}
 			if (imageFileName != null) {
-				if (!imageFileName.trim().equals(""))
-					b.setIcon(page.loadImage(imageFileName));
+				if (!imageFileName.trim().equals("")) {
+					Icon icon = page.loadImage(imageFileName);
+					b.setIcon(icon);
+					if (icon instanceof ImageIcon) {
+						((ImageIcon) icon).setDescription(imageFileName);
+					}
+				}
 				imageFileName = null;
 			}
 			if (toolTip != null) {
