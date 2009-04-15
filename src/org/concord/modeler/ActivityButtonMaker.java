@@ -121,15 +121,12 @@ class ActivityButtonMaker extends ComponentMaker {
 		activityButton.setAction((Action) actionComboBox.getSelectedItem());
 		activityButton.getAction().putValue("source", this);
 		activityButton.setText(nameField.getText());
-		Icon icon = activityButton.getIcon();
-		if (icon == null) {
-			String imageFileName = imageFileNameField.getText();
-			if (imageFileName != null && !imageFileName.trim().equals("")) {
-				activityButton.setIcon(loadLocalImage(activityButton.page, imageFileName));
-			}
-			else {
-				activityButton.setIcon(null);
-			}
+		String imageFileName = imageFileNameField.getText();
+		if (imageFileName != null && !imageFileName.trim().equals("")) {
+			activityButton.setIcon(loadLocalImage(activityButton.page, imageFileName));
+		}
+		else {
+			activityButton.setIcon(null);
 		}
 		String toolTip = toolTipField.getText();
 		if (toolTip != null && !toolTip.trim().equals(""))
