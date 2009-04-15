@@ -150,15 +150,12 @@ class PageButtonMaker extends ComponentMaker {
 			pageButton.setAction((Action) o);
 		pageButton.putClientProperty("script", scriptArea.getText());
 		pageButton.setText(nameField.getText());
-		Icon icon = pageButton.getIcon();
-		if (icon == null) {
-			String imageFileName = imageFileNameField.getText();
-			if (imageFileName != null && !imageFileName.trim().equals("")) {
-				pageButton.setIcon(loadLocalImage(pageButton.page, imageFileName));
-			}
-			else {
-				pageButton.setIcon(null);
-			}
+		String imageFileName = imageFileNameField.getText();
+		if (imageFileName != null && !imageFileName.trim().equals("")) {
+			pageButton.setIcon(loadLocalImage(pageButton.page, imageFileName));
+		}
+		else {
+			pageButton.setIcon(null);
 		}
 		pageButton.setToolTipText(toolTipField.getText());
 		pageButton.getAction().putValue("source", this);
