@@ -912,8 +912,8 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 			throw new RuntimeException("must be called by the event thread.");
 		if (getToolBar() != null)
 			getToolBar().removeAll();
-		if (getExpandMenu() != null)
-			getExpandMenu().removeAll();
+		if (expandMenu != null)
+			expandMenu.removeAll();
 		removeToolbar();
 	}
 
