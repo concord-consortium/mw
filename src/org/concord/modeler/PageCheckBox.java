@@ -469,10 +469,10 @@ public class PageCheckBox extends JCheckBox implements Embeddable, ModelCommunic
 		Action a = getAction();
 		StringBuffer sb = new StringBuffer("<class>" + getClass().getName() + "</class>\n");
 		sb.append("<title>" + XMLCharacterEncoder.encode(getText()) + "</title>\n");
-		if (imageSelected != null) {
+		if (imageSelected != null && !imageSelected.trim().equals("")) {
 			sb.append("<imagefile>" + imageSelected + "</imagefile>\n");
 		}
-		if (imageDeselected != null) {
+		if (imageDeselected != null && !imageDeselected.trim().equals("")) {
 			sb.append("<imagefiledeselected>" + imageDeselected + "</imagefiledeselected>\n");
 		}
 		String toolTip = getToolTipText();
