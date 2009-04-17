@@ -157,8 +157,6 @@ class PageCheckBoxMaker extends ComponentMaker {
 				pageCheckBox.setIcon(null);
 			}
 		}
-		pageCheckBox.setIcon(loadLocalImage(pageCheckBox.page, pageCheckBox.isSelected() ? imageSelectedField.getText()
-				: imageDeselectedField.getText()));
 		pageCheckBox.setToolTipText(toolTipField.getText());
 		if (!pageCheckBox.autoSize) {
 			pageCheckBox.setPreferredSize(new Dimension(widthField.getValue(), heightField.getValue()));
