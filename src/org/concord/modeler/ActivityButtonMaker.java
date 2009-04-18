@@ -119,6 +119,7 @@ class ActivityButtonMaker extends ComponentMaker {
 		}
 		activityButton.setBackground(bgComboBox.getSelectedColor());
 		activityButton.setAction((Action) actionComboBox.getSelectedItem());
+		Icon actionIcon = activityButton.getIcon();
 		activityButton.getAction().putValue("source", this);
 		activityButton.setText(nameField.getText());
 		String imageFileName = imageFileNameField.getText();
@@ -126,7 +127,7 @@ class ActivityButtonMaker extends ComponentMaker {
 			activityButton.setIcon(loadLocalImage(activityButton.page, imageFileName));
 		}
 		else {
-			activityButton.setIcon(null);
+			activityButton.setIcon(actionIcon);
 		}
 		String toolTip = toolTipField.getText();
 		if (toolTip != null && !toolTip.trim().equals(""))
