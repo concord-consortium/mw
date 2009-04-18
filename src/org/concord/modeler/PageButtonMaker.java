@@ -148,6 +148,7 @@ class PageButtonMaker extends ComponentMaker {
 		o = actionComboBox.getSelectedItem();
 		if (o instanceof Action)
 			pageButton.setAction((Action) o);
+		Icon actionIcon = pageButton.getIcon();
 		pageButton.putClientProperty("script", scriptArea.getText());
 		pageButton.setText(nameField.getText());
 		String imageFileName = imageFileNameField.getText();
@@ -155,7 +156,7 @@ class PageButtonMaker extends ComponentMaker {
 			pageButton.setIcon(loadLocalImage(pageButton.page, imageFileName));
 		}
 		else {
-			pageButton.setIcon(null);
+			pageButton.setIcon(actionIcon);
 		}
 		pageButton.setToolTipText(toolTipField.getText());
 		pageButton.getAction().putValue("source", this);
