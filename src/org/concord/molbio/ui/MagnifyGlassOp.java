@@ -57,6 +57,7 @@ class MagnifyGlassOp implements BufferedImageOp {
 	private Shape needClip;
 	private BufferedImage internalImage;
 	private boolean drawImage;
+	private static int cornerRadius = 20;
 
 	MagnifyGlassOp(float power, float mx, float my, float rw, float rh, int drawMode) {
 		this.mx = mx;
@@ -92,17 +93,19 @@ class MagnifyGlassOp implements BufferedImageOp {
 			g2d.setColor(oldColor);
 		}
 		else {
+			int y = Math.round(yc - rrh - 1);
+			int h = Math.round(2 * rrh);
 			if (drawMode == GLASS_AS_RECTANGLE) {
-				g2d.fillRoundRect(Math.round(xc - 2 * r0), Math.round(yc - rrh - 1), Math.round(3 * r0), Math
-						.round(2 * rrh), 2, 2);
+				g2d.fillRoundRect(Math.round(xc - 2 * r0), y, Math.round(3 * r0), h, cornerRadius, cornerRadius);
+				g2d.setColor(new Color(1f, 1f, 0, 0.2f));
+				g2d.fillRect(Math.round(xc - r0), y, Math.round(r0), h);
 			}
 			else {
 				g2d.fillOval(Math.round(xc - r0), Math.round(yc - r0), 2 * Math.round(r0), 2 * Math.round(r0));
 			}
 			g2d.setPaint(rw > 30 ? new Color(red2, green2, blue2, 0.5f) : new Color(0.7f, 0f, 0.7f, 0.5f));
 			if (drawMode == GLASS_AS_RECTANGLE) {
-				g2d.drawRoundRect(Math.round(xc - 2 * r0), Math.round(yc - rrh - 1), Math.round(3 * r0), Math
-						.round(2 * rrh), 2, 2);
+				g2d.drawRoundRect(Math.round(xc - 2 * r0), y, Math.round(3 * r0), h, cornerRadius, cornerRadius);
 			}
 			else {
 				g2d.drawOval(Math.round(xc - r0), Math.round(yc - r0), 2 * Math.round(r0), 2 * Math.round(r0));
