@@ -82,9 +82,9 @@ class PluginConnector {
 					if (name != null) {
 						ChangeListener cl = model.getChanges().get(name);
 						if (cl instanceof AbstractChange) {
+							String tooltip = slider.getToolTipText();
 							slider.addChangeListener(cl);
 							model.addModelListener(slider);
-							String tooltip = slider.getToolTipText();
 							if (tooltip != null && !tooltip.trim().equals("")) {
 								slider.setToolTipText(tooltip);
 							}
@@ -104,9 +104,9 @@ class PluginConnector {
 					if (name != null) {
 						ChangeListener cl = model.getChanges().get(name);
 						if (cl instanceof AbstractChange) {
+							String tooltip = spinner.getToolTipText();
 							spinner.addChangeListener(cl);
 							model.addModelListener(spinner);
-							String tooltip = spinner.getToolTipText();
 							if (tooltip != null && !tooltip.trim().equals("")) {
 								spinner.setToolTipText(tooltip);
 							}
