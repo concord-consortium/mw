@@ -259,14 +259,14 @@ class FontDialog extends JDialog {
 
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				page.requestFocus();
+				page.requestFocusInWindow();
 				FontDialog.this.dispose();
 			}
 
 			public void windowActivated(WindowEvent e) {
 				if (page.isEditable()) {
 					lstFontName.getTextField().selectAll();
-					lstFontName.getTextField().requestFocus();
+					lstFontName.getTextField().requestFocusInWindow();
 				}
 			}
 		});

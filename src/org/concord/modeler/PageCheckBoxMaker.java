@@ -191,7 +191,7 @@ class PageCheckBoxMaker extends ComponentMaker {
 
 				public void windowActivated(WindowEvent e) {
 					nameField.selectAll();
-					nameField.requestFocus();
+					nameField.requestFocusInWindow();
 				}
 			});
 		}

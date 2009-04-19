@@ -223,11 +223,11 @@ class PageBarGraphMaker extends ComponentMaker {
 				public void windowActivated(WindowEvent e) {
 					if (focusTextComponent == null) {
 						descriptionField.selectAll();
-						descriptionField.requestFocus();
+						descriptionField.requestFocusInWindow();
 					}
 					else {
 						focusTextComponent.selectAll();
-						focusTextComponent.requestFocus();
+						focusTextComponent.requestFocusInWindow();
 					}
 				}
 			});

@@ -585,7 +585,7 @@ public abstract class ElectronicStructureViewer extends JPanel implements Update
 			return;
 		if (levelViewList == null)
 			return;
-		requestFocus();
+		requestFocusInWindow();
 		int x = e.getX();
 		int y = e.getY();
 		selectedElectronView = null;

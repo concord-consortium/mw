@@ -319,7 +319,7 @@ public class SnapshotGallery {
 			dialog.setModal(true);
 			dialog.addWindowListener(new WindowAdapter() {
 				public void windowActivated(WindowEvent e) {
-					thumbnailImagePanel.requestFocus();
+					thumbnailImagePanel.requestFocusInWindow();
 				}
 			});
 		}
@@ -333,7 +333,7 @@ public class SnapshotGallery {
 				dialog.setModal(true);
 				dialog.addWindowListener(new WindowAdapter() {
 					public void windowActivated(WindowEvent e) {
-						thumbnailImagePanel.requestFocus();
+						thumbnailImagePanel.requestFocusInWindow();
 					}
 				});
 			}

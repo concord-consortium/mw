@@ -39,8 +39,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -77,6 +79,7 @@ class ActivityButtonMaker extends ComponentMaker {
 	private JLabel areaLabel;
 	private JTextArea textArea;
 	private JPanel contentPane;
+	private JComponent focusComponent;
 
 	private ItemListener actionSelectionListener = new ItemListener() {
 		public void itemStateChanged(ItemEvent e) {
@@ -112,19 +115,27 @@ class ActivityButtonMaker extends ComponentMaker {
 		activityButton = ab;
 	}
 
-	private void confirm() {
+	private boolean confirm() {
 		if (!Page.isNativeLookAndFeelUsed()) {
 			activityButton.setOpaque(!transparentCheckBox.isSelected());
 			activityButton.setBorderType((String) borderComboBox.getSelectedItem());
 		}
 		activityButton.setBackground(bgComboBox.getSelectedColor());
-		activityButton.setAction((Action) actionComboBox.getSelectedItem());
-		Icon actionIcon = activityButton.getIcon();
+		Action action = (Action) actionComboBox.getSelectedItem();
+		Icon actionIcon = (Icon) action.getValue(Action.SMALL_ICON);
+		activityButton.setAction(action);
 		activityButton.getAction().putValue("source", this);
 		activityButton.setText(nameField.getText());
 		String imageFileName = imageFileNameField.getText();
 		if (imageFileName != null && !imageFileName.trim().equals("")) {
-			activityButton.setIcon(loadLocalImage(activityButton.page, imageFileName));
+			ImageIcon image = loadLocalImage(activityButton.page, imageFileName);
+			if (image == null) {
+				JOptionPane.showMessageDialog(dialog, "File " + imageFileName + " does not exist.", "File Error",
+						JOptionPane.ERROR_MESSAGE);
+				focusComponent = imageFileNameField;
+				return false;
+			}
+			activityButton.setIcon(image);
 		}
 		else {
 			activityButton.setIcon(actionIcon);
@@ -155,6 +166,7 @@ class ActivityButtonMaker extends ComponentMaker {
 			activityButton.putClientProperty("grade_uri", textArea.getText());
 		activityButton.page.getSaveReminder().setChanged(true);
 		activityButton.page.settleComponentSize();
+		return true;
 	}
 
 	private boolean needPageGroupInput(String s) {
@@ -182,8 +194,13 @@ class ActivityButtonMaker extends ComponentMaker {
 				}
 
 				public void windowActivated(WindowEvent e) {
-					nameField.selectAll();
-					nameField.requestFocus();
+					if (focusComponent == null) {
+						nameField.selectAll();
+						nameField.requestFocusInWindow();
+					}
+					else {
+						focusComponent.requestFocusInWindow();
+					}
 				}
 			});
 
@@ -302,9 +319,10 @@ class ActivityButtonMaker extends ComponentMaker {
 
 		ActionListener okListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				confirm();
-				dialog.dispose();
-				cancel = false;
+				if (confirm()) {
+					dialog.dispose();
+					cancel = false;
+				}
 			}
 		};
 

@@ -202,7 +202,7 @@ class GradeSubmissionDialog extends JDialog {
 			}
 
 			public void windowActivated(WindowEvent e) {
-				firstNameField.requestFocus();
+				firstNameField.requestFocusInWindow();
 				firstNameField.selectAll();
 			}
 		});

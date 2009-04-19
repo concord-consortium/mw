@@ -172,7 +172,7 @@ class ImagePropertiesDialog extends JDialog {
 			}
 
 			public void windowActivated(WindowEvent e) {
-				button.requestFocus();
+				button.requestFocusInWindow();
 			}
 		});
 

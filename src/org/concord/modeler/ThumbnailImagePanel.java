@@ -127,7 +127,7 @@ class ThumbnailImagePanel extends JPanel implements SnapshotListener {
 
 	protected void processMousePressedEvent(MouseEvent e) {
 
-		requestFocus();
+		requestFocusInWindow();
 
 		int ex = e.getX();
 		int ey = e.getY();

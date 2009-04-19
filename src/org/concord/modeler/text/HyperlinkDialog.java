@@ -174,7 +174,7 @@ class HyperlinkDialog extends JDialog {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						HyperlinkDialog.this.dispose();
-						page.requestFocus();
+						page.requestFocusInWindow();
 					}
 				});
 			}
@@ -307,7 +307,7 @@ class HyperlinkDialog extends JDialog {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						HyperlinkDialog.this.dispose();
-						page.requestFocus();
+						page.requestFocusInWindow();
 					}
 				});
 			}
@@ -328,7 +328,7 @@ class HyperlinkDialog extends JDialog {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						HyperlinkDialog.this.dispose();
-						page.requestFocus();
+						page.requestFocusInWindow();
 					}
 				});
 			}
@@ -362,13 +362,13 @@ class HyperlinkDialog extends JDialog {
 				// set the caret to its original position
 				if (caretPosition > 0)
 					page.setCaretPosition(caretPosition);
-				page.requestFocus();
+				page.requestFocusInWindow();
 			}
 
 			public void windowActivated(WindowEvent e) {
 				// transfer focus to the input URL field
 				urlField.selectAll();
-				urlField.requestFocus();
+				urlField.requestFocusInWindow();
 			}
 		});
 
@@ -458,7 +458,7 @@ class HyperlinkDialog extends JDialog {
 			int start = page.getSelectionStart();
 			int end = page.getSelectionEnd();
 			page.moveCaretPosition(end);
-			page.requestFocus();
+			page.requestFocusInWindow();
 			page.select(start, end);
 		}
 		caretPosition = page.getCaretPosition();
@@ -478,7 +478,7 @@ class HyperlinkDialog extends JDialog {
 						textLabel.setText(null);
 						urlField.setText(null);
 					}
-					page.requestFocus();
+					page.requestFocusInWindow();
 					page.select(startOffset, endOffset);
 					urlField.setEnabled(true);
 					clearButton.setEnabled(true);

@@ -237,11 +237,11 @@ class PageSliderMaker extends ComponentMaker {
 				public void windowActivated(WindowEvent e) {
 					if (focusTextComponent == null) {
 						nameField.selectAll();
-						nameField.requestFocus();
+						nameField.requestFocusInWindow();
 					}
 					else {
 						focusTextComponent.selectAll();
-						focusTextComponent.requestFocus();
+						focusTextComponent.requestFocusInWindow();
 					}
 				}
 			});

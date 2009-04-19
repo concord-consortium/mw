@@ -161,7 +161,7 @@ class ViewProperties extends JDialog {
 			}
 
 			public void windowActivated(WindowEvent e) {
-				closeButton.requestFocus();
+				closeButton.requestFocusInWindow();
 			}
 		});
 

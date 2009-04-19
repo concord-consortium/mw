@@ -304,7 +304,7 @@ class PagePropertiesDialog extends JDialog {
 
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				page.requestFocus();
+				page.requestFocusInWindow();
 				dispose();
 			}
 
@@ -312,7 +312,7 @@ class PagePropertiesDialog extends JDialog {
 				// transfer focus to the input URL field
 				if (page.isEditable()) {
 					titleField.selectAll();
-					titleField.requestFocus();
+					titleField.requestFocusInWindow();
 				}
 			}
 		});

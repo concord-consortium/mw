@@ -320,7 +320,7 @@ public class G2Dint extends Graph2D implements KeyListener, ActionListener, Mous
 			if (range == null)
 				range = new Range(this);
 			range.setVisible(true);
-			range.requestFocus();
+			range.requestFocusInWindow();
 			userlimits = true;
 			return;
 		}

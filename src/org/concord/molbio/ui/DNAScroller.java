@@ -464,7 +464,7 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 				stopFlashingThread();
 				mutationMenuWasRequired = false;
 				needDragging = false;
-				requestFocus();
+				requestFocusInWindow();
 				DNAScrollerModel dnamodel = getModel();
 				if (dnamodel == null)
 					return;

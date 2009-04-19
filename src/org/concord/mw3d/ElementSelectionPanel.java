@@ -126,7 +126,7 @@ class ElementSelectionPanel extends JPanel {
 		Point p = owner.getLocationOnScreen();
 		popup = PopupFactory.getSharedInstance().getPopup(owner, this, p.x + 5, p.y + 5);
 		popup.show();
-		comboBox.requestFocus();
+		comboBox.requestFocusInWindow();
 	}
 
 	void hidePopup() {

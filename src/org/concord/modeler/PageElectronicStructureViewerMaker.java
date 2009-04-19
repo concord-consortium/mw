@@ -99,7 +99,7 @@ class PageElectronicStructureViewerMaker extends ComponentMaker {
 			JOptionPane.showMessageDialog(pageElectronicStructureViewer,
 					"This controller is not applied to\nthe mesoscale model yet.", "Electronic Structure Viewer",
 					JOptionPane.ERROR_MESSAGE);
-			modelComboBox.requestFocus();
+			modelComboBox.requestFocusInWindow();
 			return false;
 		}
 		int curTicks = (Integer) ntickSpinner.getValue();
@@ -110,7 +110,7 @@ class PageElectronicStructureViewerMaker extends ComponentMaker {
 							"The spacing between adjacent ticks cannot be less than 2 pixels.\nPlease decrease the number of ticks or set a larger height.",
 							"Tick spacing error", JOptionPane.ERROR_MESSAGE);
 			heightField.selectAll();
-			heightField.requestFocus();
+			heightField.requestFocusInWindow();
 			return false;
 		}
 		pageElectronicStructureViewer.removeAllParameterChangeListeners();
@@ -123,7 +123,7 @@ class PageElectronicStructureViewerMaker extends ComponentMaker {
 					"Input error: upper bound must be greater than lower bound.", "Electronic Structure Viewer",
 					JOptionPane.ERROR_MESSAGE);
 			upperBoundField.selectAll();
-			upperBoundField.requestFocus();
+			upperBoundField.requestFocusInWindow();
 			return false;
 		}
 		pageElectronicStructureViewer.setTitle(titleField.getText());

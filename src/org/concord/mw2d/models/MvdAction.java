@@ -110,7 +110,7 @@ class MvdAction extends AbstractAction {
 
 				public void windowActivated(WindowEvent e) {
 					vmaxField.selectAll();
-					vmaxField.requestFocus();
+					vmaxField.requestFocusInWindow();
 				}
 			});
 			vmaxMaxwellDialog.pack();

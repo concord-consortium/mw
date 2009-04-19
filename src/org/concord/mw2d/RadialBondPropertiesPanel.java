@@ -355,7 +355,7 @@ class RadialBondPropertiesPanel extends PropertiesPanel {
 
 	void windowActivated() {
 		strengthField.selectAll();
-		strengthField.requestFocus();
+		strengthField.requestFocusInWindow();
 	}
 
 	static class BondColorListener implements ActionListener {

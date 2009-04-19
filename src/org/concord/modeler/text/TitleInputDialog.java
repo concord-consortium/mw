@@ -104,7 +104,7 @@ class TitleInputDialog extends JDialog {
 
 			public void windowActivated(WindowEvent e) {
 				tf.selectAll();
-				tf.requestFocus();
+				tf.requestFocusInWindow();
 			}
 		});
 

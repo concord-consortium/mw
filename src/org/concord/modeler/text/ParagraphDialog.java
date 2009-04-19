@@ -226,14 +226,14 @@ class ParagraphDialog extends JDialog {
 
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				page.requestFocus();
+				page.requestFocusInWindow();
 				ParagraphDialog.this.dispose();
 			}
 
 			public void windowActivated(WindowEvent e) {
 				if (page.isEditable()) {
 					leftIndent.selectAll();
-					leftIndent.requestFocus();
+					leftIndent.requestFocusInWindow();
 				}
 			}
 		});

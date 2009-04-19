@@ -346,7 +346,7 @@ public class Graph extends JComponent {
 
 	protected void processMousePressedEvent(MouseEvent e) {
 
-		requestFocus(); // must call to validate keyboard inputs
+		requestFocusInWindow(); // must call to validate keyboard inputs
 
 		// assume that only when the user clicks with left button, he means to
 		// manipulate the data or coordinate system
