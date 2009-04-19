@@ -121,7 +121,7 @@ class PageCheckBoxMaker extends ComponentMaker {
 		pageCheckBox = pcb;
 	}
 
-	private void confirm() {
+	private boolean confirm() {
 		pageCheckBox.setTransparent(transparentCheckBox.isSelected());
 		pageCheckBox.setDisabledAtRun(disabledAtRunCheckBox.isSelected());
 		pageCheckBox.setDisabledAtScript(disabledAtScriptCheckBox.isSelected());
@@ -169,6 +169,7 @@ class PageCheckBoxMaker extends ComponentMaker {
 			pageCheckBox.putClientProperty("deselection script", text);
 		pageCheckBox.page.getSaveReminder().setChanged(true);
 		pageCheckBox.page.settleComponentSize();
+		return true;
 	}
 
 	void invoke(Page page) {
