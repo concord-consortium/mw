@@ -160,7 +160,7 @@ class AngularBondPropertiesPanel extends PropertiesPanel {
 
 	void windowActivated() {
 		strengthField.selectAll();
-		strengthField.requestFocus();
+		strengthField.requestFocusInWindow();
 	}
 
 }

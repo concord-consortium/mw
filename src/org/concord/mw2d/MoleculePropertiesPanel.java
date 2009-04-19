@@ -256,7 +256,7 @@ class MoleculePropertiesPanel extends PropertiesPanel {
 				public void run() {
 					JOptionPane.showMessageDialog(dialog, "The length of sequence must be " + mol.size());
 					seqField.setText(mol.toString());
-					seqField.requestFocus();
+					seqField.requestFocusInWindow();
 				}
 			});
 			return false;
@@ -284,7 +284,7 @@ class MoleculePropertiesPanel extends PropertiesPanel {
 				public void run() {
 					JOptionPane.showMessageDialog(dialog, "The length of sequence must be " + n);
 					dnaField.setText(mol.toString());
-					dnaField.requestFocus();
+					dnaField.requestFocusInWindow();
 				}
 			});
 			return false;

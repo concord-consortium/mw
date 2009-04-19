@@ -236,7 +236,7 @@ class JnlpSettingDialog extends JDialog {
 			}
 
 			public void windowActivated(WindowEvent e) {
-				noButton.requestFocus();
+				noButton.requestFocusInWindow();
 			}
 		});
 

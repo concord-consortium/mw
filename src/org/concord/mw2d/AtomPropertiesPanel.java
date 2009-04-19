@@ -300,7 +300,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 					if (s.trim().equals("") || s.length() != 3) {
 						JOptionPane.showMessageDialog(dialog, "A codon must contain 3 letters.");
 						codonField.setText(atom.getCodon());
-						codonField.requestFocus();
+						codonField.requestFocusInWindow();
 					}
 					else {
 						char[] c = s.toCharArray();
@@ -308,7 +308,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 							JOptionPane.showMessageDialog(dialog, s
 									+ " is a STOP codon, which cannot be assigned to an amino acid.");
 							codonField.setText(atom.getCodon());
-							codonField.requestFocus();
+							codonField.requestFocusInWindow();
 						}
 						else {
 							if (!s.equalsIgnoreCase(atom.getCodon())) {

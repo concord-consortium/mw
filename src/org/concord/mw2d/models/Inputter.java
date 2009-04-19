@@ -154,7 +154,7 @@ class Inputter {
 
 			public void windowActivated(WindowEvent e) {
 				textField.selectAll();
-				textField.requestFocus();
+				textField.requestFocusInWindow();
 			}
 		});
 

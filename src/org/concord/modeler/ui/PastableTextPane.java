@@ -35,7 +35,7 @@ public class PastableTextPane extends JTextPane {
 	protected MouseAdapter mouseAdapter = new MouseAdapter() {
 		public void mousePressed(MouseEvent e) {
 			if (ModelerUtilities.isRightClick(e)) {
-				PastableTextPane.this.requestFocus();
+				PastableTextPane.this.requestFocusInWindow();
 				if (popupMenu == null)
 					popupMenu = new TextComponentPopupMenu(PastableTextPane.this);
 				popupMenu.show(PastableTextPane.this, e.getX(), e.getY());

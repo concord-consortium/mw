@@ -281,23 +281,23 @@ public class BoundarySetup extends JDialog {
 		switch (boundaryType) {
 		case RectangularBoundary.DBC_ID:
 			dbcButton.setSelected(true);
-			dbcButton.requestFocus();
+			dbcButton.requestFocusInWindow();
 			break;
 		case RectangularBoundary.PBC_ID:
 			pbcButton.setSelected(true);
-			pbcButton.requestFocus();
+			pbcButton.requestFocusInWindow();
 			break;
 		case RectangularBoundary.RBC_ID:
 			rbcButton.setSelected(true);
-			rbcButton.requestFocus();
+			rbcButton.requestFocusInWindow();
 			break;
 		case RectangularBoundary.XRYPBC_ID:
 			xrypbcButton.setSelected(true);
-			xrypbcButton.requestFocus();
+			xrypbcButton.requestFocusInWindow();
 			break;
 		case RectangularBoundary.XPYRBC_ID:
 			xpyrbcButton.setSelected(true);
-			xpyrbcButton.requestFocus();
+			xpyrbcButton.requestFocusInWindow();
 			break;
 		}
 		showBorder.setSelected(model.getBoundary().borderIsAlwaysOn());

@@ -40,8 +40,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -82,6 +84,7 @@ class PageButtonMaker extends ComponentMaker {
 	private JTextArea scriptArea;
 	private JLabel scriptLabel;
 	private JPanel contentPane;
+	private JComponent focusComponent;
 
 	private ItemListener modelSelectionListener = new ItemListener() {
 		public void itemStateChanged(ItemEvent e) {
@@ -126,7 +129,7 @@ class PageButtonMaker extends ComponentMaker {
 		pageButton = pb;
 	}
 
-	private void confirm() {
+	private boolean confirm() {
 		if (!Page.isNativeLookAndFeelUsed()) {
 			pageButton.setOpaque(!transparentCheckBox.isSelected());
 			pageButton.setBorderType((String) borderComboBox.getSelectedItem());
@@ -146,14 +149,23 @@ class PageButtonMaker extends ComponentMaker {
 			pageButton.setModelID(((Embeddable) o).getIndex());
 		}
 		o = actionComboBox.getSelectedItem();
-		if (o instanceof Action)
+		Icon actionIcon = null;
+		if (o instanceof Action) {
 			pageButton.setAction((Action) o);
-		Icon actionIcon = pageButton.getIcon();
+			actionIcon = (Icon) ((Action) o).getValue(Action.SMALL_ICON);
+		}
 		pageButton.putClientProperty("script", scriptArea.getText());
 		pageButton.setText(nameField.getText());
 		String imageFileName = imageFileNameField.getText();
 		if (imageFileName != null && !imageFileName.trim().equals("")) {
-			pageButton.setIcon(loadLocalImage(pageButton.page, imageFileName));
+			ImageIcon image = loadLocalImage(pageButton.page, imageFileName);
+			if (image == null) {
+				JOptionPane.showMessageDialog(dialog, "File " + imageFileName + " does not exist.", "File Error",
+						JOptionPane.ERROR_MESSAGE);
+				focusComponent = imageFileNameField;
+				return false;
+			}
+			pageButton.setIcon(image);
 		}
 		else {
 			pageButton.setIcon(actionIcon);
@@ -168,6 +180,7 @@ class PageButtonMaker extends ComponentMaker {
 		}
 		pageButton.page.getSaveReminder().setChanged(true);
 		pageButton.page.settleComponentSize();
+		return true;
 	}
 
 	void invoke(Page page) {
@@ -189,8 +202,13 @@ class PageButtonMaker extends ComponentMaker {
 				}
 
 				public void windowActivated(WindowEvent e) {
-					nameField.selectAll();
-					nameField.requestFocus();
+					if (focusComponent == null) {
+						nameField.selectAll();
+						nameField.requestFocusInWindow();
+					}
+					else {
+						focusComponent.requestFocusInWindow();
+					}
 				}
 			});
 		}
@@ -391,9 +409,10 @@ class PageButtonMaker extends ComponentMaker {
 
 		ActionListener okListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				confirm();
-				dialog.dispose();
-				cancel = false;
+				if (confirm()) {
+					dialog.dispose();
+					cancel = false;
+				}
 			}
 		};
 

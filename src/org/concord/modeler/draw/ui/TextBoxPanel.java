@@ -408,7 +408,7 @@ public class TextBoxPanel extends PropertiesPanel {
 
 	public void windowActivated() {
 		textArea.selectAll();
-		textArea.requestFocus();
+		textArea.requestFocusInWindow();
 	}
 
 }

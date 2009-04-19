@@ -137,7 +137,7 @@ class UserInfoProvider extends JDialog {
 			}
 
 			public void windowActivated(WindowEvent e) {
-				studentField.requestFocus();
+				studentField.requestFocusInWindow();
 				studentField.selectAll();
 			}
 		});

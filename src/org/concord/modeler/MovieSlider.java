@@ -133,7 +133,7 @@ public class MovieSlider extends JComponent implements MovieListener {
 	private void processMousePressedEvent(MouseEvent e) {
 		if (!isEnabled())
 			return;
-		requestFocus();
+		requestFocusInWindow();
 		knobHeld = knob.contains(e.getX(), e.getY());
 	}
 

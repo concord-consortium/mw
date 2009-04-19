@@ -43,7 +43,7 @@ public class PastableTextArea extends JTextArea {
 	protected MouseAdapter mouseAdapter = new MouseAdapter() {
 		public void mousePressed(MouseEvent e) {
 			if (isRightClick(e)) {
-				PastableTextArea.this.requestFocus();
+				PastableTextArea.this.requestFocusInWindow();
 				if (popupMenu == null)
 					popupMenu = new TextComponentPopupMenu(PastableTextArea.this);
 				popupMenu.show(PastableTextArea.this, e.getX(), e.getY());

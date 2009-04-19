@@ -272,11 +272,11 @@ class FindDialog extends JDialog {
 
 			public void windowActivated(WindowEvent e) {
 				if (tb.getSelectedIndex() == 0) {
-					findField1.requestFocus();
+					findField1.requestFocusInWindow();
 					findField1.selectAll();
 				}
 				else {
-					findField2.requestFocus();
+					findField2.requestFocusInWindow();
 					findField2.selectAll();
 				}
 			}

@@ -66,28 +66,28 @@ class Range extends Frame {
 		xminText.addKeyListener(new KeyAdapter() {
 			public void keyTyped(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					xmaxText.requestFocus();
+					xmaxText.requestFocusInWindow();
 				}
 			}
 		});
 		xmaxText.addKeyListener(new KeyAdapter() {
 			public void keyTyped(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					yminText.requestFocus();
+					yminText.requestFocusInWindow();
 				}
 			}
 		});
 		yminText.addKeyListener(new KeyAdapter() {
 			public void keyTyped(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					ymaxText.requestFocus();
+					ymaxText.requestFocusInWindow();
 				}
 			}
 		});
 		ymaxText.addKeyListener(new KeyAdapter() {
 			public void keyTyped(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					xminText.requestFocus();
+					xminText.requestFocusInWindow();
 				}
 			}
 		});
@@ -175,7 +175,7 @@ class Range extends Frame {
 	}
 
 	public void requestFocus() {
-		xminText.requestFocus();
+		xminText.requestFocusInWindow();
 	}
 
 }

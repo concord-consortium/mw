@@ -124,7 +124,7 @@ class TranslationAction extends AbstractAction {
 
 			public void windowActivated(WindowEvent e) {
 				xField.selectAll();
-				xField.requestFocus();
+				xField.requestFocusInWindow();
 			}
 		});
 

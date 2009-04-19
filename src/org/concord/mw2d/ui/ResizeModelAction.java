@@ -131,7 +131,7 @@ class ResizeModelAction extends AbstractAction {
 
 			public void windowActivated(WindowEvent e) {
 				widthField.selectAll();
-				widthField.requestFocus();
+				widthField.requestFocusInWindow();
 			}
 		});
 

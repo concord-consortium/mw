@@ -20,6 +20,7 @@
 package org.concord.modeler;
 
 import java.awt.Toolkit;
+import java.io.File;
 import java.util.Map;
 
 import javax.swing.ImageIcon;
@@ -48,8 +49,10 @@ public abstract class ComponentMaker {
 	}
 
 	static ImageIcon loadLocalImage(Page page, String fileName) {
-		ImageIcon icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(
-				FileUtilities.getCodeBase(page.getAddress()) + fileName));
+		String s = FileUtilities.getCodeBase(page.getAddress()) + fileName;
+		if (!new File(s).exists())
+			return null;
+		ImageIcon icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(s));
 		icon.setDescription(fileName);
 		return icon;
 	}

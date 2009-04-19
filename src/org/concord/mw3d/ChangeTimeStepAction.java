@@ -99,7 +99,7 @@ class ChangeTimeStepAction extends AbstractAction {
 
 			public void windowActivated(WindowEvent e) {
 				stepField.selectAll();
-				stepField.requestFocus();
+				stepField.requestFocusInWindow();
 			}
 		});
 		return dialog;

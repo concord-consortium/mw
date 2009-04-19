@@ -176,7 +176,7 @@ class ChangeScaleAction extends AbstractAction {
 		dialog.addWindowListener(new WindowAdapter() {
 			public void windowActivated(WindowEvent e) {
 				xminField.selectAll();
-				xminField.requestFocus();
+				xminField.requestFocusInWindow();
 			}
 		});
 

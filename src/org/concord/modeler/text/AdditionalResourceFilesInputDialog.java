@@ -97,7 +97,7 @@ class AdditionalResourceFilesInputDialog extends JDialog {
 			}
 
 			public void windowActivated(WindowEvent e) {
-				area.requestFocus();
+				area.requestFocusInWindow();
 			}
 		});
 

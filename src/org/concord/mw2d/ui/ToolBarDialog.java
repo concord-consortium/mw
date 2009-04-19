@@ -205,7 +205,7 @@ class ToolBarDialog extends JDialog {
 			}
 
 			public void windowActivated(WindowEvent e) {
-				categoryList.requestFocus();
+				categoryList.requestFocusInWindow();
 			}
 		});
 
@@ -280,7 +280,7 @@ class ToolBarDialog extends JDialog {
 			c.getLabel().setText((String) action.getValue(Action.SHORT_DESCRIPTION));
 			c.getLabel().addMouseListener(new MouseAdapter() {
 				public void mousePressed(MouseEvent e) {
-					buttonList.requestFocus();
+					buttonList.requestFocusInWindow();
 					highlightComponent(c);
 					descriptionButton.setEnabled(true);
 				}

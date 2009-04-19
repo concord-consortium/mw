@@ -323,7 +323,7 @@ public class PageScriptConsole extends JPanel implements Embeddable, ModelCommun
 		String strCommand = console.getCommandString().trim();
 		if (strCommand.length() == 0)
 			return;
-		console.requestFocus();
+		console.requestFocusInWindow();
 		if (strCommand.equalsIgnoreCase("clear") || strCommand.equalsIgnoreCase("cls")) {
 			clear();
 			return;

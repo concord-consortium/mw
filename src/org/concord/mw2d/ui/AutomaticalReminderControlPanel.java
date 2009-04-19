@@ -189,7 +189,7 @@ class AutomaticalReminderControlPanel extends JPanel {
 					public void run() {
 						if (intervalField.isEnabled()) {
 							intervalField.selectAll();
-							intervalField.requestFocus();
+							intervalField.requestFocusInWindow();
 						}
 					}
 				});

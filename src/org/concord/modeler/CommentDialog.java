@@ -82,7 +82,7 @@ class CommentDialog extends JDialog implements CommentListener {
 			}
 
 			public void windowActivated(WindowEvent e) {
-				commentInputPane.requestFocus();
+				commentInputPane.requestFocusInWindow();
 			}
 		});
 

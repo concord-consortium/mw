@@ -117,7 +117,7 @@ public class HTMLPane extends MyEditorPane {
 	private MouseListener linkMonitor = new MouseAdapter() {
 
 		public void mousePressed(MouseEvent e) {
-			requestFocus();
+			requestFocusInWindow();
 			if (ModelerUtilities.isRightClick(e)) {
 				Point p = new Point(e.getX(), e.getY());
 				if (hyperlinkPopupMenu != null) {

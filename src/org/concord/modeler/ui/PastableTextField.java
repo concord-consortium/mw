@@ -43,7 +43,7 @@ public class PastableTextField extends JTextField {
 	protected MouseAdapter mouseAdapter = new MouseAdapter() {
 		public void mousePressed(MouseEvent e) {
 			if (isRightClick(e)) {
-				PastableTextField.this.requestFocus();
+				PastableTextField.this.requestFocusInWindow();
 				if (popupMenu == null)
 					popupMenu = new TextComponentPopupMenu(PastableTextField.this);
 				popupMenu.show(PastableTextField.this, e.getX(), e.getY());

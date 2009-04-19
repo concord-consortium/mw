@@ -427,7 +427,7 @@ public class PagePotentialWell extends PotentialWell implements Embeddable, Mode
 
 				public void windowActivated(WindowEvent e) {
 					widthField.selectAll();
-					widthField.requestFocus();
+					widthField.requestFocusInWindow();
 				}
 			});
 

@@ -361,11 +361,11 @@ class PageXYGraphMaker extends ComponentMaker {
 				public void windowActivated(WindowEvent e) {
 					if (focusTextComponent == null) {
 						xLabelTextField.selectAll();
-						xLabelTextField.requestFocus();
+						xLabelTextField.requestFocusInWindow();
 					}
 					else {
 						focusTextComponent.selectAll();
-						focusTextComponent.requestFocus();
+						focusTextComponent.requestFocusInWindow();
 					}
 				}
 			});

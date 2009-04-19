@@ -490,7 +490,7 @@ public class PageDNAScroller extends DNAScroller implements Embeddable, ModelCom
 
 				public void windowActivated(WindowEvent e) {
 					widthField.selectAll();
-					widthField.requestFocus();
+					widthField.requestFocusInWindow();
 				}
 			});
 

@@ -39,7 +39,7 @@ class PreviewContainer extends JComponent {
 		setBackground(Color.gray);
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
-				requestFocus();
+				requestFocusInWindow();
 			}
 		});
 	}

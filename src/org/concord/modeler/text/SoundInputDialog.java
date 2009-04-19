@@ -113,7 +113,7 @@ class SoundInputDialog extends JDialog {
 			}
 
 			public void windowActivated(WindowEvent e) {
-				clipNameComboBox.requestFocus();
+				clipNameComboBox.requestFocusInWindow();
 			}
 		});
 

@@ -333,7 +333,7 @@ class LennardJones extends JComponent implements MouseListener, MouseMotionListe
 	public void mousePressed(MouseEvent e) {
 		if (!isEnabled())
 			return;
-		requestFocus();
+		requestFocusInWindow();
 		x = e.getX();
 		y = e.getY();
 		if (ctrl.contains(x, y)) {

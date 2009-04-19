@@ -127,7 +127,7 @@ public class LogDumper {
 			}
 
 			public void windowActivated(WindowEvent e) {
-				b.requestFocus();
+				b.requestFocusInWindow();
 			}
 		});
 

@@ -116,7 +116,7 @@ class RotationAction extends AbstractAction {
 
 			public void windowActivated(WindowEvent e) {
 				angleField.selectAll();
-				angleField.requestFocus();
+				angleField.requestFocusInWindow();
 			}
 		});
 

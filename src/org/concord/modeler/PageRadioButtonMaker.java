@@ -288,7 +288,7 @@ class PageRadioButtonMaker extends ComponentMaker {
 		scriptLabel.setEnabled(isScriptButton);
 		scriptArea.setText(isScriptButton ? (String) pageRadioButton.getClientProperty("script") : null);
 		if (isScriptButton) {
-			scriptArea.requestFocus();
+			scriptArea.requestFocusInWindow();
 			scriptArea.setCaretPosition(0);
 		}
 	}

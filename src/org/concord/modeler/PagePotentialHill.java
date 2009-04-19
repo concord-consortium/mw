@@ -452,7 +452,7 @@ public class PagePotentialHill extends PotentialHill implements Embeddable, Mode
 
 				public void windowActivated(WindowEvent e) {
 					widthField.selectAll();
-					widthField.requestFocus();
+					widthField.requestFocusInWindow();
 				}
 			});
 

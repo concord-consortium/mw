@@ -1779,7 +1779,7 @@ class JmolMenuBar extends JMenuBar {
 
 			public void windowActivated(WindowEvent e) {
 				wField.selectAll();
-				wField.requestFocus();
+				wField.requestFocusInWindow();
 			}
 		});
 
