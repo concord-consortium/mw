@@ -144,7 +144,7 @@ public final class InstancePool {
 		Object o = createInstance(c);
 		if (o != null)
 			return o;
-		return createInstance(c); // try once and only once again
+		return createInstance(c); // try once and only once again (to avoid possible infinite loops)
 
 	}
 
