@@ -141,6 +141,14 @@ public final class InstancePool {
 
 		// if no unused existing instance is found, create a new one and put it into the pool
 
+		Object o = createInstance(c);
+		if (o != null)
+			return o;
+		return createInstance(c); // try once and only once again
+
+	}
+
+	private Object createInstance(Class c) {
 		try {
 			Object o = c.newInstance();
 			pool.put(o, true);
@@ -150,7 +158,6 @@ public final class InstancePool {
 			e.printStackTrace();
 			return null;
 		}
-
 	}
 
 }
