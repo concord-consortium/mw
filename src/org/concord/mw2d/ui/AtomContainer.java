@@ -1746,6 +1746,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 		private AbstractButton dropRectangleButton;
 		private AbstractButton setBoundaryButton;
 		private AbstractButton buildBondButton;
+		private AbstractButton buildBondButton2;
 		private AbstractButton buildBendButton;
 		private AbstractButton mutateButton;
 		private AbstractButton attachAminoAcidButton;
@@ -1962,6 +1963,9 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			buildBondButton = createButton(UserAction.getAction(UserAction.BBON_ID, model));
 			toolBarButtonGroup.add(buildBondButton);
 
+			buildBondButton2 = createButton(UserAction.getAction(UserAction.DGBD_ID, model));
+			toolBarButtonGroup.add(buildBondButton2);
+
 			buildBendButton = createButton(UserAction.getAction(UserAction.BBEN_ID, model));
 			toolBarButtonGroup.add(buildBendButton);
 
@@ -2042,6 +2046,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			list.add(mutateButton);
 			list.add(changeVelocityButton);
 			list.add(buildBondButton);
+			list.add(buildBondButton2);
 			list.add(buildBendButton);
 			s = getInternationalText("EditingActions");
 			actionCategory.put(s != null ? s : "Editing Actions", list);
