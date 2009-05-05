@@ -154,7 +154,7 @@ public class PageRadioButton extends JRadioButton implements Embeddable, ModelCo
 				switch (e.getStateChange()) {
 				case ItemEvent.SELECTED:
 					if (imageSelected != null && !imageSelected.trim().equals("")) {
-						setIcon(page.loadImage(imageSelected));
+						setIcon((Icon) getClientProperty("selected image"));
 					}
 					else {
 						setIcon(null);
@@ -162,7 +162,7 @@ public class PageRadioButton extends JRadioButton implements Embeddable, ModelCo
 					break;
 				case ItemEvent.DESELECTED:
 					if (imageDeselected != null && !imageDeselected.trim().equals("")) {
-						setIcon(page.loadImage(imageDeselected));
+						setIcon((Icon) getClientProperty("deselected image"));
 					}
 					else {
 						setIcon(null);

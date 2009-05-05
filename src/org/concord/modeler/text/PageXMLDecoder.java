@@ -3502,16 +3502,20 @@ final class PageXMLDecoder {
 			if (imageFileName != null) {
 				if (!imageFileName.trim().equals("")) {
 					b.setImageFileNameSelected(imageFileName);
+					Icon image = page.loadImage(imageFileName);
+					b.putClientProperty("selected image", image);
 					if (b.isSelected())
-						b.setIcon(page.loadImage(imageFileName));
+						b.setIcon(image);
 				}
 				imageFileName = null;
 			}
 			if (imageFileDeselected != null) {
 				if (!imageFileDeselected.trim().equals("")) {
 					b.setImageFileNameDeselected(imageFileDeselected);
+					Icon image = page.loadImage(imageFileDeselected);
+					b.putClientProperty("deselected image", image);
 					if (!b.isSelected())
-						b.setIcon(page.loadImage(imageFileDeselected));
+						b.setIcon(image);
 				}
 				imageFileDeselected = null;
 			}
@@ -3584,16 +3588,20 @@ final class PageXMLDecoder {
 			if (imageFileName != null) {
 				if (!imageFileName.trim().equals("")) {
 					b.setImageFileNameSelected(imageFileName);
+					Icon image = page.loadImage(imageFileName);
+					b.putClientProperty("selected image", image);
 					if (b.isSelected())
-						b.setIcon(page.loadImage(imageFileName));
+						b.setIcon(image);
 				}
 				imageFileName = null;
 			}
 			if (imageFileDeselected != null) {
 				if (!imageFileDeselected.trim().equals("")) {
 					b.setImageFileNameDeselected(imageFileDeselected);
+					Icon image = page.loadImage(imageFileDeselected);
+					b.putClientProperty("deselected image", image);
 					if (!b.isSelected())
-						b.setIcon(page.loadImage(imageFileDeselected));
+						b.setIcon(image);
 				}
 				imageFileDeselected = null;
 			}
