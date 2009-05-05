@@ -4129,87 +4129,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 
 		case DUPL_ID:
 			mc = getSelectedComponent(e.getModifiersEx(), x, y);
-			if (mc instanceof Atom) {
-				if (nAtom < atom.length) {
-					showActionTip("Drag the selected atom to duplicate one", x + 10, y + 10);
-					atom[nAtom].duplicate((Atom) mc);
-					atom[nAtom].setSelected(true);
-					nAtom++;
-				}
-			}
-			else if (mc instanceof Molecule) {
-				Molecule mol = ((Molecule) mc).duplicate();
-				showActionTip("Drag the selected molecule to duplicate one", x + 10, y + 10);
-				nAtom += mol.size();
-				if (!(mc instanceof MolecularObject)) {
-					mol.setSelected(true);
-				}
-				else {
-					MolecularObject ss = mc instanceof CurvedSurface ? new CurvedSurface(mol) : new CurvedRibbon(mol);
-					ss.setModel(model);
-					ss.setSelected(true);
-					ss.setBackground(((MolecularObject) mc).getBackground());
-				}
-			}
-			else if (mc instanceof RectangularObstacle) {
-				showActionTip("Drag the selected obstacle to duplicate one", x + 10, y + 10);
-				RectangularObstacle r0 = (RectangularObstacle) mc;
-				RectangularObstacle r1 = (RectangularObstacle) r0.clone();
-				r1.x = x - 10 - clickPoint.x;
-				r1.y = y - 10 - clickPoint.y;
-				obstacles.add(r1);
-				r1.setSelected(true);
-			}
-			else if (mc instanceof ImageComponent) {
-				showActionTip("Drag the selected image to duplicate one", x + 10, y + 10);
-				ImageComponent ic = null;
-				try {
-					ic = new ImageComponent((ImageComponent) mc);
-				}
-				catch (IOException ioe) {
-					ioe.printStackTrace();
-				}
-				if (ic != null) {
-					ic.setSelected(true);
-					ic.setLocation(x - 10 - clickPoint.x, y - 10 - clickPoint.y);
-					addLayeredComponent(ic);
-				}
-			}
-			else if (mc instanceof TextBoxComponent) {
-				showActionTip("Drag the selected text box to duplicate one", x + 10, y + 10);
-				TextBoxComponent tb = new TextBoxComponent((TextBoxComponent) mc);
-				tb.setSelected(true);
-				tb.setLocation(x - 10 - clickPoint.x, y - 10 - clickPoint.y);
-				addLayeredComponent(tb);
-			}
-			else if (mc instanceof LineComponent) {
-				showActionTip("Drag the selected line to duplicate one", x + 10, y + 10);
-				LineComponent lc = new LineComponent((LineComponent) mc);
-				lc.setSelected(true);
-				lc.setLocation(x - 10 - clickPoint.x, y - 10 - clickPoint.y);
-				addLayeredComponent(lc);
-			}
-			else if (mc instanceof RectangleComponent) {
-				showActionTip("Drag the selected rectangle to duplicate one", x + 10, y + 10);
-				RectangleComponent rc = new RectangleComponent((RectangleComponent) mc);
-				rc.setSelected(true);
-				rc.setLocation(x - 10 - clickPoint.x, y - 10 - clickPoint.y);
-				addLayeredComponent(rc);
-			}
-			else if (mc instanceof TriangleComponent) {
-				showActionTip("Drag the selected triangle to duplicate one", x + 10, y + 10);
-				TriangleComponent tc = new TriangleComponent((TriangleComponent) mc);
-				tc.setSelected(true);
-				tc.setLocation(x - 10 - clickPoint.x, y - 10 - clickPoint.y);
-				addLayeredComponent(tc);
-			}
-			else if (mc instanceof EllipseComponent) {
-				showActionTip("Drag the selected ellipse to duplicate one", x + 10, y + 10);
-				EllipseComponent ec = new EllipseComponent((EllipseComponent) mc);
-				ec.setSelected(true);
-				ec.setLocation(x - 10 - clickPoint.x, y - 10 - clickPoint.y);
-				addLayeredComponent(ec);
-			}
+			duplicate(mc, x, y);
 			repaint();
 			break;
 
@@ -5642,6 +5562,140 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		}
 		repaint();
 		e.consume();
+	}
+
+	private void duplicate(ModelComponent mc, int x, int y) {
+		if (mc instanceof Atom) {
+			if (nAtom < atom.length) {
+				showActionTip("Drag the selected atom to duplicate one", x + 10, y + 10);
+				atom[nAtom].duplicate((Atom) mc);
+				atom[nAtom].setSelected(true);
+				nAtom++;
+			}
+		}
+		else if (mc instanceof Molecule) {
+			Molecule mol = ((Molecule) mc).duplicate();
+			showActionTip("Drag the selected molecule to duplicate one", x + 10, y + 10);
+			nAtom += mol.size();
+			if (!(mc instanceof MolecularObject)) {
+				mol.setSelected(true);
+			}
+			else {
+				MolecularObject ss = mc instanceof CurvedSurface ? new CurvedSurface(mol) : new CurvedRibbon(mol);
+				ss.setModel(model);
+				ss.setSelected(true);
+				ss.setBackground(((MolecularObject) mc).getBackground());
+			}
+		}
+		else if (mc instanceof RectangularObstacle) {
+			showActionTip("Drag the selected obstacle to duplicate one", x + 10, y + 10);
+			RectangularObstacle r0 = (RectangularObstacle) mc;
+			RectangularObstacle r1 = (RectangularObstacle) r0.clone();
+			r1.x = x - 10 - clickPoint.x;
+			r1.y = y - 10 - clickPoint.y;
+			obstacles.add(r1);
+			r1.setSelected(true);
+		}
+		else if (mc instanceof ImageComponent) {
+			ModelComponent mc2 = ((ImageComponent) mc).getHost();
+			if (mc2 == null) {
+				showActionTip("Drag the selected image to duplicate one", x + 10, y + 10);
+				ImageComponent ic = null;
+				try {
+					ic = new ImageComponent((ImageComponent) mc);
+				}
+				catch (IOException ioe) {
+					ioe.printStackTrace();
+				}
+				if (ic != null) {
+					ic.setSelected(true);
+					ic.setLocation(x - 10 - clickPoint.x, y - 10 - clickPoint.y);
+					addLayeredComponent(ic);
+				}
+			}
+			else {
+				duplicateUnderlyingObject(mc2, x, y);
+			}
+		}
+		else if (mc instanceof TextBoxComponent) {
+			ModelComponent mc2 = ((TextBoxComponent) mc).getHost();
+			if (mc2 == null) {
+				showActionTip("Drag the selected text box to duplicate one", x + 10, y + 10);
+				TextBoxComponent tb = new TextBoxComponent((TextBoxComponent) mc);
+				tb.setSelected(true);
+				tb.setLocation(x - 10 - clickPoint.x, y - 10 - clickPoint.y);
+				addLayeredComponent(tb);
+			}
+			else {
+				duplicateUnderlyingObject(mc2, x, y);
+			}
+		}
+		else if (mc instanceof LineComponent) {
+			ModelComponent mc2 = ((LineComponent) mc).getHost();
+			if (mc2 == null) {
+				showActionTip("Drag the selected line to duplicate one", x + 10, y + 10);
+				LineComponent lc = new LineComponent((LineComponent) mc);
+				lc.setSelected(true);
+				lc.setLocation(x - 10 - clickPoint.x, y - 10 - clickPoint.y);
+				addLayeredComponent(lc);
+			}
+			else {
+				duplicateUnderlyingObject(mc2, x, y);
+			}
+		}
+		else if (mc instanceof RectangleComponent) {
+			ModelComponent mc2 = ((RectangleComponent) mc).getHost();
+			if (mc2 == null) {
+				showActionTip("Drag the selected rectangle to duplicate one", x + 10, y + 10);
+				RectangleComponent rc = new RectangleComponent((RectangleComponent) mc);
+				rc.setSelected(true);
+				rc.setLocation(x - 10 - clickPoint.x, y - 10 - clickPoint.y);
+				addLayeredComponent(rc);
+			}
+			else {
+				duplicateUnderlyingObject(mc2, x, y);
+			}
+		}
+		else if (mc instanceof TriangleComponent) {
+			ModelComponent mc2 = ((TriangleComponent) mc).getHost();
+			if (mc2 == null) {
+				showActionTip("Drag the selected triangle to duplicate one", x + 10, y + 10);
+				TriangleComponent tc = new TriangleComponent((TriangleComponent) mc);
+				tc.setSelected(true);
+				tc.setLocation(x - 10 - clickPoint.x, y - 10 - clickPoint.y);
+				addLayeredComponent(tc);
+			}
+			else {
+				duplicateUnderlyingObject(mc2, x, y);
+			}
+		}
+		else if (mc instanceof EllipseComponent) {
+			ModelComponent mc2 = ((EllipseComponent) mc).getHost();
+			if (mc2 == null) {
+				showActionTip("Drag the selected ellipse to duplicate one", x + 10, y + 10);
+				EllipseComponent ec = new EllipseComponent((EllipseComponent) mc);
+				ec.setSelected(true);
+				ec.setLocation(x - 10 - clickPoint.x, y - 10 - clickPoint.y);
+				addLayeredComponent(ec);
+			}
+			else {
+				duplicateUnderlyingObject(mc2, x, y);
+			}
+		}
+	}
+
+	private void duplicateUnderlyingObject(ModelComponent mc, int x, int y) {
+		if (mc instanceof Atom) {
+			Molecule mol = molecules.getMolecule((Atom) mc);
+			if (mol != null)
+				mc = mol;
+		}
+		else if (mc instanceof RadialBond) {
+			Molecule mol = molecules.getMolecule((RadialBond) mc);
+			if (mol != null)
+				mc = mol;
+		}
+		duplicate(mc, x, y);
 	}
 
 	private void moveHostTo(ModelComponent host, double x, double y) {
