@@ -379,9 +379,9 @@ public final class UserAction {
 		name.put(i, "Create Radial Bond");
 		cursor.put(i, ModelerUtilities.createCursor(new ImageIcon(IconPool.class
 				.getResource("images/radialbondcursor.gif")), hotSpot, "bond"));
-		icon.put(i, IconPool.getIcon("radial bond"));
+		icon.put(i, IconPool.getIcon("radial bond 2"));
 		String s = getInternationalText("MakeRadialBond");
-		description.put(i, s != null ? s : "Create a radial bond between a pair of atoms");
+		description.put(i, s != null ? s : "Drag mouse to create a radial bond between a pair of atoms");
 		longDescription
 				.put(
 						i,
@@ -397,7 +397,7 @@ public final class UserAction {
 				.getResource("images/radialbondcursor.gif")), hotSpot, "bond"));
 		icon.put(i, IconPool.getIcon("radial bond"));
 		String s = getInternationalText("MakeRadialBond");
-		description.put(i, s != null ? s : "Make a radial bond between a pair of atoms");
+		description.put(i, s != null ? s : "Click to make a radial bond between a pair of atoms");
 		longDescription
 				.put(
 						i,

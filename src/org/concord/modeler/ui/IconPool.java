@@ -217,6 +217,9 @@ public final class IconPool {
 		icon = new ImageIcon(c.getResource("images/radialbond.gif"));
 		map.put("radial bond", icon);
 
+		icon = new ImageIcon(c.getResource("images/radialbond2.gif"));
+		map.put("radial bond 2", icon);
+
 		icon = new ImageIcon(c.getResource("images/radialbondcursor.gif"));
 		map.put("radial bond cursor", icon);
 
