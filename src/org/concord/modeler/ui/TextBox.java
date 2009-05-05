@@ -244,7 +244,9 @@ public class TextBox extends JPanel implements HtmlService, Searchable {
 		if (c instanceof AbstractButton) {
 			AbstractButton ab = (AbstractButton) c;
 			if (execute) {
-				ab.setSelected(b);
+				if (b)
+					ab.doClick();
+				else ab.setSelected(false);
 			}
 			else {
 				ItemListener[] il = ab.getItemListeners();

@@ -106,7 +106,7 @@ class RadialBondPropertiesPanel extends PropertiesPanel {
 		s = MDView.getInternationalText("BondStyle");
 		p.add(new JLabel(s != null ? s : "Style"));
 		styleComboBox = new JComboBox(new String[] { "Standard Stick", "Long Spring", "Solid Line", "Invisible",
-				"Unicolor Stick", "Short Spring" });
+				"Unicolor Stick", "Short Spring", "Double Bond", "Triple Bond" });
 		setComboBox(styleComboBox, bond.getBondStyle() - RadialBond.STANDARD_STICK_STYLE);
 		styleComboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
