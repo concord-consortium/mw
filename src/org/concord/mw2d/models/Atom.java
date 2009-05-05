@@ -286,7 +286,7 @@ public class Atom extends Particle {
 		if (!(target instanceof Atom))
 			throw new IllegalArgumentException("target must be an atom");
 		super.duplicate(target);
-		setElement(((AtomicModel) model).getElement(((Atom) target).id));
+		setElement(model.getElement(((Atom) target).id));
 		if (model != null) {
 			model.view.copyAttachedLayeredComponents(target, this);
 		}
@@ -331,7 +331,7 @@ public class Atom extends Particle {
 	public void resetElectronsToGroundState() {
 		if (electrons.isEmpty())
 			return;
-		ElectronicStructure es = ((AtomicModel) model).getElement(id).getElectronicStructure();
+		ElectronicStructure es = model.getElement(id).getElectronicStructure();
 		EnergyLevel ground = es.getEnergyLevel(0);
 		synchronized (electrons) {
 			for (Electron e : electrons)
@@ -411,7 +411,7 @@ public class Atom extends Particle {
 			hydrophobic = 0;
 		}
 		if (model != null)
-			((AtomicModel) model).setUpdateParArray(true);
+			model.setUpdateParArray(true);
 		if (isExcitable()) {
 			if (electrons.isEmpty()) {
 				Electron el = new Electron(this);
@@ -539,7 +539,7 @@ public class Atom extends Particle {
 			throw new RuntimeException("Attempt to write to the empty queue");
 		Electron e = electrons.get(0);
 		EnergyLevel level = e.getEnergyLevel();
-		ElectronicStructure es = ((AtomicModel) model).getElement(id).getElectronicStructure();
+		ElectronicStructure es = model.getElement(id).getElectronicStructure();
 		byte m = (byte) es.indexOf(level);
 		excitationQ.update(m);
 	}
@@ -810,11 +810,11 @@ public class Atom extends Particle {
 			if (userField != null)
 				userField.render(g, this, model.getMovie().getCurrentFrameIndex() >= model.getTapePointer() - 1);
 
-			if (model.view.excitationShown() && ((AtomicModel) model).isSubatomicEnabled()) {
+			if (model.view.excitationShown() && model.isSubatomicEnabled()) {
 				if (hasElectrons()) {
 					Electron e = electrons.get(0);
 					if (e.getEnergyLevel() != null) {
-						ElectronicStructure es = ((AtomicModel) model).getElement(id).getElectronicStructure();
+						ElectronicStructure es = model.getElement(id).getElectronicStructure();
 						if (es.indexOf(e.getEnergyLevel()) != 0) {
 							g.setColor(model.view.contrastBackground());
 							g.setStroke(ViewAttribute.DASHED);
