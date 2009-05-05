@@ -149,7 +149,7 @@ public class PageCheckBox extends JCheckBox implements Embeddable, ModelCommunic
 				switch (e.getStateChange()) {
 				case ItemEvent.SELECTED:
 					if (imageSelected != null && !imageSelected.trim().equals("")) {
-						setIcon(page.loadImage(imageSelected));
+						setIcon((Icon) getClientProperty("selected image"));
 					}
 					else {
 						setIcon(null);
@@ -157,7 +157,7 @@ public class PageCheckBox extends JCheckBox implements Embeddable, ModelCommunic
 					break;
 				case ItemEvent.DESELECTED:
 					if (imageDeselected != null && !imageDeselected.trim().equals("")) {
-						setIcon(page.loadImage(imageDeselected));
+						setIcon((Icon) getClientProperty("deselected image"));
 					}
 					else {
 						setIcon(null);
