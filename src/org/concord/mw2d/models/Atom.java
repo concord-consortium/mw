@@ -287,6 +287,9 @@ public class Atom extends Particle {
 			throw new IllegalArgumentException("target must be an atom");
 		super.duplicate(target);
 		setElement(((AtomicModel) model).getElement(((Atom) target).id));
+		if (model != null) {
+			model.view.copyAttachedLayeredComponents(target, this);
+		}
 	}
 
 	/**
@@ -298,8 +301,8 @@ public class Atom extends Particle {
 	}
 
 	/**
-	 * <b>Warning</b>: Do NOT call this method to set the type of atom. Call <tt>setElement</tt> instead. The
-	 * existence of this method is for serialization.
+	 * <b>Warning</b>: Do NOT call this method to set the type of atom. Call <tt>setElement</tt> instead. The existence
+	 * of this method is for serialization.
 	 * 
 	 * @see org.concord.mw2d.models.Atom#setElement
 	 */
@@ -374,8 +377,8 @@ public class Atom extends Particle {
 	}
 
 	/**
-	 * <b>Warning</b>: You should always use <code>setElement</code> to set the type of atom. This method should be
-	 * used to set ONLY the codon, because an amino acid maps to multiple codons.
+	 * <b>Warning</b>: You should always use <code>setElement</code> to set the type of atom. This method should be used
+	 * to set ONLY the codon, because an amino acid maps to multiple codons.
 	 */
 	public void setCodon(String s) {
 		codon = s;
@@ -574,11 +577,11 @@ public class Atom extends Particle {
 	}
 
 	/*
-	 * correct the position predicted by the <tt>predict</tt> method. <b>Important</b>: <tt>fx, fy</tt> were used
-	 * in the force calculation routine to store the new acceleration data. <tt>ax, ay</tt> were used to hold the old
+	 * correct the position predicted by the <tt>predict</tt> method. <b>Important</b>: <tt>fx, fy</tt> were used in the
+	 * force calculation routine to store the new acceleration data. <tt>ax, ay</tt> were used to hold the old
 	 * acceleration data before calling this method. After calling this method, new acceleration data will be assigned
-	 * to <tt>ax, ay</tt>, whereas the forces and torques to <tt>fx, fy</tt>. <b>Be aware</b>: the acceleration
-	 * and force properties of a particle are correct ONLY after this correction method has been called.
+	 * to <tt>ax, ay</tt>, whereas the forces and torques to <tt>fx, fy</tt>. <b>Be aware</b>: the acceleration and
+	 * force properties of a particle are correct ONLY after this correction method has been called.
 	 * 
 	 * @param half half of the time increment
 	 */
@@ -742,7 +745,7 @@ public class Atom extends Particle {
 	}
 
 	public void render(Graphics2D g) {
-		
+
 		if (outOfView())
 			return;
 
