@@ -1795,6 +1795,9 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			}
 		}
 		boolean rbondRemoved = rbd != null && !rbd.isEmpty();
+		if (!atomRemoved && rbondRemoved) {
+			MoleculeCollection.sort(model);
+		}
 
 		// if anything is removed, notify Page and UndoManager
 		if (atomRemoved || obstacleRemoved || layerRemoved || rbondRemoved) {
