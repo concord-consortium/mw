@@ -372,6 +372,22 @@ public final class UserAction {
 						"<html><p><b><i>Drop a rectangular obstacle whose upper-left corner is at the mouse-clicked position, and drag to specify its size.</i></b></p><p>A rectangular obstacle changes the motion of other objects by elastically colliding with them.</p></html>");
 	}
 
+	/** action ID for creating a radial bond by dragging between two atoms */
+	public final static short DGBD_ID = 0x1f4e;
+	static {
+		Short i = new Short(DGBD_ID);
+		name.put(i, "Create Radial Bond");
+		cursor.put(i, ModelerUtilities.createCursor(new ImageIcon(IconPool.class
+				.getResource("images/radialbondcursor.gif")), hotSpot, "bond"));
+		icon.put(i, IconPool.getIcon("radial bond"));
+		String s = getInternationalText("MakeRadialBond");
+		description.put(i, s != null ? s : "Create a radial bond between a pair of atoms");
+		longDescription
+				.put(
+						i,
+						"<html><p><b><i>Create a radial bond by dragging between two atoms.</i></b></p><p>A radial bond is a harmonic force that connects a pair of atoms. It models the force caused by covalent</p><p>bonding that maintains the stability of the molecular structure.</p></html>");
+	}
+
 	/** action ID for building a radial bond */
 	public final static short BBON_ID = 0x1f4f;
 	static {

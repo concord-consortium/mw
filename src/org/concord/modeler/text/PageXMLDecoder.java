@@ -24,6 +24,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.Insets;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -3572,6 +3573,9 @@ final class PageXMLDecoder {
 			b.setName(actionName);
 			if (titleText != null) {
 				b.setText(titleText);
+				if (titleText.equals("")) {
+					b.setIconTextGap(0);
+				}
 				titleText = null;
 			}
 			else {
@@ -3602,6 +3606,14 @@ final class PageXMLDecoder {
 				b.setAutoSize(false);
 				b.setPreferredSize(new Dimension((int) width, (int) height));
 				width = height = 0;
+			}
+			else {
+				if (b.getIconTextGap() == 0) { // this means that we have only image no text.
+					int imageWidth = b.getIcon().getIconWidth();
+					int imageHeight = b.getIcon().getIconHeight();
+					b.setMargin(new Insets(0, 0, 0, 0));
+					b.setPreferredSize(new Dimension(imageWidth + 2, imageHeight + 2));
+				}
 			}
 			if (disabledAtRun) {
 				b.setDisabledAtRun(disabledAtRun);

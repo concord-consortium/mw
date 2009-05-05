@@ -1134,6 +1134,8 @@ public abstract class MDView extends PrintableComponent {
 			clearSelection();
 		}
 		notifyActionStateListeners(new ActionStateEvent(this, new Short(actionID), new Short(i)));
+		if (actionID != i)
+			externalCursor = null;
 		actionID = i;
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {

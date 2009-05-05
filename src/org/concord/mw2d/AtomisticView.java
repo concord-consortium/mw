@@ -67,6 +67,7 @@ import javax.swing.JToggleButton;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.AbstractUndoableEdit;
 
+import org.concord.modeler.Modeler;
 import org.concord.modeler.ModelerUtilities;
 import org.concord.modeler.draw.StrokeFactory;
 import org.concord.modeler.event.ModelEvent;
@@ -171,6 +172,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 	private AddObjectIndicator addObjectIndicator;
 	int nAtom;
 	private int nAtomPBC;
+	private Atom bondAtom1, bondAtom2;
 
 	/* obstacle */
 	private ObstacleCollection obstacles;
@@ -1737,14 +1739,15 @@ public class AtomisticView extends MDView implements BondChangeListener {
 
 		List lay = removeSelectedLayeredComponents();
 		List obs = removeSelectedObstacles();
-		List<Integer> list = null;
+		List<Integer> atm = null;
+		List<RadialBond> rbd = null;
 
 		// remove any atoms in the selected area
 		for (int k = 0; k < nAtom; k++) {
 			if (selectedArea.contains(atom[k].getRx(), atom[k].getRy())) {
-				if (list == null)
-					list = new ArrayList<Integer>();
-				list.add(k);
+				if (atm == null)
+					atm = new ArrayList<Integer>();
+				atm.add(k);
 			}
 		}
 
@@ -1758,27 +1761,43 @@ public class AtomisticView extends MDView implements BondChangeListener {
 					if (mol.intersects(selectedArea)) {
 						for (Iterator i2 = mol.iterator(); i2.hasNext();) {
 							i = ((Atom) i2.next()).getIndex();
-							if (list == null)
-								list = new ArrayList<Integer>();
-							if (!list.contains(i))
-								list.add(i);
+							if (atm == null)
+								atm = new ArrayList<Integer>();
+							if (!atm.contains(i))
+								atm.add(i);
 						}
 					}
 				}
 			}
 		}
 
-		boolean atomRemoved = list != null && !list.isEmpty();
+		boolean atomRemoved = atm != null && !atm.isEmpty();
 		boolean obstacleRemoved = obs != null && !obs.isEmpty();
 		boolean layerRemoved = lay != null && !lay.isEmpty();
 
 		if (atomRemoved) {
-			removeMarkedAtoms(list);
+			removeMarkedAtoms(atm);
 			model.setNumberOfParticles(nAtom); // is this needed?
 		}
 
+		// remove any radial bond that intersects with the area
+		RadialBond rBond;
+		synchronized (bonds.getSynchronizationLock()) {
+			for (Iterator it = bonds.iterator(); it.hasNext();) {
+				rBond = (RadialBond) it.next();
+				if (rBond.intersects(selectedArea)) {
+					if (rbd == null)
+						rbd = new ArrayList<RadialBond>();
+					rbd.add(rBond);
+					it.remove();
+					removeAssociatedBends(rBond);
+				}
+			}
+		}
+		boolean rbondRemoved = rbd != null && !rbd.isEmpty();
+
 		// if anything is removed, notify Page and UndoManager
-		if (atomRemoved || obstacleRemoved || layerRemoved) {
+		if (atomRemoved || obstacleRemoved || layerRemoved || rbondRemoved) {
 			model.notifyChange();
 			if (!doNotFireUndoEvent) {
 				RectangularObstacle[] r2 = null;
@@ -1800,7 +1819,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 					}
 				}
 				model.getUndoManager().undoableEditHappened(
-						new UndoableEditEvent(model, new UndoableDeletion(UndoAction.BLOCK_REMOVE, list != null ? list
+						new UndoableEditEvent(model, new UndoableDeletion(UndoAction.BLOCK_REMOVE, atm != null ? atm
 								.size() : 0, r2, i2)));
 				updateUndoUIComponents();
 			}
@@ -1913,9 +1932,33 @@ public class AtomisticView extends MDView implements BondChangeListener {
 	protected boolean createABond(int x, int y) {
 		if (!(selectedComponent instanceof Atom))
 			return false;
-		Atom at0 = (Atom) selectedComponent;
-		Atom at = whichAtom(x, y);
-		if (at == null || at == at0)
+		Atom a1 = (Atom) selectedComponent;
+		Atom a2 = whichAtom(x, y);
+		boolean success = createBond(a1, a2);
+		if (success) {
+			if (!doNotFireUndoEvent) {
+				model.getUndoManager().undoableEditHappened(
+						new UndoableEditEvent(model, new UndoableInsertion(BBON_ID, x, y)));
+				updateUndoUIComponents();
+			}
+		}
+		return success;
+	}
+
+	private boolean createABond(Atom a1, Atom a2) {
+		boolean success = createBond(a1, a2);
+		if (success) {
+			if (!doNotFireUndoEvent) {
+				model.getUndoManager().undoableEditHappened(
+						new UndoableEditEvent(model, new UndoableInsertion(DGBD_ID)));
+				updateUndoUIComponents();
+			}
+		}
+		return success;
+	}
+
+	private boolean createBond(Atom a1, Atom a2) {
+		if (a1 == null || a2 == null || a1 == a2)
 			return false;
 		if (!bonds.isEmpty()) {
 			RadialBond rBond;
@@ -1925,21 +1968,16 @@ public class AtomisticView extends MDView implements BondChangeListener {
 					rBond = (RadialBond) it.next();
 					origin = rBond.getAtom1();
 					destin = rBond.getAtom2();
-					if ((at == origin && at0 == destin) || (at0 == origin && at == destin))
+					if ((a1 == origin && a2 == destin) || (a2 == origin && a1 == destin))
 						return false;
 				}
 			}
 		}
-		double xij = at.getRx() - at0.getRx();
-		double yij = at.getRy() - at0.getRy();
-		bonds.add(new RadialBond.Builder(at0, at).bondLength(Math.hypot(xij, yij)).build());
+		double xij = a2.getRx() - a1.getRx();
+		double yij = a2.getRy() - a1.getRy();
+		bonds.add(new RadialBond.Builder(a1, a2).bondLength(Math.hypot(xij, yij)).build());
 		MoleculeCollection.sort(model);
 		model.notifyChange();
-		if (!doNotFireUndoEvent) {
-			model.getUndoManager().undoableEditHappened(
-					new UndoableEditEvent(model, new UndoableInsertion(BBON_ID, x, y)));
-			updateUndoUIComponents();
-		}
 		repaint();
 		return true;
 	}
@@ -3557,7 +3595,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 
 		if (shading) {
 			// Mac OS X has bugs in GradientPaint (09/10/2007)
-			if (System.getProperty("os.name").startsWith("Mac")) {
+			if (Modeler.isMac()) {
 				g2.drawImage(biRect, 10, 10, null);
 			}
 			else {
@@ -3576,27 +3614,18 @@ public class AtomisticView extends MDView implements BondChangeListener {
 
 		paintSteering(g2);
 
-		if (actionID == DELE_ID || actionID == ADOB_ID || actionID == FILA_ID || actionID == FILB_ID
-				|| actionID == FILC_ID || actionID == FILD_ID || actionID == MARK_ID || actionID == COUN_ID) {
-			g2.setStroke(ViewAttribute.THIN);
-			g2.setColor(contrastBackground());
-			g2.draw(selectedArea);
-		}
-
 		if (getEnergizer())
 			energizer.paint(g2);
 
-		if (model.heatBathActivated()) {
-			if (drawString) {
-				g2.setFont(ViewAttribute.SMALL_FONT);
-				g2.setColor(contrastBackground());
-				// String s = MDView.getInternationalText("HeatBath");
-				// g2.drawString(s != null ? s : "Heat bath", 10, 15);
-				IconPool.getIcon("heat bath").paintIcon(this, g2, 8, 8);
-			}
+		if (model.heatBathActivated() && drawString) {
+			g2.setFont(ViewAttribute.SMALL_FONT);
+			g2.setColor(contrastBackground());
+			IconPool.getIcon("heat bath").paintIcon(this, g2, 8, 8);
 		}
 
-		if (actionID == CPOS_ID || actionID == CNEG_ID) {
+		switch (actionID) {
+		case CPOS_ID:
+		case CNEG_ID:
 			if (selectedComponent instanceof Atom) {
 				Atom at = (Atom) selectedComponent;
 				String str = at.getCharge() + "";
@@ -3610,8 +3639,9 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				g2.setColor(Color.black);
 				g2.drawString(str, (int) at.getRx() + 4, (int) at.getRy() - sh / 2 + 4);
 			}
-		}
-		else if (actionID == IRES_ID || actionID == DRES_ID) {
+			break;
+		case IRES_ID:
+		case DRES_ID:
 			if (selectedComponent instanceof Atom) {
 				Atom at = (Atom) selectedComponent;
 				if (at.getRestraint() != null) {
@@ -3619,35 +3649,62 @@ public class AtomisticView extends MDView implements BondChangeListener {
 					g.drawString(at.getRestraint().toString(), (int) at.getRx(), (int) at.getRy());
 				}
 			}
-		}
-		else if (actionID == IDMP_ID || actionID == DDMP_ID) {
+			break;
+		case IDMP_ID:
+		case DDMP_ID:
 			if (selectedComponent instanceof Atom) {
 				Atom at = (Atom) selectedComponent;
 				g.setColor(contrastBackground());
 				g.drawString(at.getFriction() + "", (int) at.getRx(), (int) at.getRy());
 			}
-		}
-		else if (actionID == ADDA_ID || actionID == ADDB_ID || actionID == ADDC_ID || actionID == ADDD_ID) {
+			break;
+		case ADDA_ID:
+		case ADDB_ID:
+		case ADDC_ID:
+		case ADDD_ID:
 			if (addAtomIndicator.x >= 0 && addAtomIndicator.y >= 0) {
 				g2.setStroke(ViewAttribute.THIN_DASHED);
 				g2.setColor(contrastBackground(128));
 				g2.draw(addAtomIndicator);
 			}
-		}
-		else if (actionID == ADDI_ID || actionID == WATE_ID || actionID == BENZ_ID || actionID == ADCH_ID) {
+			break;
+		case ADDI_ID:
+		case WATE_ID:
+		case BENZ_ID:
+		case ADCH_ID:
 			if (addObjectIndicator != null && addObjectIndicator.isPainted()) {
 				g2.setStroke(ViewAttribute.THIN_DASHED);
 				g2.setColor(contrastBackground(128));
 				addObjectIndicator.paint(g2);
 			}
-		}
-		else if (actionID == HEAT_ID) {
+			break;
+		case HEAT_ID:
 			g2.setStroke(ViewAttribute.THIN);
 			pointHeater.paint(g2, true);
-		}
-		else if (actionID == COOL_ID) {
+			break;
+		case COOL_ID:
 			g2.setStroke(ViewAttribute.THIN);
 			pointHeater.paint(g2, false);
+			break;
+		case DELE_ID:
+		case ADOB_ID:
+		case FILA_ID:
+		case FILB_ID:
+		case FILC_ID:
+		case FILD_ID:
+		case MARK_ID:
+		case COUN_ID:
+			g2.setStroke(ViewAttribute.THIN);
+			g2.setColor(contrastBackground());
+			g2.draw(selectedArea);
+			break;
+		case DGBD_ID:
+			if (bondAtom1 != null) {
+				g2.setStroke(ViewAttribute.DASHED);
+				g2.setColor(contrastBackground());
+				g2.drawLine((int) bondAtom1.getRx(), (int) bondAtom1.getRy(), mouseHeldX, mouseHeldY);
+			}
+			break;
 		}
 
 		g2.setStroke(ViewAttribute.THIN);
@@ -4006,6 +4063,27 @@ public class AtomisticView extends MDView implements BondChangeListener {
 					showActionTip("Click the atom to show its current average position", x + 20, y + 20);
 				}
 				repaint();
+			}
+			break;
+
+		case DGBD_ID:
+			bondAtom1 = whichAtom(x, y);
+			if (bondAtom1 == null) {
+				RadialBond rb = whichBond(x, y);
+				if (rb != null) {
+					byte style = rb.getBondStyle();
+					switch (style) {
+					case RadialBond.DOUBLE_BOND_STYLE:
+						style = RadialBond.TRIPLE_BOND_STYLE;
+						break;
+					case RadialBond.TRIPLE_BOND_STYLE:
+						style = RadialBond.STANDARD_STICK_STYLE;
+						break;
+					default:
+						style = RadialBond.DOUBLE_BOND_STYLE;
+					}
+					rb.setBondStyle(style);
+				}
 			}
 			break;
 
@@ -5013,6 +5091,10 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			}
 			break;
 
+		case DGBD_ID:
+			repaint();
+			break;
+
 		}
 
 		if (useJmol)
@@ -5528,6 +5610,14 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			}
 			break;
 
+		case DGBD_ID:
+			bondAtom2 = whichAtom(x, y);
+			if (bondAtom1 != null && bondAtom2 != null) {
+				createABond(bondAtom1, bondAtom2);
+			}
+			bondAtom1 = bondAtom2 = null;
+			break;
+
 		}
 
 		if (useJmol)
@@ -5841,6 +5931,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			case ADOB_ID:
 				presentationName = "Inserting Rectangular Obstacle";
 				break;
+			case DGBD_ID:
 			case BBON_ID:
 				presentationName = "Making Radial Bond";
 				break;
@@ -5988,6 +6079,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 					removeMarkedAtoms(list);
 				}
 				break;
+			case DGBD_ID:
 			case BBON_ID:
 				buffer = bonds.get(bonds.size() - 1);
 				bonds.remove((RadialBond) buffer);
@@ -6078,6 +6170,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				if (area != null)
 					fillAreaWithAtoms(area, latticeType, elementID);
 				break;
+			case DGBD_ID:
 			case BBON_ID:
 				if (buffer instanceof RadialBond) {
 					bonds.add((RadialBond) buffer);

@@ -49,6 +49,8 @@ public class RadialBond implements ModelComponent {
 	public final static byte GHOST_STYLE = 0x68;
 	public final static byte UNICOLOR_STICK_STYLE = 0x69;
 	public final static byte SHORT_SPRING_STYLE = 0x6a;
+	public final static byte DOUBLE_BOND_STYLE = 0x6b;
+	public final static byte TRIPLE_BOND_STYLE = 0x6c;
 
 	public final static float PEPTIDE_BOND_LENGTH_PARAMETER = 0.55f;
 
@@ -56,9 +58,15 @@ public class RadialBond implements ModelComponent {
 	public final static byte TORQUE_AROUND_ATOM2 = 2;
 	public final static byte TORQUE_AROUND_CENTER = 3;
 
-	private final static Stroke STICK = new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
-	private final static double ZERO = 0.000001;
-	private final static double DISTANCE_AWAY_FROM_AXIS = 10.0;
+	private static float stickWidth = 2;
+
+	private final static Stroke STICK = new BasicStroke(2 * stickWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
+	private final static Stroke DOUBLE_STICK = new BasicStroke(8 * stickWidth, BasicStroke.CAP_BUTT,
+			BasicStroke.JOIN_MITER);
+	private final static Stroke TRIPLE_STICK = new BasicStroke(14 * stickWidth, BasicStroke.CAP_BUTT,
+			BasicStroke.JOIN_MITER);
+	private final static double ZERO = 0.000000001;
+	private final static double DISTANCE_AWAY_FROM_AXIS = 10;
 
 	Atom atom1, atom2;
 	double bondLength = 20, bondStrength = 0.2;
@@ -79,7 +87,6 @@ public class RadialBond implements ModelComponent {
 	private Color bondColor;
 	private byte bondStyle = STANDARD_STICK_STYLE;
 	private static Line2D.Double axis;
-	private float stickWidth = 2;
 	private boolean selected, blinking;
 	private boolean marked;
 	private boolean visible = true;
@@ -771,6 +778,103 @@ public class RadialBond implements ModelComponent {
 		}
 	}
 
+	private void drawDoubleBond(Graphics2D g) {
+		if (!model.view.getUseJmol()) {
+			double cos = axis.x2 - axis.x1;
+			double sin = axis.y2 - axis.y1;
+			double d = Math.hypot(cos, sin);
+			cos /= d;
+			sin /= d;
+			g.setStroke(DOUBLE_STICK);
+			double p = 0.5 * d + 0.25 * (atom1.sigma - atom2.sigma);
+			double x = axis.x1 + cos * p;
+			double y = axis.y1 + sin * p;
+			g.setColor(atom1.getColor());
+			line.setLine(axis.x1, axis.y1, x, y);
+			g.draw(line);
+			g.setColor(atom2.getColor());
+			line.setLine(axis.x2, axis.y2, x, y);
+			g.draw(line);
+			g.setColor(model.view.getBackground());
+			g.setStroke(STICK);
+			line.setLine(axis.x1, axis.y1, axis.x2, axis.y2);
+			g.draw(line);
+			g.setColor(model.view.contrastBackground());
+			g.setStroke(ViewAttribute.THIN);
+			cos *= 4 * stickWidth;
+			sin *= 4 * stickWidth;
+			line.setLine(axis.x2 - sin, axis.y2 + cos, axis.x1 - sin, axis.y1 + cos);
+			g.draw(line);
+			line.setLine(axis.x2 + sin, axis.y2 - cos, axis.x1 + sin, axis.y1 - cos);
+			g.draw(line);
+			cos /= 2;
+			sin /= 2;
+			line.setLine(axis.x2 - sin, axis.y2 + cos, axis.x1 - sin, axis.y1 + cos);
+			g.draw(line);
+			line.setLine(axis.x2 + sin, axis.y2 - cos, axis.x1 + sin, axis.y1 - cos);
+			g.draw(line);
+		}
+		if (selected && model.view.getShowSelectionHalo()) {
+			drawFlankLines(g, null, 5, null);
+		}
+	}
+
+	private void drawTripleBond(Graphics2D g) {
+		if (!model.view.getUseJmol()) {
+			double cos = axis.x2 - axis.x1;
+			double sin = axis.y2 - axis.y1;
+			double d = Math.hypot(cos, sin);
+			cos /= d;
+			sin /= d;
+			g.setStroke(TRIPLE_STICK);
+			double p = 0.5 * d + 0.25 * (atom1.sigma - atom2.sigma);
+			double x = axis.x1 + cos * p;
+			double y = axis.y1 + sin * p;
+			g.setColor(atom1.getColor());
+			line.setLine(axis.x1, axis.y1, x, y);
+			g.draw(line);
+			g.setColor(atom2.getColor());
+			line.setLine(axis.x2, axis.y2, x, y);
+			g.draw(line);
+			g.setColor(model.view.getBackground());
+			g.setStroke(DOUBLE_STICK);
+			line.setLine(axis.x1, axis.y1, axis.x2, axis.y2);
+			g.draw(line);
+			g.setStroke(STICK);
+			g.setColor(atom1.getColor());
+			line.setLine(axis.x1, axis.y1, x, y);
+			g.draw(line);
+			g.setColor(atom2.getColor());
+			line.setLine(axis.x2, axis.y2, x, y);
+			g.draw(line);
+
+			g.setColor(model.view.contrastBackground());
+			g.setStroke(ViewAttribute.THIN);
+			double cos2 = cos * 4 * stickWidth;
+			double sin2 = sin * 4 * stickWidth;
+			line.setLine(axis.x2 - sin2, axis.y2 + cos2, axis.x1 - sin2, axis.y1 + cos2);
+			g.draw(line);
+			line.setLine(axis.x2 + sin2, axis.y2 - cos2, axis.x1 + sin2, axis.y1 - cos2);
+			g.draw(line);
+			cos2 = cos * 1.8 * stickWidth;
+			sin2 = sin * 1.8 * stickWidth;
+			line.setLine(axis.x2 - sin2, axis.y2 + cos2, axis.x1 - sin2, axis.y1 + cos2);
+			g.draw(line);
+			line.setLine(axis.x2 + sin2, axis.y2 - cos2, axis.x1 + sin2, axis.y1 - cos2);
+			g.draw(line);
+			cos2 = cos * 7 * stickWidth;
+			sin2 = sin * 7 * stickWidth;
+			line.setLine(axis.x2 - sin2, axis.y2 + cos2, axis.x1 - sin2, axis.y1 + cos2);
+			g.draw(line);
+			line.setLine(axis.x2 + sin2, axis.y2 - cos2, axis.x1 + sin2, axis.y1 - cos2);
+			g.draw(line);
+
+		}
+		if (selected && model.view.getShowSelectionHalo()) {
+			drawFlankLines(g, null, 5, null);
+		}
+	}
+
 	private void drawLine(Graphics2D g) {
 		g.setStroke(STICK);
 		g.setColor(bondColor == null ? model.view.contrastBackground() : bondColor);
@@ -831,6 +935,12 @@ public class RadialBond implements ModelComponent {
 				break;
 			case UNICOLOR_STICK_STYLE:
 				drawColorStick(g, UNICOLOR_STICK_STYLE);
+				break;
+			case DOUBLE_BOND_STYLE:
+				drawDoubleBond(g);
+				break;
+			case TRIPLE_BOND_STYLE:
+				drawTripleBond(g);
 				break;
 			default:
 				drawColorStick(g, STANDARD_STICK_STYLE);
