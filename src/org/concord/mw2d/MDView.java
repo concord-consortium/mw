@@ -1513,6 +1513,9 @@ public abstract class MDView extends PrintableComponent {
 				else if (x instanceof LineComponent) {
 					y = new LineComponent((LineComponent) x);
 				}
+				else if (x instanceof TextBoxComponent) {
+					y = new TextBoxComponent((TextBoxComponent) x);
+				}
 				if (y != null) {
 					addLayeredComponent(y);
 					y.setHost(acceptor);

@@ -179,6 +179,12 @@ public class MoleculeCollection {
 		return null;
 	}
 
+	public Molecule getMolecule(RadialBond rb) {
+		if (rb == null)
+			return null;
+		return getMolecule(rb.atom1);
+	}
+
 	public int getMoleculeIndex(Atom a) {
 		if (a == null)
 			return -1;
