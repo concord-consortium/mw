@@ -3115,7 +3115,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 			userDir = userDir.substring(0, userDir.length() - 1);
 		userDir = FileUtilities.httpEncode(userDir);
 		ClassLoader cl = Thread.currentThread().getContextClassLoader();
-		String resourceURL = cl.getResource("org").toString();
+		String resourceURL = cl.getResource("org/concord/modeler").toString();
 		int i = resourceURL.indexOf(userDir);
 		if (i != -1) {
 			String s = resourceURL.substring(i + userDir.length() + 1);
