@@ -232,7 +232,7 @@ public class ChemContainer extends MDContainer {
 
 	private class MB extends SimulatorMenuBar {
 
-		private JMenuItem energyTSItem, disableRecorderItem, removeToolBarItem;
+		private JMenuItem energyTSItem, disableRecorderItem, removeToolBarItem, enablePropertyDialogMenuItem;
 
 		private void enableMovieMenuItems(boolean b) {
 			energyTSItem.setEnabled(b);
@@ -393,6 +393,7 @@ public class ChemContainer extends MDContainer {
 			menu.addMenuListener(new MenuListener() {
 				public void menuSelected(MenuEvent e) {
 					disableRecorderItem.setEnabled(!model.hasGraphs());
+					setMenuItemWithoutNotifyingListeners(enablePropertyDialogMenuItem, view.isPropertyDialogEnabled());
 				}
 
 				public void menuCanceled(MenuEvent e) {
@@ -415,6 +416,15 @@ public class ChemContainer extends MDContainer {
 				}
 			});
 			menu.add(disableRecorderItem);
+
+			s = getInternationalText("EnablePropertyDialog");
+			enablePropertyDialogMenuItem = new JCheckBoxMenuItem(s != null ? s : "Enable Property Dialog");
+			enablePropertyDialogMenuItem.addItemListener(new ItemListener() {
+				public void itemStateChanged(ItemEvent e) {
+					view.setPropertyDialogEnabled(e.getStateChange() == ItemEvent.SELECTED);
+				}
+			});
+			menu.add(enablePropertyDialogMenuItem);
 
 			s = getInternationalText("ShowActionTip");
 			menuItem = new JCheckBoxMenuItem(s != null ? s : "Show Action Tip");

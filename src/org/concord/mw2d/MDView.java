@@ -223,6 +223,7 @@ public abstract class MDView extends PrintableComponent {
 	private boolean energizerOn;
 	private JComponent toolBar;
 	private boolean actionTipEnabled;
+	private boolean propertyDialogEnabled = true;
 	private final Object updateLock = new Object();
 
 	public MDView() {
@@ -783,6 +784,7 @@ public abstract class MDView extends PrintableComponent {
 	}
 
 	public void clear() {
+		propertyDialogEnabled = true;
 		externalCursor = null;
 		setFillMode(FillMode.getNoFillMode());
 		setBackgroundImage(null);
@@ -1153,8 +1155,16 @@ public abstract class MDView extends PrintableComponent {
 		actionTipEnabled = b;
 	}
 
-	public boolean actionTipIsEnabled() {
+	public boolean isActionTipEnabled() {
 		return actionTipEnabled;
+	}
+
+	public void setPropertyDialogEnabled(boolean b) {
+		propertyDialogEnabled = b;
+	}
+
+	public boolean isPropertyDialogEnabled() {
+		return propertyDialogEnabled;
 	}
 
 	/**
@@ -3576,6 +3586,7 @@ public abstract class MDView extends PrintableComponent {
 		private boolean energizer;
 		private boolean showParticleIndex, showClock = true, drawCharge = true, showMirrorImages = true,
 				drawExternalForce;
+		private boolean propertyDialogEnabled = true;
 		private FillMode fillMode;
 		private VectorFlavor velocityFlavor;
 		private VectorFlavor momentumFlavor;
@@ -3595,6 +3606,14 @@ public abstract class MDView extends PrintableComponent {
 			momentumFlavor = new VectorFlavor(Color.gray, ViewAttribute.THIN, 1);
 			accelerationFlavor = new VectorFlavor(Color.red, ViewAttribute.THIN, 100);
 			forceFlavor = new VectorFlavor(Color.orange, ViewAttribute.THIN, 1);
+		}
+
+		public void setPropertyDialogEnabled(boolean b) {
+			propertyDialogEnabled = b;
+		}
+
+		public boolean isPropertyDialogEnabled() {
+			return propertyDialogEnabled;
 		}
 
 		public void setRenderingMethod(int i) {

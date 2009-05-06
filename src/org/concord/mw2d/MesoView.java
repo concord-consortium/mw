@@ -975,7 +975,7 @@ public class MesoView extends MDView {
 					((GayBerneParticle) mc).setSelectedToRotate(false);
 					((GayBerneParticle) mc).setSelectedToResize(false);
 				}
-				if (clickCount >= 2)
+				if (isPropertyDialogEnabled() && clickCount >= 2)
 					DialogFactory.showDialog(mc);
 			}
 			repaint();

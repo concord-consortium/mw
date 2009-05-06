@@ -1240,6 +1240,7 @@ public class MesoModel extends MDModel {
 
 		monitor.setProgressMessage("Reading view parameters...");
 		final MesoView.State vs = (MesoView.State) in.readObject();
+		view.setPropertyDialogEnabled(vs.isPropertyDialogEnabled());
 		view.setRenderingMethod(vs.getRenderingMethod());
 		view.setFillMode(vs.getFillMode());
 		view.setBackground(vs.getBackground());
@@ -1313,6 +1314,7 @@ public class MesoModel extends MDModel {
 		}
 
 		MesoView.State vs = new MesoView.State();
+		vs.setPropertyDialogEnabled(view.isPropertyDialogEnabled());
 		vs.setRenderingMethod(view.getRenderingMethod());
 		vs.setBackground(view.getBackground());
 		vs.setMarkColor(view.getMarkColor().getRGB());
