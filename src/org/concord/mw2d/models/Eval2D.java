@@ -45,6 +45,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
@@ -4582,6 +4583,19 @@ class Eval2D extends AbstractEval {
 					out(ScriptEvent.FAILED, "Coordinate error: " + str);
 					return false;
 				}
+				Action act = view.getActionMap().get("Input Text Box");
+				float[] x = parseCoordinates(str);
+				if (x == null) {
+					out(ScriptEvent.FAILED, "Coordinate error: " + str);
+					return false;
+				}
+				act.putValue("x", (int) x[0]);
+				act.putValue("y", (int) x[1]);
+				act.putValue("callout", Boolean.FALSE);
+				act.actionPerformed(null);
+				act.putValue("x", null);
+				act.putValue("y", null);
+				act.putValue("callout", null);
 				return true;
 			}
 		}

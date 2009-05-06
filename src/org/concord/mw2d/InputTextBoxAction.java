@@ -49,12 +49,26 @@ class InputTextBoxAction extends AbstractAction {
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		int x = -1;
+		int y = -1;
+		Object o = getValue("x");
+		if (o instanceof Integer) {
+			x = ((Integer) o).intValue();
+		}
+		o = getValue("y");
+		if (o instanceof Integer) {
+			y = ((Integer) o).intValue();
+		}
 		final JDialog dialog = new JDialog(JOptionPane.getFrameForComponent(view), "Text Box Properties", true);
 		TextBoxComponent c = new TextBoxComponent("Your text here");
 		c.setBorderType((byte) 2);
 		c.setShadowType((byte) 2);
-		c.setCallOut(true);
+		o = getValue("callout");
+		c.setCallOut(o == Boolean.FALSE ? false : true);
 		c.setFillMode(new FillMode.ColorFill(Color.green));
+		if (x >= 0 && y >= 0) {
+			c.setLocation(x, y);
+		}
 		view.addLayeredComponent(c);
 		final TextBoxPropertiesPanel p = new TextBoxPropertiesPanel(c);
 		dialog.setContentPane(p);
