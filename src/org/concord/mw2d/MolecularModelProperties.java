@@ -142,7 +142,8 @@ class MolecularModelProperties extends ModelProperties {
 
 		panel.add(new JLabel("Reaction Interval", SwingConstants.LEFT));
 		try {
-			reactionIntervalField = new IntegerTextField(m.getJob().getTaskByName(ReactionModel.REACT).getInterval(), 1, 100);
+			reactionIntervalField = new IntegerTextField(m.getJob().getTaskByName(ReactionModel.REACT).getInterval(),
+					1, 100);
 		}
 		catch (Exception e) {
 			reactionIntervalField = new IntegerTextField(10, 1, 100);
@@ -499,13 +500,10 @@ class MolecularModelProperties extends ModelProperties {
 		p.add(scrollPane, BorderLayout.CENTER);
 
 		s = MDView.getInternationalText("CautionLabel");
-		p
-				.add(
-						new JLabel(
-								"<html><body><font size=2><b>"
-										+ (s != null ? s : "Caution")
-										+ ":</b><br>(a) These scripts won't run if the model is not loaded via page loading.<br>(b) Long-running scripts can interfer with authoring.<br>(c) Don't use motion scripts if the model won't be seen upon loading.</font></body></html>"),
-						BorderLayout.SOUTH);
+		String s2 = "<html><body><font size=2><b>"
+				+ (s != null ? s : "Caution")
+				+ ":</b><br>(a) These scripts won't run if the model is not loaded via page loading.<br>(b) Long-running scripts can interfer with authoring.<br>(c) Don't use motion scripts if the model won't be seen upon loading.</font></body></html>";
+		p.add(new JLabel(s2), BorderLayout.SOUTH);
 
 		pack();
 
