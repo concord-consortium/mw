@@ -514,9 +514,9 @@ public abstract class MDView extends PrintableComponent {
 		a.putValue(Action.SMALL_ICON, IconPool.getIcon("properties"));
 		a.putValue(Action.NAME, "Access Model Properties");
 		a.putValue(Action.SHORT_DESCRIPTION, "Access model properties");
-		a.putValue(Action.ACCELERATOR_KEY, System.getProperty("os.name").startsWith("Mac") ? KeyStroke.getKeyStroke(
-				KeyEvent.VK_M, KeyEvent.ALT_MASK | KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_M,
-				KeyEvent.ALT_MASK | KeyEvent.CTRL_MASK, true));
+		a.putValue(Action.ACCELERATOR_KEY, macOS ? KeyStroke.getKeyStroke(KeyEvent.VK_M, KeyEvent.ALT_MASK
+				| KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_M, KeyEvent.ALT_MASK
+				| KeyEvent.CTRL_MASK, true));
 		getInputMap().put((KeyStroke) a.getValue(Action.ACCELERATOR_KEY), "Properties");
 		getActionMap().put("Properties", a);
 
