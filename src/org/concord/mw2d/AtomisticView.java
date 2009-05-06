@@ -3819,8 +3819,10 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			ModelComponent mc = getSelectedComponent(e.getModifiersEx(), x, y);
 			if (mc != null) {
 				mc.storeCurrentState();
-				if (isPropertyDialogEnabled() && clickCount >= 2)
-					DialogFactory.showDialog(mc);
+				if (clickCount >= 2) {
+					if (isPropertyDialogEnabled() || mc instanceof TextBoxComponent)
+						DialogFactory.showDialog(mc);
+				}
 			}
 			repaint();
 			break;
