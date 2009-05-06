@@ -1137,6 +1137,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 		private JMenuItem quantumdynamicsMenuItem;
 		private JMenuItem setupFlowMenuItem;
 		private JMenuItem enableFlowMenuItem;
+		private JMenuItem enablePropertyDialogMenuItem;
 		private JMenuItem eFieldLineMenuItem;
 		private JMenu computeMenu;
 		private JMenuItem lightSourceMenuItem;
@@ -1550,6 +1551,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			menu.addMenuListener(new MenuListener() {
 				public void menuSelected(MenuEvent e) {
 					setMenuItemWithoutNotifyingListeners(enableFlowMenuItem, model.isAtomFlowEnabled());
+					setMenuItemWithoutNotifyingListeners(enablePropertyDialogMenuItem, view.isPropertyDialogEnabled());
 					setupFlowMenuItem.setEnabled(model.getRecorderDisabled() && model.isAtomFlowEnabled());
 					enableFlowMenuItem.setEnabled(model.getRecorderDisabled());
 					disableRecorderItem.setEnabled(!model.hasGraphs() && !hasDNAScroller()
@@ -1585,6 +1587,15 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 				}
 			});
 			menu.add(enableFlowMenuItem);
+
+			s = getInternationalText("EnablePropertyDialog");
+			enablePropertyDialogMenuItem = new JCheckBoxMenuItem(s != null ? s : "Enable Property Dialog");
+			enablePropertyDialogMenuItem.addItemListener(new ItemListener() {
+				public void itemStateChanged(ItemEvent e) {
+					view.setPropertyDialogEnabled(e.getStateChange() == ItemEvent.SELECTED);
+				}
+			});
+			menu.add(enablePropertyDialogMenuItem);
 
 			s = getInternationalText("ShowActionTip");
 			menuItem = new JCheckBoxMenuItem(s != null ? s : "Show Action Tip");

@@ -3849,6 +3849,7 @@ public abstract class AtomicModel extends MDModel {
 		}
 
 		AtomisticView.State vs = new AtomisticView.State();
+		vs.setPropertyDialogEnabled(view.isPropertyDialogEnabled());
 		vs.setRenderingMethod(view.getRenderingMethod());
 		vs.setUseJmol(view.getUseJmol());
 		vs.setElementColors(view.getElementColors());
@@ -4160,6 +4161,7 @@ public abstract class AtomicModel extends MDModel {
 
 		monitor.setProgressMessage("Reading view...");
 		final AtomisticView.State vs = (AtomisticView.State) in.readObject();
+		view.setPropertyDialogEnabled(vs.isPropertyDialogEnabled());
 		view.setRenderingMethod(vs.getRenderingMethod());
 		view.setUseJmol(vs.getUseJmol() || !vs.getMonochromatic());
 		view.setElementColors(vs.getElementColors());
