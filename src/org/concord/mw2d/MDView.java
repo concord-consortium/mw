@@ -2633,7 +2633,7 @@ public abstract class MDView extends PrintableComponent {
 				energizerButtonPressed = true;
 				Thread t = new Thread(new Runnable() {
 					public void run() {
-						while (energizerButtonPressed) {
+						while (energizerButtonPressed && getModel().getTemperature() < 100000) {
 							energizer.heat();
 							repaint();
 							try {
