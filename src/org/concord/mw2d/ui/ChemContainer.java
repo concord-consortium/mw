@@ -539,6 +539,7 @@ public class ChemContainer extends MDContainer {
 		private AbstractButton dropCkButton;
 		private AbstractButton dropRectangleButton;
 		private AbstractButton buildBondButton;
+		private AbstractButton buildBondButton2;
 		private AbstractButton buildBendButton;
 		private AbstractButton mutateButton;
 
@@ -609,6 +610,9 @@ public class ChemContainer extends MDContainer {
 			dropRectangleButton = createButton(UserAction.getAction(UserAction.ADOB_ID, model));
 			toolBarButtonGroup.add(dropRectangleButton);
 
+			buildBondButton2 = createButton(UserAction.getAction(UserAction.DGBD_ID, model));
+			toolBarButtonGroup.add(buildBondButton2);
+
 			buildBondButton = createButton(UserAction.getAction(UserAction.BBON_ID, model));
 			toolBarButtonGroup.add(buildBondButton);
 
@@ -639,6 +643,7 @@ public class ChemContainer extends MDContainer {
 			list.add(rotateObjectButton);
 			list.add(changeVelocityButton);
 			list.add(buildBondButton);
+			list.add(buildBondButton2);
 			list.add(buildBendButton);
 			s = getInternationalText("EditingActions");
 			actionCategory.put(s != null ? s : "Editing Actions", list);
