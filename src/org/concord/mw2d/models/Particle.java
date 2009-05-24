@@ -738,11 +738,13 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 		setShowRMean(false);
 		setShowFMean(false);
 		measuringTool.clear();
+		if (getView() != null)
+			getView().removeAttachedLayeredComponents(this);
 	}
 
-	public abstract void set(Particle p);
+	public abstract void set(Particle p, boolean copyLayers);
 
-	public void duplicate(Particle p) {
+	public void duplicate(Particle p, boolean copyLayers) {
 		if (p == null)
 			throw new IllegalArgumentException("null input");
 		if (getHostModel() == null)
@@ -763,6 +765,8 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 		visible = p.visible;
 		showRMean = p.showRMean;
 		showFMean = p.showFMean;
+		if (copyLayers && getView() != null)
+			getView().copyAttachedLayeredComponents(p, this);
 	}
 
 	/**
@@ -1075,6 +1079,8 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	}
 
 	MDView getView() {
+		if (getHostModel() == null)
+			return null;
 		return ((MDView) getHostModel().getView());
 	}
 

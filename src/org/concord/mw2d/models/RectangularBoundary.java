@@ -491,7 +491,7 @@ public class RectangularBoundary extends Rectangle2D.Double implements Boundary 
 					yn = mirror.y - y;
 					if (atom[n].rx + xn > -10 && atom[n].rx + xn < container.width + 10 && atom[n].ry + yn > -10
 							&& atom[n].ry + yn < container.height + 10) {
-						atom[npbc].set(atom[n]);
+						atom[npbc].set(atom[n], true);
 						atom[npbc].addRx(xn);
 						atom[npbc].addRy(yn);
 						npbc++;

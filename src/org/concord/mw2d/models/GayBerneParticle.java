@@ -87,11 +87,6 @@ public class GayBerneParticle extends UnitedAtom implements Rotatable {
 		ellipse = new Ellipse2D.Double();
 	}
 
-	public GayBerneParticle(GayBerneParticle gbp) {
-		this();
-		set(gbp);
-	}
-
 	boolean outOfView() {
 		return false;
 	}
@@ -230,15 +225,15 @@ public class GayBerneParticle extends UnitedAtom implements Rotatable {
 				+ format.format(0.1 * breadth) + "nm ]";
 	}
 
-	public void set(Particle target) {
-		duplicate(target);
+	public void set(Particle target, boolean copyLayers) {
+		duplicate(target, copyLayers);
 		copyRestraint(target.restraint);
 	}
 
-	public void duplicate(Particle target) {
+	public void duplicate(Particle target, boolean copyLayers) {
 		if (!(target instanceof GayBerneParticle))
 			throw new IllegalArgumentException("target not GB");
-		super.duplicate(target);
+		super.duplicate(target, copyLayers);
 		GayBerneParticle gb = (GayBerneParticle) target;
 		mass = gb.mass;
 		color = target.color;
