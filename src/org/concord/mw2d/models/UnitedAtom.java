@@ -180,10 +180,10 @@ public abstract class UnitedAtom extends Particle {
 		dipoleMoment = 0.0;
 	}
 
-	public void duplicate(Particle p) {
+	public void duplicate(Particle p, boolean copyLayers) {
 		if (!(p instanceof UnitedAtom))
 			throw new IllegalArgumentException("target not a UnitedAtom");
-		super.duplicate(p);
+		super.duplicate(p, copyLayers);
 		UnitedAtom ua = (UnitedAtom) p;
 		theta = ua.theta;
 		omega = ua.omega;

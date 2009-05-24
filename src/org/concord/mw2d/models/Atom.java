@@ -276,20 +276,17 @@ public class Atom extends Particle {
 	/**
 	 * This method copies fields from the specified atom to this one except the index.
 	 */
-	public void set(Particle target) {
-		duplicate(target);
+	public void set(Particle target, boolean copyLayers) {
+		duplicate(target, copyLayers);
 		copyRestraint(target.restraint);
 		// setTapeMeasure(target.getTapeMeasure());
 	}
 
-	public void duplicate(Particle target) {
+	public void duplicate(Particle target, boolean copyLayers) {
 		if (!(target instanceof Atom))
 			throw new IllegalArgumentException("target must be an atom");
-		super.duplicate(target);
+		super.duplicate(target, copyLayers);
 		setElement(model.getElement(((Atom) target).id));
-		if (model != null) {
-			model.view.copyAttachedLayeredComponents(target, this);
-		}
 	}
 
 	/**

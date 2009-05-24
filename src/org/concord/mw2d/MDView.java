@@ -1498,6 +1498,14 @@ public abstract class MDView extends PrintableComponent {
 		return l;
 	}
 
+	public void removeAttachedLayeredComponents(ModelComponent source) {
+		List<Layered> l = getLayeredComponentHostedBy(source);
+		if (l != null && !l.isEmpty()) {
+			for (Layered a : l)
+				removeLayeredComponent(a);
+		}
+	}
+
 	public void copyAttachedLayeredComponents(ModelComponent source, ModelComponent acceptor) {
 		List<Layered> l = getLayeredComponentHostedBy(source);
 		if (l != null && !l.isEmpty()) {

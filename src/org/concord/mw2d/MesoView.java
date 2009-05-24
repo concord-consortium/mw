@@ -239,7 +239,7 @@ public class MesoView extends MDView {
 					gbBufferArray[temp].setModel(model);
 					gbBufferArray[temp].setIndex(temp);
 				}
-				gbBufferArray[temp].set(gb[i]);
+				gbBufferArray[temp].set(gb[i], false);
 				gbBufferArray[temp].setSelected(gb[i].isSelected());
 				gbBufferArray[temp].setUserField(gb[i].getUserField());
 				List<Layered> l = getLayeredComponentHostedBy(gb[i]);
@@ -267,7 +267,7 @@ public class MesoView extends MDView {
 					gbBufferArray[ii].setModel(model);
 					gbBufferArray[ii].setIndex(ii);
 				}
-				gbBufferArray[ii].set(gb[i]);
+				gbBufferArray[ii].set(gb[i], false);
 				gbBufferArray[ii].setUserField(gb[i].getUserField());
 				gb[i].eraseProperties();
 				temq++;
@@ -277,7 +277,7 @@ public class MesoView extends MDView {
 			gb[i].erase();
 		nParticle = temp;
 		for (int i = 0; i < nParticle; i++) {
-			gb[i].set(gbBufferArray[i]);
+			gb[i].set(gbBufferArray[i], false);
 			gb[i].setSelected(gbBufferArray[i].isSelected());
 			gb[i].setUserField(gbBufferArray[i].getUserField());
 			if (!layerBasket.isEmpty()) {
@@ -296,7 +296,7 @@ public class MesoView extends MDView {
 		nParticle += nRemoved;
 		int incr = 0;
 		for (int i = oldNOP; i < nParticle; i++) {
-			gb[i].set(gbBufferArray[gb.length - 1 - incr]);
+			gb[i].set(gbBufferArray[gb.length - 1 - incr], false);
 			gb[i].setUserField(gbBufferArray[gb.length - 1 - incr].getUserField());
 			incr++;
 		}
@@ -1266,7 +1266,7 @@ public class MesoView extends MDView {
 			if (mc instanceof GayBerneParticle) {
 				if (nParticle < gb.length) {
 					showActionTip("Drag the selected Gay-Berne particle to duplicate one", x + 10, y + 10);
-					gb[nParticle].duplicate((GayBerneParticle) mc);
+					gb[nParticle].duplicate((GayBerneParticle) mc, true);
 					gb[nParticle].setSelected(true);
 					nParticle++;
 				}

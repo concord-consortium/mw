@@ -999,7 +999,7 @@ public class Molecule implements ModelComponent, Rotatable {
 		synchronized (atoms) {
 			for (Atom at : atoms) {
 				map.put(at.getIndex(), k);
-				model.atom[oldNOA + k].duplicate(at);
+				model.atom[oldNOA + k].duplicate(at, true);
 				mol.addAtom(model.atom[oldNOA + k]);
 				k++;
 			}
