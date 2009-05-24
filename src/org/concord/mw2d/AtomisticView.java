@@ -1461,7 +1461,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 					atomBufferArray[temp].setModel(model);
 					atomBufferArray[temp].setIndex(temp);
 				}
-				atomBufferArray[temp].set(atom[i], false);
+				atomBufferArray[temp].set(atom[i]);
 				atomBufferArray[temp].setSelected(atom[i].isSelected());
 				atomBufferArray[temp].setUserField(atom[i].getUserField());
 				List<Layered> l = getLayeredComponentHostedBy(atom[i]);
@@ -1487,7 +1487,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 					atomBufferArray[ii].setModel(model);
 					atomBufferArray[ii].setIndex(ii);
 				}
-				atomBufferArray[ii].set(atom[i], false);
+				atomBufferArray[ii].set(atom[i]);
 				atomBufferArray[ii].setUserField(atom[i].getUserField());
 				atom[i].eraseProperties();
 				// map the original indices of the dead atoms to those of their backups
@@ -1502,7 +1502,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			atom[i].erase();
 		nAtom = temp;
 		for (int i = 0; i < nAtom; i++) {
-			atom[i].set(atomBufferArray[i], false);
+			atom[i].set(atomBufferArray[i]);
 			atom[i].setSelected(atomBufferArray[i].isSelected());
 			atom[i].setUserField(atomBufferArray[i].getUserField());
 			List<Layered> l = getLayeredComponentHostedBy(atomBufferArray[i]);
@@ -2389,7 +2389,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		mol.setModel(model);
 		int incr = 0;
 		for (int i = oldNOA; i < nAtom; i++) {
-			atom[i].set(atomBufferArray[atom.length - 1 - incr], false);
+			atom[i].set(atomBufferArray[atom.length - 1 - incr]);
 			mol.addAtom(atom[i]);
 			incr++;
 		}
@@ -2463,7 +2463,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		int incr = 0;
 		for (int i = oldNOA; i < nAtom; i++) {
 			Atom a = atomBufferArray[atom.length - 1 - incr];
-			atom[i].set(a, false);
+			atom[i].set(a);
 			atom[i].setUserField(a.getUserField());
 			List<Layered> l = deadLayered.get(a);
 			if (l != null) {

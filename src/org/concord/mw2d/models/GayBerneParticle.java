@@ -225,8 +225,8 @@ public class GayBerneParticle extends UnitedAtom implements Rotatable {
 				+ format.format(0.1 * breadth) + "nm ]";
 	}
 
-	public void set(Particle target, boolean copyLayers) {
-		duplicate(target, copyLayers);
+	public void set(Particle target) {
+		duplicate(target, false);
 		copyRestraint(target.restraint);
 	}
 
