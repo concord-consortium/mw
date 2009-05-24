@@ -742,8 +742,16 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 			getView().removeAttachedLayeredComponents(this);
 	}
 
-	public abstract void set(Particle p, boolean copyLayers);
+	/**
+	 * set all the proporties of the specified particle to this one. This method is used to copy the state of a particle
+	 * for non-GUI operations.
+	 */
+	public abstract void set(Particle p);
 
+	/**
+	 * duplicate all the properties the specified particle except for the location-specific ones (such as restraints).
+	 * This method is used in GUI operations.
+	 */
 	public void duplicate(Particle p, boolean copyLayers) {
 		if (p == null)
 			throw new IllegalArgumentException("null input");

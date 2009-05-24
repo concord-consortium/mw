@@ -276,8 +276,8 @@ public class Atom extends Particle {
 	/**
 	 * This method copies fields from the specified atom to this one except the index.
 	 */
-	public void set(Particle target, boolean copyLayers) {
-		duplicate(target, copyLayers);
+	public void set(Particle target) {
+		duplicate(target, false);
 		copyRestraint(target.restraint);
 		// setTapeMeasure(target.getTapeMeasure());
 	}
