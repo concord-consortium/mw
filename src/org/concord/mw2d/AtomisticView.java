@@ -1497,7 +1497,6 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				temq++;
 			}
 		}
-		System.out.println("%%%" + getImages().length);
 		for (int i = temp; i < nAtom; i++)
 			atom[i].erase();
 		nAtom = temp;
@@ -4134,9 +4133,11 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			break;
 
 		case DUPL_ID:
-			mc = getSelectedComponent(e.getModifiersEx(), x, y);
-			duplicate(mc, x, y);
-			repaint();
+			if (!ModelerUtilities.isRightClick(e)) {
+				mc = getSelectedComponent(e.getModifiersEx(), x, y);
+				duplicate(mc, x, y);
+				repaint();
+			}
 			break;
 
 		case ADDA_ID:

@@ -77,6 +77,7 @@ class LayeredComponentPopupMenu extends JPopupMenu {
 
 			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
 				if (view.selectedComponent instanceof Layered) {
+					view.clearEditor(false);
 					if (((Layered) view.selectedComponent).getHost() != null) {
 						attachMI.setEnabled(false);
 						detachMI.setEnabled(true);
