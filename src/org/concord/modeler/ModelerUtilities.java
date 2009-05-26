@@ -934,24 +934,24 @@ public final class ModelerUtilities {
 	}
 
 	/** get a scaled instance of the input ImageIcon */
-	public static ImageIcon scaleImageIcon(ImageIcon icon, float scale) {
+	public static ImageIcon scaleImageIcon(ImageIcon icon, float scale, int hints) {
 		if (icon == null)
 			return null;
 		if (scale > 1.0f || scale <= 0.0f)
 			throw new IllegalArgumentException("scale must be in (0, 1].");
 		int w = icon.getIconWidth();
 		int h = icon.getIconHeight();
-		return new ImageIcon(icon.getImage()
-				.getScaledInstance((int) (w * scale), (int) (h * scale), Image.SCALE_SMOOTH));
+		return new ImageIcon(icon.getImage().getScaledInstance((int) (w * scale), (int) (h * scale), hints));
 	}
 
 	/** create an ImageIcon delegate of a component */
 	public static ImageIcon componentToImageIcon(Component c, String description, boolean paintBorder) {
-		return componentToImageIcon(c, description, paintBorder, 1.0f);
+		return componentToImageIcon(c, description, paintBorder, 1, Image.SCALE_SMOOTH);
 	}
 
 	/** create an ImageIcon delegate of a component with the specified scale */
-	public static ImageIcon componentToImageIcon(Component c, String description, boolean paintBorder, float scale) {
+	public static ImageIcon componentToImageIcon(Component c, String description, boolean paintBorder, float scale,
+			int hints) {
 		if (c == null)
 			return null;
 		if (!c.isShowing())
@@ -991,7 +991,7 @@ public final class ModelerUtilities {
 		ImageIcon icon = null;
 		if (scale < 1.0f) {
 			icon = new ImageIcon(bi.getScaledInstance((int) (bi.getWidth() * scale), (int) (bi.getHeight() * scale),
-					Image.SCALE_SMOOTH));
+					hints));
 		}
 		else {
 			if (paintBorder) {
