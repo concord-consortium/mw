@@ -25,6 +25,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.print.PageFormat;
 import java.awt.print.Pageable;
@@ -78,6 +79,8 @@ class PrintPage extends JComponent implements Printable, Pageable {
 	private Page page;
 
 	private static String footer;
+
+	private static int scalingHints = Image.SCALE_SMOOTH;
 
 	static void reset() {
 		lastElement = lastWord = -1;
@@ -257,7 +260,7 @@ class PrintPage extends JComponent implements Printable, Pageable {
 						name = e.nextElement();
 						if (name.equals(StyleConstants.IconAttribute)) {
 							sas.removeAttribute(name);
-							icon = ModelerUtilities.scaleImageIcon((ImageIcon) icon, s);
+							icon = ModelerUtilities.scaleImageIcon((ImageIcon) icon, s, scalingHints);
 							StyleConstants.setIcon(sas, icon);
 							alreadyScaled = true;
 							break;
@@ -280,7 +283,7 @@ class PrintPage extends JComponent implements Printable, Pageable {
 					name = e.nextElement();
 					if (name.equals(StyleConstants.IconAttribute)) {
 						sas.removeAttribute(name);
-						StyleConstants.setIcon(sas, ModelerUtilities.scaleImageIcon((ImageIcon) icon, s));
+						StyleConstants.setIcon(sas, ModelerUtilities.scaleImageIcon((ImageIcon) icon, s, scalingHints));
 						break;
 					}
 				}
@@ -294,7 +297,7 @@ class PrintPage extends JComponent implements Printable, Pageable {
 						if (name.equals(StyleConstants.IconAttribute)) {
 							sas.removeAttribute(name);
 							StyleConstants.setIcon(sas, ModelerUtilities.scaleImageIcon((ImageIcon) icon, Page
-									.getPrintParameters().getImageScale()));
+									.getPrintParameters().getImageScale(), scalingHints));
 							break;
 						}
 					}
@@ -363,11 +366,11 @@ class PrintPage extends JComponent implements Printable, Pageable {
 				}
 				if (component instanceof AbstractButton || component instanceof JComboBox) {
 					StyleConstants.setIcon(sas, ModelerUtilities.componentToImageIcon(component, component.toString(),
-							false, 1.0f));
+							false, 1, scalingHints));
 				}
 				else {
 					StyleConstants.setIcon(sas, ModelerUtilities.componentToImageIcon(component, component.toString(),
-							false, scale));
+							false, scale, scalingHints));
 				}
 				if (!b && !isIconWrapper) {
 					component.setOpaque(false);
@@ -402,8 +405,8 @@ class PrintPage extends JComponent implements Printable, Pageable {
 	}
 
 	/**
-	 * The passed arguments <code>pageFormat0</code> and <code>pageIndex0</code> are not used. Instead, the page
-	 * format and page index passed through the constructor are used to avoid possible inconsistency.
+	 * The passed arguments <code>pageFormat0</code> and <code>pageIndex0</code> are not used. Instead, the page format
+	 * and page index passed through the constructor are used to avoid possible inconsistency.
 	 */
 	public int print(Graphics g, PageFormat pageFormat0, int pageIndex0) {
 		g.translate(0, 0);

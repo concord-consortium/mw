@@ -29,9 +29,9 @@ public final class PrintParameters {
 	private int leftMargin = DEFAULT_MARGIN;
 	private int rightMargin = DEFAULT_MARGIN;
 
-	private float componentScale = 0.75f;
+	private float componentScale = 0.7f;
 	private float chracterScale = 1;
-	private float imageScale = 1;
+	private float imageScale = 0.7f;
 	private float indentScale = 0.25f;
 
 	public PrintParameters() {
