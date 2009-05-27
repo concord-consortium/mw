@@ -3206,60 +3206,62 @@ public abstract class AtomicModel extends MDModel {
 		}
 
 		double etemp = 0.0;
-		for (VectorField f : fields) {
-			if (f instanceof GravitationalField) {
-				GravitationalField gf = (GravitationalField) f;
-				if (obstacles != null && !obstacles.isEmpty()) {
-					RectangularObstacle obs = null;
-					synchronized (obstacles.getSynchronizationLock()) {
-						for (int jobs = 0, nobs = obstacles.size(); jobs < nobs; jobs++) {
-							obs = obstacles.get(jobs);
-							gf.dyn(obs);
-							etemp = gf.getPotential(obs, time);
-							vsum += etemp;
+		synchronized (fields) {
+			for (VectorField f : fields) {
+				if (f instanceof GravitationalField) {
+					GravitationalField gf = (GravitationalField) f;
+					if (obstacles != null && !obstacles.isEmpty()) {
+						RectangularObstacle obs = null;
+						synchronized (obstacles.getSynchronizationLock()) {
+							for (int jobs = 0, nobs = obstacles.size(); jobs < nobs; jobs++) {
+								obs = obstacles.get(jobs);
+								gf.dyn(obs);
+								etemp = gf.getPotential(obs, time);
+								vsum += etemp;
+							}
 						}
 					}
-				}
-				for (int i = 0; i < numberOfAtoms; i++) {
-					gf.dyn(atom[i]);
-					etemp = gf.getPotential(atom[i], time);
-					vsum += etemp;
-				}
-			}
-			else if (f instanceof ElectricField) {
-				ElectricField ef = (ElectricField) f;
-				for (int i = 0; i < numberOfAtoms; i++) {
-					if (Math.abs(atom[i].charge) > ZERO) {
-						ef.dyn(universe.getDielectricConstant(), atom[i], time);
-						etemp = ef.getPotential(atom[i], time);
+					for (int i = 0; i < numberOfAtoms; i++) {
+						gf.dyn(atom[i]);
+						etemp = gf.getPotential(atom[i], time);
 						vsum += etemp;
 					}
 				}
-			}
-			else if (f instanceof MagneticField) {
-				MagneticField mf = (MagneticField) f;
-				for (int i = 0; i < numberOfAtoms; i++) {
-					if (Math.abs(atom[i].charge) > ZERO)
-						mf.dyn(atom[i]);
-				}
-			}
-			else if (f instanceof AccelerationalField) {
-				AccelerationalField af = (AccelerationalField) f;
-				if (obstacles != null && !obstacles.isEmpty()) {
-					RectangularObstacle obs = null;
-					synchronized (obstacles.getSynchronizationLock()) {
-						for (int jobs = 0, nobs = obstacles.size(); jobs < nobs; jobs++) {
-							obs = obstacles.get(jobs);
-							af.dyn(obs);
-							etemp = af.getPotential(obs, time);
+				else if (f instanceof ElectricField) {
+					ElectricField ef = (ElectricField) f;
+					for (int i = 0; i < numberOfAtoms; i++) {
+						if (Math.abs(atom[i].charge) > ZERO) {
+							ef.dyn(universe.getDielectricConstant(), atom[i], time);
+							etemp = ef.getPotential(atom[i], time);
 							vsum += etemp;
 						}
 					}
 				}
-				for (int i = 0; i < numberOfAtoms; i++) {
-					af.dyn(atom[i]);
-					etemp = af.getPotential(atom[i], time);
-					vsum += etemp;
+				else if (f instanceof MagneticField) {
+					MagneticField mf = (MagneticField) f;
+					for (int i = 0; i < numberOfAtoms; i++) {
+						if (Math.abs(atom[i].charge) > ZERO)
+							mf.dyn(atom[i]);
+					}
+				}
+				else if (f instanceof AccelerationalField) {
+					AccelerationalField af = (AccelerationalField) f;
+					if (obstacles != null && !obstacles.isEmpty()) {
+						RectangularObstacle obs = null;
+						synchronized (obstacles.getSynchronizationLock()) {
+							for (int jobs = 0, nobs = obstacles.size(); jobs < nobs; jobs++) {
+								obs = obstacles.get(jobs);
+								af.dyn(obs);
+								etemp = af.getPotential(obs, time);
+								vsum += etemp;
+							}
+						}
+					}
+					for (int i = 0; i < numberOfAtoms; i++) {
+						af.dyn(atom[i]);
+						etemp = af.getPotential(atom[i], time);
+						vsum += etemp;
+					}
 				}
 			}
 		}

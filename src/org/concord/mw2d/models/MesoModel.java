@@ -1033,29 +1033,29 @@ public class MesoModel extends MDModel {
 						/ gb[0].inertia;
 			}
 
-			VectorField f;
-			for (int i = 0, nf = fields.size(); i < nf; i++) {
-				f = fields.elementAt(i);
-				if (f instanceof GravitationalField) {
-					GravitationalField gf = (GravitationalField) f;
-					gf.dyn(gb[0]);
-					etemp = gf.getPotential(gb[0], time);
-					vsum += etemp;
-				}
-				else if (f instanceof ElectricField) {
-					if (Math.abs(gb[0].charge) > 0 || Math.abs(gb[0].dipoleMoment) > 0) {
-						ElectricField ef = (ElectricField) f;
-						ef.dyn(universe.getDielectricConstant(), gb[0], time);
-						etemp = ef.getPotential(gb[0], time);
+			synchronized (fields) {
+				for (VectorField f : fields) {
+					if (f instanceof GravitationalField) {
+						GravitationalField gf = (GravitationalField) f;
+						gf.dyn(gb[0]);
+						etemp = gf.getPotential(gb[0], time);
 						vsum += etemp;
 					}
-				}
-				else if (f instanceof MagneticField) {
-					if (Math.abs(gb[0].charge) > 0 || Math.abs(gb[0].dipoleMoment) > 0) {
-						MagneticField mf = (MagneticField) f;
-						mf.dyn(gb[0]);
-						etemp = mf.getPotential(gb[0], time);
-						vsum += etemp;
+					else if (f instanceof ElectricField) {
+						if (Math.abs(gb[0].charge) > 0 || Math.abs(gb[0].dipoleMoment) > 0) {
+							ElectricField ef = (ElectricField) f;
+							ef.dyn(universe.getDielectricConstant(), gb[0], time);
+							etemp = ef.getPotential(gb[0], time);
+							vsum += etemp;
+						}
+					}
+					else if (f instanceof MagneticField) {
+						if (Math.abs(gb[0].charge) > 0 || Math.abs(gb[0].dipoleMoment) > 0) {
+							MagneticField mf = (MagneticField) f;
+							mf.dyn(gb[0]);
+							etemp = mf.getPotential(gb[0], time);
+							vsum += etemp;
+						}
 					}
 				}
 			}
@@ -1154,34 +1154,34 @@ public class MesoModel extends MDModel {
 			}
 		}
 
-		VectorField f;
-		for (int n = 0; n < fields.size(); n++) {
-			f = fields.elementAt(n);
-			if (f instanceof GravitationalField) {
-				GravitationalField gf = (GravitationalField) f;
-				for (int i = 0; i < numberOfParticles; i++) {
-					gf.dyn(gb[i]);
-					etemp = gf.getPotential(gb[i], time);
-					vsum += etemp;
-				}
-			}
-			else if (f instanceof ElectricField) {
-				ElectricField ef = (ElectricField) f;
-				for (int i = 0; i < numberOfParticles; i++) {
-					if (Math.abs(gb[i].charge) > 0 || Math.abs(gb[i].dipoleMoment) > 0) {
-						ef.dyn(universe.getDielectricConstant(), gb[i], time);
-						etemp = ef.getPotential(gb[i], time);
+		synchronized (fields) {
+			for (VectorField f : fields) {
+				if (f instanceof GravitationalField) {
+					GravitationalField gf = (GravitationalField) f;
+					for (int i = 0; i < numberOfParticles; i++) {
+						gf.dyn(gb[i]);
+						etemp = gf.getPotential(gb[i], time);
 						vsum += etemp;
 					}
 				}
-			}
-			else if (f instanceof MagneticField) {
-				MagneticField mf = (MagneticField) f;
-				for (int i = 0; i < numberOfParticles; i++) {
-					if (Math.abs(gb[i].charge) > 0 || Math.abs(gb[i].dipoleMoment) > 0) {
-						mf.dyn(gb[i]);
-						etemp = mf.getPotential(gb[i], time);
-						vsum += etemp;
+				else if (f instanceof ElectricField) {
+					ElectricField ef = (ElectricField) f;
+					for (int i = 0; i < numberOfParticles; i++) {
+						if (Math.abs(gb[i].charge) > 0 || Math.abs(gb[i].dipoleMoment) > 0) {
+							ef.dyn(universe.getDielectricConstant(), gb[i], time);
+							etemp = ef.getPotential(gb[i], time);
+							vsum += etemp;
+						}
+					}
+				}
+				else if (f instanceof MagneticField) {
+					MagneticField mf = (MagneticField) f;
+					for (int i = 0; i < numberOfParticles; i++) {
+						if (Math.abs(gb[i].charge) > 0 || Math.abs(gb[i].dipoleMoment) > 0) {
+							mf.dyn(gb[i]);
+							etemp = mf.getPotential(gb[i], time);
+							vsum += etemp;
+						}
 					}
 				}
 			}
