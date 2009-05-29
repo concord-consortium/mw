@@ -233,6 +233,23 @@ public class Initializer {
 				root = new File(System.getProperty("user.home"), "Application Data");
 			}
 		}
+		else if (System.getProperty("os.name").startsWith("Windows Vista")) {
+			// workaround for the Java bug on Vista (http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6519127)
+			String userName = System.getProperty("user.name");
+			String userHome = System.getProperty("user.home");
+			int index = userHome.indexOf("\\" + userName);
+			if (index != -1 && index + userName.length() + 1 == userHome.length()) {
+				// user name agrees with user home
+			}
+			else {
+				String tmpDir = System.getProperty("java.io.tmpdir");
+				userName = "\\" + userName;
+				index = tmpDir.indexOf(userName);
+				if (index != -1)
+					userHome = tmpDir.substring(0, index) + userName;
+			}
+			root = new File(userHome, "AppData");
+		}
 		else {
 			root = new File(System.getProperty("user.home"), "Application Data");
 		}
