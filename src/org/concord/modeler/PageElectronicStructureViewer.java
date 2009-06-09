@@ -433,7 +433,7 @@ public class PageElectronicStructureViewer extends ElectronicStructureViewer imp
 				a = mm.getAtom(i);
 				if (!a.isExcitable())
 					continue;
-				if (!a.getElectrons().isEmpty())
+				if (a.getID() == elementID && !a.getElectrons().isEmpty())
 					addElectron(a.getElectron(0));
 			}
 			repaint();
