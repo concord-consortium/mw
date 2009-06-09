@@ -2927,6 +2927,26 @@ public abstract class AtomicModel extends MDModel {
 		if (fa != null) {
 			for (FieldArea x : fa) {
 				x.interact(atom[0]);
+				if (photons != null && !photons.isEmpty()) {
+					List<Photon> absorbedPhotons = new ArrayList<Photon>();
+					synchronized (photons) {
+						for (Photon p : photons)
+							if (x.absorb(p))
+								absorbedPhotons.add(p);
+					}
+					if (!absorbedPhotons.isEmpty())
+						photons.removeAll(absorbedPhotons);
+				}
+				if (freeElectrons != null && !freeElectrons.isEmpty()) {
+					List<Electron> absorbedElectrons = new ArrayList<Electron>();
+					synchronized (freeElectrons) {
+						for (Electron e : freeElectrons)
+							if (x.absorb(e))
+								absorbedElectrons.add(e);
+					}
+					if (!absorbedElectrons.isEmpty())
+						freeElectrons.removeAll(absorbedElectrons);
+				}
 			}
 		}
 
@@ -3271,6 +3291,26 @@ public abstract class AtomicModel extends MDModel {
 			for (FieldArea x : fa) {
 				for (int i = 0; i < numberOfAtoms; i++)
 					x.interact(atom[i]);
+				if (photons != null && !photons.isEmpty()) {
+					List<Photon> absorbedPhotons = new ArrayList<Photon>();
+					synchronized (photons) {
+						for (Photon p : photons)
+							if (x.absorb(p))
+								absorbedPhotons.add(p);
+					}
+					if (!absorbedPhotons.isEmpty())
+						photons.removeAll(absorbedPhotons);
+				}
+				if (freeElectrons != null && !freeElectrons.isEmpty()) {
+					List<Electron> absorbedElectrons = new ArrayList<Electron>();
+					synchronized (freeElectrons) {
+						for (Electron e : freeElectrons)
+							if (x.absorb(e))
+								absorbedElectrons.add(e);
+					}
+					if (!absorbedElectrons.isEmpty())
+						freeElectrons.removeAll(absorbedElectrons);
+				}
 			}
 		}
 

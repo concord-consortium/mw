@@ -65,7 +65,8 @@ class LayeredComponentPopupMenu extends JPopupMenu {
 	private JMenuItem eastMI;
 	private JMenuItem westMI;
 	private JMenu physicsMenu;
-	private JMenuItem miEField, miBField, miLineReflect, miViscosity, miShapeReflect;
+	private JMenuItem miEField, miBField, miLineReflect, miPhotonAbsorber, miElectronAbsorber, miViscosity,
+			miShapeReflect;
 	private JMenuItem miVisible, miDraggable;
 
 	LayeredComponentPopupMenu(final MDView view) {
@@ -139,6 +140,8 @@ class LayeredComponentPopupMenu extends JPopupMenu {
 					if (view.selectedComponent instanceof FieldArea) {
 						physicsMenu.setEnabled(true);
 						physicsMenu.add(miShapeReflect);
+						physicsMenu.add(miPhotonAbsorber);
+						physicsMenu.add(miElectronAbsorber);
 						physicsMenu.add(miViscosity);
 						physicsMenu.add(miEField);
 						physicsMenu.add(miBField);
@@ -156,6 +159,10 @@ class LayeredComponentPopupMenu extends JPopupMenu {
 							miEField.setBackground(physicsMenu.getBackground());
 							miBField.setBackground(physicsMenu.getBackground());
 						}
+						miPhotonAbsorber.setBackground(fa.getPhotonAbsorption() > 0 ? SystemColor.controlHighlight
+								: physicsMenu.getBackground());
+						miElectronAbsorber.setBackground(fa.getElectronAbsorption() > 0 ? SystemColor.controlHighlight
+								: physicsMenu.getBackground());
 						miViscosity.setBackground(fa.getViscosity() > 0 ? SystemColor.controlHighlight : physicsMenu
 								.getBackground());
 						miShapeReflect.setBackground(fa.getReflection() ? SystemColor.controlHighlight : physicsMenu
@@ -164,6 +171,8 @@ class LayeredComponentPopupMenu extends JPopupMenu {
 					else if (view.selectedComponent instanceof LineComponent) {
 						physicsMenu.setEnabled(true);
 						physicsMenu.remove(miShapeReflect);
+						physicsMenu.remove(miPhotonAbsorber);
+						physicsMenu.remove(miElectronAbsorber);
 						physicsMenu.remove(miViscosity);
 						physicsMenu.remove(miEField);
 						physicsMenu.remove(miBField);
@@ -266,6 +275,32 @@ class LayeredComponentPopupMenu extends JPopupMenu {
 			}
 		});
 		physicsMenu.add(miShapeReflect);
+
+		miPhotonAbsorber = new JMenuItem("Photon Absorption");
+		s = MDView.getInternationalText("PhotonAbsorption");
+		if (s != null)
+			miPhotonAbsorber.setText(s);
+		miPhotonAbsorber.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (view.selectedComponent instanceof FieldArea)
+					new FieldAreaPhotonAbsorptionAction((FieldArea) view.selectedComponent).createDialog(view)
+							.setVisible(true);
+			}
+		});
+		physicsMenu.add(miPhotonAbsorber);
+
+		miElectronAbsorber = new JMenuItem("Electron Absorption");
+		s = MDView.getInternationalText("ElectronAbsorption");
+		if (s != null)
+			miElectronAbsorber.setText(s);
+		miElectronAbsorber.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (view.selectedComponent instanceof FieldArea)
+					new FieldAreaElectronAbsorptionAction((FieldArea) view.selectedComponent).createDialog(view)
+							.setVisible(true);
+			}
+		});
+		physicsMenu.add(miElectronAbsorber);
 
 		miViscosity = new JMenuItem("Viscosity");
 		s = MDView.getInternationalText("MediumViscosityLabel");

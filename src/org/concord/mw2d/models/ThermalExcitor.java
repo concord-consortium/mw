@@ -173,7 +173,7 @@ class ThermalExcitor {
 		atom.electrons.remove(e);
 		e.setAtom(null);
 		// positively charge the ion that is left behind
-		atom.setCharge(1);
+		// atom.setCharge(1);
 		model.addFreeElectron(e);
 
 		return true;

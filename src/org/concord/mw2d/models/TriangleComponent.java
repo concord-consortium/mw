@@ -41,6 +41,8 @@ public class TriangleComponent extends AbstractTriangle implements ModelComponen
 	private boolean visible = true;
 	private boolean draggable = true;
 	private float viscosity;
+	private float photonAbsorption;
+	private float electronAbsorption;
 	private boolean reflection;
 	private double previousSegDistSq = Double.MAX_VALUE;
 
@@ -62,6 +64,8 @@ public class TriangleComponent extends AbstractTriangle implements ModelComponen
 		setModel(t.model);
 		setReflection(t.reflection);
 		setViscosity(t.viscosity);
+		setPhotonAbsorption(t.photonAbsorption);
+		setElectronAbsorption(t.electronAbsorption);
 		setVectorField(VectorFieldFactory.getCopy(t.vectorField));
 	}
 
@@ -97,6 +101,8 @@ public class TriangleComponent extends AbstractTriangle implements ModelComponen
 		}
 		setReflection(d.reflection);
 		setViscosity(d.viscosity);
+		setPhotonAbsorption(d.photonAbsorption);
+		setElectronAbsorption(d.electronAbsorption);
 		setVectorField(d.vectorField);
 	}
 
@@ -130,6 +136,22 @@ public class TriangleComponent extends AbstractTriangle implements ModelComponen
 	public void destroy() {
 		model = null;
 		host = null;
+	}
+
+	public boolean absorb(Photon p) {
+		if (model instanceof AtomicModel) {
+			if (contains(p.x, p.y))
+				return photonAbsorption > Math.random();
+		}
+		return false;
+	}
+
+	public boolean absorb(Electron e) {
+		if (model instanceof AtomicModel) {
+			if (contains(e.rx, e.ry))
+				return electronAbsorption > Math.random();
+		}
+		return false;
 	}
 
 	public void interact(Particle p) {
@@ -235,6 +257,22 @@ public class TriangleComponent extends AbstractTriangle implements ModelComponen
 
 	public boolean getReflection() {
 		return reflection;
+	}
+
+	public void setPhotonAbsorption(float photonAbsorption) {
+		this.photonAbsorption = photonAbsorption;
+	}
+
+	public float getPhotonAbsorption() {
+		return photonAbsorption;
+	}
+
+	public void setElectronAbsorption(float electronAbsorption) {
+		this.electronAbsorption = electronAbsorption;
+	}
+
+	public float getElectronAbsorption() {
+		return electronAbsorption;
 	}
 
 	public void setViscosity(float viscosity) {
@@ -352,6 +390,8 @@ public class TriangleComponent extends AbstractTriangle implements ModelComponen
 		private float angle;
 		private FillMode fillMode = FillMode.getNoFillMode();
 		private float viscosity;
+		private float photonAbsorption;
+		private float electronAbsorption;
 		private VectorField vectorField;
 		private boolean reflection;
 
@@ -386,6 +426,8 @@ public class TriangleComponent extends AbstractTriangle implements ModelComponen
 			}
 			reflection = t.getReflection();
 			viscosity = t.getViscosity();
+			photonAbsorption = t.getPhotonAbsorption();
+			electronAbsorption = t.getElectronAbsorption();
 			vectorField = t.getVectorField();
 			draggable = t.draggable;
 			visible = t.visible;
@@ -397,6 +439,22 @@ public class TriangleComponent extends AbstractTriangle implements ModelComponen
 
 		public boolean getReflection() {
 			return reflection;
+		}
+
+		public void setPhotonAbsorption(float photonAbsorption) {
+			this.photonAbsorption = photonAbsorption;
+		}
+
+		public float getPhotonAbsorption() {
+			return photonAbsorption;
+		}
+
+		public void setElectronAbsorption(float electronAbsorption) {
+			this.electronAbsorption = electronAbsorption;
+		}
+
+		public float getElectronAbsorption() {
+			return electronAbsorption;
 		}
 
 		public void setViscosity(float viscosity) {
