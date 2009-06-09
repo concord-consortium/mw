@@ -39,6 +39,8 @@ public class RectangleComponent extends AbstractRectangle implements ModelCompon
 	private boolean visible = true;
 	private boolean draggable = true;
 	private float viscosity;
+	private float photonAbsorption;
+	private float electronAbsorption;
 	private boolean reflection;
 
 	public RectangleComponent() {
@@ -60,6 +62,8 @@ public class RectangleComponent extends AbstractRectangle implements ModelCompon
 		setModel(r.model);
 		setReflection(r.reflection);
 		setViscosity(r.viscosity);
+		setPhotonAbsorption(r.photonAbsorption);
+		setElectronAbsorption(r.electronAbsorption);
 		setVectorField(VectorFieldFactory.getCopy(r.vectorField));
 	}
 
@@ -95,6 +99,8 @@ public class RectangleComponent extends AbstractRectangle implements ModelCompon
 		}
 		setReflection(d.reflection);
 		setViscosity(d.viscosity);
+		setPhotonAbsorption(d.photonAbsorption);
+		setElectronAbsorption(d.electronAbsorption);
 		setVectorField(d.vectorField);
 	}
 
@@ -125,6 +131,22 @@ public class RectangleComponent extends AbstractRectangle implements ModelCompon
 	public void destroy() {
 		model = null;
 		host = null;
+	}
+
+	public boolean absorb(Photon p) {
+		if (model instanceof AtomicModel) {
+			if (contains(p.x, p.y))
+				return photonAbsorption > Math.random();
+		}
+		return false;
+	}
+
+	public boolean absorb(Electron e) {
+		if (model instanceof AtomicModel) {
+			if (contains(e.rx, e.ry))
+				return electronAbsorption > Math.random();
+		}
+		return false;
 	}
 
 	public void interact(Particle p) {
@@ -211,6 +233,22 @@ public class RectangleComponent extends AbstractRectangle implements ModelCompon
 
 	public boolean getReflection() {
 		return reflection;
+	}
+
+	public void setPhotonAbsorption(float photonAbsorption) {
+		this.photonAbsorption = photonAbsorption;
+	}
+
+	public float getPhotonAbsorption() {
+		return photonAbsorption;
+	}
+
+	public void setElectronAbsorption(float electronAbsorption) {
+		this.electronAbsorption = electronAbsorption;
+	}
+
+	public float getElectronAbsorption() {
+		return electronAbsorption;
 	}
 
 	public void setViscosity(float viscosity) {
@@ -327,6 +365,8 @@ public class RectangleComponent extends AbstractRectangle implements ModelCompon
 		private float angle;
 		private FillMode fillMode = FillMode.getNoFillMode();
 		private float viscosity;
+		private float photonAbsorption;
+		private float electronAbsorption;
 		private VectorField vectorField;
 		private boolean reflection;
 
@@ -361,6 +401,8 @@ public class RectangleComponent extends AbstractRectangle implements ModelCompon
 			}
 			reflection = r.getReflection();
 			viscosity = r.getViscosity();
+			photonAbsorption = r.getPhotonAbsorption();
+			electronAbsorption = r.getElectronAbsorption();
 			vectorField = r.getVectorField();
 			draggable = r.draggable;
 			visible = r.visible;
@@ -372,6 +414,22 @@ public class RectangleComponent extends AbstractRectangle implements ModelCompon
 
 		public boolean getReflection() {
 			return reflection;
+		}
+
+		public void setPhotonAbsorption(float photonAbsorption) {
+			this.photonAbsorption = photonAbsorption;
+		}
+
+		public float getPhotonAbsorption() {
+			return photonAbsorption;
+		}
+
+		public void setElectronAbsorption(float electronAbsorption) {
+			this.electronAbsorption = electronAbsorption;
+		}
+
+		public float getElectronAbsorption() {
+			return electronAbsorption;
 		}
 
 		public void setViscosity(float viscosity) {

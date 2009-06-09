@@ -39,6 +39,8 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 	private boolean visible = true;
 	private boolean draggable = true;
 	private float viscosity;
+	private float photonAbsorption;
+	private float electronAbsorption;
 	private boolean reflection;
 
 	public EllipseComponent() {
@@ -59,7 +61,9 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 		setLayer(e.layer);
 		setModel(e.model);
 		setReflection(e.reflection);
-		setViscosity(e.getViscosity());
+		setViscosity(e.viscosity);
+		setPhotonAbsorption(e.photonAbsorption);
+		setElectronAbsorption(e.electronAbsorption);
 		setVectorField(VectorFieldFactory.getCopy(e.vectorField));
 	}
 
@@ -95,6 +99,8 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 		}
 		setReflection(d.reflection);
 		setViscosity(d.viscosity);
+		setPhotonAbsorption(d.photonAbsorption);
+		setElectronAbsorption(d.electronAbsorption);
 		setVectorField(d.vectorField);
 	}
 
@@ -121,6 +127,22 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 	public void destroy() {
 		model = null;
 		host = null;
+	}
+
+	public boolean absorb(Photon p) {
+		if (model instanceof AtomicModel) {
+			if (contains(p.x, p.y))
+				return photonAbsorption > Math.random();
+		}
+		return false;
+	}
+
+	public boolean absorb(Electron e) {
+		if (model instanceof AtomicModel) {
+			if (contains(e.rx, e.ry))
+				return electronAbsorption > Math.random();
+		}
+		return false;
 	}
 
 	public void interact(Particle p) {
@@ -167,6 +189,22 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 
 	public boolean getReflection() {
 		return reflection;
+	}
+
+	public void setPhotonAbsorption(float photonAbsorption) {
+		this.photonAbsorption = photonAbsorption;
+	}
+
+	public float getPhotonAbsorption() {
+		return photonAbsorption;
+	}
+
+	public void setElectronAbsorption(float electronAbsorption) {
+		this.electronAbsorption = electronAbsorption;
+	}
+
+	public float getElectronAbsorption() {
+		return electronAbsorption;
 	}
 
 	public void setViscosity(float viscosity) {
@@ -286,6 +324,8 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 		private float angle;
 		private FillMode fillMode = FillMode.getNoFillMode();
 		private float viscosity;
+		private float photonAbsorption;
+		private float electronAbsorption;
 		private VectorField vectorField;
 		private boolean reflection;
 
@@ -320,6 +360,8 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 			}
 			reflection = e.getReflection();
 			viscosity = e.getViscosity();
+			photonAbsorption = e.getPhotonAbsorption();
+			electronAbsorption = e.getElectronAbsorption();
 			vectorField = e.getVectorField();
 			draggable = e.draggable;
 			visible = e.visible;
@@ -339,6 +381,22 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 
 		public float getViscosity() {
 			return viscosity;
+		}
+
+		public void setPhotonAbsorption(float photonAbsorption) {
+			this.photonAbsorption = photonAbsorption;
+		}
+
+		public float getPhotonAbsorption() {
+			return photonAbsorption;
+		}
+
+		public void setElectronAbsorption(float electronAbsorption) {
+			this.electronAbsorption = electronAbsorption;
+		}
+
+		public float getElectronAbsorption() {
+			return electronAbsorption;
 		}
 
 		public void setVectorField(VectorField vectorField) {

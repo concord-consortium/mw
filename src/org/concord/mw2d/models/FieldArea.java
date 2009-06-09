@@ -35,9 +35,21 @@ public interface FieldArea {
 
 	public float getViscosity();
 
+	public void setPhotonAbsorption(float photonAbsorption);
+
+	public float getPhotonAbsorption();
+
+	public void setElectronAbsorption(float electronAbsorption);
+
+	public float getElectronAbsorption();
+
 	public Shape getBounds();
 
 	public void interact(Particle p);
+
+	public boolean absorb(Photon p);
+
+	public boolean absorb(Electron e);
 
 	public void setReflection(boolean b);
 

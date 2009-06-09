@@ -136,7 +136,7 @@ class PhotonicExcitor {
 		atom.electrons.remove(e);
 
 		// positively charge the ion that is left behind
-		atom.setCharge(1);
+		// atom.setCharge(1);
 		model.addFreeElectron(e);
 	}
 
