@@ -70,11 +70,11 @@ class FieldAreaPhotonAbsorptionAction {
 		slider.setMinorTickSpacing(1);
 		Hashtable<Integer, JLabel> labels = new Hashtable<Integer, JLabel>();
 		labels.put(0, new JLabel("0"));
-		labels.put(20, new JLabel("0.2"));
-		labels.put(40, new JLabel("0.4"));
-		labels.put(60, new JLabel("0.6"));
-		labels.put(80, new JLabel("0.8"));
-		labels.put(100, new JLabel("1"));
+		labels.put(20, new JLabel("20%"));
+		labels.put(40, new JLabel("40%"));
+		labels.put(60, new JLabel("60%"));
+		labels.put(80, new JLabel("80%"));
+		labels.put(100, new JLabel("100%"));
 		slider.setLabelTable(labels);
 		slider.setPaintLabels(true);
 		slider.setPreferredSize(new Dimension(300, 80));
