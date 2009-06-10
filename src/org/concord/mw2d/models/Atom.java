@@ -49,7 +49,7 @@ import static org.concord.mw2d.models.Element.*;
 public class Atom extends Particle {
 
 	private transient MolecularModel model;
-	List<Electron> electrons;
+	private List<Electron> electrons;
 
 	private boolean stateStored;
 	private double rxUndo, ryUndo, vxUndo, vyUndo;
@@ -315,6 +315,14 @@ public class Atom extends Particle {
 
 	public List<Electron> getElectrons() {
 		return electrons;
+	}
+
+	public void addElectron(Electron e) {
+		electrons.add(e);
+	}
+
+	public void removeElectron(Electron e) {
+		electrons.remove(e);
 	}
 
 	public Electron getElectron(int i) {

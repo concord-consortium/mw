@@ -72,7 +72,7 @@ class ThreeBodyRecombination {
 		e.setEnergyLevel(level);
 		// associate the electron with this atom
 		e.setAtom(a1);
-		a1.electrons.add(e);
+		a1.addElectron(e);
 		// neutralize the atom
 		a1.setCharge(0);
 		transformVelocitiesBack();
