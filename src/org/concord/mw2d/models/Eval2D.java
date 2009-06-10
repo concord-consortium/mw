@@ -4643,6 +4643,22 @@ class Eval2D extends AbstractEval {
 			}
 		}
 
+		matcher = TRIANGLE.matcher(str);
+		if (matcher.find()) {
+			str = str.substring(matcher.end()).trim();
+			float[] x = parseArray(6, str);
+			if (x != null) {
+				for (int i = 0; i < 6; i++)
+					x[i] *= IR_CONVERTER;
+				TriangleComponent triangle = new TriangleComponent();
+				triangle.setVertex(0, x[0], x[1]);
+				triangle.setVertex(1, x[2], x[3]);
+				triangle.setVertex(2, x[4], x[5]);
+				view.addLayeredComponent(triangle);
+				return true;
+			}
+		}
+
 		out(ScriptEvent.FAILED, "Unrecognized type of object to add: " + str);
 		return false;
 
