@@ -70,6 +70,7 @@ import org.concord.mw2d.AtomisticView;
 import org.concord.mw2d.MDView;
 import org.concord.mw2d.MesoView;
 import org.concord.mw2d.UserAction;
+import org.concord.mw2d.event.UpdateEvent;
 
 import static java.util.regex.Pattern.compile;
 import static org.concord.modeler.script.Compiler.*;
@@ -89,6 +90,7 @@ class Eval2D extends AbstractEval {
 	private final static byte BY_ELLIPSE = 21;
 	private final static byte BY_TRIANGLE = 22;
 
+	private final static Pattern ELECTRON = compile("(^(?i)electron\\b){1}");
 	private final static Pattern PCF = compile("(^(?i)pcf\\b){1}");
 	private final static Pattern TCF = compile("(^(?i)tcf\\b){1}");
 	private final static Pattern MVD = compile("(^(?i)mvd\\b){1}");
@@ -4409,48 +4411,49 @@ class Eval2D extends AbstractEval {
 
 	private boolean evaluateAddClause(String str) {
 
-		Matcher matcher = ATOM.matcher(str);
-		if (matcher.find()) {
-			if (!(model instanceof AtomicModel))
-				return false;
-			str = str.substring(matcher.end()).trim();
-			float x = 1, y = 1;
-			String s1 = null;
-			int space = str.indexOf(" ");
-			if (space < 0) {
-				s1 = str.substring(0).trim();
-				RectangularBoundary boundary = model.getBoundary();
-				x = (float) (Math.random() * boundary.width + boundary.x);
-				y = (float) (Math.random() * boundary.height + boundary.y);
-			}
-			else {
-				s1 = str.substring(0, space).trim();
-				String s2 = str.substring(space + 1).trim();
-				float[] r = parseCoordinates(s2);
-				if (r != null) {
-					x = r[0];
-					y = r[1];
+		Matcher matcher = null;
+
+		if (model instanceof AtomicModel) {
+
+			matcher = ATOM.matcher(str);
+			if (matcher.find()) {
+				str = str.substring(matcher.end()).trim();
+				float x = 1, y = 1;
+				String s1 = null;
+				int space = str.indexOf(" ");
+				if (space < 0) {
+					s1 = str.substring(0).trim();
+					RectangularBoundary boundary = model.getBoundary();
+					x = (float) (Math.random() * boundary.width + boundary.x);
+					y = (float) (Math.random() * boundary.height + boundary.y);
 				}
 				else {
-					out(ScriptEvent.FAILED, "Error: Cannot parse " + str);
-					return false;
+					s1 = str.substring(0, space).trim();
+					String s2 = str.substring(space + 1).trim();
+					float[] r = parseCoordinates(s2);
+					if (r != null) {
+						x = r[0];
+						y = r[1];
+					}
+					else {
+						out(ScriptEvent.FAILED, "Error: Cannot parse " + str);
+						return false;
+					}
 				}
+				double a = parseMathExpression(s1);
+				if (Double.isNaN(a))
+					return false;
+				int id = (int) Math.round(a);
+				if (((AtomisticView) view).insertAnAtom(x, y, id, true, false)) {
+					view.repaint();
+					notifyChange();
+				}
+				else {
+					out(ScriptEvent.HARMLESS, "Cannot insert an atom to the specified location: " + str);
+				}
+				return true;
 			}
-			double a = parseMathExpression(s1);
-			if (Double.isNaN(a))
-				return false;
-			int id = (int) Math.round(a);
-			if (((AtomisticView) view).insertAnAtom(x, y, id, true, false)) {
-				view.repaint();
-				notifyChange();
-			}
-			else {
-				out(ScriptEvent.HARMLESS, "Cannot insert an atom to the specified location: " + str);
-			}
-			return true;
-		}
 
-		if (model instanceof MolecularModel) {
 			matcher = OBSTACLE.matcher(str);
 			if (matcher.find()) {
 				str = str.substring(matcher.end()).trim();
@@ -4469,6 +4472,27 @@ class Eval2D extends AbstractEval {
 					return true;
 				}
 			}
+
+			matcher = ELECTRON.matcher(str);
+			if (matcher.find()) {
+				str = str.substring(matcher.end()).trim();
+				String[] t = str.split(REGEX_WHITESPACE);
+				float[] x = parseArray(2, t);
+				if (x != null) {
+					Atom a = ((AtomicModel) model).getAtom(Math.round(x[0]));
+					Electron e = a.getElectron(0);
+					if (e == null) {
+						e = new Electron(a);
+						ElectronicStructure es = ((AtomicModel) model).getElement(a.id).getElectronicStructure();
+						EnergyLevel el = es.getEnergyLevel(Math.round(x[1]));
+						e.setEnergyLevel(el);
+						a.addElectron(e);
+						model.notifyUpdateListeners(new UpdateEvent(model));
+					}
+					return true;
+				}
+			}
+
 		}
 
 		matcher = IMAGE.matcher(str);

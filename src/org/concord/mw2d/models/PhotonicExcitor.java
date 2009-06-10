@@ -65,10 +65,10 @@ class PhotonicExcitor {
 	 */
 	private float excite() {
 
-		if (atom.electrons.isEmpty())
+		if (!atom.hasElectrons())
 			return 0;
 
-		Electron e = atom.electrons.get(0);
+		Electron e = atom.getElectron(0);
 		EnergyLevel level = e.getEnergyLevel();
 		ElectronicStructure es = model.getElement(atom.id).getElectronicStructure();
 		int n = es.getNumberOfEnergyLevels();
@@ -101,9 +101,9 @@ class PhotonicExcitor {
 	 * electronic state.
 	 */
 	private float stimulatedEmission() {
-		if (atom.electrons.isEmpty())
+		if (!atom.hasElectrons())
 			return 0;
-		Electron e = atom.electrons.get(0);
+		Electron e = atom.getElectron(0);
 		EnergyLevel level = e.getEnergyLevel();
 		ElectronicStructure es = model.getElement(atom.id).getElectronicStructure();
 		int m = es.indexOf(level);
@@ -133,7 +133,7 @@ class PhotonicExcitor {
 		e.vy = atom.vy + v * sin;
 		// detach the electron from the atom and make it a free electron
 		e.setAtom(null);
-		atom.electrons.remove(e);
+		atom.removeElectron(e);
 
 		// positively charge the ion that is left behind
 		// atom.setCharge(1);

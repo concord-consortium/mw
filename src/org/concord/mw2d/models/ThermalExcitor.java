@@ -54,11 +54,11 @@ class ThermalExcitor {
 		if (!a1.isExcitable() && !a2.isExcitable())
 			return;
 
-		if (a1.electrons.isEmpty() && a2.electrons.isEmpty()) // neither a1 nor a2 has electrons
+		if (!a1.hasElectrons() && !a2.hasElectrons()) // neither a1 nor a2 has electrons
 			return;
 
-		Electron e1 = a1.electrons.isEmpty() ? null : a1.electrons.get(0);
-		Electron e2 = a2.electrons.isEmpty() ? null : a2.electrons.get(0);
+		Electron e1 = !a1.hasElectrons() ? null : a1.getElectron(0);
+		Electron e2 = !a2.hasElectrons() ? null : a2.getElectron(0);
 		if (e1 == null && e2 != null && a2.isExcitable())
 			return;
 		if (e2 == null && e1 != null && a1.isExcitable())
@@ -170,7 +170,7 @@ class ThermalExcitor {
 		v2 = (p + Math.signum(u1 - u2) * Math.sqrt(m1 / m2 * s)) / (m1 + m2);
 
 		// detach the electron from the atom and make it a free electron
-		atom.electrons.remove(e);
+		atom.removeElectron(e);
 		e.setAtom(null);
 		// positively charge the ion that is left behind
 		// atom.setCharge(1);
