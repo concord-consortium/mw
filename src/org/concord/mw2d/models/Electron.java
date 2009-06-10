@@ -107,6 +107,8 @@ public class Electron {
 	}
 
 	public int getEnergyLevelIndex() {
+		if (model == null || atom == null)
+			return -1;
 		ElectronicStructure es = model.getElement(atom.id).getElectronicStructure();
 		return es.indexOf(energyLevel);
 	}

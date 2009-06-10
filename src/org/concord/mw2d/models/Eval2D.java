@@ -3558,6 +3558,14 @@ class Eval2D extends AbstractEval {
 						return false;
 					mm.getLightSource().setAngleOfIncidence((float) Math.toRadians(x));
 				}
+				else if (t.startsWith(".wavelength")) {
+					t = t.substring(11).trim();
+					double x = parseMathExpression(t);
+					if (Double.isNaN(x))
+						return false;
+					// 1240 nm = 1 eV
+					mm.getLightSource().setFrequency((float) (1240.0 / x));
+				}
 				return true;
 			}
 			return false;
