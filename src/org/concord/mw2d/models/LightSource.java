@@ -32,6 +32,7 @@ public class LightSource implements Serializable {
 	public final static byte SOUTH = 104;
 	public final static byte OTHER = 105;
 
+	final static float WAVELENGTH_CONVERTER = 3600;
 	private static float infrared = 2.5f;
 	private static float ultraviolet = 14.5f;
 

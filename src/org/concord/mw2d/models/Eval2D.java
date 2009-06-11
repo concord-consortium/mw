@@ -3563,8 +3563,7 @@ class Eval2D extends AbstractEval {
 					double x = parseMathExpression(t);
 					if (Double.isNaN(x))
 						return false;
-					// 1240 nm = 1 eV
-					mm.getLightSource().setFrequency((float) (1240.0 / x));
+					mm.getLightSource().setFrequency((float) (LightSource.WAVELENGTH_CONVERTER / x));
 				}
 				return true;
 			}
