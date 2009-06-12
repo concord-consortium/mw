@@ -100,6 +100,7 @@ class Eval2D extends AbstractEval {
 	private final static Pattern AVERAGE_POSITION = compile("(^(?i)(averageposition|avpos)\\b){1}");
 	private final static Pattern AVERAGE_FORCE = compile("(^(?i)(averageforce|avfor)\\b){1}");
 	private final static Pattern LIGHT_SOURCE = compile("(^(?i)lightsource\\b){1}");
+	private final static Pattern TRANSCRIBE = compile("(^(?i)transcribe\\b){1}");
 
 	// converters to convert the internal units to normal units.
 	private final static float R_CONVERTER = 0.1f;
@@ -1236,6 +1237,14 @@ class Eval2D extends AbstractEval {
 			if (matcher.find()) {
 				if (evaluateBuildBendClause(ci.substring(ci.startsWith("abond") ? 5 : 4).trim()))
 					return true;
+			}
+
+			// transcribe
+			matcher = TRANSCRIBE.matcher(ci);
+			if (matcher.find()) {
+				model.containerScriptCallback.setScript(ci);
+				model.containerScriptCallback.execute();
+				return true;
 			}
 
 		}

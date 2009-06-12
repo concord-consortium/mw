@@ -172,6 +172,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	private Eval2D evalTask; // evaluator for task scripts
 	private Thread evalThread;
 	private ScriptCallback externalScriptCallback;
+	ScriptCallback containerScriptCallback;
 	boolean initializationScriptToRun;
 	private final AtomicBoolean isLoading = new AtomicBoolean();
 
@@ -825,6 +826,10 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 
 	public void setExternalScriptCallback(ScriptCallback c) {
 		externalScriptCallback = c;
+	}
+
+	public void setContainerScriptCallback(ScriptCallback c) {
+		containerScriptCallback = c;
 	}
 
 	private void initEvalTask() {
