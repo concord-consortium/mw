@@ -102,11 +102,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 	private DNAComparator dnaComparator;
 
 	public DNAScrollerWithRNA() {
-		this(true);
-	}
-
-	public DNAScrollerWithRNA(boolean randomMutationSupport) {
-		super(randomMutationSupport);
+		super();
 		transcriptionEndEffect = new EndTranscriptionEffect(this, SCROLLER_TRANSCRIPTION_READY_STATE,
 				SCROLLER_TRANSLATION_READY_STATE);
 		transcriptionBeginEffect = new BeginTranscriptionEffect(this, SCROLLER_NORMAL_STATE,

@@ -116,14 +116,12 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 	private static final byte M_SUBSTITUTION_C = 1;
 	private static final byte M_SUBSTITUTION_G = 2;
 	private static final byte M_SUBSTITUTION_T = 3;
-	private static final byte M_SUBSTITUTION_RANDOM = 4;
-	private static final byte M_INSERTION_A = 5;
-	private static final byte M_INSERTION_C = 6;
-	private static final byte M_INSERTION_G = 7;
-	private static final byte M_INSERTION_T = 8;
-	private static final byte M_INSERTION_RANDOM = 9;
-	private static final byte M_DELETION = 10;
-	private static final byte M_MIXED = 11;
+	private static final byte M_INSERTION_A = 4;
+	private static final byte M_INSERTION_C = 5;
+	private static final byte M_INSERTION_G = 6;
+	private static final byte M_INSERTION_T = 7;
+	private static final byte M_DELETION = 8;
+	private static final byte M_MIXED = 9;
 
 	private static final int DEFAULT_CODON_DISTANCE = 2;
 	static final int RNA_POLYMERASE_SIZE = 10;
@@ -135,7 +133,6 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 	private JMenu insertionMenu;
 	private JMenu substitutionMenu;
 	private DNAScrollerMenuItem deletionMenuItem;
-	private DNAScrollerMenuItem randomMenuItem;
 
 	JPanel scroller;
 	JScrollBar scrollBar;
@@ -170,7 +167,6 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 	private DNAScrollerDrawer drawer;
 
 	private boolean needRecalculateAfterResizing;
-	private boolean randomMutationSupport;
 
 	private static Border emptyBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
 
@@ -216,10 +212,6 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 	private static boolean isUSLocale = Locale.getDefault().equals(Locale.US);
 
 	public DNAScroller() {
-		this(true);
-	}
-
-	public DNAScroller(boolean randomMutationSupport) {
 
 		if (bundle == null && !isUSLocale) {
 			try {
@@ -230,7 +222,6 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 		}
 
 		mutationMenuWasRequired = false;
-		this.randomMutationSupport = randomMutationSupport;
 		drawer = this;
 		setLayout(new BorderLayout());
 		scroller = new JPanel() {
@@ -652,15 +643,7 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 					break;
 				}
 			}
-			if (randomMutationSupport) {
-				insertionMenu.add(new DNAScrollerMenuItem("<html>" + baseChar + " &#10140; " + "Random base</html>",
-						this, M_INSERTION_RANDOM, dnaScrollerItem));
-				substitutionMenu.add(new DNAScrollerMenuItem("<html>" + baseChar + " &#10140; " + "Random base</html>",
-						this, M_SUBSTITUTION_RANDOM, dnaScrollerItem));
-			}
 			deletionMenuItem.setDNAScrollerMenuItem(dnaScrollerItem);
-			if (randomMutationSupport)
-				randomMenuItem.setDNAScrollerMenuItem(dnaScrollerItem);
 		}
 	}
 
@@ -697,11 +680,6 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 		s = getInternationalText("DeletionMutation");
 		deletionMenuItem = new DNAScrollerMenuItem(s != null ? s : "Deletion mutation", this, M_DELETION);
 		mutationMenu.add(deletionMenuItem);
-		if (randomMutationSupport) {
-			s = getInternationalText("RandomMutation");
-			randomMenuItem = new DNAScrollerMenuItem(s != null ? s : "Random mutation", this, M_MIXED);
-			mutationMenu.add(randomMenuItem);
-		}
 	}
 
 	public DNAScrollerModel getModel() {
@@ -1786,12 +1764,6 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 			else {
 				mutatorKind = Mutator.MUTATOR_INSERTION;
 			}
-			break;
-		case M_SUBSTITUTION_RANDOM:
-			mutatorKind = Mutator.MUTATOR_SUBSTITUTION;
-			break;
-		case M_INSERTION_RANDOM:
-			mutatorKind = Mutator.MUTATOR_INSERTION;
 			break;
 		case M_DELETION:
 			mutatorKind = Mutator.MUTATOR_DELETION;
