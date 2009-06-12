@@ -213,6 +213,10 @@ public class DNAScrollerModel implements MutationListener {
 		return currIndex;
 	}
 
+	public Codon getCurrent35Codon() {
+		return get35Codon(currIndex);
+	}
+
 	public void setCurrIndex(int currIndex) {
 		this.currIndex = currIndex;
 		checkCurrIndex();

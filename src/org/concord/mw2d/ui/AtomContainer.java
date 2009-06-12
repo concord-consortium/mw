@@ -20,6 +20,8 @@
 
 package org.concord.mw2d.ui;
 
+import static java.util.regex.Pattern.compile;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -39,6 +41,8 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
@@ -63,6 +67,7 @@ import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
 import org.concord.modeler.ModelerUtilities;
+import org.concord.modeler.ScriptCallback;
 import org.concord.modeler.process.AbstractLoadable;
 import org.concord.modeler.process.Loadable;
 import org.concord.modeler.ui.CustomBevelBorder;
@@ -103,6 +108,8 @@ import org.concord.mw2d.models.StructureFactor;
 
 public class AtomContainer extends MDContainer implements RNATranscriptionListener, RNATranslationListener,
 		MutationListener, ItemListener {
+
+	private final static Pattern TRANSCRIBE = compile("(^(?i)transcribe\\b){1}");
 
 	protected AtomisticView view;
 	protected MolecularModel model;
@@ -155,6 +162,21 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 	public AtomContainer(int tapeLength) {
 		super();
 		init(400, 250, tapeLength);
+	}
+
+	// run the scripts that are not supported by models.
+	private String runScript(String script) {
+		Matcher matcher = TRANSCRIBE.matcher(script);
+		if (matcher.find()) {
+			if (dnaScroller != null) {
+				System.out.println(dnaScroller.getModel().get35Chars()[dnaScroller.getModel().getCurrIndex()]);
+				String s = script.substring(matcher.end()).trim().toUpperCase();
+				if ("A".equals(s)) {
+
+				}
+			}
+		}
+		return null;
 	}
 
 	private void createActions() {
@@ -388,6 +410,14 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 		Action a = new ShowEnergyAction(model);
 		model.getActions().put((String) a.getValue(Action.SHORT_DESCRIPTION), a);
 		model.setReminder(reminder);
+		model.setContainerScriptCallback(new ScriptCallback() {
+			public String execute() {
+				String s = getScript();
+				if (s != null)
+					return runScript(s);
+				return null;
+			}
+		});
 
 		setFileChooser(ModelerUtilities.fileChooser);
 		createMenuBar();
