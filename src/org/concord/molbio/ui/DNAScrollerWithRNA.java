@@ -420,15 +420,13 @@ public class DNAScrollerWithRNA extends DNAScroller {
 		if (op == null)
 			return;
 		switch (scrollerState) {
-		case SCROLLER_TRANSCRIPTION_READY_STATE:
-			op.setR((charw + 2 * getCodonDistance()) / 2);
-			break;
 		case SCROLLER_TRANSLATION_READY_STATE:
 			op.setR(getCodonWidth());
 			break;
+		case SCROLLER_TRANSCRIPTION_READY_STATE:
 		case SCROLLER_NORMAL_STATE:
 		default:
-			op.setR((3 * charw + 2 * getCodonDistance()) / 2);
+			op.setR(RNA_POLYMERASE_SIZE);
 			break;
 		}
 	}
@@ -726,8 +724,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 				super.createMagnifyGlassOp();
 			}
 			else {
-				op = new MagnifyGlassOp(1f, xop, yop, charw + 2 * getCodonDistance(), rh,
-						MagnifyGlassOp.GLASS_AS_RECTANGLE);
+				op = new MagnifyGlassOp(1f, xop, yop, RNA_POLYMERASE_SIZE, rh, MagnifyGlassOp.GLASS_AS_RECTANGLE);
 			}
 		}
 		else {
@@ -754,7 +751,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 		}
 
 		float xop = getLeftOffset() + (model.getCurrIndex() - model.getStartWindowIndex()) * getCodonWidth() / 3
-				+ charw / 2 + getCodonDistance();
+				+ charw / 2 + getCodonDistance() + RNA_POLYMERASE_SIZE / 2;
 		int reminder = currentBase % 3;
 		xop += reminder * getCodonWidth() / 3;
 		op.setX(xop);

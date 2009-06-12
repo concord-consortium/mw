@@ -126,6 +126,7 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 	private static final byte M_MIXED = 11;
 
 	private static final int DEFAULT_CODON_DISTANCE = 2;
+	static final int RNA_POLYMERASE_SIZE = 10;
 	static final int DEFAULT_CURRENT_BASE_OFFSETY = 5;
 
 	DNAScrollerModel model;
@@ -940,8 +941,7 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 		float yop = getYop();
 		float rh = charh + 1;
 		if (op == null) {
-			op = new MagnifyGlassOp(1f, xop, yop, (3 * charw + 2 * getCodonDistance()) / 2, rh,
-					MagnifyGlassOp.GLASS_AS_RECTANGLE);
+			op = new MagnifyGlassOp(1f, xop, yop, RNA_POLYMERASE_SIZE, rh, MagnifyGlassOp.GLASS_AS_RECTANGLE);
 		}
 		else {
 			op.mx = xop;
@@ -949,7 +949,6 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 			op.rh = rh;
 		}
 		setHighlightColor(highlightColor);
-
 	}
 
 	void setOpOffset() {
