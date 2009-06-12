@@ -84,7 +84,7 @@ class MagnifyGlassOp implements BufferedImageOp {
 		g2d.setPaint(rw > 30 ? new Color(red, green, blue, 0.2f) : new Color(1, 0, 1, 0.2f));
 		Shape oldClip = g2d.getClip();
 		g2d.setClip(needClip);
-		if (drawImage && internalImage != null && (drawMode == GLASS_AS_RECTANGLE)) {
+		if (drawImage && internalImage != null && drawMode == GLASS_AS_RECTANGLE) {
 			Composite oldComp = g2d.getComposite();
 			Color oldColor = g2d.getColor();
 			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.85f));
