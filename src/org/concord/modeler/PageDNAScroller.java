@@ -111,7 +111,7 @@ public class PageDNAScroller extends DNAScroller implements Embeddable, ModelCom
 	};
 
 	public PageDNAScroller() {
-		super(false);
+		super();
 		setHighlightColor(Color.green);
 		setDNA(new DNA("ACGTACGTACGTACGTACGTACGTACGTACGTACGTACGTACGTACGT"));
 		setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
