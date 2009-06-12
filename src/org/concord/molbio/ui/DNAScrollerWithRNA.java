@@ -500,7 +500,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 		startBaseInd += DNA.START_LENGTH;
 		if (dna.hasStartFragment() && currentInd < startBaseInd)
 			return true;
-		startBaseInd = (dnaHasTerminator) ? dnaLength - DNA.TERMINATOR_LENGTH : dnaLength;
+		startBaseInd = dnaHasTerminator ? dnaLength - DNA.TERMINATOR_LENGTH : dnaLength;
 		if (dna.hasEndFragment() && currentInd >= startBaseInd - DNA.END_LENGTH)
 			return true;
 		return false;
@@ -1019,7 +1019,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 			else if (colorSchemeByUsage)
 				forceColor = Aminoacid.getUsageColor(codon.toString());
 			drawCodonFrame(g, true, currChar, r, currentBaseBoolean, forceColor);
-			drawBackbone(g, r, true, false, ((startIndex + i) % 3 == 0));
+			drawBackbone(g, r, true, false, (startIndex + i) % 3 == 0);
 
 			Color needColor = Color.black;
 			if (!model.isStrand53Available())

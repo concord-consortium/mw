@@ -958,17 +958,17 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 		op.setX(xop);
 	}
 
-	void fillBackground(Graphics2D gbim) {
+	void fillBackground(Graphics2D g) {
 		if (isOpaque()) {
-			gbim.fillRect(0, 0, bim.getWidth(), bim.getHeight());
+			g.fillRect(0, 0, bim.getWidth(), bim.getHeight());
 		}
 		else {
 			Color bColor = getBackground();
-			Composite oldComp = gbim.getComposite();
-			gbim.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR, 0));
-			gbim.setColor(new Color(bColor.getRed(), bColor.getGreen(), bColor.getBlue(), 0));
-			gbim.fillRect(0, 0, bim.getWidth(), bim.getHeight());
-			gbim.setComposite(oldComp);
+			Composite oldComp = g.getComposite();
+			g.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR, 0));
+			g.setColor(new Color(bColor.getRed(), bColor.getGreen(), bColor.getBlue(), 0));
+			g.fillRect(0, 0, bim.getWidth(), bim.getHeight());
+			g.setComposite(oldComp);
 		}
 	}
 
@@ -1205,18 +1205,18 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 		Polygon poly = null;
 		if (n == 'A' || n == 'T' || n == 'U') {
 			if (upperPart) {
-				poly = (n == 'A') ? pAUpper : pTUUpper;
+				poly = n == 'A' ? pAUpper : pTUUpper;
 			}
 			else {
-				poly = (n == 'A') ? pALower : pTULower;
+				poly = n == 'A' ? pALower : pTULower;
 			}
 		}
 		else {
 			if (upperPart) {
-				poly = (n == 'G') ? pGUpper : pCUpper;
+				poly = n == 'G' ? pGUpper : pCUpper;
 			}
 			else {
-				poly = (n == 'G') ? pGLower : pCLower;
+				poly = n == 'G' ? pGLower : pCLower;
 			}
 		}
 		if (poly == null)

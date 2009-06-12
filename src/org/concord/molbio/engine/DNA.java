@@ -248,7 +248,7 @@ public class DNA implements Cloneable {
 		if (str == null)
 			return;
 		boolean needPromoter = !str.startsWith(PROMOTER_FRAGMENT_STR);
-		boolean needStart = !str.startsWith((needPromoter) ? START_FRAGMENT_STR : PROMOTER_START_FRAGMENT_STR);
+		boolean needStart = !str.startsWith(needPromoter ? START_FRAGMENT_STR : PROMOTER_START_FRAGMENT_STR);
 
 		boolean needTerminator = !str.endsWith(TERMINATOR_FRAGMENT_STR);
 		Pattern pattern = null;
@@ -256,35 +256,28 @@ public class DNA implements Cloneable {
 			pattern = Pattern.compile(END_FRAGMENT_REG_STR + "$");
 		}
 		else {
-			// pattern = Pattern.compile(END_FRAGMENT_REG_STR+TERMINATOR_FRAGMENT_STR+"$");
 			pattern = Pattern.compile(END_FRAGMENT_REG_STR + TERMINATOR_FRAGMENT_REG_STR + "$");
 		}
 		Matcher matcher = pattern.matcher(str);
 		boolean needEnd = !matcher.find();
 
-		// System.out.println("needEnd "+needEnd+" before add start "+toString());
 		if (needPromoter) {
 			if (needStart)
 				appendStartDNAFragment();
-			// System.out.println("after add start (1) "+toString());
 			appendPromoterDNAFragment();
 		}
 		else if (needStart) {
 			appendStartDNAFragment(PROMOTER_FRAGMENT_STR.length());
 		}
 
-		// System.out.println("after add promoter "+toString());
 		if (needTerminator) {
 			if (needEnd)
 				appendEndDNAFragment();
-			// System.out.println("after add end(1) "+toString());
 			appendTerminatorDNAFragment();
 		}
 		else if (needEnd) {
 			appendEndDNAFragment(getLength() - TERMINATOR_FRAGMENT_STR.length());
-			// System.out.println("after add end(2) "+toString());
 		}
-		// System.out.println("FINAL "+toString());
 
 	}
 
