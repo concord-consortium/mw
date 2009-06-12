@@ -187,7 +187,7 @@ public class DNAScrollerModel implements MutationListener {
 	}
 
 	public int getStartWindowIndex() {
-		return (dna == null) ? 0 : startWindowIndex;
+		return dna == null ? 0 : startWindowIndex;
 	}
 
 	public void setStartWindowIndex(int startWindowIndex) {
