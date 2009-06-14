@@ -60,9 +60,9 @@ public final class Nucleotide {
 		nameStr = "" + this.name;
 	}
 
-	public Nucleotide getComplimentaryNucleotide(boolean inRNA) {
+	public Nucleotide getComplementaryNucleotide(boolean inRNA) {
 		try {
-			Nucleotide n = getNucleotide(getComplimentaryNucleotideName(inRNA));
+			Nucleotide n = getNucleotide(getComplementaryNucleotideName(inRNA));
 			return n;
 		}
 		catch (IllegalArgumentException e) {
@@ -70,8 +70,8 @@ public final class Nucleotide {
 		return null;
 	}
 
-	public Nucleotide getComplimentaryNucleotide() {
-		return getComplimentaryNucleotide(false);
+	public Nucleotide getComplementaryNucleotide() {
+		return getComplementaryNucleotide(false);
 	}
 
 	public boolean isUndefine() {
@@ -92,9 +92,9 @@ public final class Nucleotide {
 		return false;
 	}
 
-	public char getComplimentaryNucleotideName(boolean inRNA) {
+	public char getComplementaryNucleotideName(boolean inRNA) {
 		if (name == ADENINE_NAME)
-			return (inRNA) ? URACIL_NAME : THYMINE_NAME;
+			return inRNA ? URACIL_NAME : THYMINE_NAME;
 		if (name == THYMINE_NAME)
 			return ADENINE_NAME;
 		if (name == GUANINE_NAME)
@@ -106,8 +106,8 @@ public final class Nucleotide {
 		return UNDEFINE_NAME;
 	}
 
-	public char getComplimentaryNucleotideName() {
-		return getComplimentaryNucleotideName(false);
+	public char getComplementaryNucleotideName() {
+		return getComplementaryNucleotideName(false);
 	}
 
 	public char getName() {

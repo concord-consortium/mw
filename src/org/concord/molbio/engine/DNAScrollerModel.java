@@ -267,7 +267,7 @@ public class DNAScrollerModel implements MutationListener {
 			codons53[i / 3] = Codon.getCodon(s53.charAt(i), s53.charAt(i + 1), s53.charAt(i + 2))/* .getTranscripted() */;
 			codons35[i / 3] = Codon.getCodon(s35.charAt(i + 2), s35.charAt(i + 1), s35.charAt(i))/* .getTranscripted() */;
 		}
-		unfinishedCodon = ((dna.getLength() % 3) != 0);
+		unfinishedCodon = (dna.getLength() % 3) != 0;
 	}
 
 	public boolean isUnfinishedCodon() {
@@ -296,9 +296,9 @@ public class DNAScrollerModel implements MutationListener {
 			return null;
 
 		StringBuffer sb = new StringBuffer();
-		sb.append(dnaString53.charAt((reverse) ? roundOffset + 2 : roundOffset));
+		sb.append(dnaString53.charAt(reverse ? roundOffset + 2 : roundOffset));
 		sb.append(dnaString53.charAt(roundOffset + 1));
-		sb.append(dnaString53.charAt((reverse) ? roundOffset : roundOffset + 2));
+		sb.append(dnaString53.charAt(reverse ? roundOffset : roundOffset + 2));
 		return sb.toString();
 	}
 
@@ -315,9 +315,9 @@ public class DNAScrollerModel implements MutationListener {
 		if (roundOffset + 2 >= dnaString35.length())
 			return null;
 		StringBuffer sb = new StringBuffer();
-		sb.append(dnaString35.charAt((reverse) ? roundOffset : roundOffset + 2));
+		sb.append(dnaString35.charAt(reverse ? roundOffset : roundOffset + 2));
 		sb.append(dnaString35.charAt(roundOffset + 1));
-		sb.append(dnaString35.charAt((reverse) ? roundOffset + 2 : roundOffset));
+		sb.append(dnaString35.charAt(reverse ? roundOffset + 2 : roundOffset));
 		return sb.toString();
 	}
 
@@ -385,43 +385,43 @@ public class DNAScrollerModel implements MutationListener {
 	}
 
 	public char[] get53Chars() {
-		return (dnaString53 == null) ? null : dnaString53.toCharArray();
+		return dnaString53 == null ? null : dnaString53.toCharArray();
 	}
 
 	public char[] get35Chars() {
-		return (dnaString35 == null) ? null : dnaString35.toCharArray();
+		return dnaString35 == null ? null : dnaString35.toCharArray();
 	}
 
 	public char[] getRNAChars() {
-		return (rnaString == null) ? null : rnaString.toCharArray();
+		return rnaString == null ? null : rnaString.toCharArray();
 	}
 
 	public int get53StrandLengthFromCurrIndex() {
-		return (dnaString53 == null) ? 0 : dnaString53.length();
+		return dnaString53 == null ? 0 : dnaString53.length();
 	}
 
 	public int get35StrandLengthFromCurrIndex() {
-		return (dnaString35 == null) ? 0 : dnaString35.length();
+		return dnaString35 == null ? 0 : dnaString35.length();
 	}
 
 	public int getRNALengthFromCurrIndex() {
-		return (rnaString == null) ? 0 : rnaString.length();
+		return rnaString == null ? 0 : rnaString.length();
 	}
 
 	public boolean isStrand53Available() {
-		return (strandAvailability == DNA_STRAND_AVAILABLE_BOTH || strandAvailability == DNA_STRAND_AVAILABLE_53);
+		return strandAvailability == DNA_STRAND_AVAILABLE_BOTH || strandAvailability == DNA_STRAND_AVAILABLE_53;
 	}
 
 	public boolean isStrand35Available() {
-		return (strandAvailability == DNA_STRAND_AVAILABLE_BOTH || strandAvailability == DNA_STRAND_AVAILABLE_35);
+		return strandAvailability == DNA_STRAND_AVAILABLE_BOTH || strandAvailability == DNA_STRAND_AVAILABLE_35;
 	}
 
 	public boolean isStrandBothAvailable() {
-		return (strandAvailability == DNA_STRAND_AVAILABLE_BOTH);
+		return strandAvailability == DNA_STRAND_AVAILABLE_BOTH;
 	}
 
 	public boolean isStrandsAvailable() {
-		return (strandAvailability != DNA_STRAND_AVAILABLE_NONE);
+		return strandAvailability != DNA_STRAND_AVAILABLE_NONE;
 	}
 
 	public void setStrandAvailability(int value) throws IllegalArgumentException {

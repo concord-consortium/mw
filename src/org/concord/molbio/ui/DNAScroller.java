@@ -559,9 +559,6 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 	public void flashCodon() {
 		stopFlashingThread();
 		flashThread = new FlashThread(this);
-		/*
-		 * try{ thread.join(); }catch(Throwable t){}
-		 */
 	}
 
 	void addAllComponents() {

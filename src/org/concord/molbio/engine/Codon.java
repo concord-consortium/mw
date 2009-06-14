@@ -141,8 +141,8 @@ public class Codon {
 	}
 
 	public Codon getTranscripted(boolean reversed) {
-		return new Codon(bases[(reversed) ? 2 : 0].getComplimentaryNucleotide(true), bases[1]
-				.getComplimentaryNucleotide(true), bases[(reversed) ? 0 : 2].getComplimentaryNucleotide(true));
+		return new Codon(bases[(reversed) ? 2 : 0].getComplementaryNucleotide(true), bases[1]
+				.getComplementaryNucleotide(true), bases[(reversed) ? 0 : 2].getComplementaryNucleotide(true));
 	}
 
 	public Aminoacid createAminoacidWithTranscription() {

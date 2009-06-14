@@ -108,7 +108,7 @@ public class DNA implements Cloneable {
 				}
 			}
 			Nucleotide nuc = Nucleotide.getNucleotide(n);
-			Nucleotide complNuc = nuc.getComplimentaryNucleotide(false);
+			Nucleotide complNuc = nuc.getComplementaryNucleotide(false);
 			strands[DNA_STRAND_BASE].addNucleotide(nuc);
 			strands[DNA_STRAND_COMPL].addNucleotide(complNuc);
 		}
@@ -145,7 +145,7 @@ public class DNA implements Cloneable {
 				}
 			}
 			Nucleotide nuc = Nucleotide.getNucleotide(n);
-			Nucleotide complNuc = nuc.getComplimentaryNucleotide(false);
+			Nucleotide complNuc = nuc.getComplementaryNucleotide(false);
 			sb.append(complNuc.toString());
 		}
 		return new DNA(sb.toString());
@@ -336,7 +336,7 @@ public class DNA implements Cloneable {
 		for (int i = 0; i < str.length(); i++) {
 			char n = str.charAt(i);
 			Nucleotide nuc = Nucleotide.getNucleotide(n);
-			Nucleotide complNuc = nuc.getComplimentaryNucleotide(false);
+			Nucleotide complNuc = nuc.getComplementaryNucleotide(false);
 			strands[DNA_STRAND_BASE].addNucleotide(index, nuc);
 			strands[DNA_STRAND_COMPL].addNucleotide(index, complNuc);
 			index++;
@@ -376,7 +376,7 @@ public class DNA implements Cloneable {
 			Nucleotide n2 = strands[DNA_STRAND_COMPL].getNucleotide(i);
 			if (n1 == null || n2 == null)
 				return false;
-			Nucleotide nc = n1.getComplimentaryNucleotide();
+			Nucleotide nc = n1.getComplementaryNucleotide();
 			if (nc != n2)
 				return false;
 		}
@@ -421,7 +421,7 @@ public class DNA implements Cloneable {
 				if (stopProduceRNAonStopCodon && codon.getTranscripted().isCodonStop())
 					break;
 				for (int n = 0; n < 3; n++)
-					rna.addNucleotide(nc[n].getComplimentaryNucleotide(true));
+					rna.addNucleotide(nc[n].getComplementaryNucleotide(true));
 			}
 		}
 		else {
@@ -439,7 +439,7 @@ public class DNA implements Cloneable {
 				if (stopProduceRNAonStopCodon && codon.getTranscripted().isCodonStop())
 					break;
 				for (int n = 0; n < 3; n++)
-					rna.addNucleotide(nc[n].getComplimentaryNucleotide(true));
+					rna.addNucleotide(nc[n].getComplementaryNucleotide(true));
 			}
 			/*
 			 * for(int i = endIndex; i > startIndex; i-=3){ boolean endStrand = false; for(int n = 0; n < 3; n++){

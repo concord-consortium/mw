@@ -79,6 +79,7 @@ import org.concord.modeler.util.SwingWorker;
 import org.concord.molbio.engine.DeletionMutator;
 import org.concord.molbio.engine.DNA;
 import org.concord.molbio.engine.InsertionMutator;
+import org.concord.molbio.engine.Nucleotide;
 import org.concord.molbio.engine.SubstitutionMutator;
 import org.concord.molbio.event.MutationEvent;
 import org.concord.molbio.event.MutationListener;
@@ -169,10 +170,17 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 		Matcher matcher = TRANSCRIBE.matcher(script);
 		if (matcher.find()) {
 			if (dnaScroller != null) {
-				System.out.println(dnaScroller.getModel().get35Chars()[dnaScroller.getModel().getCurrIndex()]);
-				String s = script.substring(matcher.end()).trim().toUpperCase();
-				if ("A".equals(s)) {
-
+				int i = dnaScroller.getCurrentBase();
+				if (i < 0) {
+					dnaScroller.resetToStartTranscription();
+				}
+				else {
+					String dna = dnaScroller.getModel().getFullDNA35String();
+					Nucleotide n = Nucleotide.getNucleotide(dna.charAt(i + 1)).getComplementaryNucleotide(true);
+					String s = script.substring(matcher.end()).trim().toUpperCase();
+					if (n.toString().equals(s)) {
+						dnaScroller.doOneStep();
+					}
 				}
 			}
 		}

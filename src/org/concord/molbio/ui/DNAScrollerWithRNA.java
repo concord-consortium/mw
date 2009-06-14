@@ -851,11 +851,11 @@ public class DNAScrollerWithRNA extends DNAScroller {
 	}
 
 	public Dimension getPreferredSize() {
-		return (pPreferredSize != null) ? pPreferredSize : new Dimension(500, 130);
+		return pPreferredSize != null ? pPreferredSize : new Dimension(500, 130);
 	}
 
 	public boolean highlightCurrentBase() {
-		return (scrollerState == SCROLLER_NORMAL_STATE);
+		return scrollerState == SCROLLER_NORMAL_STATE;
 	}
 
 	synchronized Rectangle[] getRects53(Graphics g) {
@@ -945,7 +945,8 @@ public class DNAScrollerWithRNA extends DNAScroller {
 		Color currColor = g.getColor();
 		char currChar;
 		if (charRectangles35 != null && chars != null && i < charRectangles35.length && i < chars.length) {
-			boolean currentBaseBoolean = ((currentStrand == DNA.DNA_STRAND_35 && i == currentBase - startIndex) && highlightCurrentBase());
+			boolean currentBaseBoolean = currentStrand == DNA.DNA_STRAND_35 && i == currentBase - startIndex
+					&& highlightCurrentBase();
 			currChar = chars[i];
 			int cw = fm.charWidth(currChar);
 			Rectangle r = charRectangles35[i];
@@ -996,7 +997,8 @@ public class DNAScrollerWithRNA extends DNAScroller {
 		Color currColor = g.getColor();
 		char currChar;
 		if (charRectangles53 != null && chars != null && i >= 0 && i < charRectangles53.length && i < chars.length) {
-			boolean currentBaseBoolean = ((currentStrand == DNA.DNA_STRAND_53 && i == currentBase - startIndex) && highlightCurrentBase());
+			boolean currentBaseBoolean = currentStrand == DNA.DNA_STRAND_53 && i == currentBase - startIndex
+					&& highlightCurrentBase();
 			currChar = chars[i];
 			int cw = fm.charWidth(currChar);
 			Rectangle r = charRectangles53[i];
@@ -1584,8 +1586,6 @@ public class DNAScrollerWithRNA extends DNAScroller {
 			l.baseTranscripted(evt);
 			totalConsumed = totalConsumed && evt.isConsumed();
 		}
-		// if (totalConsumed && mode == RNATranscriptionListener.MODE_TRANSCRIPTION_BASE)
-		// notifyTranslation();
 	}
 
 	private void notifyTranslationListeners(int mode) {

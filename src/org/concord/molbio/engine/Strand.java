@@ -50,7 +50,7 @@ public class Strand {
 		for (int i = 0; i < str.length(); i++) {
 			char n = str.charAt(i);
 			Nucleotide nuc = Nucleotide.getNucleotide(n);
-			Nucleotide complNuc = nuc.getComplimentaryNucleotide(false);
+			Nucleotide complNuc = nuc.getComplementaryNucleotide(false);
 			strand.addNucleotide(complNuc);
 		}
 		return strand;

@@ -53,7 +53,7 @@ public class SubstitutionMutator extends Mutator {
 			if (n == null)
 				continue;
 			secondStrand.removeNucleotide(i);
-			secondStrand.addNucleotide(i, n.getComplimentaryNucleotide());
+			secondStrand.addNucleotide(i, n.getComplementaryNucleotide());
 		}
 		Nucleotide newNucleotide = dna.getStrand(strandIndex).getNucleotide(nucleotideIndex);
 		notifyMutationListeners(new MutationEvent(this, strandIndex, nucleotideIndex, oldNucleotide, newNucleotide));
