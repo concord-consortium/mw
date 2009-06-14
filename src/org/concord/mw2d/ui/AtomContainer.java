@@ -111,6 +111,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 		MutationListener, ItemListener {
 
 	private final static Pattern TRANSCRIBE = compile("(^(?i)transcribe\\b){1}");
+	private final static Pattern TRANSLATE = compile("(^(?i)translate\\b){1}");
 
 	protected AtomisticView view;
 	protected MolecularModel model;
@@ -170,16 +171,49 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 		Matcher matcher = TRANSCRIBE.matcher(script);
 		if (matcher.find()) {
 			if (dnaScroller != null) {
-				int i = dnaScroller.getCurrentBase();
-				if (i < 0) {
-					dnaScroller.resetToStartTranscription();
-				}
-				else {
-					String dna = dnaScroller.getModel().getFullDNA35String();
-					Nucleotide n = Nucleotide.getNucleotide(dna.charAt(i + 1)).getComplementaryNucleotide(true);
+				if (!dnaScroller.isTranscriptionEnded()) {
 					String s = script.substring(matcher.end()).trim().toUpperCase();
-					if (n.toString().equals(s)) {
-						dnaScroller.doOneStep();
+					if (s.equals("START")) {
+						dnaScroller.setGotoTranslationAfterTranscription(false);
+						dnaScroller.startTranscription();
+					}
+					else {
+						int i = dnaScroller.getCurrentBase();
+						if (i < 0) {
+							dnaScroller.resetToStartTranscription();
+						}
+						else {
+							String dna = dnaScroller.getModel().getFullDNA35String();
+							Nucleotide n = Nucleotide.getNucleotide(dna.charAt(i + 1)).getComplementaryNucleotide(true);
+							if (n.toString().equals(s)) {
+								dnaScroller.doOneStep();
+							}
+						}
+					}
+				}
+			}
+		}
+		matcher = TRANSLATE.matcher(script);
+		if (matcher.find()) {
+			if (dnaScroller != null) {
+				if (!dnaScroller.isTranslationEnded()) {
+					String s = script.substring(matcher.end()).trim().toUpperCase();
+					if ("READY".equalsIgnoreCase(s)) {
+						dnaScroller.startTranscriptionEffectEnd();
+					}
+					else {
+						if (!dnaScroller.isTranscriptionEnded()) {
+							JOptionPane
+									.showMessageDialog(
+											JOptionPane.getFrameForComponent(view),
+											"Translation cannot start without transcription, or before the\ncompletion of transcription.",
+											"Message", JOptionPane.INFORMATION_MESSAGE);
+							return null;
+						}
+						int i = dnaScroller.getModel().getCurrIndex() + 3;
+						String aa = dnaScroller.get53CurrAminoacidAbbreviation(i).toUpperCase();
+						if (aa.equals(s))
+							dnaScroller.doOneStep();
 					}
 				}
 			}
