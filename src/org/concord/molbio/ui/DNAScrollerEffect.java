@@ -56,11 +56,11 @@ class BeginTranscriptionEffect implements DNAScrollerEffect {
 	private DNAScrollerWithRNA owner;
 	private int effectDelay = DEFAULT_EFFECT_TIME_DELAY;
 	private int maximumStep = DEFAULT_EFFECT_MAX_STEP;
-	private boolean effectDone = false;
+	private boolean effectDone;
 	private int initialState;
 	private int finalState;
 	private int currentStep;
-	private boolean effectForcedToEnd = false;
+	private boolean effectForcedToEnd;
 
 	BeginTranscriptionEffect(DNAScrollerWithRNA owner, int initialState, int finalState) {
 		this.owner = owner;
@@ -165,11 +165,11 @@ class EndTranscriptionEffect implements DNAScrollerEffect {
 	private DNAScrollerWithRNA owner;
 	private int effectDelay = DEFAULT_EFFECT_TIME_DELAY;
 	private int maximumStep = DEFAULT_EFFECT_MAX_STEP;
-	private boolean effectDone = false;
+	private boolean effectDone;
 	private int initialState;
 	private int finalState;
 	private int currentStep;
-	private boolean effectForcedToEnd = false;
+	private boolean effectForcedToEnd;
 
 	EndTranscriptionEffect(DNAScrollerWithRNA owner, int initialState, int finalState) {
 		this.owner = owner;

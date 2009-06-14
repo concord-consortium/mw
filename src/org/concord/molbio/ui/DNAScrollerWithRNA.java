@@ -98,6 +98,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 	private boolean gotoTranslationAfterTranscription;
 	private boolean mutationAfterTranslationDoneAllowed;
 	private boolean oneStepMode;
+	private boolean startTranslationAfterEffect;
 
 	private DNAComparator dnaComparator;
 
@@ -332,6 +333,15 @@ public class DNAScrollerWithRNA extends DNAScroller {
 	public void startTranscriptionEffectEnd() {
 		if (currentEffect == null) {
 			currentEffect = transcriptionEndEffect;
+			startTranslationAfterEffect = true;
+			transcriptionEndEffect.startEffect();
+		}
+	}
+
+	public void startTranscriptionEffectEndWithoutGoingToTranslation() {
+		if (currentEffect == null) {
+			currentEffect = transcriptionEndEffect;
+			startTranslationAfterEffect = false;
 			transcriptionEndEffect.startEffect();
 		}
 	}
@@ -396,7 +406,8 @@ public class DNAScrollerWithRNA extends DNAScroller {
 		if (effect == transcriptionEndEffect && isStartTranslationWithEffect()) {
 			resetToStartTranslation();
 			setStartTranslationWithEffect(false);
-			startTranslation();
+			if (startTranslationAfterEffect)
+				startTranslation();
 			setStartTranslationWithEffect(true);
 		}
 		if (effect == transcriptionBeginEffect && isStartTranscriptionWithEffect()) {
@@ -1349,7 +1360,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 			currentBase++;
 			int startindex = model.getStartWindowIndex();
 			int maxCodons = getMaxCodonsInScroller();
-			if ((maxIndex - startindex >= 3 * maxCodons) && (currentBase - startindex > 3 * maxCodons / 2)) {
+			if (maxIndex - startindex >= 3 * maxCodons && currentBase - startindex > 3 * maxCodons / 2) {
 				model.setStartWindowIndex(startindex + 3);
 			}
 			model.setCurrIndex(3 * (currentBase / 3));
