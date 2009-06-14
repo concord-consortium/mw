@@ -111,7 +111,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 			public void baseTranscripted(RNATranscriptionEvent evt) {
 				evt.setConsumed(true);
 				if (evt.getMode() == RNATranscriptionListener.MODE_TRANSCRIPTION_END
-						&& isGotoTranslationAfterTranscription()) {
+						&& gotoTranslationAfterTranscription) {
 					if (!oneStepMode)
 						startTranslation();
 				}
@@ -1266,7 +1266,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 		return transcriptionEnded;
 	}
 
-	/*
+	/**
 	 * Returns the current transcription dt in ms @return the current transcription dt in ms.
 	 * 
 	 * @see #setTranscriptionDT
@@ -1275,13 +1275,13 @@ public class DNAScrollerWithRNA extends DNAScroller {
 		return transcriptionDT;
 	}
 
-	/*
+	/**
 	 * set the current transcription dt in ms @param transcriptionDT the current transcription dt in ms. if
 	 * transcriptionDT is zero then transcription occurs immediately after every transcription step transcription
 	 * listeners will be notified
 	 */
 	public void setTranscriptionDT(int transcriptionDT) {
-		this.transcriptionDT = (transcriptionDT >= 0) ? transcriptionDT : 0;
+		this.transcriptionDT = transcriptionDT > 0 ? transcriptionDT : 0;
 	}
 
 	public void startTranscription(boolean withRunning) {
@@ -1305,7 +1305,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 			transcriptionThread = new Thread(new Runnable() {
 				public void run() {
 					try {
-						int postDelay = (transcriptionDT < 1000) ? transcriptionDT / 2 : 500;
+						int postDelay = transcriptionDT < 1000 ? transcriptionDT / 2 : 500;
 						while (!transcriptionEndedInternal) {
 							if (isRunning()) {
 								drawLastRNABase = false;
@@ -1500,7 +1500,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 			currentCodon++;
 			int startindex = model.getStartWindowIndex();
 			int maxCodons = getMaxCodonsInScroller();
-			if ((3 * maxDNAIndex - startindex >= 3 * maxCodons) && (3 * currentCodon - startindex > 3 * maxCodons / 4)) {
+			if (3 * maxDNAIndex - startindex >= 3 * maxCodons && 3 * currentCodon - startindex > 3 * maxCodons / 4) {
 				model.setStartWindowIndex(startindex + 3);
 			}
 			model.setCurrIndex(3 * currentCodon);

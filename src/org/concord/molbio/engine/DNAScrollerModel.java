@@ -162,7 +162,7 @@ public class DNAScrollerModel implements MutationListener {
 	}
 
 	private void reinit() {
-		rna = (dna != null) ? dna.transcript(DNA.DNA_STRAND_COMPL) : null;
+		rna = dna != null ? dna.transcript(DNA.DNA_STRAND_COMPL) : null;
 		createDNAStrings();
 		createCodons();
 	}
@@ -175,11 +175,11 @@ public class DNAScrollerModel implements MutationListener {
 	}
 
 	public int getCodonsNumber() {
-		return (codons53 == null) ? 0 : codons53.length;
+		return codons53 == null ? 0 : codons53.length;
 	}
 
 	public int getNBaseInWindow() {
-		return (dna == null) ? 0 : nbaseinwindow;
+		return dna == null ? 0 : nbaseinwindow;
 	}
 
 	public void setNBaseInWindow(int nbaseinwindow) {

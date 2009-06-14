@@ -19,10 +19,6 @@
  * END LICENSE */
 package org.concord.molbio.ui;
 
-/**
- * @author Charles Xie
- * 
- */
 interface DNAScrollerEffect {
 
 	static final int DEFAULT_EFFECT_MAX_STEP = 25;
