@@ -199,7 +199,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 				if (!dnaScroller.isTranslationEnded()) {
 					String s = script.substring(matcher.end()).trim().toUpperCase();
 					if ("READY".equalsIgnoreCase(s)) {
-						dnaScroller.startTranscriptionEffectEnd();
+						dnaScroller.startTranscriptionEffectEndWithoutGoingToTranslation();
 					}
 					else {
 						if (!dnaScroller.isTranscriptionEnded()) {
