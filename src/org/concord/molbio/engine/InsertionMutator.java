@@ -57,7 +57,7 @@ public class InsertionMutator extends Mutator {
 		for (int i = 0; i < strandToInsert.getLength(); i++) {
 			Nucleotide n = strandToInsert.getNucleotide(i);
 			firstStrand.addNucleotide(nucleotideIndex, n);
-			secondaryStrand.addNucleotide(nucleotideIndex, n.getComplimentaryNucleotide());
+			secondaryStrand.addNucleotide(nucleotideIndex, n.getComplementaryNucleotide());
 			if (getMutationDirection() >= 0) {
 				nucleotideIndex++;
 			}

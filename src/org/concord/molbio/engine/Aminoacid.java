@@ -261,7 +261,7 @@ public class Aminoacid {
 				StringBuffer sb = new StringBuffer();
 				StringBuffer sb1 = new StringBuffer();
 				for (int i = 0; i < bases.length; i++) {
-					sb.append(bases[i].getComplimentaryNucleotideName(true));
+					sb.append(bases[i].getComplementaryNucleotideName(true));
 					sb1.append(bases[i].getName());
 				}
 				String c = sb.toString();
@@ -318,9 +318,9 @@ public class Aminoacid {
 			n3 = Nucleotide.convert53DNAStrandToRNA(nucleos[2].getName());
 			break;
 		case EXPRESS_FROM_35DNA_STRAND:
-			n1 = nucleos[0].getComplimentaryNucleotideName(true);
-			n2 = nucleos[1].getComplimentaryNucleotideName(true);
-			n3 = nucleos[2].getComplimentaryNucleotideName(true);
+			n1 = nucleos[0].getComplementaryNucleotideName(true);
+			n2 = nucleos[1].getComplementaryNucleotideName(true);
+			n3 = nucleos[2].getComplementaryNucleotideName(true);
 			break;
 		case EXPRESS_FROM_RNA:
 			n1 = nucleos[0].getName();
@@ -340,7 +340,7 @@ public class Aminoacid {
 				Codon codon = new Codon((String) it.next());
 				Nucleotide[] bases = codon.bases;
 				for (int i = 0; i < bases.length; i++) {
-					sb.append(bases[i].getComplimentaryNucleotideName(true));
+					sb.append(bases[i].getComplementaryNucleotideName(true));
 				}
 				if (it.hasNext()) {
 					sb.append(",");
@@ -364,7 +364,7 @@ public class Aminoacid {
 				StringBuffer sb = new StringBuffer();
 				for (int i = 0; i < 3; i++) {
 					Nucleotide n = Nucleotide.getNucleotide(codon.charAt(i));
-					sb.append(n.getComplimentaryNucleotideName(true));
+					sb.append(n.getComplementaryNucleotideName(true));
 				}
 				return sb.toString();
 			}
@@ -382,7 +382,7 @@ public class Aminoacid {
 				StringBuffer sb = new StringBuffer();
 				for (int i = 0; i < 3; i++) {
 					Nucleotide n = Nucleotide.getNucleotide(codon.charAt(i));
-					sb.append(n.getComplimentaryNucleotideName(false));
+					sb.append(n.getComplementaryNucleotideName(false));
 				}
 				return sb.toString();
 			}

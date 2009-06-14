@@ -137,7 +137,7 @@ public class RNA extends Strand {
 		for (int i = 0; i < str.length(); i++) {
 			char n = str.charAt(i);
 			Nucleotide nuc = Nucleotide.getNucleotide(n);
-			Nucleotide complNuc = nuc.getComplimentaryNucleotide(true);
+			Nucleotide complNuc = nuc.getComplementaryNucleotide(true);
 			strand.addNucleotide(complNuc);
 		}
 		return strand;
