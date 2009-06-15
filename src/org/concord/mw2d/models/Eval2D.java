@@ -1293,6 +1293,14 @@ class Eval2D extends AbstractEval {
 			});
 			return true;
 		}
+		if ("beep".equals(strLC)) { // beep
+			EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					Toolkit.getDefaultToolkit().beep();
+				}
+			});
+			return true;
+		}
 		if ("run".equals(strLC)) { // run
 			// FIXME: Why do we need to do this to make "delay modeltime" to work with a prior "run" command?
 			try {

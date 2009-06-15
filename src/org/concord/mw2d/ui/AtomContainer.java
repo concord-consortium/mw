@@ -29,6 +29,7 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -188,6 +189,9 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 							if (n.toString().equals(s)) {
 								dnaScroller.doOneStep();
 							}
+							else {
+								Toolkit.getDefaultToolkit().beep();
+							}
 						}
 					}
 				}
@@ -203,6 +207,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 					}
 					else {
 						if (!dnaScroller.isTranscriptionEnded()) {
+							Toolkit.getDefaultToolkit().beep();
 							JOptionPane
 									.showMessageDialog(
 											JOptionPane.getFrameForComponent(view),
@@ -216,8 +221,12 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 							dnaScroller.doOneStep();
 						}
 						else {
-							if (dnaScroller.getModel().get53Codon(i).isCodonStop() && "STOP".equals(s))
+							if (dnaScroller.getModel().get53Codon(i).isCodonStop() && "STOP".equals(s)) {
 								dnaScroller.doOneStep();
+							}
+							else {
+								Toolkit.getDefaultToolkit().beep();
+							}
 						}
 					}
 				}

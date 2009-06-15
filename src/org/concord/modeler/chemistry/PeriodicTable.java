@@ -447,11 +447,11 @@ public class PeriodicTable extends JPanel implements ItemSelectable {
 		return mute;
 	}
 
-	void setSelectedButton(int n) {
+	private void setSelectedButton(int n) {
 		setSelectedButton(n, 0);
 	}
 
-	Color getButtonColor(int i) {
+	private Color getButtonColor(int i) {
 		int n = i + 1;
 		if (n == 2 || n == 10 || n == 18 || n == 36 || n == 54 || n == 86)
 			return RARE_GAS_COLOR;
@@ -491,7 +491,7 @@ public class PeriodicTable extends JPanel implements ItemSelectable {
 		repaint();
 	}
 
-	void setSelectedButton(int n, int modifiers) {
+	private void setSelectedButton(int n, int modifiers) {
 		if (n < 0 || n >= button.length)
 			return;
 		boolean multipleSelection = false;
@@ -558,7 +558,7 @@ public class PeriodicTable extends JPanel implements ItemSelectable {
 		notifyTableItemListeners(ElementData.elements[n]);
 	}
 
-	void clearAlltextFields() {
+	private void clearAlltextFields() {
 		tf_name.setText("");
 		tf_shell.setText("");
 		tf_structure.setText("");
@@ -577,11 +577,11 @@ public class PeriodicTable extends JPanel implements ItemSelectable {
 		this.multipleSelectionAllowed = multipleSelectionAllowed;
 	}
 
-	int getMaxElementIndex() {
+	private int getMaxElementIndex() {
 		return 112;
 	}
 
-	int getDownElementIndex(int n) {
+	private int getDownElementIndex(int n) {
 		if (n >= 80 && n < getMaxElementIndex())
 			return n;
 		if (n >= 39 && n < 81)
@@ -595,7 +595,7 @@ public class PeriodicTable extends JPanel implements ItemSelectable {
 		return n;
 	}
 
-	int getUpElementIndex(int n) {
+	private int getUpElementIndex(int n) {
 		if ((n >= 0 && n < 2) || (n >= 3 && n < 9) || (n >= 20 && n < 30))
 			return n;
 		if (n == 2)
@@ -636,10 +636,10 @@ public class PeriodicTable extends JPanel implements ItemSelectable {
 		}
 	}
 
-	void playSound(int note) {
+	private void playSound(int note) {
 		if (channel == null || mute)
 			return;
-		channel.noteOn(note, 30);
+		channel.noteOn(note, 100);
 	}
 
 	public void selectAtom(String atomSymbol) {
