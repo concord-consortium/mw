@@ -308,7 +308,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			 */
 			if (!((MDView) getView()).errorReminderSuppressed()) {
 				if (!heatBathActivated()) {
-					if (lastCheckedTot != 0 && tot - lastCheckedTot > 10.0) {
+					if (lastCheckedTot != 0 && tot - lastCheckedTot > 100.0) {
 						EventQueue.invokeLater(new Runnable() {
 							public void run() {
 								JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()),
