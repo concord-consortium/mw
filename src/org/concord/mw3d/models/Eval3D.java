@@ -2134,7 +2134,7 @@ class Eval3D extends AbstractEval {
 				model.atom[i].epsilon = x;
 		}
 		else {
-			out(ScriptEvent.FAILED, "Cannot set propery: " + str2);
+			out(ScriptEvent.FAILED, "Cannot set property: " + str2);
 			b = false;
 		}
 		if (b) {
@@ -2163,7 +2163,7 @@ class Eval3D extends AbstractEval {
 		else if (s == "movable")
 			model.atom[i].setMovable(x);
 		else {
-			out(ScriptEvent.FAILED, "Cannot set propery: " + str2);
+			out(ScriptEvent.FAILED, "Cannot set property: " + str2);
 			b = false;
 		}
 		if (b) {
@@ -2214,7 +2214,7 @@ class Eval3D extends AbstractEval {
 		else if (s == "friction")
 			atom[i].damp = x;
 		else {
-			out(ScriptEvent.FAILED, "Cannot set propery: " + str2);
+			out(ScriptEvent.FAILED, "Cannot set property: " + str2);
 			b = false;
 		}
 		if (b)
