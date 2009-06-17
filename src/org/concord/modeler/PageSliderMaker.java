@@ -656,10 +656,10 @@ class PageSliderMaker extends ComponentMaker {
 
 		// script setting area
 		p1 = new JPanel(new BorderLayout(4, 4));
-		p.add(p1, BorderLayout.SOUTH);
+		p.add(p1, BorderLayout.CENTER);
 
 		s = Modeler.getInternationalText("EnterScriptForSliderLabel");
-		scriptLabel = new JLabel("2. "
+		scriptLabel = new JLabel("1. "
 				+ (s != null ? s : "Enter scripts (refer value as %val, maximum as %max & minimum as %min):"));
 		scriptLabel.setEnabled(false);
 		p1.add(scriptLabel, BorderLayout.NORTH);
@@ -673,10 +673,10 @@ class PageSliderMaker extends ComponentMaker {
 
 		// label setting area
 		p1 = new JPanel(new BorderLayout(4, 4));
-		p.add(p1, BorderLayout.CENTER);
+		p.add(p1, BorderLayout.SOUTH);
 
 		s = Modeler.getInternationalText("EnterValueLabelPairs");
-		labelLabel = new JLabel("1. " + (s != null ? s : "Enter value-label pairs:"));
+		labelLabel = new JLabel("2. " + (s != null ? s : "Enter value-label pairs:"));
 		p1.add(labelLabel, BorderLayout.NORTH);
 		labelArea = new PastableTextArea(5, 10);
 		labelArea.setBorder(BorderFactory.createLoweredBevelBorder());
