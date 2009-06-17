@@ -86,7 +86,7 @@ class ElectricFieldEditor extends JDialog {
 		northIcon = new ImageIcon(getClass().getResource("images/northElectricFieldIcon.gif"));
 		southIcon = new ImageIcon(getClass().getResource("images/southElectricFieldIcon.gif"));
 
-		final ElectricFieldDrawing tf = new ElectricFieldDrawing(fieldIntensity, amplitudeAC, frequencyAC);
+		final ElectricFieldDrawing drawing = new ElectricFieldDrawing(fieldIntensity, amplitudeAC, frequencyAC);
 
 		imageLabel = new JLabel(eastIcon);
 
@@ -132,7 +132,7 @@ class ElectricFieldEditor extends JDialog {
 		sliderDC.setLabelTable(tableOfLabels);
 		sliderDC.addChangeListener(new ChangeListener() {
 			private void setIntensity(double intensity) {
-				tf.setDC(intensity);
+				drawing.setDC(Math.abs(intensity));
 				if (ef != null)
 					ef.setIntensity(intensity);
 			}
@@ -143,19 +143,15 @@ class ElectricFieldEditor extends JDialog {
 					fieldIntensity = source.getValue() / intensityScale;
 					switch (direction) {
 					case ElectricField.EAST:
+					case ElectricField.SOUTH:
 						setIntensity(fieldIntensity);
 						break;
 					case ElectricField.WEST:
-						setIntensity(fieldIntensity);
-						break;
-					case ElectricField.SOUTH:
+					case ElectricField.NORTH:
 						setIntensity(-fieldIntensity);
 						break;
-					case ElectricField.NORTH:
-						setIntensity(fieldIntensity);
-						break;
 					}
-					tf.repaint();
+					drawing.repaint();
 				}
 			}
 		});
@@ -172,8 +168,8 @@ class ElectricFieldEditor extends JDialog {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
 					direction = ElectricField.EAST;
 					imageLabel.setIcon(eastIcon);
-					tf.setDC(Math.abs(fieldIntensity));
-					tf.repaint();
+					drawing.setDC(Math.abs(fieldIntensity));
+					drawing.repaint();
 					if (ef != null)
 						ef.setOrientation(direction);
 				}
@@ -189,8 +185,8 @@ class ElectricFieldEditor extends JDialog {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
 					direction = ElectricField.WEST;
 					imageLabel.setIcon(westIcon);
-					tf.setDC(-Math.abs(fieldIntensity));
-					tf.repaint();
+					drawing.setDC(-Math.abs(fieldIntensity));
+					drawing.repaint();
 					if (ef != null)
 						ef.setOrientation(direction);
 				}
@@ -206,8 +202,8 @@ class ElectricFieldEditor extends JDialog {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
 					direction = ElectricField.NORTH;
 					imageLabel.setIcon(northIcon);
-					tf.setDC(Math.abs(fieldIntensity));
-					tf.repaint();
+					drawing.setDC(Math.abs(fieldIntensity));
+					drawing.repaint();
 					if (ef != null)
 						ef.setOrientation(direction);
 				}
@@ -223,8 +219,8 @@ class ElectricFieldEditor extends JDialog {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
 					direction = ElectricField.SOUTH;
 					imageLabel.setIcon(southIcon);
-					tf.setDC(-Math.abs(fieldIntensity));
-					tf.repaint();
+					drawing.setDC(-Math.abs(fieldIntensity));
+					drawing.repaint();
 					if (ef != null)
 						ef.setOrientation(direction);
 				}
@@ -258,8 +254,8 @@ class ElectricFieldEditor extends JDialog {
 				if (!source.getValueIsAdjusting()) {
 					int value = source.getValue();
 					amplitudeAC = value / intensityScale;
-					tf.setAmplitude(amplitudeAC);
-					tf.repaint();
+					drawing.setAmplitude(amplitudeAC);
+					drawing.repaint();
 					if (ef != null)
 						ef.setAmplitude(amplitudeAC);
 				}
@@ -305,8 +301,8 @@ class ElectricFieldEditor extends JDialog {
 					int value = source.getValue();
 					double df = (FRQ_MAX - FRQ_MIN) / frqSlider.getMaximum();
 					frequencyAC = FRQ_MIN + value * df;
-					tf.setFrequency(frequencyAC);
-					tf.repaint();
+					drawing.setFrequency(frequencyAC);
+					drawing.repaint();
 					if (ef != null)
 						ef.setFrequency(frequencyAC);
 				}
@@ -353,9 +349,9 @@ class ElectricFieldEditor extends JDialog {
 		panel2.add(button);
 		cPanel.add(panel, BorderLayout.SOUTH);
 
-		tf.setPreferredSize(new Dimension(150, 100));
+		drawing.setPreferredSize(new Dimension(150, 100));
 
-		cPanel.add(tf, BorderLayout.EAST);
+		cPanel.add(drawing, BorderLayout.EAST);
 
 		container.setLayout(new BorderLayout());
 		container.add(aPanel, BorderLayout.WEST);
