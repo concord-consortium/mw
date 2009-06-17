@@ -5406,7 +5406,7 @@ class Eval2D extends AbstractEval {
 				m.gb[i].restraint.y0 = x * IR_CONVERTER;
 		}
 		else {
-			out(ScriptEvent.FAILED, "Cannot set propery: " + str2);
+			out(ScriptEvent.FAILED, "Cannot set property: " + str2);
 			b = false;
 		}
 		if (b)
@@ -5474,7 +5474,7 @@ class Eval2D extends AbstractEval {
 				m.atom[i].restraint.y0 = x * IR_CONVERTER;
 		}
 		else {
-			out(ScriptEvent.FAILED, "Cannot set propery: " + str2);
+			out(ScriptEvent.FAILED, "Cannot set property: " + str2);
 			b = false;
 		}
 		if (b)
@@ -5501,7 +5501,7 @@ class Eval2D extends AbstractEval {
 		else if (s == "draggable")
 			model.getParticle(i).setDraggable(x);
 		else {
-			out(ScriptEvent.FAILED, "Cannot set propery: " + str2);
+			out(ScriptEvent.FAILED, "Cannot set property: " + str2);
 			b = false;
 		}
 		if (b) {
@@ -5556,7 +5556,7 @@ class Eval2D extends AbstractEval {
 			}
 		}
 		else {
-			out(ScriptEvent.FAILED, "Cannot set propery: " + str2);
+			out(ScriptEvent.FAILED, "Cannot set property: " + str2);
 			b = false;
 		}
 		if (b)
@@ -5614,7 +5614,7 @@ class Eval2D extends AbstractEval {
 			}
 		}
 		else {
-			out(ScriptEvent.FAILED, "Cannot set propery: " + str2);
+			out(ScriptEvent.FAILED, "Cannot set property: " + str2);
 			b = false;
 		}
 		if (b) {
@@ -5649,7 +5649,7 @@ class Eval2D extends AbstractEval {
 		else if (s == "bondangle")
 			m.bends.get(i).setBondAngle(x);
 		else {
-			out(ScriptEvent.FAILED, "Cannot set propery: " + str2);
+			out(ScriptEvent.FAILED, "Cannot set property: " + str2);
 			b = false;
 		}
 		if (b)
@@ -5679,7 +5679,7 @@ class Eval2D extends AbstractEval {
 		else if (s == "epsilon")
 			m.getElement(i).setEpsilon(x);
 		else {
-			out(ScriptEvent.FAILED, "Cannot set propery: " + str2);
+			out(ScriptEvent.FAILED, "Cannot set property: " + str2);
 			b = false;
 		}
 		if (b)
@@ -5739,7 +5739,7 @@ class Eval2D extends AbstractEval {
 			obs.setElasticity((float) x);
 		}
 		else {
-			out(ScriptEvent.FAILED, "Cannot set propery: " + str2);
+			out(ScriptEvent.FAILED, "Cannot set property: " + str2);
 			b = false;
 		}
 		if (b)
@@ -5772,7 +5772,7 @@ class Eval2D extends AbstractEval {
 			obs.setDraggable(x);
 		}
 		else {
-			out(ScriptEvent.FAILED, "Cannot set propery: " + str2);
+			out(ScriptEvent.FAILED, "Cannot set property: " + str2);
 			b = false;
 		}
 		if (b)
@@ -5842,7 +5842,7 @@ class Eval2D extends AbstractEval {
 			}
 		}
 		else {
-			out(ScriptEvent.FAILED, "Cannot set propery: " + str2);
+			out(ScriptEvent.FAILED, "Cannot set property: " + str2);
 			b = false;
 		}
 		if (b) {
@@ -5929,7 +5929,7 @@ class Eval2D extends AbstractEval {
 			}
 		}
 		else {
-			out(ScriptEvent.FAILED, "Cannot set propery: " + str2);
+			out(ScriptEvent.FAILED, "Cannot set property: " + str2);
 			b = false;
 		}
 		if (b) {
@@ -6051,7 +6051,7 @@ class Eval2D extends AbstractEval {
 			}
 		}
 		else {
-			out(ScriptEvent.FAILED, "Cannot set propery: " + str2);
+			out(ScriptEvent.FAILED, "Cannot set property: " + str2);
 			b = false;
 		}
 		if (b) {
@@ -6173,7 +6173,7 @@ class Eval2D extends AbstractEval {
 			}
 		}
 		else {
-			out(ScriptEvent.FAILED, "Cannot set propery: " + str2);
+			out(ScriptEvent.FAILED, "Cannot set property: " + str2);
 			b = false;
 		}
 		if (b) {
@@ -6295,7 +6295,7 @@ class Eval2D extends AbstractEval {
 			}
 		}
 		else {
-			out(ScriptEvent.FAILED, "Cannot set propery: " + str2);
+			out(ScriptEvent.FAILED, "Cannot set property: " + str2);
 			b = false;
 		}
 		if (b) {
@@ -6439,7 +6439,7 @@ class Eval2D extends AbstractEval {
 			}
 		}
 		else {
-			out(ScriptEvent.FAILED, "Cannot set propery: " + str2);
+			out(ScriptEvent.FAILED, "Cannot set property: " + str2);
 			b = false;
 		}
 		if (b) {
