@@ -161,7 +161,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		massField = new RealNumberTextField(atom.getMass() * 120, 1, 1000000.0, 10);
 		massField.setEnabled(!atom.isAminoAcid());
 
-		chargeField = new RealNumberTextField(atom.getCharge(), -5.0, 5.0, 10);
+		chargeField = new RealNumberTextField(atom.getCharge(), -50.0, 50.0, 10);
 		frictionField = new RealNumberTextField(atom.getFriction(), 0.0, 100.0, 10);
 		springField = new RealNumberTextField(atom.getRestraint() == null ? 0.0f : atom.getRestraint().getK() * 100,
 				0.0, 100000.0, 10);
