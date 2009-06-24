@@ -3431,6 +3431,10 @@ final class PageXMLDecoder {
 				s.setToolTipText(toolTip);
 				toolTip = null;
 			}
+			else {
+				if (titleText != null)
+					s.setToolTipText(titleText);
+			}
 			if (labeltable != null) {
 				s.setupLabels(labeltable);
 				s.putClientProperty("Label", labeltable);

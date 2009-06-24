@@ -53,6 +53,7 @@ import org.concord.modeler.ConnectionManager;
 import org.concord.modeler.draw.FillMode;
 import org.concord.modeler.draw.LineStyle;
 import org.concord.modeler.draw.Triangle;
+import org.concord.modeler.draw.FillMode.GradientFill;
 import org.concord.modeler.event.ModelEvent;
 import org.concord.modeler.event.PageComponentEvent;
 import org.concord.modeler.event.ScriptEvent;
@@ -6198,8 +6199,14 @@ class Eval2D extends AbstractEval {
 		boolean b = true;
 		if (s == "alpha") {
 			double x = parseMathExpression(str3);
-			if (!Double.isNaN(x))
-				c[i].setAlphaAtCenter((short) x);
+			if (!Double.isNaN(x)) {
+				if (c[i].getFillMode() instanceof GradientFill) {
+					c[i].setAlphaAtCenter((short) x);
+				}
+				else {
+					c[i].setAlpha((short) x);
+				}
+			}
 		}
 		else if (s == "x") {
 			double x = parseMathExpression(str3);

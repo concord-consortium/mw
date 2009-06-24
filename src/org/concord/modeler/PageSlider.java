@@ -215,7 +215,7 @@ public class PageSlider extends JSlider implements Embeddable, ModelCommunicator
 			removeChangeListener(i);
 		}
 		super.addChangeListener(cl);
-		setToolTipText(cl.toString());
+		// setToolTipText(cl.toString());
 	}
 
 	public void setIndex(int i) {
