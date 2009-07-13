@@ -59,16 +59,11 @@ import org.concord.molbio.event.RNATranslationListener;
 
 public class DNAScrollerWithRNA extends DNAScroller {
 
-	public static final int SCROLLER_NORMAL_STATE = 0;
-	public static final int SCROLLER_TRANSCRIPTION_READY_STATE = 1;
-	public static final int SCROLLER_TRANSLATION_READY_STATE = 2;
-
 	private final static int UPP_OFFSET = 35;
 	private final static int DOWN_OFFSET = 5;
 	private final static int LEFT_OFFSET = 20;
 
 	private Rectangle[] rRNA;
-	private int scrollerState = SCROLLER_TRANSCRIPTION_READY_STATE;
 
 	private DNAScrollerEffect currentEffect;
 	private DNAScrollerEffect transcriptionBeginEffect;
@@ -436,10 +431,6 @@ public class DNAScrollerWithRNA extends DNAScroller {
 			op.setR(RNA_POLYMERASE_SIZE);
 			break;
 		}
-	}
-
-	public synchronized int getScrollerState() {
-		return scrollerState;
 	}
 
 	void drawArrows(Graphics g) {

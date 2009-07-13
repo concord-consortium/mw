@@ -184,12 +184,14 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 							dnaScroller.resetToStartTranscription();
 						}
 						String dna = dnaScroller.getModel().getFullDNA35String();
-						Nucleotide n = Nucleotide.getNucleotide(dna.charAt(i + 1)).getComplementaryNucleotide(true);
-						if (n.toString().equals(s)) {
-							dnaScroller.doOneStep();
-						}
-						else {
-							Toolkit.getDefaultToolkit().beep();
+						if (i + 1 < dna.length()) {
+							Nucleotide n = Nucleotide.getNucleotide(dna.charAt(i + 1)).getComplementaryNucleotide(true);
+							if (n.toString().equals(s)) {
+								dnaScroller.doOneStep();
+							}
+							else {
+								Toolkit.getDefaultToolkit().beep();
+							}
 						}
 					}
 				}
@@ -1853,7 +1855,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 
 			super();
 
-			/** drop Nt */
+			/* drop Nt */
 			dropNtButton = createButton(UserAction.getAction(UserAction.ADDA_ID, model));
 			final Runnable runNt = new Runnable() {
 				public void run() {
@@ -1869,7 +1871,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			customizationAction.put(dropNtButton.getAction().getValue(Action.SHORT_DESCRIPTION), runNt);
 			toolBarButtonGroup.add(dropNtButton);
 
-			/** drop Pl */
+			/* drop Pl */
 			dropPlButton = createButton(UserAction.getAction(UserAction.ADDB_ID, model));
 			final Runnable runPl = new Runnable() {
 				public void run() {
@@ -1885,7 +1887,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			customizationAction.put(dropPlButton.getAction().getValue(Action.SHORT_DESCRIPTION), runPl);
 			toolBarButtonGroup.add(dropPlButton);
 
-			/** drop Ws */
+			/* drop Ws */
 			dropWsButton = createButton(UserAction.getAction(UserAction.ADDC_ID, model));
 			final Runnable runWs = new Runnable() {
 				public void run() {
@@ -1901,7 +1903,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			customizationAction.put(dropWsButton.getAction().getValue(Action.SHORT_DESCRIPTION), runWs);
 			toolBarButtonGroup.add(dropWsButton);
 
-			/** drop Ck */
+			/* drop Ck */
 			dropCkButton = createButton(UserAction.getAction(UserAction.ADDD_ID, model));
 			final Runnable runCk = new Runnable() {
 				public void run() {
@@ -1917,7 +1919,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			customizationAction.put(dropCkButton.getAction().getValue(Action.SHORT_DESCRIPTION), runCk);
 			toolBarButtonGroup.add(dropCkButton);
 
-			/** drop diatomic molecule */
+			/* drop diatomic molecule */
 			dropDiatomicButton = createButton(UserAction.getAction(UserAction.ADDI_ID, model));
 			final Runnable run1 = new Runnable() {
 				public void run() {
@@ -1963,7 +1965,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			customizationAction.put(dropTriatomicButton.getAction().getValue(Action.SHORT_DESCRIPTION), run2);
 			toolBarButtonGroup.add(dropTriatomicButton);
 
-			/** drop benzene molecule */
+			/* drop benzene molecule */
 			dropBenzeneButton = createButton(UserAction.getAction(UserAction.BENZ_ID, model));
 			toolBarButtonGroup.add(dropBenzeneButton);
 
@@ -1990,23 +1992,23 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			customizationAction.put(dropChainButton.getAction().getValue(Action.SHORT_DESCRIPTION), run3);
 			toolBarButtonGroup.add(dropChainButton);
 
-			/** fill the selected area with Nt atoms */
+			/* fill the selected area with Nt atoms */
 			fillAreaWithNtButton = createButton(UserAction.getAction(UserAction.FILA_ID, model));
 			toolBarButtonGroup.add(fillAreaWithNtButton);
 
-			/** fill the selected area with Pl atoms */
+			/* fill the selected area with Pl atoms */
 			fillAreaWithPlButton = createButton(UserAction.getAction(UserAction.FILB_ID, model));
 			toolBarButtonGroup.add(fillAreaWithPlButton);
 
-			/** fill the selected area with Ws atoms */
+			/* fill the selected area with Ws atoms */
 			fillAreaWithWsButton = createButton(UserAction.getAction(UserAction.FILC_ID, model));
 			toolBarButtonGroup.add(fillAreaWithWsButton);
 
-			/** fill the selected area with Ck atoms */
+			/* fill the selected area with Ck atoms */
 			fillAreaWithCkButton = createButton(UserAction.getAction(UserAction.FILD_ID, model));
 			toolBarButtonGroup.add(fillAreaWithCkButton);
 
-			/** drop rectangular molecular surface */
+			/* drop rectangular molecular surface */
 			dropRectangularSurfaceButton = createButton(UserAction.getAction(UserAction.SREC_ID, model));
 			toolBarButtonGroup.add(dropRectangularSurfaceButton);
 

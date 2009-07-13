@@ -126,7 +126,7 @@ class MoleculePropertiesPanel extends PropertiesPanel {
 			seqField.setAction(new AbstractAction() {
 				public void actionPerformed(ActionEvent e) {
 					boolean b = true;
-					if (!((Polypeptide) mol).getDNACode().equals(seqField.getText().trim())) {
+					if (!((Polypeptide) mol).getAminoAcidCode().equalsIgnoreCase(seqField.getText().trim())) {
 						b = setProtein((Polypeptide) mol);
 					}
 					if (b)
