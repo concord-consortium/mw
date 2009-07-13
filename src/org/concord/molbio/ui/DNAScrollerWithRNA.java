@@ -1186,13 +1186,13 @@ public class DNAScrollerWithRNA extends DNAScroller {
 
 	public void reset() {
 		stopAllThreads();
-		currentBase = -1;
-		currentCodon = -1;
 		checkInitPromoterForTranslation();
 		checkInitPromoterForTranscription();
 		clearProtein();
 		setScrollerState(SCROLLER_NORMAL_STATE);
 		resetGUIScroller();
+		currentBase = -1;
+		currentCodon = -1;
 	}
 
 	public void resetToStartTranscription() {

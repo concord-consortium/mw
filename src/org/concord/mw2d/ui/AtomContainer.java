@@ -183,15 +183,13 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 						if (i < 0) {
 							dnaScroller.resetToStartTranscription();
 						}
+						String dna = dnaScroller.getModel().getFullDNA35String();
+						Nucleotide n = Nucleotide.getNucleotide(dna.charAt(i + 1)).getComplementaryNucleotide(true);
+						if (n.toString().equals(s)) {
+							dnaScroller.doOneStep();
+						}
 						else {
-							String dna = dnaScroller.getModel().getFullDNA35String();
-							Nucleotide n = Nucleotide.getNucleotide(dna.charAt(i + 1)).getComplementaryNucleotide(true);
-							if (n.toString().equals(s)) {
-								dnaScroller.doOneStep();
-							}
-							else {
-								Toolkit.getDefaultToolkit().beep();
-							}
+							Toolkit.getDefaultToolkit().beep();
 						}
 					}
 				}
