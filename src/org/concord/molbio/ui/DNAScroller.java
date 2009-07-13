@@ -112,6 +112,10 @@ import static org.concord.molbio.engine.Nucleotide.U_COLOR;
 
 public class DNAScroller extends JPanel implements ItemSelectable, PropertyChangeListener, Printable, DNAScrollerDrawer {
 
+	public static final int SCROLLER_NORMAL_STATE = 0;
+	public static final int SCROLLER_TRANSCRIPTION_READY_STATE = 1;
+	public static final int SCROLLER_TRANSLATION_READY_STATE = 2;
+
 	private static final byte M_SUBSTITUTION_A = 0;
 	private static final byte M_SUBSTITUTION_C = 1;
 	private static final byte M_SUBSTITUTION_G = 2;
@@ -128,6 +132,7 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 	static final int DEFAULT_CURRENT_BASE_OFFSETY = 5;
 
 	DNAScrollerModel model;
+	int scrollerState = SCROLLER_TRANSCRIPTION_READY_STATE;
 
 	private JPopupMenu mutationMenu;
 	private JMenu insertionMenu;
@@ -366,18 +371,20 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 		return emptyBorder;
 	}
 
-	public MouseMotionListener getScrollerMouseMotionListener() {
+	public synchronized int getScrollerState() {
+		return scrollerState;
+	}
+
+	private MouseMotionListener getScrollerMouseMotionListener() {
 		return new MouseMotionAdapter() {
 			public void mouseDragged(MouseEvent e) {
 				if (!needDragging || getColorSchemeByUsage())
 					return;
-
 				DNAScrollerModel dnamodel = getModel();
 				if (dnamodel == null)
 					return;
 				if (!dnamodel.isStrandsAvailable())
 					return;
-
 				int w = minWidth;
 				Point curentPoint = e.getPoint();
 				if (curentPoint.x >= w - charw || curentPoint.x < 0) {
@@ -393,9 +400,11 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 		};
 	}
 
-	public MouseListener getScrollerMouseListener() {
+	private MouseListener getScrollerMouseListener() {
 		return new MouseAdapter() {
 			public void mouseReleased(MouseEvent evt) {
+				if (scrollerState != SCROLLER_NORMAL_STATE)
+					return;
 				if (usageModeTimer != null && usageModeTimer.isRunning())
 					usageModeTimer.stop();
 				if (getColorSchemeByUsage()) {
@@ -409,7 +418,6 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 					if (!rClip.contains(evt.getPoint()))
 						return;
 				}
-				// if(wasRightClick(evt)) return;
 				startPoint = null;
 				if (needDragging) {
 					DNAScrollerModel dnamodel = getModel();
@@ -436,6 +444,8 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 			}
 
 			public void mousePressed(MouseEvent evt) {
+				if (scrollerState != SCROLLER_NORMAL_STATE)
+					return;
 				if (usageModeTimer == null) {
 					usageModeTimer = new Timer(2000, new ActionListener() {
 						public void actionPerformed(ActionEvent te) {
@@ -476,7 +486,6 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 							if (!inPredefinedFragment(i + dnamodel.getStartWindowIndex()) && isMutationEnabled()
 									&& needPopupMenu(evt)) {
 								handleMutationMenu(evt, dsi);
-								// dnamodel.setCurrIndex(oldIndex);
 							}
 							if (normalCodons) {
 								notifyItemListener(new ItemEvent(DNAScroller.this, ItemEvent.ITEM_STATE_CHANGED, dsi,
@@ -506,7 +515,6 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 							if (!inPredefinedFragment(i + dnamodel.getStartWindowIndex()) && isMutationEnabled()
 									&& needPopupMenu(evt)) {
 								handleMutationMenu(evt, dsi);
-								// dnamodel.setCurrIndex(oldIndex);
 							}
 							if (normalCodons) {
 								notifyItemListener(new ItemEvent(DNAScroller.this, ItemEvent.ITEM_STATE_CHANGED, dsi,
