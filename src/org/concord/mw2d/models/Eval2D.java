@@ -2869,6 +2869,37 @@ class Eval2D extends AbstractEval {
 		return "" + a.getIndex();
 	}
 
+	private String evaluateSequenceOfMoleculeFunction(final String clause) {
+		if (clause == null || clause.equals(""))
+			return null;
+		if (!(model instanceof MolecularModel))
+			return null;
+		MolecularModel mm = (MolecularModel) model;
+		int nmol = mm.molecules.size();
+		if (nmol <= 0)
+			return null;
+		int i = clause.indexOf("(");
+		int j = clause.lastIndexOf(")");
+		if (i == -1 || j == -1) {
+			out(ScriptEvent.FAILED, "function must be enclosed within parenthesis: " + clause);
+			return null;
+		}
+		String s = clause.substring(i + 1, j).trim();
+		double x = parseMathExpression(s);
+		if (Double.isNaN(x)) {
+			out(ScriptEvent.FAILED, "Cannot parse : " + s);
+			return null;
+		}
+		i = Math.round((float) x);
+		if (i < 0 || i >= nmol) {
+			return null;
+		}
+		Molecule mol = mm.molecules.get(i);
+		if (mol instanceof Polypeptide)
+			return ((Polypeptide) mol).getAminoAcidCode(false);
+		return mol.toString();
+	}
+
 	private String evaluateWhichImageIsAttachedFunction(final String clause) {
 		if (clause == null || clause.equals(""))
 			return null;
@@ -3761,6 +3792,10 @@ class Eval2D extends AbstractEval {
 			}
 			else if (exp.startsWith("atomofmolecule(")) {
 				exp = evaluateAtomOfMoleculeFunction(exp);
+				storeDefinition(isStatic, var, exp != null ? exp : "-1");
+			}
+			else if (exp.startsWith("sequenceofmolecule(")) {
+				exp = evaluateSequenceOfMoleculeFunction(exp);
 				storeDefinition(isStatic, var, exp != null ? exp : "-1");
 			}
 			else if (exp.startsWith("whichimageisattached(")) {
