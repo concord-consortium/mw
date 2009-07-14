@@ -352,6 +352,8 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 				view.removeAllObjects();
 				dnaScroller.reset();
 				enableTranslationActions(true);
+				dnaPlayButton.setEnabled(true);
+				dnaStepButton.setEnabled(true);
 			}
 
 			public String toString() {
