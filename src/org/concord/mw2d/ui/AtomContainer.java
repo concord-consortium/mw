@@ -88,6 +88,7 @@ import org.concord.molbio.event.RNATranslationEvent;
 import org.concord.molbio.event.RNATranslationListener;
 import org.concord.molbio.event.RNATranscriptionEvent;
 import org.concord.molbio.event.RNATranscriptionListener;
+import org.concord.molbio.ui.DNAScroller;
 import org.concord.molbio.ui.DNAScrollerWithRNA;
 import org.concord.mw2d.AtomisticView;
 import org.concord.mw2d.BoundarySetup;
@@ -182,6 +183,12 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 						int i = dnaScroller.getCurrentBase();
 						if (i < 0) {
 							dnaScroller.resetToStartTranscription();
+						}
+						else {
+							if (dnaScroller.getScrollerState() == DNAScroller.SCROLLER_NORMAL_STATE) {
+								dnaScroller.reset();
+								return null;
+							}
 						}
 						String dna = dnaScroller.getModel().getFullDNA35String();
 						if (i + 1 < dna.length()) {
