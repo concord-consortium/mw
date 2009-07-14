@@ -47,7 +47,7 @@ public class Polypeptide extends Molecule {
 	}
 
 	public String toString() {
-		return getAminoAcidCode();
+		return getAminoAcidCode(true);
 	}
 
 	/** if this molecule represents a protein, return its possible DNA code. */
@@ -76,10 +76,10 @@ public class Polypeptide extends Molecule {
 		return new String(seq);
 	}
 
-	/** return the sequence of the amino acids if this molecule is a protein. */
-	public String getAminoAcidCode() {
+	/** return the sequence of the amino acids if this molecule is a protein, in one-letter code. */
+	public String getAminoAcidCode(boolean oneLetter) {
 		int n = size();
-		char[] seq = new char[n];
+		String seq = "";
 		Atom a = null;
 		char[] code = null;
 		for (int i = 0; i < n; i++) {
@@ -91,13 +91,17 @@ public class Polypeptide extends Molecule {
 				code = null;
 			}
 			if (code != null) {
-				seq[i] = Aminoacid.express(code).getLetter();
+				seq += oneLetter ? Aminoacid.express(code).getLetter() : "-"
+						+ Aminoacid.express(code).getAbbreviation();
 			}
 			else {
 				return null;
 			}
 		}
-		return new String(seq);
+		if (!oneLetter && seq.length() > 0) {
+			seq = seq.substring(1);
+		}
+		return seq;
 	}
 
 	void sortSequence() {

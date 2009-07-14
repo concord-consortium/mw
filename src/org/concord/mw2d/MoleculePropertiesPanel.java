@@ -25,6 +25,8 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.LayoutManager;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
@@ -126,7 +128,7 @@ class MoleculePropertiesPanel extends PropertiesPanel {
 			seqField.setAction(new AbstractAction() {
 				public void actionPerformed(ActionEvent e) {
 					boolean b = true;
-					if (!((Polypeptide) mol).getAminoAcidCode().equalsIgnoreCase(seqField.getText().trim())) {
+					if (!((Polypeptide) mol).getAminoAcidCode(true).equalsIgnoreCase(seqField.getText().trim())) {
 						b = setProtein((Polypeptide) mol);
 					}
 					if (b)
@@ -186,7 +188,16 @@ class MoleculePropertiesPanel extends PropertiesPanel {
 			s = MDView.getInternationalText("AminoAcidSequenceLabel");
 			panel.add(new JLabel(s != null ? s : "Amino acid sequence"));
 			panel.add(seqField);
-			panel.add(new JPanel());
+			s = MDView.getInternationalText("Copy");
+			JButton button = new JButton(s != null ? s : "Copy");
+			button.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
+							new StringSelection(((Polypeptide) mol).getAminoAcidCode(false)), null);
+				}
+			});
+			button.setToolTipText("Copy the sequence of amino acids in three-letter code");
+			panel.add(button);
 		}
 		else if (mol instanceof DNAStrand) {
 			s = MDView.getInternationalText("NucleotideSequenceLabel");
