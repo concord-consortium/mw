@@ -137,12 +137,12 @@ public class MagneticField implements VectorField, Serializable {
 
 	/*
 	 * The magnetic potential of an atom is always zero, because magnetic force does not do any work. But for a dipole
-	 * moment, it is not zero. FIXME: I didn't find a closed-form solution for an electric dipole's magnetic potential.
+	 * moment, it is not zero.
+	 * 
+	 * FIXME: I didn't find a closed-form solution for an electric dipole's magnetic potential.
 	 */
 	double getPotential(Particle p, float time) {
 		if (bounds != null && !bounds.contains(p.getRx(), p.getRy()))
-			return 0;
-		if (local) // we cannot do energy conservation for a local field
 			return 0;
 		double poten = 0.0;
 		if (p instanceof GayBerneParticle) {

@@ -243,21 +243,15 @@ public class ElectricField implements VectorField, Serializable {
 	}
 
 	double getPotential(Electron e, float time) {
-		if (local) // we cannot do energy conservation for a local field
-			return 0;
 		double h = 0.0;
 		switch (o) {
 		case NORTH:
-			h = e.ry;
-			break;
 		case SOUTH:
-			h = bounds.getBounds().height - e.ry;
+			h = bounds.getBounds().y - e.ry;
 			break;
 		case EAST:
-			h = bounds.getBounds().width - e.rx;
-			break;
 		case WEST:
-			h = e.rx;
+			h = bounds.getBounds().x - e.rx;
 			break;
 		}
 		return -h * (getDcForce() + amp * Math.sin(frq * time));
