@@ -169,21 +169,16 @@ public class ElectricField implements VectorField, Serializable {
 	double getPotential(Particle p, float time) {
 		if (bounds != null && !bounds.contains(p.rx, p.ry))
 			return 0;
-		if (local) // we cannot do energy conservation for a local field
-			return 0;
+		Rectangle r = bounds.getBounds();
 		double h = 0.0;
 		switch (o) {
 		case NORTH:
-			h = p.ry;
-			break;
 		case SOUTH:
-			h = bounds.getBounds().height - p.ry;
+			h = r.y - p.ry;
 			break;
 		case EAST:
-			h = bounds.getBounds().width - p.rx;
-			break;
 		case WEST:
-			h = p.rx;
+			h = r.x - p.rx;
 			break;
 		}
 		h *= p.charge;
