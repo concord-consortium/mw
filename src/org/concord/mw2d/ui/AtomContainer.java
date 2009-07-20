@@ -223,12 +223,15 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 							return null;
 						}
 						int i = dnaScroller.getModel().getCurrIndex() + 3;
+						if (!dnaScroller.getModel().getDNA().startWithPromoter() && model.getNumberOfAtoms() <= 0)
+							i = 0;
 						String aa = dnaScroller.get53CurrAminoacidAbbreviation(i);
 						if (aa != null && aa.toUpperCase().equals(s)) {
 							dnaScroller.doOneStep();
 						}
 						else {
-							if (dnaScroller.getModel().get53Codon(i).isCodonStop() && "STOP".equals(s)) {
+							org.concord.molbio.engine.Codon codon = dnaScroller.getModel().get53Codon(i);
+							if (codon != null && codon.isCodonStop() && "STOP".equals(s)) {
 								dnaScroller.doOneStep();
 							}
 							else {
