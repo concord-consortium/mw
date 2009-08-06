@@ -426,6 +426,20 @@ public class PageCheckBox extends JCheckBox implements Embeddable, ModelCommunic
 		ComponentMaker.enable(this, b, source, modelID, modelClass, page);
 	}
 
+	public void setSelected(boolean b) {
+		super.setSelected(b);
+		if (b) {
+			Object o = getClientProperty("selected image");
+			if (o instanceof Icon)
+				setIcon((Icon) o);
+		}
+		else {
+			Object o = getClientProperty("deselected image");
+			if (o instanceof Icon)
+				setIcon((Icon) o);
+		}
+	}
+
 	public void modelUpdate(final ModelEvent e) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
