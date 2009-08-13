@@ -538,7 +538,12 @@ public class ModelCanvas extends JComponent implements Embeddable, Scriptable, E
 		if (container instanceof AtomContainer) {
 			if (((AtomContainer) container).hasDNAScroller()) {
 				AtomContainer x = (AtomContainer) container;
-				dnaSettings.append("<dna>" + x.getDNA() + "</dna>");
+				if (x.getDNA() != null) {
+					dnaSettings.append("<dna>" + x.getDNA() + "</dna>");
+				}
+				else {
+					dnaSettings.append("<dna></dna>");
+				}
 				dnaSettings.append("<dna_dt1>" + x.getTranscriptionTimeStep() + "</dna_dt1>");
 				dnaSettings.append("<dna_dt2>" + x.getTranslationMDStep() + "</dna_dt2>");
 				dnaSettings.append("<dna_context>" + x.getDNAContextEnabled() + "</dna_context>");
