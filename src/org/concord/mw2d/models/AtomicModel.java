@@ -2491,20 +2491,22 @@ public abstract class AtomicModel extends MDModel {
 	}
 
 	private void shootSingleBeam(int direct, float angle) {
+		float x = (float) boundary.x;
+		float y = (float) boundary.y;
 		float w = (float) boundary.width;
 		float h = (float) boundary.height;
 		switch (direct) {
 		case LightSource.WEST:
-			addPhotonAtAngle(0, h * 0.5f, angle);
+			addPhotonAtAngle(x, y + h * 0.5f, angle);
 			break;
 		case LightSource.EAST:
-			addPhotonAtAngle(w, h * 0.5f, angle);
+			addPhotonAtAngle(x + w, y + h * 0.5f, angle);
 			break;
 		case LightSource.NORTH:
-			addPhotonAtAngle(w * 0.5f, 0, angle);
+			addPhotonAtAngle(x + w * 0.5f, y, angle);
 			break;
 		case LightSource.SOUTH:
-			addPhotonAtAngle(w * 0.5f, h, angle);
+			addPhotonAtAngle(x + w * 0.5f, y + h, angle);
 			break;
 		case LightSource.OTHER:
 			shootAtAngle(0, 0, 0, 0, angle);
@@ -2513,31 +2515,33 @@ public abstract class AtomicModel extends MDModel {
 	}
 
 	private void shootAtAngle(int m, int n, float dx, float dy, float angle) {
+		float x = (float) boundary.x;
+		float y = (float) boundary.y;
 		float w = (float) boundary.width;
 		float h = (float) boundary.height;
 		if (angle > 0 && angle < 0.5 * Math.PI) {
 			for (int i = 1; i <= m; i++)
-				addPhotonAtAngle(dx * i, 0, angle);
+				addPhotonAtAngle(x + dx * i, y, angle);
 			for (int i = 0; i <= n; i++)
-				addPhotonAtAngle(0, dy * i, angle);
+				addPhotonAtAngle(x, y + dy * i, angle);
 		}
 		else if (angle < 0 && angle > -0.5 * Math.PI) {
 			for (int i = 1; i <= m; i++)
-				addPhotonAtAngle(dx * i, h, angle);
+				addPhotonAtAngle(x + dx * i, y + h, angle);
 			for (int i = 0; i <= n; i++)
-				addPhotonAtAngle(0, h - dy * i, angle);
+				addPhotonAtAngle(x, y + h - dy * i, angle);
 		}
 		else if (angle < Math.PI && angle > 0.5 * Math.PI) {
 			for (int i = 0; i <= m; i++)
-				addPhotonAtAngle(w - dx * i, 0, angle);
+				addPhotonAtAngle(x + w - dx * i, y, angle);
 			for (int i = 1; i <= n; i++)
-				addPhotonAtAngle(w, dy * i, angle);
+				addPhotonAtAngle(x + w, y + dy * i, angle);
 		}
 		else if (angle > -Math.PI && angle < -0.5 * Math.PI) {
 			for (int i = 0; i <= m; i++)
-				addPhotonAtAngle(w - dx * i, h, angle);
+				addPhotonAtAngle(x + w - dx * i, y + h, angle);
 			for (int i = 1; i <= n; i++)
-				addPhotonAtAngle(w, h - dy * i, angle);
+				addPhotonAtAngle(x + w, y + h - dy * i, angle);
 		}
 	}
 
@@ -2563,6 +2567,8 @@ public abstract class AtomicModel extends MDModel {
 			shootSingleBeam(direct, angle);
 			return;
 		}
+		float x = (float) boundary.x;
+		float y = (float) boundary.y;
 		float w = (float) boundary.width;
 		float h = (float) boundary.height;
 		if (nBeam > 0) {
@@ -2571,22 +2577,22 @@ public abstract class AtomicModel extends MDModel {
 			case LightSource.WEST:
 				spacing = h / (nBeam + 1);
 				for (int i = 1; i <= nBeam; i++)
-					addPhotonAtAngle(0, spacing * i, angle);
+					addPhotonAtAngle(x, y + spacing * i, angle);
 				break;
 			case LightSource.EAST:
 				spacing = h / (nBeam + 1);
 				for (int i = 1; i <= nBeam; i++)
-					addPhotonAtAngle(w, spacing * i, angle);
+					addPhotonAtAngle(x + w, y + spacing * i, angle);
 				break;
 			case LightSource.NORTH:
 				spacing = w / (nBeam + 1);
 				for (int i = 1; i <= nBeam; i++)
-					addPhotonAtAngle(spacing * i, 0, angle);
+					addPhotonAtAngle(x + spacing * i, y, angle);
 				break;
 			case LightSource.SOUTH:
 				spacing = w / (nBeam + 1);
 				for (int i = 1; i <= nBeam; i++)
-					addPhotonAtAngle(spacing * i, h, angle);
+					addPhotonAtAngle(x + spacing * i, y + h, angle);
 				break;
 			case LightSource.OTHER:
 				float s = (float) Math.abs(Math.sin(angle));
