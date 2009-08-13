@@ -374,6 +374,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 				if (dnaScroller == null)
 					return;
 				model.stopImmediately();
+				view.removeAllObjects();
 				inputDNAString();
 			}
 

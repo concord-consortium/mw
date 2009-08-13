@@ -4082,6 +4082,8 @@ final class PageXMLDecoder {
 				}
 				if (mc.getMdContainer() instanceof AtomContainer) {
 					AtomContainer x = (AtomContainer) mc.getMdContainer();
+					if ("null".equals(dnaString))
+						dnaString = "";
 					x.setDNAString(dnaString);
 					x.setDNAContextEnabled(dnaContext);
 					if (dnaString != null) {
