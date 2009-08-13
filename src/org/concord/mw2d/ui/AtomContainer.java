@@ -239,7 +239,12 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 							}
 						}
 						else {
-							Toolkit.getDefaultToolkit().beep();
+							if (i == dnaScroller.getModel().getDNALength()) {
+								dnaScroller.doOneStep(); // release the protein strand from the RNA strand
+							}
+							else {
+								Toolkit.getDefaultToolkit().beep();
+							}
 						}
 					}
 				}
