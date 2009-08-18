@@ -43,6 +43,10 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 	private float electronAbsorption;
 	private boolean reflection;
 
+	// a Gaussian potential can be applied: phi(x,y) = phi0 * exp{-gamma*{[(x-x0)/a]^2+[(y-y0)/b]^2}}
+	private float phi0; // potential at the center
+	private float gamma = 1; // how fast does the potential decline: phi0 -> phi0/exp(gamma) from center to edge
+
 	public EllipseComponent() {
 		super();
 		setLineColor(Color.black);
@@ -60,6 +64,8 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 		setLineColor(e.getLineColor());
 		setLayer(e.layer);
 		setModel(e.model);
+		setPotentialAtCenter(e.phi0);
+		setPotentialDecayFactor(e.gamma);
 		setReflection(e.reflection);
 		setViscosity(e.viscosity);
 		setPhotonAbsorption(e.photonAbsorption);
@@ -97,6 +103,8 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 				setHost(model.getObstacles().get(index));
 			}
 		}
+		setPotentialAtCenter(d.phi0);
+		setPotentialDecayFactor(d.gamma);
 		setReflection(d.reflection);
 		setViscosity(d.viscosity);
 		setPhotonAbsorption(d.photonAbsorption);
@@ -163,6 +171,14 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 					externalReflection((Atom) p);
 			}
 		}
+		if (phi0 != 0) {
+			double dx = 2 * (p.rx - getRx()) / getWidth();
+			double dy = 2 * (p.ry - getRy()) / getHeight();
+			double v = phi0 * Math.exp(-gamma * (dx * dx + dy * dy));
+			double c = MDModel.GF_CONVERSION_CONSTANT * v * gamma * 2;
+			p.fx += c * dx * 2 / getWidth();
+			p.fy += c * dy * 2 / getHeight();
+		}
 	}
 
 	private void internalReflection(Atom a) {
@@ -181,6 +197,22 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 				m++;
 		}
 		return m;
+	}
+
+	public void setPotentialAtCenter(float phi0) {
+		this.phi0 = phi0;
+	}
+
+	public float getPotentialAtCenter() {
+		return phi0;
+	}
+
+	public void setPotentialDecayFactor(float gamma) {
+		this.gamma = gamma;
+	}
+
+	public float getPotentialDecayFactor() {
+		return gamma;
 	}
 
 	public void setReflection(boolean b) {
@@ -328,6 +360,8 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 		private float electronAbsorption;
 		private VectorField vectorField;
 		private boolean reflection;
+		private float phi0;
+		private float gamma = 1;
 
 		public Delegate() {
 		}
@@ -358,6 +392,8 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 					hostIndex = e.getHostModel().getObstacles().indexOf(e.getHost());
 				}
 			}
+			phi0 = e.getPotentialAtCenter();
+			gamma = e.getPotentialDecayFactor();
 			reflection = e.getReflection();
 			viscosity = e.getViscosity();
 			photonAbsorption = e.getPhotonAbsorption();
@@ -365,6 +401,22 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 			vectorField = e.getVectorField();
 			draggable = e.draggable;
 			visible = e.visible;
+		}
+
+		public void setPotentialAtCenter(float phi0) {
+			this.phi0 = phi0;
+		}
+
+		public float getPotentialAtCenter() {
+			return phi0;
+		}
+
+		public void setPotentialDecayFactor(float gamma) {
+			this.gamma = gamma;
+		}
+
+		public float getPotentialDecayFactor() {
+			return gamma;
 		}
 
 		public void setReflection(boolean b) {
