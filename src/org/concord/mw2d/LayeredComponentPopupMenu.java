@@ -40,6 +40,7 @@ import org.concord.modeler.draw.DrawingElement;
 import org.concord.modeler.process.Executable;
 import org.concord.modeler.ui.IconPool;
 import org.concord.mw2d.models.ElectricField;
+import org.concord.mw2d.models.EllipseComponent;
 import org.concord.mw2d.models.FieldArea;
 import org.concord.mw2d.models.ImageComponent;
 import org.concord.mw2d.models.Layered;
@@ -66,7 +67,7 @@ class LayeredComponentPopupMenu extends JPopupMenu {
 	private JMenuItem westMI;
 	private JMenu physicsMenu;
 	private JMenuItem miEField, miBField, miLineReflect, miPhotonAbsorber, miElectronAbsorber, miViscosity,
-			miShapeReflect;
+			miShapeReflect, miPotential;
 	private JMenuItem miVisible, miDraggable;
 
 	LayeredComponentPopupMenu(final MDView view) {
@@ -145,6 +146,9 @@ class LayeredComponentPopupMenu extends JPopupMenu {
 						physicsMenu.add(miViscosity);
 						physicsMenu.add(miEField);
 						physicsMenu.add(miBField);
+						if (view.selectedComponent instanceof EllipseComponent) {
+							physicsMenu.add(miPotential);
+						}
 						physicsMenu.remove(miLineReflect);
 						FieldArea fa = (FieldArea) view.selectedComponent;
 						if (fa.getVectorField() instanceof ElectricField) {
@@ -167,6 +171,11 @@ class LayeredComponentPopupMenu extends JPopupMenu {
 								.getBackground());
 						miShapeReflect.setBackground(fa.getReflection() ? SystemColor.controlHighlight : physicsMenu
 								.getBackground());
+						if (view.selectedComponent instanceof EllipseComponent) {
+							miPotential.setBackground(((EllipseComponent) view.selectedComponent)
+									.getPotentialAtCenter() != 0 ? SystemColor.controlHighlight : physicsMenu
+									.getBackground());
+						}
 					}
 					else if (view.selectedComponent instanceof LineComponent) {
 						physicsMenu.setEnabled(true);
@@ -176,6 +185,7 @@ class LayeredComponentPopupMenu extends JPopupMenu {
 						physicsMenu.remove(miViscosity);
 						physicsMenu.remove(miEField);
 						physicsMenu.remove(miBField);
+						physicsMenu.remove(miPotential);
 						physicsMenu.add(miLineReflect);
 						miLineReflect.setSelected(((LineComponent) view.selectedComponent).isReflector());
 					}
@@ -337,6 +347,18 @@ class LayeredComponentPopupMenu extends JPopupMenu {
 			}
 		});
 		physicsMenu.add(miLineReflect);
+
+		s = MDView.getInternationalText("Potential");
+		miPotential = new JMenuItem(s != null ? s : "Potential");
+		miPotential.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (view.selectedComponent instanceof EllipseComponent) {
+					new EllipticalPotentialAction((EllipseComponent) view.selectedComponent).createDialog(view)
+							.setVisible(true);
+				}
+			}
+		});
+		physicsMenu.add(miPotential);
 
 		// order
 
