@@ -235,6 +235,18 @@ public class TextBox extends JPanel implements HtmlService, Searchable {
 		list.get(i).setEnabled(b);
 	}
 
+	public void setEmbeddedComponentEnabled(String uid, boolean b) {
+		List<JComponent> list = getEmbeddedComponents();
+		if (list == null || uid == null)
+			return;
+		for (JComponent x : list) {
+			if (uid.equals(x.getName())) {
+				x.setEnabled(b);
+				break;
+			}
+		}
+	}
+
 	/** set the selection state of a component without or with causing the listeners on it to fire */
 	public void setComponentSelected(int i, boolean b, boolean execute) {
 		List<JComponent> list = getEmbeddedComponents();
@@ -271,6 +283,50 @@ public class TextBox extends JPanel implements HtmlService, Searchable {
 				if (cl != null)
 					for (ChangeListener x : cl)
 						ab.addChangeListener(x);
+			}
+		}
+	}
+
+	/** set the selection state of a component without or with causing the listeners on it to fire */
+	public void setComponentSelected(String uid, boolean b, boolean execute) {
+		List<JComponent> list = getEmbeddedComponents();
+		if (list == null || uid == null)
+			return;
+		for (JComponent c : list) {
+			if (uid.equals(c.getName())) {
+				if (c instanceof AbstractButton) {
+					AbstractButton ab = (AbstractButton) c;
+					if (execute) {
+						if (b)
+							ab.doClick();
+						else ab.setSelected(false);
+					}
+					else {
+						ItemListener[] il = ab.getItemListeners();
+						if (il != null)
+							for (ItemListener x : il)
+								ab.removeItemListener(x);
+						ActionListener[] al = ab.getActionListeners();
+						if (al != null)
+							for (ActionListener x : al)
+								ab.removeActionListener(x);
+						ChangeListener[] cl = ab.getChangeListeners();
+						if (cl != null)
+							for (ChangeListener x : cl)
+								ab.removeChangeListener(x);
+						ab.setSelected(b);
+						if (il != null)
+							for (ItemListener x : il)
+								ab.addItemListener(x);
+						if (al != null)
+							for (ActionListener x : al)
+								ab.addActionListener(x);
+						if (cl != null)
+							for (ChangeListener x : cl)
+								ab.addChangeListener(x);
+					}
+				}
+				break;
 			}
 		}
 	}

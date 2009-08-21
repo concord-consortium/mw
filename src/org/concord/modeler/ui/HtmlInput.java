@@ -43,6 +43,7 @@ public class HtmlInput {
 	private String alt;
 
 	// MW-only input attributes
+	private String uid;
 	private String selectedScript;
 	private String deselectedScript;
 	private String selectedSelfScript;
@@ -62,6 +63,14 @@ public class HtmlInput {
 
 	public boolean getEnabled() {
 		return enabled;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+
+	public String getUid() {
+		return uid;
 	}
 
 	public void setAlt(String alt) {

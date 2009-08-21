@@ -129,13 +129,20 @@ class TextBoxScripter extends ComponentScripter {
 					i = Integer.parseInt(s[0]);
 				}
 				catch (NumberFormatException e) {
-					e.printStackTrace();
 				}
 				if (i >= 0) {
 					final int i2 = i;
 					EventQueue.invokeLater(new Runnable() {
 						public void run() {
 							textBox.setEmbeddedComponentEnabled(i2, true);
+						}
+					});
+				}
+				else {
+					final String uid = s[0];
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							textBox.setEmbeddedComponentEnabled(uid, true);
 						}
 					});
 				}
@@ -146,14 +153,21 @@ class TextBoxScripter extends ComponentScripter {
 					i = Integer.parseInt(s[0]);
 				}
 				catch (NumberFormatException e) {
-					e.printStackTrace();
 				}
+				final boolean b = "true".equalsIgnoreCase(s[1]);
 				if (i >= 0) {
 					final int i2 = i;
-					final boolean b = "true".equalsIgnoreCase(s[1]);
 					EventQueue.invokeLater(new Runnable() {
 						public void run() {
 							textBox.setEmbeddedComponentEnabled(i2, b);
+						}
+					});
+				}
+				else {
+					final String uid = s[0];
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							textBox.setEmbeddedComponentEnabled(uid, b);
 						}
 					});
 				}
@@ -170,23 +184,30 @@ class TextBoxScripter extends ComponentScripter {
 					i = Integer.parseInt(s[0]);
 				}
 				catch (NumberFormatException e) {
-					e.printStackTrace();
 				}
+				boolean a = true;
+				if (s.length >= 2)
+					a = "true".equalsIgnoreCase(s[1]);
+				boolean b = false;
+				if (s.length >= 3)
+					b = "execute".equalsIgnoreCase(s[2]);
+				final boolean a2 = a;
+				final boolean b2 = b;
 				if (i >= 0) {
-					boolean a = true;
-					if (s.length >= 2)
-						a = "true".equalsIgnoreCase(s[1]);
-					boolean b = false;
-					if (s.length >= 3)
-						b = "execute".equalsIgnoreCase(s[2]);
 					final int i2 = i;
-					final boolean a2 = a;
-					final boolean b2 = b;
 					EventQueue.invokeLater(new Runnable() {
 						public void run() {
 							textBox.setComponentSelected(i2, a2, b2);
 						}
 					});
+				} else {
+					final String uid = s[0];
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							textBox.setComponentSelected(uid, a2, b2);
+						}
+					});
+					
 				}
 			}
 			return;
