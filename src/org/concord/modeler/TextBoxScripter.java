@@ -30,6 +30,7 @@ import java.util.regex.Pattern;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 
 import org.concord.modeler.script.Compiler;
 import org.concord.modeler.util.FileUtilities;
@@ -200,14 +201,15 @@ class TextBoxScripter extends ComponentScripter {
 							textBox.setComponentSelected(i2, a2, b2);
 						}
 					});
-				} else {
+				}
+				else {
 					final String uid = s[0];
 					EventQueue.invokeLater(new Runnable() {
 						public void run() {
 							textBox.setComponentSelected(uid, a2, b2);
 						}
 					});
-					
+
 				}
 			}
 			return;
@@ -217,33 +219,56 @@ class TextBoxScripter extends ComponentScripter {
 		if (matcher.find()) {
 			String[] s = ci.substring(matcher.end()).trim().split("\\s+");
 			if (s.length >= 2) {
-				int i = -1, j = -1;
+				int i = -1;
 				try {
 					i = Integer.parseInt(s[0]);
+				}
+				catch (NumberFormatException e) {
+				}
+				int j = -1;
+				try {
 					j = Integer.parseInt(s[1]);
 				}
 				catch (NumberFormatException e) {
 					e.printStackTrace();
 				}
-				if (i >= 0 && j >= 0) {
+				if (j >= 0) {
+					final int j2 = j;
 					boolean b = false;
 					if (s.length >= 3)
 						b = "execute".equalsIgnoreCase(s[2]);
-					final int i2 = i;
-					final int j2 = j;
 					final boolean b2 = b;
-					EventQueue.invokeLater(new Runnable() {
-						public void run() {
-							List comboBoxes = textBox.getEmbeddedComponents(JComboBox.class);
-							if (comboBoxes == null || comboBoxes.isEmpty())
-								return;
-							if (i2 < comboBoxes.size()) {
-								JComboBox cb = (JComboBox) comboBoxes.get(i2);
-								if (j2 < cb.getItemCount())
-									textBox.setSelectedIndex(cb, j2, b2);
+					if (i >= 0) {
+						final int i2 = i;
+						EventQueue.invokeLater(new Runnable() {
+							public void run() {
+								List comboBoxes = textBox.getEmbeddedComponents(JComboBox.class);
+								if (comboBoxes == null || comboBoxes.isEmpty())
+									return;
+								if (i2 < comboBoxes.size()) {
+									JComboBox cb = (JComboBox) comboBoxes.get(i2);
+									if (j2 < cb.getItemCount())
+										textBox.setSelectedIndex(cb, j2, b2);
+								}
 							}
-						}
-					});
+						});
+					}
+					else {
+						final String uid = s[0];
+						EventQueue.invokeLater(new Runnable() {
+							public void run() {
+								List<JComponent> comboBoxes = textBox.getEmbeddedComponents(JComboBox.class);
+								if (comboBoxes == null || comboBoxes.isEmpty())
+									return;
+								for (JComponent x : comboBoxes) {
+									if (uid.equals(x.getName())) {
+										textBox.setSelectedIndex((JComboBox) x, j2, b2);
+										break;
+									}
+								}
+							}
+						});
+					}
 				}
 			}
 			return;
