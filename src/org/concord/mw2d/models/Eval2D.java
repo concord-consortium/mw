@@ -1278,14 +1278,6 @@ class Eval2D extends AbstractEval {
 			view.repaint();
 			return true;
 		}
-		if ("snapshot".equals(strLC)) { // snapshot
-			EventQueue.invokeLater(new Runnable() {
-				public void run() {
-					model.notifyPageComponentListeners(new PageComponentEvent(view, PageComponentEvent.SNAPSHOT_TAKEN));
-				}
-			});
-			return true;
-		}
 		if ("focus".equals(strLC)) { // focus
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
@@ -1317,43 +1309,6 @@ class Eval2D extends AbstractEval {
 			});
 			return true;
 		}
-		if (strLC.startsWith("stop")) {
-			if ("stop".equals(strLC)) { // stop
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						model.stop();
-					}
-				});
-				return true;
-			}
-			if ("immediately".equals(strLC.substring(4).trim())) { // stop immediately
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						model.stopImmediately();
-					}
-				});
-				return true;
-			}
-		}
-		if (strLC.startsWith("reset")) {
-			if ("reset".equals(strLC)) { // reset
-				evaluateLoadClause((String) model.getProperty("url"));
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						readdMouseAndKeyScripts(model.getInitializationScript());
-						model.notifyModelListeners(new ModelEvent(model, ModelEvent.MODEL_RESET));
-						model.notifyPageComponentListeners(new PageComponentEvent(model,
-								PageComponentEvent.COMPONENT_RESET));
-					}
-				});
-				return true;
-			}
-			if ("silently".equals(strLC.substring(5).trim())) { // reset silently
-				evaluateLoadClause((String) model.getProperty("url"));
-				readdMouseAndKeyScripts(model.getInitializationScript());
-				return true;
-			}
-		}
 		if ("init".equals(strLC)) { // cause the initialization script to be executed, if any
 			if (model.getInitializationScript() != null)
 				model.runScript(model.getInitializationScript());
@@ -1374,6 +1329,63 @@ class Eval2D extends AbstractEval {
 			// EventQueue.invokeLater(new Runnable() { public void run() { removeSelectedObjects(); } });
 			notifyChange();
 			return true;
+		}
+		if (strLC.startsWith("stop")) {
+			if ("stop".equals(strLC)) { // stop
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						model.stop();
+					}
+				});
+				return true;
+			}
+			if ("immediately".equals(strLC.substring(4).trim())) { // stop immediately
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						model.stopImmediately();
+					}
+				});
+				return true;
+			}
+		}
+		else if (strLC.startsWith("reset")) {
+			if ("reset".equals(strLC)) { // reset
+				evaluateLoadClause((String) model.getProperty("url"));
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						readdMouseAndKeyScripts(model.getInitializationScript());
+						model.notifyModelListeners(new ModelEvent(model, ModelEvent.MODEL_RESET));
+						model.notifyPageComponentListeners(new PageComponentEvent(model,
+								PageComponentEvent.COMPONENT_RESET));
+					}
+				});
+				return true;
+			}
+			if ("silently".equals(strLC.substring(5).trim())) { // reset silently
+				evaluateLoadClause((String) model.getProperty("url"));
+				readdMouseAndKeyScripts(model.getInitializationScript());
+				return true;
+			}
+		}
+		else if (strLC.startsWith("snapshot")) {
+			if ("snapshot".equals(strLC)) { // snapshot
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						model.notifyPageComponentListeners(new PageComponentEvent(view,
+								PageComponentEvent.SNAPSHOT_TAKEN));
+					}
+				});
+				return true;
+			}
+			if ("nodescription".equals(strLC.substring(8).trim())) { // snapshot nodescription
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						model.notifyPageComponentListeners(new PageComponentEvent(view,
+								PageComponentEvent.SNAPSHOT_TAKEN_NODESCRIPTION));
+					}
+				});
+				return true;
+			}
 		}
 		return false;
 	}

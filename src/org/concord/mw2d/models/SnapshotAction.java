@@ -47,7 +47,7 @@ class SnapshotAction extends AbstractAction {
 		if (!(e.getSource() instanceof JMenuItem) && ModelerUtilities.stopFiring(e))
 			return;
 		model.notifyPageComponentListeners(new PageComponentEvent(model.getView(),
-				withDescription ? PageComponentEvent.SNAPSHOT_TAKEN : PageComponentEvent.SNAPSHOT_TAKEN2));
+				withDescription ? PageComponentEvent.SNAPSHOT_TAKEN : PageComponentEvent.SNAPSHOT_TAKEN_NODESCRIPTION));
 	}
 
 	public String toString() {

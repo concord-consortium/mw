@@ -30,7 +30,7 @@ public class PageComponentEvent extends EventObject {
 	public final static byte COMPONENT_RUN = 0x03;
 	public final static byte SNAPSHOT_TAKEN = 0x04;
 	public final static byte COMPONENT_RESET = 0x05;
-	public final static byte SNAPSHOT_TAKEN2 = 0x06;
+	public final static byte SNAPSHOT_TAKEN_NODESCRIPTION = 0x06;
 
 	private byte id = -0x01;
 
