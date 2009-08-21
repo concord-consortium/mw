@@ -40,6 +40,7 @@ public class HtmlSelect {
 	private String name;
 
 	// MW-specific tags
+	private String uid;
 	private boolean enabled = true;
 
 	private List<HtmlOption> options;
@@ -48,6 +49,14 @@ public class HtmlSelect {
 	private Element sourceElement;
 
 	public HtmlSelect() {
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+
+	public String getUid() {
+		return uid;
 	}
 
 	public void setEnabled(boolean b) {
