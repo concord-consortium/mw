@@ -1909,7 +1909,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 			});
 			break;
 
-		case PageComponentEvent.SNAPSHOT_TAKEN2:
+		case PageComponentEvent.SNAPSHOT_TAKEN_NODESCRIPTION:
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					SnapshotGallery.sharedInstance().takeSnapshot(page.getAddress(), src, false);
