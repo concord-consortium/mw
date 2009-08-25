@@ -611,6 +611,7 @@ public final class ModelerUtilities {
 	public static int copyResourceToDirectory(String path, File dir) {
 		if (path == null || dir == null)
 			throw new IllegalArgumentException("Resource location error");
+		path = path.trim();
 		String s2 = path;
 		if (FileUtilities.isRemote(path)) {
 			File f2 = ConnectionManager.sharedInstance().shouldUpdate(path);
