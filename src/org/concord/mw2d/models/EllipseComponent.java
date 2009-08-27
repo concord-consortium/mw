@@ -208,6 +208,8 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 	}
 
 	public void setPotentialDecayFactor(float gamma) {
+		if (gamma <= 0)
+			throw new IllegalArgumentException("The decay factor gamma must be a positive number: " + gamma);
 		this.gamma = gamma;
 	}
 

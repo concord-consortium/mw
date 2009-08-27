@@ -6306,6 +6306,16 @@ class Eval2D extends AbstractEval {
 				}
 			}
 		}
+		else if (s == "phi0") {
+			double x = parseMathExpression(str3);
+			if (!Double.isNaN(x))
+				c[i].setPotentialAtCenter((float) x);
+		}
+		else if (s == "gamma") {
+			double x = parseMathExpression(str3);
+			if (!Double.isNaN(x))
+				c[i].setPotentialDecayFactor((float) x);
+		}
 		else if (s == "viscosity") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))

@@ -51,7 +51,7 @@ import org.concord.mw2d.models.MolecularModel;
 class ElementEditor {
 
 	private final static double ZERO = 0.000001;
-	private final static double MAX_SIG = 50.0;
+	private final static double MAX_SIG = 80.0;
 	private final static double MIN_SIG = 5.0;
 	private final static double MAX_EPS = 1.0;
 	private final static double MIN_EPS = 0.0;
