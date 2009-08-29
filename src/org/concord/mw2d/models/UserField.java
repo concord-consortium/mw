@@ -28,6 +28,8 @@ import java.io.Serializable;
 import org.concord.mw2d.MDView;
 import org.concord.mw2d.ViewAttribute;
 
+import static org.concord.mw2d.models.Trigonometry.*;
+
 public class UserField implements VectorField, Serializable {
 
 	public final static byte FORCE_MODE = 0;
@@ -223,11 +225,11 @@ public class UserField implements VectorField, Serializable {
 			double arrowy = 1.0 * sintheta;
 			g.setStroke(ViewAttribute.MODERATE);
 			g.drawLine((int) x, (int) y, (int) endx, (int) endy);
-			grx = 5 * (arrowx * Particle.COS45 + arrowy * Particle.SIN45);
-			gry = 5 * (arrowy * Particle.COS45 - arrowx * Particle.SIN45);
+			grx = 5 * (arrowx * COS45 + arrowy * SIN45);
+			gry = 5 * (arrowy * COS45 - arrowx * SIN45);
 			g.drawLine((int) endx, (int) endy, (int) (endx - grx), (int) (endy - gry));
-			grx = 5 * (arrowx * Particle.COS45 - arrowy * Particle.SIN45);
-			gry = 5 * (arrowy * Particle.COS45 + arrowx * Particle.SIN45);
+			grx = 5 * (arrowx * COS45 - arrowy * SIN45);
+			gry = 5 * (arrowy * COS45 + arrowx * SIN45);
 			g.drawLine((int) endx, (int) endy, (int) (endx - grx), (int) (endy - gry));
 		}
 

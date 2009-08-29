@@ -38,8 +38,7 @@ import javax.swing.Timer;
 import org.concord.modeler.util.HashCodeUtil;
 import org.concord.mw2d.ViewAttribute;
 
-import static org.concord.mw2d.models.Particle.COS45;
-import static org.concord.mw2d.models.Particle.SIN45;
+import static org.concord.mw2d.models.Trigonometry.*;
 
 public class RadialBond implements ModelComponent {
 

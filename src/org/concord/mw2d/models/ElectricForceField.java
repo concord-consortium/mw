@@ -23,6 +23,8 @@ package org.concord.mw2d.models;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import static org.concord.mw2d.models.Trigonometry.*;
+
 public class ElectricForceField {
 
 	private final Object lock = new Object();
@@ -34,6 +36,7 @@ public class ElectricForceField {
 	private double fmin, fmax;
 	private Color color = Color.green;
 	private float smoother = 0.1f;
+	private int arrowLength = 3;
 
 	public void setWindow(int width, int height) {
 		if (width == this.width && height == this.height)
@@ -170,11 +173,11 @@ public class ElectricForceField {
 					x2 = (j + 0.5 * (1.0 + cosx)) * cellSize;
 					y2 = (i + 0.5 * (1.0 + sinx)) * cellSize;
 					g.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
-					wingx = 5 * (cosx * Particle.COS45 + sinx * Particle.SIN45);
-					wingy = 5 * (sinx * Particle.COS45 - cosx * Particle.SIN45);
+					wingx = arrowLength * (cosx * COS30 + sinx * SIN30);
+					wingy = arrowLength * (sinx * COS30 - cosx * SIN30);
 					g.drawLine((int) x2, (int) y2, (int) (x2 - wingx), (int) (y2 - wingy));
-					wingx = 5 * (cosx * Particle.COS45 - sinx * Particle.SIN45);
-					wingy = 5 * (sinx * Particle.COS45 + cosx * Particle.SIN45);
+					wingx = arrowLength * (cosx * COS30 - sinx * SIN30);
+					wingy = arrowLength * (sinx * COS30 + cosx * SIN30);
 					g.drawLine((int) x2, (int) y2, (int) (x2 - wingx), (int) (y2 - wingy));
 				}
 			}

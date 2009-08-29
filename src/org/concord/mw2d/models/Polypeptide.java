@@ -27,6 +27,8 @@ import org.concord.modeler.event.ModelEvent;
 import org.concord.molbio.engine.Aminoacid;
 import org.concord.mw2d.ui.GrowthModeDialog;
 
+import static org.concord.mw2d.models.Trigonometry.*;
+
 public class Polypeptide extends Molecule {
 
 	public Polypeptide() {
@@ -152,11 +154,10 @@ public class Polypeptide extends Molecule {
 		Element e = model.getElement(id);
 		d = RadialBond.PEPTIDE_BOND_LENGTH_PARAMETER * (terminus.getSigma() + e.getSigma());
 		if (GrowthModeDialog.getMode() == GrowthModeDialog.ZIGZAG) {
-			if (model.view.insertAnAtom(terminus.rx + d * (costheta * Particle.COS120 - sintheta * Particle.SIN120),
-					terminus.ry + d * (sintheta * Particle.COS120 + costheta * Particle.SIN120), id, true)
-					|| model.view.insertAnAtom(terminus.rx + d
-							* (costheta * Particle.COS240 - sintheta * Particle.SIN240), terminus.ry + d
-							* (sintheta * Particle.COS240 + costheta * Particle.SIN240), id, true)) {
+			if (model.view.insertAnAtom(terminus.rx + d * (costheta * COS120 - sintheta * SIN120), terminus.ry + d
+					* (sintheta * COS120 + costheta * SIN120), id, true)
+					|| model.view.insertAnAtom(terminus.rx + d * (costheta * COS240 - sintheta * SIN240), terminus.ry
+							+ d * (sintheta * COS240 + costheta * SIN240), id, true)) {
 				model.bonds.add(new RadialBond.Builder(terminus, model.atom[model.getNumberOfAtoms() - 1])
 						.bondLength(d).build());
 				addAtom(model.atom[model.getNumberOfAtoms() - 1]);
@@ -165,17 +166,14 @@ public class Polypeptide extends Molecule {
 			}
 		}
 		else if (GrowthModeDialog.getMode() == GrowthModeDialog.SPIRAL) {
-			if (model.view.insertAnAtom(terminus.rx + d * (costheta * Particle.COS120 - sintheta * Particle.SIN120),
-					terminus.ry + d * (sintheta * Particle.COS120 + costheta * Particle.SIN120), id, true)
-					|| model.view.insertAnAtom(terminus.rx + d
-							* (costheta * Particle.COS60 - sintheta * Particle.SIN60), terminus.ry + d
-							* (sintheta * Particle.COS60 + costheta * Particle.SIN60), id, true)
-					|| model.view.insertAnAtom(terminus.rx + d
-							* (costheta * Particle.COS240 - sintheta * Particle.SIN240), terminus.ry + d
-							* (sintheta * Particle.COS240 + costheta * Particle.SIN240), id, true)
-					|| model.view.insertAnAtom(terminus.rx + d
-							* (costheta * Particle.COS300 - sintheta * Particle.SIN300), terminus.ry + d
-							* (sintheta * Particle.COS300 + costheta * Particle.SIN300), id, true)) {
+			if (model.view.insertAnAtom(terminus.rx + d * (costheta * COS120 - sintheta * SIN120), terminus.ry + d
+					* (sintheta * COS120 + costheta * SIN120), id, true)
+					|| model.view.insertAnAtom(terminus.rx + d * (costheta * COS60 - sintheta * SIN60), terminus.ry + d
+							* (sintheta * COS60 + costheta * SIN60), id, true)
+					|| model.view.insertAnAtom(terminus.rx + d * (costheta * COS240 - sintheta * SIN240), terminus.ry
+							+ d * (sintheta * COS240 + costheta * SIN240), id, true)
+					|| model.view.insertAnAtom(terminus.rx + d * (costheta * COS300 - sintheta * SIN300), terminus.ry
+							+ d * (sintheta * COS300 + costheta * SIN300), id, true)) {
 				model.bonds.add(new RadialBond.Builder(terminus, model.atom[model.getNumberOfAtoms() - 1])
 						.bondLength(d).build());
 				addAtom(model.atom[model.getNumberOfAtoms() - 1]);
