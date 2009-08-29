@@ -447,6 +447,20 @@ public class PageRadioButton extends JRadioButton implements Embeddable, ModelCo
 		ComponentMaker.enable(this, b, source, modelID, modelClass, page);
 	}
 
+	public void setSelected(boolean b) {
+		super.setSelected(b);
+		if (b) {
+			Object o = getClientProperty("selected image");
+			if (o instanceof Icon)
+				setIcon((Icon) o);
+		}
+		else {
+			Object o = getClientProperty("deselected image");
+			if (o instanceof Icon)
+				setIcon((Icon) o);
+		}
+	}
+
 	public void modelUpdate(final ModelEvent e) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -475,7 +489,8 @@ public class PageRadioButton extends JRadioButton implements Embeddable, ModelCo
 	public String toString() {
 		Action a = getAction();
 		StringBuffer sb = new StringBuffer("<class>" + getClass().getName() + "</class>\n");
-		sb.append("<title>" + XMLCharacterEncoder.encode(getText()) + "</title>\n");
+		if (getText() != null)
+			sb.append("<title>" + XMLCharacterEncoder.encode(getText()) + "</title>\n");
 		if (imageSelected != null && !imageSelected.trim().equals("")) {
 			sb.append("<imagefile>" + imageSelected + "</imagefile>\n");
 		}
