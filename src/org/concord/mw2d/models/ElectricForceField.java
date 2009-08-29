@@ -32,8 +32,8 @@ public class ElectricForceField {
 	private double intensity, x1, y1, x2, y2, wingx, wingy, cosx, sinx, distance;
 	private int m;
 	private double fmin, fmax;
-	private Color bgColor, fgColor;
-	private int red, green, blue;
+	private Color color = Color.green;
+	private float smoother = 0.1f;
 
 	public void setWindow(int width, int height) {
 		if (width == this.width && height == this.height)
@@ -73,11 +73,6 @@ public class ElectricForceField {
 
 		fmin = Double.MAX_VALUE;
 		fmax = -Double.MAX_VALUE;
-		bgColor = model.view.getBackground();
-		fgColor = model.view.contrastBackground();
-		red = fgColor.getRed() - bgColor.getRed();
-		green = fgColor.getGreen() - bgColor.getGreen();
-		blue = fgColor.getBlue() - bgColor.getBlue();
 
 		synchronized (lock) {
 
@@ -141,7 +136,7 @@ public class ElectricForceField {
 						}
 					}
 
-					intensity = Math.sqrt(fx[m] * fx[m] + fy[m] * fy[m]);
+					intensity = Math.pow(fx[m] * fx[m] + fy[m] * fy[m], smoother);
 					if (fmin > intensity)
 						fmin = intensity;
 					if (fmax < intensity)
@@ -164,11 +159,10 @@ public class ElectricForceField {
 			for (int i = 0; i < ny; i++) {
 				for (int j = 0; j < nx; j++) {
 					m = i * nx + j;
-					intensity = Math.sqrt(fx[m] * fx[m] + fy[m] * fy[m]);
-					x2 = (intensity - fmin) * distance;
-					g.setColor(new Color((int) (bgColor.getRed() + x2 * red), (int) (bgColor.getGreen() + x2 * green),
-							(int) (bgColor.getBlue() + x2 * blue)));
-					x1 = 1.0 / intensity;
+					intensity = fx[m] * fx[m] + fy[m] * fy[m];
+					x2 = (Math.pow(intensity, smoother) - fmin) * distance;
+					g.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), (int) (x2 * 255)));
+					x1 = 1.0 / Math.sqrt(intensity);
 					cosx = fx[m] * x1;
 					sinx = fy[m] * x1;
 					x1 = (j + 0.5 * (1.0 - cosx)) * cellSize;
