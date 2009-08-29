@@ -45,6 +45,7 @@ import org.concord.mw2d.ViewAttribute;
 import org.concord.mw2d.ui.GrowthModeDialog;
 
 import static org.concord.mw2d.models.Element.*;
+import static org.concord.mw2d.models.Trigonometry.*;
 
 public class Atom extends Particle {
 

@@ -32,6 +32,8 @@ import java.util.Iterator;
 import org.concord.modeler.draw.FillMode;
 import org.concord.modeler.math.Vector2D;
 
+import static org.concord.mw2d.models.Trigonometry.*;
+
 public abstract class MolecularObject extends Molecule {
 
 	/* default element */
@@ -226,13 +228,13 @@ public abstract class MolecularObject extends Molecule {
 		double lengthy = model.view.getVelocityFlavor().getLength() * v.getY();
 		Point2D r = getCenterOfMass2D();
 		g.drawLine((int) r.getX(), (int) r.getY(), (int) (r.getX() + lengthx), (int) (r.getY() + lengthy));
-		double wingx = 5 * (arrowx * Particle.COS45 + arrowy * Particle.SIN45);
-		double wingy = 5 * (arrowy * Particle.COS45 - arrowx * Particle.SIN45);
+		double wingx = 5 * (arrowx * COS45 + arrowy * SIN45);
+		double wingy = 5 * (arrowy * COS45 - arrowx * SIN45);
 		g.drawLine((int) (r.getX() + lengthx), (int) (r.getY() + lengthy), (int) (r.getX() + lengthx - wingx), (int) (r
 				.getY()
 				+ lengthy - wingy));
-		wingx = 5 * (arrowx * Particle.COS45 - arrowy * Particle.SIN45);
-		wingy = 5 * (arrowy * Particle.COS45 + arrowx * Particle.SIN45);
+		wingx = 5 * (arrowx * COS45 - arrowy * SIN45);
+		wingy = 5 * (arrowy * COS45 + arrowx * SIN45);
 		g.drawLine((int) (r.getX() + lengthx), (int) (r.getY() + lengthy), (int) (r.getX() + lengthx - wingx), (int) (r
 				.getY()
 				+ lengthy - wingy));
@@ -249,13 +251,13 @@ public abstract class MolecularObject extends Molecule {
 		double lengthy = model.view.getMomentumFlavor().getLength() * v.getY();
 		Point2D r = getCenterOfMass2D();
 		g.drawLine((int) r.getX(), (int) r.getY(), (int) (r.getX() + lengthx), (int) (r.getY() + lengthy));
-		double wingx = 5 * (arrowx * Particle.COS45 + arrowy * Particle.SIN45);
-		double wingy = 5 * (arrowy * Particle.COS45 - arrowx * Particle.SIN45);
+		double wingx = 5 * (arrowx * COS45 + arrowy * SIN45);
+		double wingy = 5 * (arrowy * COS45 - arrowx * SIN45);
 		g.drawLine((int) (r.getX() + lengthx), (int) (r.getY() + lengthy), (int) (r.getX() + lengthx - wingx), (int) (r
 				.getY()
 				+ lengthy - wingy));
-		wingx = 5 * (arrowx * Particle.COS45 - arrowy * Particle.SIN45);
-		wingy = 5 * (arrowy * Particle.COS45 + arrowx * Particle.SIN45);
+		wingx = 5 * (arrowx * COS45 - arrowy * SIN45);
+		wingy = 5 * (arrowy * COS45 + arrowx * SIN45);
 		g.drawLine((int) (r.getX() + lengthx), (int) (r.getY() + lengthy), (int) (r.getX() + lengthx - wingx), (int) (r
 				.getY()
 				+ lengthy - wingy));

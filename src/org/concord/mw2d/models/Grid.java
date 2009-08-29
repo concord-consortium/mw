@@ -31,6 +31,9 @@ import java.util.Arrays;
 import org.concord.mw2d.MDView;
 import org.concord.mw2d.ViewAttribute;
 
+import static org.concord.mw2d.models.Trigonometry.COS60;
+import static org.concord.mw2d.models.Trigonometry.SIN60;
+
 /**
  * GRID is the method to relate micro and macro. The basical idea is to divide the simulation box into a lot of small
  * grid cells. When the molecular dynamics is performed, count the number of times atoms visit each cell and accumulate
@@ -377,12 +380,12 @@ public class Grid implements ComponentListener {
 						tempInv = arrowLength / Math.sqrt(vxc * vxc + vyc * vyc);
 						arrowx = vxc * tempInv;
 						arrowy = vyc * tempInv;
-						wingx = arrowx * Particle.SIN60 + arrowy * Particle.COS60;
-						wingy = arrowy * Particle.SIN60 - arrowx * Particle.COS60;
+						wingx = arrowx * SIN60 + arrowy * COS60;
+						wingy = arrowy * SIN60 - arrowx * COS60;
 						tempLine.setLine(xc + vxc, yc + vyc, xc + vxc - wingx, yc + vyc - wingy);
 						g.draw(tempLine);
-						wingx = arrowx * Particle.SIN60 - arrowy * Particle.COS60;
-						wingy = arrowy * Particle.SIN60 + arrowx * Particle.COS60;
+						wingx = arrowx * SIN60 - arrowy * COS60;
+						wingy = arrowy * SIN60 + arrowx * COS60;
 						tempLine.setLine(xc + vxc, yc + vyc, xc + vxc - wingx, yc + vyc - wingy);
 						g.draw(tempLine);
 						break;
@@ -399,12 +402,12 @@ public class Grid implements ComponentListener {
 						tempInv = arrowLength / Math.sqrt(vxc * vxc + vyc * vyc);
 						arrowx = vxc * tempInv;
 						arrowy = vyc * tempInv;
-						wingx = arrowx * Particle.SIN60 + arrowy * Particle.COS60;
-						wingy = arrowy * Particle.SIN60 - arrowx * Particle.COS60;
+						wingx = arrowx * SIN60 + arrowy * COS60;
+						wingy = arrowy * SIN60 - arrowx * COS60;
 						tempLine.setLine(xc + vxc, yc + vyc, xc + vxc - wingx, yc + vyc - wingy);
 						g.draw(tempLine);
-						wingx = arrowx * Particle.SIN60 - arrowy * Particle.COS60;
-						wingy = arrowy * Particle.SIN60 + arrowx * Particle.COS60;
+						wingx = arrowx * SIN60 - arrowy * COS60;
+						wingy = arrowy * SIN60 + arrowx * COS60;
 						tempLine.setLine(xc + vxc, yc + vyc, xc + vxc - wingx, yc + vyc - wingy);
 						g.draw(tempLine);
 						break;

@@ -49,6 +49,8 @@ import org.concord.mw2d.MDView;
 import org.concord.mw2d.StyleConstant;
 import org.concord.mw2d.ViewAttribute;
 
+import static org.concord.mw2d.models.Trigonometry.*;
+
 /**
  * This is the abstract class from which you should derive a Newtonian particle in two dimension, such as an
  * <tt>Atom</tt> or a <tt>UnitedAtom</tt>.
@@ -58,16 +60,6 @@ import org.concord.mw2d.ViewAttribute;
 
 public abstract class Particle implements Comparable, Cloneable, Serializable, ModelComponent {
 
-	final static double COS45 = Math.cos(Math.toRadians(45.0));
-	final static double SIN45 = Math.sin(Math.toRadians(45.0));
-	final static double COS60 = Math.cos(Math.toRadians(60.0));
-	final static double SIN60 = Math.sin(Math.toRadians(60.0));
-	final static double COS120 = Math.cos(Math.toRadians(120.0));
-	final static double SIN120 = Math.sin(Math.toRadians(120.0));
-	final static double COS240 = Math.cos(Math.toRadians(240.0));
-	final static double SIN240 = Math.sin(Math.toRadians(240.0));
-	final static double COS300 = Math.cos(Math.toRadians(300.0));
-	final static double SIN300 = Math.sin(Math.toRadians(300.0));
 	final static double ZERO = 0.000000000000001;
 	final static Font FONT_ON_TOP = new Font("Arial", Font.PLAIN | Font.BOLD, 9);
 
