@@ -55,7 +55,7 @@ public class PageComboBox extends JComboBox implements Embeddable, ModelCommunic
 	boolean disabledAtRun, disabledAtScript;
 	String optionGroup;
 	private int index;
-	private String id;
+	private String uid;
 	private boolean marked;
 	private Color comboBoxBackground;
 	private static Color defaultComboBoxForeground;
@@ -96,7 +96,6 @@ public class PageComboBox extends JComboBox implements Embeddable, ModelCommunic
 		if (m != null)
 			m.addModelListener(this);
 		setToolTipText(comboBox.getToolTipText());
-		setId(comboBox.id);
 	}
 
 	boolean isTargetClass() {
@@ -218,12 +217,12 @@ public class PageComboBox extends JComboBox implements Embeddable, ModelCommunic
 		return index;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 
-	public String getId() {
-		return id;
+	public String getUid() {
+		return uid;
 	}
 
 	public void setPage(Page p) {

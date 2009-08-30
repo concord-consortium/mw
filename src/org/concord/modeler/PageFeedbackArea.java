@@ -39,7 +39,7 @@ public class PageFeedbackArea extends FeedbackArea implements Embeddable, AutoRe
 	boolean widthIsRelative, heightIsRelative;
 	float widthRatio = 1, heightRatio = 1;
 	private int index;
-	private String id;
+	private String uid;
 	private boolean marked;
 	private boolean wasOpaque;
 	private Color background;
@@ -73,7 +73,6 @@ public class PageFeedbackArea extends FeedbackArea implements Embeddable, AutoRe
 		}
 		setPreferredSize(new Dimension(w, h));
 		setChangable(page.isEditable());
-		setId(area.id);
 	}
 
 	private void init() {
@@ -154,12 +153,12 @@ public class PageFeedbackArea extends FeedbackArea implements Embeddable, AutoRe
 		return index;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 
-	public String getId() {
-		return id;
+	public String getUid() {
+		return uid;
 	}
 
 	public void setTransparent(boolean b) {

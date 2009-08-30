@@ -50,7 +50,7 @@ public class PageCheckBox extends JCheckBox implements Embeddable, ModelCommunic
 	boolean autoSize = true;
 	boolean disabledAtRun, disabledAtScript;
 	private int index;
-	private String id;
+	private String uid;
 	private String imageSelected, imageDeselected;
 	private boolean marked;
 	private Color checkBoxBackground;
@@ -90,7 +90,6 @@ public class PageCheckBox extends JCheckBox implements Embeddable, ModelCommunic
 		setDisabledAtScript(checkBox.disabledAtScript);
 		setPreferredSize(checkBox.getPreferredSize());
 		setChangable(page.isEditable());
-		setId(checkBox.id);
 		Object o = checkBox.getClientProperty("selection script");
 		if (o != null)
 			putClientProperty("selection script", o);
@@ -216,12 +215,12 @@ public class PageCheckBox extends JCheckBox implements Embeddable, ModelCommunic
 		return index;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 
-	public String getId() {
-		return id;
+	public String getUid() {
+		return uid;
 	}
 
 	public void setImageFileNameSelected(String imageSelected) {

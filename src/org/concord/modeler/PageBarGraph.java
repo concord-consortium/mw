@@ -56,7 +56,7 @@ public class PageBarGraph extends BarGraph implements Embeddable, Scriptable, Mo
 	int samplingPoints = 10;
 	private double initialValue;
 	private int index;
-	private String id;
+	private String uid;
 	private boolean marked;
 	private boolean changable;
 	private Color originalBackground, originalForeground;
@@ -101,7 +101,6 @@ public class PageBarGraph extends BarGraph implements Embeddable, Scriptable, Mo
 		setMinorTicks(g.getMinorTicks());
 		setMajorTicks(g.getMajorTicks());
 		setPreferredSize(g.getPreferredSize());
-		setId(g.id);
 		Model m = getModel();
 		if (m != null) {
 			m.addModelListener(this);
@@ -213,12 +212,12 @@ public class PageBarGraph extends BarGraph implements Embeddable, Scriptable, Mo
 		return index;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 
-	public String getId() {
-		return id;
+	public String getUid() {
+		return uid;
 	}
 
 	public void setPage(Page p) {

@@ -96,7 +96,7 @@ public class PageMolecularViewer extends JmolContainer implements BasicModel, Em
 	boolean widthIsRelative, heightIsRelative;
 	float widthRatio = 1, heightRatio = 1;
 	private int index;
-	private String id;
+	private String uid;
 	private boolean marked;
 	private boolean changable;
 	private int selectedAtom = -1, selectedAnnotationHostAtom = -1;
@@ -1534,12 +1534,12 @@ public class PageMolecularViewer extends JmolContainer implements BasicModel, Em
 		return index;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 
-	public String getId() {
-		return id;
+	public String getUid() {
+		return uid;
 	}
 
 	public void setMarked(boolean b) {

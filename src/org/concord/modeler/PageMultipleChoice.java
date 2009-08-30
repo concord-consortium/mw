@@ -46,7 +46,7 @@ public class PageMultipleChoice extends MultipleChoice implements Embeddable, Mu
 
 	Page page;
 	int index;
-	String id;
+	String uid;
 	private boolean marked;
 	private boolean changable;
 	private boolean wasOpaque;
@@ -82,7 +82,6 @@ public class PageMultipleChoice extends MultipleChoice implements Embeddable, Mu
 	public PageMultipleChoice(PageMultipleChoice choice, Page parent) {
 		this();
 		setPage(parent);
-		setId(choice.getId());
 		setSingleSelection(choice.getSingleSelection());
 		int n = choice.getChoiceCount();
 		changeNumberOfChoices(n);
@@ -203,12 +202,12 @@ public class PageMultipleChoice extends MultipleChoice implements Embeddable, Mu
 		return index;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 
-	public String getId() {
-		return id;
+	public String getUid() {
+		return uid;
 	}
 
 	public void setMarked(boolean b) {

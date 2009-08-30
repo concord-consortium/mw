@@ -60,7 +60,7 @@ public class PageMd3d extends MolecularContainer implements Embeddable, Scriptab
 
 	Page page;
 	private int index;
-	private String id;
+	private String uid;
 	private boolean marked;
 	private boolean changable;
 	private Map<String, ChangeListener> changeMap;
@@ -527,12 +527,12 @@ public class PageMd3d extends MolecularContainer implements Embeddable, Scriptab
 		return index;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 
-	public String getId() {
-		return id;
+	public String getUid() {
+		return uid;
 	}
 
 	public void setMarked(boolean b) {

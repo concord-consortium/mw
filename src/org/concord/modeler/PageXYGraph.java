@@ -94,7 +94,7 @@ public class PageXYGraph extends XYGrapher implements Embeddable, Scriptable, Mo
 	boolean autoUpdate = true;
 	String labelForXAxis, labelForYAxis;
 	private int index;
-	private String id;
+	private String uid;
 	private boolean marked;
 	private boolean changable;
 	private Action syncAction, refreshAction;
@@ -227,7 +227,6 @@ public class PageXYGraph extends XYGrapher implements Embeddable, Scriptable, Mo
 		setPreferredSize(g.getPreferredSize());
 		setBorderType(g.getBorderType());
 		setChangable(page.isEditable());
-		setId(g.id);
 		Model m = getModel();
 		if (m != null) {
 			m.addModelListener(this);
@@ -396,12 +395,12 @@ public class PageXYGraph extends XYGrapher implements Embeddable, Scriptable, Mo
 		return index;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 
-	public String getId() {
-		return id;
+	public String getUid() {
+		return uid;
 	}
 
 	public void setAutoScale(boolean b) {

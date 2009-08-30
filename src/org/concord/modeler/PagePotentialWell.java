@@ -61,7 +61,7 @@ public class PagePotentialWell extends PotentialWell implements Embeddable, Mode
 
 	private Page page;
 	private int index;
-	private String id;
+	private String uid;
 	private String modelClass;
 	private int modelID = -1;
 	private boolean marked;
@@ -109,7 +109,6 @@ public class PagePotentialWell extends PotentialWell implements Embeddable, Mode
 		if (mc != null)
 			mc.getMdContainer().getModel().addModelListener(this);
 		setChangable(page.isEditable());
-		setId(well.id);
 	}
 
 	public void destroy() {
@@ -189,12 +188,12 @@ public class PagePotentialWell extends PotentialWell implements Embeddable, Mode
 		return index;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 
-	public String getId() {
-		return id;
+	public String getUid() {
+		return uid;
 	}
 
 	public void setPage(Page p) {

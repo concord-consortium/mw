@@ -56,7 +56,7 @@ public class PageNumericBox extends JLabel implements Embeddable, ModelCommunica
 	DecimalFormat formatter;
 	double value;
 	private int index;
-	private String id;
+	private String uid;
 	private boolean marked;
 	private String format = "Fixed point";
 	private Color originalForeground;
@@ -96,7 +96,6 @@ public class PageNumericBox extends JLabel implements Embeddable, ModelCommunica
 				m.getMovie().addMovieListener(this);
 		}
 		setChangable(page.isEditable());
-		setId(box.id);
 	}
 
 	boolean isTargetClass() {
@@ -167,12 +166,12 @@ public class PageNumericBox extends JLabel implements Embeddable, ModelCommunica
 		return index;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 
-	public String getId() {
-		return id;
+	public String getUid() {
+		return uid;
 	}
 
 	public void setValue(final double value) {

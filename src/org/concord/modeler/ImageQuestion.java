@@ -65,7 +65,7 @@ public class ImageQuestion extends JPanel implements Embeddable, TransferListene
 
 	Page page;
 	int index;
-	String id;
+	String uid;
 	String name;
 	private boolean marked;
 	private boolean opened;
@@ -174,7 +174,6 @@ public class ImageQuestion extends JPanel implements Embeddable, TransferListene
 		setOpaque(iq.isOpaque());
 		setBackground(iq.getBackground());
 		setChangable(page.isEditable());
-		setId(iq.id);
 	}
 
 	public void addImageInputListener(ImageInputListener l) {
@@ -358,12 +357,12 @@ public class ImageQuestion extends JPanel implements Embeddable, TransferListene
 		return index;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 
-	public String getId() {
-		return id;
+	public String getUid() {
+		return uid;
 	}
 
 	public void setMarked(boolean b) {

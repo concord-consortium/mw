@@ -56,7 +56,7 @@ public class PageTextField extends JPanel implements Embeddable, HtmlService, Se
 
 	Page page;
 	int index;
-	String id;
+	String uid;
 	String referenceAnswer;
 	String layout = BorderLayout.NORTH;
 	private boolean marked;
@@ -126,7 +126,6 @@ public class PageTextField extends JPanel implements Embeddable, HtmlService, Se
 		setBorderType(t.getBorderType());
 		setChangable(page.isEditable());
 		referenceAnswer = t.referenceAnswer;
-		setId(t.id);
 	}
 
 	public void destroy() {
@@ -242,12 +241,12 @@ public class PageTextField extends JPanel implements Embeddable, HtmlService, Se
 		return index;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 
-	public String getId() {
-		return id;
+	public String getUid() {
+		return uid;
 	}
 
 	public void setPreferredSize(Dimension dim) {
