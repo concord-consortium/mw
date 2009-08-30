@@ -52,7 +52,7 @@ public class PageRadioButton extends JRadioButton implements Embeddable, ModelCo
 	boolean disabledAtRun, disabledAtScript;
 	private long groupID = -1;
 	private int index;
-	private String id;
+	private String uid;
 	private String imageSelected, imageDeselected;
 	private boolean marked;
 	private boolean wasOpaque;
@@ -104,7 +104,6 @@ public class PageRadioButton extends JRadioButton implements Embeddable, ModelCo
 		BasicModel m = getBasicModel();
 		if (m != null)
 			m.addModelListener(this);
-		setId(radioButton.id);
 	}
 
 	boolean isTargetClass() {
@@ -221,12 +220,12 @@ public class PageRadioButton extends JRadioButton implements Embeddable, ModelCo
 		return index;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 
-	public String getId() {
-		return id;
+	public String getUid() {
+		return uid;
 	}
 
 	public void setGroupID(long id) {

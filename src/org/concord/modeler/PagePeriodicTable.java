@@ -38,7 +38,7 @@ public class PagePeriodicTable extends PeriodicTable implements Embeddable {
 
 	Page page;
 	private int index;
-	private String id;
+	private String uid;
 	private boolean marked;
 	private String borderType;
 	private static Color defaultBackground, defaultForeground;
@@ -63,7 +63,6 @@ public class PagePeriodicTable extends PeriodicTable implements Embeddable {
 		setForeground(t.getForeground());
 		setPreferredSize(t.getPreferredSize());
 		setChangable(page.isEditable());
-		setId(t.id);
 	}
 
 	public void destroy() {
@@ -132,12 +131,12 @@ public class PagePeriodicTable extends PeriodicTable implements Embeddable {
 		return index;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 
-	public String getId() {
-		return id;
+	public String getUid() {
+		return uid;
 	}
 
 	public String getBorderType() {

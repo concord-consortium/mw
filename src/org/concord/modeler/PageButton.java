@@ -59,7 +59,7 @@ public class PageButton extends JButton implements Embeddable, ModelCommunicator
 	boolean disabledAtRun;
 	boolean disabledAtScript;
 	private int index;
-	private String id;
+	private String uid;
 	private boolean marked;
 	private boolean transparent;
 	private String borderType;
@@ -139,7 +139,6 @@ public class PageButton extends JButton implements Embeddable, ModelCommunicator
 		setAutoSize(button.autoSize);
 		setPreferredSize(button.getPreferredSize());
 		setChangable(page.isEditable());
-		setId(button.id);
 		Object o = button.getClientProperty("script");
 		if (o != null)
 			putClientProperty("script", o);
@@ -240,12 +239,12 @@ public class PageButton extends JButton implements Embeddable, ModelCommunicator
 		return index;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 
-	public String getId() {
-		return id;
+	public String getUid() {
+		return uid;
 	}
 
 	public void setMarked(boolean b) {

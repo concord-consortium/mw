@@ -44,7 +44,7 @@ public class PageDiffractionInstrument extends DiffractionInstrument implements 
 	int modelID = -1;
 	boolean loadScan, scriptScan;
 	private int index;
-	private String id;
+	private String uid;
 	private boolean marked;
 	private boolean changable;
 	private JPopupMenu popupMenu;
@@ -66,7 +66,6 @@ public class PageDiffractionInstrument extends DiffractionInstrument implements 
 		if (mc != null)
 			mc.getMdContainer().getModel().addModelListener(this);
 		setChangable(page.isEditable());
-		setId(di.id);
 	}
 
 	public void destroy() {
@@ -158,12 +157,12 @@ public class PageDiffractionInstrument extends DiffractionInstrument implements 
 		return index;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 
-	public String getId() {
-		return id;
+	public String getUid() {
+		return uid;
 	}
 
 	public void setMarked(boolean b) {

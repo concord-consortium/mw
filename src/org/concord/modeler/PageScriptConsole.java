@@ -52,7 +52,7 @@ public class PageScriptConsole extends JPanel implements Embeddable, ModelCommun
 	String modelClass;
 	int modelID = -1;
 	private int index;
-	private String id;
+	private String uid;
 	private boolean marked;
 	private boolean changable;
 	private JPopupMenu popupMenu;
@@ -101,7 +101,6 @@ public class PageScriptConsole extends JPanel implements Embeddable, ModelCommun
 		setModelClass(console.modelClass);
 		setPreferredSize(console.getPreferredSize());
 		setChangable(page.isEditable());
-		setId(console.id);
 	}
 
 	boolean isTargetClass() {
@@ -189,12 +188,12 @@ public class PageScriptConsole extends JPanel implements Embeddable, ModelCommun
 		return index;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 
-	public String getId() {
-		return id;
+	public String getUid() {
+		return uid;
 	}
 
 	public void setMarked(boolean b) {

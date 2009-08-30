@@ -60,7 +60,7 @@ public class PageSpinner extends JComponent implements Embeddable, ModelCommunic
 	JSpinner spinner;
 	JLabel label;
 	private int index;
-	private String id;
+	private String uid;
 	private boolean marked;
 	private static Color defaultBackground, defaultForeground;
 	private JPopupMenu popupMenu;
@@ -117,7 +117,6 @@ public class PageSpinner extends JComponent implements Embeddable, ModelCommunic
 		BasicModel m = getBasicModel();
 		if (m != null)
 			m.addModelListener(this);
-		setId(spinner.id);
 	}
 
 	boolean isTargetClass() {
@@ -204,12 +203,12 @@ public class PageSpinner extends JComponent implements Embeddable, ModelCommunic
 		return index;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 
-	public String getId() {
-		return id;
+	public String getUid() {
+		return uid;
 	}
 
 	public void setLabel(String s) {

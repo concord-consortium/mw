@@ -65,7 +65,7 @@ public class ModelCanvas extends JComponent implements Embeddable, Scriptable, E
 	private boolean used;
 	private boolean changable = true;
 	private int index;
-	private String id;
+	private String uid;
 	private Object[] toolBarButtons;
 	private final Object lock = new Object();
 	private static Border defaultBorder = BorderFactory.createRaisedBevelBorder();
@@ -373,12 +373,12 @@ public class ModelCanvas extends JComponent implements Embeddable, Scriptable, E
 		}
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 
-	public String getId() {
-		return id;
+	public String getUid() {
+		return uid;
 	}
 
 	public void addMenuBar() {

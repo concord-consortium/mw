@@ -46,7 +46,7 @@ public class ActivityButton extends JButton implements Embeddable {
 	String reportTitle;
 	boolean autoSize = true;
 	private int index;
-	private String id;
+	private String uid;
 	private boolean transparent;
 	private boolean marked;
 	private boolean wasOpaque;
@@ -78,7 +78,6 @@ public class ActivityButton extends JButton implements Embeddable {
 		setAction(button.getAction());
 		setText(button.getText());
 		setIcon(button.getIcon());
-		setId(button.getId());
 		setToolTipText(button.getToolTipText());
 		setAutoSize(button.autoSize);
 		setPreferredSize(button.getPreferredSize());
@@ -173,12 +172,12 @@ public class ActivityButton extends JButton implements Embeddable {
 		return index;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 
-	public String getId() {
-		return id;
+	public String getUid() {
+		return uid;
 	}
 
 	public void setMarked(boolean b) {
