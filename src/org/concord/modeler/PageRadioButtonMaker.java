@@ -393,9 +393,9 @@ class PageRadioButtonMaker extends ComponentMaker {
 
 		// row 3
 		s = Modeler.getInternationalText("UniqueIdentifier");
-		p.add(new JLabel(s != null ? s : "Unique identifier", SwingConstants.LEFT));
+		p.add(new JLabel((s != null ? s : "Unique identifier") + " (A-z, 0-9)", SwingConstants.LEFT));
 		uidField = new JTextField();
-		uidField.setToolTipText("Type in a string to be used as the unique identifier of this button.");
+		uidField.setToolTipText("Type in a string to be used as the unique identifier of this radio button.");
 		uidField.addActionListener(okListener);
 		p.add(uidField);
 

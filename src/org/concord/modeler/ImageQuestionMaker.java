@@ -37,6 +37,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import org.concord.modeler.text.Page;
@@ -56,6 +57,7 @@ class ImageQuestionMaker extends ComponentMaker {
 	private JCheckBox transparentCheckBox;
 	private ColorComboBox bgComboBox;
 	private JComboBox borderComboBox;
+	private JTextField uidField;
 	private IntegerTextField widthField, heightField;
 	private JTextArea questionArea;
 	private JPanel contentPane;
@@ -70,7 +72,15 @@ class ImageQuestionMaker extends ComponentMaker {
 
 	private boolean confirm() {
 
-		String s = Modeler.getInternationalText("YouMustSetQuestion");
+		String s = uidField.getText();
+		if (s != null) {
+			s = s.trim();
+			imageQuestion.setUid(s.equals("") ? null : s);
+		}
+		else {
+			imageQuestion.setUid(null);
+		}
+		s = Modeler.getInternationalText("YouMustSetQuestion");
 		String s2 = Modeler.getInternationalText("SetQuestion");
 		if (questionArea.getText() == null || questionArea.getText().trim().equals("")) {
 			JOptionPane.showMessageDialog(dialog, s != null ? s : "You must set a question.", s2 != null ? s2
@@ -127,6 +137,7 @@ class ImageQuestionMaker extends ComponentMaker {
 			});
 		}
 
+		uidField.setText(imageQuestion.getUid());
 		widthField.setValue(imageQuestion.getPreferredSize().width);
 		heightField.setValue(imageQuestion.getPreferredSize().height);
 		questionArea.setText(ModelerUtilities.deUnicode(imageQuestion.getQuestion()));
@@ -205,12 +216,12 @@ class ImageQuestionMaker extends ComponentMaker {
 		heightField.addActionListener(okListener);
 		p1.add(heightField);
 
-		s = Modeler.getInternationalText("BorderLabel");
-		p1.add(new JLabel((s != null ? s : "Border") + " : ", SwingConstants.LEFT));
-		borderComboBox = new JComboBox(BorderManager.BORDER_TYPE);
-		borderComboBox.setRenderer(new ComboBoxRenderer.BorderCell());
-		borderComboBox.setBackground(p1.getBackground());
-		p1.add(borderComboBox);
+		s = Modeler.getInternationalText("UniqueIdentifier");
+		p1.add(new JLabel((s != null ? s : "Unique identifier") + " (A-z, 0-9): ", SwingConstants.LEFT));
+		uidField = new JTextField(10);
+		uidField.setToolTipText("Type in a string to be used as the unique identifier of this image question.");
+		uidField.addActionListener(okListener);
+		p1.add(uidField);
 
 		p1 = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
 		p2.add(p1, BorderLayout.CENTER);
@@ -221,9 +232,16 @@ class ImageQuestionMaker extends ComponentMaker {
 		p1.add(transparentCheckBox);
 
 		s = Modeler.getInternationalText("BackgroundColorLabel");
-		p1.add(new JLabel(s != null ? s : "Background color", SwingConstants.LEFT));
+		p1.add(new JLabel((s != null ? s : "Background color") + ": ", SwingConstants.LEFT));
 		bgComboBox = new ColorComboBox(imageQuestion);
 		p1.add(bgComboBox);
+
+		s = Modeler.getInternationalText("BorderLabel");
+		p1.add(new JLabel((s != null ? s : "Border") + " : ", SwingConstants.LEFT));
+		borderComboBox = new JComboBox(BorderManager.BORDER_TYPE);
+		borderComboBox.setRenderer(new ComboBoxRenderer.BorderCell());
+		borderComboBox.setBackground(p1.getBackground());
+		p1.add(borderComboBox);
 
 		p = new JPanel(new BorderLayout(10, 10));
 		p.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));

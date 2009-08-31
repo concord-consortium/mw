@@ -73,6 +73,7 @@ class PageMultipleChoiceMaker extends ComponentMaker {
 	private JCheckBox multipleCheckBox, transparentCheckBox;
 	private ColorComboBox bgComboBox;
 	private JComboBox borderComboBox;
+	private JTextField uidField;
 	private JTextArea questionArea;
 	private IntegerTextField widthField, heightField;
 	private JPanel choiceButtonPanel, choiceFieldPanel, scriptPanel;
@@ -108,6 +109,15 @@ class PageMultipleChoiceMaker extends ComponentMaker {
 			JOptionPane.showMessageDialog(dialog, "You must set the question for this multiple choice.",
 					"Missing question", JOptionPane.ERROR_MESSAGE);
 			return false;
+		}
+
+		String t = uidField.getText();
+		if (t != null) {
+			t = t.trim();
+			pageMultipleChoice.setUid(t.equals("") ? null : t);
+		}
+		else {
+			pageMultipleChoice.setUid(null);
 		}
 
 		pageMultipleChoice.setQuestion(questionArea.getText());
@@ -204,6 +214,7 @@ class PageMultipleChoiceMaker extends ComponentMaker {
 
 		AbstractButton[] choiceButtons = pageMultipleChoice.getChoiceButtons();
 		nChoiceSpinner.setValue(new Integer(choiceButtons.length));
+		uidField.setText(pageMultipleChoice.getUid());
 		widthField.setValue(pageMultipleChoice.getPreferredSize().width);
 		heightField.setValue(pageMultipleChoice.getPreferredSize().height);
 		questionArea.setText(ModelerUtilities.deUnicode(pageMultipleChoice.getQuestion()));
@@ -363,6 +374,14 @@ class PageMultipleChoiceMaker extends ComponentMaker {
 			}
 		});
 		p1.add(nChoiceSpinner);
+
+		s = Modeler.getInternationalText("UniqueIdentifier");
+		p1.add(new JLabel((s != null ? s : "Unique identifier") + " (A-z, 0-9): ", SwingConstants.LEFT));
+		uidField = new JTextField(10);
+		uidField
+				.setToolTipText("Type in a string to be used as the unique identifier of this multiple choice question.");
+		uidField.addActionListener(okListener);
+		p1.add(uidField);
 
 		p1 = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 2));
 		p1.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));

@@ -28,8 +28,12 @@ import static org.concord.mw2d.models.Trigonometry.SIN30;
 
 public class ElectricForceField {
 
+	public final static byte ARGB_SHADING_MODE = 0;
+	public final static byte HSB_SHADING_MODE = 1;
+
 	private final Object lock = new Object();
 
+	private byte mode = HSB_SHADING_MODE;
 	private int width, height, cellSize = 10, nx, ny;
 	private float[] fx, fy;
 	private double intensity, x1, y1, x2, y2, wingx, wingy, cosx, sinx, distance;
@@ -47,6 +51,14 @@ public class ElectricForceField {
 		ny = Math.round((float) height / (float) cellSize);
 		fx = new float[nx * ny];
 		fy = new float[nx * ny];
+	}
+
+	public void setMode(byte mode) {
+		this.mode = mode;
+	}
+
+	public byte getMode() {
+		return mode;
 	}
 
 	public int getCellSize() {
@@ -152,36 +164,83 @@ public class ElectricForceField {
 	public void render(Graphics2D g, MolecularModel model) {
 		if (!computeForceGrid(model))
 			return;
-		Color bgColor = model.getView().getBackground();
-		int fgRed = 255 - bgColor.getRed();
-		int fgBlu = 255 - bgColor.getBlue();
-		int fgGrn = 255 - bgColor.getGreen();
-		synchronized (lock) {
-			for (int i = 0; i < ny; i++) {
-				for (int j = 0; j < nx; j++) {
-					m = i * nx + j;
-					intensity = fx[m] * fx[m] + fy[m] * fy[m];
-					x2 = Math.pow(intensity, smoother) * scaleFactor;
-					if (x2 > 1)
-						x2 = 1;
-					g.setColor(new Color(fgRed, fgGrn, fgBlu, (int) (x2 * 255)));
-					x1 = 1.0 / Math.sqrt(intensity);
-					cosx = fx[m] * x1;
-					sinx = fy[m] * x1;
-					x1 = (j + 0.5 * (1.0 - cosx)) * cellSize;
-					y1 = (i + 0.5 * (1.0 - sinx)) * cellSize;
-					x2 = (j + 0.5 * (1.0 + cosx)) * cellSize;
-					y2 = (i + 0.5 * (1.0 + sinx)) * cellSize;
-					g.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
-					wingx = arrowLength * (cosx * COS30 + sinx * SIN30);
-					wingy = arrowLength * (sinx * COS30 - cosx * SIN30);
-					g.drawLine((int) x2, (int) y2, (int) (x2 - wingx), (int) (y2 - wingy));
-					wingx = arrowLength * (cosx * COS30 - sinx * SIN30);
-					wingy = arrowLength * (sinx * COS30 + cosx * SIN30);
-					g.drawLine((int) x2, (int) y2, (int) (x2 - wingx), (int) (y2 - wingy));
+		switch (mode) {
+		case ARGB_SHADING_MODE:
+			Color bgColor = model.getView().getBackground();
+			int fgRed = 255 - bgColor.getRed();
+			int fgBlu = 255 - bgColor.getBlue();
+			int fgGrn = 255 - bgColor.getGreen();
+			synchronized (lock) {
+				for (int i = 0; i < ny; i++) {
+					for (int j = 0; j < nx; j++) {
+						m = i * nx + j;
+						intensity = fx[m] * fx[m] + fy[m] * fy[m];
+						x2 = Math.pow(intensity, smoother) * scaleFactor;
+						if (x2 > 1)
+							x2 = 1;
+						g.setColor(new Color(fgRed, fgGrn, fgBlu, (int) (x2 * 255)));
+						x1 = 1.0 / Math.sqrt(intensity);
+						cosx = fx[m] * x1;
+						sinx = fy[m] * x1;
+						x1 = (j + 0.5 * (1.0 - cosx)) * cellSize;
+						y1 = (i + 0.5 * (1.0 - sinx)) * cellSize;
+						x2 = (j + 0.5 * (1.0 + cosx)) * cellSize;
+						y2 = (i + 0.5 * (1.0 + sinx)) * cellSize;
+						g.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
+						wingx = arrowLength * (cosx * COS30 + sinx * SIN30);
+						wingy = arrowLength * (sinx * COS30 - cosx * SIN30);
+						g.drawLine((int) x2, (int) y2, (int) (x2 - wingx), (int) (y2 - wingy));
+						wingx = arrowLength * (cosx * COS30 - sinx * SIN30);
+						wingy = arrowLength * (sinx * COS30 + cosx * SIN30);
+						g.drawLine((int) x2, (int) y2, (int) (x2 - wingx), (int) (y2 - wingy));
+					}
 				}
 			}
+			break;
+		case HSB_SHADING_MODE:
+			boolean blackBg = Color.black.equals(model.getView().getBackground());
+			synchronized (lock) {
+				for (int i = 0; i < ny; i++) {
+					for (int j = 0; j < nx; j++) {
+						m = i * nx + j;
+						intensity = fx[m] * fx[m] + fy[m] * fy[m];
+						x2 = Math.pow(intensity, smoother) * scaleFactor;
+						if (x2 > 1)
+							x2 = 1;
+						if (blackBg) {
+							if (x2 < 0.5) {
+								g.setColor(new Color(Color.HSBtoRGB(0.333f, 1, (float) x2)));
+							}
+							else {
+								g.setColor(new Color(Color.HSBtoRGB(0.333f, 1 - (float) x2, 1)));
+							}
+						}
+						else {
+							if (x2 < 0.5) {
+								g.setColor(new Color(Color.HSBtoRGB(0.333f, (float) x2, 1)));
+							}
+							else {
+								g.setColor(new Color(Color.HSBtoRGB(0.333f, 1, (1 - (float) x2))));
+							}
+						}
+						x1 = 1.0 / Math.sqrt(intensity);
+						cosx = fx[m] * x1;
+						sinx = fy[m] * x1;
+						x1 = (j + 0.5 * (1.0 - cosx)) * cellSize;
+						y1 = (i + 0.5 * (1.0 - sinx)) * cellSize;
+						x2 = (j + 0.5 * (1.0 + cosx)) * cellSize;
+						y2 = (i + 0.5 * (1.0 + sinx)) * cellSize;
+						g.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
+						wingx = arrowLength * (cosx * COS30 + sinx * SIN30);
+						wingy = arrowLength * (sinx * COS30 - cosx * SIN30);
+						g.drawLine((int) x2, (int) y2, (int) (x2 - wingx), (int) (y2 - wingy));
+						wingx = arrowLength * (cosx * COS30 - sinx * SIN30);
+						wingy = arrowLength * (sinx * COS30 + cosx * SIN30);
+						g.drawLine((int) x2, (int) y2, (int) (x2 - wingx), (int) (y2 - wingy));
+					}
+				}
+			}
+			break;
 		}
 	}
-
 }
