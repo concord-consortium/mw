@@ -214,6 +214,8 @@ public class PagePeriodicTable extends PeriodicTable implements Embeddable {
 
 	public String toString() {
 		StringBuffer sb = new StringBuffer("<class>" + getClass().getName() + "</class>\n");
+		if (uid != null)
+			sb.append("<uid>" + uid + "</uid>\n");
 		if (!isMuted())
 			sb.append("<mute>false</mute>\n");
 		if (!isOpaque()) {

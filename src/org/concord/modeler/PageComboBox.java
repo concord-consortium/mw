@@ -529,6 +529,8 @@ public class PageComboBox extends JComboBox implements Embeddable, ModelCommunic
 
 	public String toString() {
 		StringBuffer sb = new StringBuffer("<class>" + getClass().getName() + "</class>\n");
+		if (uid != null)
+			sb.append("<uid>" + uid + "</uid>\n");
 		if (modelClass != null)
 			sb.append("<modelclass>" + modelClass + "</modelclass>\n");
 		sb.append("<model>" + modelID + "</model>\n");

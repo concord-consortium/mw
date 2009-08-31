@@ -321,6 +321,8 @@ public class PageFunctionGraph extends JPanel implements Embeddable {
 
 	public String toString() {
 		StringBuffer sb = new StringBuffer("<class>" + getClass().getName() + "</class>\n");
+		if (uid != null)
+			sb.append("<uid>" + uid + "</uid>\n");
 		sb.append("<width>" + getWidth() + "</width><height>" + getHeight() + "</height>");
 		if (!graph.isOpaque()) {
 			sb.append("<opaque>false</opaque>\n");

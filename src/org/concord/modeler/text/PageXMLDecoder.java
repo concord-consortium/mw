@@ -436,7 +436,7 @@ final class PageXMLDecoder {
 		boolean caching;
 		List<String> jarNames;
 		String parameter;
-		String titleText, toolTip, actionName, changeName;
+		String uid, titleText, toolTip, actionName, changeName;
 		String imageFileName, imageFileDeselected, description;
 		String format;
 		String modelClass;
@@ -1596,6 +1596,10 @@ final class PageXMLDecoder {
 					stepsize = d;
 			}
 
+			else if (qName == "uid") {
+				uid = str;
+			}
+
 			else if (qName == "title") {
 				titleText = str;
 			}
@@ -2118,6 +2122,10 @@ final class PageXMLDecoder {
 		private PageTextBox createTextBox() {
 			PageTextBox t = new PageTextBox();
 			t.setIndex(indexOfComponent++);
+			if (uid != null) {
+				t.setUid(uid);
+				uid = null;
+			}
 			if (titleText != null && titleText.trim().length() >= 6) {
 				t.setContentType(titleText.trim().substring(0, 6).toLowerCase().equals("<html>") ? "text/html"
 						: "text/plain");
@@ -2204,6 +2212,10 @@ final class PageXMLDecoder {
 		private PageFunctionGraph createFunctionGraph() {
 			PageFunctionGraph g = new PageFunctionGraph();
 			g.setPage(page);
+			if (uid != null) {
+				g.setUid(uid);
+				uid = null;
+			}
 			g.setChangable(page.isEditable());
 			if (width > 0 && height > 0) {
 				g.setPreferredSize(new Dimension((int) width, (int) height));
@@ -2240,6 +2252,10 @@ final class PageXMLDecoder {
 		private PagePeriodicTable createPeriodicTable() {
 			PagePeriodicTable t = new PagePeriodicTable();
 			t.setPage(page);
+			if (uid != null) {
+				t.setUid(uid);
+				uid = null;
+			}
 			if (!mute) {
 				t.mute(false);
 				mute = true;
@@ -2270,6 +2286,10 @@ final class PageXMLDecoder {
 		private PageFeedbackArea createFeedbackArea() {
 			PageFeedbackArea fa = new PageFeedbackArea();
 			fa.setPage(page);
+			if (uid != null) {
+				fa.setUid(uid);
+				uid = null;
+			}
 			if (borderType != null) {
 				fa.setBorderType(borderType);
 				borderType = null;
@@ -2312,6 +2332,10 @@ final class PageXMLDecoder {
 			SearchTextField t = new SearchTextField();
 			t.setPage(page);
 			t.setIndex(indexOfComponent);
+			if (uid != null) {
+				t.setUid(uid);
+				uid = null;
+			}
 			if (type >= 0) {
 				t.setDatabaseType(type);
 				type = -1;
@@ -2340,6 +2364,10 @@ final class PageXMLDecoder {
 			PagePhotonSpectrometer s = new PagePhotonSpectrometer();
 			s.setPage(page);
 			s.setModelID(modelIndex);
+			if (uid != null) {
+				s.setUid(uid);
+				uid = null;
+			}
 			if (type != -1) {
 				s.setType(type);
 				type = -1;
@@ -2373,6 +2401,10 @@ final class PageXMLDecoder {
 			PageDiffractionInstrument i = new PageDiffractionInstrument();
 			i.setPage(page);
 			i.setModelID(modelIndex);
+			if (uid != null) {
+				i.setUid(uid);
+				uid = null;
+			}
 			if (type != -1) {
 				i.setType(type);
 				type = -1;
@@ -2409,6 +2441,10 @@ final class PageXMLDecoder {
 			PageElectronicStructureViewer s = new PageElectronicStructureViewer();
 			s.setModelID(modelIndex);
 			s.setPage(page);
+			if (uid != null) {
+				s.setUid(uid);
+				uid = null;
+			}
 			if (titleText != null) {
 				s.setTitle(titleText);
 				titleText = null;
@@ -2462,6 +2498,10 @@ final class PageXMLDecoder {
 			PageDNAScroller s = new PageDNAScroller();
 			s.setPage(page);
 			s.setModelID(modelIndex);
+			if (uid != null) {
+				s.setUid(uid);
+				uid = null;
+			}
 			if (borderType != null) {
 				s.setBorderType(borderType);
 				borderType = null;
@@ -2493,6 +2533,10 @@ final class PageXMLDecoder {
 			PagePotentialHill h = new PagePotentialHill();
 			h.setModelID(modelIndex);
 			h.setPage(page);
+			if (uid != null) {
+				h.setUid(uid);
+				uid = null;
+			}
 			if (!opaque) {
 				h.setOpaque(false);
 				opaque = true;
@@ -2521,6 +2565,10 @@ final class PageXMLDecoder {
 			PagePotentialWell w = new PagePotentialWell();
 			w.setPage(page);
 			w.setModelID(modelIndex);
+			if (uid != null) {
+				w.setUid(uid);
+				uid = null;
+			}
 			if (!opaque) {
 				w.setOpaque(false);
 				opaque = true;
@@ -2549,6 +2597,10 @@ final class PageXMLDecoder {
 			PageXYGraph b = new PageXYGraph();
 			b.setPage(page);
 			b.setModelID(modelIndex);
+			if (uid != null) {
+				b.setUid(uid);
+				uid = null;
+			}
 			if ((argb1 | ARGB_NOT_SET) != ARGB_NOT_SET) {
 				b.getGraph().setGraphBackground(new Color(argb1));
 				argb1 = ARGB_NOT_SET;
@@ -2700,6 +2752,10 @@ final class PageXMLDecoder {
 			PageBarGraph b = new PageBarGraph();
 			b.setPage(page);
 			b.setModelID(modelIndex);
+			if (uid != null) {
+				b.setUid(uid);
+				uid = null;
+			}
 			b.setValue(value);
 			b.setInitialValue(value);
 			b.setMinimum(minimum);
@@ -2798,6 +2854,10 @@ final class PageXMLDecoder {
 			PageGauge g = new PageGauge();
 			g.setPage(page);
 			g.setModelID(modelIndex);
+			if (uid != null) {
+				g.setUid(uid);
+				uid = null;
+			}
 			g.setValue(value);
 			g.setInitialValue(value);
 			g.setMinimum(minimum);
@@ -2883,6 +2943,10 @@ final class PageXMLDecoder {
 			PageNumericBox b = new PageNumericBox();
 			b.setPage(page);
 			b.setModelID(modelIndex);
+			if (uid != null) {
+				b.setUid(uid);
+				uid = null;
+			}
 			if ((argb2 | ARGB_NOT_SET) != ARGB_NOT_SET) {
 				b.setForeground(new Color(argb2));
 				argb2 = ARGB_NOT_SET;
@@ -2954,6 +3018,10 @@ final class PageXMLDecoder {
 			PageMultipleChoice m = new PageMultipleChoice();
 			m.setIndex(indexOfComponent);
 			m.setPage(page);
+			if (uid != null) {
+				m.setUid(uid);
+				uid = null;
+			}
 			m.setSingleSelection(singleSelection);
 			m.changeNumberOfChoices(nrow == 0 ? 4 : nrow);
 			for (int i = 0; i < nrow; i++)
@@ -3064,6 +3132,10 @@ final class PageXMLDecoder {
 			ImageQuestion iq = new ImageQuestion();
 			iq.setPage(page);
 			iq.setIndex(indexOfComponent);
+			if (uid != null) {
+				iq.setUid(uid);
+				uid = null;
+			}
 			if (width > 0 && height > 0) {
 				iq.setPreferredSize(new Dimension((int) width, (int) height));
 				width = height = 0;
@@ -3124,6 +3196,10 @@ final class PageXMLDecoder {
 			PageTextArea t = new PageTextArea();
 			t.setPage(page);
 			t.setIndex(indexOfComponent);
+			if (uid != null) {
+				t.setUid(uid);
+				uid = null;
+			}
 			boolean needCache = ConnectionManager.sharedInstance().isCachingAllowed() && page.isRemote();
 			if (titleText != null) {
 				if (needCache) {
@@ -3198,6 +3274,10 @@ final class PageXMLDecoder {
 			PageTextField t = new PageTextField();
 			t.setPage(page);
 			t.setIndex(indexOfComponent);
+			if (uid != null) {
+				t.setUid(uid);
+				uid = null;
+			}
 			boolean needCache = ConnectionManager.sharedInstance().isCachingAllowed() && page.isRemote();
 			if (titleText != null) {
 				if (needCache) {
@@ -3279,6 +3359,10 @@ final class PageXMLDecoder {
 			}
 			PageTable t = new PageTable(tableValue, columnName != null, rowName != null);
 			t.setPage(page);
+			if (uid != null) {
+				t.setUid(uid);
+				uid = null;
+			}
 			if (rowMargin != 10 && rowMargin != t.getRowMargin()) {
 				t.setRowMargin(rowMargin);
 				rowMargin = 10;
@@ -3366,6 +3450,10 @@ final class PageXMLDecoder {
 		private PageSpinner createSpinner() {
 			PageSpinner s = new PageSpinner();
 			s.setPage(page);
+			if (uid != null) {
+				s.setUid(uid);
+				uid = null;
+			}
 			connect(s);
 			s.setMinimum(minimum);
 			s.setMaximum(maximum);
@@ -3408,6 +3496,10 @@ final class PageXMLDecoder {
 		private PageSlider createSlider() {
 			PageSlider s = new PageSlider();
 			s.setPage(page);
+			if (uid != null) {
+				s.setUid(uid);
+				uid = null;
+			}
 			connect(s);
 			if (orientation == PageSlider.VERTICAL || orientation == PageSlider.HORIZONTAL) {
 				s.setOrientation(orientation);
@@ -3478,6 +3570,10 @@ final class PageXMLDecoder {
 		private PageCheckBox createCheckBox() {
 			PageCheckBox b = new PageCheckBox();
 			b.setPage(page);
+			if (uid != null) {
+				b.setUid(uid);
+				uid = null;
+			}
 			connect(b);
 			if (!transparent) {
 				b.setOpaque(true);
@@ -3555,6 +3651,10 @@ final class PageXMLDecoder {
 
 		private PageRadioButton createRadioButton() {
 			PageRadioButton b = new PageRadioButton();
+			if (uid != null) {
+				b.setUid(uid);
+				uid = null;
+			}
 			if (groupID != 0) {
 				b.setGroupID(groupID);
 				groupID = 0;
@@ -3646,6 +3746,10 @@ final class PageXMLDecoder {
 		private PageComboBox createComboBox() {
 			PageComboBox cb = new PageComboBox();
 			cb.setPage(page);
+			if (uid != null) {
+				cb.setUid(uid);
+				uid = null;
+			}
 			connect(cb);
 			if (actionName != null) {
 				cb.setName(actionName);
@@ -3682,6 +3786,10 @@ final class PageXMLDecoder {
 		private PageButton createButton() {
 			PageButton b = new PageButton();
 			b.setPage(page);
+			if (uid != null) {
+				b.setUid(uid);
+				uid = null;
+			}
 			connect(b);
 			if (borderType != null) {
 				b.setBorderType(borderType);
@@ -3753,6 +3861,10 @@ final class PageXMLDecoder {
 		private ActivityButton createActivityButton() {
 			ActivityButton b = new ActivityButton();
 			b.setPage(page);
+			if (uid != null) {
+				b.setUid(uid);
+				uid = null;
+			}
 			if (borderType != null) {
 				b.setBorderType(borderType);
 				borderType = null;
@@ -3829,6 +3941,10 @@ final class PageXMLDecoder {
 			PageApplet applet = new PageApplet();
 			applet.setPage(page);
 			applet.setIndex(indexOfApplet++);
+			if (uid != null) {
+				applet.setUid(uid);
+				uid = null;
+			}
 			if (mainClass != null) {
 				applet.setClassName(mainClass);
 				mainClass = null;
@@ -3867,6 +3983,10 @@ final class PageXMLDecoder {
 			PageJContainer plugin = new PageJContainer();
 			plugin.setPage(page);
 			plugin.setIndex(indexOfPlugin++);
+			if (uid != null) {
+				plugin.setUid(uid);
+				uid = null;
+			}
 			if (codeBase != null) {
 				plugin.setCodeBase(codeBase);
 				codeBase = null;
@@ -3908,6 +4028,10 @@ final class PageXMLDecoder {
 		private AudioPlayer createAudioPlayer() {
 			AudioPlayer player = new AudioPlayer();
 			player.setPage(page);
+			if (uid != null) {
+				player.setUid(uid);
+				uid = null;
+			}
 			if (description != null) {
 				player.setClipName(description);
 				description = null;
@@ -3935,6 +4059,10 @@ final class PageXMLDecoder {
 		private PageScriptConsole createScriptConsole() {
 			PageScriptConsole sc = new PageScriptConsole();
 			sc.setPage(page);
+			if (uid != null) {
+				sc.setUid(uid);
+				uid = null;
+			}
 			connect(sc);
 			if (borderType != null) {
 				sc.setBorderType(borderType);
@@ -3954,6 +4082,10 @@ final class PageXMLDecoder {
 		private PageMolecularViewer createMolecularViewer() {
 			PageMolecularViewer mv = (PageMolecularViewer) InstancePool.sharedInstance().getUnusedInstance(
 					PageMolecularViewer.class);
+			if (uid != null) {
+				mv.setUid(uid);
+				uid = null;
+			}
 			jmolConnector.enroll(mv);
 			mv.setPage(page);
 			mv.reset();
@@ -4017,6 +4149,10 @@ final class PageXMLDecoder {
 
 		private PageMd3d createMd3d() {
 			PageMd3d md = (PageMd3d) InstancePool.sharedInstance().getUnusedInstance(PageMd3d.class);
+			if (uid != null) {
+				md.setUid(uid);
+				uid = null;
+			}
 			mw3dConnector.enroll(md);
 			md.setPage(page);
 			md.reset();

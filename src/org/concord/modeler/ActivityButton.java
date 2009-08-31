@@ -365,6 +365,8 @@ public class ActivityButton extends JButton implements Embeddable {
 
 	public String toString() {
 		StringBuffer sb = new StringBuffer("<class>" + getClass().getName() + "</class>\n");
+		if (uid != null)
+			sb.append("<uid>" + uid + "</uid>\n");
 		sb.append("<title>" + XMLCharacterEncoder.encode(getText()) + "</title>\n");
 		Icon icon = getIcon();
 		if (icon instanceof ImageIcon) {

@@ -596,6 +596,8 @@ public class PageSlider extends JSlider implements Embeddable, ModelCommunicator
 		AbstractChange c = getChange();
 
 		StringBuffer sb = new StringBuffer("<class>" + getClass().getName() + "</class>\n");
+		if (uid != null)
+			sb.append("<uid>" + uid + "</uid>\n");
 		if (modelClass != null)
 			sb.append("<modelclass>" + getModelClass() + "</modelclass>\n");
 		sb.append("<model>" + getModelID() + "</model>\n");

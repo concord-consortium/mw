@@ -480,6 +480,8 @@ public class PageButton extends JButton implements Embeddable, ModelCommunicator
 		Action a = getAction();
 		StringBuffer sb = new StringBuffer("<class>" + getClass().getName() + "</class>\n");
 		sb.append("<title>" + XMLCharacterEncoder.encode(getText()) + "</title>\n");
+		if (uid != null)
+			sb.append("<uid>" + uid + "</uid>\n");
 		Icon icon = getIcon();
 		if (icon instanceof ImageIcon) {
 			String imageFileName = ((ImageIcon) icon).getDescription();

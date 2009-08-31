@@ -384,6 +384,8 @@ public class PageBarGraph extends BarGraph implements Embeddable, Scriptable, Mo
 		if (modelClass != null)
 			sb.append("<modelclass>" + modelClass + "</modelclass>\n");
 		sb.append("<model>" + getModelID() + "</model>\n");
+		if (uid != null)
+			sb.append("<uid>" + uid + "</uid>\n");
 		sb.append("<timeseries>" + timeSeriesName + "</timeseries>\n");
 		if (!getDescription().equals(timeSeriesName))
 			sb.append("<description>" + XMLCharacterEncoder.encode(getDescription()) + "</description>\n");

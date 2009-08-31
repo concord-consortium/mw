@@ -372,6 +372,8 @@ public class PageGauge extends Gauge implements Embeddable, Scriptable, ModelCom
 			sb.append("<modelclass>" + modelClass + "</modelclass>\n");
 		sb.append("<model>" + getModelID() + "</model>\n");
 		sb.append("<timeseries>" + timeSeriesName + "</timeseries>\n");
+		if (uid != null)
+			sb.append("<uid>" + uid + "</uid>\n");
 		if (!getDescription().equals(timeSeriesName))
 			sb.append("<description>" + XMLCharacterEncoder.encode(getDescription()) + "</description>\n");
 		switch (getAverageType()) {

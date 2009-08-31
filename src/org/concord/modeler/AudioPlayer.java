@@ -565,6 +565,8 @@ public class AudioPlayer extends JPanel implements Embeddable, MetaEventListener
 
 	public String toString() {
 		StringBuffer sb = new StringBuffer("<class>" + getClass().getName() + "</class>\n");
+		if (uid != null)
+			sb.append("<uid>" + uid + "</uid>\n");
 		sb.append("<title>" + XMLCharacterEncoder.encode(getText()) + "</title>\n");
 		if (getToolTipText() != null) {
 			sb.append("<tooltip>" + XMLCharacterEncoder.encode(getToolTipText()) + "</tooltip>\n");

@@ -1739,6 +1739,8 @@ public class PageMolecularViewer extends JmolContainer implements BasicModel, Em
 
 	public String toString() {
 		StringBuffer sb = new StringBuffer("<class>" + getClass().getName() + "</class>\n");
+		if (uid != null)
+			sb.append("<uid>" + uid + "</uid>\n");
 		String s = getCustomInitializationScript();
 		if (s != null && !s.trim().equals(""))
 			sb.append("<script>" + XMLCharacterEncoder.encode(s) + "</script>");

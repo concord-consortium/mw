@@ -443,6 +443,8 @@ public class PageElectronicStructureViewer extends ElectronicStructureViewer imp
 		StringBuffer sb = new StringBuffer("<class>" + getClass().getName() + "</class>\n");
 		sb.append("<model>" + modelID + "</model>\n");
 		sb.append("<type>" + elementID + "</type>\n");
+		if (uid != null)
+			sb.append("<uid>" + uid + "</uid>\n");
 		if (getTitle() != null)
 			sb.append("<title>" + XMLCharacterEncoder.encode(getTitle()) + "</title>\n");
 		sb.append("<minimum>" + getLowerBound() + "</minimum>\n");

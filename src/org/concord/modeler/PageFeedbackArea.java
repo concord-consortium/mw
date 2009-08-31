@@ -296,6 +296,8 @@ public class PageFeedbackArea extends FeedbackArea implements Embeddable, AutoRe
 
 	public String toString() {
 		StringBuffer sb = new StringBuffer("<class>" + getClass().getName() + "</class>\n");
+		if (uid != null)
+			sb.append("<uid>" + uid + "</uid>\n");
 		sb.append("<width>" + (widthIsRelative ? (widthRatio > 1.0f ? 1 : widthRatio) : getWidth()) + "</width>\n");
 		sb.append("<height>" + (heightIsRelative ? (heightRatio > 1.0f ? 1 : heightRatio) : getHeight())
 				+ "</height>\n");

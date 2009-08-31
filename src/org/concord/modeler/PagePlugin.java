@@ -838,6 +838,9 @@ abstract public class PagePlugin extends JPanel implements Embeddable, Scriptabl
 		if (className != null)
 			sb.append("<appletclass>" + className + "</appletclass>\n");
 
+		if (uid != null)
+			sb.append("<uid>" + uid + "</uid>\n");
+
 		sb.append("<resource>" + XMLCharacterEncoder.encode(FileUtilities.getFileName(getResourceAddress()))
 				+ "</resource>");
 

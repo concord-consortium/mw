@@ -416,6 +416,8 @@ public class PageNumericBox extends JLabel implements Embeddable, ModelCommunica
 		sb.append("<model>" + getModelID() + "</model>\n");
 		if (dataType != INSTANTANEOUS)
 			sb.append("<datatype>" + dataType + "</datatype>\n");
+		if (uid != null)
+			sb.append("<uid>" + uid + "</uid>\n");
 		sb.append("<description>" + XMLCharacterEncoder.encode(getDescription()) + "</description>\n");
 		sb.append("<width>" + getWidth() + "</width>\n");
 		sb.append("<height>" + getHeight() + "</height>\n");

@@ -973,6 +973,8 @@ public class PageXYGraph extends XYGrapher implements Embeddable, Scriptable, Mo
 		StringBuffer sb = new StringBuffer("<class>" + getClass().getName() + "</class>\n");
 		if (modelClass != null)
 			sb.append("<modelclass>" + modelClass + "</modelclass>\n");
+		if (uid != null)
+			sb.append("<uid>" + uid + "</uid>\n");
 		sb.append("<model>" + getModelID() + "</model>\n");
 		sb.append("<time_series_x>" + XMLCharacterEncoder.encode(descriptions[0]) + "</time_series_x>\n");
 		if (xMultiplier != 1.0f)
