@@ -326,6 +326,8 @@ public class PagePhotonSpectrometer extends PhotonSpectrometer implements Script
 	public String toString() {
 		StringBuffer sb = new StringBuffer("<class>" + getClass().getName() + "</class>\n");
 		sb.append("<model>" + getModelID() + "</model>\n");
+		if (uid != null)
+			sb.append("<uid>" + uid + "</uid>\n");
 		sb.append("<minimum>" + getLowerBound() + "</minimum>\n");
 		sb.append("<maximum>" + getUpperBound() + "</maximum>\n");
 		sb.append("<nstep>" + getNumberOfTicks() + "</nstep>\n");

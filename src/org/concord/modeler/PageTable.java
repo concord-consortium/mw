@@ -960,6 +960,9 @@ public class PageTable extends JScrollPane implements Embeddable, AutoResizable 
 
 		StringBuffer sb = new StringBuffer("<class>" + getClass().getName() + "</class>\n");
 
+		if (uid != null)
+			sb.append("<uid>" + uid + "</uid>\n");
+
 		if (hasTableColumnHeader())
 			sb.append("<columnname>" + XMLCharacterEncoder.encode(getColumnNames()) + "</columnname>\n");
 		if (hasTableRowHeader())

@@ -65,6 +65,7 @@ class PageRadioButtonMaker extends ComponentMaker {
 	private JCheckBox transparentCheckBox, autoSizeCheckBox, disabledAtRunCheckBox, disabledAtScriptCheckBox;
 	private ColorComboBox bgComboBox;
 	private JTextField nameField;
+	private JTextField uidField;
 	private JTextField imageSelectedField, imageDeselectedField;
 	private JTextField toolTipField;
 	private IntegerTextField widthField, heightField;
@@ -119,6 +120,14 @@ class PageRadioButtonMaker extends ComponentMaker {
 	}
 
 	private void confirm() {
+		String s = uidField.getText();
+		if (s != null) {
+			s = s.trim();
+			pageRadioButton.setUid(s.equals("") ? null : s);
+		}
+		else {
+			pageRadioButton.setUid(null);
+		}
 		pageRadioButton.setTransparent(transparentCheckBox.isSelected());
 		pageRadioButton.setBackground(bgComboBox.getSelectedColor());
 		Object o = modelComboBox.getSelectedItem();
@@ -138,7 +147,7 @@ class PageRadioButtonMaker extends ComponentMaker {
 		pageRadioButton.setImageFileNameSelected(imageSelectedField.getText());
 		pageRadioButton.setImageFileNameDeselected(imageDeselectedField.getText());
 		if (pageRadioButton.isSelected()) {
-			String s = pageRadioButton.getImageFileNameSelected();
+			s = pageRadioButton.getImageFileNameSelected();
 			if (s != null && !s.trim().equals("")) {
 				pageRadioButton.setIcon(loadLocalImage(pageRadioButton.page, s));
 			}
@@ -147,7 +156,7 @@ class PageRadioButtonMaker extends ComponentMaker {
 			}
 		}
 		else {
-			String s = pageRadioButton.getImageFileNameDeselected();
+			s = pageRadioButton.getImageFileNameDeselected();
 			if (s != null && !s.trim().equals("")) {
 				pageRadioButton.setIcon(loadLocalImage(pageRadioButton.page, s));
 			}
@@ -253,6 +262,7 @@ class PageRadioButtonMaker extends ComponentMaker {
 		String t = pageRadioButton.getText();
 		nameField.setText(t != null ? t : (actionComboBox.getSelectedItem() != null ? actionComboBox.getSelectedItem()
 				.toString() : null));
+		uidField.setText(pageRadioButton.getUid());
 		imageSelectedField.setText(pageRadioButton.getImageFileNameSelected());
 		imageDeselectedField.setText(pageRadioButton.getImageFileNameDeselected());
 		toolTipField.setText(pageRadioButton.getToolTipText());
@@ -382,6 +392,14 @@ class PageRadioButtonMaker extends ComponentMaker {
 		p.add(actionComboBox);
 
 		// row 3
+		s = Modeler.getInternationalText("UniqueIdentifier");
+		p.add(new JLabel(s != null ? s : "Unique identifier", SwingConstants.LEFT));
+		uidField = new JTextField();
+		uidField.setToolTipText("Type in a string to be used as the unique identifier of this button.");
+		uidField.addActionListener(okListener);
+		p.add(uidField);
+
+		// row 4
 		s = Modeler.getInternationalText("TextLabel");
 		p.add(new JLabel(s != null ? s : "Text", SwingConstants.LEFT));
 		nameField = new JTextField();
@@ -389,7 +407,7 @@ class PageRadioButtonMaker extends ComponentMaker {
 		nameField.addActionListener(okListener);
 		p.add(nameField);
 
-		// row 4
+		// row 5
 		s = Modeler.getInternationalText("ImageFileNameSelected");
 		p.add(new JLabel(s != null ? s : "Image to show while selected", SwingConstants.LEFT));
 		imageSelectedField = new JTextField();
@@ -398,7 +416,7 @@ class PageRadioButtonMaker extends ComponentMaker {
 		imageSelectedField.addActionListener(okListener);
 		p.add(imageSelectedField);
 
-		// row 5
+		// row 6
 		s = Modeler.getInternationalText("ImageFileNameDeselected");
 		p.add(new JLabel(s != null ? s : "Image to show while not selected", SwingConstants.LEFT));
 		imageDeselectedField = new JTextField();
@@ -407,7 +425,7 @@ class PageRadioButtonMaker extends ComponentMaker {
 		imageDeselectedField.addActionListener(okListener);
 		p.add(imageDeselectedField);
 
-		// row 6
+		// row 7
 		s = Modeler.getInternationalText("ToolTipLabel");
 		p.add(new JLabel(s != null ? s : "Tool tip", SwingConstants.LEFT));
 		toolTipField = new JTextField();
@@ -415,7 +433,7 @@ class PageRadioButtonMaker extends ComponentMaker {
 		toolTipField.addActionListener(okListener);
 		p.add(toolTipField);
 
-		// row 7
+		// row 8
 		s = Modeler.getInternationalText("WidthLabel");
 		p.add(new JLabel(s != null ? s : "Width", SwingConstants.LEFT));
 		widthField = new IntegerTextField(pageRadioButton.getWidth() <= 0 ? 100 : pageRadioButton.getWidth(), 10, 400);
@@ -425,7 +443,7 @@ class PageRadioButtonMaker extends ComponentMaker {
 		widthField.addActionListener(okListener);
 		p.add(widthField);
 
-		// row 8
+		// row 9
 		s = Modeler.getInternationalText("HeightLabel");
 		p.add(new JLabel(s != null ? s : "Height", SwingConstants.LEFT));
 		heightField = new IntegerTextField(pageRadioButton.getHeight() <= 0 ? 24 : pageRadioButton.getHeight(), 10, 400);
@@ -435,7 +453,7 @@ class PageRadioButtonMaker extends ComponentMaker {
 		heightField.addActionListener(okListener);
 		p.add(heightField);
 
-		// row 9
+		// row 10
 		s = Modeler.getInternationalText("BackgroundColorLabel");
 		p.add(new JLabel(s != null ? s : "Background color", SwingConstants.LEFT));
 		bgComboBox = new ColorComboBox(pageRadioButton);
@@ -443,7 +461,7 @@ class PageRadioButtonMaker extends ComponentMaker {
 		bgComboBox.setToolTipText("Select the background color for this radio button, if it is not transparent.");
 		p.add(bgComboBox);
 
-		ModelerUtilities.makeCompactGrid(p, 9, 2, 5, 5, 10, 2);
+		ModelerUtilities.makeCompactGrid(p, 10, 2, 5, 5, 10, 2);
 
 		p = new JPanel(new BorderLayout(10, 10));
 		p.setBorder(BorderFactory.createEmptyBorder(10, 10, 2, 10));

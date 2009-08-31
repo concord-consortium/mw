@@ -455,6 +455,8 @@ public class PageTextArea extends JPanel implements Embeddable, HtmlService, Sea
 
 	public String toString() {
 		StringBuffer sb = new StringBuffer("<class>" + getClass().getName() + "</class>\n");
+		if (uid != null)
+			sb.append("<uid>" + uid + "</uid>\n");
 		sb.append("<width>" + getWidth() + "</width>\n");
 		sb.append("<height>" + getHeight() + "</height>\n");
 		if (getTitle() != null)

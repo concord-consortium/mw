@@ -687,6 +687,9 @@ public class PageMd3d extends MolecularContainer implements Embeddable, Scriptab
 					+ "</coordinate>");
 		}
 
+		if (uid != null)
+			b.append("<uid>" + uid + "</uid>\n");
+
 		b.append("<width>" + getWidth() + "</width><height>" + getHeight() + "</height>");
 
 		if (!isMenuBarEnabled())

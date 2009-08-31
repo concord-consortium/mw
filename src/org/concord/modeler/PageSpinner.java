@@ -457,6 +457,8 @@ public class PageSpinner extends JComponent implements Embeddable, ModelCommunic
 	public String toString() {
 		AbstractChange c = getChange();
 		StringBuffer sb = new StringBuffer("<class>" + getClass().getName() + "</class>\n");
+		if (uid != null)
+			sb.append("<uid>" + uid + "</uid>\n");
 		sb.append("<title>" + XMLCharacterEncoder.encode(label.getText()) + "</title>\n");
 		String s = getToolTipText();
 		if (s == null || (c != null && s.equals(c.getProperty(AbstractChange.SHORT_DESCRIPTION)))) {

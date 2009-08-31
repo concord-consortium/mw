@@ -533,6 +533,8 @@ public class ImageQuestion extends JPanel implements Embeddable, TransferListene
 
 	public String toString() {
 		StringBuffer sb = new StringBuffer("<class>" + getClass().getName() + "</class>");
+		if (uid != null)
+			sb.append("<uid>" + uid + "</uid>\n");
 		sb.append("<width>" + getWidth() + "</width>");
 		sb.append("<height>" + getHeight() + "</height>");
 		sb.append("<title>" + XMLCharacterEncoder.encode(questionArea.getText()) + "</title>");

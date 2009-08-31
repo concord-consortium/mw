@@ -466,6 +466,8 @@ public class PageTextField extends JPanel implements Embeddable, HtmlService, Se
 
 	public String toString() {
 		StringBuffer sb = new StringBuffer("<class>" + getClass().getName() + "</class>\n");
+		if (uid != null)
+			sb.append("<uid>" + uid + "</uid>\n");
 		if (!layout.equals(BorderLayout.NORTH))
 			sb.append("<layout>" + layout + "</layout>\n");
 		sb.append("<width>" + getWidth() + "</width>\n");

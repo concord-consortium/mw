@@ -78,6 +78,7 @@ class PageSliderMaker extends ComponentMaker {
 	private JRadioButton horizontalRadioButton, verticalRadioButton;
 	private JComboBox borderComboBox;
 	private ColorComboBox bgComboBox;
+	private JTextField uidField;
 	private JTextField nameField;
 	private JTextField toolTipField;
 	private RealNumberTextField maxField, minField, valueField;
@@ -159,6 +160,14 @@ class PageSliderMaker extends ComponentMaker {
 					JOptionPane.ERROR_MESSAGE);
 			focusTextComponent = maxField;
 			return false;
+		}
+		String s = uidField.getText();
+		if (s != null) {
+			s = s.trim();
+			pageSlider.setUid(s.equals("") ? null : s);
+		}
+		else {
+			pageSlider.setUid(null);
 		}
 		pageSlider.setTitle(nameField.getText());
 		pageSlider.setOrientation(horizontalRadioButton.isSelected() ? JSlider.HORIZONTAL : JSlider.VERTICAL);
@@ -308,6 +317,7 @@ class PageSliderMaker extends ComponentMaker {
 		String t = pageSlider.getTitle();
 		nameField.setText(t != null && !t.trim().equals("") ? t
 				: (actionComboBox.getSelectedItem() != null ? actionComboBox.getSelectedItem().toString() : null));
+		uidField.setText(pageSlider.getUid());
 		toolTipField.setText(pageSlider.getToolTipText());
 		minField.setValue(pageSlider.getDoubleMinimum());
 		maxField.setValue(pageSlider.getDoubleMaximum());
@@ -484,6 +494,14 @@ class PageSliderMaker extends ComponentMaker {
 		p2.add(actionComboBox);
 
 		// row 3
+		s = Modeler.getInternationalText("UniqueIdentifier");
+		p2.add(new JLabel(s != null ? s : "Unique identifier", SwingConstants.LEFT));
+		uidField = new JTextField();
+		uidField.setToolTipText("Type in a string to be used as the unique identifier of this button.");
+		uidField.addActionListener(okListener);
+		p2.add(uidField);
+
+		// row 4
 		s = Modeler.getInternationalText("TextLabel");
 		p2.add(new JLabel(s != null ? s : "Title", SwingConstants.LEFT));
 		nameField = new JTextField(pageSlider.getTitle());
@@ -491,7 +509,7 @@ class PageSliderMaker extends ComponentMaker {
 		nameField.addActionListener(okListener);
 		p2.add(nameField);
 
-		// row 4
+		// row 5
 		s = Modeler.getInternationalText("ToolTipLabel");
 		p2.add(new JLabel(s != null ? s : "Tool tip", SwingConstants.LEFT));
 		toolTipField = new JTextField();
@@ -499,7 +517,7 @@ class PageSliderMaker extends ComponentMaker {
 		toolTipField.addActionListener(okListener);
 		p2.add(toolTipField);
 
-		// row 5
+		// row 6
 		s = Modeler.getInternationalText("BackgroundColorLabel");
 		p2.add(new JLabel(s != null ? s : "Background color", SwingConstants.LEFT));
 		bgComboBox = new ColorComboBox(pageSlider);
@@ -507,7 +525,7 @@ class PageSliderMaker extends ComponentMaker {
 		bgComboBox.setToolTipText("Select the background color for this slider, if it is not transparent.");
 		p2.add(bgComboBox);
 
-		// row 6
+		// row 7
 		s = Modeler.getInternationalText("BorderLabel");
 		p2.add(new JLabel(s != null ? s : "Border", SwingConstants.LEFT));
 		borderComboBox = new JComboBox(BorderManager.BORDER_TYPE);
@@ -516,7 +534,7 @@ class PageSliderMaker extends ComponentMaker {
 		borderComboBox.setToolTipText("Select the border type for this button.");
 		p2.add(borderComboBox);
 
-		ModelerUtilities.makeCompactGrid(p2, 6, 2, 5, 5, 10, 2);
+		ModelerUtilities.makeCompactGrid(p2, 7, 2, 5, 5, 10, 2);
 
 		p2 = new JPanel(new SpringLayout());
 		p.add(p2, BorderLayout.EAST);
