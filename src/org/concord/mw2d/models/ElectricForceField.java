@@ -23,7 +23,8 @@ package org.concord.mw2d.models;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import static org.concord.mw2d.models.Trigonometry.*;
+import static org.concord.mw2d.models.Trigonometry.COS30;
+import static org.concord.mw2d.models.Trigonometry.SIN30;
 
 public class ElectricForceField {
 
@@ -33,8 +34,7 @@ public class ElectricForceField {
 	private float[] fx, fy;
 	private double intensity, x1, y1, x2, y2, wingx, wingy, cosx, sinx, distance;
 	private int m;
-	private double fmin, fmax;
-	private Color color = Color.green;
+	private float scaleFactor = 2;
 	private float smoother = 0.1f;
 	private int arrowLength = 3;
 
@@ -43,8 +43,8 @@ public class ElectricForceField {
 			return;
 		this.width = width;
 		this.height = height;
-		nx = (int) ((float) width / (float) cellSize);
-		ny = (int) ((float) height / (float) cellSize);
+		nx = Math.round((float) width / (float) cellSize);
+		ny = Math.round((float) height / (float) cellSize);
 		fx = new float[nx * ny];
 		fy = new float[nx * ny];
 	}
@@ -64,18 +64,16 @@ public class ElectricForceField {
 			ny = (int) ((float) height / (float) cellSize);
 			fx = new float[nx * ny];
 			fy = new float[nx * ny];
+			arrowLength = cellSize / 3;
 		}
 	}
 
-	public void computeForceGrid(MolecularModel model) {
+	private boolean computeForceGrid(MolecularModel model) {
 
 		if (nx * ny <= 0)
-			return;
+			return false;
 		if (model.numberOfAtoms <= 0)
-			return;
-
-		fmin = Double.MAX_VALUE;
-		fmax = -Double.MAX_VALUE;
+			return false;
 
 		synchronized (lock) {
 
@@ -139,11 +137,6 @@ public class ElectricForceField {
 						}
 					}
 
-					intensity = Math.pow(fx[m] * fx[m] + fy[m] * fy[m], smoother);
-					if (fmin > intensity)
-						fmin = intensity;
-					if (fmax < intensity)
-						fmax = intensity;
 					m++;
 
 				}
@@ -152,19 +145,26 @@ public class ElectricForceField {
 
 		}
 
+		return true;
+
 	}
 
-	public void render(Graphics g) {
-		if (fmax == fmin)
+	public void render(Graphics g, MolecularModel model) {
+		if (!computeForceGrid(model))
 			return;
-		distance = 1.0 / (fmax - fmin);
+		Color bgColor = model.getView().getBackground();
+		int fgRed = 255 - bgColor.getRed();
+		int fgBlu = 255 - bgColor.getBlue();
+		int fgGrn = 255 - bgColor.getGreen();
 		synchronized (lock) {
 			for (int i = 0; i < ny; i++) {
 				for (int j = 0; j < nx; j++) {
 					m = i * nx + j;
 					intensity = fx[m] * fx[m] + fy[m] * fy[m];
-					x2 = (Math.pow(intensity, smoother) - fmin) * distance;
-					g.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), (int) (x2 * 255)));
+					x2 = Math.pow(intensity, smoother) * scaleFactor;
+					if (x2 > 1)
+						x2 = 1;
+					g.setColor(new Color(fgRed, fgGrn, fgBlu, (int) (x2 * 255)));
 					x1 = 1.0 / Math.sqrt(intensity);
 					cosx = fx[m] * x1;
 					sinx = fy[m] * x1;
