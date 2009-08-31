@@ -21,7 +21,7 @@
 package org.concord.mw2d.models;
 
 import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 import static org.concord.mw2d.models.Trigonometry.COS30;
 import static org.concord.mw2d.models.Trigonometry.SIN30;
@@ -35,7 +35,7 @@ public class ElectricForceField {
 	private double intensity, x1, y1, x2, y2, wingx, wingy, cosx, sinx, distance;
 	private int m;
 	private float scaleFactor = 2;
-	private float smoother = 0.1f;
+	private float smoother = 0.125f;
 	private int arrowLength = 3;
 
 	public void setWindow(int width, int height) {
@@ -149,7 +149,7 @@ public class ElectricForceField {
 
 	}
 
-	public void render(Graphics g, MolecularModel model) {
+	public void render(Graphics2D g, MolecularModel model) {
 		if (!computeForceGrid(model))
 			return;
 		Color bgColor = model.getView().getBackground();
@@ -183,4 +183,5 @@ public class ElectricForceField {
 			}
 		}
 	}
+
 }
