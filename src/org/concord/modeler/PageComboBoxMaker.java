@@ -65,6 +65,7 @@ class PageComboBoxMaker extends ComponentMaker {
 	private JComboBox modelComboBox, actionComboBox;
 	private JCheckBox disabledAtRunCheckBox, disabledAtScriptCheckBox;
 	private JLabel optionLabel;
+	private JTextField uidField;
 	private JTextField optionField;
 	private JTextField toolTipField;
 	private JTextArea scriptArea;
@@ -137,6 +138,14 @@ class PageComboBoxMaker extends ComponentMaker {
 	}
 
 	private void confirm() {
+		String s = uidField.getText();
+		if (s != null) {
+			s = s.trim();
+			pageComboBox.setUid(s.equals("") ? null : s);
+		}
+		else {
+			pageComboBox.setUid(null);
+		}
 		Object o = modelComboBox.getSelectedItem();
 		BasicModel m = (BasicModel) o;
 		m.addModelListener(pageComboBox);
@@ -253,6 +262,7 @@ class PageComboBoxMaker extends ComponentMaker {
 			}
 		}
 		actionComboBox.addItemListener(actionSelectionListener);
+		uidField.setText(pageComboBox.getUid());
 		toolTipField.setText(pageComboBox.getToolTipText());
 		disabledAtRunCheckBox.setSelected(pageComboBox.disabledAtRun);
 		disabledAtScriptCheckBox.setSelected(pageComboBox.disabledAtScript);
@@ -392,18 +402,20 @@ class PageComboBoxMaker extends ComponentMaker {
 		optionLabel = new JLabel("Model list", SwingConstants.LEFT);
 		optionLabel.setEnabled(false);
 
-		JPanel p1 = new JPanel(new GridLayout(4, 1, 3, 3));
+		JPanel p1 = new JPanel(new GridLayout(5, 1, 3, 3));
 		p.add(p1, BorderLayout.WEST);
 
 		s = Modeler.getInternationalText("SelectModelLabel");
 		p1.add(new JLabel(s != null ? s : "Select a model", SwingConstants.LEFT));
 		s = Modeler.getInternationalText("SelectActionLabel");
 		p1.add(new JLabel(s != null ? s : "Select an action", SwingConstants.LEFT));
+		s = Modeler.getInternationalText("UniqueIdentifier");
+		p1.add(new JLabel((s != null ? s : "Unique identifier") + " (A-z, 0-9)", SwingConstants.LEFT));
 		s = Modeler.getInternationalText("ToolTipLabel");
 		p1.add(new JLabel(s != null ? s : "Tool tip", SwingConstants.LEFT));
 		p1.add(optionLabel);
 
-		p1 = new JPanel(new GridLayout(4, 1, 3, 3));
+		p1 = new JPanel(new GridLayout(5, 1, 3, 3));
 		p.add(p1, BorderLayout.CENTER);
 
 		modelComboBox = new JComboBox();
@@ -420,6 +432,11 @@ class PageComboBoxMaker extends ComponentMaker {
 		actionComboBox.setFont(smallFont);
 		actionComboBox.setToolTipText("Select the choice action for this combo box.");
 		p1.add(actionComboBox);
+
+		uidField = new JTextField();
+		uidField.setToolTipText("Type in a string to be used as the unique identifier of this combo box.");
+		uidField.addActionListener(okListener);
+		p1.add(uidField);
 
 		toolTipField = new JTextField();
 		toolTipField.setToolTipText("Type in the text that will appear as the tool tip.");

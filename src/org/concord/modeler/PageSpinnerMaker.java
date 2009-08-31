@@ -64,6 +64,7 @@ class PageSpinnerMaker extends ComponentMaker {
 	private PageSpinner pageSpinner;
 	private static Font smallFont;
 	private JDialog dialog;
+	private JTextField uidField;
 	private JTextField nameField;
 	private JTextField toolTipField;
 	private RealNumberTextField maxField, minField, valueField, stepField;
@@ -135,6 +136,14 @@ class PageSpinnerMaker extends ComponentMaker {
 					JOptionPane.ERROR_MESSAGE);
 			focusTextComponent = maxField;
 			return false;
+		}
+		String s = uidField.getText();
+		if (s != null) {
+			s = s.trim();
+			pageSpinner.setUid(s.equals("") ? null : s);
+		}
+		else {
+			pageSpinner.setUid(null);
 		}
 		pageSpinner.setLabel(nameField.getText());
 		SpinnerNumberModel m = (SpinnerNumberModel) pageSpinner.spinner.getModel();
@@ -256,6 +265,7 @@ class PageSpinnerMaker extends ComponentMaker {
 		fillActionComboBox();
 		actionComboBox.addItemListener(actionSelectionListener);
 
+		uidField.setText(pageSpinner.getUid());
 		nameField.setText(pageSpinner.label.getText());
 		toolTipField.setText(pageSpinner.getToolTipText());
 		disabledAtRunCheckBox.setSelected(pageSpinner.disabledAtRun);
@@ -381,18 +391,21 @@ class PageSpinnerMaker extends ComponentMaker {
 		p.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		contentPane.add(p, BorderLayout.NORTH);
 
-		JPanel p1 = new JPanel(new GridLayout(4, 1, 5, 5));
+		JPanel p1 = new JPanel(new GridLayout(5, 1, 5, 5));
 		s = Modeler.getInternationalText("SelectModelLabel");
 		p1.add(new JLabel(s != null ? s : "Select a model", SwingConstants.LEFT));
 		s = Modeler.getInternationalText("SelectVariableLabel");
 		p1.add(new JLabel(s != null ? s : "Select a variable", SwingConstants.LEFT));
+		s = Modeler.getInternationalText("UniqueIdentifier");
+		p1.add(new JLabel((s != null ? s : "Unique identifier") + " (A-z, 0-9)", SwingConstants.LEFT));
 		s = Modeler.getInternationalText("TextLabel");
 		p1.add(new JLabel(s != null ? s : "Text", SwingConstants.LEFT));
 		s = Modeler.getInternationalText("ToolTipLabel");
 		p1.add(new JLabel(s != null ? s : "Tool tip", SwingConstants.LEFT));
+
 		p.add(p1, BorderLayout.WEST);
 
-		p1 = new JPanel(new GridLayout(4, 1, 5, 5));
+		p1 = new JPanel(new GridLayout(5, 1, 5, 5));
 
 		modelComboBox = new JComboBox();
 		if (smallFont == null)
@@ -408,6 +421,11 @@ class PageSpinnerMaker extends ComponentMaker {
 		actionComboBox.setFont(smallFont);
 		actionComboBox.setToolTipText("Select the variable this spinner button will control.");
 		p1.add(actionComboBox);
+
+		uidField = new JTextField();
+		uidField.setToolTipText("Type in a string to be used as the unique identifier of this spinner button.");
+		uidField.addActionListener(okListener);
+		p1.add(uidField);
 
 		nameField = new JTextField();
 		nameField.setToolTipText("Type in the text that will appear to the left of this spinner button.");

@@ -495,9 +495,9 @@ class PageSliderMaker extends ComponentMaker {
 
 		// row 3
 		s = Modeler.getInternationalText("UniqueIdentifier");
-		p2.add(new JLabel(s != null ? s : "Unique identifier", SwingConstants.LEFT));
+		p2.add(new JLabel((s != null ? s : "Unique identifier") + " (A-z, 0-9)", SwingConstants.LEFT));
 		uidField = new JTextField();
-		uidField.setToolTipText("Type in a string to be used as the unique identifier of this button.");
+		uidField.setToolTipText("Type in a string to be used as the unique identifier of this slider.");
 		uidField.addActionListener(okListener);
 		p2.add(uidField);
 
