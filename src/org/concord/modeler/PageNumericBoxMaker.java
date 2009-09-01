@@ -39,6 +39,7 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
@@ -61,6 +62,7 @@ class PageNumericBoxMaker extends ComponentMaker {
 
 	private PageNumericBox pageNumericBox;
 	private JDialog dialog;
+	private JTextField uidField;
 	private JComboBox modelComboBox;
 	private JComboBox timeSeriesComboBox;
 	private JComboBox filterComboBox;
@@ -125,6 +127,14 @@ class PageNumericBoxMaker extends ComponentMaker {
 	}
 
 	private void confirm() {
+		String s = uidField.getText();
+		if (s != null) {
+			s = s.trim();
+			pageNumericBox.setUid(s.equals("") ? null : s);
+		}
+		else {
+			pageNumericBox.setUid(null);
+		}
 		pageNumericBox.setBorderType((String) borderComboBox.getSelectedItem());
 		pageNumericBox.setForeground(fontColorComboBox.getSelectedColor());
 		String fontType = (String) fontNameComboBox.getSelectedItem();
@@ -269,6 +279,7 @@ class PageNumericBoxMaker extends ComponentMaker {
 			dataComboBox.setSelectedIndex(2);
 			break;
 		}
+		uidField.setText(pageNumericBox.getUid());
 		multiplierField.setValue(pageNumericBox.multiplier);
 		addendField.setValue(pageNumericBox.addend);
 		maximumFractionDigitField.setValue(pageNumericBox.formatter.getMaximumFractionDigits());
@@ -418,6 +429,14 @@ class PageNumericBoxMaker extends ComponentMaker {
 		p.add(filterComboBox);
 
 		// row 4
+		s = Modeler.getInternationalText("UniqueIdentifier");
+		p.add(new JLabel((s != null ? s : "Unique identifier") + " (A-z, 0-9)", SwingConstants.LEFT));
+		uidField = new JTextField();
+		uidField.setToolTipText("Type in a string to be used as the unique identifier of this numeric box.");
+		uidField.addActionListener(okListener);
+		p.add(uidField);
+
+		// row 5
 		s = Modeler.getInternationalText("NumericDataType");
 		p.add(new JLabel(s != null ? s : "Data type", SwingConstants.LEFT));
 		dataComboBox = new JComboBox(
@@ -426,28 +445,28 @@ class PageNumericBoxMaker extends ComponentMaker {
 				.setToolTipText("Select the instantaneous value, time average value, or root mean square deviation to display.");
 		p.add(dataComboBox);
 
-		// row 5
+		// row 6
 		p.add(new JLabel("Multiplier", SwingConstants.LEFT));
 		multiplierField = new FloatNumberTextField(1, -Float.MAX_VALUE, Float.MAX_VALUE);
 		multiplierField.setToolTipText("Type in a value to multiply the output.");
 		multiplierField.addActionListener(okListener);
 		p.add(multiplierField);
 
-		// row 6
+		// row 7
 		p.add(new JLabel("Addend", SwingConstants.LEFT));
 		addendField = new FloatNumberTextField(0, -Float.MAX_VALUE, Float.MAX_VALUE);
 		addendField.setToolTipText("Type in a value to be added to the output.");
 		addendField.addActionListener(okListener);
 		p.add(addendField);
 
-		// row 7
+		// row 8
 		s = Modeler.getInternationalText("DigitalFormat");
 		p.add(new JLabel(s != null ? s : "Digital format", SwingConstants.LEFT));
 		formatComboBox = new JComboBox(new String[] { "Fixed point", "Scientific notation" });
 		formatComboBox.setToolTipText("Select the digital format to display numbers.");
 		p.add(formatComboBox);
 
-		// row 8
+		// row 9
 		s = Modeler.getInternationalText("MaximumFractionDigits");
 		p.add(new JLabel(s != null ? s : "Maximum fraction digits", SwingConstants.LEFT));
 		maximumFractionDigitField = new IntegerTextField(5, 0, 20);
@@ -456,7 +475,7 @@ class PageNumericBoxMaker extends ComponentMaker {
 		maximumFractionDigitField.addActionListener(okListener);
 		p.add(maximumFractionDigitField);
 
-		// row 9
+		// row 10
 		s = Modeler.getInternationalText("MaximumIntegerDigits");
 		p.add(new JLabel(s != null ? s : "Maximum integer digits", SwingConstants.LEFT));
 		maximumIntegerDigitField = new IntegerTextField(1, 0, 20);
@@ -465,7 +484,7 @@ class PageNumericBoxMaker extends ComponentMaker {
 		maximumIntegerDigitField.addActionListener(okListener);
 		p.add(maximumIntegerDigitField);
 
-		// row 10
+		// row 11
 		s = Modeler.getInternationalText("WidthLabel");
 		p.add(new JLabel(s != null ? s : "Width", SwingConstants.LEFT));
 		widthField = new IntegerTextField(SwingUtilities.computeStringWidth(pageNumericBox
@@ -474,7 +493,7 @@ class PageNumericBoxMaker extends ComponentMaker {
 		widthField.addActionListener(okListener);
 		p.add(widthField);
 
-		// row 11
+		// row 12
 		s = Modeler.getInternationalText("HeightLabel");
 		p.add(new JLabel(s != null ? s : "Height", SwingConstants.LEFT));
 		heightField = new IntegerTextField(20, 10, 200);
@@ -482,7 +501,7 @@ class PageNumericBoxMaker extends ComponentMaker {
 		heightField.addActionListener(okListener);
 		p.add(heightField);
 
-		// row 12
+		// row 13
 		s = Modeler.getInternationalText("NumericFontColor");
 		p.add(new JLabel(s != null ? s : "Font color", SwingConstants.LEFT));
 		fontColorComboBox = new ColorComboBox(pageNumericBox);
@@ -490,21 +509,21 @@ class PageNumericBoxMaker extends ComponentMaker {
 		fontColorComboBox.setRequestFocusEnabled(false);
 		p.add(fontColorComboBox);
 
-		// row 13
+		// row 14
 		s = Modeler.getInternationalText("NumericFontType");
 		p.add(new JLabel(s != null ? s : "Font type", SwingConstants.LEFT));
 		fontNameComboBox = ModelerUtilities.createFontNameComboBox();
 		fontNameComboBox.setSelectedItem(Page.getDefaultFontFamily());
 		p.add(fontNameComboBox);
 
-		// row 14
+		// row 15
 		s = Modeler.getInternationalText("NumericFontSize");
 		p.add(new JLabel(s != null ? s : "Font size", SwingConstants.LEFT));
 		fontSizeComboBox = ModelerUtilities.createFontSizeComboBox();
 		fontSizeComboBox.setSelectedItem(new Integer(Page.getDefaultFontSize()));
 		p.add(fontSizeComboBox);
 
-		// row 15
+		// row 16
 		s = Modeler.getInternationalText("BorderLabel");
 		p.add(new JLabel(s != null ? s : "Border", SwingConstants.LEFT));
 		borderComboBox = new JComboBox(BorderManager.BORDER_TYPE);
@@ -513,7 +532,7 @@ class PageNumericBoxMaker extends ComponentMaker {
 		borderComboBox.setToolTipText("Select the border type.");
 		p.add(borderComboBox);
 
-		ModelerUtilities.makeCompactGrid(p, 15, 2, 5, 5, 10, 2);
+		ModelerUtilities.makeCompactGrid(p, 16, 2, 5, 5, 10, 2);
 
 	}
 

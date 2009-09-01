@@ -68,6 +68,7 @@ class PageGaugeMaker extends ComponentMaker {
 	private PageGauge pageGauge;
 	private int filterType;
 	private JDialog dialog;
+	private JTextField uidField;
 	private JTextField descriptionField;
 	private JComboBox modelComboBox, timeSeriesComboBox, filterComboBox;
 	private JComboBox borderComboBox, tickComboBox, labelComboBox, titleComboBox;
@@ -134,6 +135,14 @@ class PageGaugeMaker extends ComponentMaker {
 					JOptionPane.ERROR_MESSAGE);
 			focusTextComponent = maxField;
 			return false;
+		}
+		String s = uidField.getText();
+		if (s != null) {
+			s = s.trim();
+			pageGauge.setUid(s.equals("") ? null : s);
+		}
+		else {
+			pageGauge.setUid(null);
 		}
 		switch (typeComboBox.getSelectedIndex()) {
 		case 0:
@@ -239,21 +248,23 @@ class PageGaugeMaker extends ComponentMaker {
 		case PageGauge.INSTANTANEOUS:
 			typeComboBox.setSelectedIndex(0);
 			parameterLabel.setEnabled(false);
-			parameterLabel.setText(null);
+			String s = Modeler.getInternationalText("Parameter");
+			parameterLabel.setText(s != null ? s : "Parameter");
 			parameterField.setText(null);
 			parameterField.setEditable(false);
 			break;
 		case PageGauge.GROWING_POINT_RUNNING_AVERAGE:
 			typeComboBox.setSelectedIndex(1);
 			parameterLabel.setEnabled(false);
-			parameterLabel.setText(null);
+			s = Modeler.getInternationalText("Parameter");
+			parameterLabel.setText(s != null ? s : "Parameter");
 			parameterField.setText(null);
 			parameterField.setEditable(false);
 			break;
 		case PageGauge.SIMPLE_RUNNING_AVERAGE:
 			typeComboBox.setSelectedIndex(2);
 			parameterLabel.setEnabled(true);
-			String s = Modeler.getInternationalText("SamplingPoints");
+			s = Modeler.getInternationalText("SamplingPoints");
 			parameterLabel.setText(s != null ? s : "Sampling points");
 			parameterField.setValue(pageGauge.samplingPoints);
 			parameterField.setMinValue(10);
@@ -272,6 +283,7 @@ class PageGaugeMaker extends ComponentMaker {
 			break;
 		}
 
+		uidField.setText(pageGauge.getUid());
 		titleComboBox.setSelectedIndex(pageGauge.getPaintTitle() ? 0 : 1);
 		tickComboBox.setSelectedIndex(pageGauge.getPaintTicks() ? 0 : 1);
 		labelComboBox.setSelectedIndex(pageGauge.getPaintLabels() ? 0 : 1);
@@ -518,6 +530,14 @@ class PageGaugeMaker extends ComponentMaker {
 		p.add(filterComboBox);
 
 		// row 4
+		s = Modeler.getInternationalText("UniqueIdentifier");
+		p.add(new JLabel((s != null ? s : "Unique identifier") + " (A-z, 0-9)", SwingConstants.LEFT));
+		uidField = new JTextField();
+		uidField.setToolTipText("Type in a string to be used as the unique identifier of this gauge.");
+		uidField.addActionListener(okListener);
+		p.add(uidField);
+
+		// row 5
 		s = Modeler.getInternationalText("Type");
 		p.add(new JLabel(s != null ? s : "Type", SwingConstants.LEFT));
 		typeComboBox = new JComboBox(new String[] { "Instantaneous", "Growing-point running average",
@@ -527,13 +547,14 @@ class PageGaugeMaker extends ComponentMaker {
 				switch (typeComboBox.getSelectedIndex()) {
 				case 0:
 				case 1:
-					parameterLabel.setText(null);
+					String s = Modeler.getInternationalText("Parameter");
+					parameterLabel.setText(s != null ? s : "Parameter");
 					parameterLabel.setEnabled(false);
 					parameterField.setText(null);
 					parameterField.setEditable(false);
 					break;
 				case 2:
-					String s = Modeler.getInternationalText("SamplingPoints");
+					s = Modeler.getInternationalText("SamplingPoints");
 					parameterLabel.setText(s != null ? s : "Sampling points");
 					parameterLabel.setEnabled(true);
 					parameterField.setValue(pageGauge.samplingPoints);
@@ -555,14 +576,14 @@ class PageGaugeMaker extends ComponentMaker {
 		});
 		p.add(typeComboBox);
 
-		// row 5
+		// row 6
 		parameterLabel = new JLabel();
 		p.add(parameterLabel);
 		parameterField = new FloatNumberTextField(0.0f, -Float.MAX_VALUE, Float.MAX_VALUE);
 		parameterField.addActionListener(okListener);
 		p.add(parameterField);
 
-		// row 6
+		// row 7
 		s = Modeler.getInternationalText("TextLabel");
 		p.add(new JLabel(s != null ? s : "Description", SwingConstants.LEFT));
 		descriptionField = new JTextField();
@@ -570,7 +591,7 @@ class PageGaugeMaker extends ComponentMaker {
 		descriptionField.setToolTipText("Type in the text to be displayed in the gauge.");
 		p.add(descriptionField);
 
-		// row 7
+		// row 8
 		s = Modeler.getInternationalText("UpperBoundLabel");
 		p.add(new JLabel(s != null ? s : "Set upper bound", SwingConstants.LEFT));
 		maxField = new FloatNumberTextField(1.0f, -Float.MAX_VALUE, Float.MAX_VALUE);
@@ -578,7 +599,7 @@ class PageGaugeMaker extends ComponentMaker {
 		maxField.setToolTipText("Type in the upper bound this gauge displays.");
 		p.add(maxField);
 
-		// row 8
+		// row 9
 		s = Modeler.getInternationalText("LowerBoundLabel");
 		p.add(new JLabel(s != null ? s : "Set lower bound", SwingConstants.LEFT));
 		minField = new FloatNumberTextField(-1.0f, -Float.MAX_VALUE, Float.MAX_VALUE);
@@ -586,7 +607,7 @@ class PageGaugeMaker extends ComponentMaker {
 		minField.setToolTipText("Type in the lower bound this gauge displays.");
 		p.add(minField);
 
-		// row 9
+		// row 10
 		s = Modeler.getInternationalText("CurrentValueLabel");
 		p.add(new JLabel(s != null ? s : "Current value", SwingConstants.LEFT));
 		valueField = new FloatNumberTextField(0.0f, -Float.MAX_VALUE, Float.MAX_VALUE);
@@ -594,7 +615,7 @@ class PageGaugeMaker extends ComponentMaker {
 		valueField.setToolTipText("The current value of the output.");
 		p.add(valueField);
 
-		// row 10
+		// row 11
 		s = Modeler.getInternationalText("WidthLabel");
 		p.add(new JLabel(s != null ? s : "Width", SwingConstants.LEFT));
 		widthField = new IntegerTextField(100, 10, 800);
@@ -602,7 +623,7 @@ class PageGaugeMaker extends ComponentMaker {
 		widthField.addActionListener(okListener);
 		p.add(widthField);
 
-		// row 11
+		// row 12
 		s = Modeler.getInternationalText("HeightLabel");
 		p.add(new JLabel(s != null ? s : "Height", SwingConstants.LEFT));
 		heightField = new IntegerTextField(200, 10, 800);
@@ -610,7 +631,7 @@ class PageGaugeMaker extends ComponentMaker {
 		heightField.addActionListener(okListener);
 		p.add(heightField);
 
-		ModelerUtilities.makeCompactGrid(p, 11, 2, 5, 5, 10, 2);
+		ModelerUtilities.makeCompactGrid(p, 12, 2, 5, 5, 10, 2);
 
 		/* right panel */
 
@@ -719,7 +740,11 @@ class PageGaugeMaker extends ComponentMaker {
 		borderComboBox.setToolTipText("Select the border type.");
 		p.add(borderComboBox);
 
-		ModelerUtilities.makeCompactGrid(p, 11, 2, 5, 5, 10, 2);
+		// row 12
+		p.add(new JPanel());
+		p.add(new JPanel());
+
+		ModelerUtilities.makeCompactGrid(p, 12, 2, 5, 5, 10, 2);
 
 	}
 
