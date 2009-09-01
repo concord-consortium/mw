@@ -3358,48 +3358,49 @@ class Eval2D extends AbstractEval {
 			return true;
 		}
 		if (model instanceof MolecularModel) {
+			AtomisticView av = (AtomisticView) view;
 			if (s.startsWith("style")) {
-				((AtomisticView) view).setDisplayStyle(s.substring(6).trim());
+				av.setDisplayStyle(s.substring(6).trim());
 				return true;
 			}
 			result = parseOnOff("velocity", s);
 			if (result != -1) {
-				((AtomisticView) view).showVelocityVector(result == ON);
+				av.showVelocityVector(result == ON);
 				return true;
 			}
 			result = parseOnOff("momentum", s);
 			if (result != -1) {
-				((AtomisticView) view).showMomentumVector(result == ON);
+				av.showMomentumVector(result == ON);
 				return true;
 			}
 			result = parseOnOff("acceleration", s);
 			if (result != -1) {
-				((AtomisticView) view).showAccelerationVector(result == ON);
+				av.showAccelerationVector(result == ON);
 				return true;
 			}
 			result = parseOnOff("force", s);
 			if (result != -1) {
-				((AtomisticView) view).showForceVector(result == ON);
+				av.showForceVector(result == ON);
 				return true;
 			}
 			result = parseOnOff("vdwline", s);
 			if (result != -1) {
-				((AtomisticView) view).showVDWLines(result == ON);
+				av.showVDWLines(result == ON);
 				return true;
 			}
 			result = parseOnOff("keshading", s);
 			if (result != -1) {
-				((AtomisticView) view).showShading(result == ON);
+				av.showShading(result == ON);
 				return true;
 			}
 			result = parseOnOff("chargeshading", s);
 			if (result != -1) {
-				((AtomisticView) view).showChargeShading(result == ON);
+				av.showChargeShading(result == ON);
 				return true;
 			}
 			double param = parseKeywordValue("grid", s);
 			if (!Double.isNaN(param)) {
-				((AtomisticView) view).setGridMode((byte) param);
+				av.setGridMode((byte) param);
 				((MolecularModel) model).setupGrid();
 				view.repaint();
 				return true;
@@ -3408,14 +3409,15 @@ class Eval2D extends AbstractEval {
 			if (!Double.isNaN(param)) {
 				Atom probe = ((AtomicModel) model).createAtomOfElement(Element.ID_NT);
 				probe.setCharge(param);
-				((AtomisticView) view).showContourPlot(true, probe);
-				view.repaint();
+				av.showContourPlot(true, probe);
+				av.repaint();
 				return true;
 			}
 			param = parseKeywordValue("efield", s);
 			if (!Double.isNaN(param)) {
-				((AtomisticView) view).showEFieldLines(true, (int) param);
-				view.repaint();
+				av.showEFieldLines(true);
+				av.setEFCellSize((int) param);
+				av.repaint();
 				return true;
 			}
 		}

@@ -28,12 +28,12 @@ import static org.concord.mw2d.models.Trigonometry.SIN30;
 
 public class ElectricForceField {
 
-	public final static byte ARGB_SHADING_MODE = 0;
-	public final static byte HSB_SHADING_MODE = 1;
+	public final static byte TRANSPARENCY_SHADING_MODE = 0;
+	public final static byte TWO_COLORS_SHADING_MODE = 1;
 
 	private final Object lock = new Object();
 
-	private byte mode = ARGB_SHADING_MODE;
+	private byte mode = TRANSPARENCY_SHADING_MODE;
 	private int width, height, cellSize = 10, nx, ny;
 	private float[] fx, fy;
 	private double intensity, x1, y1, x2, y2, wingx, wingy, cosx, sinx, distance;
@@ -166,7 +166,7 @@ public class ElectricForceField {
 		if (!computeForceGrid(model))
 			return;
 		switch (mode) {
-		case ARGB_SHADING_MODE:
+		case TRANSPARENCY_SHADING_MODE:
 			Color bgColor = model.getView().getBackground();
 			int fgRed = 255 - bgColor.getRed();
 			int fgBlu = 255 - bgColor.getBlue();
@@ -198,7 +198,7 @@ public class ElectricForceField {
 				}
 			}
 			break;
-		case HSB_SHADING_MODE:
+		case TWO_COLORS_SHADING_MODE:
 			boolean blackBg = Color.black.equals(model.getView().getBackground());
 			synchronized (lock) {
 				for (int i = 0; i < ny; i++) {

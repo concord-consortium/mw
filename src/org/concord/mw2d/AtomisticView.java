@@ -1210,12 +1210,11 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		return gridMode;
 	}
 
-	public void showEFieldLines(boolean state, int cellSize) {
+	public void showEFieldLines(boolean state) {
 		eFieldLines = state;
 		if (state) {
 			if (eField == null)
 				eField = new ElectricForceField();
-			eField.setCellSize(cellSize);
 		}
 	}
 
@@ -1223,7 +1222,25 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		return eFieldLines;
 	}
 
-	public int getCellSizeForEFieldLines() {
+	public void setEFShadingMode(byte i) {
+		if (eField == null)
+			eField = new ElectricForceField();
+		eField.setMode(i);
+	}
+
+	public byte getEFShadingMode() {
+		if (eField == null)
+			return 0;
+		return eField.getMode();
+	}
+
+	public void setEFCellSize(int i) {
+		if (eField == null)
+			eField = new ElectricForceField();
+		eField.setCellSize(i);
+	}
+
+	public int getEFCellSize() {
 		if (eField == null)
 			return 10;
 		return eField.getCellSize();
@@ -6663,6 +6680,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		private byte displayStyle = StyleConstant.SPACE_FILLING;
 		private int probeID = Element.ID_NT;
 		private int efCellSize = 10;
+		private byte efShadingMode = ElectricForceField.TRANSPARENCY_SHADING_MODE;
 		private boolean shading, chargeShading, showVVectors, showVDWCircles, showVDWLines, showChargeLines,
 				showSSLines, showBPLines, showPVectors, showAVectors, showFVectors, showContour, showExcitation = true,
 				showEFieldLines, useJmol;
@@ -6878,6 +6896,14 @@ public class AtomisticView extends MDView implements BondChangeListener {
 
 		public int getEFCellSize() {
 			return efCellSize;
+		}
+
+		public void setEFShadingMode(byte shadingMode) {
+			efShadingMode = shadingMode;
+		}
+
+		public byte getEFShadingMode() {
+			return efShadingMode;
 		}
 
 		public void setMolecularObjectColors(Color[] c) {

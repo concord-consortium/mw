@@ -3931,7 +3931,8 @@ public abstract class AtomicModel extends MDModel {
 		vs.setShowSSLines(view.ssLinesShown());
 		vs.setShowBPLines(view.bpLinesShown());
 		vs.setShowEFieldLines(view.eFieldLinesShown());
-		vs.setEFCellSize(view.getCellSizeForEFieldLines());
+		vs.setEFCellSize(view.getEFCellSize());
+		vs.setEFShadingMode(view.getEFShadingMode());
 		vs.setVelocityFlavor(view.getVelocityFlavor());
 		vs.setMomentumFlavor(view.getMomentumFlavor());
 		vs.setAccelerationFlavor(view.getAccelerationFlavor());
@@ -4232,7 +4233,9 @@ public abstract class AtomicModel extends MDModel {
 		view.showChargeLines(vs.getShowChargeLines());
 		view.showSSLines(vs.getShowSSLines());
 		view.showBPLines(vs.getShowBPLines());
-		view.showEFieldLines(vs.getShowEFieldLines(), vs.getEFCellSize());
+		view.showEFieldLines(vs.getShowEFieldLines());
+		view.setEFCellSize(vs.getEFCellSize());
+		view.setEFShadingMode(vs.getEFShadingMode());
 		view.showShading(vs.getShading());
 		view.showChargeShading(vs.getChargeShading());
 		view.showVelocityVector(vs.getShowVVectors());
