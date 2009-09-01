@@ -1556,7 +1556,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			eFieldLineMenuItem.setIcon(efieldIcon);
 			eFieldLineMenuItem.addItemListener(new ItemListener() {
 				public void itemStateChanged(ItemEvent e) {
-					view.showEFieldLines(e.getStateChange() == ItemEvent.SELECTED, view.getCellSizeForEFieldLines());
+					view.showEFieldLines(e.getStateChange() == ItemEvent.SELECTED);
 					view.repaint();
 				}
 			});

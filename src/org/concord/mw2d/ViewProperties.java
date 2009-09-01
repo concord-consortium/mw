@@ -33,6 +33,7 @@ import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -67,6 +68,7 @@ class ViewProperties extends JDialog {
 	private JCheckBox useJmolCheckBox;
 	private JCheckBox indexCheckBox;
 	private JCheckBox clockCheckBox;
+	private JCheckBox efieldCheckBox;
 	private JCheckBox chargeCheckBox;
 	private JCheckBox dipoleCheckBox;
 	private JCheckBox vdwLinesCheckBox;
@@ -212,12 +214,12 @@ class ViewProperties extends JDialog {
 		useJmolCheckBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				boolean b = useJmolCheckBox.isSelected();
-				((AtomisticView) view).setUseJmol(b);
+				av.setUseJmol(b);
 				styleComboBox.setEnabled(b);
 				displayStyleLabel.setEnabled(b);
 				vdwCirclesCheckBox.setEnabled(b);
 				if (b)
-					((AtomisticView) view).notifyJmol();
+					av.notifyJmol();
 			}
 		});
 		p2.add(useJmolCheckBox);
@@ -240,12 +242,30 @@ class ViewProperties extends JDialog {
 			chargeCheckBox.setText(s);
 		p2.add(chargeCheckBox);
 
+		CheckBoxLinkPanel px = new CheckBoxLinkPanel();
+		efieldCheckBox = px.getCheckBox();
+		px.setCheckBoxAction(new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				av.showEFieldLines(efieldCheckBox.isSelected());
+				av.repaint();
+			}
+		});
+		s = MDView.getInternationalText("ShowElectricField");
+		px.setLinkText(s != null ? s : "Show Electric Field");
+		px.setLinkAction(new Runnable() {
+			public void run() {
+				EFieldOption efo = new EFieldOption(av);
+				efo.setLocationRelativeTo(ViewProperties.this);
+				efo.setVisible(true);
+			}
+		});
+		p2.add(px);
+
 		externalForceCheckBox = new JCheckBox(view.getSwitches().get("Show External Force"));
 		s = MDView.getInternationalText("ShowExternalForce");
 		if (s != null)
 			externalForceCheckBox.setText(s);
 		p2.add(externalForceCheckBox);
-		p2.add(new JPanel());
 
 		s = MDView.getInternationalText("ShowVanderWaalsSpheres");
 		vdwCirclesCheckBox = new JCheckBox(s != null ? s : "Show VDW Spheres");
@@ -290,7 +310,7 @@ class ViewProperties extends JDialog {
 		});
 		p2.add(vdwCirclesStyleComboBox);
 
-		CheckBoxLinkPanel px = new CheckBoxLinkPanel();
+		px = new CheckBoxLinkPanel();
 		vdwLinesCheckBox = px.getCheckBox();
 		px.setCheckBoxAction(view.getSwitches().get("Show van der Waals interactions"));
 		vdwLinesCheckBox.addItemListener(new ItemListener() {
@@ -784,6 +804,7 @@ class ViewProperties extends JDialog {
 			setStateOfToggleButton(momentumCheckBox, av.momentumVectorShown(), true);
 			setStateOfToggleButton(accelerationCheckBox, av.accelerationVectorShown(), true);
 			setStateOfToggleButton(forceCheckBox, av.forceVectorShown(), true);
+			setStateOfToggleButton(efieldCheckBox, av.eFieldLinesShown(), false);
 			switch (view.getRestraintStyle()) {
 			case StyleConstant.RESTRAINT_CROSS_STYLE:
 				setStateOfComboBox(restraintStyleComboBox, 0);
@@ -843,38 +864,38 @@ class ViewProperties extends JDialog {
 		}
 	}
 
-	void setStateOfToggleButton(JToggleButton cb, boolean b, boolean noText) {
+	void setStateOfToggleButton(JToggleButton toggle, boolean b, boolean noText) {
 
-		Action a = cb.getAction();
-		ActionListener[] al = cb.getActionListeners();
-		ItemListener[] il = cb.getItemListeners();
-		String s = cb.getText();
+		Action a = toggle.getAction();
+		ActionListener[] al = toggle.getActionListeners();
+		ItemListener[] il = toggle.getItemListeners();
+		String s = toggle.getText();
 
-		cb.setAction(null);
+		toggle.setAction(null);
 		if (al != null) {
 			for (ActionListener x : al)
-				cb.removeActionListener(x);
+				toggle.removeActionListener(x);
 		}
 		if (il != null) {
 			for (ItemListener x : il)
-				cb.removeItemListener(x);
+				toggle.removeItemListener(x);
 		}
 
-		cb.setSelected(b);
+		toggle.setSelected(b);
 
-		cb.setAction(a);
+		toggle.setAction(a);
 		if (al != null) {
 			for (ActionListener x : al)
-				cb.addActionListener(x);
+				toggle.addActionListener(x);
 		}
 		if (il != null) {
 			for (ItemListener x : il)
-				cb.addItemListener(x);
+				toggle.addItemListener(x);
 		}
 
 		if (noText)
-			cb.setText(null);
-		else cb.setText(s);
+			toggle.setText(null);
+		else toggle.setText(s);
 
 	}
 
