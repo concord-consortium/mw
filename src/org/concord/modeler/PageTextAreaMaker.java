@@ -37,6 +37,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import org.concord.modeler.text.Page;
@@ -53,6 +54,7 @@ class PageTextAreaMaker extends ComponentMaker {
 
 	private PageTextArea pageTextArea;
 	private JDialog dialog;
+	private JTextField uidField;
 	private IntegerTextField widthField, heightField;
 	private JTextArea titleArea, answerArea;
 	private JCheckBox transparentCheckBox;
@@ -74,6 +76,15 @@ class PageTextAreaMaker extends ComponentMaker {
 			JOptionPane.showMessageDialog(dialog, "You must set the question for this text area.", "Missing question",
 					JOptionPane.ERROR_MESSAGE);
 			return false;
+		}
+
+		String s = uidField.getText();
+		if (s != null) {
+			s = s.trim();
+			pageTextArea.setUid(s.equals("") ? null : s);
+		}
+		else {
+			pageTextArea.setUid(null);
 		}
 
 		pageTextArea.setTitle(titleArea.getText());
@@ -123,6 +134,7 @@ class PageTextAreaMaker extends ComponentMaker {
 			});
 		}
 
+		uidField.setText(pageTextArea.getUid());
 		borderComboBox.setSelectedItem(pageTextArea.getBorderType());
 		transparentCheckBox.setSelected(!pageTextArea.isOpaque());
 		bgComboBox.setColor(pageTextArea.getBackground());
@@ -213,6 +225,16 @@ class PageTextAreaMaker extends ComponentMaker {
 		heightField.addActionListener(okListener);
 		p1.add(heightField);
 
+		s = Modeler.getInternationalText("UniqueIdentifier");
+		p1.add(new JLabel((s != null ? s : "Unique identifier") + " (A-z, 0-9): ", SwingConstants.LEFT));
+		uidField = new JTextField(10);
+		uidField.setToolTipText("Type in a string to be used as the unique identifier of this text area.");
+		uidField.addActionListener(okListener);
+		p1.add(uidField);
+
+		p1 = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
+		p2.add(p1, BorderLayout.CENTER);
+
 		s = Modeler.getInternationalText("BorderLabel");
 		p1.add(new JLabel((s != null ? s : "Border") + ":"));
 		borderComboBox = new JComboBox(BorderManager.BORDER_TYPE);
@@ -220,9 +242,6 @@ class PageTextAreaMaker extends ComponentMaker {
 		borderComboBox.setBackground(p1.getBackground());
 		borderComboBox.setSelectedIndex(0);
 		p1.add(borderComboBox);
-
-		p1 = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
-		p2.add(p1, BorderLayout.CENTER);
 
 		s = Modeler.getInternationalText("Transparent");
 		transparentCheckBox = new JCheckBox(s != null ? s : "Transparent");

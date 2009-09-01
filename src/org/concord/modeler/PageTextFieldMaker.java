@@ -39,6 +39,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import org.concord.modeler.text.Page;
@@ -55,6 +56,7 @@ class PageTextFieldMaker extends ComponentMaker {
 
 	private PageTextField pageTextField;
 	private JDialog dialog;
+	private JTextField uidField;
 	private JTextArea titleArea, answerArea;
 	private IntegerTextField widthField, heightField;
 	private JRadioButton topRadioButton, leftRadioButton;
@@ -77,6 +79,15 @@ class PageTextFieldMaker extends ComponentMaker {
 			JOptionPane.showMessageDialog(dialog, "You must set the question for this text field.", "Missing question",
 					JOptionPane.ERROR_MESSAGE);
 			return false;
+		}
+
+		String s = uidField.getText();
+		if (s != null) {
+			s = s.trim();
+			pageTextField.setUid(s.equals("") ? null : s);
+		}
+		else {
+			pageTextField.setUid(null);
 		}
 
 		pageTextField.setTitle(titleArea.getText());
@@ -127,6 +138,7 @@ class PageTextFieldMaker extends ComponentMaker {
 			});
 		}
 
+		uidField.setText(pageTextField.getUid());
 		borderComboBox.setSelectedItem(pageTextField.getBorderType());
 		transparentCheckBox.setSelected(!pageTextField.isOpaque());
 		bgComboBox.setColor(pageTextField.getBackground());
@@ -238,6 +250,13 @@ class PageTextFieldMaker extends ComponentMaker {
 		heightField = new IntegerTextField(100, 20, 800, 5);
 		heightField.addActionListener(okListener);
 		p1.add(heightField);
+
+		s = Modeler.getInternationalText("UniqueIdentifier");
+		p1.add(new JLabel((s != null ? s : "Unique identifier") + " (A-z, 0-9): ", SwingConstants.LEFT));
+		uidField = new JTextField(10);
+		uidField.setToolTipText("Type in a string to be used as the unique identifier of this text field.");
+		uidField.addActionListener(okListener);
+		p1.add(uidField);
 
 		p1 = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
 		p2.add(p1, BorderLayout.CENTER);
