@@ -33,7 +33,7 @@ public class ElectricForceField {
 
 	private final Object lock = new Object();
 
-	private byte mode = HSB_SHADING_MODE;
+	private byte mode = ARGB_SHADING_MODE;
 	private int width, height, cellSize = 10, nx, ny;
 	private float[] fx, fy;
 	private double intensity, x1, y1, x2, y2, wingx, wingy, cosx, sinx, distance;
@@ -128,8 +128,9 @@ public class ElectricForceField {
 							break;
 						}
 						distance = x2 * x2 + y2 * y2;
-						if (distance > 0.25 * model.atom[k].sigma * model.atom[k].sigma) {
-							distance = model.atom[k].charge / (Math.sqrt(distance) * distance);
+						if (distance > 0.01 * model.atom[k].sigma * model.atom[k].sigma) {
+							distance = model.atom[k].charge
+									/ (Math.sqrt(distance) * distance * model.getUniverse().getDielectricConstant());
 							fx[m] += distance * x2;
 							fy[m] += distance * y2;
 						}
