@@ -148,10 +148,20 @@ public abstract class BasicPageTextBox extends TextBox implements AutoResizable,
 	public void showBoundary(boolean b) {
 		String t = "";
 		if (this instanceof IconWrapper) {
-			t = "Color bar: #" + (index + 1) + " (" + getWidth() + "x" + getHeight() + ")";
+			if (uid == null) {
+				t = "Color bar: #" + (index + 1) + " (" + getWidth() + "x" + getHeight() + ")";
+			}
+			else {
+				t = "Color bar: #" + (index + 1) + " UID = " + uid + " (" + getWidth() + "x" + getHeight() + ")";
+			}
 		}
 		else {
-			t = "Text box: #" + (index + 1) + " (" + getWidth() + "x" + getHeight() + ")";
+			if (uid == null) {
+				t = "Text box: #" + (index + 1) + " (" + getWidth() + "x" + getHeight() + ")";
+			}
+			else {
+				t = "Text box: #" + (index + 1) + " UID = " + uid + " (" + getWidth() + "x" + getHeight() + ")";
+			}
 		}
 		String s = (String) getClientProperty("border");
 		if (s == null || BorderRectangle.EMPTY_BORDER.equals(s)) {

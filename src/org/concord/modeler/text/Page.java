@@ -2129,6 +2129,35 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		return null;
 	}
 
+	/** return the embedded object with the specified UID. */
+	public Embeddable getEmbeddedComponent(String uid) {
+		if (uid == null)
+			return null;
+		if (getDocument() == null)
+			return null;
+		if (getDocument().getLength() <= 0)
+			return null;
+		AbstractDocument.BranchElement section = (AbstractDocument.BranchElement) getDocument().getDefaultRootElement();
+		AbstractDocument.BranchElement paragraph;
+		AbstractDocument.LeafElement content;
+		Object name, attr;
+		for (Enumeration i = section.children(); i.hasMoreElements();) {
+			paragraph = (AbstractDocument.BranchElement) i.nextElement();
+			for (Enumeration j = paragraph.children(); j.hasMoreElements();) {
+				content = (AbstractDocument.LeafElement) j.nextElement();
+				for (Enumeration k = content.getAttributeNames(); k.hasMoreElements();) {
+					name = k.nextElement();
+					attr = content.getAttribute(name);
+					if (attr instanceof Embeddable) {
+						if (uid.equals(((Embeddable) attr).getUid()))
+							return (Embeddable) attr;
+					}
+				}
+			}
+		}
+		return null;
+	}
+
 	public List<Embeddable> getEmbeddedComponents() {
 		if (getDocument() == null)
 			return null;
