@@ -328,14 +328,17 @@ class MolecularModelProperties extends ModelProperties {
 		});
 		p.add(label);
 
-		ljCheckBox = new JCheckBox("On between covalently-bonded pairs");
+		s = MDView.getInternationalText("LennardJonesOnBetweenCovalentlyBondedPairs");
+		ljCheckBox = new JCheckBox(s != null ? s : "On between covalently-bonded pairs");
 		ljCheckBox.setSelected(model.getLJBetweenBondPairs());
 		p.add(ljCheckBox);
 
-		label = new JLabel("Electrostatic", SwingConstants.LEFT);
+		s = MDView.getInternationalText("ElectrostaticForce");
+		label = new JLabel(s != null ? s : "Electrostatic", SwingConstants.LEFT);
 		p.add(label);
 
-		interCoulombCheckBox = new JCheckBox("On between charges");
+		s = MDView.getInternationalText("ElectrostaticForceOnBetweenCharges");
+		interCoulombCheckBox = new JCheckBox(s != null ? s : "On between charges");
 		interCoulombCheckBox.setSelected(model.getInterCoulomb());
 		p.add(interCoulombCheckBox);
 
@@ -435,7 +438,7 @@ class MolecularModelProperties extends ModelProperties {
 
 		JSlider slider = new JSlider(1, 80);
 		slider.setOrientation(JSlider.HORIZONTAL);
-		slider.setToolTipText("Change the dielectric constant");
+		slider.setToolTipText(s != null ? s : "Change the dielectric constant");
 		slider.setPaintLabels(true);
 		slider.setPaintTicks(true);
 		slider.setPaintTrack(true);
@@ -443,8 +446,8 @@ class MolecularModelProperties extends ModelProperties {
 		slider.setMajorTickSpacing(20);
 		slider.setMinorTickSpacing(1);
 		slider.setValue((int) model.getUniverse().getDielectricConstant());
-		slider.setBorder(new TitledBorder(BorderFactory.createEtchedBorder(), "Dielectric Constant (Dimensionless)", 0,
-				0));
+		slider.setBorder(new TitledBorder(BorderFactory.createEtchedBorder(), s != null ? s
+				: "Dielectric Constant (Dimensionless)", 0, 0));
 
 		Hashtable<Integer, JLabel> tableOfLabels = new Hashtable<Integer, JLabel>();
 		JLabel label4 = new JLabel("80 (water)");
