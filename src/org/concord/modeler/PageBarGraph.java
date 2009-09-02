@@ -81,6 +81,7 @@ public class PageBarGraph extends BarGraph implements Embeddable, Scriptable, Mo
 		this();
 		setPage(parent);
 		setModelID(g.modelID);
+		setUid(g.uid);
 		setAverageType(g.getAverageType());
 		setTimeSeriesName(g.timeSeriesName);
 		setDescription(g.getDescription());

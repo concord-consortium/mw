@@ -182,6 +182,7 @@ public class PageXYGraph extends XYGrapher implements Embeddable, Scriptable, Mo
 
 	public PageXYGraph(PageXYGraph g, Page parent) {
 		this();
+		setUid(g.uid);
 		setPage(parent);
 		setModelID(g.modelID);
 		xMultiplier = g.xMultiplier;

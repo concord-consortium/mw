@@ -128,6 +128,7 @@ public class PageButton extends JButton implements Embeddable, ModelCommunicator
 		}
 		setModelClass(button.modelClass);
 		setModelID(button.modelID);
+		setUid(button.uid);
 		setName(button.getName());
 		setAction(button.getAction());
 		setIcon(button.getIcon());

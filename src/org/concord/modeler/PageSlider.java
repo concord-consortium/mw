@@ -83,6 +83,7 @@ public class PageSlider extends JSlider implements Embeddable, ModelCommunicator
 
 	public PageSlider(PageSlider slider, Page parent) {
 		this();
+		setUid(slider.uid);
 		setPage(parent);
 		setOrientation(slider.getOrientation());
 		setModelID(slider.modelID);
@@ -530,7 +531,7 @@ public class PageSlider extends JSlider implements Embeddable, ModelCommunicator
 		setValue(Math.round((float) (value * scaleFactor)));
 		setMajorTickSpacing((getMaximum() - getMinimum()) / nstep);
 		/*
-		 * if(Math.abs(getValue()-scaleFactor*value)>0.01*value) { EventQueue.invokeLater(new Runnable(){ public void
+		 * if(Math.abs(getValue()-scaleFactorvalue)>0.01value) { EventQueue.invokeLater(new Runnable(){ public void
 		 * run(){ JOptionPane.showMessageDialog (JOptionPane.getFrameForComponent(PageSlider.this), "The current value
 		 * "+value+" is changed to "+getValue()/scaleFactor "\nin order to be on the slider's scale. If this value is"
 		 * "\nnot appropriate, please change it using the slider."); } }); }

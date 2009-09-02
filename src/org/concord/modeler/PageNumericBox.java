@@ -78,6 +78,7 @@ public class PageNumericBox extends JLabel implements Embeddable, ModelCommunica
 		this();
 		setPage(parent);
 		setModelID(box.modelID);
+		setUid(box.uid);
 		setDataType(box.getDataType());
 		setValue(box.getValue());
 		setMultiplier(box.getMultiplier());

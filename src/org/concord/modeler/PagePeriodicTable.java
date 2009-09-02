@@ -58,6 +58,7 @@ public class PagePeriodicTable extends PeriodicTable implements Embeddable {
 
 	public PagePeriodicTable(PagePeriodicTable t, Page parent) {
 		this();
+		setUid(t.uid);
 		setPage(parent);
 		setBackground(t.getBackground());
 		setForeground(t.getForeground());

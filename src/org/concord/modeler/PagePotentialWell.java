@@ -97,6 +97,7 @@ public class PagePotentialWell extends PotentialWell implements Embeddable, Mode
 
 	public PagePotentialWell(PagePotentialWell well, Page parent) {
 		this();
+		setUid(well.uid);
 		setPage(parent);
 		setOpaque(well.isOpaque());
 		setBorderType(well.getBorderType());

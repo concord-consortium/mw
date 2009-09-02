@@ -56,6 +56,7 @@ public class PageFeedbackArea extends FeedbackArea implements Embeddable, AutoRe
 	public PageFeedbackArea(PageFeedbackArea area, Page parent) {
 		this();
 		setPage(parent);
+		setUid(area.uid);
 		setBackground(area.getBackground());
 		setBorderType(area.getBorderType());
 		setOpaque(area.isOpaque());

@@ -101,6 +101,7 @@ public class AudioPlayer extends JPanel implements Embeddable, MetaEventListener
 		setBorderType(player.getBorderType());
 		setPreferredSize(player.getPreferredSize());
 		setClipName(player.clipName);
+		setUid(player.uid);
 		setText(player.getText());
 		setToolTipText(player.getToolTipText());
 		setBackground(player.getBackground());

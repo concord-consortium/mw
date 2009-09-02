@@ -117,6 +117,7 @@ public class PageTextField extends JPanel implements Embeddable, HtmlService, Se
 
 	public PageTextField(PageTextField t, Page parent) {
 		this();
+		setUid(t.uid);
 		setPage(parent);
 		setTitle(t.getTitle());
 		setQuestionPosition(t.getQuestionPosition());

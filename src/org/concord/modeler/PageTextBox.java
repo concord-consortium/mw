@@ -74,6 +74,7 @@ public class PageTextBox extends BasicPageTextBox {
 
 	public PageTextBox(PageTextBox box, Page parent) {
 		this();
+		setUid(box.uid);
 		setPage(parent);
 		setText(box.getText());
 		setOpaque(box.isOpaque());

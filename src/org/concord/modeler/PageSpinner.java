@@ -90,6 +90,7 @@ public class PageSpinner extends JComponent implements Embeddable, ModelCommunic
 
 	public PageSpinner(PageSpinner spinner, Page parent) {
 		this();
+		setUid(spinner.uid);
 		setPage(parent);
 		setModelID(spinner.modelID);
 		setModelClass(spinner.modelClass);

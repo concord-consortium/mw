@@ -71,6 +71,7 @@ public class PageGauge extends Gauge implements Embeddable, Scriptable, ModelCom
 		this();
 		setPage(parent);
 		setModelID(g.modelID);
+		setUid(g.uid);
 		setAverageType(g.getAverageType());
 		setTimeSeriesName(g.timeSeriesName);
 		setDescription(g.getDescription());

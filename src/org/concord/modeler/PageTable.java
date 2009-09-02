@@ -228,6 +228,7 @@ public class PageTable extends JScrollPane implements Embeddable, AutoResizable 
 
 	public PageTable(PageTable t, Page parent) {
 		this(t.hasTableColumnHeader(), t.hasTableRowHeader());
+		setUid(t.uid);
 		setPage(parent);
 		setTableBackground(t.getTableBackground());
 		int nrow = t.getRowCount();

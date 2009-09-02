@@ -138,6 +138,7 @@ abstract public class PagePlugin extends JPanel implements Embeddable, Scriptabl
 		setBackground(pagePlugin.getBackground());
 		setChangable(page.isEditable());
 		setClassName(pagePlugin.className);
+		setUid(pagePlugin.uid);
 		if (pagePlugin.jarName != null)
 			jarName = Collections.synchronizedList(new ArrayList<String>(pagePlugin.jarName));
 		if (pagePlugin.parameterMap != null)

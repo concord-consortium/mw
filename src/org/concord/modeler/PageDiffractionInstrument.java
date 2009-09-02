@@ -62,6 +62,7 @@ public class PageDiffractionInstrument extends DiffractionInstrument implements 
 		setPage(parent);
 		setBorderType(di.getBorderType());
 		setModelID(di.modelID);
+		setUid(di.uid);
 		ModelCanvas mc = page.getComponentPool().get(modelID);
 		if (mc != null)
 			mc.getMdContainer().getModel().addModelListener(this);

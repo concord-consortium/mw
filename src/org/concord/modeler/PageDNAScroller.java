@@ -129,6 +129,7 @@ public class PageDNAScroller extends DNAScroller implements Embeddable, ModelCom
 		this();
 		setPage(parent);
 		setModelID(s.modelID);
+		setUid(s.uid);
 		setBorderType(s.getBorderType());
 		setOpaque(s.isOpaque());
 		setProteinID(s.proteinID);

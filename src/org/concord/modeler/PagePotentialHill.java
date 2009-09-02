@@ -98,6 +98,7 @@ public class PagePotentialHill extends PotentialHill implements Embeddable, Mode
 
 	public PagePotentialHill(PagePotentialHill hill, Page parent) {
 		this();
+		setUid(hill.uid);
 		setPage(parent);
 		setOpaque(hill.isOpaque());
 		setBorderType(hill.getBorderType());
@@ -605,7 +606,8 @@ public class PagePotentialHill extends PotentialHill implements Embeddable, Mode
 	public void propertyChange(PropertyChangeEvent e) {
 		if (modelID != -1) {
 			try {
-				Reaction r = ((ReactionModel) page.getComponentPool().get(modelID).getMdContainer().getModel()).getType();
+				Reaction r = ((ReactionModel) page.getComponentPool().get(modelID).getMdContainer().getModel())
+						.getType();
 				adjustReactionHeat(r);
 			}
 			catch (Exception exception) {

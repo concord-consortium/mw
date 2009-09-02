@@ -100,6 +100,7 @@ public class PageFunctionGraph extends JPanel implements Embeddable {
 
 	public PageFunctionGraph(PageFunctionGraph g, Page parent) {
 		this();
+		setUid(g.uid);
 		setPage(parent);
 		setBackground(g.getBackground());
 		setPreferredSize(g.getPreferredSize());

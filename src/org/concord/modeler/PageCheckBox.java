@@ -75,6 +75,7 @@ public class PageCheckBox extends JCheckBox implements Embeddable, ModelCommunic
 		setPage(parent);
 		setModelClass(checkBox.modelClass);
 		setModelID(checkBox.modelID);
+		setUid(checkBox.uid);
 		setOpaque(checkBox.isOpaque());
 		setBackground(checkBox.getBackground());
 		setSelected(checkBox.isSelected());
