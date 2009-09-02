@@ -116,6 +116,7 @@ public class PageTextArea extends JPanel implements Embeddable, HtmlService, Sea
 
 	public PageTextArea(PageTextArea t, Page parent) {
 		this();
+		setUid(t.uid);
 		setPage(parent);
 		setTitle(t.getTitle());
 		setPreferredSize(t.getPreferredSize());

@@ -76,6 +76,7 @@ public class ActivityButton extends JButton implements Embeddable {
 			setOpaque(button.isOpaque());
 		}
 		setAction(button.getAction());
+		setUid(button.uid);
 		setText(button.getText());
 		setIcon(button.getIcon());
 		setToolTipText(button.getToolTipText());

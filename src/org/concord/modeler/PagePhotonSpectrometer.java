@@ -61,6 +61,7 @@ public class PagePhotonSpectrometer extends PhotonSpectrometer implements Script
 		setPage(parent);
 		setBorderType(pps.getBorderType());
 		setModelID(pps.modelID);
+		setUid(pps.uid);
 		setType(pps.getType());
 		setNumberOfTicks(pps.getNumberOfTicks());
 		setLowerBound(pps.getLowerBound());

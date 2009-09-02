@@ -95,6 +95,7 @@ public class PageScriptConsole extends JPanel implements Embeddable, ModelCommun
 
 	public PageScriptConsole(PageScriptConsole console, Page parent) {
 		this();
+		setUid(console.uid);
 		setPage(parent);
 		setBorderType(console.getBorderType());
 		setModelID(console.modelID);

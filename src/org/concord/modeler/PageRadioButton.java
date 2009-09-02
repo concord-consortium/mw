@@ -77,6 +77,7 @@ public class PageRadioButton extends JRadioButton implements Embeddable, ModelCo
 		setPage(parent);
 		setModelClass(radioButton.modelClass);
 		setModelID(radioButton.modelID);
+		setUid(radioButton.uid);
 		setGroupID(radioButton.groupID);
 		setOpaque(radioButton.isOpaque());
 		setBackground(radioButton.getBackground());

@@ -77,6 +77,7 @@ public class PageComboBox extends JComboBox implements Embeddable, ModelCommunic
 		setPage(parent);
 		setModelClass(comboBox.modelClass);
 		setModelID(comboBox.modelID);
+		setUid(comboBox.uid);
 		setName(comboBox.getName());
 		setAction(comboBox.getAction());
 		Object o = comboBox.getClientProperty("Selected Index");

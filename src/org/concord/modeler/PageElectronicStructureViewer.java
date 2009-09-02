@@ -73,6 +73,7 @@ public class PageElectronicStructureViewer extends ElectronicStructureViewer imp
 
 	public PageElectronicStructureViewer(PageElectronicStructureViewer viewer, Page parent) {
 		this();
+		setUid(viewer.uid);
 		setElementID(viewer.getElementID());
 		setUpperBound(viewer.getUpperBound());
 		setLowerBound(viewer.getLowerBound());
