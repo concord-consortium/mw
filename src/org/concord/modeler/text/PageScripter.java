@@ -132,13 +132,22 @@ class PageScripter extends ComponentScripter {
 					i = Integer.parseInt(s[0]);
 				}
 				catch (NumberFormatException e) {
-					e.printStackTrace();
 				}
 				if (i >= 0) {
 					final int i2 = i;
 					EventQueue.invokeLater(new Runnable() {
 						public void run() {
 							Object o = page.getEmbeddedComponent(Embeddable.class, i2);
+							if (o instanceof JComponent)
+								((JComponent) o).setEnabled(true);
+						}
+					});
+				}
+				else {
+					final String uid = s[0];
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							Embeddable o = page.getEmbeddedComponent(uid);
 							if (o instanceof JComponent)
 								((JComponent) o).setEnabled(true);
 						}
@@ -151,14 +160,23 @@ class PageScripter extends ComponentScripter {
 					i = Integer.parseInt(s[0]);
 				}
 				catch (NumberFormatException e) {
-					e.printStackTrace();
 				}
+				final boolean b = "true".equalsIgnoreCase(s[1]);
 				if (i >= 0) {
 					final int i2 = i;
-					final boolean b = "true".equalsIgnoreCase(s[1]);
 					EventQueue.invokeLater(new Runnable() {
 						public void run() {
 							Object o = page.getEmbeddedComponent(Embeddable.class, i2);
+							if (o instanceof JComponent)
+								((JComponent) o).setEnabled(b);
+						}
+					});
+				}
+				else {
+					final String uid = s[0];
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							Embeddable o = page.getEmbeddedComponent(uid);
 							if (o instanceof JComponent)
 								((JComponent) o).setEnabled(b);
 						}
@@ -178,27 +196,35 @@ class PageScripter extends ComponentScripter {
 					i = Integer.parseInt(s[0]);
 				}
 				catch (NumberFormatException e) {
-					e.printStackTrace();
 				}
+				boolean a = true;
+				if (s.length >= 2)
+					a = "true".equalsIgnoreCase(s[1]);
+				boolean b = false;
+				if (s.length >= 3)
+					b = "execute".equalsIgnoreCase(s[2]);
+				final boolean a2 = a;
+				final boolean b2 = b;
 				if (i >= 0) {
-					boolean a = true;
-					if (s.length >= 2)
-						a = "true".equalsIgnoreCase(s[1]);
-					boolean b = false;
-					if (s.length >= 3)
-						b = "execute".equalsIgnoreCase(s[2]);
 					final int i2 = i;
-					final boolean a2 = a;
-					final boolean b2 = b;
 					EventQueue.invokeLater(new Runnable() {
 						public void run() {
 							setComponentSelected(i2, a2, b2);
 						}
 					});
 				}
+				else {
+					final String uid = s[0];
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							setComponentSelected(uid, a2, b2);
+						}
+					});
+				}
 			}
 			return;
 		}
+
 		// select index from a combo box
 		matcher = SELECT_COMBOBOX.matcher(ci);
 		if (matcher.find()) {
@@ -207,28 +233,47 @@ class PageScripter extends ComponentScripter {
 				int i = -1, j = -1;
 				try {
 					i = Integer.parseInt(s[0]);
+				}
+				catch (NumberFormatException e) {
+				}
+				try {
 					j = Integer.parseInt(s[1]);
 				}
 				catch (NumberFormatException e) {
 					e.printStackTrace();
 				}
-				if (i >= 0 && j >= 0) {
+				if (j >= 0) {
+					final int j2 = j;
 					boolean b = false;
 					if (s.length >= 3)
 						b = "execute".equalsIgnoreCase(s[2]);
-					final int i2 = i;
-					final int j2 = j;
 					final boolean b2 = b;
-					EventQueue.invokeLater(new Runnable() {
-						public void run() {
-							Object o = page.getEmbeddedComponent(JComboBox.class, i2);
-							if (o instanceof JComboBox) {
-								JComboBox cb = (JComboBox) o;
-								if (j2 < cb.getItemCount())
-									setSelectedIndex(cb, j2, b2);
+					if (i >= 0) {
+						final int i2 = i;
+						EventQueue.invokeLater(new Runnable() {
+							public void run() {
+								Object o = page.getEmbeddedComponent(JComboBox.class, i2);
+								if (o instanceof JComboBox) {
+									JComboBox cb = (JComboBox) o;
+									if (j2 < cb.getItemCount())
+										setSelectedIndex(cb, j2, b2);
+								}
 							}
-						}
-					});
+						});
+					}
+					else {
+						final String uid = s[0];
+						EventQueue.invokeLater(new Runnable() {
+							public void run() {
+								Embeddable o = page.getEmbeddedComponent(uid);
+								if (o instanceof JComboBox) {
+									JComboBox cb = (JComboBox) o;
+									if (j2 < cb.getItemCount())
+										setSelectedIndex(cb, j2, b2);
+								}
+							}
+						});
+					}
 				}
 			}
 			return;
@@ -272,6 +317,49 @@ class PageScripter extends ComponentScripter {
 				if (cl != null)
 					for (ChangeListener x : cl)
 						ab.addChangeListener(x);
+			}
+		}
+	}
+
+	/* set the selection state of a component without or with causing the listeners on it to fire */
+	private void setComponentSelected(String uid, boolean b, boolean execute) {
+		List<Embeddable> list = page.getEmbeddedComponents();
+		if (list == null || list.isEmpty() || uid == null)
+			return;
+		for (Embeddable c : list) {
+			if (uid.equals(c.getUid())) {
+				if (c instanceof AbstractButton) {
+					AbstractButton ab = (AbstractButton) c;
+					if (execute) {
+						if (b)
+							ab.doClick();
+						else ab.setSelected(false);
+					}
+					else {
+						ItemListener[] il = ab.getItemListeners();
+						if (il != null)
+							for (ItemListener x : il)
+								ab.removeItemListener(x);
+						ActionListener[] al = ab.getActionListeners();
+						if (al != null)
+							for (ActionListener x : al)
+								ab.removeActionListener(x);
+						ChangeListener[] cl = ab.getChangeListeners();
+						if (cl != null)
+							for (ChangeListener x : cl)
+								ab.removeChangeListener(x);
+						ab.setSelected(b);
+						if (il != null)
+							for (ItemListener x : il)
+								ab.addItemListener(x);
+						if (al != null)
+							for (ActionListener x : al)
+								ab.addActionListener(x);
+						if (cl != null)
+							for (ChangeListener x : cl)
+								ab.addChangeListener(x);
+					}
+				}
 			}
 		}
 	}

@@ -39,6 +39,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 
@@ -57,6 +58,7 @@ class PageTextBoxMaker extends ComponentMaker {
 
 	private PageTextBox pageTextBox;
 	private JDialog dialog;
+	private JTextField uidField;
 	private JComboBox borderComboBox;
 	private JTextArea textArea;
 	private FloatNumberTextField widthField, heightField;
@@ -75,6 +77,14 @@ class PageTextBoxMaker extends ComponentMaker {
 	}
 
 	private void confirm() {
+		String s = uidField.getText();
+		if (s != null) {
+			s = s.trim();
+			pageTextBox.setUid(s.equals("") ? null : s);
+		}
+		else {
+			pageTextBox.setUid(null);
+		}
 		pageTextBox.setBorderType((String) borderComboBox.getSelectedItem());
 		pageTextBox.putClientProperty("border", pageTextBox.getBorderType());
 		pageTextBox.setBackground(bgComboBox.getSelectedColor());
@@ -142,6 +152,7 @@ class PageTextBoxMaker extends ComponentMaker {
 			});
 		}
 
+		uidField.setText(pageTextBox.getUid());
 		indexLabel.setText(pageTextBox.index == -1 ? "to be decided" : "#" + (pageTextBox.index + 1));
 		if (pageTextBox.widthIsRelative) {
 			widthField.setValue(pageTextBox.widthRatio);
@@ -261,7 +272,18 @@ class PageTextBoxMaker extends ComponentMaker {
 		bgComboBox.setRequestFocusEnabled(false);
 		p.add(bgComboBox);
 
-		ModelerUtilities.makeCompactGrid(p, 2, 4, 5, 5, 15, 5);
+		// row 3
+		s = Modeler.getInternationalText("UniqueIdentifier");
+		p.add(new JLabel((s != null ? s : "Unique identifier") + " (A-z, 0-9): ", SwingConstants.LEFT));
+		uidField = new JTextField(10);
+		uidField.setToolTipText("Type in a string to be used as the unique identifier of this text box.");
+		uidField.setAction(okAction);
+		p.add(uidField);
+
+		p.add(new JPanel());
+		p.add(new JPanel());
+
+		ModelerUtilities.makeCompactGrid(p, 3, 4, 5, 5, 15, 5);
 
 		p = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		topPanel.add(p, BorderLayout.SOUTH);
