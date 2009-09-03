@@ -83,6 +83,7 @@ public class PageMultipleChoice extends MultipleChoice implements Embeddable, Mu
 		this();
 		setUid(choice.uid);
 		setPage(parent);
+		setQuestionPosition(choice.getQuestionPosition());
 		setSingleSelection(choice.getSingleSelection());
 		int n = choice.getChoiceCount();
 		changeNumberOfChoices(n);
