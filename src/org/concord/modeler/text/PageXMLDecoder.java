@@ -3022,6 +3022,10 @@ final class PageXMLDecoder {
 				m.setUid(uid);
 				uid = null;
 			}
+			if (layout != null) {
+				m.setQuestionPosition(layout);
+				layout = null;
+			}
 			m.setSingleSelection(singleSelection);
 			m.changeNumberOfChoices(nrow == 0 ? 4 : nrow);
 			for (int i = 0; i < nrow; i++)

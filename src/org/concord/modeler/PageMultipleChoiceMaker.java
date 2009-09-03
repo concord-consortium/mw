@@ -70,6 +70,7 @@ class PageMultipleChoiceMaker extends ComponentMaker {
 	private PageMultipleChoice pageMultipleChoice;
 	private JPanel contentPane;
 	private JDialog dialog;
+	private JRadioButton topRadioButton, leftRadioButton;
 	private JCheckBox multipleCheckBox, transparentCheckBox;
 	private ColorComboBox bgComboBox;
 	private JComboBox borderComboBox;
@@ -129,6 +130,7 @@ class PageMultipleChoiceMaker extends ComponentMaker {
 		pageMultipleChoice.setSingleSelection(!multipleCheckBox.isSelected());
 		int n = (Integer) nChoiceSpinner.getValue();
 		pageMultipleChoice.changeNumberOfChoices(n);
+		pageMultipleChoice.setQuestionPosition(topRadioButton.isSelected() ? BorderLayout.NORTH : BorderLayout.WEST);
 
 		int m = 0;
 		for (int i = 0; i < n; i++) {
@@ -263,6 +265,12 @@ class PageMultipleChoiceMaker extends ComponentMaker {
 		}
 		answerButtonCheckBox.setSelected(pageMultipleChoice.hasCheckAnswerButton());
 		clearButtonCheckBox.setSelected(pageMultipleChoice.hasClearAnswerButton());
+		if (pageMultipleChoice.getQuestionPosition().equals(BorderLayout.NORTH)) {
+			topRadioButton.setSelected(true);
+		}
+		else {
+			leftRadioButton.setSelected(true);
+		}
 
 		dialog.setVisible(true);
 
@@ -353,6 +361,33 @@ class PageMultipleChoiceMaker extends ComponentMaker {
 		p1.setBorder(BorderFactory.createEmptyBorder(15, 10, 5, 10));
 		box.add(p1);
 
+		s = Modeler.getInternationalText("QuestionPosition");
+		p1.add(new JLabel((s != null ? s : "Question position") + " :", SwingConstants.LEFT));
+
+		ButtonGroup bg = new ButtonGroup();
+		s = Modeler.getInternationalText("Top");
+		topRadioButton = new JRadioButton(s != null ? s : "Top");
+		topRadioButton.setSelected(true);
+		p1.add(topRadioButton);
+		bg.add(topRadioButton);
+
+		s = Modeler.getInternationalText("Left");
+		leftRadioButton = new JRadioButton(s != null ? s : "Left");
+		p1.add(leftRadioButton);
+		bg.add(leftRadioButton);
+
+		s = Modeler.getInternationalText("UniqueIdentifier");
+		p1.add(new JLabel((s != null ? s : "Unique identifier") + " (A-z, 0-9): ", SwingConstants.LEFT));
+		uidField = new JTextField(10);
+		uidField
+				.setToolTipText("Type in a string to be used as the unique identifier of this multiple choice question.");
+		uidField.addActionListener(okListener);
+		p1.add(uidField);
+
+		p1 = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 2));
+		p1.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+		box.add(p1);
+
 		s = Modeler.getInternationalText("MultipleSelection");
 		multipleCheckBox = new JCheckBox(s != null ? s : "Multiple selection");
 		multipleCheckBox.addItemListener(new ItemListener() {
@@ -374,14 +409,6 @@ class PageMultipleChoiceMaker extends ComponentMaker {
 			}
 		});
 		p1.add(nChoiceSpinner);
-
-		s = Modeler.getInternationalText("UniqueIdentifier");
-		p1.add(new JLabel((s != null ? s : "Unique identifier") + " (A-z, 0-9): ", SwingConstants.LEFT));
-		uidField = new JTextField(10);
-		uidField
-				.setToolTipText("Type in a string to be used as the unique identifier of this multiple choice question.");
-		uidField.addActionListener(okListener);
-		p1.add(uidField);
 
 		p1 = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 2));
 		p1.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
