@@ -23,6 +23,7 @@ package org.concord.modeler.ui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -64,6 +65,7 @@ public abstract class MultipleChoice extends JPanel implements HtmlService, Sear
 	protected AbstractButton[] choices;
 	protected BasicPageTextBox questionBody;
 	protected JButton checkAnswerButton, clearAnswerButton;
+	protected String layout = BorderLayout.NORTH;
 	private ButtonGroup buttonGroup;
 	private AbstractButton invisibleButton;
 	private JPanel choicePanel;
@@ -397,24 +399,44 @@ public abstract class MultipleChoice extends JPanel implements HtmlService, Sear
 		return questionBody.getText();
 	}
 
+	public void setQuestionPosition(String s) {
+		layout = s;
+		if (layout == null)
+			return;
+		add(questionBody, layout);
+		layChoices();
+	}
+
+	public String getQuestionPosition() {
+		return layout;
+	}
+
 	public void setChoice(int i, String s) {
-		char c = (char) ('A' + i);
-		s = s.trim();
-		if (s.toLowerCase().startsWith("<html>")) {
-			String s1 = s.substring(0, 6);
-			String s2 = s.substring(6);
-			choices[i].setText(s1 + c + ". " + s2);
+		if (layout.equals(BorderLayout.NORTH)) {
+			char c = (char) ('A' + i);
+			s = s.trim();
+			if (s.toLowerCase().startsWith("<html>")) {
+				String s1 = s.substring(0, 6);
+				String s2 = s.substring(6);
+				choices[i].setText(s1 + c + ". " + s2);
+			}
+			else {
+				choices[i].setText(c + ". " + s);
+			}
 		}
 		else {
-			choices[i].setText(c + ". " + s);
+			choices[i].setText(s.trim());
 		}
 	}
 
 	public String getChoice(int i) {
 		String s = choices[i].getText();
-		if (s.toLowerCase().startsWith("<html>"))
-			return s.substring(0, 6) + s.substring(9);
-		return s.substring(3);
+		if (layout.equals(BorderLayout.NORTH)) {
+			if (s.toLowerCase().startsWith("<html>"))
+				return s.substring(0, 6) + s.substring(9);
+			return s.substring(3);
+		}
+		return s;
 	}
 
 	public String[] getChoices() {
@@ -585,8 +607,8 @@ public abstract class MultipleChoice extends JPanel implements HtmlService, Sear
 			return;
 
 		choicePanel.removeAll();
-		// choicePanel.setLayout(new BoxLayout(choicePanel, BoxLayout.Y_AXIS));
-		choicePanel.setLayout(new java.awt.GridLayout(choices.length, 1, 0, 0));
+		choicePanel.setLayout(layout.equals(BorderLayout.NORTH) ? new GridLayout(choices.length, 1, 0, 0)
+				: new GridLayout(1, choices.length, 0, 0));
 		choicePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 
 		for (AbstractButton c : choices) {

@@ -149,7 +149,7 @@ class PageTextFieldMaker extends ComponentMaker {
 		titleArea.setText(ModelerUtilities.deUnicode(pageTextField.getTitle()));
 		titleArea.setCaretPosition(0);
 		answerArea.setText(pageTextField.getReferenceAnswer());
-		if (pageTextField.layout == BorderLayout.NORTH) {
+		if (pageTextField.layout.equals(BorderLayout.NORTH)) {
 			topRadioButton.setSelected(true);
 		}
 		else {

@@ -487,6 +487,8 @@ public class PageMultipleChoice extends MultipleChoice implements Embeddable, Mu
 		StringBuffer sb = new StringBuffer("<class>" + getClass().getName() + "</class>\n");
 		if (uid != null)
 			sb.append("<uid>" + uid + "</uid>\n");
+		if (!layout.equals(BorderLayout.NORTH))
+			sb.append("<layout>" + layout + "</layout>\n");
 		sb.append("<single>" + getSingleSelection() + "</single>\n");
 		sb.append("<row>" + getChoiceCount() + "</row>\n");
 		sb.append("<width>" + getWidth() + "</width>\n");
