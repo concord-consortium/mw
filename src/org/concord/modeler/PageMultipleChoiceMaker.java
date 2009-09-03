@@ -254,11 +254,14 @@ class PageMultipleChoiceMaker extends ComponentMaker {
 		transparentCheckBox.setSelected(!pageMultipleChoice.isOpaque());
 		bgComboBox.setColor(pageMultipleChoice.getBackground());
 		multipleCheckBox.setSelected(!pageMultipleChoice.getSingleSelection());
+		boolean northLayout = pageMultipleChoice.getQuestionPosition().equals(BorderLayout.NORTH);
 		for (int i = 0; i < choiceButtons.length; i++) {
 			choiceButton[i].setSelected(pageMultipleChoice.isCorrect(i));
-			if (choiceButtons[i].getText() == null || choiceButtons[i].getText().length() < 3) {
-				choiceField[i].setText(null);
-				continue;
+			if (northLayout) {
+				if (choiceButtons[i].getText() == null || choiceButtons[i].getText().length() < 3) {
+					choiceField[i].setText(null);
+					continue;
+				}
 			}
 			choiceField[i].setText(pageMultipleChoice.getChoice(i));
 			choiceField[i].setCaretPosition(0);
