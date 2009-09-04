@@ -301,7 +301,7 @@ class ActivityButtonMaker extends ComponentMaker {
 		}
 		else if (isScriptButton || scriptDefault) {
 			areaLabel
-					.setText("<html>Enter scripts in the following format:<br><font face=\"Courier New\" size=\"-2\">(native)script:[component type]:[component index]:[script body]</font></html>");
+					.setText("<html>Enter scripts in the following format:<br><font face=\"Courier New\" size=\"-2\">(native)script:[component type]:[index or UID]:[script body]</font></html>");
 			textArea.setText((String) activityButton.getClientProperty("script"));
 		}
 		else if (isGradeButton) {

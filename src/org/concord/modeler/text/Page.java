@@ -3968,18 +3968,23 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			n = Integer.valueOf(token[1].trim()).intValue();
 		}
 		catch (NumberFormatException e) {
-			e.printStackTrace();
-			n = -1;
 		}
-		if (n > 0) {
+		if (n > 0) { // use index
 			if (token[2] != null && token[2].trim().length() > 0) {
 				Object o = getEmbeddedComponent(klass, n - 1);
-				if (o instanceof Scriptable) {
+				if (o instanceof Scriptable)
 					return ((Scriptable) o).runScript(token[2].trim());
-				}
-				if (o instanceof NativelyScriptable) {
+				if (o instanceof NativelyScriptable)
 					return ((NativelyScriptable) o).runNativeScript(token[2].trim());
-				}
+			}
+		}
+		else { // try UID
+			if (token[2] != null && token[2].trim().length() > 0) {
+				Embeddable o = getEmbeddedComponent(token[1].trim());
+				if (o instanceof Scriptable)
+					return ((Scriptable) o).runScript(token[2].trim());
+				if (o instanceof NativelyScriptable)
+					return ((NativelyScriptable) o).runNativeScript(token[2].trim());
 			}
 		}
 		return writeErrorMessage(Arrays.asList(token) + " for " + klass);
@@ -3991,16 +3996,18 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			n = Integer.valueOf(token[1].trim()).intValue();
 		}
 		catch (NumberFormatException e) {
-			e.printStackTrace();
-			n = -1;
 		}
-		if (n > 0) {
+		if (n > 0) { // use index
 			if (token[2] != null && token[2].trim().length() > 0) {
 				Object o = getEmbeddedComponent(klass, n - 1);
-				if (o instanceof NativelyScriptable) {
+				if (o instanceof NativelyScriptable)
 					return ((NativelyScriptable) o).runNativeScript(token[2].trim());
-				}
 			}
+		}
+		else { // try UID
+			Embeddable o = getEmbeddedComponent(token[1].trim());
+			if (o instanceof NativelyScriptable)
+				return ((NativelyScriptable) o).runNativeScript(token[2].trim());
 		}
 		return writeErrorMessage(Arrays.asList(token) + " for " + klass);
 	}
