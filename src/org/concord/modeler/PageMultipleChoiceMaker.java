@@ -571,7 +571,7 @@ class PageMultipleChoiceMaker extends ComponentMaker {
 	private JEditorPane createTipPane() {
 		JEditorPane ep = new JEditorPane(
 				"text/html",
-				"<html><body face=Verdana><table><tr><td align=center valign=center><b>Example >>> </b></td><td valign=top><font size=2>script:textbox:1:load filename1.html;<br>script:textbox:2:load filename2.html;</tr><tr><td colspan=2><font size=2>Tip: Copy and paste a line from the above example into the text areas and edit them accordingly.</td></tr></table></html>");
+				"<html><body face=Verdana><table><tr><td align=center valign=center><b>Example >>> </b></td><td valign=top><font size=2>script:textbox:uid1:load filename1.html;<br>script:textbox:uid2:load filename2.html;</tr><tr><td colspan=2><font size=2>Tip: Copy and paste a line from the above example into the text areas and edit them accordingly.</td></tr></table></html>");
 		ep.setEditable(false);
 		ep.setBackground(scriptPanel.getBackground());
 		return ep;
