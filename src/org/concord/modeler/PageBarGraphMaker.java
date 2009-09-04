@@ -131,19 +131,13 @@ class PageBarGraphMaker extends ComponentMaker {
 	}
 
 	private boolean confirm() {
+		if (!checkAndSetUid(uidField.getText(), pageBarGraph, dialog))
+			return false;
 		if (minField.getValue() >= maxField.getValue()) {
 			JOptionPane.showMessageDialog(dialog, "Upper bound must be greater than lower bound.", "Input error",
 					JOptionPane.ERROR_MESSAGE);
 			focusTextComponent = maxField;
 			return false;
-		}
-		String s = uidField.getText();
-		if (s != null) {
-			s = s.trim();
-			pageBarGraph.setUid(s.equals("") ? null : s);
-		}
-		else {
-			pageBarGraph.setUid(null);
 		}
 		switch (averageTypeComboBox.getSelectedIndex()) {
 		case 0:
@@ -528,7 +522,7 @@ class PageBarGraphMaker extends ComponentMaker {
 
 		// row 4
 		s = Modeler.getInternationalText("UniqueIdentifier");
-		p.add(new JLabel((s != null ? s : "Unique identifier") + " (A-z, 0-9)", SwingConstants.LEFT));
+		p.add(new JLabel(s != null ? s : "Unique identifier", SwingConstants.LEFT));
 		uidField = new JTextField();
 		uidField.setToolTipText("Type in a string to be used as the unique identifier of this bar graph.");
 		uidField.addActionListener(okListener);

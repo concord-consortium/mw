@@ -117,14 +117,8 @@ class ActivityButtonMaker extends ComponentMaker {
 	}
 
 	private boolean confirm() {
-		String s = uidField.getText();
-		if (s != null) {
-			s = s.trim();
-			activityButton.setUid(s.equals("") ? null : s);
-		}
-		else {
-			activityButton.setUid(null);
-		}
+		if (!checkAndSetUid(uidField.getText(), activityButton, dialog))
+			return false;
 		if (!Page.isNativeLookAndFeelUsed()) {
 			activityButton.setOpaque(!transparentCheckBox.isSelected());
 			activityButton.setBorderType((String) borderComboBox.getSelectedItem());
@@ -152,7 +146,7 @@ class ActivityButtonMaker extends ComponentMaker {
 		String toolTip = toolTipField.getText();
 		if (toolTip != null && !toolTip.trim().equals(""))
 			activityButton.setToolTipText(toolTip);
-		s = pageGroupField.getText();
+		String s = pageGroupField.getText();
 		if (s.trim().equals("")) {
 			s = null;
 		}
@@ -370,7 +364,7 @@ class ActivityButtonMaker extends ComponentMaker {
 
 		// row 2
 		s = Modeler.getInternationalText("UniqueIdentifier");
-		p.add(new JLabel((s != null ? s : "Unique identifier") + " (A-z, 0-9)", SwingConstants.LEFT));
+		p.add(new JLabel(s != null ? s : "Unique identifier", SwingConstants.LEFT));
 		uidField = new JTextField();
 		uidField.setToolTipText("Type in a string to be used as the unique identifier of this button.");
 		uidField.addActionListener(okListener);

@@ -21,11 +21,13 @@ package org.concord.modeler;
 
 import java.awt.Toolkit;
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import org.concord.modeler.text.Page;
@@ -42,6 +44,55 @@ public abstract class ComponentMaker {
 	final static String EXECUTE_NATIVE_SCRIPT = "Execute native script";
 
 	boolean cancel;
+
+	static boolean checkAndSetUid(String uid, Embeddable e, JDialog dialog) {
+		if (uid != null) {
+			uid = uid.trim();
+			if (uid.equals("")) {
+				e.setUid(null);
+			}
+			else {
+				if (verifyUid(uid)) {
+					if (hasUidBeenUsed(uid, e)) {
+						JOptionPane.showMessageDialog(dialog, "The unique identifier " + uid
+								+ " has been used by another component on this page.\nPlease choose a different one.",
+								"UID error", JOptionPane.ERROR_MESSAGE);
+						return false;
+					}
+					e.setUid(uid);
+				}
+				else {
+					JOptionPane
+							.showMessageDialog(
+									dialog,
+									"The unique identifier must contain only alphenumeric characters and\nat least one alphebetic character.",
+									"UID error", JOptionPane.ERROR_MESSAGE);
+					return false;
+				}
+			}
+		}
+		else {
+			e.setUid(null);
+		}
+		return true;
+	}
+
+	private static boolean verifyUid(String uid) {
+		if (uid.matches("[^a-zA-Z]+"))
+			return false;
+		return uid.matches("\\w+");
+	}
+
+	private static boolean hasUidBeenUsed(String uid, Embeddable e) {
+		List<Embeddable> list = e.getPage().getEmbeddedComponents();
+		if (list == null || list.isEmpty())
+			return false;
+		for (Embeddable x : list) {
+			if (x != e && uid.equals(x.getUid()))
+				return true;
+		}
+		return false;
+	}
 
 	public static boolean isScriptActionKey(String s) {
 		return EXECUTE_MW_SCRIPT.equals(s) || EXECUTE_JMOL_SCRIPT.equals(s) || EXECUTE_NATIVE_SCRIPT.equals(s)

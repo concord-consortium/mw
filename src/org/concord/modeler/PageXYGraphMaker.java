@@ -152,14 +152,9 @@ class PageXYGraphMaker extends ComponentMaker {
 
 	private boolean confirm() {
 
-		String s = uidField.getText();
-		if (s != null) {
-			s = s.trim();
-			pageXYGraph.setUid(s.equals("") ? null : s);
-		}
-		else {
-			pageXYGraph.setUid(null);
-		}
+		if (!checkAndSetUid(uidField.getText(), pageXYGraph, dialog))
+			return false;
+
 		pageXYGraph.setChangable(true);
 		pageXYGraph.setPreferredSize(new Dimension(widthField.getValue(), heightField.getValue()));
 		pageXYGraph.setBorderType((String) borderComboBox.getSelectedItem());
@@ -927,7 +922,7 @@ class PageXYGraphMaker extends ComponentMaker {
 
 		// row 4
 		s = Modeler.getInternationalText("UniqueIdentifier");
-		p2.add(new JLabel((s != null ? s : "Unique identifier") + " (A-z, 0-9)", SwingConstants.LEFT));
+		p2.add(new JLabel(s != null ? s : "Unique identifier", SwingConstants.LEFT));
 		uidField = new JTextField();
 		uidField.setToolTipText("Type in a string to be used as the unique identifier of this X-Y graph.");
 		uidField.addActionListener(okListener);

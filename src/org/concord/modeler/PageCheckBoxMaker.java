@@ -123,14 +123,8 @@ class PageCheckBoxMaker extends ComponentMaker {
 	}
 
 	private boolean confirm() {
-		String s = uidField.getText();
-		if (s != null) {
-			s = s.trim();
-			pageCheckBox.setUid(s.equals("") ? null : s);
-		}
-		else {
-			pageCheckBox.setUid(null);
-		}
+		if (!checkAndSetUid(uidField.getText(), pageCheckBox, dialog))
+			return false;
 		pageCheckBox.setTransparent(transparentCheckBox.isSelected());
 		pageCheckBox.setDisabledAtRun(disabledAtRunCheckBox.isSelected());
 		pageCheckBox.setDisabledAtScript(disabledAtScriptCheckBox.isSelected());
@@ -148,6 +142,7 @@ class PageCheckBoxMaker extends ComponentMaker {
 		pageCheckBox.setText(nameField.getText());
 		pageCheckBox.setImageFileNameSelected(imageSelectedField.getText());
 		pageCheckBox.setImageFileNameDeselected(imageDeselectedField.getText());
+		String s = null;
 		if (pageCheckBox.isSelected()) {
 			s = pageCheckBox.getImageFileNameSelected();
 			if (s != null && !s.trim().equals("")) {
@@ -342,9 +337,10 @@ class PageCheckBoxMaker extends ComponentMaker {
 
 		ActionListener okListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				confirm();
-				dialog.setVisible(false);
-				cancel = false;
+				if (confirm()) {
+					dialog.dispose();
+					cancel = false;
+				}
 			}
 		};
 
@@ -403,7 +399,7 @@ class PageCheckBoxMaker extends ComponentMaker {
 
 		// row 3
 		s = Modeler.getInternationalText("UniqueIdentifier");
-		p.add(new JLabel((s != null ? s : "Unique identifier") + " (A-z, 0-9)", SwingConstants.LEFT));
+		p.add(new JLabel(s != null ? s : "Unique identifier", SwingConstants.LEFT));
 		uidField = new JTextField();
 		uidField.setToolTipText("Type in a string to be used as the unique identifier of this check box.");
 		uidField.addActionListener(okListener);

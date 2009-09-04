@@ -155,19 +155,13 @@ class PageSliderMaker extends ComponentMaker {
 	}
 
 	private boolean confirm() {
+		if (!checkAndSetUid(uidField.getText(), pageSlider, dialog))
+			return false;
 		if (maxField.getValue() <= minField.getValue()) {
 			JOptionPane.showMessageDialog(dialog, "Upper bound must be greater than lower bound.", "Input error",
 					JOptionPane.ERROR_MESSAGE);
 			focusTextComponent = maxField;
 			return false;
-		}
-		String s = uidField.getText();
-		if (s != null) {
-			s = s.trim();
-			pageSlider.setUid(s.equals("") ? null : s);
-		}
-		else {
-			pageSlider.setUid(null);
 		}
 		pageSlider.setTitle(nameField.getText());
 		pageSlider.setOrientation(horizontalRadioButton.isSelected() ? JSlider.HORIZONTAL : JSlider.VERTICAL);
@@ -495,7 +489,7 @@ class PageSliderMaker extends ComponentMaker {
 
 		// row 3
 		s = Modeler.getInternationalText("UniqueIdentifier");
-		p2.add(new JLabel((s != null ? s : "Unique identifier") + " (A-z, 0-9)", SwingConstants.LEFT));
+		p2.add(new JLabel(s != null ? s : "Unique identifier", SwingConstants.LEFT));
 		uidField = new JTextField();
 		uidField.setToolTipText("Type in a string to be used as the unique identifier of this slider.");
 		uidField.addActionListener(okListener);

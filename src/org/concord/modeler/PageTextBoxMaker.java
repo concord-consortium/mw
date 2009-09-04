@@ -76,15 +76,9 @@ class PageTextBoxMaker extends ComponentMaker {
 		pageTextBox = ptb;
 	}
 
-	private void confirm() {
-		String s = uidField.getText();
-		if (s != null) {
-			s = s.trim();
-			pageTextBox.setUid(s.equals("") ? null : s);
-		}
-		else {
-			pageTextBox.setUid(null);
-		}
+	private boolean confirm() {
+		if (!checkAndSetUid(uidField.getText(), pageTextBox, dialog))
+			return false;
 		pageTextBox.setBorderType((String) borderComboBox.getSelectedItem());
 		pageTextBox.putClientProperty("border", pageTextBox.getBorderType());
 		pageTextBox.setBackground(bgComboBox.getSelectedColor());
@@ -125,6 +119,7 @@ class PageTextBoxMaker extends ComponentMaker {
 				pageTextBox.setEmbeddedComponentAttributes();
 			}
 		});
+		return true;
 	}
 
 	void invoke(Page page) {
@@ -193,9 +188,10 @@ class PageTextBoxMaker extends ComponentMaker {
 
 		Action okAction = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
-				confirm();
-				dialog.dispose();
-				cancel = false;
+				if (confirm()) {
+					dialog.dispose();
+					cancel = false;
+				}
 			}
 		};
 
@@ -274,7 +270,7 @@ class PageTextBoxMaker extends ComponentMaker {
 
 		// row 3
 		s = Modeler.getInternationalText("UniqueIdentifier");
-		p.add(new JLabel((s != null ? s : "Unique identifier") + " (A-z, 0-9): ", SwingConstants.LEFT));
+		p.add(new JLabel((s != null ? s : "Unique identifier") + " : ", SwingConstants.LEFT));
 		uidField = new JTextField(10);
 		uidField.setToolTipText("Type in a string to be used as the unique identifier of this text box.");
 		uidField.setAction(okAction);

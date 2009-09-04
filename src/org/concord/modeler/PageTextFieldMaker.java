@@ -81,14 +81,8 @@ class PageTextFieldMaker extends ComponentMaker {
 			return false;
 		}
 
-		String s = uidField.getText();
-		if (s != null) {
-			s = s.trim();
-			pageTextField.setUid(s.equals("") ? null : s);
-		}
-		else {
-			pageTextField.setUid(null);
-		}
+		if (!checkAndSetUid(uidField.getText(), pageTextField, dialog))
+			return false;
 
 		pageTextField.setTitle(titleArea.getText());
 		pageTextField.setReferenceAnswer(answerArea.getText());
@@ -252,7 +246,7 @@ class PageTextFieldMaker extends ComponentMaker {
 		p1.add(heightField);
 
 		s = Modeler.getInternationalText("UniqueIdentifier");
-		p1.add(new JLabel((s != null ? s : "Unique identifier") + " (A-z, 0-9): ", SwingConstants.LEFT));
+		p1.add(new JLabel((s != null ? s : "Unique identifier") + " : ", SwingConstants.LEFT));
 		uidField = new JTextField(10);
 		uidField.setToolTipText("Type in a string to be used as the unique identifier of this text field.");
 		uidField.addActionListener(okListener);

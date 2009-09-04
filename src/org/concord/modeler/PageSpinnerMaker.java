@@ -131,19 +131,13 @@ class PageSpinnerMaker extends ComponentMaker {
 	};
 
 	private boolean confirm() {
+		if (!checkAndSetUid(uidField.getText(), pageSpinner, dialog))
+			return false;
 		if (maxField.getValue() <= minField.getValue()) {
 			JOptionPane.showMessageDialog(dialog, "Upper bound must be greater than lower bound.", "Input error",
 					JOptionPane.ERROR_MESSAGE);
 			focusTextComponent = maxField;
 			return false;
-		}
-		String s = uidField.getText();
-		if (s != null) {
-			s = s.trim();
-			pageSpinner.setUid(s.equals("") ? null : s);
-		}
-		else {
-			pageSpinner.setUid(null);
 		}
 		pageSpinner.setLabel(nameField.getText());
 		SpinnerNumberModel m = (SpinnerNumberModel) pageSpinner.spinner.getModel();
@@ -397,7 +391,7 @@ class PageSpinnerMaker extends ComponentMaker {
 		s = Modeler.getInternationalText("SelectVariableLabel");
 		p1.add(new JLabel(s != null ? s : "Select a variable", SwingConstants.LEFT));
 		s = Modeler.getInternationalText("UniqueIdentifier");
-		p1.add(new JLabel((s != null ? s : "Unique identifier") + " (A-z, 0-9)", SwingConstants.LEFT));
+		p1.add(new JLabel(s != null ? s : "Unique identifier", SwingConstants.LEFT));
 		s = Modeler.getInternationalText("TextLabel");
 		p1.add(new JLabel(s != null ? s : "Text", SwingConstants.LEFT));
 		s = Modeler.getInternationalText("ToolTipLabel");
