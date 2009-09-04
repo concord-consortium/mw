@@ -106,19 +106,13 @@ class PageMultipleChoiceMaker extends ComponentMaker {
 
 	private boolean confirm() {
 
+		if (!checkAndSetUid(uidField.getText(), pageMultipleChoice, dialog))
+			return false;
+
 		if (questionArea.getText() == null || questionArea.getText().trim().equals("")) {
 			JOptionPane.showMessageDialog(dialog, "You must set the question for this multiple choice.",
 					"Missing question", JOptionPane.ERROR_MESSAGE);
 			return false;
-		}
-
-		String t = uidField.getText();
-		if (t != null) {
-			t = t.trim();
-			pageMultipleChoice.setUid(t.equals("") ? null : t);
-		}
-		else {
-			pageMultipleChoice.setUid(null);
 		}
 
 		pageMultipleChoice.setQuestion(questionArea.getText());
@@ -380,7 +374,7 @@ class PageMultipleChoiceMaker extends ComponentMaker {
 		bg.add(leftRadioButton);
 
 		s = Modeler.getInternationalText("UniqueIdentifier");
-		p1.add(new JLabel((s != null ? s : "Unique identifier") + " (A-z, 0-9): ", SwingConstants.LEFT));
+		p1.add(new JLabel((s != null ? s : "Unique identifier") + ": ", SwingConstants.LEFT));
 		uidField = new JTextField(10);
 		uidField
 				.setToolTipText("Type in a string to be used as the unique identifier of this multiple choice question.");

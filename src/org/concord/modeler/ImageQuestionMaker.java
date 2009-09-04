@@ -72,15 +72,10 @@ class ImageQuestionMaker extends ComponentMaker {
 
 	private boolean confirm() {
 
-		String s = uidField.getText();
-		if (s != null) {
-			s = s.trim();
-			imageQuestion.setUid(s.equals("") ? null : s);
-		}
-		else {
-			imageQuestion.setUid(null);
-		}
-		s = Modeler.getInternationalText("YouMustSetQuestion");
+		if (!checkAndSetUid(uidField.getText(), imageQuestion, dialog))
+			return false;
+
+		String s = Modeler.getInternationalText("YouMustSetQuestion");
 		String s2 = Modeler.getInternationalText("SetQuestion");
 		if (questionArea.getText() == null || questionArea.getText().trim().equals("")) {
 			JOptionPane.showMessageDialog(dialog, s != null ? s : "You must set a question.", s2 != null ? s2
@@ -158,10 +153,10 @@ class ImageQuestionMaker extends ComponentMaker {
 
 		ActionListener okListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (!confirm())
-					return;
-				dialog.dispose();
-				cancel = false;
+				if (confirm()) {
+					dialog.dispose();
+					cancel = false;
+				}
 			}
 		};
 
@@ -217,7 +212,7 @@ class ImageQuestionMaker extends ComponentMaker {
 		p1.add(heightField);
 
 		s = Modeler.getInternationalText("UniqueIdentifier");
-		p1.add(new JLabel((s != null ? s : "Unique identifier") + " (A-z, 0-9): ", SwingConstants.LEFT));
+		p1.add(new JLabel((s != null ? s : "Unique identifier") + " : ", SwingConstants.LEFT));
 		uidField = new JTextField(10);
 		uidField.setToolTipText("Type in a string to be used as the unique identifier of this image question.");
 		uidField.addActionListener(okListener);

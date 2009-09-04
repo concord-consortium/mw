@@ -50,6 +50,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
@@ -80,6 +81,7 @@ class PageAppletMaker extends ComponentMaker {
 
 	PageApplet pageApplet;
 	private JDialog dialog;
+	private JTextField uidField;
 	private JList jarList;
 	private JComboBox borderComboBox, classComboBox;
 	private ColorComboBox bgComboBox;
@@ -98,9 +100,11 @@ class PageAppletMaker extends ComponentMaker {
 		pageApplet = pa;
 	}
 
-	void confirm() {
+	private boolean confirm() {
+		if (!checkAndSetUid(uidField.getText(), pageApplet, dialog))
+			return false;
 		if (jarList.isSelectionEmpty())
-			return;
+			return false;
 		pageApplet.destroyApplet();
 		if (pageApplet.jarName == null)
 			pageApplet.jarName = new ArrayList<String>();
@@ -123,6 +127,7 @@ class PageAppletMaker extends ComponentMaker {
 		pageApplet.page.getSaveReminder().setChanged(true);
 		pageApplet.page.settleComponentSize();
 		pageApplet.start();
+		return true;
 	}
 
 	void invoke(Page page) {
@@ -150,6 +155,7 @@ class PageAppletMaker extends ComponentMaker {
 			});
 		}
 
+		uidField.setText(pageApplet.getUid());
 		fillJarList();
 		classComboBox.setSelectedItem(pageApplet.className);
 		parameterArea.setText(pageApplet.parametersToString());
@@ -249,9 +255,10 @@ class PageAppletMaker extends ComponentMaker {
 
 		ActionListener okListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				confirm();
-				dialog.dispose();
-				cancel = false;
+				if (confirm()) {
+					dialog.dispose();
+					cancel = false;
+				}
 			}
 		};
 
@@ -317,6 +324,14 @@ class PageAppletMaker extends ComponentMaker {
 		p.add(classComboBox);
 
 		// row 3
+		s = Modeler.getInternationalText("UniqueIdentifier");
+		p.add(new JLabel(s != null ? s : "Unique identifier", SwingConstants.LEFT));
+		uidField = new JTextField();
+		uidField.setToolTipText("Type in a string to be used as the unique identifier of this applet.");
+		uidField.addActionListener(okListener);
+		p.add(uidField);
+
+		// row 4
 		s = Modeler.getInternationalText("WidthLabel");
 		p.add(new JLabel(s != null ? s : "Width", SwingConstants.LEFT));
 		widthField = new IntegerTextField(pageApplet.getPreferredSize().width, 10, 1000);
@@ -324,7 +339,7 @@ class PageAppletMaker extends ComponentMaker {
 		widthField.addActionListener(okListener);
 		p.add(widthField);
 
-		// row 4
+		// row 5
 		s = Modeler.getInternationalText("HeightLabel");
 		p.add(new JLabel(s != null ? s : "Height", SwingConstants.LEFT));
 		heightField = new IntegerTextField(pageApplet.getPreferredSize().height, 10, 1000);
@@ -332,7 +347,7 @@ class PageAppletMaker extends ComponentMaker {
 		heightField.addActionListener(okListener);
 		p.add(heightField);
 
-		// row 5
+		// row 6
 		s = Modeler.getInternationalText("BackgroundColorLabel");
 		p.add(new JLabel(s != null ? s : "Background color", SwingConstants.LEFT));
 		bgComboBox = new ColorComboBox(pageApplet);
@@ -341,7 +356,7 @@ class PageAppletMaker extends ComponentMaker {
 		bgComboBox.setToolTipText("Select the background color.");
 		p.add(bgComboBox);
 
-		// row 6
+		// row 7
 		s = Modeler.getInternationalText("BorderLabel");
 		p.add(new JLabel(s != null ? s : "Border", SwingConstants.LEFT));
 		borderComboBox = new JComboBox(BorderManager.BORDER_TYPE);
@@ -351,7 +366,7 @@ class PageAppletMaker extends ComponentMaker {
 		borderComboBox.setPreferredSize(new Dimension(200, 24));
 		p.add(borderComboBox);
 
-		ModelerUtilities.makeCompactGrid(p, 6, 2, 5, 5, 10, 2);
+		ModelerUtilities.makeCompactGrid(p, 7, 2, 5, 5, 10, 2);
 
 		// parameter setting area
 		p = new JPanel(new BorderLayout(4, 4));

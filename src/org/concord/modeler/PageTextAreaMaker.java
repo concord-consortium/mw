@@ -72,19 +72,13 @@ class PageTextAreaMaker extends ComponentMaker {
 
 	private boolean confirm() {
 
+		if (!checkAndSetUid(uidField.getText(), pageTextArea, dialog))
+			return false;
+
 		if (titleArea.getText() == null || titleArea.getText().trim().equals("")) {
 			JOptionPane.showMessageDialog(dialog, "You must set the question for this text area.", "Missing question",
 					JOptionPane.ERROR_MESSAGE);
 			return false;
-		}
-
-		String s = uidField.getText();
-		if (s != null) {
-			s = s.trim();
-			pageTextArea.setUid(s.equals("") ? null : s);
-		}
-		else {
-			pageTextArea.setUid(null);
 		}
 
 		pageTextArea.setTitle(titleArea.getText());
@@ -226,7 +220,7 @@ class PageTextAreaMaker extends ComponentMaker {
 		p1.add(heightField);
 
 		s = Modeler.getInternationalText("UniqueIdentifier");
-		p1.add(new JLabel((s != null ? s : "Unique identifier") + " (A-z, 0-9): ", SwingConstants.LEFT));
+		p1.add(new JLabel((s != null ? s : "Unique identifier") + " : ", SwingConstants.LEFT));
 		uidField = new JTextField(10);
 		uidField.setToolTipText("Type in a string to be used as the unique identifier of this text area.");
 		uidField.addActionListener(okListener);

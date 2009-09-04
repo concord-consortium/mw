@@ -86,6 +86,7 @@ class PageJContainerMaker extends ComponentMaker {
 
 	PageJContainer pageJContainer;
 	private JDialog dialog;
+	private JTextField uidField;
 	private JList jarList;
 	private JComboBox borderComboBox, classComboBox;
 	private ColorComboBox bgComboBox;
@@ -107,7 +108,9 @@ class PageJContainerMaker extends ComponentMaker {
 		pageJContainer = pp;
 	}
 
-	boolean confirm() {
+	private boolean confirm() {
+		if (!checkAndSetUid(uidField.getText(), pageJContainer, dialog))
+			return false;
 		boolean remote = tabbedPane.getSelectedIndex() == 0;
 		if (pageJContainer.jarName == null)
 			pageJContainer.jarName = new ArrayList<String>();
@@ -200,6 +203,7 @@ class PageJContainerMaker extends ComponentMaker {
 			});
 		}
 
+		uidField.setText(pageJContainer.getUid());
 		fillJarList();
 		classComboBox.setSelectedItem(pageJContainer.className);
 		parameterArea.setText(pageJContainer.parametersToString());
@@ -487,6 +491,14 @@ class PageJContainerMaker extends ComponentMaker {
 		p2.add(p, BorderLayout.CENTER);
 
 		// row 1
+		s = Modeler.getInternationalText("UniqueIdentifier");
+		p.add(new JLabel(s != null ? s : "Unique identifier", SwingConstants.LEFT));
+		uidField = new JTextField();
+		uidField.setToolTipText("Type in a string to be used as the unique identifier of this plugin.");
+		uidField.addActionListener(okListener);
+		p.add(uidField);
+
+		// row 2
 		s = Modeler.getInternationalText("WidthLabel");
 		p.add(new JLabel(s != null ? s : "Width", SwingConstants.LEFT));
 		widthField = new IntegerTextField(pageJContainer.getPreferredSize().width, 10, 1000);
@@ -494,7 +506,7 @@ class PageJContainerMaker extends ComponentMaker {
 		widthField.addActionListener(okListener);
 		p.add(widthField);
 
-		// row 2
+		// row 3
 		s = Modeler.getInternationalText("HeightLabel");
 		p.add(new JLabel(s != null ? s : "Height", SwingConstants.LEFT));
 		heightField = new IntegerTextField(pageJContainer.getPreferredSize().height, 10, 1000);
@@ -502,7 +514,7 @@ class PageJContainerMaker extends ComponentMaker {
 		heightField.addActionListener(okListener);
 		p.add(heightField);
 
-		// row 3
+		// row 4
 		s = Modeler.getInternationalText("BackgroundColorLabel");
 		p.add(new JLabel(s != null ? s : "Background color", SwingConstants.LEFT));
 		bgComboBox = new ColorComboBox(pageJContainer);
@@ -511,7 +523,7 @@ class PageJContainerMaker extends ComponentMaker {
 		bgComboBox.setToolTipText("Select the background color.");
 		p.add(bgComboBox);
 
-		// row 4
+		// row 5
 		s = Modeler.getInternationalText("BorderLabel");
 		p.add(new JLabel(s != null ? s : "Border", SwingConstants.LEFT));
 		borderComboBox = new JComboBox(BorderManager.BORDER_TYPE);
@@ -521,7 +533,7 @@ class PageJContainerMaker extends ComponentMaker {
 		borderComboBox.setPreferredSize(new Dimension(200, 24));
 		p.add(borderComboBox);
 
-		ModelerUtilities.makeCompactGrid(p, 4, 2, 5, 5, 10, 2);
+		ModelerUtilities.makeCompactGrid(p, 5, 2, 5, 5, 10, 2);
 
 		// parameter setting area
 		p = new JPanel(new BorderLayout(4, 4));

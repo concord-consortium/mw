@@ -130,6 +130,8 @@ class PageGaugeMaker extends ComponentMaker {
 	}
 
 	private boolean confirm() {
+		if (!checkAndSetUid(uidField.getText(), pageGauge, dialog))
+			return false;
 		if (minField.getValue() >= maxField.getValue()) {
 			JOptionPane.showMessageDialog(dialog, "Upper bound must be greater than lower bound.", "Input error",
 					JOptionPane.ERROR_MESSAGE);
@@ -531,7 +533,7 @@ class PageGaugeMaker extends ComponentMaker {
 
 		// row 4
 		s = Modeler.getInternationalText("UniqueIdentifier");
-		p.add(new JLabel((s != null ? s : "Unique identifier") + " (A-z, 0-9)", SwingConstants.LEFT));
+		p.add(new JLabel(s != null ? s : "Unique identifier", SwingConstants.LEFT));
 		uidField = new JTextField();
 		uidField.setToolTipText("Type in a string to be used as the unique identifier of this gauge.");
 		uidField.addActionListener(okListener);

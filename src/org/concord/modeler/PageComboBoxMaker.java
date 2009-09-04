@@ -137,14 +137,16 @@ class PageComboBoxMaker extends ComponentMaker {
 		pageComboBox = pcb;
 	}
 
-	private void confirm() {
-		String s = uidField.getText();
-		if (s != null) {
-			s = s.trim();
-			pageComboBox.setUid(s.equals("") ? null : s);
-		}
-		else {
-			pageComboBox.setUid(null);
+	private boolean confirm() {
+		if (!checkAndSetUid(uidField.getText(), pageComboBox, dialog))
+			return false;
+		String s = scriptArea.getText();
+		if (s != null && !s.trim().equals("")) {
+			if (!checkBraceBalance(s)) {
+				JOptionPane.showMessageDialog(dialog, "Unbalanced balances are found.", "Menu text-script pair error",
+						JOptionPane.ERROR_MESSAGE);
+				return false;
+			}
 		}
 		Object o = modelComboBox.getSelectedItem();
 		BasicModel m = (BasicModel) o;
@@ -169,6 +171,7 @@ class PageComboBoxMaker extends ComponentMaker {
 		pageComboBox.setDisabledAtScript(disabledAtScriptCheckBox.isSelected());
 		pageComboBox.page.getSaveReminder().setChanged(true);
 		pageComboBox.page.settleComponentSize();
+		return true;
 	}
 
 	void invoke(Page page) {
@@ -353,17 +356,10 @@ class PageComboBoxMaker extends ComponentMaker {
 
 		ActionListener okListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (scriptArea.getText() != null && !scriptArea.getText().trim().equals("")) {
-					if (!checkBraceBalance(scriptArea.getText())) {
-						JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(pageComboBox),
-								"Unbalanced balances are found.", "Menu text-script pair error",
-								JOptionPane.ERROR_MESSAGE);
-						return;
-					}
+				if (confirm()) {
+					dialog.dispose();
+					cancel = false;
 				}
-				confirm();
-				dialog.dispose();
-				cancel = false;
 			}
 		};
 
@@ -410,7 +406,7 @@ class PageComboBoxMaker extends ComponentMaker {
 		s = Modeler.getInternationalText("SelectActionLabel");
 		p1.add(new JLabel(s != null ? s : "Select an action", SwingConstants.LEFT));
 		s = Modeler.getInternationalText("UniqueIdentifier");
-		p1.add(new JLabel((s != null ? s : "Unique identifier") + " (A-z, 0-9)", SwingConstants.LEFT));
+		p1.add(new JLabel(s != null ? s : "Unique identifier", SwingConstants.LEFT));
 		s = Modeler.getInternationalText("ToolTipLabel");
 		p1.add(new JLabel(s != null ? s : "Tool tip", SwingConstants.LEFT));
 		p1.add(optionLabel);

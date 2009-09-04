@@ -119,15 +119,9 @@ class PageRadioButtonMaker extends ComponentMaker {
 		pageRadioButton = prb;
 	}
 
-	private void confirm() {
-		String s = uidField.getText();
-		if (s != null) {
-			s = s.trim();
-			pageRadioButton.setUid(s.equals("") ? null : s);
-		}
-		else {
-			pageRadioButton.setUid(null);
-		}
+	private boolean confirm() {
+		if (!checkAndSetUid(uidField.getText(), pageRadioButton, dialog))
+			return false;
 		pageRadioButton.setTransparent(transparentCheckBox.isSelected());
 		pageRadioButton.setBackground(bgComboBox.getSelectedColor());
 		Object o = modelComboBox.getSelectedItem();
@@ -146,6 +140,7 @@ class PageRadioButtonMaker extends ComponentMaker {
 		pageRadioButton.setText(nameField.getText());
 		pageRadioButton.setImageFileNameSelected(imageSelectedField.getText());
 		pageRadioButton.setImageFileNameDeselected(imageDeselectedField.getText());
+		String s = null;
 		if (pageRadioButton.isSelected()) {
 			s = pageRadioButton.getImageFileNameSelected();
 			if (s != null && !s.trim().equals("")) {
@@ -173,6 +168,7 @@ class PageRadioButtonMaker extends ComponentMaker {
 		}
 		pageRadioButton.page.getSaveReminder().setChanged(true);
 		pageRadioButton.page.settleComponentSize();
+		return true;
 	}
 
 	void invoke(Page page) {
@@ -332,9 +328,10 @@ class PageRadioButtonMaker extends ComponentMaker {
 
 		ActionListener okListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				confirm();
-				dialog.dispose();
-				cancel = false;
+				if (confirm()) {
+					dialog.dispose();
+					cancel = false;
+				}
 			}
 		};
 
@@ -393,7 +390,7 @@ class PageRadioButtonMaker extends ComponentMaker {
 
 		// row 3
 		s = Modeler.getInternationalText("UniqueIdentifier");
-		p.add(new JLabel((s != null ? s : "Unique identifier") + " (A-z, 0-9)", SwingConstants.LEFT));
+		p.add(new JLabel(s != null ? s : "Unique identifier", SwingConstants.LEFT));
 		uidField = new JTextField();
 		uidField.setToolTipText("Type in a string to be used as the unique identifier of this radio button.");
 		uidField.addActionListener(okListener);
