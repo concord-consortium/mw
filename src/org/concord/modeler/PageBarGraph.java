@@ -83,6 +83,14 @@ public class PageBarGraph extends BarGraph implements Embeddable, Scriptable, Mo
 		setModelID(g.modelID);
 		setUid(g.uid);
 		setAverageType(g.getAverageType());
+		switch (getAverageType()) {
+		case SIMPLE_RUNNING_AVERAGE:
+			samplingPoints = g.samplingPoints;
+			break;
+		case EXPONENTIAL_RUNNING_AVERAGE:
+			smoothingFactor = g.smoothingFactor;
+			break;
+		}
 		setTimeSeriesName(g.timeSeriesName);
 		setDescription(g.getDescription());
 		setMultiplier(g.getMultiplier());
@@ -102,6 +110,7 @@ public class PageBarGraph extends BarGraph implements Embeddable, Scriptable, Mo
 		setMinorTicks(g.getMinorTicks());
 		setMajorTicks(g.getMajorTicks());
 		setPreferredSize(g.getPreferredSize());
+		setBorderType(g.getBorderType());
 		Model m = getModel();
 		if (m != null) {
 			m.addModelListener(this);
@@ -227,6 +236,14 @@ public class PageBarGraph extends BarGraph implements Embeddable, Scriptable, Mo
 
 	public Page getPage() {
 		return page;
+	}
+
+	public String getBorderType() {
+		return BorderManager.getBorder(this);
+	}
+
+	public void setBorderType(String s) {
+		BorderManager.setBorder(this, s, page.getBackground());
 	}
 
 	public void setInitialValue(double x) {
