@@ -123,6 +123,7 @@ public abstract class TextContainer implements DrawingElement {
 		callOut = tb.callOut;
 		callOutPoint.setLocation(tb.callOutPoint);
 		font = tb.font;
+		angle = tb.angle;
 		attachmentPosition = tb.attachmentPosition;
 		component = tb.component;
 	}
