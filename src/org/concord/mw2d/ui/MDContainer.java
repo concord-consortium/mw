@@ -629,11 +629,15 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 
 		int m = System.getProperty("os.name").startsWith("Mac") ? 2 : 0;
 		Insets margin = new Insets(m, m, m, m);
+		Dimension dim = new Dimension(20, 20);
 
 		JButton button = new JButton(getView().getActionMap().get("Reload"));
 		button.setText(null);
 		button.setHorizontalAlignment(SwingConstants.CENTER);
 		button.setMargin(margin);
+		button.setMaximumSize(dim);
+		button.setMinimumSize(dim);
+		button.setPreferredSize(dim);
 		button.setFocusPainted(false);
 		moviePanel.add(button);
 
@@ -641,6 +645,9 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 		button.setText(null);
 		button.setHorizontalAlignment(SwingConstants.CENTER);
 		button.setMargin(margin);
+		button.setMaximumSize(dim);
+		button.setMinimumSize(dim);
+		button.setPreferredSize(dim);
 		button.setFocusPainted(false);
 		moviePanel.add(button);
 
@@ -648,6 +655,9 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 		button.setText(null);
 		button.setHorizontalAlignment(SwingConstants.CENTER);
 		button.setMargin(margin);
+		button.setMaximumSize(dim);
+		button.setMinimumSize(dim);
+		button.setPreferredSize(dim);
 		button.setFocusPainted(false);
 		moviePanel.add(button);
 
@@ -655,6 +665,9 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 		button.setText(null);
 		button.setHorizontalAlignment(SwingConstants.CENTER);
 		button.setMargin(margin);
+		button.setMaximumSize(dim);
+		button.setMinimumSize(dim);
+		button.setPreferredSize(dim);
 		button.setFocusPainted(false);
 		moviePanel.add(button);
 
@@ -662,6 +675,9 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 		button.setText(null);
 		button.setHorizontalAlignment(SwingConstants.CENTER);
 		button.setMargin(margin);
+		button.setMaximumSize(dim);
+		button.setMinimumSize(dim);
+		button.setPreferredSize(dim);
 		button.setFocusPainted(false);
 		moviePanel.add(button);
 
@@ -669,6 +685,9 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 		button.setText(null);
 		button.setHorizontalAlignment(SwingConstants.CENTER);
 		button.setMargin(margin);
+		button.setMaximumSize(dim);
+		button.setMinimumSize(dim);
+		button.setPreferredSize(dim);
 		button.setFocusPainted(false);
 		moviePanel.add(button);
 
