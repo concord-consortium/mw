@@ -2400,6 +2400,7 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 
 		int m = System.getProperty("os.name").startsWith("Mac") ? 2 : 0;
 		Insets margin = new Insets(m, m, m, m);
+		Dimension dim = new Dimension(20, 20);
 
 		MovieSlider ms = model.getMovie().getMovieSlider();
 		ms.setPreferredSize(new Dimension(130, 20));
@@ -2410,6 +2411,9 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 		button.setText(null);
 		button.setHorizontalAlignment(SwingConstants.CENTER);
 		button.setMargin(margin);
+		button.setMaximumSize(dim);
+		button.setMinimumSize(dim);
+		button.setPreferredSize(dim);
 		button.setFocusPainted(false);
 		moviePanel.add(button);
 
@@ -2417,6 +2421,9 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 		button.setText(null);
 		button.setHorizontalAlignment(SwingConstants.CENTER);
 		button.setMargin(margin);
+		button.setMaximumSize(dim);
+		button.setMinimumSize(dim);
+		button.setPreferredSize(dim);
 		button.setFocusPainted(false);
 		moviePanel.add(button);
 
@@ -2424,6 +2431,9 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 		button.setText(null);
 		button.setHorizontalAlignment(SwingConstants.CENTER);
 		button.setMargin(margin);
+		button.setMaximumSize(dim);
+		button.setMinimumSize(dim);
+		button.setPreferredSize(dim);
 		button.setFocusPainted(false);
 		moviePanel.add(button);
 
@@ -2431,6 +2441,9 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 		button.setText(null);
 		button.setHorizontalAlignment(SwingConstants.CENTER);
 		button.setMargin(margin);
+		button.setMaximumSize(dim);
+		button.setMinimumSize(dim);
+		button.setPreferredSize(dim);
 		button.setFocusPainted(false);
 		moviePanel.add(button);
 
@@ -2438,6 +2451,9 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 		button.setText(null);
 		button.setHorizontalAlignment(SwingConstants.CENTER);
 		button.setMargin(margin);
+		button.setMaximumSize(dim);
+		button.setMinimumSize(dim);
+		button.setPreferredSize(dim);
 		button.setFocusPainted(false);
 		moviePanel.add(button);
 
@@ -2445,6 +2461,9 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 		button.setText(null);
 		button.setHorizontalAlignment(SwingConstants.CENTER);
 		button.setMargin(margin);
+		button.setMaximumSize(dim);
+		button.setMinimumSize(dim);
+		button.setPreferredSize(dim);
 		button.setFocusPainted(false);
 		moviePanel.add(button);
 
