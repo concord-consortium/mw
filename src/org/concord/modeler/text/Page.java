@@ -167,6 +167,7 @@ import org.concord.modeler.PageMultipleChoice;
 import org.concord.modeler.PageNumericBox;
 import org.concord.modeler.PagePeriodicTable;
 import org.concord.modeler.PagePhotonSpectrometer;
+import org.concord.modeler.PagePlugin;
 import org.concord.modeler.PagePotentialHill;
 import org.concord.modeler.PagePotentialWell;
 import org.concord.modeler.PageRadioButton;
@@ -757,6 +758,9 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 					}
 					else if (e instanceof ModelCanvas) {
 						((ModelCanvas) e).getMdContainer().getView().setEditable(b);
+					}
+					else if (e instanceof PagePlugin) {
+						((PagePlugin) e).setEditable(b);
 					}
 				}
 			}

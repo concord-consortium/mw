@@ -67,6 +67,20 @@ public class PageApplet extends PagePlugin {
 		super(pageApplet, parent);
 	}
 
+	public void setEditable(boolean b) {
+		if (!implementMwService())
+			return;
+		Method method;
+		try {
+			method = applet.getClass().getMethod("setEditable", new Class[] { boolean.class });
+			if (method != null)
+				method.invoke(applet, new Object[] { b });
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public void start() {
 
 		if (jarName == null || jarName.isEmpty() || className == null) {

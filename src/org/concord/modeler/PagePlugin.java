@@ -165,6 +165,8 @@ abstract public class PagePlugin extends JPanel implements Embeddable, Scriptabl
 		startThread.start();
 	}
 
+	public abstract void setEditable(boolean b);
+
 	public void addPageComponentListener(PageComponentListener pcl) {
 		if (pcl == null)
 			throw new IllegalArgumentException("null input");
