@@ -77,7 +77,6 @@ public class PageApplet extends PagePlugin {
 				method.invoke(applet, new Object[] { b });
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 
