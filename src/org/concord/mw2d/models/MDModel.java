@@ -1785,7 +1785,8 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 					}
 
 					public void finished() {
-						//if (heatBath == null) setTemperature(300);
+						// if (heatBath == null) setTemperature(300);
+						// don't do this---user will be surprised of suddent velocity changes
 						run2();
 					}
 				}.start();

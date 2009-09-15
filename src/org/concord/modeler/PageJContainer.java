@@ -72,6 +72,10 @@ public class PageJContainer extends PagePlugin {
 		codeBase = pageJContainer.codeBase;
 	}
 
+	public void setEditable(boolean b) {
+		plugin.setEditable(b);
+	}
+
 	public void setCodeBase(String s) {
 		codeBase = s;
 	}

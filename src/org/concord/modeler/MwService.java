@@ -35,6 +35,9 @@ import javax.swing.JPopupMenu;
 
 public interface MwService {
 
+	/** notify this service that it should be in the editable mode */
+	public void setEditable(boolean b);
+
 	public Component getSnapshotComponent();
 
 	public JPopupMenu getPopupMenu();
