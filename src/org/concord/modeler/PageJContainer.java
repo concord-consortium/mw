@@ -73,7 +73,11 @@ public class PageJContainer extends PagePlugin {
 	}
 
 	public void setEditable(boolean b) {
-		plugin.setEditable(b);
+		try {
+			plugin.setEditable(b);
+		}
+		catch (Throwable e) {
+		}
 	}
 
 	public void setCodeBase(String s) {
