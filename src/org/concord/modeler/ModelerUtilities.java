@@ -1153,6 +1153,7 @@ public final class ModelerUtilities {
 			return;
 		Action a = button.getAction();
 		String text = button.getText();
+		String tooltip = button.getToolTipText();
 		ItemListener[] il = button.getItemListeners();
 		if (il != null) {
 			for (ItemListener x : il)
@@ -1175,6 +1176,7 @@ public final class ModelerUtilities {
 		if (a != null)
 			button.setAction(a);
 		button.setText(text);
+		button.setToolTipText(tooltip);
 	}
 
 	public static void selectWithoutNotifyingListeners(JComboBox comboBox, int selectedIndex) {
