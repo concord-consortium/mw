@@ -2310,44 +2310,52 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		return null;
 	}
 
+	// this method only changes the nonlocal acceleration field
 	void setAField(double d) {
 		synchronized (fields) {
 			for (VectorField f : fields) {
 				if (f instanceof AccelerationalField) {
-					f.setIntensity(d);
+					if (!f.isLocal())
+						f.setIntensity(d);
 					break;
 				}
 			}
 		}
 	}
 
+	// this method only changes the nonlocal gravitational field
 	void setGField(double d) {
 		synchronized (fields) {
 			for (VectorField f : fields) {
 				if (f instanceof GravitationalField) {
-					f.setIntensity(d);
+					if (!f.isLocal())
+						f.setIntensity(d);
 					break;
 				}
 			}
 		}
 	}
 
+	// this method only changes the nonlocal electric field
 	void setEField(double d) {
 		synchronized (fields) {
 			for (VectorField f : fields) {
 				if (f instanceof ElectricField) {
-					f.setIntensity(d);
+					if (!f.isLocal())
+						f.setIntensity(d);
 					break;
 				}
 			}
 		}
 	}
 
+	// this method only changes the nonlocal magnetic field
 	void setBField(double d) {
 		synchronized (fields) {
 			for (VectorField f : fields) {
 				if (f instanceof MagneticField) {
-					f.setIntensity(d);
+					if (!f.isLocal())
+						f.setIntensity(d);
 					break;
 				}
 			}
