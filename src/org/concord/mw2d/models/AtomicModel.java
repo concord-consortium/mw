@@ -1875,7 +1875,6 @@ public abstract class AtomicModel extends MDModel {
 	 * @GuardedBy("this")
 	 */
 	 
-
 	public synchronized void setTemperature(double temperature) {
 		if (temperature < ZERO)
 			temperature = 0.0;

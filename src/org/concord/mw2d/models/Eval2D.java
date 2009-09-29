@@ -4388,37 +4388,49 @@ class Eval2D extends AbstractEval {
 					out(ScriptEvent.FAILED, "Illegal parameter: gravitational acceleration cannot be negative: " + x);
 					return false;
 				}
+				VectorField vf = model.getNonLocalField(GravitationalField.class.getName());
 				if (x < ZERO) {
-					model.removeField(GravitationalField.class.getName());
+					if (vf != null)
+						model.removeNonLocalField(vf);
 				}
 				else {
-					if (model.getNonLocalField(GravitationalField.class.getName()) == null)
-						model.addNonLocalField(new GravitationalField(view.getBounds()));
-					model.setGField(x);
+					if (vf == null) {
+						vf = new GravitationalField(view.getBounds());
+						model.addNonLocalField(vf);
+					}
+					vf.setIntensity(x);
 				}
 				notifyChange();
 				return true;
 			}
 			else if (s0 == "efield") {
+				VectorField vf = model.getNonLocalField(ElectricField.class.getName());
 				if (Math.abs(x) < ZERO) {
-					model.removeField(ElectricField.class.getName());
+					if (vf != null)
+						model.removeNonLocalField(vf);
 				}
 				else {
-					if (model.getNonLocalField(ElectricField.class.getName()) == null)
-						model.addNonLocalField(new ElectricField(view.getBounds()));
-					model.setEField(x);
+					if (vf == null) {
+						vf = new ElectricField(view.getBounds());
+						model.addNonLocalField(vf);
+					}
+					vf.setIntensity(x);
 				}
 				notifyChange();
 				return true;
 			}
 			else if (s0 == "bfield") {
+				VectorField vf = model.getNonLocalField(MagneticField.class.getName());
 				if (Math.abs(x) < ZERO) {
-					model.removeField(MagneticField.class.getName());
+					if (vf != null)
+						model.removeNonLocalField(vf);
 				}
 				else {
-					if (model.getNonLocalField(MagneticField.class.getName()) == null)
-						model.addNonLocalField(new MagneticField(view.getBounds()));
-					model.setBField(x);
+					if (vf == null) {
+						vf = new MagneticField(view.getBounds());
+						model.addNonLocalField(vf);
+					}
+					vf.setIntensity(x);
 				}
 				notifyChange();
 				return true;
