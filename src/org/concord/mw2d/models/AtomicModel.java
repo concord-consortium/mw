@@ -1875,6 +1875,7 @@ public abstract class AtomicModel extends MDModel {
 	 * @GuardedBy("this")
 	 */
 	 
+
 	public synchronized void setTemperature(double temperature) {
 		if (temperature < ZERO)
 			temperature = 0.0;
@@ -3549,6 +3550,7 @@ public abstract class AtomicModel extends MDModel {
 			a.custom = 0;
 			a.setMovable(true);
 			a.setVisible(true);
+			a.setDraggable(true);
 			a.setCharge(0.0);
 			a.setRestraint(null);
 			a.setUserField(null);
