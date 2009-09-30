@@ -166,11 +166,19 @@ class PageCheckBoxMaker extends ComponentMaker {
 			pageCheckBox.setPreferredSize(new Dimension(widthField.getValue(), heightField.getValue()));
 		}
 		String text = scriptAreaSelected.getText();
-		if (text != null && !text.trim().equals(""))
+		if (text != null && !text.trim().equals("")) {
 			pageCheckBox.putClientProperty("selection script", text);
+		}
+		else {
+			pageCheckBox.putClientProperty("selection script", null);
+		}
 		text = scriptAreaDeselected.getText();
-		if (text != null && !text.trim().equals(""))
+		if (text != null && !text.trim().equals("")) {
 			pageCheckBox.putClientProperty("deselection script", text);
+		}
+		else {
+			pageCheckBox.putClientProperty("deselection script", null);
+		}
 		pageCheckBox.page.getSaveReminder().setChanged(true);
 		pageCheckBox.page.settleComponentSize();
 		return true;

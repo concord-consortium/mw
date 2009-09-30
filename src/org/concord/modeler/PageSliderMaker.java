@@ -211,6 +211,9 @@ class PageSliderMaker extends ComponentMaker {
 		if (scriptArea.getText() != null && !scriptArea.getText().trim().equals("")) {
 			pageSlider.putClientProperty("Script", scriptArea.getText());
 		}
+		else {
+			pageSlider.putClientProperty("Script", null);
+		}
 		pageSlider.setOpaque(!transparentCheckBox.isSelected());
 		pageSlider.setToolTipText(toolTipField.getText());
 		pageSlider.page.getSaveReminder().setChanged(true);
