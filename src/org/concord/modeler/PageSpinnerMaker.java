@@ -160,6 +160,9 @@ class PageSpinnerMaker extends ComponentMaker {
 		if (scriptArea.getText() != null && !scriptArea.getText().trim().equals("")) {
 			pageSpinner.setScript(scriptArea.getText());
 		}
+		else {
+			pageSpinner.setScript(null);
+		}
 		pageSpinner.setToolTipText(toolTipField.getText());
 		pageSpinner.page.getSaveReminder().setChanged(true);
 		pageSpinner.page.settleComponentSize();

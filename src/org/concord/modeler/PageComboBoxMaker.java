@@ -166,6 +166,9 @@ class PageComboBoxMaker extends ComponentMaker {
 			pageComboBox.putClientProperty("Script", scriptArea.getText());
 			pageComboBox.setupScripts(scriptArea.getText());
 		}
+		else {
+			pageComboBox.putClientProperty("Script", null);
+		}
 		pageComboBox.setToolTipText(toolTipField.getText());
 		pageComboBox.setDisabledAtRun(disabledAtRunCheckBox.isSelected());
 		pageComboBox.setDisabledAtScript(disabledAtScriptCheckBox.isSelected());
