@@ -941,6 +941,7 @@ public class MesoModel extends MDModel {
 		for (GayBerneParticle p : gb) {
 			p.setMovable(true);
 			p.setVisible(true);
+			p.setDraggable(true);
 			p.setRestraint(null);
 			p.setCharge(0.0);
 			p.custom = 0;

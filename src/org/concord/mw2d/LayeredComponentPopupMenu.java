@@ -149,6 +149,9 @@ class LayeredComponentPopupMenu extends JPopupMenu {
 						if (view.selectedComponent instanceof EllipseComponent) {
 							physicsMenu.add(miPotential);
 						}
+						else {
+							physicsMenu.remove(miPotential);
+						}
 						physicsMenu.remove(miLineReflect);
 						FieldArea fa = (FieldArea) view.selectedComponent;
 						if (fa.getVectorField() instanceof ElectricField) {
