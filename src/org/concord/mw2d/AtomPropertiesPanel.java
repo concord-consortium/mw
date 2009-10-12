@@ -105,7 +105,7 @@ class AtomPropertiesPanel extends PropertiesPanel {
 		char[] codon = null;
 		if (atom.isAminoAcid()) {
 			codon = atom.getCodon().toCharArray();
-			atom.setName("" + Codon.expressFromDNA(codon).getLetter());
+			atom.setName("" + Codon.expressFromDNA(codon).getAbbreviation());
 		}
 
 		nameLabel = createLabel(atom.getName() + " (element " + atom.getID() + ")");
