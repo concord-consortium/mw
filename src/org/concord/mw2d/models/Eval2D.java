@@ -2688,6 +2688,43 @@ class Eval2D extends AbstractEval {
 		return null;
 	}
 
+	private String evaluateWhichObstacleFunction(final String clause) {
+		if (clause == null || clause.equals(""))
+			return null;
+		int no = model.getObstacles().size();
+		if (no <= 0)
+			return "-1";
+		int i = clause.indexOf("(");
+		int j = clause.lastIndexOf(")");
+		if (i == -1 || j == -1) {
+			out(ScriptEvent.FAILED, "function must be enclosed within parenthesis: " + clause);
+			return null;
+		}
+		String s = clause.substring(i + 1, j);
+		String[] t = s.split(",");
+		int n = t.length;
+		switch (n) {
+		case 2:
+			float[] x = parseArray(2, t);
+			if (x != null) {
+				for (int k = 0; k < x.length; k++)
+					x[k] *= IR_CONVERTER;
+				RectangularObstacle ro = null;
+				for (int k = 0; k < no; k++) {
+					ro = model.getObstacles().get(k);
+					if (ro.contains(x[0], x[1]))
+						return "" + k;
+				}
+				return "-1";
+			}
+			break;
+		default:
+			out(ScriptEvent.FAILED, "argument error: " + clause);
+			return null;
+		}
+		return null;
+	}
+
 	private String evaluateWhichParticleFunction(final String clause) {
 		if (clause == null || clause.equals(""))
 			return null;
@@ -3593,26 +3630,71 @@ class Eval2D extends AbstractEval {
 		if (matcher.find()) {
 			int end = matcher.end();
 			s = str.substring(end).trim().split(REGEX_WHITESPACE + "+");
-			if (s.length != 2) {
+			if (s.length < 2) {
 				out(ScriptEvent.FAILED, "Argument error: " + str);
 				return false;
 			}
 			if (s[0].startsWith("%")) {
 				s[0] = s[0].substring(1);
 			}
-			if ("on".equalsIgnoreCase(s[1]) || "off".equalsIgnoreCase(s[1])) {
-				if ("visible".equalsIgnoreCase(s[0])) {
-					setObstacleField(str.substring(0, end - 1), s[0], "on".equalsIgnoreCase(s[1]));
-				}
-				else if ("draggable".equalsIgnoreCase(s[0])) {
-					setObstacleField(str.substring(0, end - 1), s[0], "on".equalsIgnoreCase(s[1]));
+			if (s[0].equalsIgnoreCase("permeable")) { // special case to deal with setting permeability
+				if (model.obstacles != null) {
+					String str1 = str.substring(0, end - 1);
+					int lb = str1.indexOf("[");
+					int rb = str1.indexOf("]");
+					double z = parseMathExpression(str1.substring(lb + 1, rb));
+					if (Double.isNaN(z))
+						return false;
+					int i = (int) Math.round(z);
+					if (i < 0 || i >= model.obstacles.size()) {
+						out(ScriptEvent.FAILED, "Obstacle " + i + " doesn't exisit.");
+						return false;
+					}
+					RectangularObstacle obs = model.obstacles.get(i);
+					for (byte id = 0; id < 4; id++)
+						obs.setPermeable(id, false);
+					obs.setPhotonPermeable(false);
+					obs.setElectronPermeable(false);
+					for (int k = 1; k < s.length; k++) {
+						s[k] = s[k].trim().toLowerCase().intern();
+						if (s[k] == "nt") {
+							obs.setPermeable((byte) 0, true);
+						}
+						else if (s[k] == "pl") {
+							obs.setPermeable((byte) 1, true);
+						}
+						else if (s[k] == "ws") {
+							obs.setPermeable((byte) 2, true);
+						}
+						else if (s[k] == "ck") {
+							obs.setPermeable((byte) 3, true);
+						}
+						else if (s[k] == "photon") {
+							obs.setPhotonPermeable(true);
+						}
+						else if (s[k] == "electron") {
+							obs.setElectronPermeable(true);
+						}
+					}
 				}
 			}
 			else {
-				double x = parseMathExpression(s[1]);
-				if (Double.isNaN(x))
-					return false;
-				setObstacleField(str.substring(0, end - 1), s[0], x);
+				if (s.length == 2) {
+					if ("on".equalsIgnoreCase(s[1]) || "off".equalsIgnoreCase(s[1])) {
+						if ("visible".equalsIgnoreCase(s[0])) {
+							setObstacleField(str.substring(0, end - 1), s[0], "on".equalsIgnoreCase(s[1]));
+						}
+						else if ("draggable".equalsIgnoreCase(s[0])) {
+							setObstacleField(str.substring(0, end - 1), s[0], "on".equalsIgnoreCase(s[1]));
+						}
+					}
+					else {
+						double x = parseMathExpression(s[1]);
+						if (Double.isNaN(x))
+							return false;
+						setObstacleField(str.substring(0, end - 1), s[0], x);
+					}
+				}
 			}
 			return true;
 		}
@@ -3790,6 +3872,10 @@ class Eval2D extends AbstractEval {
 			}
 			else if (exp.startsWith("whichparticle(")) {
 				exp = evaluateWhichParticleFunction(exp);
+				storeDefinition(isStatic, var, exp != null ? exp : "-1");
+			}
+			else if (exp.startsWith("whichobstacle(")) {
+				exp = evaluateWhichObstacleFunction(exp);
 				storeDefinition(isStatic, var, exp != null ? exp : "-1");
 			}
 			else if (exp.startsWith("whichrbond(")) {
