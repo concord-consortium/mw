@@ -2838,6 +2838,44 @@ class Eval2D extends AbstractEval {
 		return mm.bonds.getBondedPartnerCount(a) + "";
 	}
 
+	private String evaluateWhichABondFunction(final String clause) {
+		if (clause == null || clause.equals(""))
+			return null;
+		if (!(model instanceof MolecularModel))
+			return null;
+		MolecularModel mm = (MolecularModel) model;
+		int nab = mm.bends.size();
+		if (nab <= 0)
+			return null;
+		int i = clause.indexOf("(");
+		int j = clause.lastIndexOf(")");
+		if (i == -1 || j == -1) {
+			out(ScriptEvent.FAILED, "function must be enclosed within parenthesis: " + clause);
+			return null;
+		}
+		String s = clause.substring(i + 1, j);
+		String[] t = s.split(",");
+		int n = t.length;
+		switch (n) {
+		case 3:
+			float[] x = parseArray(3, t);
+			if (x != null) {
+				Atom a = mm.atom[Math.round(x[0])];
+				Atom b = mm.atom[Math.round(x[1])];
+				Atom c = mm.atom[Math.round(x[2])];
+				AngularBond ab = mm.bends.getBond(a, b, c);
+				if (ab == null)
+					return null;
+				return "" + ab.getIndex();
+			}
+			break;
+		default:
+			out(ScriptEvent.FAILED, "argument error: " + clause);
+			return null;
+		}
+		return null;
+	}
+
 	private String evaluateWhichMoleculeFunction(final String clause) {
 		if (clause == null || clause.equals(""))
 			return null;
@@ -3885,6 +3923,10 @@ class Eval2D extends AbstractEval {
 			else if (exp.startsWith("countrbond(")) {
 				exp = evaluateCountRBondFunction(exp);
 				storeDefinition(isStatic, var, exp != null ? exp : "0");
+			}
+			else if (exp.startsWith("whichabond(")) {
+				exp = evaluateWhichABondFunction(exp);
+				storeDefinition(isStatic, var, exp != null ? exp : "-1");
 			}
 			else if (exp.startsWith("whichmolecule(")) {
 				exp = evaluateWhichMoleculeFunction(exp);
