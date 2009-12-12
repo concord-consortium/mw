@@ -38,12 +38,10 @@ public class Bessel2K0 extends PostfixMathCommand {
 		return "The Bessel function of second kind of order 0: Y0(x)";
 	}
 
-	@SuppressWarnings("unchecked")
 	public void run(Stack inStack) throws ParseException {
 		checkStack(inStack);// check the stack
 		Object param = inStack.pop();
 		inStack.push(y0(param));// push the result on the inStack
-		return;
 	}
 
 	public Object y0(Object param) throws ParseException {
@@ -51,7 +49,6 @@ public class Bessel2K0 extends PostfixMathCommand {
 			double x = ((Number) param).doubleValue();
 			return new Double(compute(x));
 		}
-
 		throw new ParseException("Invalid parameter type");
 	}
 

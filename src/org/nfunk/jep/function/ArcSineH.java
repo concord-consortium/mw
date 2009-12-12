@@ -20,12 +20,12 @@
 
 /*****************************************************************************
 
-JEP - Java Math Expression Parser 2.24
-      December 30 2002
-      (c) Copyright 2002, Nathan Funk
-      See LICENSE.txt for license information.
+ JEP - Java Math Expression Parser 2.24
+ December 30 2002
+ (c) Copyright 2002, Nathan Funk
+ See LICENSE.txt for license information.
 
-*****************************************************************************/
+ *****************************************************************************/
 package org.nfunk.jep.function;
 
 import java.util.Stack;
@@ -33,41 +33,32 @@ import java.util.Stack;
 import org.nfunk.jep.ParseException;
 import org.nfunk.jep.type.Complex;
 
-public class ArcSineH extends PostfixMathCommand
-{
-	public ArcSineH()
-	{
+public class ArcSineH extends PostfixMathCommand {
+
+	public ArcSineH() {
 		numberOfParameters = 1;
 	}
 
-	public String toString(){
+	public String toString() {
 		return "The hyperbolic arc sine function";
 	}
 
-	@SuppressWarnings("unchecked")
-	public void run(Stack inStack)
-		throws ParseException
-	{
+	public void run(Stack inStack) throws ParseException {
 		checkStack(inStack);// check the stack
 		Object param = inStack.pop();
-		inStack.push(asinh(param));//push the result on the inStack
-		return;
+		inStack.push(asinh(param));// push the result on the inStack
 	}
 
-	public Object asinh(Object param)
-		throws ParseException
-	{
-		if (param instanceof Number)
-		{
-			Complex temp = new Complex(((Number)param).doubleValue(),0.0);
-			
+	public Object asinh(Object param) throws ParseException {
+		if (param instanceof Number) {
+			Complex temp = new Complex(((Number) param).doubleValue(), 0.0);
+
 			return temp.asinh();
 		}
-		else if (param instanceof Complex)
-		{
-			return ((Complex)param).asinh();
+		else if (param instanceof Complex) {
+			return ((Complex) param).asinh();
 		}
-
 		throw new ParseException("Invalid parameter type");
 	}
+
 }

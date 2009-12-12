@@ -34,6 +34,7 @@ import org.nfunk.jep.ParseException;
 import org.nfunk.jep.type.Complex;
 
 public class CosineH extends PostfixMathCommand {
+
 	public CosineH() {
 		numberOfParameters = 1;
 	}
@@ -42,12 +43,10 @@ public class CosineH extends PostfixMathCommand {
 		return "The hyperbolic cosine function";
 	}
 
-	@SuppressWarnings("unchecked")
 	public void run(Stack inStack) throws ParseException {
 		checkStack(inStack);// check the stack
 		Object param = inStack.pop();
 		inStack.push(cosh(param));// push the result on the inStack
-		return;
 	}
 
 	public Object cosh(Object param) throws ParseException {
@@ -58,7 +57,6 @@ public class CosineH extends PostfixMathCommand {
 		else if (param instanceof Complex) {
 			return ((Complex) param).cosh();
 		}
-
 		throw new ParseException("Invalid parameter type");
 	}
 

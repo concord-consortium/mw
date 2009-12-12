@@ -40,7 +40,6 @@ public class Poissonc extends PostfixMathCommand {
 		return "The sum of the k+1 to infinity terms of the Poisson distribution";
 	}
 
-	@SuppressWarnings("unchecked")
 	public void run(Stack stack) throws ParseException {
 
 		// Check if stack is null

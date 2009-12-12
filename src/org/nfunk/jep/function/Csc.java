@@ -39,12 +39,10 @@ public class Csc extends PostfixMathCommand {
 		return "The cosec function";
 	}
 
-	@SuppressWarnings("unchecked")
 	public void run(Stack inStack) throws ParseException {
 		checkStack(inStack);// check the stack
 		Object param = inStack.pop();
 		inStack.push(csc(param));// push the result on the inStack
-		return;
 	}
 
 	public Object csc(Object param) throws ParseException {
@@ -54,7 +52,6 @@ public class Csc extends PostfixMathCommand {
 		else if (param instanceof Complex) {
 			return ((Complex) param).csc();
 		}
-
 		throw new ParseException("Invalid parameter type");
 	}
 

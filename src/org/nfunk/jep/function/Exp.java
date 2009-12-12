@@ -39,12 +39,10 @@ public class Exp extends PostfixMathCommand {
 		return "The exponential function";
 	}
 
-	@SuppressWarnings("unchecked")
 	public void run(Stack inStack) throws ParseException {
 		checkStack(inStack);// check the stack
 		Object param = inStack.pop();
 		inStack.push(exp(param));// push the result on the inStack
-		return;
 	}
 
 	public Object exp(Object param) throws ParseException {
@@ -54,7 +52,6 @@ public class Exp extends PostfixMathCommand {
 		else if (param instanceof Complex) {
 			return ((Complex) param).exp();
 		}
-
 		throw new ParseException("Invalid parameter type");
 	}
 

@@ -43,12 +43,10 @@ public class ArcTangent extends PostfixMathCommand {
 		return "The arc tangent function";
 	}
 
-	@SuppressWarnings("unchecked")
 	public void run(Stack inStack) throws ParseException {
 		checkStack(inStack);// check the stack
 		Object param = inStack.pop();
 		inStack.push(atan(param));// push the result on the inStack
-		return;
 	}
 
 	public Object atan(Object param) throws ParseException {
@@ -58,7 +56,6 @@ public class ArcTangent extends PostfixMathCommand {
 		else if (param instanceof Complex) {
 			return ((Complex) param).atan();
 		}
-
 		throw new ParseException("Invalid parameter type");
 	}
 

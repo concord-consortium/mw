@@ -34,12 +34,10 @@ public class Sign extends PostfixMathCommand {
 		return "The sign function";
 	}
 
-	@SuppressWarnings("unchecked")
 	public void run(Stack inStack) throws ParseException {
 		checkStack(inStack);// check the stack
 		Object param = inStack.pop();
 		inStack.push(signfunc(param));// push the result on the inStack
-		return;
 	}
 
 	public Object signfunc(Object param) throws ParseException {

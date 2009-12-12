@@ -38,7 +38,6 @@ public class Not extends PostfixMathCommand {
 		numberOfParameters = 1;
 	}
 
-	@SuppressWarnings("unchecked")
 	public void run(Stack inStack) throws ParseException {
 		checkStack(inStack);// check the stack
 		Object param = inStack.pop();
@@ -47,7 +46,6 @@ public class Not extends PostfixMathCommand {
 			inStack.push(new Double(r));// push the result on the inStack
 		}
 		else throw new ParseException("Invalid parameter type");
-		return;
 	}
 
 }

@@ -39,12 +39,10 @@ public class Sec extends PostfixMathCommand {
 		return "The sec function";
 	}
 
-	@SuppressWarnings("unchecked")
 	public void run(Stack inStack) throws ParseException {
 		checkStack(inStack);// check the stack
 		Object param = inStack.pop();
 		inStack.push(sec(param));// push the result on the inStack
-		return;
 	}
 
 	public Object sec(Object param) throws ParseException {
@@ -54,7 +52,6 @@ public class Sec extends PostfixMathCommand {
 		else if (param instanceof Complex) {
 			return ((Complex) param).sec();
 		}
-
 		throw new ParseException("Invalid parameter type");
 	}
 

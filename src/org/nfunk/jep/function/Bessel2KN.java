@@ -40,7 +40,6 @@ public class Bessel2KN extends PostfixMathCommand {
 		return "The Bessel function of second kind of order n: Yn(x)";
 	}
 
-	@SuppressWarnings("unchecked")
 	public void run(Stack stack) throws ParseException {
 
 		// Check if stack is null

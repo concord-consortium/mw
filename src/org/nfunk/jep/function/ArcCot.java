@@ -19,8 +19,8 @@
  * END LICENSE */
 
 /** added by Connie Chen to JEP
-*   Concord Consortium 8/2/2003
-*/
+ *   Concord Consortium 8/2/2003
+ */
 
 package org.nfunk.jep.function;
 
@@ -34,27 +34,24 @@ public class ArcCot extends PostfixMathCommand {
 	public ArcCot() {
 		numberOfParameters = 1;
 	}
-	
-	public String toString(){
+
+	public String toString() {
 		return "The arc cotangent function";
 	}
 
-	@SuppressWarnings("unchecked")
 	public void run(Stack inStack) throws ParseException {
 		checkStack(inStack);// check the stack
 		Object param = inStack.pop();
-		inStack.push(acot(param));//push the result on the inStack
-		return;
+		inStack.push(acot(param));// push the result on the inStack
 	}
-	
+
 	public Object acot(Object param) throws ParseException {
 		if (param instanceof Number) {
-			return new Double(Math.PI*0.5-Math.atan(((Number)param).doubleValue()));
+			return new Double(Math.PI * 0.5 - Math.atan(((Number) param).doubleValue()));
 		}
 		else if (param instanceof Complex) {
-			return ((Complex)param).acot();
+			return ((Complex) param).acot();
 		}
-
 		throw new ParseException("Invalid parameter type");
 	}
 

@@ -43,12 +43,10 @@ public class Logarithm extends PostfixMathCommand {
 		return "The logarithm function of base 10";
 	}
 
-	@SuppressWarnings("unchecked")
 	public void run(Stack inStack) throws ParseException {
 		checkStack(inStack);// check the stack
 		Object param = inStack.pop();
 		inStack.push(log(param));// push the result on the inStack
-		return;
 	}
 
 	public Object log(Object param) throws ParseException {

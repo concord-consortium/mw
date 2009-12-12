@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2006  The Concord Consortium, Inc.,
+ *   Copyright (C) 2009  The Concord Consortium, Inc.,
  *   25 Love Lane, Concord, MA 01742
  *
  *   This program is free software; you can redistribute it and/or modify
@@ -18,43 +18,34 @@
  *
  * END LICENSE */
 
-/*****************************************************************************
-
- JEP - Java Math Expression Parser 2.24
- December 30 2002
- (c) Copyright 2002, Nathan Funk
- See LICENSE.txt for license information.
-
- *****************************************************************************/
 package org.nfunk.jep.function;
 
 import java.util.Stack;
 
 import org.nfunk.jep.ParseException;
-import org.nfunk.jep.type.Complex;
 
-public class Abs extends PostfixMathCommand {
+public class Hypot extends PostfixMathCommand {
 
-	public Abs() {
-		numberOfParameters = 1;
+	public Hypot() {
+		numberOfParameters = 2;
 	}
 
 	public String toString() {
-		return "Absolute";
+		return "The hypot function";
 	}
 
 	public void run(Stack inStack) throws ParseException {
 		checkStack(inStack);// check the stack
-		Object param = inStack.pop();
-		inStack.push(abs(param));// push the result on the inStack
-	}
-
-	public Object abs(Object param) throws ParseException {
-		if (param instanceof Number)
-			return new Double(Math.abs(((Number) param).doubleValue()));
-		if (param instanceof Complex)
-			return new Double(((Complex) param).abs());
-		throw new ParseException("Invalid parameter type");
+		Object param2 = inStack.pop();
+		Object param1 = inStack.pop();
+		if ((param1 instanceof Number) && (param2 instanceof Number)) {
+			double x = ((Number) param2).doubleValue();
+			double y = ((Number) param1).doubleValue();
+			inStack.push(new Double(x * x + y * y));
+		}
+		else {
+			throw new ParseException("Invalid parameter type");
+		}
 	}
 
 }

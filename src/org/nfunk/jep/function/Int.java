@@ -34,12 +34,10 @@ public class Int extends PostfixMathCommand {
 		return "The integer part of x";
 	}
 
-	@SuppressWarnings("unchecked")
 	public void run(Stack inStack) throws ParseException {
 		checkStack(inStack);// check the stack
 		Object param = inStack.pop();
 		inStack.push(getInt(param));// push the result on the inStack
-		return;
 	}
 
 	public Object getInt(Object param) throws ParseException {

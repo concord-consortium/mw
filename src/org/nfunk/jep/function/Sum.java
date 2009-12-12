@@ -51,7 +51,6 @@ public class Sum extends PostfixMathCommand {
 	/**
 	 * Calculates the result of summing up all parameters, which are assumed to be of the Double type.
 	 */
-	@SuppressWarnings("unchecked")
 	public void run(Stack stack) throws ParseException {
 
 		// Check if stack is null

@@ -41,7 +41,6 @@ public class Chisqc extends PostfixMathCommand {
 		return "The Chi square integral from x to infinity";
 	}
 
-	@SuppressWarnings("unchecked")
 	public void run(Stack stack) throws ParseException {
 
 		// Check if stack is null

@@ -43,12 +43,10 @@ public class SineH extends PostfixMathCommand {
 		return "The hyperbolic sine function";
 	}
 
-	@SuppressWarnings("unchecked")
 	public void run(Stack inStack) throws ParseException {
 		checkStack(inStack);// check the stack
 		Object param = inStack.pop();
 		inStack.push(sinh(param));// push the result on the inStack
-		return;
 	}
 
 	public Object sinh(Object param) throws ParseException {
@@ -59,7 +57,6 @@ public class SineH extends PostfixMathCommand {
 		else if (param instanceof Complex) {
 			return ((Complex) param).sinh();
 		}
-
 		throw new ParseException("Invalid parameter type");
 	}
 

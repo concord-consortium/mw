@@ -45,7 +45,6 @@ public class Ibeta extends PostfixMathCommand {
 		return "The incomplete beta function";
 	}
 
-	@SuppressWarnings("unchecked")
 	public void run(Stack stack) throws ParseException {
 
 		// Check if stack is null
@@ -348,7 +347,7 @@ public class Ibeta extends PostfixMathCommand {
 
 	}
 
-	/* Power series for incomplete beta integral. Use when b*x is small and x not too close to 1. */
+	/* Power series for incomplete beta integral. Use when bx is small and x not too close to 1. */
 	static private double pseries(double a, double b, double x) throws ArithmeticException {
 
 		double s, t, u, v, n, t1, z, ai;

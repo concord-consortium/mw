@@ -39,15 +39,11 @@ public class Subtract extends PostfixMathCommand {
 		numberOfParameters = 2;
 	}
 
-	@SuppressWarnings("unchecked")
 	public void run(Stack inStack) throws ParseException {
 		checkStack(inStack); // check the stack
-
 		Object param2 = inStack.pop();
 		Object param1 = inStack.pop();
-
 		inStack.push(sub(param1, param2));
-
 		return;
 	}
 

@@ -34,12 +34,10 @@ public class Round extends PostfixMathCommand {
 		return "The closest integer to x";
 	}
 
-	@SuppressWarnings("unchecked")
 	public void run(Stack inStack) throws ParseException {
 		checkStack(inStack);// check the stack
 		Object param = inStack.pop();
 		inStack.push(round(param));// push the result on the inStack
-		return;
 	}
 
 	public Object round(Object param) throws ParseException {

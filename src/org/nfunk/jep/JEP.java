@@ -39,6 +39,7 @@ import org.nfunk.jep.function.CubeRoot;
 import org.nfunk.jep.function.ErrorFunction;
 import org.nfunk.jep.function.Exp;
 import org.nfunk.jep.function.Gamma;
+import org.nfunk.jep.function.Hypot;
 import org.nfunk.jep.function.Ibeta;
 import org.nfunk.jep.function.Igam;
 import org.nfunk.jep.function.Igamc;
@@ -245,6 +246,7 @@ public class JEP {
 
 		funTab.put("sqrt", new SquareRoot());
 		funTab.put("cbrt", new CubeRoot());
+		funTab.put("hypot", new Hypot());
 		funTab.put("angle", new Angle());
 		funTab.put("abs", new Abs());
 		funTab.put("sgn", new Sign());
@@ -430,7 +432,9 @@ public class JEP {
 	 * 
 	 * <pre>
 	 * &quot;1*2&quot;
-	 * </pre>.
+	 * </pre>
+	 * 
+	 * .
 	 * <p>
 	 * The default value is false.
 	 * 

@@ -40,13 +40,11 @@ public class Divide extends PostfixMathCommand {
 		numberOfParameters = 2;
 	}
 
-	@SuppressWarnings("unchecked")
 	public void run(Stack inStack) throws ParseException {
 		checkStack(inStack); // check the stack
 		Object param2 = inStack.pop();
 		Object param1 = inStack.pop();
 		inStack.push(div(param1, param2)); // push the result on the inStack
-		return;
 	}
 
 	public Object div(Object param1, Object param2) throws ParseException {
@@ -94,7 +92,6 @@ public class Divide extends PostfixMathCommand {
 		return new Complex(c.re() / d.doubleValue(), c.im() / d.doubleValue());
 	}
 
-	@SuppressWarnings("unchecked")
 	public Vector div(Vector v, Number d) {
 		Vector result = new Vector();
 
@@ -104,7 +101,6 @@ public class Divide extends PostfixMathCommand {
 		return result;
 	}
 
-	@SuppressWarnings("unchecked")
 	public Vector div(Number d, Vector v) {
 		Vector result = new Vector();
 
@@ -114,7 +110,6 @@ public class Divide extends PostfixMathCommand {
 		return result;
 	}
 
-	@SuppressWarnings("unchecked")
 	public Vector div(Vector v, Complex c) {
 		Vector result = new Vector();
 
@@ -124,7 +119,6 @@ public class Divide extends PostfixMathCommand {
 		return result;
 	}
 
-	@SuppressWarnings("unchecked")
 	public Vector div(Complex c, Vector v) {
 		Vector result = new Vector();
 
@@ -133,4 +127,5 @@ public class Divide extends PostfixMathCommand {
 
 		return result;
 	}
+
 }
