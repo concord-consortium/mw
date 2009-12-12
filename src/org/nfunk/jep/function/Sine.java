@@ -35,7 +35,7 @@ import org.nfunk.jep.ParseException;
 import org.nfunk.jep.type.Complex;
 
 public class Sine extends PostfixMathCommand {
-	
+
 	public Sine() {
 		numberOfParameters = 1;
 	}
@@ -44,12 +44,10 @@ public class Sine extends PostfixMathCommand {
 		return "The sine function";
 	}
 
-	@SuppressWarnings("unchecked")
 	public void run(Stack inStack) throws ParseException {
 		checkStack(inStack);// check the stack
 		Object param = inStack.pop();
 		inStack.push(sin(param));// push the result on the inStack
-		return;
 	}
 
 	public Object sin(Object param) throws ParseException {
@@ -59,7 +57,6 @@ public class Sine extends PostfixMathCommand {
 		else if (param instanceof Complex) {
 			return ((Complex) param).sin();
 		}
-
 		throw new ParseException("Invalid parameter type");
 	}
 }

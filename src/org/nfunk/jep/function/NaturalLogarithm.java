@@ -43,12 +43,10 @@ public class NaturalLogarithm extends PostfixMathCommand {
 		return "The natural logarithm";
 	}
 
-	@SuppressWarnings("unchecked")
 	public void run(Stack inStack) throws ParseException {
 		checkStack(inStack);// check the stack
 		Object param = inStack.pop();
 		inStack.push(ln(param));// push the result on the inStack
-		return;
 	}
 
 	public Object ln(Object param) throws ParseException {

@@ -40,12 +40,10 @@ public class LnGamma extends PostfixMathCommand {
 		return "The natural logarithm of the gamma function";
 	}
 
-	@SuppressWarnings("unchecked")
 	public void run(Stack inStack) throws ParseException {
 		checkStack(inStack);// check the stack
 		Object param = inStack.pop();
 		inStack.push(lgamma(param));// push the result on the inStack
-		return;
 	}
 
 	public Object lgamma(Object param) throws ParseException {

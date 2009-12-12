@@ -40,7 +40,6 @@ public class Poisson extends PostfixMathCommand {
 		return "The sum of the first k terms of the Poisson distribution";
 	}
 
-	@SuppressWarnings("unchecked")
 	public void run(Stack stack) throws ParseException {
 
 		// Check if stack is null

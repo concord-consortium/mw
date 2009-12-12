@@ -39,12 +39,10 @@ public class ErrorFunction extends PostfixMathCommand {
 		return "The error function";
 	}
 
-	@SuppressWarnings("unchecked")
 	public void run(Stack inStack) throws ParseException {
 		checkStack(inStack);// check the stack
 		Object param = inStack.pop();
 		inStack.push(erf(param));// push the result on the inStack
-		return;
 	}
 
 	public Object erf(Object param) throws ParseException {
@@ -52,7 +50,6 @@ public class ErrorFunction extends PostfixMathCommand {
 			double x = ((Number) param).doubleValue();
 			return new Double(compute(x));
 		}
-
 		throw new ParseException("Invalid parameter type");
 	}
 

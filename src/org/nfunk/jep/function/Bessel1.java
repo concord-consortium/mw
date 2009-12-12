@@ -38,18 +38,15 @@ public class Bessel1 extends PostfixMathCommand {
 		return "The Bessel function of order 1: J1(x)";
 	}
 
-	@SuppressWarnings("unchecked")
 	public void run(Stack inStack) throws ParseException {
 		checkStack(inStack);// check the stack
 		Object param = inStack.pop();
 		inStack.push(j1(param));// push the result on the inStack
-		return;
 	}
 
 	public Object j1(Object param) throws ParseException {
-		if (param instanceof Number) {
+		if (param instanceof Number)
 			return new Double(compute(((Number) param).doubleValue()));
-		}
 		throw new ParseException("Invalid parameter type");
 	}
 

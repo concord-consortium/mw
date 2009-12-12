@@ -45,11 +45,9 @@ public class Random extends PostfixMathCommand {
 		return "The random function";
 	}
 
-	@SuppressWarnings("unchecked")
 	public void run(Stack inStack) throws ParseException {
 		checkStack(inStack);// check the stack
 		inStack.push(new Double(Math.random()));
-		return;
 	}
 
 }

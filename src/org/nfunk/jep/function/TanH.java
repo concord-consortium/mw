@@ -43,12 +43,10 @@ public class TanH extends PostfixMathCommand {
 		return "The hyperbolic tangent function";
 	}
 
-	@SuppressWarnings("unchecked")
 	public void run(Stack inStack) throws ParseException {
 		checkStack(inStack);// check the stack
 		Object param = inStack.pop();
 		inStack.push(tanh(param));// push the result on the inStack
-		return;
 	}
 
 	public Object tanh(Object param) throws ParseException {

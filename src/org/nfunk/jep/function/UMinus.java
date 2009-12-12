@@ -39,12 +39,10 @@ public class UMinus extends PostfixMathCommand {
 		numberOfParameters = 1;
 	}
 
-	@SuppressWarnings("unchecked")
 	public void run(Stack inStack) throws ParseException {
 		checkStack(inStack);// check the stack
 		Object param = inStack.pop();
 		inStack.push(umin(param));
-		return;
 	}
 
 	public Object umin(Object param) throws ParseException {

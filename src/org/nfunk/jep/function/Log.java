@@ -40,7 +40,6 @@ public class Log extends PostfixMathCommand {
 		return "The logarithm of arbitrary base";
 	}
 
-	@SuppressWarnings("unchecked")
 	public void run(Stack stack) throws ParseException {
 
 		// Check if stack is null

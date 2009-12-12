@@ -34,15 +34,10 @@ public class CubeRoot extends PostfixMathCommand {
 		return "The cube root function";
 	}
 
-	/**
-	 * Applies the function to the parameters on the stack.
-	 */
-	@SuppressWarnings("unchecked")
 	public void run(Stack inStack) throws ParseException {
 		checkStack(inStack);// check the stack
 		Object param = inStack.pop();
 		inStack.push(cbrt(param));// push the result on the inStack
-		return;
 	}
 
 	/**

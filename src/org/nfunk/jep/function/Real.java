@@ -34,17 +34,15 @@ import org.nfunk.jep.ParseException;
 import org.nfunk.jep.type.Complex;
 
 public class Real extends PostfixMathCommand {
-	
+
 	public Real() {
 		numberOfParameters = 1;
 	}
 
-	@SuppressWarnings("unchecked")
 	public void run(Stack inStack) throws ParseException {
 		checkStack(inStack);// check the stack
 		Object param = inStack.pop();
 		inStack.push(re(param));// push the result on the inStack
-		return;
 	}
 
 	public Number re(Object param) throws ParseException {

@@ -43,7 +43,6 @@ public class Power extends PostfixMathCommand {
 		return "The power function";
 	}
 
-	@SuppressWarnings("unchecked")
 	public void run(Stack inStack) throws ParseException {
 		checkStack(inStack); // check the stack
 		Object param2 = inStack.pop();

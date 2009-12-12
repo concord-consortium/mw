@@ -40,7 +40,6 @@ public class Multiply extends PostfixMathCommand {
 		numberOfParameters = -1;
 	}
 
-	@SuppressWarnings("unchecked")
 	public void run(Stack stack) throws ParseException {
 		checkStack(stack); // check the stack
 
@@ -60,8 +59,6 @@ public class Multiply extends PostfixMathCommand {
 		}
 
 		stack.push(product);
-
-		return;
 	}
 
 	public Object mul(Object param1, Object param2) throws ParseException {
@@ -103,7 +100,6 @@ public class Multiply extends PostfixMathCommand {
 		return c.mul(d.doubleValue());
 	}
 
-	@SuppressWarnings("unchecked")
 	public Vector mul(Vector v, Number d) {
 		Vector result = new Vector();
 
@@ -113,7 +109,6 @@ public class Multiply extends PostfixMathCommand {
 		return result;
 	}
 
-	@SuppressWarnings("unchecked")
 	public Vector mul(Vector v, Complex c) {
 		Vector result = new Vector();
 
@@ -122,4 +117,5 @@ public class Multiply extends PostfixMathCommand {
 
 		return result;
 	}
+
 }

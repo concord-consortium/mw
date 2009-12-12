@@ -40,7 +40,6 @@ public class Igamc extends PostfixMathCommand {
 		return "The complemented incomplete gamma function";
 	}
 
-	@SuppressWarnings("unchecked")
 	public void run(Stack stack) throws ParseException {
 
 		// Check if stack is null

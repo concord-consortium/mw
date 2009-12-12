@@ -43,16 +43,10 @@ public class SquareRoot extends PostfixMathCommand {
 		return "The square root function";
 	}
 
-	/**
-	 * Applies the function to the parameters on the stack.
-	 */
-	@SuppressWarnings("unchecked")
 	public void run(Stack inStack) throws ParseException {
-
 		checkStack(inStack);// check the stack
 		Object param = inStack.pop();
 		inStack.push(sqrt(param));// push the result on the inStack
-		return;
 	}
 
 	/**
@@ -64,7 +58,6 @@ public class SquareRoot extends PostfixMathCommand {
 
 		if (param instanceof Number) {
 			double value = ((Number) param).doubleValue();
-
 			// a value less than 0 will produce a complex result
 			if (value < 0) {
 				return (new Complex(value).sqrt());
@@ -77,4 +70,5 @@ public class SquareRoot extends PostfixMathCommand {
 
 		throw new ParseException("Invalid parameter type");
 	}
+
 }

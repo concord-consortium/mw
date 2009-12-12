@@ -42,12 +42,10 @@ public class Normal extends PostfixMathCommand {
 		return "The integral of the Gaussian function from negative infinity to x";
 	}
 
-	@SuppressWarnings("unchecked")
 	public void run(Stack inStack) throws ParseException {
 		checkStack(inStack);// check the stack
 		Object param = inStack.pop();
 		inStack.push(normal(param));// push the result on the inStack
-		return;
 	}
 
 	private Object normal(Object param) throws ParseException {
