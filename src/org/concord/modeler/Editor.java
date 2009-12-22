@@ -96,6 +96,7 @@ import org.concord.modeler.event.PageEvent;
 import org.concord.modeler.event.PageListener;
 import org.concord.modeler.text.BulletIcon;
 import org.concord.modeler.text.Page;
+import org.concord.modeler.ui.BackgroundToolBar;
 import org.concord.modeler.ui.ColorComboBox;
 import org.concord.modeler.ui.ColorMenu;
 import org.concord.modeler.ui.ColorRectangle;
@@ -194,7 +195,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		if (noEditIcon == null)
 			noEditIcon = new ImageIcon(getClass().getResource("images/NoEdit.gif"));
 		if (editIcon == null)
-			editIcon = new ImageIcon(getClass().getResource("images/Edit.gif"));
+			editIcon = new ImageIcon(getClass().getResource("images/edit.png"));
 
 		desktopPane = new JDesktopPane();
 		desktopPane.setBackground(Color.white);
@@ -889,7 +890,8 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 
 	private JToolBar createToolBar1() {
 
-		JToolBar tb = new JToolBar(SwingConstants.HORIZONTAL);
+		JToolBar tb = new BackgroundToolBar(SwingConstants.HORIZONTAL, new ImageIcon(Modeler.class
+				.getResource("images/background.png")));
 		tb.setFloatable(false);
 		tb.setMargin(new Insets(1, 1, 1, 1));
 		tb.setLayout(new FlowLayout(FlowLayout.LEFT, 2, 1));
@@ -899,6 +901,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 			tb.add(new JLabel(toolBarHeaderIcon));
 
 		editCheckBox = new JCheckBox(noEditIcon);
+		editCheckBox.setOpaque(false);
 		editCheckBox.setHorizontalAlignment(SwingConstants.CENTER);
 		if (Modeler.showToolBarText) {
 			String s = Modeler.getInternationalText("EditCheckBox");
@@ -930,8 +933,9 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		// if(Modeler.showToolBarText) tb.add(new JLabel(Modeler.toolBarSeparatorIcon));
 
 		JButton button = new JButton(page.getAction(Page.OPEN_PAGE));
+		button.setOpaque(false);
 		button.setHorizontalAlignment(SwingConstants.CENTER);
-		button.setIcon(new ImageIcon(getClass().getResource("images/open.gif")));
+		button.setIcon(new ImageIcon(getClass().getResource("images/open.png")));
 		if (Modeler.showToolBarText) {
 			String s = Modeler.getInternationalText("OpenButton");
 			if (s != null)
@@ -958,8 +962,9 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		tb.add(button);
 
 		button = new JButton(page.getAction(Page.SAVE_PAGE));
+		button.setOpaque(false);
 		button.setHorizontalAlignment(SwingConstants.CENTER);
-		button.setIcon(new ImageIcon(getClass().getResource("images/save.gif")));
+		button.setIcon(new ImageIcon(getClass().getResource("images/save.png")));
 		if (Modeler.showToolBarText) {
 			String s = Modeler.getInternationalText("SaveButton");
 			if (s != null)
@@ -985,7 +990,8 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		addDisabledComponentWhileLoading(button);
 		tb.add(button);
 
-		button = new JButton(new ImageIcon(getClass().getResource("images/Search.gif")));
+		button = new JButton(new ImageIcon(getClass().getResource("images/find.png")));
+		button.setOpaque(false);
 		button.setHorizontalAlignment(SwingConstants.CENTER);
 		button.setPreferredSize(BUTTON_DIMENSION);
 		button.setMargin(ZERO_INSETS);
@@ -1002,9 +1008,10 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		tb.add(button);
 
 		button = new JButton(page.getAction("Print"));
+		button.setOpaque(false);
 		button.setHorizontalAlignment(SwingConstants.CENTER);
 		button.setText(null);
-		button.setIcon(new ImageIcon(getClass().getResource("images/printer2.gif")));
+		button.setIcon(new ImageIcon(getClass().getResource("images/print.png")));
 		button.setPreferredSize(BUTTON_DIMENSION);
 		button.setMargin(ZERO_INSETS);
 		if (!Modeler.isMac()) {
@@ -1017,7 +1024,8 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		addDisabledComponentWhileLoading(button);
 		tb.add(button);
 
-		snapshotButton = new JButton(new ImageIcon(getClass().getResource("images/Album.gif")));
+		snapshotButton = new JButton(new ImageIcon(getClass().getResource("images/album.png")));
+		snapshotButton.setOpaque(false);
 		snapshotButton.setHorizontalAlignment(SwingConstants.CENTER);
 		if (!Modeler.isMac()) {
 			snapshotButton.setBorderPainted(false);
@@ -1046,6 +1054,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		addDisabledComponentWhileLoading(snapshotButton);
 
 		submitCommentButton = new JButton(new ImageIcon(getClass().getResource("images/EditComment.gif")));
+		submitCommentButton.setOpaque(false);
 		if (Modeler.windowCount == 0)
 			submitCommentButton.setEnabled(false);
 		String s = Modeler.getInternationalText("MakeCommentButton");
@@ -1076,6 +1085,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		addDisabledComponentWhileLoading(submitCommentButton);
 
 		viewCommentButton = new JButton(new ImageIcon(getClass().getResource("images/ViewComment.gif")));
+		viewCommentButton.setOpaque(false);
 		if (Modeler.windowCount == 0)
 			viewCommentButton.setEnabled(false);
 		viewCommentButton.setHorizontalAlignment(SwingConstants.CENTER);
@@ -1094,6 +1104,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		addDisabledComponentWhileLoading(viewCommentButton);
 
 		mwSpaceButton = new JButton(new ImageIcon(getClass().getResource("images/webmw.gif")));
+		mwSpaceButton.setOpaque(false);
 		if (Modeler.windowCount == 0)
 			mwSpaceButton.setEnabled(false);
 		s = Modeler.getInternationalText("MyMwSpace");
@@ -1132,7 +1143,8 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 
 	private JToolBar createToolBar3() {
 
-		JToolBar tb = new JToolBar(SwingConstants.HORIZONTAL);
+		JToolBar tb = new BackgroundToolBar(SwingConstants.HORIZONTAL, new ImageIcon(Modeler.class
+				.getResource("images/background.png")));
 		tb.setFloatable(false);
 		tb.setMargin(new Insets(1, 1, 1, 1));
 		tb.setLayout(new FlowLayout(FlowLayout.LEFT, 2, 1));
@@ -1142,8 +1154,9 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		tb.putClientProperty("JToolBar.isRollover", Boolean.TRUE);
 
 		cutButton = new JButton(page.getAction(DefaultEditorKit.cutAction));
+		cutButton.setOpaque(false);
 		cutButton.setHorizontalAlignment(SwingConstants.CENTER);
-		cutButton.setIcon(new ImageIcon(getClass().getResource("images/cut.gif")));
+		cutButton.setIcon(new ImageIcon(getClass().getResource("images/cut.png")));
 		cutButton.setText(null);
 		cutButton.setPreferredSize(BUTTON_DIMENSION);
 		cutButton.setMargin(ZERO_INSETS);
@@ -1156,8 +1169,9 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		tb.add(cutButton);
 
 		copyButton = new JButton(page.getAction(DefaultEditorKit.copyAction));
+		copyButton.setOpaque(false);
 		copyButton.setHorizontalAlignment(SwingConstants.CENTER);
-		copyButton.setIcon(new ImageIcon(getClass().getResource("images/copy.gif")));
+		copyButton.setIcon(new ImageIcon(getClass().getResource("images/copy.png")));
 		copyButton.setText(null);
 		copyButton.setPreferredSize(BUTTON_DIMENSION);
 		copyButton.setMargin(ZERO_INSETS);
@@ -1170,8 +1184,9 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		tb.add(copyButton);
 
 		pasteButton = new JButton(page.getAction(DefaultEditorKit.pasteAction));
+		pasteButton.setOpaque(false);
 		pasteButton.setHorizontalAlignment(SwingConstants.CENTER);
-		pasteButton.setIcon(new ImageIcon(getClass().getResource("images/paste.gif")));
+		pasteButton.setIcon(new ImageIcon(getClass().getResource("images/paste.png")));
 		pasteButton.setText(null);
 		pasteButton.setPreferredSize(BUTTON_DIMENSION);
 		pasteButton.setMargin(ZERO_INSETS);
@@ -1184,8 +1199,9 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		tb.add(pasteButton);
 
 		JButton button = new JButton(page.getAction(Page.UNDO));
+		button.setOpaque(false);
 		button.setHorizontalAlignment(SwingConstants.CENTER);
-		button.setIcon(new ImageIcon(getClass().getResource("images/Undo2.gif")));
+		button.setIcon(new ImageIcon(getClass().getResource("images/undo.png")));
 		button.setText(null);
 		button.setPreferredSize(BUTTON_DIMENSION);
 		button.setMargin(ZERO_INSETS);
@@ -1197,9 +1213,10 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		tb.add(button);
 
 		button = new JButton(page.getAction(Page.REDO));
+		button.setOpaque(false);
 		button.setHorizontalAlignment(SwingConstants.CENTER);
 		button.setText(null);
-		button.setIcon(new ImageIcon(getClass().getResource("images/Redo2.gif")));
+		button.setIcon(new ImageIcon(getClass().getResource("images/redo.png")));
 		button.setPreferredSize(BUTTON_DIMENSION);
 		button.setMargin(ZERO_INSETS);
 		if (!Modeler.isMac()) {
@@ -1211,7 +1228,8 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 
 		tb.add(new JLabel(Modeler.toolBarSeparatorIcon));
 
-		button = new JButton(new ImageIcon(getClass().getResource("images/SetColor.gif")));
+		button = new JButton(new ImageIcon(getClass().getResource("images/bgfill.png")));
+		button.setOpaque(false);
 		button.setHorizontalAlignment(SwingConstants.CENTER);
 		button.setPreferredSize(BUTTON_DIMENSION);
 		button.setMargin(ZERO_INSETS);
@@ -1231,6 +1249,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		tb.add(button);
 
 		button = new JButton(new ImageIcon(getClass().getResource("images/InsertComponent.gif")));
+		button.setOpaque(false);
 		button.setHorizontalAlignment(SwingConstants.CENTER);
 		button.setPreferredSize(BUTTON_DIMENSION);
 		button.setMargin(ZERO_INSETS);
@@ -1250,6 +1269,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		tb.add(button);
 
 		inputImageButton = new JButton(page.getAction("Input Image"));
+		inputImageButton.setOpaque(false);
 		inputImageButton.setIcon(new ImageIcon(getClass().getResource("images/InsertPicture.gif")));
 		inputImageButton.setHorizontalAlignment(SwingConstants.CENTER);
 		inputImageButton.setText(null);
@@ -1266,6 +1286,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		tb.add(new JLabel(Modeler.toolBarSeparatorIcon));
 
 		button = new JButton(page.getAction(Page.INSERT_COMPONENT));
+		button.setOpaque(false);
 		button.setText(null);
 		button.setName("Text Box");
 		button.setToolTipText("Insert a text box");
@@ -1281,6 +1302,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		tb.add(button);
 
 		button = new JButton(page.getAction(Page.INSERT_COMPONENT));
+		button.setOpaque(false);
 		button.setText(null);
 		button.setName("Multiple Choice");
 		button.setToolTipText("Insert a multiple choice");
@@ -1296,6 +1318,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		tb.add(button);
 
 		button = new JButton(page.getAction(Page.INSERT_COMPONENT));
+		button.setOpaque(false);
 		button.setIcon(new ImageIcon(getClass().getResource("text/images/ImageQuestion.gif")));
 		button.setText(null);
 		button.setName("Image Question");
@@ -1311,6 +1334,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		tb.add(button);
 
 		button = new JButton(page.getAction(Page.INSERT_COMPONENT));
+		button.setOpaque(false);
 		button.setIcon(new ImageIcon(getClass().getResource("text/images/TextArea.gif")));
 		button.setText(null);
 		button.setName("User Input Text Area");
@@ -1326,6 +1350,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		tb.add(button);
 
 		button = new JButton(page.getAction(Page.INSERT_COMPONENT));
+		button.setOpaque(false);
 		button.setText(null);
 		button.setName("Table");
 		button.setToolTipText("Insert a table");
@@ -1341,6 +1366,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		tb.add(button);
 
 		button = new JButton(page.getAction(Page.INSERT_COMPONENT));
+		button.setOpaque(false);
 		button.setText(null);
 		button.setName("Applet");
 		button.setToolTipText("Insert an applet");
@@ -1356,6 +1382,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		tb.add(button);
 
 		button = new JButton(page.getAction(Page.INSERT_COMPONENT));
+		button.setOpaque(false);
 		button.setText(null);
 		button.setName("Plugin");
 		button.setToolTipText("Insert a plugin");
@@ -1423,7 +1450,8 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 
 	private JToolBar createToolBar2() {
 
-		JToolBar tb = new JToolBar(SwingConstants.HORIZONTAL);
+		JToolBar tb = new BackgroundToolBar(SwingConstants.HORIZONTAL, new ImageIcon(Modeler.class
+				.getResource("images/background.png")));
 		tb.setFloatable(false);
 		tb.setMargin(new Insets(1, 1, 1, 1));
 		tb.setLayout(new FlowLayout(FlowLayout.LEFT, 2, 1));
@@ -1434,15 +1462,18 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 
 		Initializer.sharedInstance().setMessage("Reading system fonts...");
 		fontNameComboBox = ModelerUtilities.createFontNameComboBox();
+		fontNameComboBox.setOpaque(false);
 		fontNameComboBox.addActionListener(fontFamilyAction);
 		tb.add(fontNameComboBox);
 		Initializer.sharedInstance().setMessage("Creating Editor's tool bar 2...");
 
 		fontSizeComboBox = ModelerUtilities.createFontSizeComboBox();
+		fontSizeComboBox.setOpaque(false);
 		fontSizeComboBox.addActionListener(fontSizeAction);
 		tb.add(fontSizeComboBox);
 
 		fontColorComboBox = new ColorComboBox(this);
+		fontColorComboBox.setOpaque(false);
 		fontColorComboBox.setRenderer(new ComboBoxRenderer.ColorCell());
 		fontColorComboBox.setToolTipText("Font color");
 		fontColorComboBox.setPreferredSize(new Dimension(80, fontSizeComboBox.getPreferredSize().height));
@@ -1451,6 +1482,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		tb.add(fontColorComboBox);
 
 		boldCheckBox = new JCheckBox(page.getAction(Page.BOLD));
+		boldCheckBox.setOpaque(false);
 		boldCheckBox.setHorizontalAlignment(SwingConstants.CENTER);
 		boldCheckBox.setIcon(new ImageIcon(getClass().getResource("text/images/Bold.gif")));
 		boldCheckBox.setText(null);
@@ -1466,6 +1498,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		tb.add(boldCheckBox);
 
 		italicCheckBox = new JCheckBox(page.getAction(Page.ITALIC));
+		italicCheckBox.setOpaque(false);
 		italicCheckBox.setHorizontalAlignment(SwingConstants.CENTER);
 		italicCheckBox.setIcon(new ImageIcon(getClass().getResource("text/images/Italic.gif")));
 		italicCheckBox.setText(null);
@@ -1481,6 +1514,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		tb.add(italicCheckBox);
 
 		underlineCheckBox = new JCheckBox(page.getAction(Page.UNDERLINE));
+		underlineCheckBox.setOpaque(false);
 		underlineCheckBox.setHorizontalAlignment(SwingConstants.CENTER);
 		underlineCheckBox.setIcon(new ImageIcon(getClass().getResource("text/images/Underline.gif")));
 		underlineCheckBox.setText(null);
@@ -1501,6 +1535,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		ButtonGroup bg = new ButtonGroup();
 
 		leftAlignmentCheckBox = new JCheckBox(page.getAction(Page.LEFT_ALIGN));
+		leftAlignmentCheckBox.setOpaque(false);
 		leftAlignmentCheckBox.setHorizontalAlignment(SwingConstants.CENTER);
 		leftAlignmentCheckBox.setIcon(new ImageIcon(getClass().getResource("text/images/AlignLeft.gif")));
 		leftAlignmentCheckBox.setText(null);
@@ -1517,6 +1552,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		bg.add(leftAlignmentCheckBox);
 
 		centerAlignmentCheckBox = new JCheckBox(page.getAction(Page.CENTER_ALIGN));
+		centerAlignmentCheckBox.setOpaque(false);
 		centerAlignmentCheckBox.setHorizontalAlignment(SwingConstants.CENTER);
 		centerAlignmentCheckBox.setIcon(new ImageIcon(getClass().getResource("text/images/AlignCenter.gif")));
 		centerAlignmentCheckBox.setText(null);
@@ -1533,6 +1569,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		bg.add(centerAlignmentCheckBox);
 
 		rightAlignmentCheckBox = new JCheckBox(page.getAction(Page.RIGHT_ALIGN));
+		rightAlignmentCheckBox.setOpaque(false);
 		rightAlignmentCheckBox.setHorizontalAlignment(SwingConstants.CENTER);
 		rightAlignmentCheckBox.setIcon(new ImageIcon(getClass().getResource("text/images/AlignRight.gif")));
 		rightAlignmentCheckBox.setText(null);
@@ -1550,6 +1587,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		tb.addSeparator();
 
 		bulletCheckBox = new JCheckBox(page.getAction(Page.BULLET));
+		bulletCheckBox.setOpaque(false);
 		bulletCheckBox.setHorizontalAlignment(SwingConstants.CENTER);
 		bulletCheckBox.setIcon(new ImageIcon(getClass().getResource("text/images/Bullet.gif")));
 		bulletCheckBox.setText(null);
@@ -1565,6 +1603,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		tb.add(bulletCheckBox);
 
 		JButton button = new JButton(page.getAction(Page.INCREASE_INDENT));
+		button.setOpaque(false);
 		button.setHorizontalAlignment(SwingConstants.CENTER);
 		button.setIcon(new ImageIcon(getClass().getResource("text/images/LeftIndent.gif")));
 		button.setText(null);
@@ -1579,6 +1618,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		tb.add(button);
 
 		button = new JButton(page.getAction(Page.DECREASE_INDENT));
+		button.setOpaque(false);
 		button.setHorizontalAlignment(SwingConstants.CENTER);
 		button.setIcon(new ImageIcon(getClass().getResource("text/images/ReverseLeftIndent.gif")));
 		button.setText(null);
@@ -1595,6 +1635,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		tb.add(new JLabel(Modeler.toolBarSeparatorIcon));
 
 		button = new JButton(page.getAction("Hyperlink"));
+		button.setOpaque(false);
 		button.setHorizontalAlignment(SwingConstants.CENTER);
 		if (Modeler.showToolBarText) {
 			button.setMargin(ZERO_INSETS);
