@@ -100,6 +100,7 @@ import org.concord.modeler.text.ExternalClient;
 import org.concord.modeler.text.HyperlinkParameter;
 import org.concord.modeler.text.Page;
 import org.concord.modeler.text.SaveReminder;
+import org.concord.modeler.ui.BackgroundToolBar;
 import org.concord.modeler.ui.ColorMenu;
 import org.concord.modeler.util.DataQueue;
 import org.concord.modeler.util.FileUtilities;
@@ -2593,7 +2594,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 
 	void createToolBar() {
 
-		toolBar = new JToolBar();
+		toolBar = new BackgroundToolBar(new ImageIcon(Modeler.class.getResource("images/background.png")));
 		toolBar.setMargin(new Insets(1, 1, 1, 1));
 		toolBar.setBorder(BorderFactory.createEtchedBorder());
 		toolBar.setFloatable(false);
@@ -2606,6 +2607,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 
 		String s;
 		backButton = new JButton(navigator.getAction(Navigator.BACK));
+		backButton.setOpaque(false);
 		backButton.setHorizontalAlignment(SwingConstants.CENTER);
 		if (showToolBarText) {
 			backButton.setMargin(Editor.ZERO_INSETS);
@@ -2631,6 +2633,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		editor.addDisabledComponentWhileLoading(backButton);
 
 		forwardButton = new JButton(navigator.getAction(Navigator.FORWARD));
+		forwardButton.setOpaque(false);
 		forwardButton.setHorizontalAlignment(SwingConstants.CENTER);
 		forwardButton.setText(null);
 		forwardButton.setPreferredSize(dim);
@@ -2644,6 +2647,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		editor.addDisabledComponentWhileLoading(forwardButton);
 
 		homeButton = new JButton(navigator.getAction(Navigator.HOME));
+		homeButton.setOpaque(false);
 		homeButton.setHorizontalAlignment(SwingConstants.CENTER);
 		homeButton.setText(null);
 		homeButton.setPreferredSize(dim);
@@ -2658,6 +2662,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		editor.addDisabledComponentWhileLoading(homeButton);
 
 		reloadButton = new JButton(editor.getPage().getAction(Page.REFRESH));
+		reloadButton.setOpaque(false);
 		reloadButton.setHorizontalAlignment(SwingConstants.CENTER);
 		if (showToolBarText) {
 			reloadButton.setMargin(Editor.ZERO_INSETS);
@@ -2684,6 +2689,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		editor.addDisabledComponentWhileLoading(reloadButton);
 
 		navigator.getComboBox().setRequestFocusEnabled(false);
+		navigator.getComboBox().setOpaque(false);
 		int fontSize = navigator.getComboBox().getFont().getSize();
 		navigator.getComboBox().setPreferredSize(new Dimension(400, fontSize * 2));
 		toolBar.add(navigator.getComboBox());
