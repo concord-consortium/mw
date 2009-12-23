@@ -893,9 +893,8 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		JToolBar tb = new BackgroundToolBar(SwingConstants.HORIZONTAL, new ImageIcon(Modeler.class
 				.getResource("images/background.png")));
 		tb.setFloatable(false);
-		tb.setMargin(new Insets(1, 1, 1, 1));
 		tb.setLayout(new FlowLayout(FlowLayout.LEFT, 2, 1));
-		tb.setBorder(BorderFactory.createEtchedBorder());
+		tb.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		tb.putClientProperty("JToolBar.isRollover", Boolean.TRUE);
 		if (!Modeler.isMac())
 			tb.add(new JLabel(toolBarHeaderIcon));
@@ -1146,9 +1145,8 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		JToolBar tb = new BackgroundToolBar(SwingConstants.HORIZONTAL, new ImageIcon(Modeler.class
 				.getResource("images/background.png")));
 		tb.setFloatable(false);
-		tb.setMargin(new Insets(1, 1, 1, 1));
 		tb.setLayout(new FlowLayout(FlowLayout.LEFT, 2, 1));
-		tb.setBorder(BorderFactory.createEmptyBorder());
+		tb.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		if (!Modeler.isMac())
 			tb.add(new JLabel(toolBarHeaderIcon));
 		tb.putClientProperty("JToolBar.isRollover", Boolean.TRUE);
@@ -1453,9 +1451,8 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		JToolBar tb = new BackgroundToolBar(SwingConstants.HORIZONTAL, new ImageIcon(Modeler.class
 				.getResource("images/background.png")));
 		tb.setFloatable(false);
-		tb.setMargin(new Insets(1, 1, 1, 1));
 		tb.setLayout(new FlowLayout(FlowLayout.LEFT, 2, 1));
-		tb.setBorder(BorderFactory.createEtchedBorder());
+		tb.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		tb.putClientProperty("JToolBar.isRollover", Boolean.TRUE);
 		if (!Modeler.isMac())
 			tb.add(new JLabel(toolBarHeaderIcon));
