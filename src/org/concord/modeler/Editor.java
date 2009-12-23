@@ -1273,7 +1273,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 
 		inputImageButton = new JButton(page.getAction("Input Image"));
 		inputImageButton.setOpaque(false);
-		inputImageButton.setIcon(new ImageIcon(getClass().getResource("images/InsertPicture.gif")));
+		inputImageButton.setIcon(new ImageIcon(getClass().getResource("images/insert_picture.png")));
 		inputImageButton.setHorizontalAlignment(SwingConstants.CENTER);
 		inputImageButton.setText(null);
 		inputImageButton.setToolTipText("Insert an image");
@@ -1309,7 +1309,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		button.setText(null);
 		button.setName("Multiple Choice");
 		button.setToolTipText("Insert a multiple choice");
-		button.setIcon(new ImageIcon(getClass().getResource("text/images/MultipleChoice.gif")));
+		button.setIcon(new ImageIcon(getClass().getResource("text/images/multi_choice.png")));
 		button.setHorizontalAlignment(SwingConstants.CENTER);
 		button.setPreferredSize(BUTTON_DIMENSION);
 		button.setMargin(ZERO_INSETS);
@@ -1322,7 +1322,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 
 		button = new JButton(page.getAction(Page.INSERT_COMPONENT));
 		button.setOpaque(false);
-		button.setIcon(new ImageIcon(getClass().getResource("text/images/ImageQuestion.gif")));
+		button.setIcon(new ImageIcon(getClass().getResource("text/images/image_question.png")));
 		button.setText(null);
 		button.setName("Image Question");
 		button.setToolTipText("Insert an image question");
@@ -1338,7 +1338,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 
 		button = new JButton(page.getAction(Page.INSERT_COMPONENT));
 		button.setOpaque(false);
-		button.setIcon(new ImageIcon(getClass().getResource("text/images/TextArea.gif")));
+		button.setIcon(new ImageIcon(getClass().getResource("text/images/text_area.png")));
 		button.setText(null);
 		button.setName("User Input Text Area");
 		button.setToolTipText("Insert a user-input text area");
@@ -1357,7 +1357,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		button.setText(null);
 		button.setName("Table");
 		button.setToolTipText("Insert a table");
-		button.setIcon(new ImageIcon(getClass().getResource("text/images/Table.gif")));
+		button.setIcon(new ImageIcon(getClass().getResource("text/images/table.png")));
 		button.setHorizontalAlignment(SwingConstants.CENTER);
 		button.setPreferredSize(BUTTON_DIMENSION);
 		button.setMargin(ZERO_INSETS);
@@ -1389,7 +1389,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		button.setText(null);
 		button.setName("Plugin");
 		button.setToolTipText("Insert a plugin");
-		button.setIcon(new ImageIcon(getClass().getResource("text/images/plugin.gif")));
+		button.setIcon(new ImageIcon(getClass().getResource("text/images/plugin.png")));
 		button.setHorizontalAlignment(SwingConstants.CENTER);
 		button.setPreferredSize(BUTTON_DIMENSION);
 		button.setMargin(ZERO_INSETS);
