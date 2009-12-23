@@ -2716,6 +2716,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		if (!EventQueue.isDispatchThread())
 			throw new RuntimeException("This method must be called by the AWT event thread");
 		getContentPane().remove(toolBar);
+		editor.setToolBarOffset(0);
 	}
 
 	/** side effect of implementing an interface */
@@ -2723,6 +2724,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		if (!EventQueue.isDispatchThread())
 			throw new RuntimeException("This method must be called by the AWT event thread");
 		getContentPane().add(toolBar, BorderLayout.NORTH);
+		editor.setToolBarOffset(-toolBar.getHeight());
 	}
 
 	/** side effect of implementing an interface */
@@ -3255,6 +3257,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 					Modeler m = (Modeler) get();
 					Debugger.print("Modeler created");
 					m.pack();
+					m.editor.setToolBarOffset(-m.toolBar.getHeight());
 					m.setVisible(true);
 					Debugger.print("Modeler becomes visible");
 					m.toFront();
