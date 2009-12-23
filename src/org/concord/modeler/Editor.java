@@ -96,7 +96,7 @@ import org.concord.modeler.event.PageEvent;
 import org.concord.modeler.event.PageListener;
 import org.concord.modeler.text.BulletIcon;
 import org.concord.modeler.text.Page;
-import org.concord.modeler.ui.BackgroundToolBar;
+import org.concord.modeler.ui.BackgroundPanel;
 import org.concord.modeler.ui.ColorComboBox;
 import org.concord.modeler.ui.ColorMenu;
 import org.concord.modeler.ui.ColorRectangle;
@@ -595,8 +595,9 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		Initializer.sharedInstance().setMessage("Creating Editor's tool bar 3...");
 		toolBar[2] = createToolBar3();
 
-		toolBarPanel = new JPanel(new BorderLayout(0, 0));
-		toolBarPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+		toolBarPanel = new BackgroundPanel(new BorderLayout(0, 0), new ImageIcon(Modeler.class
+				.getResource("images/background.png")));
+		toolBarPanel.setBorder(BorderFactory.createEmptyBorder());
 		toolBarPanel.add(toolBar[0], BorderLayout.CENTER);
 
 		add(toolBarPanel, BorderLayout.NORTH);
@@ -890,8 +891,8 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 
 	private JToolBar createToolBar1() {
 
-		JToolBar tb = new BackgroundToolBar(SwingConstants.HORIZONTAL, new ImageIcon(Modeler.class
-				.getResource("images/background.png")));
+		JToolBar tb = new JToolBar(SwingConstants.HORIZONTAL);
+		tb.setOpaque(false);
 		tb.setFloatable(false);
 		tb.setLayout(new FlowLayout(FlowLayout.LEFT, 2, 1));
 		tb.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -1142,8 +1143,8 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 
 	private JToolBar createToolBar3() {
 
-		JToolBar tb = new BackgroundToolBar(SwingConstants.HORIZONTAL, new ImageIcon(Modeler.class
-				.getResource("images/background.png")));
+		JToolBar tb = new JToolBar(SwingConstants.HORIZONTAL);
+		tb.setOpaque(false);
 		tb.setFloatable(false);
 		tb.setLayout(new FlowLayout(FlowLayout.LEFT, 2, 1));
 		tb.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -1448,8 +1449,8 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 
 	private JToolBar createToolBar2() {
 
-		JToolBar tb = new BackgroundToolBar(SwingConstants.HORIZONTAL, new ImageIcon(Modeler.class
-				.getResource("images/background.png")));
+		JToolBar tb = new JToolBar(SwingConstants.HORIZONTAL);
+		tb.setOpaque(false);
 		tb.setFloatable(false);
 		tb.setLayout(new FlowLayout(FlowLayout.LEFT, 2, 1));
 		tb.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -1481,7 +1482,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		boldCheckBox = new JCheckBox(page.getAction(Page.BOLD));
 		boldCheckBox.setOpaque(false);
 		boldCheckBox.setHorizontalAlignment(SwingConstants.CENTER);
-		boldCheckBox.setIcon(new ImageIcon(getClass().getResource("text/images/Bold.gif")));
+		boldCheckBox.setIcon(new ImageIcon(getClass().getResource("text/images/bold.png")));
 		boldCheckBox.setText(null);
 		boldCheckBox.setPreferredSize(BUTTON_DIMENSION);
 		boldCheckBox.setMargin(ZERO_INSETS);
@@ -1497,7 +1498,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		italicCheckBox = new JCheckBox(page.getAction(Page.ITALIC));
 		italicCheckBox.setOpaque(false);
 		italicCheckBox.setHorizontalAlignment(SwingConstants.CENTER);
-		italicCheckBox.setIcon(new ImageIcon(getClass().getResource("text/images/Italic.gif")));
+		italicCheckBox.setIcon(new ImageIcon(getClass().getResource("text/images/italic.png")));
 		italicCheckBox.setText(null);
 		italicCheckBox.setPreferredSize(BUTTON_DIMENSION);
 		italicCheckBox.setMargin(ZERO_INSETS);
@@ -1513,7 +1514,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		underlineCheckBox = new JCheckBox(page.getAction(Page.UNDERLINE));
 		underlineCheckBox.setOpaque(false);
 		underlineCheckBox.setHorizontalAlignment(SwingConstants.CENTER);
-		underlineCheckBox.setIcon(new ImageIcon(getClass().getResource("text/images/Underline.gif")));
+		underlineCheckBox.setIcon(new ImageIcon(getClass().getResource("text/images/underline.png")));
 		underlineCheckBox.setText(null);
 		underlineCheckBox.setPreferredSize(BUTTON_DIMENSION);
 		underlineCheckBox.setMargin(ZERO_INSETS);
@@ -1534,7 +1535,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		leftAlignmentCheckBox = new JCheckBox(page.getAction(Page.LEFT_ALIGN));
 		leftAlignmentCheckBox.setOpaque(false);
 		leftAlignmentCheckBox.setHorizontalAlignment(SwingConstants.CENTER);
-		leftAlignmentCheckBox.setIcon(new ImageIcon(getClass().getResource("text/images/AlignLeft.gif")));
+		leftAlignmentCheckBox.setIcon(new ImageIcon(getClass().getResource("text/images/align_left.png")));
 		leftAlignmentCheckBox.setText(null);
 		leftAlignmentCheckBox.setPreferredSize(BUTTON_DIMENSION);
 		leftAlignmentCheckBox.setMargin(ZERO_INSETS);
@@ -1551,7 +1552,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		centerAlignmentCheckBox = new JCheckBox(page.getAction(Page.CENTER_ALIGN));
 		centerAlignmentCheckBox.setOpaque(false);
 		centerAlignmentCheckBox.setHorizontalAlignment(SwingConstants.CENTER);
-		centerAlignmentCheckBox.setIcon(new ImageIcon(getClass().getResource("text/images/AlignCenter.gif")));
+		centerAlignmentCheckBox.setIcon(new ImageIcon(getClass().getResource("text/images/align_center.png")));
 		centerAlignmentCheckBox.setText(null);
 		centerAlignmentCheckBox.setPreferredSize(BUTTON_DIMENSION);
 		centerAlignmentCheckBox.setMargin(ZERO_INSETS);
@@ -1568,7 +1569,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		rightAlignmentCheckBox = new JCheckBox(page.getAction(Page.RIGHT_ALIGN));
 		rightAlignmentCheckBox.setOpaque(false);
 		rightAlignmentCheckBox.setHorizontalAlignment(SwingConstants.CENTER);
-		rightAlignmentCheckBox.setIcon(new ImageIcon(getClass().getResource("text/images/AlignRight.gif")));
+		rightAlignmentCheckBox.setIcon(new ImageIcon(getClass().getResource("text/images/align_right.png")));
 		rightAlignmentCheckBox.setText(null);
 		rightAlignmentCheckBox.setPreferredSize(BUTTON_DIMENSION);
 		rightAlignmentCheckBox.setMargin(ZERO_INSETS);
@@ -1586,7 +1587,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		bulletCheckBox = new JCheckBox(page.getAction(Page.BULLET));
 		bulletCheckBox.setOpaque(false);
 		bulletCheckBox.setHorizontalAlignment(SwingConstants.CENTER);
-		bulletCheckBox.setIcon(new ImageIcon(getClass().getResource("text/images/Bullet.gif")));
+		bulletCheckBox.setIcon(new ImageIcon(getClass().getResource("text/images/add_bullets.png")));
 		bulletCheckBox.setText(null);
 		bulletCheckBox.setPreferredSize(BUTTON_DIMENSION);
 		bulletCheckBox.setMargin(ZERO_INSETS);
@@ -1602,7 +1603,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		JButton button = new JButton(page.getAction(Page.INCREASE_INDENT));
 		button.setOpaque(false);
 		button.setHorizontalAlignment(SwingConstants.CENTER);
-		button.setIcon(new ImageIcon(getClass().getResource("text/images/LeftIndent.gif")));
+		button.setIcon(new ImageIcon(getClass().getResource("text/images/increase_indentation.png")));
 		button.setText(null);
 		button.setPreferredSize(BUTTON_DIMENSION);
 		button.setMargin(ZERO_INSETS);
@@ -1617,7 +1618,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		button = new JButton(page.getAction(Page.DECREASE_INDENT));
 		button.setOpaque(false);
 		button.setHorizontalAlignment(SwingConstants.CENTER);
-		button.setIcon(new ImageIcon(getClass().getResource("text/images/ReverseLeftIndent.gif")));
+		button.setIcon(new ImageIcon(getClass().getResource("text/images/decrease_indentation.png")));
 		button.setText(null);
 		button.setPreferredSize(BUTTON_DIMENSION);
 		button.setMargin(ZERO_INSETS);

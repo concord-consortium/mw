@@ -20,25 +20,26 @@
 package org.concord.modeler.ui;
 
 import java.awt.Graphics;
+import java.awt.LayoutManager;
 
 import javax.swing.ImageIcon;
-import javax.swing.JToolBar;
+import javax.swing.JPanel;
 
 /**
  * @author Charles Xie
  * 
  */
-public class BackgroundToolBar extends JToolBar {
+public class BackgroundPanel extends JPanel {
 
 	private ImageIcon backgroundImage;
 
-	public BackgroundToolBar(ImageIcon image) {
+	public BackgroundPanel(ImageIcon image) {
 		super();
 		setBackgroundImage(image);
 	}
 
-	public BackgroundToolBar(int orientation, ImageIcon image) {
-		super(orientation);
+	public BackgroundPanel(LayoutManager layout, ImageIcon image) {
+		super(layout);
 		setBackgroundImage(image);
 	}
 

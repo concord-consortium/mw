@@ -78,6 +78,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
@@ -317,6 +318,10 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		Initializer.sharedInstance().setMessage("Creating menu bar...");
 		createMenuBar();
 		setJMenuBar(menuBar);
+
+		JPanel toolBarPanel = new JPanel(new BorderLayout());
+		toolBarPanel.setBorder(BorderFactory.createEmptyBorder());
+		toolBarPanel.add(toolBar, BorderLayout.CENTER);
 
 		getContentPane().add(editor, BorderLayout.CENTER);
 		getContentPane().add(toolBar, BorderLayout.NORTH);
