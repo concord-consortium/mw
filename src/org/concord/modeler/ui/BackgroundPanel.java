@@ -32,6 +32,7 @@ import javax.swing.JPanel;
 public class BackgroundPanel extends JPanel {
 
 	private ImageIcon backgroundImage;
+	private int xOffset, yOffset;
 
 	public BackgroundPanel(ImageIcon image) {
 		super();
@@ -41,6 +42,14 @@ public class BackgroundPanel extends JPanel {
 	public BackgroundPanel(LayoutManager layout, ImageIcon image) {
 		super(layout);
 		setBackgroundImage(image);
+	}
+
+	public void setXOffset(int xOffset) {
+		this.xOffset = xOffset;
+	}
+
+	public void setYOffset(int yOffset) {
+		this.yOffset = yOffset;
 	}
 
 	public void setBackgroundImage(ImageIcon image) {
@@ -56,7 +65,7 @@ public class BackgroundPanel extends JPanel {
 			int jmax = getHeight() / iconHeight + 1;
 			for (int i = 0; i < imax; i++) {
 				for (int j = 0; j < jmax; j++) {
-					backgroundImage.paintIcon(this, g, i * iconWidth, j * iconHeight);
+					backgroundImage.paintIcon(this, g, xOffset + i * iconWidth, yOffset + j * iconHeight);
 				}
 			}
 		}

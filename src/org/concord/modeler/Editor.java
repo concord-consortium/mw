@@ -147,7 +147,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 			disabledComponentsWhileLoading;
 	private ComponentPool componentPool;
 	private JToolBar[] toolBar;
-	private JPanel toolBarPanel;
+	private BackgroundPanel toolBarPanel;
 	private JScrollPane scroller;
 	private Page page;
 	private FindDialog findDialog;
@@ -602,6 +602,10 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 
 		add(toolBarPanel, BorderLayout.NORTH);
 
+	}
+
+	void setToolBarOffset(int h) {
+		toolBarPanel.setYOffset(h);
 	}
 
 	public void addEditorListener(EditorListener el) {
