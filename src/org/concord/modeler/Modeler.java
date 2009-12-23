@@ -26,7 +26,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
-import java.awt.Insets;
 import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
@@ -2595,8 +2594,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 	void createToolBar() {
 
 		toolBar = new BackgroundToolBar(new ImageIcon(Modeler.class.getResource("images/background.png")));
-		toolBar.setMargin(new Insets(1, 1, 1, 1));
-		toolBar.setBorder(BorderFactory.createEtchedBorder());
+		toolBar.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		toolBar.setFloatable(false);
 		toolBar.setLayout(new FlowLayout(FlowLayout.LEFT, 2, 1));
 		toolBar.putClientProperty("JToolBar.isRollover", Boolean.TRUE);
