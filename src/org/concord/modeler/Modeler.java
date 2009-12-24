@@ -26,6 +26,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
+import java.awt.FontMetrics;
+import java.awt.Insets;
 import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
@@ -80,6 +82,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
@@ -2596,6 +2599,31 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		}
 	}
 
+	static void setToolBarButton(AbstractButton b) {
+		setToolBarButton(b, false);
+	}
+
+	static void setToolBarButton(AbstractButton b, boolean disabled) {
+		b.setOpaque(false);
+		b.setHorizontalAlignment(SwingConstants.CENTER);
+		b.setBorderPainted(false);
+		b.setFocusPainted(false);
+		if (!(b instanceof JToggleButton))
+			b.setRequestFocusEnabled(false);
+		b.setMargin(new Insets(0, 0, 0, 0));
+		if (disabled && windowCount == 0)
+			b.setEnabled(false);
+		String text = b.getText();
+		if (text != null && !text.equals("")) {
+			FontMetrics fm = b.getFontMetrics(b.getFont());
+			int w = fm.stringWidth(text) + b.getIconTextGap() + b.getIcon().getIconWidth();
+			b.setPreferredSize(new Dimension(w + 10, 26));
+		}
+		else {
+			b.setPreferredSize(new Dimension(26, 26));
+		}
+	}
+
 	void createToolBar() {
 
 		toolBar = new BackgroundToolBar(new ImageIcon(Modeler.class.getResource("images/background.png")));
@@ -2606,90 +2634,40 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		if (!IS_MAC)
 			toolBar.add(new JLabel(toolBarHeaderIcon));
 
-		Dimension dim = new Dimension(24, 24);
-
 		String s;
 		backButton = new JButton(navigator.getAction(Navigator.BACK));
-		backButton.setOpaque(false);
-		backButton.setHorizontalAlignment(SwingConstants.CENTER);
 		if (showToolBarText) {
-			backButton.setMargin(Editor.ZERO_INSETS);
-			int w = backButton.getFontMetrics(backButton.getFont()).stringWidth(backButton.getText());
-			w += backButton.getIconTextGap();
-			w += backButton.getIcon().getIconWidth();
-			backButton.setPreferredSize(new Dimension(w + 10, dim.height));
 			s = getInternationalText("BackButton");
 			if (s != null)
 				backButton.setText(s);
 		}
-		else {
-			backButton.setText(null);
-			backButton.setPreferredSize(dim);
-			if ("CDE/Motif".equals(lookandfeel))
-				backButton.setMargin(Editor.ZERO_INSETS);
-		}
-		if (!IS_MAC) {
-			backButton.setBorderPainted(false);
-			backButton.setFocusPainted(false);
-		}
 		toolBar.add(backButton);
 		editor.addDisabledComponentWhileLoading(backButton);
+		setToolBarButton(backButton, true);
 
 		forwardButton = new JButton(navigator.getAction(Navigator.FORWARD));
-		forwardButton.setOpaque(false);
-		forwardButton.setHorizontalAlignment(SwingConstants.CENTER);
 		forwardButton.setText(null);
-		forwardButton.setPreferredSize(dim);
-		if (!IS_MAC) {
-			forwardButton.setBorderPainted(false);
-			forwardButton.setFocusPainted(false);
-		}
-		if ("CDE/Motif".equals(lookandfeel))
-			forwardButton.setMargin(Editor.ZERO_INSETS);
 		toolBar.add(forwardButton);
 		editor.addDisabledComponentWhileLoading(forwardButton);
+		setToolBarButton(forwardButton, true);
 
 		homeButton = new JButton(navigator.getAction(Navigator.HOME));
-		homeButton.setOpaque(false);
-		homeButton.setHorizontalAlignment(SwingConstants.CENTER);
 		homeButton.setText(null);
-		homeButton.setPreferredSize(dim);
-		if (!IS_MAC) {
-			homeButton.setBorderPainted(false);
-			homeButton.setFocusPainted(false);
-		}
-		if ("CDE/Motif".equals(lookandfeel))
-			homeButton.setMargin(Editor.ZERO_INSETS);
 		toolBar.add(homeButton);
 		editor.addEnabledComponentWhenNotEditable(homeButton);
 		editor.addDisabledComponentWhileLoading(homeButton);
+		setToolBarButton(homeButton, true);
 
 		reloadButton = new JButton(editor.getPage().getAction(Page.REFRESH));
-		reloadButton.setOpaque(false);
-		reloadButton.setHorizontalAlignment(SwingConstants.CENTER);
 		if (showToolBarText) {
-			reloadButton.setMargin(Editor.ZERO_INSETS);
-			int w = reloadButton.getFontMetrics(reloadButton.getFont()).stringWidth(reloadButton.getText());
-			w += reloadButton.getIconTextGap();
-			w += reloadButton.getIcon().getIconWidth();
-			reloadButton.setPreferredSize(new Dimension(w + 10, dim.height));
 			s = getInternationalText("ReloadButton");
 			if (s != null)
 				reloadButton.setText(s);
 		}
-		else {
-			reloadButton.setText(null);
-			reloadButton.setPreferredSize(dim);
-			if ("CDE/Motif".equals(lookandfeel))
-				reloadButton.setMargin(Editor.ZERO_INSETS);
-		}
-		if (!IS_MAC) {
-			reloadButton.setBorderPainted(false);
-			reloadButton.setFocusPainted(false);
-		}
 		toolBar.add(reloadButton);
 		editor.addEnabledComponentWhenNotEditable(reloadButton);
 		editor.addDisabledComponentWhileLoading(reloadButton);
+		setToolBarButton(reloadButton, true);
 
 		navigator.getComboBox().setRequestFocusEnabled(false);
 		navigator.getComboBox().setOpaque(false);

@@ -694,7 +694,7 @@ public final class ModelerUtilities {
 		c.setToolTipText("Font size");
 		c.setSelectedIndex(4);
 		FontMetrics fm = c.getFontMetrics(c.getFont());
-		int w = fm.stringWidth(FONT_SIZE[FONT_SIZE.length - 1].toString()) + (Modeler.isMac() ? 40 : 30);
+		int w = fm.stringWidth(FONT_SIZE[FONT_SIZE.length - 1].toString()) + (Modeler.isMac() ? 50 : 40);
 		int h = fm.getHeight() + 4;
 		c.setPreferredSize(new Dimension(w, h));
 		c.setEditable(false);
