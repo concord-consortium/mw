@@ -1251,7 +1251,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		});
 		tb.add(button);
 
-		button = new JButton(new ImageIcon(getClass().getResource("images/InsertComponent.gif")));
+		button = new JButton(new ImageIcon(getClass().getResource("images/insert_model.png")));
 		button.setOpaque(false);
 		button.setHorizontalAlignment(SwingConstants.CENTER);
 		button.setPreferredSize(BUTTON_DIMENSION);
@@ -1293,7 +1293,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		button.setText(null);
 		button.setName("Text Box");
 		button.setToolTipText("Insert a text box");
-		button.setIcon(new ImageIcon(getClass().getResource("text/images/TextBox.gif")));
+		button.setIcon(new ImageIcon(getClass().getResource("text/images/text_box.png")));
 		button.setHorizontalAlignment(SwingConstants.CENTER);
 		button.setPreferredSize(BUTTON_DIMENSION);
 		button.setMargin(ZERO_INSETS);
@@ -1373,7 +1373,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		button.setText(null);
 		button.setName("Applet");
 		button.setToolTipText("Insert an applet");
-		button.setIcon(new ImageIcon(getClass().getResource("text/images/Applet.gif")));
+		button.setIcon(new ImageIcon(getClass().getResource("text/images/applet.png")));
 		button.setHorizontalAlignment(SwingConstants.CENTER);
 		button.setPreferredSize(BUTTON_DIMENSION);
 		button.setMargin(ZERO_INSETS);
