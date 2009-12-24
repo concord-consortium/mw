@@ -27,9 +27,7 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
-import java.awt.FontMetrics;
 import java.awt.GridLayout;
-import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -117,8 +115,6 @@ import org.concord.mw2d.models.MDModel;
 
 public class Editor extends JComponent implements PageListener, PageComponentListener {
 
-	final static Insets ZERO_INSETS = new Insets(0, 0, 0, 0);
-
 	private static StyledEditorKit.FontSizeAction[] fsa;
 	private static StyledEditorKit.ForegroundAction[] fga;
 	private static StyledEditorKit.FontFamilyAction[] ffa;
@@ -126,7 +122,6 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 	private static final Border SELECTED_BORDER = new BasicBorders.ButtonBorder(Color.lightGray, Color.white,
 			Color.black, Color.gray);
 	private final static Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
-	private final static Dimension BUTTON_DIMENSION = new Dimension(24, 24);
 	private static ImageIcon noEditIcon, editIcon;
 	private static Icon toolBarHeaderIcon = new ImageIcon(Editor.class.getResource("images/ToolBarHeaderBar.gif"));
 	private static boolean initialized;
@@ -759,9 +754,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		p.setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5));
 
 		JButton button = new JButton(IconPool.getIcon("exit"));
-		if (!Modeler.isMac())
-			button.setBorderPainted(false);
-		button.setMargin(ZERO_INSETS);
+		button.setBorderPainted(false);
 		button.setToolTipText("Exit the full screen mode");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -772,23 +765,17 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 
 		button = new JButton(page.getNavigator().getAction(Navigator.BACK));
 		button.setText(null);
-		if (!Modeler.isMac())
-			button.setBorderPainted(false);
-		button.setMargin(ZERO_INSETS);
+		button.setBorderPainted(false);
 		p.add(button);
 
 		button = new JButton(page.getNavigator().getAction(Navigator.FORWARD));
 		button.setText(null);
-		if (!Modeler.isMac())
-			button.setBorderPainted(false);
-		button.setMargin(ZERO_INSETS);
+		button.setBorderPainted(false);
 		p.add(button);
 
 		button = new JButton(page.getAction(Page.REFRESH));
 		button.setText(null);
-		if (!Modeler.isMac())
-			button.setBorderPainted(false);
-		button.setMargin(ZERO_INSETS);
+		button.setBorderPainted(false);
 		p.add(button);
 
 		floatingButtons = new JInternalFrame(null, false, false, false, false);
@@ -905,241 +892,93 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 			tb.add(new JLabel(toolBarHeaderIcon));
 
 		editCheckBox = new JCheckBox(noEditIcon);
-		editCheckBox.setOpaque(false);
-		editCheckBox.setHorizontalAlignment(SwingConstants.CENTER);
 		if (Modeler.showToolBarText) {
 			String s = Modeler.getInternationalText("EditCheckBox");
 			editCheckBox.setText(s != null ? s : "Editor");
-			editCheckBox.setMargin(ZERO_INSETS);
-			FontMetrics fm = editCheckBox.getFontMetrics(editCheckBox.getFont());
-			int w = fm.stringWidth(editCheckBox.getText());
-			w += editCheckBox.getIconTextGap();
-			w += editCheckBox.getIcon().getIconWidth();
-			w += editCheckBox.getMargin().left + editCheckBox.getMargin().right;
-			editCheckBox.setPreferredSize(new Dimension(w + 10, BUTTON_DIMENSION.height));
-		}
-		else {
-			editCheckBox.setPreferredSize(BUTTON_DIMENSION);
-			editCheckBox.setMargin(ZERO_INSETS);
-		}
-		if (!Modeler.isMac()) {
-			editCheckBox.setBorderPainted(false);
-			editCheckBox.setFocusPainted(false);
 		}
 		editCheckBox.setToolTipText("Click to make this page editable");
 		editCheckBox.setSelected(false);
-		// editCheckBox.setRequestFocusEnabled(false); // this will disable the caret
 		editCheckBox.addActionListener(lockAction);
-		tb.add(editCheckBox);
-		if (Modeler.windowCount == 0)
-			editCheckBox.setEnabled(false);
 		addDisabledComponentWhileLoading(editCheckBox);
-		// if(Modeler.showToolBarText) tb.add(new JLabel(Modeler.toolBarSeparatorIcon));
+		tb.add(editCheckBox);
+		Modeler.setToolBarButton(editCheckBox, true);
 
 		JButton button = new JButton(page.getAction(Page.OPEN_PAGE));
-		button.setOpaque(false);
-		button.setHorizontalAlignment(SwingConstants.CENTER);
 		button.setIcon(new ImageIcon(getClass().getResource("images/open.png")));
 		if (Modeler.showToolBarText) {
 			String s = Modeler.getInternationalText("OpenButton");
 			if (s != null)
 				button.setText(s);
-			button.setMargin(ZERO_INSETS);
-			int w = button.getFontMetrics(button.getFont()).stringWidth(button.getText());
-			w += button.getIconTextGap();
-			w += button.getIcon().getIconWidth();
-			button.setPreferredSize(new Dimension(w + 10, BUTTON_DIMENSION.height));
 		}
-		else {
-			button.setText(null);
-			button.setPreferredSize(BUTTON_DIMENSION);
-			button.setMargin(ZERO_INSETS);
-		}
-		if (!Modeler.isMac()) {
-			button.setBorderPainted(false);
-			button.setFocusPainted(false);
-		}
-		button.setRequestFocusEnabled(false);
-		if (Modeler.windowCount == 0)
-			button.setEnabled(false);
 		addDisabledComponentWhileLoading(button);
 		tb.add(button);
+		Modeler.setToolBarButton(button, true);
 
 		button = new JButton(page.getAction(Page.SAVE_PAGE));
-		button.setOpaque(false);
-		button.setHorizontalAlignment(SwingConstants.CENTER);
 		button.setIcon(new ImageIcon(getClass().getResource("images/save.png")));
 		if (Modeler.showToolBarText) {
 			String s = Modeler.getInternationalText("SaveButton");
 			if (s != null)
 				button.setText(s);
-			button.setMargin(ZERO_INSETS);
-			int w = button.getFontMetrics(button.getFont()).stringWidth(button.getText());
-			w += button.getIconTextGap();
-			w += button.getIcon().getIconWidth();
-			button.setPreferredSize(new Dimension(w + 10, BUTTON_DIMENSION.height));
 		}
-		else {
-			button.setText(null);
-			button.setPreferredSize(BUTTON_DIMENSION);
-			button.setMargin(ZERO_INSETS);
-		}
-		if (!Modeler.isMac()) {
-			button.setBorderPainted(false);
-			button.setFocusPainted(false);
-		}
-		button.setRequestFocusEnabled(false);
-		if (Modeler.windowCount == 0)
-			button.setEnabled(false);
 		addDisabledComponentWhileLoading(button);
 		tb.add(button);
+		Modeler.setToolBarButton(button, true);
 
 		button = new JButton(new ImageIcon(getClass().getResource("images/find.png")));
-		button.setOpaque(false);
-		button.setHorizontalAlignment(SwingConstants.CENTER);
-		button.setPreferredSize(BUTTON_DIMENSION);
-		button.setMargin(ZERO_INSETS);
-		if (!Modeler.isMac()) {
-			button.setBorderPainted(false);
-			button.setFocusPainted(false);
-		}
 		button.setToolTipText("Find on this page");
-		button.setRequestFocusEnabled(false);
 		button.addActionListener(findAction);
-		if (Modeler.windowCount == 0)
-			button.setEnabled(false);
 		addDisabledComponentWhileLoading(button);
 		tb.add(button);
+		Modeler.setToolBarButton(button, true);
 
 		button = new JButton(page.getAction("Print"));
-		button.setOpaque(false);
-		button.setHorizontalAlignment(SwingConstants.CENTER);
 		button.setText(null);
 		button.setIcon(new ImageIcon(getClass().getResource("images/print.png")));
-		button.setPreferredSize(BUTTON_DIMENSION);
-		button.setMargin(ZERO_INSETS);
-		if (!Modeler.isMac()) {
-			button.setBorderPainted(false);
-			button.setFocusPainted(false);
-		}
-		button.setRequestFocusEnabled(false);
-		if (Modeler.windowCount == 0)
-			button.setEnabled(false);
 		addDisabledComponentWhileLoading(button);
 		tb.add(button);
+		Modeler.setToolBarButton(button, true);
 
 		snapshotButton = new JButton(new ImageIcon(getClass().getResource("images/album.png")));
-		snapshotButton.setOpaque(false);
-		snapshotButton.setHorizontalAlignment(SwingConstants.CENTER);
-		if (!Modeler.isMac()) {
-			snapshotButton.setBorderPainted(false);
-			snapshotButton.setFocusPainted(false);
-		}
-		snapshotButton.setRequestFocusEnabled(false);
 		snapshotButton.setToolTipText("Open snapshot gallery");
 		snapshotButton.addActionListener(openSnapshotGallery);
 		if (Modeler.showToolBarText) {
 			String s = Modeler.getInternationalText("OpenSnapshotGalleryButton");
 			snapshotButton.setText(s != null ? s : "Snapshots");
-			snapshotButton.setMargin(ZERO_INSETS);
-			int w = snapshotButton.getFontMetrics(snapshotButton.getFont()).stringWidth(snapshotButton.getText());
-			w += snapshotButton.getIconTextGap();
-			w += snapshotButton.getIcon().getIconWidth();
-			snapshotButton.setPreferredSize(new Dimension(w + 10, BUTTON_DIMENSION.height));
-		}
-		else {
-			snapshotButton.setPreferredSize(BUTTON_DIMENSION);
-			snapshotButton.setMargin(ZERO_INSETS);
 		}
 		tb.add(snapshotButton);
 		SnapshotGallery.sharedInstance().addFlashComponent(snapshotButton);
-		if (Modeler.windowCount == 0)
-			snapshotButton.setEnabled(false);
 		addDisabledComponentWhileLoading(snapshotButton);
+		Modeler.setToolBarButton(snapshotButton, true);
 
 		submitCommentButton = new JButton(new ImageIcon(getClass().getResource("images/EditComment.gif")));
-		submitCommentButton.setOpaque(false);
-		if (Modeler.windowCount == 0)
-			submitCommentButton.setEnabled(false);
 		String s = Modeler.getInternationalText("MakeCommentButton");
 		submitCommentButton.setText(s != null ? s : "Comment");
-		submitCommentButton.setHorizontalAlignment(SwingConstants.CENTER);
-		submitCommentButton.setPreferredSize(BUTTON_DIMENSION);
-		if (!Modeler.isMac()) {
-			submitCommentButton.setBorderPainted(false);
-			submitCommentButton.setFocusPainted(false);
-		}
 		submitCommentButton.setToolTipText("Make comments on current page");
-		submitCommentButton.setRequestFocusEnabled(false);
 		submitCommentButton.addActionListener(serverGate.commentAction);
-		if (Modeler.showToolBarText) {
-			submitCommentButton.setMargin(ZERO_INSETS);
-			int w = submitCommentButton.getFontMetrics(submitCommentButton.getFont()).stringWidth(
-					submitCommentButton.getText());
-			w += submitCommentButton.getIconTextGap();
-			w += submitCommentButton.getIcon().getIconWidth();
-			submitCommentButton.setPreferredSize(new Dimension(w + 10, BUTTON_DIMENSION.height));
-		}
-		else {
-			submitCommentButton.setText(null);
-			submitCommentButton.setPreferredSize(BUTTON_DIMENSION);
-			submitCommentButton.setMargin(ZERO_INSETS);
-		}
 		tb.add(submitCommentButton);
 		addDisabledComponentWhileLoading(submitCommentButton);
+		Modeler.setToolBarButton(submitCommentButton);
 
 		viewCommentButton = new JButton(new ImageIcon(getClass().getResource("images/ViewComment.gif")));
-		viewCommentButton.setOpaque(false);
-		if (Modeler.windowCount == 0)
-			viewCommentButton.setEnabled(false);
-		viewCommentButton.setHorizontalAlignment(SwingConstants.CENTER);
-		viewCommentButton.setPreferredSize(BUTTON_DIMENSION);
-		if (!Modeler.isMac()) {
-			viewCommentButton.setBorderPainted(false);
-			viewCommentButton.setFocusPainted(false);
-		}
 		viewCommentButton.setToolTipText("Show discussions about current page");
-		viewCommentButton.setRequestFocusEnabled(false);
 		viewCommentButton.addActionListener(serverGate.viewCommentAction);
-		viewCommentButton.setText(null);
-		viewCommentButton.setPreferredSize(BUTTON_DIMENSION);
-		viewCommentButton.setMargin(ZERO_INSETS);
 		tb.add(viewCommentButton);
 		addDisabledComponentWhileLoading(viewCommentButton);
+		Modeler.setToolBarButton(viewCommentButton);
 
 		mwSpaceButton = new JButton(new ImageIcon(getClass().getResource("images/webmw.gif")));
-		mwSpaceButton.setOpaque(false);
-		if (Modeler.windowCount == 0)
-			mwSpaceButton.setEnabled(false);
 		s = Modeler.getInternationalText("MyMwSpace");
 		mwSpaceButton.setText(s != null ? s : "My MW Space");
-		mwSpaceButton.setHorizontalAlignment(SwingConstants.CENTER);
-		mwSpaceButton.setPreferredSize(BUTTON_DIMENSION);
-		if (!Modeler.isMac()) {
-			mwSpaceButton.setBorderPainted(false);
-			mwSpaceButton.setFocusPainted(false);
-		}
 		mwSpaceButton.setToolTipText("Click to enter my MW Space");
-		mwSpaceButton.setRequestFocusEnabled(false);
 		mwSpaceButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				page.getNavigator().visitLocation(Modeler.getContextRoot() + "home.jsp?client=mw");
 			}
 		});
-		if (Modeler.showToolBarText) {
-			mwSpaceButton.setMargin(ZERO_INSETS);
-			int w = mwSpaceButton.getFontMetrics(mwSpaceButton.getFont()).stringWidth(mwSpaceButton.getText());
-			w += mwSpaceButton.getIconTextGap();
-			w += mwSpaceButton.getIcon().getIconWidth();
-			mwSpaceButton.setPreferredSize(new Dimension(w + 10, BUTTON_DIMENSION.height));
-		}
-		else {
-			mwSpaceButton.setText(null);
-			mwSpaceButton.setPreferredSize(BUTTON_DIMENSION);
-			mwSpaceButton.setMargin(ZERO_INSETS);
-		}
 		tb.add(mwSpaceButton);
 		addDisabledComponentWhileLoading(mwSpaceButton);
+		Modeler.setToolBarButton(mwSpaceButton);
 
 		return tb;
 
@@ -1157,91 +996,42 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		tb.putClientProperty("JToolBar.isRollover", Boolean.TRUE);
 
 		cutButton = new JButton(page.getAction(DefaultEditorKit.cutAction));
-		cutButton.setOpaque(false);
-		cutButton.setHorizontalAlignment(SwingConstants.CENTER);
 		cutButton.setIcon(new ImageIcon(getClass().getResource("images/cut.png")));
 		cutButton.setText(null);
-		cutButton.setPreferredSize(BUTTON_DIMENSION);
-		cutButton.setMargin(ZERO_INSETS);
-		if (!Modeler.isMac()) {
-			cutButton.setBorderPainted(false);
-			cutButton.setFocusPainted(false);
-		}
-		cutButton.setRequestFocusEnabled(false);
 		cutButton.setToolTipText("Cut");
 		tb.add(cutButton);
+		Modeler.setToolBarButton(cutButton);
 
 		copyButton = new JButton(page.getAction(DefaultEditorKit.copyAction));
-		copyButton.setOpaque(false);
-		copyButton.setHorizontalAlignment(SwingConstants.CENTER);
 		copyButton.setIcon(new ImageIcon(getClass().getResource("images/copy.png")));
 		copyButton.setText(null);
-		copyButton.setPreferredSize(BUTTON_DIMENSION);
-		copyButton.setMargin(ZERO_INSETS);
-		if (!Modeler.isMac()) {
-			copyButton.setBorderPainted(false);
-			copyButton.setFocusPainted(false);
-		}
-		copyButton.setRequestFocusEnabled(false);
 		copyButton.setToolTipText("Copy");
 		tb.add(copyButton);
+		Modeler.setToolBarButton(copyButton);
 
 		pasteButton = new JButton(page.getAction(DefaultEditorKit.pasteAction));
-		pasteButton.setOpaque(false);
-		pasteButton.setHorizontalAlignment(SwingConstants.CENTER);
 		pasteButton.setIcon(new ImageIcon(getClass().getResource("images/paste.png")));
 		pasteButton.setText(null);
-		pasteButton.setPreferredSize(BUTTON_DIMENSION);
-		pasteButton.setMargin(ZERO_INSETS);
-		if (!Modeler.isMac()) {
-			pasteButton.setBorderPainted(false);
-			pasteButton.setFocusPainted(false);
-		}
-		pasteButton.setRequestFocusEnabled(false);
 		pasteButton.setToolTipText("Paste");
 		tb.add(pasteButton);
+		Modeler.setToolBarButton(pasteButton);
 
 		JButton button = new JButton(page.getAction(Page.UNDO));
-		button.setOpaque(false);
-		button.setHorizontalAlignment(SwingConstants.CENTER);
 		button.setIcon(new ImageIcon(getClass().getResource("images/undo.png")));
 		button.setText(null);
-		button.setPreferredSize(BUTTON_DIMENSION);
-		button.setMargin(ZERO_INSETS);
-		if (!Modeler.isMac()) {
-			button.setBorderPainted(false);
-			button.setFocusPainted(false);
-		}
-		button.setRequestFocusEnabled(false);
 		tb.add(button);
+		Modeler.setToolBarButton(button);
 
 		button = new JButton(page.getAction(Page.REDO));
-		button.setOpaque(false);
-		button.setHorizontalAlignment(SwingConstants.CENTER);
 		button.setText(null);
 		button.setIcon(new ImageIcon(getClass().getResource("images/redo.png")));
-		button.setPreferredSize(BUTTON_DIMENSION);
-		button.setMargin(ZERO_INSETS);
-		if (!Modeler.isMac()) {
-			button.setBorderPainted(false);
-			button.setFocusPainted(false);
-		}
-		button.setRequestFocusEnabled(false);
 		tb.add(button);
+		Modeler.setToolBarButton(button);
 
 		tb.add(new JLabel(Modeler.toolBarSeparatorIcon));
 
 		button = new JButton(new ImageIcon(getClass().getResource("images/bgfill.png")));
-		button.setOpaque(false);
-		button.setHorizontalAlignment(SwingConstants.CENTER);
-		button.setPreferredSize(BUTTON_DIMENSION);
-		button.setMargin(ZERO_INSETS);
-		if (!Modeler.isMac()) {
-			button.setBorderPainted(false);
-			button.setFocusPainted(false);
-		}
 		button.setToolTipText("Set background");
-		button.setRequestFocusEnabled(false);
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (backgroundPopupMenu == null)
@@ -1250,18 +1040,10 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 			}
 		});
 		tb.add(button);
+		Modeler.setToolBarButton(button);
 
 		button = new JButton(new ImageIcon(getClass().getResource("images/insert_model.png")));
-		button.setOpaque(false);
-		button.setHorizontalAlignment(SwingConstants.CENTER);
-		button.setPreferredSize(BUTTON_DIMENSION);
-		button.setMargin(ZERO_INSETS);
-		if (!Modeler.isMac()) {
-			button.setBorderPainted(false);
-			button.setFocusPainted(false);
-		}
 		button.setToolTipText("Insert a model component");
-		button.setRequestFocusEnabled(false);
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (insertComponentPopupMenu == null)
@@ -1270,135 +1052,72 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 			}
 		});
 		tb.add(button);
+		Modeler.setToolBarButton(button);
 
 		inputImageButton = new JButton(page.getAction("Input Image"));
-		inputImageButton.setOpaque(false);
 		inputImageButton.setIcon(new ImageIcon(getClass().getResource("images/insert_picture.png")));
-		inputImageButton.setHorizontalAlignment(SwingConstants.CENTER);
 		inputImageButton.setText(null);
 		inputImageButton.setToolTipText("Insert an image");
-		inputImageButton.setPreferredSize(BUTTON_DIMENSION);
-		inputImageButton.setMargin(ZERO_INSETS);
-		if (!Modeler.isMac()) {
-			inputImageButton.setBorderPainted(false);
-			inputImageButton.setFocusPainted(false);
-		}
-		inputImageButton.setRequestFocusEnabled(false);
 		tb.add(inputImageButton);
+		Modeler.setToolBarButton(inputImageButton);
 
 		tb.add(new JLabel(Modeler.toolBarSeparatorIcon));
 
 		button = new JButton(page.getAction(Page.INSERT_COMPONENT));
-		button.setOpaque(false);
 		button.setText(null);
 		button.setName("Text Box");
 		button.setToolTipText("Insert a text box");
 		button.setIcon(new ImageIcon(getClass().getResource("text/images/text_box.png")));
-		button.setHorizontalAlignment(SwingConstants.CENTER);
-		button.setPreferredSize(BUTTON_DIMENSION);
-		button.setMargin(ZERO_INSETS);
-		if (!Modeler.isMac()) {
-			button.setBorderPainted(false);
-			button.setFocusPainted(false);
-		}
-		button.setRequestFocusEnabled(false);
 		tb.add(button);
+		Modeler.setToolBarButton(button);
 
 		button = new JButton(page.getAction(Page.INSERT_COMPONENT));
-		button.setOpaque(false);
 		button.setText(null);
 		button.setName("Multiple Choice");
 		button.setToolTipText("Insert a multiple choice");
 		button.setIcon(new ImageIcon(getClass().getResource("text/images/multi_choice.png")));
-		button.setHorizontalAlignment(SwingConstants.CENTER);
-		button.setPreferredSize(BUTTON_DIMENSION);
-		button.setMargin(ZERO_INSETS);
-		if (!Modeler.isMac()) {
-			button.setBorderPainted(false);
-			button.setFocusPainted(false);
-		}
-		button.setRequestFocusEnabled(false);
 		tb.add(button);
+		Modeler.setToolBarButton(button);
 
 		button = new JButton(page.getAction(Page.INSERT_COMPONENT));
-		button.setOpaque(false);
 		button.setIcon(new ImageIcon(getClass().getResource("text/images/image_question.png")));
 		button.setText(null);
 		button.setName("Image Question");
 		button.setToolTipText("Insert an image question");
-		button.setHorizontalAlignment(SwingConstants.CENTER);
-		button.setPreferredSize(BUTTON_DIMENSION);
-		button.setMargin(ZERO_INSETS);
-		if (!Modeler.isMac()) {
-			button.setBorderPainted(false);
-			button.setFocusPainted(false);
-		}
-		button.setRequestFocusEnabled(false);
 		tb.add(button);
+		Modeler.setToolBarButton(button);
 
 		button = new JButton(page.getAction(Page.INSERT_COMPONENT));
-		button.setOpaque(false);
 		button.setIcon(new ImageIcon(getClass().getResource("text/images/text_area.png")));
 		button.setText(null);
 		button.setName("User Input Text Area");
 		button.setToolTipText("Insert a user-input text area");
-		button.setHorizontalAlignment(SwingConstants.CENTER);
-		button.setPreferredSize(BUTTON_DIMENSION);
-		button.setMargin(ZERO_INSETS);
-		if (!Modeler.isMac()) {
-			button.setBorderPainted(false);
-			button.setFocusPainted(false);
-		}
-		button.setRequestFocusEnabled(false);
 		tb.add(button);
+		Modeler.setToolBarButton(button);
 
 		button = new JButton(page.getAction(Page.INSERT_COMPONENT));
-		button.setOpaque(false);
 		button.setText(null);
 		button.setName("Table");
 		button.setToolTipText("Insert a table");
 		button.setIcon(new ImageIcon(getClass().getResource("text/images/table.png")));
-		button.setHorizontalAlignment(SwingConstants.CENTER);
-		button.setPreferredSize(BUTTON_DIMENSION);
-		button.setMargin(ZERO_INSETS);
-		if (!Modeler.isMac()) {
-			button.setBorderPainted(false);
-			button.setFocusPainted(false);
-		}
-		button.setRequestFocusEnabled(false);
 		tb.add(button);
+		Modeler.setToolBarButton(button);
 
 		button = new JButton(page.getAction(Page.INSERT_COMPONENT));
-		button.setOpaque(false);
 		button.setText(null);
 		button.setName("Applet");
 		button.setToolTipText("Insert an applet");
 		button.setIcon(new ImageIcon(getClass().getResource("text/images/applet.png")));
-		button.setHorizontalAlignment(SwingConstants.CENTER);
-		button.setPreferredSize(BUTTON_DIMENSION);
-		button.setMargin(ZERO_INSETS);
-		if (!Modeler.isMac()) {
-			button.setBorderPainted(false);
-			button.setFocusPainted(false);
-		}
-		button.setRequestFocusEnabled(false);
 		tb.add(button);
+		Modeler.setToolBarButton(button);
 
 		button = new JButton(page.getAction(Page.INSERT_COMPONENT));
-		button.setOpaque(false);
 		button.setText(null);
 		button.setName("Plugin");
 		button.setToolTipText("Insert a plugin");
 		button.setIcon(new ImageIcon(getClass().getResource("text/images/plugin.png")));
-		button.setHorizontalAlignment(SwingConstants.CENTER);
-		button.setPreferredSize(BUTTON_DIMENSION);
-		button.setMargin(ZERO_INSETS);
-		if (!Modeler.isMac()) {
-			button.setBorderPainted(false);
-			button.setFocusPainted(false);
-		}
-		button.setRequestFocusEnabled(false);
 		tb.add(button);
+		Modeler.setToolBarButton(button);
 
 		return tb;
 
@@ -1484,52 +1203,28 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		tb.add(fontColorComboBox);
 
 		boldCheckBox = new JCheckBox(page.getAction(Page.BOLD));
-		boldCheckBox.setOpaque(false);
-		boldCheckBox.setHorizontalAlignment(SwingConstants.CENTER);
 		boldCheckBox.setIcon(new ImageIcon(getClass().getResource("text/images/bold.png")));
 		boldCheckBox.setText(null);
-		boldCheckBox.setPreferredSize(BUTTON_DIMENSION);
-		boldCheckBox.setMargin(ZERO_INSETS);
-		if (!Modeler.isMac()) {
-			boldCheckBox.setBorderPainted(false);
-			boldCheckBox.setFocusPainted(false);
-		}
 		boldCheckBox.setToolTipText("Bold");
-		boldCheckBox.setRequestFocusEnabled(false);
 		boldCheckBox.addItemListener(boldAction);
 		tb.add(boldCheckBox);
+		Modeler.setToolBarButton(boldCheckBox);
 
 		italicCheckBox = new JCheckBox(page.getAction(Page.ITALIC));
-		italicCheckBox.setOpaque(false);
-		italicCheckBox.setHorizontalAlignment(SwingConstants.CENTER);
 		italicCheckBox.setIcon(new ImageIcon(getClass().getResource("text/images/italic.png")));
 		italicCheckBox.setText(null);
-		italicCheckBox.setPreferredSize(BUTTON_DIMENSION);
-		italicCheckBox.setMargin(ZERO_INSETS);
-		if (!Modeler.isMac()) {
-			italicCheckBox.setBorderPainted(false);
-			italicCheckBox.setFocusPainted(false);
-		}
 		italicCheckBox.setToolTipText("Italic");
-		italicCheckBox.setRequestFocusEnabled(false);
 		italicCheckBox.addItemListener(italicAction);
 		tb.add(italicCheckBox);
+		Modeler.setToolBarButton(italicCheckBox);
 
 		underlineCheckBox = new JCheckBox(page.getAction(Page.UNDERLINE));
-		underlineCheckBox.setOpaque(false);
-		underlineCheckBox.setHorizontalAlignment(SwingConstants.CENTER);
 		underlineCheckBox.setIcon(new ImageIcon(getClass().getResource("text/images/underline.png")));
 		underlineCheckBox.setText(null);
-		underlineCheckBox.setPreferredSize(BUTTON_DIMENSION);
-		underlineCheckBox.setMargin(ZERO_INSETS);
-		if (!Modeler.isMac()) {
-			underlineCheckBox.setBorderPainted(false);
-			underlineCheckBox.setFocusPainted(false);
-		}
 		underlineCheckBox.setToolTipText("Underline");
-		underlineCheckBox.setRequestFocusEnabled(false);
 		underlineCheckBox.addItemListener(underlineAction);
 		tb.add(underlineCheckBox);
+		Modeler.setToolBarButton(underlineCheckBox);
 		tb.addSeparator();
 
 		tb.add(new JLabel(Modeler.toolBarSeparatorIcon));
@@ -1537,130 +1232,66 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		ButtonGroup bg = new ButtonGroup();
 
 		leftAlignmentCheckBox = new JCheckBox(page.getAction(Page.LEFT_ALIGN));
-		leftAlignmentCheckBox.setOpaque(false);
-		leftAlignmentCheckBox.setHorizontalAlignment(SwingConstants.CENTER);
 		leftAlignmentCheckBox.setIcon(new ImageIcon(getClass().getResource("text/images/align_left.png")));
 		leftAlignmentCheckBox.setText(null);
-		leftAlignmentCheckBox.setPreferredSize(BUTTON_DIMENSION);
-		leftAlignmentCheckBox.setMargin(ZERO_INSETS);
-		if (!Modeler.isMac()) {
-			leftAlignmentCheckBox.setBorderPainted(false);
-			leftAlignmentCheckBox.setFocusPainted(false);
-		}
 		leftAlignmentCheckBox.setToolTipText("Align paragraph left");
-		leftAlignmentCheckBox.setRequestFocusEnabled(false);
 		leftAlignmentCheckBox.addItemListener(leftAlignmentAction);
 		tb.add(leftAlignmentCheckBox);
 		bg.add(leftAlignmentCheckBox);
+		Modeler.setToolBarButton(leftAlignmentCheckBox);
 
 		centerAlignmentCheckBox = new JCheckBox(page.getAction(Page.CENTER_ALIGN));
-		centerAlignmentCheckBox.setOpaque(false);
-		centerAlignmentCheckBox.setHorizontalAlignment(SwingConstants.CENTER);
 		centerAlignmentCheckBox.setIcon(new ImageIcon(getClass().getResource("text/images/align_center.png")));
 		centerAlignmentCheckBox.setText(null);
-		centerAlignmentCheckBox.setPreferredSize(BUTTON_DIMENSION);
-		centerAlignmentCheckBox.setMargin(ZERO_INSETS);
-		if (!Modeler.isMac()) {
-			centerAlignmentCheckBox.setBorderPainted(false);
-			centerAlignmentCheckBox.setFocusPainted(false);
-		}
 		centerAlignmentCheckBox.setToolTipText("Align paragraph center");
-		centerAlignmentCheckBox.setRequestFocusEnabled(false);
 		centerAlignmentCheckBox.addItemListener(centerAlignmentAction);
 		tb.add(centerAlignmentCheckBox);
 		bg.add(centerAlignmentCheckBox);
+		Modeler.setToolBarButton(centerAlignmentCheckBox);
 
 		rightAlignmentCheckBox = new JCheckBox(page.getAction(Page.RIGHT_ALIGN));
-		rightAlignmentCheckBox.setOpaque(false);
-		rightAlignmentCheckBox.setHorizontalAlignment(SwingConstants.CENTER);
 		rightAlignmentCheckBox.setIcon(new ImageIcon(getClass().getResource("text/images/align_right.png")));
 		rightAlignmentCheckBox.setText(null);
-		rightAlignmentCheckBox.setPreferredSize(BUTTON_DIMENSION);
-		rightAlignmentCheckBox.setMargin(ZERO_INSETS);
-		if (!Modeler.isMac()) {
-			rightAlignmentCheckBox.setBorderPainted(false);
-			rightAlignmentCheckBox.setFocusPainted(false);
-		}
 		rightAlignmentCheckBox.setToolTipText("Align paragraph right");
-		rightAlignmentCheckBox.setRequestFocusEnabled(false);
 		rightAlignmentCheckBox.addItemListener(rightAlignmentAction);
 		tb.add(rightAlignmentCheckBox);
 		bg.add(rightAlignmentCheckBox);
+		Modeler.setToolBarButton(rightAlignmentCheckBox);
 		tb.addSeparator();
 
 		bulletCheckBox = new JCheckBox(page.getAction(Page.BULLET));
-		bulletCheckBox.setOpaque(false);
-		bulletCheckBox.setHorizontalAlignment(SwingConstants.CENTER);
 		bulletCheckBox.setIcon(new ImageIcon(getClass().getResource("text/images/add_bullets.png")));
 		bulletCheckBox.setText(null);
-		bulletCheckBox.setPreferredSize(BUTTON_DIMENSION);
-		bulletCheckBox.setMargin(ZERO_INSETS);
-		if (!Modeler.isMac()) {
-			bulletCheckBox.setBorderPainted(false);
-			bulletCheckBox.setFocusPainted(false);
-		}
 		bulletCheckBox.setToolTipText("Add bullet to paragraph");
-		bulletCheckBox.setRequestFocusEnabled(false);
 		bulletCheckBox.addItemListener(bulletAction);
 		tb.add(bulletCheckBox);
+		Modeler.setToolBarButton(bulletCheckBox);
 
 		JButton button = new JButton(page.getAction(Page.INCREASE_INDENT));
-		button.setOpaque(false);
-		button.setHorizontalAlignment(SwingConstants.CENTER);
 		button.setIcon(new ImageIcon(getClass().getResource("text/images/increase_indentation.png")));
 		button.setText(null);
-		button.setPreferredSize(BUTTON_DIMENSION);
-		button.setMargin(ZERO_INSETS);
-		if (!Modeler.isMac()) {
-			button.setBorderPainted(false);
-			button.setFocusPainted(false);
-		}
 		button.setToolTipText("Increase indentation");
-		button.setRequestFocusEnabled(false);
 		tb.add(button);
+		Modeler.setToolBarButton(button);
 
 		button = new JButton(page.getAction(Page.DECREASE_INDENT));
-		button.setOpaque(false);
-		button.setHorizontalAlignment(SwingConstants.CENTER);
 		button.setIcon(new ImageIcon(getClass().getResource("text/images/decrease_indentation.png")));
 		button.setText(null);
-		button.setPreferredSize(BUTTON_DIMENSION);
-		button.setMargin(ZERO_INSETS);
-		if (!Modeler.isMac()) {
-			button.setBorderPainted(false);
-			button.setFocusPainted(false);
-		}
 		button.setToolTipText("Decrease indentation");
-		button.setRequestFocusEnabled(false);
 		tb.add(button);
+		Modeler.setToolBarButton(button);
 
 		tb.add(new JLabel(Modeler.toolBarSeparatorIcon));
 
 		button = new JButton(page.getAction("Hyperlink"));
-		button.setOpaque(false);
-		button.setHorizontalAlignment(SwingConstants.CENTER);
 		if (Modeler.showToolBarText) {
-			button.setMargin(ZERO_INSETS);
-			int w = button.getFontMetrics(button.getFont()).stringWidth(button.getText());
-			w += button.getIconTextGap();
-			w += button.getIcon().getIconWidth();
-			button.setPreferredSize(new Dimension(w + 10, BUTTON_DIMENSION.height));
 			String s = Modeler.getInternationalText("HyperlinkButton");
 			if (s != null)
 				button.setText(s);
 		}
-		else {
-			button.setText(null);
-			button.setPreferredSize(BUTTON_DIMENSION);
-			button.setMargin(ZERO_INSETS);
-		}
-		if (!Modeler.isMac()) {
-			button.setBorderPainted(false);
-			button.setFocusPainted(false);
-		}
-		button.setRequestFocusEnabled(false);
 		addEnabledComponentWhenEditable(button);
 		tb.add(button);
+		Modeler.setToolBarButton(button);
 
 		return tb;
 
