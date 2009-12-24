@@ -5594,7 +5594,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		};
 		hyperlinkAction.putValue(Action.NAME, "Hyperlink");
 		hyperlinkAction.putValue(Action.SHORT_DESCRIPTION, "Add a hyperlink to the selected area");
-		hyperlinkAction.putValue(Action.SMALL_ICON, new ImageIcon(getClass().getResource("images/Hyperlink.gif")));
+		hyperlinkAction.putValue(Action.SMALL_ICON, new ImageIcon(getClass().getResource("images/hyperlink.png")));
 		hyperlinkAction.putValue(Action.ACCELERATOR_KEY, mac ? KeyStroke.getKeyStroke(KeyEvent.VK_K,
 				KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_K, KeyEvent.CTRL_MASK, true));
 
