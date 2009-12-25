@@ -214,7 +214,7 @@ public class Navigator {
 		};
 		homeAction.putValue(Action.NAME, HOME);
 		homeAction.putValue(Action.SHORT_DESCRIPTION, "Display home page");
-		homeAction.putValue(Action.SMALL_ICON, new ImageIcon(getClass().getResource("images/Home.gif")));
+		homeAction.putValue(Action.SMALL_ICON, new ImageIcon(getClass().getResource("images/home.png")));
 		homeAction
 				.putValue(Action.ACCELERATOR_KEY, Modeler.isMac() ? KeyStroke.getKeyStroke(KeyEvent.VK_H,
 						KeyEvent.META_MASK | KeyEvent.SHIFT_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_HOME,
@@ -586,7 +586,7 @@ public class Navigator {
 			setEnabled(false);
 			putValue(NAME, BACK);
 			putValue(SHORT_DESCRIPTION, "Go to previous page");
-			putValue(SMALL_ICON, new ImageIcon(getClass().getResource("images/Back.gif")));
+			putValue(SMALL_ICON, new ImageIcon(getClass().getResource("images/back.png")));
 			putValue(ACCELERATOR_KEY, Modeler.isMac() ? KeyStroke.getKeyStroke(KeyEvent.VK_OPEN_BRACKET,
 					KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.ALT_MASK));
 		}
@@ -621,7 +621,7 @@ public class Navigator {
 			setEnabled(false);
 			putValue(NAME, FORWARD);
 			putValue(SHORT_DESCRIPTION, "Go to next page");
-			putValue(SMALL_ICON, new ImageIcon(getClass().getResource("images/Forward.gif")));
+			putValue(SMALL_ICON, new ImageIcon(getClass().getResource("images/forward.png")));
 			putValue(ACCELERATOR_KEY, Modeler.isMac() ? KeyStroke.getKeyStroke(KeyEvent.VK_CLOSE_BRACKET,
 					KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.ALT_MASK));
 		}

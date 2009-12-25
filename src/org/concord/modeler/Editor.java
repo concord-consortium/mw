@@ -122,7 +122,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 	private static final Border SELECTED_BORDER = new BasicBorders.ButtonBorder(Color.lightGray, Color.white,
 			Color.black, Color.gray);
 	private final static Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
-	private static ImageIcon noEditIcon, editIcon;
+	private static ImageIcon editIcon, viewIcon;
 	private static Icon toolBarHeaderIcon = new ImageIcon(Editor.class.getResource("images/ToolBarHeaderBar.gif"));
 	private static boolean initialized;
 
@@ -187,10 +187,10 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 			actionNotifier.setParentComponent(this);
 		}
 
-		if (noEditIcon == null)
-			noEditIcon = new ImageIcon(getClass().getResource("images/NoEdit.gif"));
 		if (editIcon == null)
 			editIcon = new ImageIcon(getClass().getResource("images/edit.png"));
+		if (viewIcon == null)
+			viewIcon = new ImageIcon(getClass().getResource("images/view.png"));
 
 		desktopPane = new JDesktopPane();
 		desktopPane.setBackground(Color.white);
@@ -280,7 +280,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(Editor.this),
 							"A page that is not on your disk cannot be edited.", "Error", JOptionPane.ERROR_MESSAGE);
 					setEditable(false);
-					editCheckBox.setToolTipText("Set editable");
+					editCheckBox.setToolTipText(isEditable() ? "Go to the viewing mode" : "Go to the editing mode");
 					return;
 				}
 				setEditable(editCheckBox.isSelected());
@@ -854,9 +854,8 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 				editCheckBox.addActionListener(lockAction);
 				setToolBar(b);
 				enableActions(b);
-				editCheckBox.setToolTipText(b ? "Click to protect this page from changing"
-						: "Click to make this page editable");
-				statusBar.tipBar.setText(b ? "Editor mode" : "Viewer mode");
+				editCheckBox.setToolTipText(b ? "Go to the viewing mode" : "Go to the editing mode");
+				statusBar.tipBar.setText(b ? "Editing" : "Viewing");
 				notifyEditorListeners(new EditorEvent(Editor.this, b ? EditorEvent.EDITOR_ENABLED
 						: EditorEvent.EDITOR_DISABLED));
 			}
@@ -891,12 +890,12 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		if (!Modeler.isMac())
 			tb.add(new JLabel(toolBarHeaderIcon));
 
-		editCheckBox = new JCheckBox(noEditIcon);
+		editCheckBox = new JCheckBox(editIcon);
 		if (Modeler.showToolBarText) {
-			String s = Modeler.getInternationalText("EditCheckBox");
-			editCheckBox.setText(s != null ? s : "Editor");
+			String s = Modeler.getInternationalText("EditingMode");
+			editCheckBox.setText(s != null ? s : "Edit");
 		}
-		editCheckBox.setToolTipText("Click to make this page editable");
+		editCheckBox.setToolTipText("Go to the editing mode");
 		editCheckBox.setSelected(false);
 		editCheckBox.addActionListener(lockAction);
 		addDisabledComponentWhileLoading(editCheckBox);
@@ -1732,7 +1731,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 					setToolbarButtons();
 					enableDisabledComponentsWhileLoading(true);
 					statusBar.getProgressBar().setIndeterminate(false);
-					statusBar.tipBar.setText(editCheckBox.isSelected() ? "Editor mode" : "Loaded");
+					statusBar.tipBar.setText(editCheckBox.isSelected() ? "Editing" : "Loaded");
 					page.requestFocusInWindow();
 					setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 					page.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
@@ -1839,12 +1838,22 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 
 	private void setToolBar(boolean editable) {
 		if (editable) {
-			editCheckBox.setIcon(editIcon);
+			editCheckBox.setIcon(viewIcon);
+			if (Modeler.showToolBarText) {
+				String s = Modeler.getInternationalText("ViewingMode");
+				editCheckBox.setText(s != null ? s : "View");
+			}
+			editCheckBox.setToolTipText("Go to the viewing mode");
 			toolBarPanel.add(toolBar[1], BorderLayout.SOUTH);
 			toolBar[0].add(toolBar[2]);
 		}
 		else {
-			editCheckBox.setIcon(noEditIcon);
+			editCheckBox.setIcon(editIcon);
+			if (Modeler.showToolBarText) {
+				String s = Modeler.getInternationalText("EditingMode");
+				editCheckBox.setText(s != null ? s : "Edit");
+			}
+			editCheckBox.setToolTipText("Go to the editing mode");
 			toolBarPanel.remove(toolBar[1]);
 			toolBar[0].remove(toolBar[2]);
 		}
