@@ -5396,7 +5396,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		};
 		refreshAction.putValue(Action.NAME, REFRESH);
 		refreshAction.putValue(Action.SHORT_DESCRIPTION, "Reload page");
-		refreshAction.putValue(Action.SMALL_ICON, new ImageIcon(Page.class.getResource("images/Refresh.gif")));
+		refreshAction.putValue(Action.SMALL_ICON, new ImageIcon(Page.class.getResource("images/reload.png")));
 		refreshAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_R);
 		refreshAction.putValue(Action.ACCELERATOR_KEY, mac ? KeyStroke.getKeyStroke(KeyEvent.VK_R, KeyEvent.META_MASK,
 				true) : KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0, true));

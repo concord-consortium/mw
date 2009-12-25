@@ -2617,7 +2617,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		if (text != null && !text.equals("")) {
 			FontMetrics fm = b.getFontMetrics(b.getFont());
 			int w = fm.stringWidth(text) + b.getIconTextGap() + b.getIcon().getIconWidth();
-			b.setPreferredSize(new Dimension(w + 10, 26));
+			b.setPreferredSize(new Dimension(w + 12, 26));
 		}
 		else {
 			b.setPreferredSize(new Dimension(26, 26));
