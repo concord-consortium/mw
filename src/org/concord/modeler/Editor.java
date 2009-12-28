@@ -590,8 +590,8 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		Initializer.sharedInstance().setMessage("Creating Editor's tool bar 3...");
 		toolBar[2] = createToolBar3();
 
-		toolBarPanel = new BackgroundPanel(new BorderLayout(0, 0), new ImageIcon(Modeler.class
-				.getResource("images/background.png")));
+		toolBarPanel = new BackgroundPanel(new BorderLayout(0, 0), new ImageIcon(Modeler.class.getResource(Modeler
+				.isMac() ? "images/toolbar_bg_mac.png" : "images/toolbar_bg_win.png")));
 		toolBarPanel.setBorder(BorderFactory.createEmptyBorder());
 		toolBarPanel.add(toolBar[0], BorderLayout.CENTER);
 
@@ -950,7 +950,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		addDisabledComponentWhileLoading(snapshotButton);
 		Modeler.setToolBarButton(snapshotButton, true);
 
-		submitCommentButton = new JButton(new ImageIcon(getClass().getResource("images/EditComment.gif")));
+		submitCommentButton = new JButton(new ImageIcon(getClass().getResource("images/comment.png")));
 		String s = Modeler.getInternationalText("MakeCommentButton");
 		submitCommentButton.setText(s != null ? s : "Comment");
 		submitCommentButton.setToolTipText("Make comments on current page");
@@ -959,14 +959,14 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		addDisabledComponentWhileLoading(submitCommentButton);
 		Modeler.setToolBarButton(submitCommentButton);
 
-		viewCommentButton = new JButton(new ImageIcon(getClass().getResource("images/ViewComment.gif")));
+		viewCommentButton = new JButton(new ImageIcon(getClass().getResource("images/view_comment.png")));
 		viewCommentButton.setToolTipText("Show discussions about current page");
 		viewCommentButton.addActionListener(serverGate.viewCommentAction);
 		tb.add(viewCommentButton);
 		addDisabledComponentWhileLoading(viewCommentButton);
 		Modeler.setToolBarButton(viewCommentButton);
 
-		mwSpaceButton = new JButton(new ImageIcon(getClass().getResource("images/webmw.gif")));
+		mwSpaceButton = new JButton(new ImageIcon(getClass().getResource("images/mwspace.png")));
 		s = Modeler.getInternationalText("MyMwSpace");
 		mwSpaceButton.setText(s != null ? s : "My MW Space");
 		mwSpaceButton.setToolTipText("Click to enter my MW Space");
