@@ -2626,7 +2626,8 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 
 	void createToolBar() {
 
-		toolBar = new BackgroundToolBar(new ImageIcon(Modeler.class.getResource("images/background.png")));
+		toolBar = new BackgroundToolBar(new ImageIcon(Modeler.class.getResource(IS_MAC ? "images/toolbar_bg_mac.png"
+				: "images/toolbar_bg_win.png")));
 		toolBar.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		toolBar.setFloatable(false);
 		toolBar.setLayout(new FlowLayout(FlowLayout.LEFT, 2, 1));
