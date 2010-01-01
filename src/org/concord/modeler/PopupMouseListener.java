@@ -54,8 +54,7 @@ class PopupMouseListener extends MouseAdapter {
 			return;
 		}
 		if (popupTrigger || e.isPopupTrigger()) {
-			if (embeddable.getPopupMenu() == null)
-				embeddable.createPopupMenu();
+			embeddable.createPopupMenu();
 			embeddable.getPopupMenu().show(embeddable.getPopupMenu().getInvoker(), e.getX() + 5, e.getY() + 5);
 		}
 		e.consume();

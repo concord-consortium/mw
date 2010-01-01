@@ -178,6 +178,8 @@ public class PageRadioButton extends JRadioButton implements Embeddable, ModelCo
 	}
 
 	public void createPopupMenu() {
+		if (popupMenu != null)
+			return;
 		popupMenu = new JPopupMenu();
 		popupMenu.setInvoker(this);
 		String s = Modeler.getInternationalText("CustomizeRadioButton");

@@ -146,6 +146,8 @@ public class PageMultipleChoice extends MultipleChoice implements Embeddable, Mu
 	}
 
 	public void createPopupMenu() {
+		if (popupMenu != null)
+			return;
 		popupMenu = new JPopupMenu();
 		popupMenu.setInvoker(this);
 		String s = Modeler.getInternationalText("CustomizeMultipleChoice");

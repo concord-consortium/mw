@@ -101,8 +101,7 @@ public class PageTable extends JScrollPane implements Embeddable, AutoResizable 
 				table.setRowSelectionInterval(irow, irow);
 				int icol = table.columnAtPoint(p);
 				table.setColumnSelectionInterval(icol, icol);
-				if (popupMenu == null)
-					createPopupMenu();
+				createPopupMenu();
 				popupMenu.show(popupMenu.getInvoker(), p.x + 5, p.y + 5);
 			}
 			else {
@@ -799,6 +798,9 @@ public class PageTable extends JScrollPane implements Embeddable, AutoResizable 
 	}
 
 	public void createPopupMenu() {
+
+		if (popupMenu != null)
+			return;
 
 		popupMenu = new JPopupMenu();
 		popupMenu.setInvoker(this);

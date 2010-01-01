@@ -119,6 +119,9 @@ public class PageScriptConsole extends JPanel implements Embeddable, ModelCommun
 
 	public void createPopupMenu() {
 
+		if (popupMenu != null)
+			return;
+
 		popupMenu = new JPopupMenu();
 		popupMenu.setInvoker(this);
 

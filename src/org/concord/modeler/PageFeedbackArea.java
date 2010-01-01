@@ -109,6 +109,9 @@ public class PageFeedbackArea extends FeedbackArea implements Embeddable, AutoRe
 
 	public void createPopupMenu() {
 
+		if (popupMenu != null)
+			return;
+
 		popupMenu = new JPopupMenu();
 		popupMenu.setInvoker(this);
 

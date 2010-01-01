@@ -121,6 +121,9 @@ public class ActivityButton extends JButton implements Embeddable {
 	/** side effect of implementing Embeddable */
 	public void createPopupMenu() {
 
+		if (popupMenu != null)
+			return;
+
 		popupMenu = new JPopupMenu();
 		popupMenu.setInvoker(this);
 

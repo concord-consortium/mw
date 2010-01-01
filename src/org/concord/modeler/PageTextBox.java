@@ -393,6 +393,8 @@ public class PageTextBox extends BasicPageTextBox {
 	}
 
 	public void createPopupMenu() {
+		if (popupMenu != null)
+			return;
 		popupMenu = new JPopupMenu();
 		popupMenu.setInvoker(textBody);
 		String s = Modeler.getInternationalText("CustomizeTextBox");

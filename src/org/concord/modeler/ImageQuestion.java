@@ -454,6 +454,9 @@ public class ImageQuestion extends JPanel implements Embeddable, TransferListene
 
 	public void createPopupMenu() {
 
+		if (popupMenu != null)
+			return;
+
 		popupMenu = new JPopupMenu();
 		popupMenu.setInvoker(this);
 

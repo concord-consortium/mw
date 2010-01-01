@@ -134,6 +134,9 @@ public class PagePotentialHill extends PotentialHill implements Embeddable, Mode
 
 	public void createPopupMenu() {
 
+		if (popupMenu != null)
+			return;
+
 		popupMenu = new JPopupMenu();
 		popupMenu.setInvoker(this);
 

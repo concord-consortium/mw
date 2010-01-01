@@ -124,6 +124,8 @@ public class PageNumericBox extends JLabel implements Embeddable, ModelCommunica
 	}
 
 	public void createPopupMenu() {
+		if (popupMenu != null)
+			return;
 		popupMenu = new JPopupMenu();
 		popupMenu.setInvoker(this);
 		String s = Modeler.getInternationalText("CustomizeNumericBox");

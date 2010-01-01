@@ -269,6 +269,9 @@ public class PageXYGraph extends XYGrapher implements Embeddable, Scriptable, Mo
 
 	public void createPopupMenu() {
 
+		if (popupMenu != null)
+			return;
+
 		popupMenu = new JPopupMenu();
 		popupMenu.setInvoker(this);
 
