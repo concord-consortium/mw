@@ -139,6 +139,9 @@ public class PageGauge extends Gauge implements Embeddable, Scriptable, ModelCom
 
 	public void createPopupMenu() {
 
+		if (popupMenu != null)
+			return;
+
 		popupMenu = new JPopupMenu();
 		popupMenu.setInvoker(this);
 

@@ -828,8 +828,7 @@ public class PageMolecularViewer extends JmolContainer implements BasicModel, Em
 		}
 		setClickedAtom(selectedAtom);
 		setClickedBond(selectedBond);
-		if (popupMenu == null)
-			createPopupMenu();
+		createPopupMenu();
 		hidePopupText();
 		popupMenu.show(popupMenu.getInvoker(), x + 5, y + 5);
 	}
@@ -1136,6 +1135,9 @@ public class PageMolecularViewer extends JmolContainer implements BasicModel, Em
 	}
 
 	public void createPopupMenu() {
+
+		if (popupMenu != null)
+			return;
 
 		popupMenu = new JPopupMenu();
 		popupMenu.setInvoker(this);

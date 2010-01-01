@@ -128,6 +128,9 @@ public class PagePotentialWell extends PotentialWell implements Embeddable, Mode
 
 	public void createPopupMenu() {
 
+		if (popupMenu != null)
+			return;
+
 		popupMenu = new JPopupMenu();
 		popupMenu.setInvoker(this);
 

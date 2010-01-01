@@ -153,6 +153,8 @@ public class PageSpinner extends JComponent implements Embeddable, ModelCommunic
 	}
 
 	public void createPopupMenu() {
+		if (popupMenu != null)
+			return;
 		popupMenu = new JPopupMenu();
 		popupMenu.setInvoker(this);
 		String s = Modeler.getInternationalText("CustomizeSpinner");

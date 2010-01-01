@@ -184,6 +184,8 @@ public class PageTextField extends JPanel implements Embeddable, HtmlService, Se
 	}
 
 	public void createPopupMenu() {
+		if (popupMenu != null)
+			return;
 		popupMenu = new JPopupMenu();
 		popupMenu.setInvoker(this);
 		String s = Modeler.getInternationalText("CustomizeTextField");

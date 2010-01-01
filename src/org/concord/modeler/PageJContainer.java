@@ -62,6 +62,8 @@ public class PageJContainer extends PagePlugin {
 	private PluginScripter scripter;
 	private List<Download> downloadJobs;
 	private volatile boolean downloadCancelled;
+	private Object popInvoker;
+	private int permanentMenuItemCount;
 
 	public PageJContainer() {
 		super();
@@ -559,51 +561,76 @@ public class PageJContainer extends PagePlugin {
 
 	public void createPopupMenu() {
 
-		popupMenu = new JPopupMenu();
-		popupMenu.setInvoker(this);
+		boolean toPack = false;
+		if (popupMenu == null) {
 
-		String s = Modeler.getInternationalText("TakeSnapshot");
-		JMenuItem mi = new JMenuItem((s != null ? s : "Take a Snapshot") + "...");
-		mi.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				snapshot();
-			}
-		});
-		popupMenu.add(mi);
-		popupMenu.addSeparator();
+			popupMenu = new JPopupMenu();
+			popupMenu.setInvoker(this);
 
-		s = Modeler.getInternationalText("CustomizePlugin");
-		final JMenuItem miCustom = new JMenuItem((s != null ? s : "Customize This Plugin") + "...");
-		miCustom.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (maker == null) {
-					maker = new PageJContainerMaker(PageJContainer.this);
+			String s = Modeler.getInternationalText("TakeSnapshot");
+			JMenuItem mi = new JMenuItem((s != null ? s : "Take a Snapshot") + "...");
+			mi.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					snapshot();
 				}
-				else {
-					maker.setJContainer(PageJContainer.this);
+			});
+			popupMenu.add(mi);
+			permanentMenuItemCount++;
+			popupMenu.addSeparator();
+			permanentMenuItemCount++;
+
+			s = Modeler.getInternationalText("CustomizePlugin");
+			mi = new JMenuItem((s != null ? s : "Customize This Plugin") + "...");
+			mi.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if (maker == null) {
+						maker = new PageJContainerMaker(PageJContainer.this);
+					}
+					else {
+						maker.setJContainer(PageJContainer.this);
+					}
+					maker.invoke(page);
 				}
-				maker.invoke(page);
-			}
-		});
-		popupMenu.add(miCustom);
+			});
+			popupMenu.add(mi);
+			permanentMenuItemCount++;
+			popupMenu.putClientProperty("customize", mi);
 
-		s = Modeler.getInternationalText("RemovePlugin");
-		final JMenuItem miRemove = new JMenuItem(s != null ? s : "Remove This Plugin");
-		miRemove.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				page.removeComponent(PageJContainer.this);
-			}
-		});
-		popupMenu.add(miRemove);
+			s = Modeler.getInternationalText("RemovePlugin");
+			mi = new JMenuItem(s != null ? s : "Remove This Plugin");
+			mi.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					page.removeComponent(PageJContainer.this);
+				}
+			});
+			popupMenu.add(mi);
+			permanentMenuItemCount++;
+			popupMenu.putClientProperty("remove", mi);
 
-		s = Modeler.getInternationalText("CopyPlugin");
-		mi = new JMenuItem(s != null ? s : "Copy This Plugin");
-		mi.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				page.copyComponent(PageJContainer.this);
-			}
-		});
-		popupMenu.add(mi);
+			s = Modeler.getInternationalText("CopyPlugin");
+			mi = new JMenuItem(s != null ? s : "Copy This Plugin");
+			mi.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					page.copyComponent(PageJContainer.this);
+				}
+			});
+			popupMenu.add(mi);
+			permanentMenuItemCount++;
+
+			popupMenu.addPopupMenuListener(new PopupMenuListener() {
+				public void popupMenuCanceled(PopupMenuEvent e) {
+				}
+
+				public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+					((JMenuItem) popupMenu.getClientProperty("customize")).setEnabled(isChangable());
+					((JMenuItem) popupMenu.getClientProperty("remove")).setEnabled(isChangable());
+				}
+
+				public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+				}
+			});
+
+		}
 
 		if (plugin != null) {
 			JPopupMenu pp = null;
@@ -613,34 +640,39 @@ public class PageJContainer extends PagePlugin {
 			catch (Throwable e) {
 				e.printStackTrace();
 			}
+			/*
+			 * if the plugin instance has changed, the old popup menu from the old instance must be removed and the new
+			 * popup menu from the new instance must be added. If the old popup isn't removed, memory leak will occur.
+			 * If the new popup isn't added, the popup menu will not work with the new instance any more.
+			 */
 			if (pp != null) {
-				popupMenu.addSeparator();
-				int n = pp.getComponentCount();
-				if (n > 0) {
-					Component[] c = new Component[n];
-					for (int i = 0; i < n; i++) {
-						c[i] = pp.getComponent(i);
+				if (popInvoker != pp.getInvoker()) {
+					int n = pp.getComponentCount();
+					if (n > 0) {
+						popInvoker = pp.getInvoker();
+						Component[] c;
+						int m = popupMenu.getComponentCount();
+						if (m > permanentMenuItemCount) {
+							c = new Component[m - permanentMenuItemCount];
+							for (int i = permanentMenuItemCount; i < m; i++)
+								c[i - permanentMenuItemCount] = popupMenu.getComponent(i);
+							for (Component x : c)
+								popupMenu.remove(x);
+						}
+						popupMenu.addSeparator();
+						c = new Component[n];
+						for (int i = 0; i < n; i++)
+							c[i] = pp.getComponent(i);
+						for (Component x : c)
+							popupMenu.add(x);
+						toPack = true;
 					}
-					for (Component x : c)
-						popupMenu.add(x);
 				}
 			}
 		}
 
-		popupMenu.pack();
-
-		popupMenu.addPopupMenuListener(new PopupMenuListener() {
-			public void popupMenuCanceled(PopupMenuEvent e) {
-			}
-
-			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-				miCustom.setEnabled(isChangable());
-				miRemove.setEnabled(isChangable());
-			}
-
-			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-			}
-		});
+		if (toPack)
+			popupMenu.pack();
 
 	}
 

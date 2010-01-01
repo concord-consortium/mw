@@ -113,6 +113,9 @@ public class PagePhotonSpectrometer extends PhotonSpectrometer implements Script
 
 	public void createPopupMenu() {
 
+		if (popupMenu != null)
+			return;
+
 		popupMenu = new JPopupMenu();
 		popupMenu.setInvoker(this);
 

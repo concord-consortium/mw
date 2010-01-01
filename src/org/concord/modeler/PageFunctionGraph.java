@@ -191,6 +191,10 @@ public class PageFunctionGraph extends JPanel implements Embeddable {
 	}
 
 	public void createPopupMenu() {
+
+		if (popupMenu != null)
+			return;
+
 		if (graph.getPopupMenu() == null) {
 			popupMenu = new JPopupMenu();
 		}

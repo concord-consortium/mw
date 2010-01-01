@@ -402,6 +402,9 @@ public class AudioPlayer extends JPanel implements Embeddable, MetaEventListener
 	/** side effect of implementing Embeddable */
 	public void createPopupMenu() {
 
+		if (popupMenu != null)
+			return;
+
 		popupMenu = new JPopupMenu();
 		popupMenu.setInvoker(this);
 

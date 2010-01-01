@@ -158,6 +158,9 @@ public class PageDNAScroller extends DNAScroller implements Embeddable, ModelCom
 
 	public void createPopupMenu() {
 
+		if (popupMenu != null)
+			return;
+
 		popupMenu = new JPopupMenu();
 		popupMenu.setInvoker(this);
 

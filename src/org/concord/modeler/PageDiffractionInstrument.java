@@ -87,6 +87,9 @@ public class PageDiffractionInstrument extends DiffractionInstrument implements 
 
 	public void createPopupMenu() {
 
+		if (popupMenu != null)
+			return;
+
 		popupMenu = new JPopupMenu();
 		popupMenu.setInvoker(this);
 
