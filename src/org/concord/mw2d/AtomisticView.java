@@ -2707,9 +2707,15 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				}
 			}
 		}
-		for (int i = 0; i < nAtom; i++)
-			if (atom[i] != a && atom[i].intersects(a, noOverlapTolerance))
-				return true;
+		Element e1 = model.getElement(a.getID());
+		Element e2;
+		for (int i = 0; i < nAtom; i++) {
+			if (atom[i] != a) {
+				e2 = model.getElement(atom[i].getID());
+				if (model.getAffinity().getEpsilon(e1, e2) > 0 && atom[i].intersects(a, noOverlapTolerance))
+					return true;
+			}
+		}
 		Object obj = null;
 		if (!molecules.isEmpty()) {
 			synchronized (molecules.getSynchronizationLock()) {
