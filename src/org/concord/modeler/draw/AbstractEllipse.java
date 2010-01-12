@@ -63,7 +63,7 @@ public abstract class AbstractEllipse implements DrawingElement {
 	private short alpha = 255;
 	private short alphaAtCenter = 255;
 	private short alphaAtEdge = 255;
-	private byte lineWeight = 1;
+	private byte lineWeight = 2;
 	private byte lineStyle = LineStyle.STROKE_NUMBER_1;
 	private BasicStroke stroke = new BasicStroke(lineWeight, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
 	private int x, y, width, height;

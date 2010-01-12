@@ -50,7 +50,7 @@ public abstract class AbstractLine implements DrawingElement {
 	private byte attachmentPosition = CENTER;
 	private Color color = Color.red;
 	private byte option = DEFAULT;
-	private byte lineWeight = 1;
+	private byte lineWeight = 3;
 	private byte lineStyle = LineStyle.STROKE_NUMBER_1;
 	private BasicStroke stroke = new BasicStroke(lineWeight, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
 	private Line2D.Float line;

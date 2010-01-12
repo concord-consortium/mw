@@ -49,6 +49,7 @@ public class TriangleComponent extends AbstractTriangle implements ModelComponen
 	public TriangleComponent() {
 		super();
 		setLineColor(Color.black);
+		setLineWeight((byte) 1);
 	}
 
 	public TriangleComponent(TriangleComponent t) {

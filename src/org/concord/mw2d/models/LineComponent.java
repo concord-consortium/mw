@@ -46,6 +46,7 @@ public class LineComponent extends AbstractLine implements ModelComponent, Layer
 	public LineComponent() {
 		super();
 		setColor(Color.black);
+		setLineWeight((byte) 1);
 	}
 
 	public LineComponent(LineComponent l) {

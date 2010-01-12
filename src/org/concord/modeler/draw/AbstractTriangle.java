@@ -49,7 +49,7 @@ public abstract class AbstractTriangle implements DrawingElement {
 	private Image fullImage;
 	private Color lineColor = Color.red;
 	private short alpha = 255;
-	private byte lineWeight = 1;
+	private byte lineWeight = 2;
 	private byte lineStyle = LineStyle.STROKE_NUMBER_1;
 	private BasicStroke stroke = new BasicStroke(lineWeight, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
 	private Triangle triangle;
