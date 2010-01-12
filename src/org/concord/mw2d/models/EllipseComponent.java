@@ -50,6 +50,7 @@ public class EllipseComponent extends AbstractEllipse implements ModelComponent,
 	public EllipseComponent() {
 		super();
 		setLineColor(Color.black);
+		setLineWeight((byte) 1);
 	}
 
 	public EllipseComponent(EllipseComponent e) {

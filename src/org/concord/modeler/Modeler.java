@@ -123,7 +123,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 	final static String MINIMUM_JAVA_VERSION = "1.5";
 
 	final static String NAME = "Molecular Workbench";
-	final static String VERSION = "2.0";
+	final static String VERSION = "3.0";
 	private final static String REMOTE_STATIC_ROOT = "http://mw2.concord.org/public/";
 	private final static String LOCAL_STATIC_ROOT = "http://localhost/public/";
 	private final static String REMOTE_CONTEXT_ROOT = "http://mw2.concord.org/";

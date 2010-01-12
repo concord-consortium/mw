@@ -46,6 +46,7 @@ public class RectangleComponent extends AbstractRectangle implements ModelCompon
 	public RectangleComponent() {
 		super();
 		setLineColor(Color.black);
+		setLineWeight((byte) 1);
 	}
 
 	public RectangleComponent(RectangleComponent r) {
