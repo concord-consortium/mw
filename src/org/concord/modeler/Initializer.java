@@ -344,19 +344,18 @@ public class Initializer {
 	}
 
 	void showSplashScreen() {
-		final Color color = new Color(8, 24, 99);
 		final Font font = new Font("Verdana", Font.PLAIN, 10);
 		progressBar = new JProgressBar();
 		progressBar.setBorder(BorderFactory.createEmptyBorder(2, 5, 5, 5));
 		progressBar.setBackground(Color.white);
-		progressBar.setForeground(color);
+		progressBar.setForeground(Color.gray);
 		progressBar.setIndeterminate(false);
 		progressBar.setMaximum(10);
 		progressBar.setMinimum(0);
 		progressBar.setStringPainted(true);
 		progressBar.setString("Launching......");
 		progressBar.setFont(font);
-		ImageIcon icon = new ImageIcon(getClass().getResource("images/Splash.gif"));
+		ImageIcon icon = new ImageIcon(getClass().getResource("images/splashpane.jpg"));
 		int iconWidth = icon.getIconWidth();
 		int iconHeight = icon.getIconHeight();
 		progressBar.setPreferredSize(new Dimension(iconWidth, 22));
@@ -367,7 +366,7 @@ public class Initializer {
 				Icon icon = getIcon();
 				icon.paintIcon(this, g, 0, 0);
 				g.setFont(font);
-				g.setColor(color);
+				g.setColor(Color.white);
 				g.drawString("Version " + Modeler.VERSION + " Copyright 2004-2010.", 10, icon.getIconHeight() - 25);
 				g.drawString("Supported by the National Science Foundation.", 10, icon.getIconHeight() - 10);
 			}
