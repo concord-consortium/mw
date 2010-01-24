@@ -2729,7 +2729,7 @@ public abstract class AtomicModel extends MDModel {
 
 		synchronized (freeElectrons) {
 			List<Electron> toRemove = null;
-			List<Electron> toAdd = null;
+			// List<Electron> toAdd = null;
 			for (Electron e : freeElectrons) {
 				e.fx = 0;
 				e.fy = 0;
@@ -2758,9 +2758,7 @@ public abstract class AtomicModel extends MDModel {
 			}
 			if (toRemove != null)
 				freeElectrons.removeAll(toRemove);
-			if (toAdd != null) {
-				freeElectrons.addAll(toAdd);
-			}
+			// if (toAdd != null) freeElectrons.addAll(toAdd);
 		}
 
 		double vsum = 0;

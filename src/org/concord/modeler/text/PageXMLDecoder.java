@@ -278,6 +278,14 @@ final class PageXMLDecoder {
 		return read(new BufferedInputStream(inputStream));
 	}
 
+	// to be used for applet only
+	boolean readURL(URL url) throws Exception {
+		URLConnection connection = url.openConnection();
+		connection.connect();
+		inputStream = connection.getInputStream();
+		return read(new BufferedInputStream(inputStream));
+	}
+
 	/*
 	 * From the Java API: "An implementation of SAXParser is NOT guaranteed to behave as per the specification if it is
 	 * used concurrently by two or more threads. It is recommended to have one instance of the SAXParser per thread or
@@ -356,7 +364,8 @@ final class PageXMLDecoder {
 		page.setReading(false);
 		page.setReadingModel(false);
 		loadingTime = System.currentTimeMillis() - loadingTime;
-		page.getSaveReminder().setChanged(false);
+		if (page.getSaveReminder() != null)
+			page.getSaveReminder().setChanged(false);
 		ConnectionManager.sharedInstance().setCheckUpdate(true);
 		if (page.getBackgroundSound() != null) {
 			page.playSound(page.getBackgroundSound());
@@ -541,7 +550,8 @@ final class PageXMLDecoder {
 
 		private Runnable reportProgress = new Runnable() {
 			public void run() {
-				progressBar.setString(elementCounter + " elements read");
+				if (progressBar != null)
+					progressBar.setString(elementCounter + " elements read");
 			}
 		};
 
@@ -611,7 +621,8 @@ final class PageXMLDecoder {
 							pluginConnector.start();
 							EventQueue.invokeLater(new Runnable() {
 								public void run() {
-									progressBar.setValue(progressBar.getMaximum());
+									if (progressBar != null)
+										progressBar.setValue(progressBar.getMaximum());
 									page.setTitle(pageTitle);
 									radioButtonConnector.connect();
 									htmlComponentConnector.connect();

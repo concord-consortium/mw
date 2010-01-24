@@ -352,56 +352,104 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 
 	static byte threadIndex;
 
+	private static boolean asApplet;
+
 	public Page() {
 
 		super();
-
-		createActions();
 
 		setOpaque(false);
 		setBackground(Color.white);
 		setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		setFont(new Font(defaultFontFamily, Font.PLAIN, defaultFontSize));
 
-		saveReminder = new SaveReminder();
-		editResponder = new EditResponder(this);
-
-		undoManager = new UndoManager();
-		myHighlightPainter = new MyHighlightPainter(Color.yellow);
-
-		bulletAction = new BulletAction();
-		increaseFontSizeAction = new ResizeFontAction(this, true);
-		decreaseFontSizeAction = new ResizeFontAction(this, false);
-		increaseIndentAction = new ChangeIndentAction(this, true);
-		decreaseIndentAction = new ChangeIndentAction(this, false);
-
-		imageReader = new ImageReader("Input Image", fileChooser, JOptionPane.getFrameForComponent(this));
-		imageReader.addImageImporter(this);
-		createActionTable();
-
-		undoHandler = new UndoableEditListener() {
-			public void undoableEditHappened(UndoableEditEvent e) {
-				undoManager.addEdit(e.getEdit());
-				((UndoAction) getAction(UNDO)).updateState();
-				((RedoAction) getAction(REDO)).updateState();
+		scriptAction = new DefaultAction() {
+			public void actionPerformed(ActionEvent e) {
+				if (ModelerUtilities.stopFiring(e))
+					return;
+				AbstractButton button = (AbstractButton) e.getSource();
+				Object script = button.getClientProperty("script");
+				if (script instanceof String) {
+					processHyperlink((String) script);
+				}
+				else { // backward compatible
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(Page.this),
+							"No script has been set.");
+				}
 			}
 		};
-		getDocument().addUndoableEditListener(undoHandler);
-		getDocument().addDocumentListener(editResponder);
+		scriptAction.putValue(Action.NAME, "Script");
+		scriptAction.putValue(Action.SHORT_DESCRIPTION, "Script");
 
-		decoder = new PageXMLDecoder(this);
-		encoder = new PageXMLEncoder(this);
+		refreshAction = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				rememberViewPosition = true;
+				visit(pageAddress);
+			}
+
+			public String toString() {
+				return (String) getValue(Action.SHORT_DESCRIPTION);
+			}
+		};
+		refreshAction.putValue(Action.NAME, REFRESH);
+		refreshAction.putValue(Action.SHORT_DESCRIPTION, "Reload page");
+		refreshAction.putValue(Action.SMALL_ICON, new ImageIcon(Page.class.getResource("images/reload.png")));
+		if (!asApplet) {
+			refreshAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_R);
+			refreshAction.putValue(Action.ACCELERATOR_KEY, Modeler.isMac() ? KeyStroke.getKeyStroke(KeyEvent.VK_R,
+					KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0, true));
+		}
 
 		hintAction = new HintAction(this);
 		gradeAction = new GradeAction(this);
+
+		if (!asApplet) {
+
+			createActions();
+
+			saveReminder = new SaveReminder();
+			editResponder = new EditResponder(this);
+
+			undoManager = new UndoManager();
+			myHighlightPainter = new MyHighlightPainter(Color.yellow);
+
+			bulletAction = new BulletAction();
+			increaseFontSizeAction = new ResizeFontAction(this, true);
+			decreaseFontSizeAction = new ResizeFontAction(this, false);
+			increaseIndentAction = new ChangeIndentAction(this, true);
+			decreaseIndentAction = new ChangeIndentAction(this, false);
+
+			imageReader = new ImageReader("Input Image", fileChooser, JOptionPane.getFrameForComponent(this));
+			imageReader.addImageImporter(this);
+
+			createActionTable();
+
+			undoHandler = new UndoableEditListener() {
+				public void undoableEditHappened(UndoableEditEvent e) {
+					undoManager.addEdit(e.getEdit());
+					((UndoAction) getAction(UNDO)).updateState();
+					((RedoAction) getAction(REDO)).updateState();
+				}
+			};
+			getDocument().addUndoableEditListener(undoHandler);
+			getDocument().addDocumentListener(editResponder);
+
+			encoder = new PageXMLEncoder(this);
+
+		}
+
+		decoder = new PageXMLDecoder(this);
+
 		activityActionMap = Collections.synchronizedMap(new TreeMap<String, Action>());
 		activityActionMap.put(hintAction.toString(), hintAction);
 		activityActionMap.put(gradeAction.toString(), gradeAction);
 		activityActionMap.put(scriptAction.toString(), scriptAction);
-		activityActionMap.put(closeAction.toString(), closeAction);
-		activityActionMap.put(printAction.toString(), printAction);
-		activityActionMap.put(saveAsAction.toString(), saveAsAction);
 		activityActionMap.put(refreshAction.toString(), refreshAction);
+		if (!asApplet) {
+			activityActionMap.put(closeAction.toString(), closeAction);
+			activityActionMap.put(printAction.toString(), printAction);
+			activityActionMap.put(saveAsAction.toString(), saveAsAction);
+		}
 
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
@@ -423,10 +471,12 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			}
 		});
 
-		popupMenu = new PagePopupMenu(this);
-		imagePopupMenu = new ImagePopupMenu(this);
-		colorBarPopupMenu = new ColorBarPopupMenu(this);
-		linkPopupMenu = new HyperlinkPopupMenu(this);
+		if (!asApplet) {
+			popupMenu = new PagePopupMenu(this);
+			imagePopupMenu = new ImagePopupMenu(this);
+			colorBarPopupMenu = new ColorBarPopupMenu(this);
+			linkPopupMenu = new HyperlinkPopupMenu(this);
+		}
 
 		properties = new HashMap<Object, Object>();
 
@@ -435,65 +485,76 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 
 		setEditable(false); // called to disable the caret
 
-		if (clipboard == null)
-			clipboard = new Clipboard("Auxilary styled text clipboard");
+		if (!asApplet) {
 
-		// register key bindings
+			if (clipboard == null)
+				clipboard = new Clipboard("Auxilary styled text clipboard");
 
-		getInputMap().put((KeyStroke) refreshAction.getValue(Action.ACCELERATOR_KEY), REFRESH);
-		getActionMap().put(REFRESH, refreshAction);
-		getInputMap().put((KeyStroke) closeAction.getValue(Action.ACCELERATOR_KEY), CLOSE_PAGE);
-		getActionMap().put(CLOSE_PAGE, closeAction);
-
-		// NOTE!!! workaround to screen important key bindings to be passed to embedded components.
-		// This is a temporary solution, still searching for a solution of how to stop KeyEvent from
-		// passing from one component to another through the registered key bindings. The following are
-		// the keys that could cause conflicts between the Word Processor and the Model Builder.
-
-		Action emptyAction = new AbstractAction() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		};
-
-		if (OS.startsWith("Mac")) {
-			getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_MASK, true), "_x");
-			getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_MASK, true), "_c");
-			getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_MASK, true), "_v");
-			getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_M, KeyEvent.META_MASK, true), "_m");
-			getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.META_MASK, true), "_z");
-			getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, KeyEvent.META_MASK, true), "_y");
-		}
-		else {
-			getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.CTRL_MASK, true), "_x");
-			getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_MASK, true), "_c");
-			getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_MASK, true), "_v");
-			getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_M, KeyEvent.CTRL_MASK, true), "_m");
-			getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.CTRL_MASK, true), "_z");
-			getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, KeyEvent.CTRL_MASK, true), "_y");
-		}
-		getActionMap().put("_x", emptyAction);
-		getActionMap().put("_c", emptyAction);
-		getActionMap().put("_v", emptyAction);
-		getActionMap().put("_m", emptyAction);
-		getActionMap().put("_z", emptyAction);
-		getActionMap().put("_y", emptyAction);
-
-		// multiple key bindings
-
-		if (OS.startsWith("Windows")) {
-
-			KeyStroke ks = KeyStroke.getKeyStroke(KeyEvent.VK_R, KeyEvent.CTRL_MASK, true);
-			getInputMap().put(ks, REFRESH);
+			// register key bindings
+			getInputMap().put((KeyStroke) refreshAction.getValue(Action.ACCELERATOR_KEY), REFRESH);
 			getActionMap().put(REFRESH, refreshAction);
-
-			ks = KeyStroke.getKeyStroke(KeyEvent.VK_F4, KeyEvent.ALT_MASK);
-			getInputMap().put(ks, CLOSE_PAGE);
+			getInputMap().put((KeyStroke) closeAction.getValue(Action.ACCELERATOR_KEY), CLOSE_PAGE);
 			getActionMap().put(CLOSE_PAGE, closeAction);
 
+			// NOTE!!! workaround to screen important key bindings to be passed to embedded components.
+			// This is a temporary solution, still searching for a solution of how to stop KeyEvent from
+			// passing from one component to another through the registered key bindings. The following are
+			// the keys that could cause conflicts between the Word Processor and the Model Builder.
+
+			Action emptyAction = new AbstractAction() {
+				public void actionPerformed(ActionEvent e) {
+				}
+			};
+
+			if (OS.startsWith("Mac")) {
+				getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_MASK, true), "_x");
+				getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_MASK, true), "_c");
+				getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_MASK, true), "_v");
+				getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_M, KeyEvent.META_MASK, true), "_m");
+				getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.META_MASK, true), "_z");
+				getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, KeyEvent.META_MASK, true), "_y");
+			}
+			else {
+				getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.CTRL_MASK, true), "_x");
+				getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_MASK, true), "_c");
+				getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_MASK, true), "_v");
+				getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_M, KeyEvent.CTRL_MASK, true), "_m");
+				getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.CTRL_MASK, true), "_z");
+				getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, KeyEvent.CTRL_MASK, true), "_y");
+			}
+			getActionMap().put("_x", emptyAction);
+			getActionMap().put("_c", emptyAction);
+			getActionMap().put("_v", emptyAction);
+			getActionMap().put("_m", emptyAction);
+			getActionMap().put("_z", emptyAction);
+			getActionMap().put("_y", emptyAction);
+
+			// multiple key bindings
+
+			if (OS.startsWith("Windows")) {
+
+				KeyStroke ks = KeyStroke.getKeyStroke(KeyEvent.VK_R, KeyEvent.CTRL_MASK, true);
+				getInputMap().put(ks, REFRESH);
+				getActionMap().put(REFRESH, refreshAction);
+
+				ks = KeyStroke.getKeyStroke(KeyEvent.VK_F4, KeyEvent.ALT_MASK);
+				getInputMap().put(ks, CLOSE_PAGE);
+				getActionMap().put(CLOSE_PAGE, closeAction);
+
+			}
+
+			runOnCD = "true".equalsIgnoreCase(System.getProperty("mw.cd.mode"));
+
 		}
 
-		runOnCD = "true".equalsIgnoreCase(System.getProperty("mw.cd.mode"));
+	}
 
+	public static void setApplet(boolean b) {
+		asApplet = b;
+	}
+
+	public static boolean isApplet() {
+		return asApplet;
 	}
 
 	public void setEditor(Editor editor) {
@@ -1374,6 +1435,11 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	// for applet to override
+	public URL getCodeBase() {
+		return null;
 	}
 
 	public String getAddress() {
@@ -2522,6 +2588,19 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				notifyPageListeners(new PageEvent(Page.this, PageEvent.PAGE_READ_END));
 			}
 		});
+	}
+
+	// for use with applet only
+	void importPage(URL url) throws Exception {
+		boolean success = decoder.readURL(url);
+		if (success) {
+			/* Critically important!!!! */
+			EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					setStyledDocument(decoder.getDocument());
+				}
+			});
+		}
 	}
 
 	private boolean loadPage(final String uri) throws IOException, SAXException, UnsupportedFormatException {
@@ -3722,6 +3801,19 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			g2.fillRect(0, 0, getWidth(), getHeight());
 		}
 		super.paintComponent(g);
+		if (asApplet) {
+			g.setFont(new Font("Arial", Font.BOLD, 16));
+			g.setColor(Color.lightGray);
+			String s = getSoftwareName();
+			int x = getWidth() - g.getFontMetrics().stringWidth(s) - 10;
+			int y = getHeight() - 20;
+			g.drawString(s, x + 1, y - 1);
+			g.drawString(s, x + 1, y + 1);
+			g.drawString(s, x - 1, y - 1);
+			g.drawString(s, x - 1, y + 1);
+			g.setColor(Color.black);
+			g.drawString(s, x, y);
+		}
 	}
 
 	/* A thread wrapper of the <code>readPage(String)</code> method. */
@@ -4046,7 +4138,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		}
 	}
 
-	private String executeMwScripts(String str) {
+	public String executeMwScripts(String str) {
 		str = str.trim();
 		if (str.equals(""))
 			return "";
@@ -5189,7 +5281,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	public void autoResizeComponents() {
 		if (getDocument().getLength() <= 0)
 			return;
-		boolean changed = saveReminder.isChanged();
+		boolean changed = saveReminder == null ? false : saveReminder.isChanged();
 		boolean b = false;
 		List<Embeddable> list = getEmbeddedComponents();
 		if (list != null && !list.isEmpty()) {
@@ -5246,7 +5338,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		}
 		if (b)
 			settleComponentSize();
-		saveReminder.setChanged(changed);
+		if (saveReminder != null)
+			saveReminder.setChanged(changed);
 	}
 
 	// if the page has been changed, return true; otherwise, return false;
@@ -5343,8 +5436,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		};
 		insertAtomContainerAction.putValue(Action.NAME, INSERT_ATOM_CONTAINER);
 		insertAtomContainerAction.putValue(Action.SHORT_DESCRIPTION, "Insert " + INSERT_ATOM_CONTAINER);
-		insertAtomContainerAction.putValue(Action.SMALL_ICON, new ImageIcon(getClass().getResource(
-				"images/MolecularModel.gif")));
+		insertAtomContainerAction.putValue(Action.SMALL_ICON, new ImageIcon(Page.class
+				.getResource("images/MolecularModel.gif")));
 
 		insertGBContainerAction = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
@@ -5384,23 +5477,6 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		insertFileAction.putValue(Action.NAME, "File");
 		insertFileAction.putValue(Action.SHORT_DESCRIPTION, "Insert a file");
 
-		refreshAction = new AbstractAction() {
-			public void actionPerformed(ActionEvent e) {
-				rememberViewPosition = true;
-				visit(pageAddress);
-			}
-
-			public String toString() {
-				return (String) getValue(Action.SHORT_DESCRIPTION);
-			}
-		};
-		refreshAction.putValue(Action.NAME, REFRESH);
-		refreshAction.putValue(Action.SHORT_DESCRIPTION, "Reload page");
-		refreshAction.putValue(Action.SMALL_ICON, new ImageIcon(Page.class.getResource("images/reload.png")));
-		refreshAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_R);
-		refreshAction.putValue(Action.ACCELERATOR_KEY, mac ? KeyStroke.getKeyStroke(KeyEvent.VK_R, KeyEvent.META_MASK,
-				true) : KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0, true));
-
 		newAction = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
 				askToCreateNewPage();
@@ -5412,24 +5488,6 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		newAction.putValue(Action.ACCELERATOR_KEY, mac ? KeyStroke
 				.getKeyStroke(KeyEvent.VK_N, KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_N,
 				KeyEvent.CTRL_MASK, true));
-
-		scriptAction = new DefaultAction() {
-			public void actionPerformed(ActionEvent e) {
-				if (ModelerUtilities.stopFiring(e))
-					return;
-				AbstractButton button = (AbstractButton) e.getSource();
-				Object script = button.getClientProperty("script");
-				if (script instanceof String) {
-					processHyperlink((String) script);
-				}
-				else { // backward compatible
-					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(Page.this),
-							"No script has been set.");
-				}
-			}
-		};
-		scriptAction.putValue(Action.NAME, "Script");
-		scriptAction.putValue(Action.SHORT_DESCRIPTION, "Script");
 
 		closeAction = new DefaultAction() {
 			public void actionPerformed(ActionEvent e) {
