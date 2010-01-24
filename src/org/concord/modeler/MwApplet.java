@@ -39,6 +39,8 @@ public class MwApplet extends JApplet {
 
 		Page.setApplet(true);
 		Page.setSoftwareName(Modeler.NAME);
+		ConnectionManager.sharedInstance().setCachingAllowed(false);
+
 		page = new Page() {
 			public URL getCodeBase() {
 				return MwApplet.this.getCodeBase();

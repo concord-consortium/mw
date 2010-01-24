@@ -2210,9 +2210,11 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			}
 			putProperty("codebase", codeBase);
 			putProperty("filename", fileName);
-			long[] t = ConnectionManager.getLastModifiedAndContentLength(u);
-			putProperty("date", new Date(t[0]));
-			putProperty("size", new Long(t[1]));
+			if (!MDContainer.isApplet()) {
+				long[] t = ConnectionManager.getLastModifiedAndContentLength(u);
+				putProperty("date", new Date(t[0]));
+				putProperty("size", new Long(t[1]));
+			}
 		}
 	}
 
@@ -2389,6 +2391,8 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 				getView().setCursor(Cursor.getPredefinedCursor(b ? Cursor.WAIT_CURSOR : Cursor.DEFAULT_CURSOR));
 				if (getIOProgressBar() != null)
 					return;
+				if (monitor == null)
+					return;
 				if (!b) {
 					monitor.hide();
 				}
@@ -2526,7 +2530,8 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			file = f;
 			readXML();
 			isLoading.set(false);
-			setProgress(ioProgressBar.getMaximum(), "100%");
+			if (ioProgressBar != null)
+				setProgress(ioProgressBar.getMaximum(), "100%");
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					finishReading();
@@ -2536,11 +2541,12 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		}
 
 		void read(URL u) {
-			file = ConnectionManager.sharedInstance().shouldUpdate(u);
+			file = MDContainer.isApplet() ? null : ConnectionManager.sharedInstance().shouldUpdate(u);
 			url = file == null ? u : null;
 			readXML();
 			isLoading.set(false);
-			setProgress(ioProgressBar.getMaximum(), "100%");
+			if (ioProgressBar != null)
+				setProgress(ioProgressBar.getMaximum(), "100%");
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					finishReading();
@@ -2550,12 +2556,14 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		}
 
 		private void updateProperties() {
-			if (file != null) {
-				URL u = ConnectionManager.sharedInstance().getRemoteLocation(file);
-				if (u == null)
-					putProperties(file);
-				else putProperties(u);
-				return;
+			if (!MDContainer.isApplet()) {
+				if (file != null) {
+					URL u = ConnectionManager.sharedInstance().getRemoteLocation(file);
+					if (u == null)
+						putProperties(file);
+					else putProperties(u);
+					return;
+				}
 			}
 			if (url != null)
 				putProperties(url);
@@ -2566,8 +2574,12 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			updateProperties();
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					monitor.getProgressBar().setMaximum((int) (((Long) getProperty("size")).longValue() / 10240.0) + 1);
-					monitor.getProgressBar().setMinimum(0);
+					if (monitor.getProgressBar() != null) {
+						Long size = (Long) getProperty("size");
+						if (size != null)
+							monitor.getProgressBar().setMaximum((int) (size.longValue() / 10240.0) + 1);
+						monitor.getProgressBar().setMinimum(0);
+					}
 				}
 			});
 
