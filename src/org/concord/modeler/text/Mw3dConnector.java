@@ -21,6 +21,8 @@
 package org.concord.modeler.text;
 
 import java.awt.EventQueue;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -67,10 +69,25 @@ class Mw3dConnector {
 		if (isEmpty())
 			return;
 		String address = null;
-		synchronized (mdList) {
-			for (PageMd3d md : mdList) {
-				address = FileUtilities.removeSuffix(page.getAddress()) + "$" + md.getIndex() + ".mdd";
-				md.input(address, false);
+		if (Page.isApplet()) {
+			synchronized (mdList) {
+				for (PageMd3d md : mdList) {
+					address = FileUtilities.removeSuffix(page.getAddress()) + "$" + md.getIndex() + ".mdd";
+					try {
+						md.input(new URL(page.getCodeBase(), FileUtilities.getFileName(address)), false);
+					}
+					catch (MalformedURLException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		else {
+			synchronized (mdList) {
+				for (PageMd3d md : mdList) {
+					address = FileUtilities.removeSuffix(page.getAddress()) + "$" + md.getIndex() + ".mdd";
+					md.input(address, false);
+				}
 			}
 		}
 	}

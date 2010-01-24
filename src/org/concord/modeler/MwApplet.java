@@ -26,6 +26,8 @@ import java.net.URL;
 import javax.swing.JApplet;
 
 import org.concord.modeler.text.Page;
+import org.concord.mw2d.ui.MDContainer;
+import org.concord.mw3d.MolecularContainer;
 
 /**
  * @author Charles Xie
@@ -40,6 +42,8 @@ public class MwApplet extends JApplet {
 		Page.setApplet(true);
 		Page.setSoftwareName(Modeler.NAME);
 		ConnectionManager.sharedInstance().setCachingAllowed(false);
+		MDContainer.setApplet(Page.isApplet());
+		MolecularContainer.setApplet(Page.isApplet());
 
 		page = new Page() {
 			public URL getCodeBase() {
