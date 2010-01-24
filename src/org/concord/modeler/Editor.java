@@ -209,7 +209,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 			}
 		});
 
-		componentPool = new ComponentPool(this);
+		componentPool = new ComponentPool(page);
 		componentPool.setSelectionColor(page.getSelectionColor());
 		page.setComponentPool(componentPool);
 

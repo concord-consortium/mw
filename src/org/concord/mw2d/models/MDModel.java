@@ -94,6 +94,7 @@ import org.concord.mw2d.MDView;
 import org.concord.mw2d.event.ParameterChangeListener;
 import org.concord.mw2d.event.UpdateEvent;
 import org.concord.mw2d.event.UpdateListener;
+import org.concord.mw2d.ui.MDContainer;
 
 /**
  * For physical units used in the molecular dynamics simulations, we assume the following:
@@ -468,8 +469,10 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		movie.setRunAction(play);
 		movie.setStopAction(stop);
 
-		modelReader = new ModelReader(ModelerUtilities.fileChooser, "Open", this);
-		modelWriter = new ModelWriter(ModelerUtilities.fileChooser, "Save As", this);
+		if (!MDContainer.isApplet()) {
+			modelReader = new ModelReader(ModelerUtilities.fileChooser, "Open", this);
+			modelWriter = new ModelWriter(ModelerUtilities.fileChooser, "Save As", this);
+		}
 
 		actionMap = Collections.synchronizedMap(new TreeMap<String, Action>());
 		actionMap.put((String) heat.getValue(Action.SHORT_DESCRIPTION), heat);
@@ -1998,10 +2001,14 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		// actions that we don't want to be accessed by an author are put into the view's ActionMap
 
 		// actions with key bindings
-		v.getInputMap().put((KeyStroke) modelReader.getValue(Action.ACCELERATOR_KEY), "Open File");
-		v.getActionMap().put("Open File", modelReader);
-		v.getInputMap().put((KeyStroke) modelWriter.getValue(Action.ACCELERATOR_KEY), "Save File");
-		v.getActionMap().put("Save File", modelWriter);
+		if (modelReader != null) {
+			v.getInputMap().put((KeyStroke) modelReader.getValue(Action.ACCELERATOR_KEY), "Open File");
+			v.getActionMap().put("Open File", modelReader);
+		}
+		if (modelWriter != null) {
+			v.getInputMap().put((KeyStroke) modelWriter.getValue(Action.ACCELERATOR_KEY), "Save File");
+			v.getActionMap().put("Save File", modelWriter);
+		}
 		v.getInputMap().put((KeyStroke) snapshot.getValue(Action.ACCELERATOR_KEY), "Snapshot");
 		v.getActionMap().put("Snapshot", snapshot);
 		v.getInputMap().put((KeyStroke) revert.getValue(Action.ACCELERATOR_KEY), "Revert");
@@ -2011,8 +2018,10 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		v.getActionMap().put("Play", play);
 		v.getActionMap().put("Stop", stop);
 		v.getActionMap().put("Reload", reload);
-		v.getActionMap().put("Model Reader", modelReader);
-		v.getActionMap().put("Model Writer", modelWriter);
+		if (modelReader != null)
+			v.getActionMap().put("Model Reader", modelReader);
+		if (modelWriter != null)
+			v.getActionMap().put("Model Writer", modelWriter);
 
 	}
 

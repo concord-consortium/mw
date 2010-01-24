@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.concord.modeler.text.Page;
 import org.concord.mw2d.ui.AtomContainer;
 import org.concord.mw2d.ui.ChemContainer;
 import org.concord.mw2d.ui.GBContainer;
@@ -73,8 +74,8 @@ public class ComponentPool {
 	private AtomContainer[] atomContainer;
 	private ChemContainer[] chemContainer;
 	private GBContainer[] gbContainer;
-	private Editor editor;
 	private boolean lazyInit = true;
+	private Page page;
 
 	class NotModelException extends IllegalArgumentException {
 		NotModelException() {
@@ -82,14 +83,16 @@ public class ComponentPool {
 		}
 	}
 
-	public ComponentPool(Editor editor) {
+	public ComponentPool(Page page) {
 
 		// MUST use a tree map to maintain order???
 		map = Collections.synchronizedMap(new TreeMap<Integer, ModelCanvas>());
 
-		MDContainer.setPreferences(Initializer.sharedInstance().getPreferences());
+		MDContainer.setApplet(Page.isApplet());
+		if (!Page.isApplet())
+			MDContainer.setPreferences(Initializer.sharedInstance().getPreferences());
 
-		this.editor = editor;
+		this.page = page;
 		atomContainer = new AtomContainer[2];
 		gbContainer = new GBContainer[2];
 		chemContainer = new ChemContainer[2];
@@ -120,22 +123,28 @@ public class ComponentPool {
 		map.clear();
 		for (int i = 0; i < 2; i++) {
 			if (atomContainer[i] != null) {
-				atomContainer[i].getModel().removePageComponentListener(editor);
-				atomContainer[i].getModel().removePageComponentListener(editor.getPage().getSaveReminder());
+				if (page.getEditor() != null)
+					atomContainer[i].getModel().removePageComponentListener(page.getEditor());
+				if (page.getSaveReminder() != null)
+					atomContainer[i].getModel().removePageComponentListener(page.getSaveReminder());
 				atomContainer[i].destroy();
 			}
 			if (chemContainer[i] != null) {
-				chemContainer[i].getModel().removePageComponentListener(editor);
-				chemContainer[i].getModel().removePageComponentListener(editor.getPage().getSaveReminder());
+				if (page.getEditor() != null)
+					chemContainer[i].getModel().removePageComponentListener(page.getEditor());
+				if (page.getSaveReminder() != null)
+					chemContainer[i].getModel().removePageComponentListener(page.getSaveReminder());
 				chemContainer[i].destroy();
 			}
 			if (gbContainer[i] != null) {
-				gbContainer[i].getModel().removePageComponentListener(editor);
-				gbContainer[i].getModel().removePageComponentListener(editor.getPage().getSaveReminder());
+				if (page.getEditor() != null)
+					gbContainer[i].getModel().removePageComponentListener(page.getEditor());
+				if (page.getSaveReminder() != null)
+					gbContainer[i].getModel().removePageComponentListener(page.getSaveReminder());
 				gbContainer[i].destroy();
 			}
 		}
-		editor = null;
+		page = null;
 	}
 
 	/**
@@ -209,35 +218,44 @@ public class ComponentPool {
 
 	private void initAtomContainer(int i) {
 		if (EventQueue.isDispatchThread())
-			editor.getPage().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+			page.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		atomContainer[i] = new AtomContainer(Modeler.tapeLength);
-		atomContainer[i].setProgressBar(editor.getStatusBar().getProgressBar());
-		atomContainer[i].getModel().addPageComponentListener(editor);
-		atomContainer[i].getModel().addPageComponentListener(editor.getPage().getSaveReminder());
+		if (page.getEditor() != null) {
+			atomContainer[i].setProgressBar(page.getEditor().getStatusBar().getProgressBar());
+			atomContainer[i].getModel().addPageComponentListener(page.getEditor());
+		}
+		if (page.getSaveReminder() != null)
+			atomContainer[i].getModel().addPageComponentListener(page.getSaveReminder());
 		if (EventQueue.isDispatchThread())
-			editor.getPage().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			page.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
 
 	private void initGBContainer(int i) {
 		if (EventQueue.isDispatchThread())
-			editor.getPage().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+			page.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		gbContainer[i] = new GBContainer(Modeler.tapeLength);
-		gbContainer[i].setProgressBar(editor.getStatusBar().getProgressBar());
-		gbContainer[i].getModel().addPageComponentListener(editor);
-		gbContainer[i].getModel().addPageComponentListener(editor.getPage().getSaveReminder());
+		if (page.getEditor() != null) {
+			gbContainer[i].setProgressBar(page.getEditor().getStatusBar().getProgressBar());
+			gbContainer[i].getModel().addPageComponentListener(page.getEditor());
+		}
+		if (page.getSaveReminder() != null)
+			gbContainer[i].getModel().addPageComponentListener(page.getSaveReminder());
 		if (EventQueue.isDispatchThread())
-			editor.getPage().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			page.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
 
 	private void initChemContainer(int i) {
 		if (EventQueue.isDispatchThread())
-			editor.getPage().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+			page.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		chemContainer[i] = new ChemContainer(Modeler.tapeLength);
-		chemContainer[i].setProgressBar(editor.getStatusBar().getProgressBar());
-		chemContainer[i].getModel().addPageComponentListener(editor);
-		chemContainer[i].getModel().addPageComponentListener(editor.getPage().getSaveReminder());
+		if (page.getEditor() != null) {
+			chemContainer[i].setProgressBar(page.getEditor().getStatusBar().getProgressBar());
+			chemContainer[i].getModel().addPageComponentListener(page.getEditor());
+		}
+		if (page.getSaveReminder() != null)
+			chemContainer[i].getModel().addPageComponentListener(page.getSaveReminder());
 		if (EventQueue.isDispatchThread())
-			editor.getPage().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			page.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
 
 	public void clear() {
@@ -280,7 +298,7 @@ public class ComponentPool {
 				map.put(REACTION_MODEL_2, value);
 			}
 			if (value != null)
-				value.setPage(editor.getPage());
+				value.setPage(page);
 		}
 		return value;
 	}
@@ -378,14 +396,14 @@ public class ComponentPool {
 				if (count == 0) {
 					initAtomContainer(0);
 					mc = new ModelCanvas(atomContainer[0]);
-					mc.setPage(editor.getPage());
+					mc.setPage(page);
 					map.put(MOLECULAR_MODEL_1, mc);
 					return mc;
 				}
 				else if (count == 1) {
 					initAtomContainer(1);
 					mc = new ModelCanvas(atomContainer[1]);
-					mc.setPage(editor.getPage());
+					mc.setPage(page);
 					if (map.get(MOLECULAR_MODEL_2) == null)
 						map.put(MOLECULAR_MODEL_2, mc);
 					else if (map.get(MOLECULAR_MODEL_1) == null)
@@ -397,14 +415,14 @@ public class ComponentPool {
 				if (count == 0) {
 					initGBContainer(0);
 					mc = new ModelCanvas(gbContainer[0]);
-					mc.setPage(editor.getPage());
+					mc.setPage(page);
 					map.put(GB_MODEL_1, mc);
 					return mc;
 				}
 				else if (count == 1) {
 					initGBContainer(1);
 					mc = new ModelCanvas(gbContainer[1]);
-					mc.setPage(editor.getPage());
+					mc.setPage(page);
 					if (map.get(GB_MODEL_2) == null)
 						map.put(GB_MODEL_2, mc);
 					else if (map.get(GB_MODEL_1) == null)
@@ -416,14 +434,14 @@ public class ComponentPool {
 				if (count == 0) {
 					initChemContainer(0);
 					mc = new ModelCanvas(chemContainer[0]);
-					mc.setPage(editor.getPage());
+					mc.setPage(page);
 					map.put(REACTION_MODEL_1, mc);
 					return mc;
 				}
 				else if (count == 1) {
 					initChemContainer(1);
 					mc = new ModelCanvas(chemContainer[1]);
-					mc.setPage(editor.getPage());
+					mc.setPage(page);
 					if (map.get(REACTION_MODEL_2) == null)
 						map.put(REACTION_MODEL_2, mc);
 					else if (map.get(REACTION_MODEL_1) == null)

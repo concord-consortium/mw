@@ -36,6 +36,7 @@ public class MwApplet extends JApplet {
 	private Page page;
 
 	public MwApplet() {
+
 		Page.setApplet(true);
 		Page.setSoftwareName(Modeler.NAME);
 		page = new Page() {
@@ -45,6 +46,10 @@ public class MwApplet extends JApplet {
 		};
 		page.setPreferredSize(new Dimension(600, 600));
 		getContentPane().add(page, BorderLayout.CENTER);
+
+		ComponentPool pool = new ComponentPool(page);
+		page.setComponentPool(pool);
+
 	}
 
 	@Override

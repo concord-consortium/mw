@@ -116,6 +116,7 @@ import org.concord.mw2d.models.RectangularObstacle;
 import org.concord.mw2d.models.TextBoxComponent;
 import org.concord.mw2d.models.TriangleComponent;
 import org.concord.mw2d.models.UserField;
+import org.concord.mw2d.ui.MDContainer;
 
 import static org.concord.mw2d.UserAction.*;
 
@@ -359,29 +360,31 @@ public abstract class MDView extends PrintableComponent {
 		a.putValue(Action.SHORT_DESCRIPTION, "Show External Force");
 		booleanSwitches.put(a.toString(), a);
 
-		ComponentPrinter printer = new ComponentPrinter(this, "Printing a Model");
-		printer.putValue(Action.NAME, "Print Model");
-		getInputMap().put((KeyStroke) printer.getValue(Action.ACCELERATOR_KEY), "Print");
-		getActionMap().put("Print", printer);
+		if (!MDContainer.isApplet()) {
+			ComponentPrinter printer = new ComponentPrinter(this, "Printing a Model");
+			printer.putValue(Action.NAME, "Print Model");
+			getInputMap().put((KeyStroke) printer.getValue(Action.ACCELERATOR_KEY), "Print");
+			getActionMap().put("Print", printer);
 
-		ImageReader imageReader = new ImageReader("Input Image", ModelerUtilities.fileChooser, this);
-		imageReader.addImageImporter(new ImageImporter() {
-			public void imageImported(ImageEvent e) {
-				addImage(e.getPath());
-				repaint();
-			}
-		});
-		getInputMap().put((KeyStroke) imageReader.getValue(Action.ACCELERATOR_KEY), "Input Image");
-		getActionMap().put("Input Image", imageReader);
+			ImageReader imageReader = new ImageReader("Input Image", ModelerUtilities.fileChooser, this);
+			imageReader.addImageImporter(new ImageImporter() {
+				public void imageImported(ImageEvent e) {
+					addImage(e.getPath());
+					repaint();
+				}
+			});
+			getInputMap().put((KeyStroke) imageReader.getValue(Action.ACCELERATOR_KEY), "Input Image");
+			getActionMap().put("Input Image", imageReader);
+
+			a = new ScreenshotSaver(ModelerUtilities.fileChooser, this, false);
+			a.putValue(Action.NAME, "Save a Screenshot of Model");
+			getInputMap().put((KeyStroke) a.getValue(Action.ACCELERATOR_KEY), "Screenshot");
+			getActionMap().put("Screenshot", a);
+		}
 
 		a = new InputTextBoxAction(this);
 		getInputMap().put((KeyStroke) a.getValue(Action.ACCELERATOR_KEY), "Input Text Box");
 		getActionMap().put("Input Text Box", a);
-
-		a = new ScreenshotSaver(ModelerUtilities.fileChooser, this, false);
-		a.putValue(Action.NAME, "Save a Screenshot of Model");
-		getInputMap().put((KeyStroke) a.getValue(Action.ACCELERATOR_KEY), "Screenshot");
-		getActionMap().put("Screenshot", a);
 
 		boolean macOS = System.getProperty("os.name").startsWith("Mac");
 		a = new AbstractAction() {
