@@ -135,6 +135,8 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 	private static ResourceBundle bundle;
 	private static boolean isUSLocale;
 
+	private static boolean asApplet;
+
 	MolecularModel model;
 	MolecularView view;
 
@@ -245,6 +247,14 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 
 	}
 
+	public static void setApplet(boolean b) {
+		asApplet = b;
+	}
+
+	public static boolean isApplet() {
+		return asApplet;
+	}
+
 	public void addModelListener(ModelListener ml) {
 		if (modelListenerList == null)
 			modelListenerList = new ArrayList<ModelListener>();
@@ -275,7 +285,7 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 
 	public void addPageComponentListener(PageComponentListener pcl) {
 		if (pcl == null)
-			throw new IllegalArgumentException("null input");
+			return;
 		if (pageComponentListenerList == null)
 			pageComponentListenerList = new ArrayList<PageComponentListener>();
 		if (!pageComponentListenerList.contains(pcl))
@@ -284,7 +294,7 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 
 	public void removePageComponentListener(PageComponentListener pcl) {
 		if (pcl == null)
-			throw new IllegalArgumentException("null input");
+			return;
 		if (pageComponentListenerList != null)
 			pageComponentListenerList.remove(pcl);
 	}
@@ -1478,7 +1488,8 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 
 	private void createMenuBar() {
 		menuBar = new JMenuBar();
-		menuBar.add(createFileMenu());
+		if (!asApplet)
+			menuBar.add(createFileMenu());
 		menuBar.add(createEditMenu());
 		menuBar.add(createViewMenu());
 		menuBar.add(createModelMenu());

@@ -1424,6 +1424,15 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	}
 
 	public URL getURL() {
+		if (asApplet) {
+			try {
+				return new URL(getCodeBase(), FileUtilities.getFileName(pageAddress));
+			}
+			catch (MalformedURLException e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
 		try {
 			if (isRemote())
 				return new URL(pageAddress);
@@ -2590,6 +2599,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 
 	// for use with applet only
 	void importPage(URL url) throws Exception {
+		setAddress(url.toString());
 		boolean success = decoder.readURL(url);
 		if (success) {
 			/* Critically important!!!! */

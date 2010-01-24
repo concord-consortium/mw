@@ -324,6 +324,8 @@ public class HTMLPane extends MyEditorPane {
 		if (pm == null)
 			return;
 		for (JPopupMenu x : pm) {
+			if (x == null)
+				continue;
 			String label = x.getLabel();
 			if ("Hyperlink".equals(label))
 				hyperlinkPopupMenu = x;

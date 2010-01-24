@@ -88,7 +88,6 @@ public class ComponentPool {
 		// MUST use a tree map to maintain order???
 		map = Collections.synchronizedMap(new TreeMap<Integer, ModelCanvas>());
 
-		MDContainer.setApplet(Page.isApplet());
 		if (!Page.isApplet())
 			MDContainer.setPreferences(Initializer.sharedInstance().getPreferences());
 
