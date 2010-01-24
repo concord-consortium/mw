@@ -250,20 +250,33 @@ public class ModelCanvas extends JComponent implements Embeddable, Scriptable, E
 	}
 
 	public void loadCurrentResource() {
-		if (!page.isRemote()) {
-			container.getModel().input(new File(resourceAddress));
-		}
-		else {
+		if (Page.isApplet()) {
 			String fileName = FileUtilities.httpEncode(FileUtilities.getFileName(resourceAddress));
-			URL baseURL = null, url = null;
+			URL url = null;
 			try {
-				baseURL = new URL(FileUtilities.httpEncode(FileUtilities.getCodeBase(page.getAddress())));
-				url = new URL(baseURL, fileName);
+				url = new URL(page.getCodeBase(), fileName);
 			}
 			catch (MalformedURLException mue) {
 				mue.printStackTrace();
 			}
 			container.getModel().input(url);
+		}
+		else {
+			if (!page.isRemote()) {
+				container.getModel().input(new File(resourceAddress));
+			}
+			else {
+				String fileName = FileUtilities.httpEncode(FileUtilities.getFileName(resourceAddress));
+				URL baseURL = null, url = null;
+				try {
+					baseURL = new URL(FileUtilities.httpEncode(FileUtilities.getCodeBase(page.getAddress())));
+					url = new URL(baseURL, fileName);
+				}
+				catch (MalformedURLException mue) {
+					mue.printStackTrace();
+				}
+				container.getModel().input(url);
+			}
 		}
 	}
 

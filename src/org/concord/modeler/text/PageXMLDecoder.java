@@ -1346,7 +1346,8 @@ final class PageXMLDecoder {
 			}
 
 			else if (qName == "resource") {
-				resourceURL = FileUtilities.getCodeBase(page.getAddress()) + FileUtilities.getFileName(str);
+				String codeBase = FileUtilities.getCodeBase(page.getAddress());
+				resourceURL = (codeBase != null ? codeBase : "") + FileUtilities.getFileName(str);
 			}
 
 			else if (qName == "script") {
