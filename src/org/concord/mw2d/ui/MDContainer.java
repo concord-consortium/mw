@@ -133,6 +133,7 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 	private JPopupMenu expandMenu;
 	private boolean isLoading;
 	private boolean statusBarShown = true;
+	private static boolean asApplet;
 
 	static Icon toolBarHeaderIcon, beginIcon, leftIcon, rightIcon, removeTBIcon, expandArrowIcon, pageSetupIcon;
 
@@ -210,6 +211,14 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 		enabledComponentsWhenEditable = new ArrayList<Component>();
 		createDefaultPopupMenu();
 		resizeModelAction = new ResizeModelAction(this);
+	}
+
+	public static void setApplet(boolean b) {
+		asApplet = b;
+	}
+
+	public static boolean isApplet() {
+		return asApplet;
 	}
 
 	void loadImages() {

@@ -56,6 +56,7 @@ import org.concord.mw2d.AtomisticView;
 import org.concord.mw2d.MDView;
 import org.concord.mw2d.event.ParameterChangeEvent;
 import org.concord.mw2d.event.UpdateEvent;
+import org.concord.mw2d.ui.MDContainer;
 
 import static org.concord.mw2d.models.Element.*;
 
@@ -269,15 +270,17 @@ public abstract class AtomicModel extends MDModel {
 
 		super();
 
-		String s = System.getProperty("nmax2d");
-		if (s != null) {
-			try {
-				short i = Short.parseShort(s);
-				if (i > NMAX)
-					NMAX = i;
-			}
-			catch (Exception e) {
-				// ignore
+		if (!MDContainer.isApplet()) {
+			String s = System.getProperty("nmax2d");
+			if (s != null) {
+				try {
+					short i = Short.parseShort(s);
+					if (i > NMAX)
+						NMAX = i;
+				}
+				catch (Exception e) {
+					// ignore
+				}
 			}
 		}
 

@@ -3802,16 +3802,16 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		}
 		super.paintComponent(g);
 		if (asApplet) {
-			g.setFont(new Font("Arial", Font.BOLD, 16));
-			g.setColor(Color.lightGray);
+			g.setFont(new Font("Verdana", Font.BOLD | Font.ITALIC, 16));
+			g.setColor(Color.gray);
 			String s = getSoftwareName();
 			int x = getWidth() - g.getFontMetrics().stringWidth(s) - 10;
-			int y = getHeight() - 20;
+			int y = getHeight() - 15;
 			g.drawString(s, x + 1, y - 1);
 			g.drawString(s, x + 1, y + 1);
 			g.drawString(s, x - 1, y - 1);
 			g.drawString(s, x - 1, y + 1);
-			g.setColor(Color.black);
+			g.setColor(Color.green);
 			g.drawString(s, x, y);
 		}
 	}
