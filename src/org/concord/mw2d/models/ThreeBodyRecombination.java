@@ -31,7 +31,7 @@ class ThreeBodyRecombination {
 	private double u1, u2; // speed of atom 1 and 2 in the contact direction before collision
 	private double v1, v2; // speed of atom 1 and 2 in the contact direction after collision
 	private double w1, w2; // speed of atom 1 and 2 in the tangential direction (no change)
-	private double ue, we; // speed components of the electron in the two directions
+	private double ue; // speed components of the electron in the two directions
 	private double cos, sin; // unit vector pointing from atom 1's center to atom 2's center
 
 	ThreeBodyRecombination(AtomicModel model) {
@@ -90,7 +90,7 @@ class ThreeBodyRecombination {
 		ue = e.vx * cos + e.vy * sin;
 		w1 = a1.vy * cos - a1.vx * sin;
 		w2 = a2.vy * cos - a2.vx * sin;
-		we = e.vy * cos - e.vx * sin;
+		// we = e.vy * cos - e.vx * sin;
 	}
 
 	private void transformVelocitiesBack() {

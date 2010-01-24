@@ -58,6 +58,7 @@ class PageScripter extends ComponentScripter {
 	private final static Pattern ENABLE_COMPONENT = compile("(^(?i)enablecomponent\\b){1}");
 	private final static Pattern SELECT_COMPONENT = compile("(^(?i)selectcomponent\\b){1}");
 	private final static Pattern SELECT_COMBOBOX = compile("(^(?i)selectcombobox\\b){1}");
+	private final static Pattern IMPORT = compile("(^(?i)import\\b){1}");
 
 	private Page page;
 
@@ -71,13 +72,31 @@ class PageScripter extends ComponentScripter {
 
 		evaluateSingleKeyword(ci);
 
+		// import (load when used as an applet)
+		Matcher matcher = IMPORT.matcher(ci);
+		if (matcher.find()) {
+			String address = ci.substring(matcher.end()).trim();
+			try {
+				page.importPage(new URL(page.getCodeBase(), address));
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+			return;
+		}
+
 		// load
-		Matcher matcher = Compiler.LOAD.matcher(ci);
+		matcher = Compiler.LOAD.matcher(ci);
 		if (matcher.find()) {
 			String address = ci.substring(matcher.end()).trim();
 			if (FileUtilities.isRelative(address))
 				address = FileUtilities.getCodeBase(page.getAddress()) + address;
-			page.getNavigator().visitLocation(address);
+			if (page.getNavigator() != null) {
+				page.getNavigator().visitLocation(address);
+			}
+			else {
+				page.visit(address);
+			}
 			return;
 		}
 
