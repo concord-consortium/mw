@@ -75,6 +75,7 @@ public class BackgroundComboBox extends JComponent implements FocusListener, Pro
 				}
 			}
 		});
+		add(selectionPanel, BorderLayout.CENTER);
 
 		popButton = new JButton(new DownTriangleIcon());
 		popButton.setBorder(new BasicBorders.ButtonBorder(Color.gray, Color.black, Color.white, Color.lightGray));
@@ -86,7 +87,6 @@ public class BackgroundComboBox extends JComponent implements FocusListener, Pro
 			}
 		});
 
-		add(selectionPanel, BorderLayout.CENTER);
 		add(popButton, BorderLayout.EAST);
 
 		selectionPanel.addFocusListener(this);

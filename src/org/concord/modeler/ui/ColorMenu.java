@@ -282,13 +282,14 @@ public class ColorMenu extends JMenu {
 	}
 
 	public void addFillEffectListeners(final ActionListener ok, final ActionListener cancel) {
-		fillEffectMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String s = getInternationalText("FillEffects");
-				FillEffectChooser.createDialog(parent, s != null ? s : "Background Filling", true, fillEffectChooser,
-						ok, cancel).setVisible(true);
-			}
-		});
+		if (fillEffectMenuItem != null)
+			fillEffectMenuItem.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					String s = getInternationalText("FillEffects");
+					FillEffectChooser.createDialog(parent, s != null ? s : "Background Filling", true,
+							fillEffectChooser, ok, cancel).setVisible(true);
+				}
+			});
 	}
 
 	public void setFillEffectActions(final ActionListener ok, final ActionListener cancel) {

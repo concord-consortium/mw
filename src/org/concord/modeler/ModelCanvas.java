@@ -107,7 +107,8 @@ public class ModelCanvas extends JComponent implements Embeddable, Scriptable, E
 						removeMenuBar();
 						break;
 					}
-					page.getSaveReminder().setChanged(true);
+					if (page.getSaveReminder() != null)
+						page.getSaveReminder().setChanged(true);
 				}
 			});
 			pm.add(miMenuBar);
@@ -125,7 +126,8 @@ public class ModelCanvas extends JComponent implements Embeddable, Scriptable, E
 						container.removeBottomBar();
 						break;
 					}
-					page.getSaveReminder().setChanged(true);
+					if (page.getSaveReminder() != null)
+						page.getSaveReminder().setChanged(true);
 				}
 			});
 			pm.add(miBottomBar);
@@ -139,7 +141,8 @@ public class ModelCanvas extends JComponent implements Embeddable, Scriptable, E
 								"Do you really want to remove the toolbar?", "Remove Toolbar",
 								JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
 							container.removeToolbar();
-							page.getSaveReminder().setChanged(true);
+							if (page.getSaveReminder() != null)
+								page.getSaveReminder().setChanged(true);
 						}
 					}
 				}
@@ -199,7 +202,8 @@ public class ModelCanvas extends JComponent implements Embeddable, Scriptable, E
 								"Do you really want to remove the toolbar?", "Remove Toolbar",
 								JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
 							container.removeToolbar();
-							page.getSaveReminder().setChanged(true);
+							if (page.getSaveReminder() != null)
+								page.getSaveReminder().setChanged(true);
 						}
 					}
 				}
@@ -219,7 +223,8 @@ public class ModelCanvas extends JComponent implements Embeddable, Scriptable, E
 						removeMenuBar();
 						break;
 					}
-					page.getSaveReminder().setChanged(true);
+					if (page.getSaveReminder() != null)
+						page.getSaveReminder().setChanged(true);
 				}
 			});
 			pm.add(miMenuBar);

@@ -451,27 +451,25 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			activityActionMap.put(saveAsAction.toString(), saveAsAction);
 		}
 
-		addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent e) {
-				processMousePressed(e);
-			}
-
-			public void mouseReleased(MouseEvent e) {
-				processMouseReleased(e);
-			}
-		});
-
-		addMouseMotionListener(new MouseMotionAdapter() {
-			public void mouseMoved(MouseEvent e) {
-				processMouseMoved(e);
-			}
-
-			public void mouseDragged(MouseEvent e) {
-				processMouseDragged(e);
-			}
-		});
-
 		if (!asApplet) {
+			addMouseListener(new MouseAdapter() {
+				public void mousePressed(MouseEvent e) {
+					processMousePressed(e);
+				}
+
+				public void mouseReleased(MouseEvent e) {
+					processMouseReleased(e);
+				}
+			});
+			addMouseMotionListener(new MouseMotionAdapter() {
+				public void mouseMoved(MouseEvent e) {
+					processMouseMoved(e);
+				}
+
+				public void mouseDragged(MouseEvent e) {
+					processMouseDragged(e);
+				}
+			});
 			popupMenu = new PagePopupMenu(this);
 			imagePopupMenu = new ImagePopupMenu(this);
 			colorBarPopupMenu = new ColorBarPopupMenu(this);
@@ -3802,16 +3800,11 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		}
 		super.paintComponent(g);
 		if (asApplet) {
-			g.setFont(new Font("Verdana", Font.BOLD | Font.ITALIC, 16));
-			g.setColor(Color.gray);
+			g.setFont(new Font("Verdana", Font.BOLD | Font.ITALIC, 12));
 			String s = getSoftwareName();
 			int x = getWidth() - g.getFontMetrics().stringWidth(s) - 10;
 			int y = getHeight() - 15;
-			g.drawString(s, x + 1, y - 1);
-			g.drawString(s, x + 1, y + 1);
-			g.drawString(s, x - 1, y - 1);
-			g.drawString(s, x - 1, y + 1);
-			g.setColor(Color.green);
+			g.setColor(new Color(0x227722));
 			g.drawString(s, x, y);
 		}
 	}

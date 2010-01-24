@@ -46,7 +46,8 @@ public class ImagePreview extends JComponent implements PropertyChangeListener {
 
 	public ImagePreview(JFileChooser fc) {
 		setPreferredSize(new Dimension(200, 100));
-		fc.addPropertyChangeListener(this);
+		if (fc != null)
+			fc.addPropertyChangeListener(this);
 		setBorder(new LineBorder(Color.black));
 	}
 
