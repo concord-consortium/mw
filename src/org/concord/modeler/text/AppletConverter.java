@@ -78,7 +78,7 @@ final class AppletConverter {
 		sb.append(LINE_SEPARATOR);
 
 		sb
-				.append("      <applet code=\"org.concord.modeler.MwApplet\" archive=\"mw.jar\" width=\"400\" height=\"600\">");
+				.append("      <applet code=\"org.concord.modeler.MwApplet\" archive=\"mw.jar\" width=\"100%\" height=\"600\">");
 		sb.append(LINE_SEPARATOR);
 		sb.append("        <param name=\"cache_archive\" value=\"mw.jar\">");
 		sb.append(LINE_SEPARATOR);
