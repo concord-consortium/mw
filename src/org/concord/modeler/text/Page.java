@@ -233,7 +233,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	public final static String OPEN_PAGE = "Open";
 	public final static String SAVE_PAGE = "Save";
 	public final static String SAVE_PAGE_AS = "Save As";
-	public final static String HTML_CONVERSION = "Save As HTML";
+	public final static String SAVE_PAGE_AS_APPLET = "Save As Applet";
 	public final static String UNDO = "Undo";
 	public final static String REDO = "Redo";
 	public final static String SET_PROPERTIES = OS.startsWith("Mac") ? "Get Info" : "Properties";
@@ -341,7 +341,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	private boolean embeddedImageFound;
 	private PageScripter scripter;
 
-	Action printAction, htmlizeAction, saveAsAction;
+	Action printAction, saveAsAppletAction, saveAsAction;
 	private Action gradeAction, hintAction, bulletAction, selectAllAction, hyperlinkAction, propertiesAction;
 	private Action increaseFontSizeAction, decreaseFontSizeAction, increaseIndentAction, decreaseIndentAction;
 	private Action insertFileAction, refreshAction, newAction, scriptAction, closeAction, pastePlainTextAction;
@@ -740,7 +740,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		paragraphAction = null;
 		insertBulletAction = null;
 		propertiesAction = null;
-		htmlizeAction = null;
+		saveAsAppletAction = null;
 		colorBarAction = null;
 
 	}
@@ -2278,10 +2278,10 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 
 	private Action[] augmentActions() {
 		Action[] defaultActions = { new UndoAction(), new RedoAction(), refreshAction, saveAction, saveAsAction,
-				htmlizeAction, openAction, newAction, insertFileAction, increaseIndentAction, decreaseIndentAction,
-				increaseFontSizeAction, decreaseFontSizeAction, bulletAction, printPreviewAction, pageSetupAction,
-				printAction, propertiesAction, symbolAction, hyperlinkAction, imageReader, colorBarAction,
-				insertAtomContainerAction, insertGBContainerAction, insertChemContainerAction,
+				saveAsAppletAction, openAction, newAction, insertFileAction, increaseIndentAction,
+				decreaseIndentAction, increaseFontSizeAction, decreaseFontSizeAction, bulletAction, printPreviewAction,
+				pageSetupAction, printAction, propertiesAction, symbolAction, hyperlinkAction, imageReader,
+				colorBarAction, insertAtomContainerAction, insertGBContainerAction, insertChemContainerAction,
 				insertProsynContainerAction, insertComponentAction, fontAction, paragraphAction, insertBulletAction,
 				pastePlainTextAction };
 		Action[] old = super.getActions();
@@ -3204,14 +3204,13 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		saveReminder.setChanged(false);
 	}
 
-	public void convertToHTML() {
-
-		final Frame frame = JOptionPane.getFrameForComponent(this);
+	public void saveAsApplet() {
+		Frame frame = JOptionPane.getFrameForComponent(this);
 		fileChooser.setAcceptAllFileFilterUsed(false);
 		fileChooser.addChoosableFileFilter(FileFilterFactory.getFilter("html"));
 		fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
 		String s = Modeler.getInternationalText("SavePageAsHTML");
-		fileChooser.setDialogTitle(s != null ? s : "Save page in HTML format");
+		fileChooser.setDialogTitle(s != null ? s : "Save as an applet");
 		fileChooser.setApproveButtonMnemonic('S');
 		String latestPath = fileChooser.getLastVisitedPath();
 		if (latestPath != null)
@@ -3222,64 +3221,23 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		if (fileChooser.showSaveDialog(frame) == JFileChooser.APPROVE_OPTION) {
 			filename = FileUtilities.fileNameAutoExtend(FileFilterFactory.getFilter("html"), fileChooser
 					.getSelectedFile());
-			final File fil = new File(filename);
-			if (fil.exists()) {
+			File file = new File(filename);
+			if (file.exists()) {
 				s = Modeler.getInternationalText("FileExists");
 				String s1 = Modeler.getInternationalText("File");
 				String s2 = Modeler.getInternationalText("Overwrite");
 				String s3 = Modeler.getInternationalText("Exists");
-				if (JOptionPane.showConfirmDialog(frame, (s1 != null ? s1 : "File") + " " + fil.getName() + " "
+				if (JOptionPane.showConfirmDialog(frame, (s1 != null ? s1 : "File") + " " + file.getName() + " "
 						+ (s3 != null ? s3 : "exists") + ", " + (s2 != null ? s2 : "overwrite") + "?", s != null ? s
 						: "File exists", JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION) {
 					fileChooser.resetChoosableFileFilters();
 					return;
 				}
 			}
-
-			if (!isWriting()) {
-				new SwingWorker("HTML-encoder thread") {
-					public Object construct() {
-						isWriting = true;
-						PageHTMLEncoder htmlEncoder = new PageHTMLEncoder(Page.this);
-						htmlEncoder.setProgressBar(encoder.getProgressBar());
-						((AbstractDocument) getDocument()).readLock();
-						try {
-							htmlEncoder.write(fil);
-						}
-						catch (Exception e) {
-							EventQueue.invokeLater(new Runnable() {
-								public void run() {
-									JOptionPane.showMessageDialog(frame, "This page cannot be converted to HTML.",
-											"Conversion error", JOptionPane.ERROR_MESSAGE);
-								}
-							});
-							e.printStackTrace();
-						}
-						finally {
-							isWriting = false;
-							((AbstractDocument) getDocument()).readUnlock();
-						}
-						return htmlEncoder;
-					}
-
-					public void finished() {
-						isWriting = false;
-						((PageHTMLEncoder) get()).setProgressBar(null);
-						if (JOptionPane.showConfirmDialog(frame,
-								"The page has been saved in the HTML format.\nDo you want to view it now?",
-								"View HTML", JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION)
-							return;
-						ExternalClient.open(ExternalClient.HTML_CLIENT, fil.toString());
-					}
-				}.start();
-				fileChooser.rememberPath(fileChooser.getCurrentDirectory().toString());
-				// fileChooser.rememberFile(filename);
-
-			}
+			new AppletConverter(this).write(file);
+			fileChooser.rememberPath(fileChooser.getCurrentDirectory().toString());
 		}
-
 		fileChooser.resetChoosableFileFilters();
-
 	}
 
 	/**
@@ -5535,19 +5493,13 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				| KeyEvent.SHIFT_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_MASK
 				| KeyEvent.SHIFT_MASK, true));
 
-		htmlizeAction = new AbstractAction() {
+		saveAsAppletAction = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
-				if (componentPool.isUsed()) {
-					if (actionNotifier != null) {
-						actionNotifier.setParentComponent(Page.this);
-						actionNotifier.show(ActionNotifier.HTML_CONVERSION_WARNING);
-					}
-				}
-				convertToHTML();
+				saveAsApplet();
 			}
 		};
-		htmlizeAction.putValue(Action.NAME, HTML_CONVERSION);
-		htmlizeAction.putValue(Action.SHORT_DESCRIPTION, "Convert to HTML format");
+		saveAsAppletAction.putValue(Action.NAME, SAVE_PAGE_AS_APPLET);
+		saveAsAppletAction.putValue(Action.SHORT_DESCRIPTION, "Save as an applet");
 
 		colorBarAction = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {

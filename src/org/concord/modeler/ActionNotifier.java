@@ -35,7 +35,6 @@ import javax.swing.JOptionPane;
 public class ActionNotifier {
 
 	public final static Byte BACK_TO_ACTUAL_SIZE = 0;
-	public final static Byte HTML_CONVERSION_WARNING = 1;
 
 	private Component parent;
 	private Map<Byte, Boolean> holder;
@@ -45,7 +44,6 @@ public class ActionNotifier {
 		setParentComponent(parent);
 		holder = new HashMap<Byte, Boolean>();
 		holder.put(BACK_TO_ACTUAL_SIZE, Boolean.TRUE);
-		holder.put(HTML_CONVERSION_WARNING, Boolean.TRUE);
 	}
 
 	public void setParentComponent(Component parent) {
@@ -62,19 +60,6 @@ public class ActionNotifier {
 						OK_DONTSHOW_OPTIONS[0]);
 				if (i == JOptionPane.NO_OPTION) {
 					holder.put(BACK_TO_ACTUAL_SIZE, Boolean.FALSE);
-				}
-				return i;
-			}
-		}
-
-		else if (type.equals(HTML_CONVERSION_WARNING)) {
-			if (holder.get(HTML_CONVERSION_WARNING)) {
-				int i = JOptionPane.showOptionDialog(JOptionPane.getFrameForComponent(parent),
-						"This page contains model(s) that will be converted to JNLP link(s).", "Action Notifier",
-						JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, OK_DONTSHOW_OPTIONS,
-						OK_DONTSHOW_OPTIONS[0]);
-				if (i == JOptionPane.NO_OPTION) {
-					holder.put(HTML_CONVERSION_WARNING, Boolean.FALSE);
 				}
 				return i;
 			}
