@@ -1061,11 +1061,11 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		menuItem.setMnemonic(KeyEvent.VK_A);
 		menu.add(menuItem);
 
-		menuItem = new JMenuItem(page.getAction(Page.HTML_CONVERSION));
+		menuItem = new JMenuItem(page.getAction(Page.SAVE_PAGE_AS_APPLET));
 		menuItem.setMnemonic(KeyEvent.VK_H);
 		s = getInternationalText("SavePageAsHTML");
-		menuItem.setText((s != null ? s : "Save As HTML") + "...");
-		menuItem.setToolTipText("Convert this XML page to a HTML page");
+		menuItem.setText((s != null ? s : "Save As Applet") + "...");
+		menuItem.setToolTipText("Save this page as an applet");
 		menu.add(menuItem);
 
 		compressPageMI.setToolTipText("Compress all the files of the current page in a ZIP file");
