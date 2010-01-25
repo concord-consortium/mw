@@ -70,8 +70,8 @@ final class AppletConverter {
 		sb.append("  <body>");
 		sb.append(LINE_SEPARATOR);
 
-		sb.append("    <p>If nothing shows up, download <a href=\"" + Modeler.getStaticRoot()
-				+ "lib/mw.jar\">mw.jar</a> to where this HTML file is located, and then refresh this page.</p>");
+		sb.append("    <p><font color=\"red\">If nothing shows up below, download <a href=\"" + Modeler.getStaticRoot()
+				+ "lib/mw.jar\">mw.jar</a> to where this HTML file is located, and then refresh this page.</font></p>");
 		sb.append(LINE_SEPARATOR);
 
 		sb.append("    <center>");
@@ -80,14 +80,24 @@ final class AppletConverter {
 		sb
 				.append("      <applet code=\"org.concord.modeler.MwApplet\" archive=\"mw.jar\" width=\"100%\" height=\"600\">");
 		sb.append(LINE_SEPARATOR);
-		sb.append("        <param name=\"cache_archive\" value=\"mw.jar\">");
-		sb.append(LINE_SEPARATOR);
-		sb.append("        <param name=\"java_arguments\" value=\"-Djnlp.packEnabled=true\"/>");
-		sb.append(LINE_SEPARATOR);
+		// sb.append("        <param name=\"cache_archive\" value=\"mw.jar\">");
+		// sb.append(LINE_SEPARATOR);
+		// sb.append("        <param name=\"java_arguments\" value=\"-Djnlp.packEnabled=true\"/>");
+		// sb.append(LINE_SEPARATOR);
 		sb.append("        <param name=\"script\" value=\"page:0:import "
 				+ FileUtilities.getFileName(page.getAddress()) + "\"/>");
 		sb.append(LINE_SEPARATOR);
 		sb.append("      </applet>");
+		sb.append(LINE_SEPARATOR);
+
+		sb.append("      <form action=\"" + Modeler.getContextRoot() + "tmp.jnlp\" method=\"GET\">");
+		sb.append("        <input type=\"HIDDEN\" name=\"address\" value=\"" + page.getAddress() + "\">");
+		sb.append("        <input type=\"SUBMIT\" value=\"Get this simulation using Molecular Workbench\">");
+		sb.append("      </form>");
+		sb.append(LINE_SEPARATOR);
+
+		sb
+				.append("      <p><b>System requirements:</b> You must have Java Version 5 or higher. <a href=\"http://java.com\">Download Java now</a>.");
 		sb.append(LINE_SEPARATOR);
 
 		sb.append("    </center>");
@@ -113,5 +123,4 @@ final class AppletConverter {
 		}
 
 	}
-
 }
