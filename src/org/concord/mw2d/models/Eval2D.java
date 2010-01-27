@@ -72,6 +72,7 @@ import org.concord.mw2d.MDView;
 import org.concord.mw2d.MesoView;
 import org.concord.mw2d.UserAction;
 import org.concord.mw2d.event.UpdateEvent;
+import org.concord.mw2d.ui.MDContainer;
 
 import static java.util.regex.Pattern.compile;
 import static org.concord.modeler.script.Compiler.*;
@@ -5249,7 +5250,7 @@ class Eval2D extends AbstractEval {
 			address = FileUtilities.getCodeBase((String) o) + address;
 		}
 		view.removeAllLayeredComponents(); // make sure they are gone in case of an exception
-		if (FileUtilities.isRemote(address)) {
+		if (MDContainer.isApplet() || FileUtilities.isRemote(address)) {
 			URL url = null;
 			try {
 				url = new URL(FileUtilities.httpEncode(address));
