@@ -33,8 +33,8 @@ import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.net.MalformedURLException;
 
@@ -368,7 +368,7 @@ class ReportDialog extends JDialog {
 		}
 		if (url == null)
 			return null;
-		HttpURLConnection conn = ConnectionManager.getConnection(url);
+		URLConnection conn = ConnectionManager.getConnection(url);
 		if (conn == null)
 			return null;
 		InputStream is = null;

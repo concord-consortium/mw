@@ -34,6 +34,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -342,13 +343,13 @@ class CommentInputPane extends JPanel {
 
 		Object[] info = new Object[] { "submit", address, ModelerUtilities.getUnicode(titleField.getText()),
 				ModelerUtilities.getUnicode(textArea.getText()), userID };
-		HttpURLConnection connect = ConnectionManager.getConnection(servletURL);
-		if (connect == null)
+		URLConnection connect = ConnectionManager.getConnection(servletURL);
+		if (!(connect instanceof HttpURLConnection))
 			return "Error: can't connect to " + servletURL;
 		String msg = null;
 		connect.setDoOutput(true);
 		try {
-			connect.setRequestMethod("POST");
+			((HttpURLConnection) connect).setRequestMethod("POST");
 		}
 		catch (ProtocolException e) {
 			e.printStackTrace();
@@ -375,7 +376,7 @@ class CommentInputPane extends JPanel {
 			return msg;
 
 		try {
-			statusCode = connect.getResponseCode();
+			statusCode = ((HttpURLConnection) connect).getResponseCode();
 		}
 		catch (IOException e) {
 			e.printStackTrace();

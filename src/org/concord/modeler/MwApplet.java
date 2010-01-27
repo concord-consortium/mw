@@ -35,7 +35,7 @@ import org.concord.mw3d.MolecularContainer;
  */
 public class MwApplet extends JApplet {
 
-	private Page page;
+	private Editor editor;
 
 	public MwApplet() {
 
@@ -45,16 +45,14 @@ public class MwApplet extends JApplet {
 		MDContainer.setApplet(Page.isApplet());
 		MolecularContainer.setApplet(Page.isApplet());
 
-		page = new Page() {
+		editor = new Editor(null) {
+			@Override
 			public URL getCodeBase() {
 				return MwApplet.this.getCodeBase();
 			}
 		};
-		page.setPreferredSize(new Dimension(600, 600));
-		getContentPane().add(page, BorderLayout.CENTER);
-
-		ComponentPool pool = new ComponentPool(page);
-		page.setComponentPool(pool);
+		editor.setPreferredSize(new Dimension(600, 600));
+		getContentPane().add(editor, BorderLayout.CENTER);
 
 	}
 
@@ -69,7 +67,7 @@ public class MwApplet extends JApplet {
 			s = null;
 		}
 		if (s != null) {
-			page.executeMwScripts(s);
+			editor.getPage().executeMwScripts(s);
 		}
 
 	}

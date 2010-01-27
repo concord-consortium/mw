@@ -38,6 +38,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.util.List;
 import java.util.Properties;
@@ -138,8 +139,8 @@ public class PageTextBox extends BasicPageTextBox {
 					}
 				}
 				if (file == null) {
-					HttpURLConnection conn = ConnectionManager.getConnection(url);
-					if (conn == null)
+					URLConnection conn = ConnectionManager.getConnection(url);
+					if (!(conn instanceof HttpURLConnection))
 						return;
 					if (sendCookie) {
 						String userID = Modeler.user.getUserID();
@@ -150,7 +151,7 @@ public class PageTextBox extends BasicPageTextBox {
 					}
 					if (formMethod != null) {
 						try {
-							conn.setRequestMethod(formMethod);
+							((HttpURLConnection) conn).setRequestMethod(formMethod);
 						}
 						catch (ProtocolException e) {
 							e.printStackTrace();

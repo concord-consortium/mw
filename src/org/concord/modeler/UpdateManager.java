@@ -29,6 +29,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.net.URLConnection;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -97,18 +98,18 @@ class UpdateManager {
 	}
 
 	private static long checkTimeStamp(String s) {
-		HttpURLConnection conn = ConnectionManager.getConnection(s);
-		if (conn == null)
+		URLConnection conn = ConnectionManager.getConnection(s);
+		if (!(conn instanceof HttpURLConnection))
 			return -1;
 		try {
-			conn.setRequestMethod("HEAD");
+			((HttpURLConnection) conn).setRequestMethod("HEAD");
 		}
 		catch (ProtocolException e) {
 			e.printStackTrace();
 			return -1;
 		}
 		long t = conn.getLastModified();
-		conn.disconnect();
+		((HttpURLConnection) conn).disconnect();
 		return t;
 	}
 

@@ -625,7 +625,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			throw new IllegalArgumentException("null url");
 		stopInput();
 		inputJob = new InputJob();
-		if (url.toString().toLowerCase().startsWith("file:/")) {
+		if (!MDContainer.isApplet() && url.toString().toLowerCase().startsWith("file:/")) {
 			inputJob.read(ModelerUtilities.convertURLToFile(url.toString()));
 		}
 		else {
@@ -1705,7 +1705,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		new SwingWorker("Model Resetter", Thread.NORM_PRIORITY) {
 			public Object construct() {
 				File file = null;
-				if (FileUtilities.isRemote(url)) {
+				if (MDContainer.isApplet() || FileUtilities.isRemote(url)) {
 					URL u = null;
 					try {
 						u = new URL(url);

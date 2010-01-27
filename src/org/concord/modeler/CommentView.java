@@ -33,8 +33,8 @@ import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 
 import javax.swing.BorderFactory;
@@ -141,7 +141,7 @@ class CommentView extends JComponent {
 			return "Error :" + e;
 		}
 
-		HttpURLConnection connect = ConnectionManager.getConnection(servletURL);
+		URLConnection connect = ConnectionManager.getConnection(servletURL);
 		if (connect == null)
 			return "Error: can't connect to " + servletURL;
 
