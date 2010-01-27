@@ -244,7 +244,8 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		setLayout(new BorderLayout());
 
 		desktopHostPanel = new JPanel(new BorderLayout(0, 0));
-		desktopHostPanel.setBorder(BorderFactory.createLoweredBevelBorder());
+		if (!Page.isApplet())
+			desktopHostPanel.setBorder(BorderFactory.createLoweredBevelBorder());
 		desktopHostPanel.add(desktopPane, BorderLayout.CENTER);
 		add(desktopHostPanel, BorderLayout.CENTER);
 
