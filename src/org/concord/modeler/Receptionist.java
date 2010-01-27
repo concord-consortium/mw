@@ -26,6 +26,7 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.net.HttpURLConnection;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 
 final class Receptionist {
@@ -59,11 +60,11 @@ final class Receptionist {
 			e.printStackTrace();
 			return;
 		}
-		HttpURLConnection con = ConnectionManager.getConnection(url);
-		if (con == null)
+		URLConnection con = ConnectionManager.getConnection(url);
+		if (!(con instanceof HttpURLConnection))
 			return;
 		try {
-			con.setRequestMethod("POST");
+			((HttpURLConnection) con).setRequestMethod("POST");
 		}
 		catch (ProtocolException e) {
 			e.printStackTrace();
@@ -72,7 +73,7 @@ final class Receptionist {
 		con.setDoOutput(true);
 
 		try {
-			responseCode = con.getResponseCode();
+			responseCode = ((HttpURLConnection) con).getResponseCode();
 		}
 		catch (IOException e) {
 			e.printStackTrace();

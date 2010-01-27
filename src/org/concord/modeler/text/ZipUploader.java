@@ -25,7 +25,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
+import java.net.URLConnection;
 import java.util.zip.ZipOutputStream;
 
 import javax.swing.JOptionPane;
@@ -44,7 +44,7 @@ class ZipUploader {
 
 	private Page page;
 	private Upload upload;
-	private HttpURLConnection connect;
+	private URLConnection connect;
 
 	ZipUploader(Page page, Upload upload) {
 		this.page = page;

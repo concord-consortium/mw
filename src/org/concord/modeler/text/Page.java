@@ -55,7 +55,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -1446,6 +1445,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 
 	// for applet to override
 	public URL getCodeBase() {
+		if (editor != null)
+			return editor.getCodeBase();
 		return null;
 	}
 
@@ -5123,7 +5124,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				if (url != null) {
 					if (ConnectionManager.isDynamicalContent(pageAddress))
 						return t;
-					HttpURLConnection conn = ConnectionManager.getConnection(url);
+					URLConnection conn = ConnectionManager.getConnection(url);
 					if (conn != null) {
 						t[0] = conn.getLastModified();
 						t[1] = conn.getContentLength();

@@ -71,8 +71,8 @@ public class ConnectionManager {
 		progressListeners.remove(listener);
 	}
 
-	/** return a HttpURLConnection with the current timeout settings */
-	public static HttpURLConnection getConnection(String address) {
+	/** return a URLConnection with the current timeout settings */
+	public static URLConnection getConnection(String address) {
 		if (address == null)
 			return null;
 		URL u = null;
@@ -86,8 +86,8 @@ public class ConnectionManager {
 		return getConnection(u);
 	}
 
-	/** return a HttpURLConnection with the current timeout settings */
-	public static HttpURLConnection getConnection(URL u) {
+	/** return a URLConnection with the current timeout settings */
+	public static URLConnection getConnection(URL u) {
 		URLConnection connection;
 		try {
 			connection = u.openConnection();
@@ -98,7 +98,7 @@ public class ConnectionManager {
 		}
 		connection.setConnectTimeout(connectTimeout);
 		connection.setReadTimeout(readTimeout);
-		return (HttpURLConnection) connection;
+		return connection;
 	}
 
 	public void setCachingAllowed(boolean b) {
@@ -425,19 +425,19 @@ public class ConnectionManager {
 			throw new IllegalArgumentException("Null URL");
 		if (sharedInstance.getWorkOffline())
 			return 0;
-		HttpURLConnection conn = getConnection(url);
-		if (conn == null)
+		URLConnection conn = getConnection(url);
+		if (!(conn instanceof HttpURLConnection))
 			return 0;
 		long lm = 0;
 		try {
-			conn.setRequestMethod("HEAD");
+			((HttpURLConnection) conn).setRequestMethod("HEAD");
 			lm = conn.getLastModified();
 		}
 		catch (ProtocolException e) {
 			e.printStackTrace();
 		}
 		finally {
-			conn.disconnect();
+			((HttpURLConnection) conn).disconnect();
 		}
 		return lm;
 	}
@@ -456,11 +456,11 @@ public class ConnectionManager {
 			return t;
 		File file = sharedInstance.getLocalCopy(url);
 		if (file == null || !file.exists()) {
-			HttpURLConnection conn = getConnection(url);
-			if (conn == null)
+			URLConnection conn = getConnection(url);
+			if (!(conn instanceof HttpURLConnection))
 				return null;
 			try {
-				conn.setRequestMethod("HEAD");
+				((HttpURLConnection) conn).setRequestMethod("HEAD");
 				t[0] = conn.getLastModified();
 				t[1] = conn.getContentLength();
 			}
@@ -468,7 +468,7 @@ public class ConnectionManager {
 				e.printStackTrace();
 			}
 			finally {
-				conn.disconnect();
+				((HttpURLConnection) conn).disconnect();
 			}
 		}
 		else {

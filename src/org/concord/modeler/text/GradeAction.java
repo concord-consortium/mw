@@ -31,6 +31,7 @@ import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -56,7 +57,7 @@ class GradeAction extends AbstractAction {
 	private Page page;
 	private PageNameGroup pageNameGroup;
 	private URL url;
-	private HttpURLConnection connection;
+	private URLConnection connection;
 	private String title;
 	private GradeSubmissionDialog gradeSubmissionDialog;
 
@@ -156,13 +157,13 @@ class GradeAction extends AbstractAction {
 		if (url == null)
 			return;
 		connection = ConnectionManager.getConnection(url);
-		if (connection == null)
+		if (!(connection instanceof HttpURLConnection))
 			return;
 		connection.setDoInput(true);
 		connection.setDoOutput(true);
 		connection.setUseCaches(false);
 		try {
-			connection.setRequestMethod("POST");
+			((HttpURLConnection) connection).setRequestMethod("POST");
 			connection.getOutputStream().write(s.getBytes());
 		}
 		catch (SocketTimeoutException e) {

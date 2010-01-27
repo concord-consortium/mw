@@ -176,9 +176,10 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 
 	public Editor(StatusBar statusBar) {
 
-		init();
-
-		setStatusBar(statusBar);
+		if (!Page.isApplet()) {
+			init();
+			setStatusBar(statusBar);
+		}
 
 		if (actionNotifier == null) {
 			actionNotifier = new ActionNotifier(this);
@@ -198,9 +199,11 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 
 		page = new Page();
 		page.setEditor(this);
-		page.setURLDisplay(statusBar.tipBar);
+		if (statusBar != null) {
+			page.setURLDisplay(statusBar.tipBar);
+			page.setProgressBar(statusBar.getProgressBar());
+		}
 		page.addPageListener(this);
-		page.setProgressBar(statusBar.getProgressBar());
 		page.setActionNotifier(actionNotifier);
 		page.addCaretListener(new CaretListener() {
 			public void caretUpdate(CaretEvent e) {
@@ -249,9 +252,11 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		enabledComponentsWhenNotEditable = new ArrayList<Component>();
 		disabledComponentsWhileLoading = new ArrayList<Component>();
 
-		page.getInputMap().put((KeyStroke) fullScreenAction.getValue(Action.ACCELERATOR_KEY), "Full Screen");
-		page.getActionMap().put("Full Screen", fullScreenAction);
-		page.putActivityAction(openSnapshotGallery);
+		if (!Page.isApplet()) {
+			page.getInputMap().put((KeyStroke) fullScreenAction.getValue(Action.ACCELERATOR_KEY), "Full Screen");
+			page.getActionMap().put("Full Screen", fullScreenAction);
+			page.putActivityAction(openSnapshotGallery);
+		}
 
 		loadModelAndPageList = new ArrayList<Object>();
 
@@ -458,6 +463,11 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 			button.setBorder(BorderFactory.createEmptyBorder());
 			button.setBackground(toolBarPanel.getBackground());
 		}
+	}
+
+	// for applet to override
+	public URL getCodeBase() {
+		return null;
 	}
 
 	/**
@@ -1499,19 +1509,21 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 				}
 			}
 		}
-		if (onPage && changed) {
-			page.getSaveReminder().setChanged(true);
-		}
-		else {
-			// NOTE: temporary solution for setting the reminder's status. Seems there is something somewhere
-			// in the event queue that signals the "changed" status. This fix appends a runnable that sets
-			// the flag to false at the end of the event queue. This bug is hard to trace down because
-			// there are too many places that signal the reminder.
-			EventQueue.invokeLater(new Runnable() {
-				public void run() {
-					page.getSaveReminder().setChanged(false);
-				}
-			});
+		if (page.getSaveReminder() != null) {
+			if (onPage && changed) {
+				page.getSaveReminder().setChanged(true);
+			}
+			else {
+				// NOTE: temporary solution for setting the reminder's status. Seems there is something somewhere
+				// in the event queue that signals the "changed" status. This fix appends a runnable that sets
+				// the flag to false at the end of the event queue. This bug is hard to trace down because
+				// there are too many places that signal the reminder.
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						page.getSaveReminder().setChanged(false);
+					}
+				});
+			}
 		}
 	}
 
@@ -1569,7 +1581,8 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					resetControllerStates(src);
-					page.getSaveReminder().setChanged(true);
+					if (page.getSaveReminder() != null)
+						page.getSaveReminder().setChanged(true);
 				}
 			});
 			break;

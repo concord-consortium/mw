@@ -220,8 +220,9 @@ public class ComponentPool {
 			page.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		atomContainer[i] = new AtomContainer(Modeler.tapeLength);
 		if (page.getEditor() != null) {
-			atomContainer[i].setProgressBar(page.getEditor().getStatusBar().getProgressBar());
 			atomContainer[i].getModel().addPageComponentListener(page.getEditor());
+			if (page.getEditor().getStatusBar() != null)
+				atomContainer[i].setProgressBar(page.getEditor().getStatusBar().getProgressBar());
 		}
 		if (page.getSaveReminder() != null)
 			atomContainer[i].getModel().addPageComponentListener(page.getSaveReminder());
@@ -234,8 +235,9 @@ public class ComponentPool {
 			page.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		gbContainer[i] = new GBContainer(Modeler.tapeLength);
 		if (page.getEditor() != null) {
-			gbContainer[i].setProgressBar(page.getEditor().getStatusBar().getProgressBar());
 			gbContainer[i].getModel().addPageComponentListener(page.getEditor());
+			if (page.getEditor().getStatusBar() != null)
+				gbContainer[i].setProgressBar(page.getEditor().getStatusBar().getProgressBar());
 		}
 		if (page.getSaveReminder() != null)
 			gbContainer[i].getModel().addPageComponentListener(page.getSaveReminder());
@@ -248,8 +250,9 @@ public class ComponentPool {
 			page.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		chemContainer[i] = new ChemContainer(Modeler.tapeLength);
 		if (page.getEditor() != null) {
-			chemContainer[i].setProgressBar(page.getEditor().getStatusBar().getProgressBar());
 			chemContainer[i].getModel().addPageComponentListener(page.getEditor());
+			if (page.getEditor().getStatusBar() != null)
+				chemContainer[i].setProgressBar(page.getEditor().getStatusBar().getProgressBar());
 		}
 		if (page.getSaveReminder() != null)
 			chemContainer[i].getModel().addPageComponentListener(page.getSaveReminder());
