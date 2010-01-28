@@ -218,6 +218,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 
 		scroller = new JScrollPane(page, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scroller.setBorder(BorderFactory.createEmptyBorder());
 		positionMap = new HashMap<String, Point>();
 		desktopPane.add(scroller, JLayeredPane.DEFAULT_LAYER);
 		desktopPane.addComponentListener(new ComponentAdapter() {
