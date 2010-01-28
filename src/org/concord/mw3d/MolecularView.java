@@ -1047,10 +1047,12 @@ public class MolecularView extends Draw {
 				}
 				s = FileUtilities.getCodeBase(resourceAddress) + s;
 			}
-			URL remoteCopy = ConnectionManager.sharedInstance().getRemoteLocation(s);
-			if (remoteCopy != null)
-				s = remoteCopy.toString();
-			if (FileUtilities.isRemote(s)) {
+			if (!MolecularContainer.isApplet()) {
+				URL remoteCopy = ConnectionManager.sharedInstance().getRemoteLocation(s);
+				if (remoteCopy != null)
+					s = remoteCopy.toString();
+			}
+			if (MolecularContainer.isApplet() || FileUtilities.isRemote(s)) {
 				URL url = null;
 				try {
 					url = new URL(s);
