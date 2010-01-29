@@ -92,6 +92,9 @@ final class AppletConverter {
 		sb.append("      </applet>");
 		sb.append(LINE_SEPARATOR);
 
+		sb.append("      <br><br>");
+		sb.append(LINE_SEPARATOR);
+
 		sb.append("      <form action=\"" + Modeler.getContextRoot() + "tmp.jnlp\" method=\"GET\">");
 		sb.append(LINE_SEPARATOR);
 		sb.append("        <input type=\"HIDDEN\" name=\"address\" value=\"" + page.getAddress() + "\">");

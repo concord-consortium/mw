@@ -1426,7 +1426,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	public URL getURL() {
 		if (asApplet) {
 			try {
-				return new URL(getCodeBase(), FileUtilities.getFileName(pageAddress));
+				return new URL(pageAddress);
 			}
 			catch (MalformedURLException e) {
 				e.printStackTrace();
@@ -3775,7 +3775,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			g2.fillRect(0, 0, getWidth(), getHeight());
 		}
 		super.paintComponent(g);
-		if (asApplet) {
+		if (isApplet()) {
 			g.setFont(new Font("Verdana", Font.BOLD | Font.ITALIC, 12));
 			String s = getSoftwareName();
 			int x = getWidth() - g.getFontMetrics().stringWidth(s) - 10;
