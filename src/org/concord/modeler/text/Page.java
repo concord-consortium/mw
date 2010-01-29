@@ -1424,17 +1424,10 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	}
 
 	public URL getURL() {
-		if (asApplet) {
-			try {
-				return new URL(pageAddress);
-			}
-			catch (MalformedURLException e) {
-				e.printStackTrace();
-				return null;
-			}
-		}
 		try {
 			if (isRemote())
+				return new URL(pageAddress);
+			if (asApplet && pageAddress.startsWith("file:"))
 				return new URL(pageAddress);
 			return new File(pageAddress).toURI().toURL();
 		}
@@ -3660,17 +3653,28 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 
 	public Icon loadImage(String path) {
 		Icon icon = null;
-		if (isApplet() || isRemote()) {
+		if (asApplet || isRemote()) {
 			String fileName = FileUtilities.httpEncode(FileUtilities.getFileName(path));
-			URL baseURL = null, url = null;
+			URL url = null;
 			boolean urlIsCorrect = true;
+			String address = FileUtilities.httpEncode(FileUtilities.getCodeBase(getAddress()));
 			try {
-				baseURL = new URL(FileUtilities.httpEncode(FileUtilities.getCodeBase(getAddress())));
-				url = new URL(baseURL, fileName);
+				url = new URL(new URL(address), fileName);
 			}
-			catch (MalformedURLException mue) {
-				mue.printStackTrace();
-				urlIsCorrect = false;
+			catch (MalformedURLException e) {
+				e.printStackTrace();
+				if (asApplet) {
+					try {
+						url = new File(address, fileName).toURI().toURL();
+					}
+					catch (MalformedURLException e1) {
+						e1.printStackTrace();
+						urlIsCorrect = false;
+					}
+				}
+				else {
+					urlIsCorrect = false;
+				}
 			}
 			if (urlIsCorrect) {
 				icon = ConnectionManager.sharedInstance().loadImage(url);
@@ -3910,7 +3914,12 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		if (href == null)
 			return;
 		rememberViewPosition = false;
-		processHyperlink(resolvePath(href));
+		if (asApplet && href.startsWith("file:")) {
+			processHyperlink(href);
+		}
+		else {
+			processHyperlink(resolvePath(href));
+		}
 	}
 
 	private static String fixLink(String href) {
@@ -4338,10 +4347,12 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 
 	private static String ensureLocation(String url) {
 		if (url.startsWith("file:")) {
-			url = ModelerUtilities.convertURLToFilePath(url);
-			String s = ConnectionManager.sharedInstance().getRemoteLocationString(url);
-			if (s != null)
-				return s;
+			if (!isApplet()) {
+				url = ModelerUtilities.convertURLToFilePath(url);
+				String s = ConnectionManager.sharedInstance().getRemoteLocationString(url);
+				if (s != null)
+					return s;
+			}
 		}
 		return url;
 	}

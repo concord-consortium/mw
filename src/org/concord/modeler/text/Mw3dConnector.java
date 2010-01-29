@@ -21,6 +21,7 @@
 package org.concord.modeler.text;
 
 import java.awt.EventQueue;
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -73,12 +74,23 @@ class Mw3dConnector {
 			synchronized (mdList) {
 				for (PageMd3d md : mdList) {
 					address = FileUtilities.removeSuffix(page.getAddress()) + "$" + md.getIndex() + ".mdd";
+					URL url = null;
 					try {
-						md.input(new URL(address), false);
+						url = new URL(address);
 					}
 					catch (MalformedURLException e) {
 						e.printStackTrace();
+						if (!FileUtilities.isRemote(address)) {
+							try {
+								url = new File(address).toURI().toURL();
+							}
+							catch (MalformedURLException e1) {
+								e1.printStackTrace();
+							}
+						}
 					}
+					if (url != null)
+						md.input(url, false);
 				}
 			}
 		}
