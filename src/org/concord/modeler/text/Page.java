@@ -450,25 +450,26 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			activityActionMap.put(saveAsAction.toString(), saveAsAction);
 		}
 
+		addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				processMousePressed(e);
+			}
+
+			public void mouseReleased(MouseEvent e) {
+				processMouseReleased(e);
+			}
+		});
+		addMouseMotionListener(new MouseMotionAdapter() {
+			public void mouseMoved(MouseEvent e) {
+				processMouseMoved(e);
+			}
+
+			public void mouseDragged(MouseEvent e) {
+				processMouseDragged(e);
+			}
+		});
+
 		if (!asApplet) {
-			addMouseListener(new MouseAdapter() {
-				public void mousePressed(MouseEvent e) {
-					processMousePressed(e);
-				}
-
-				public void mouseReleased(MouseEvent e) {
-					processMouseReleased(e);
-				}
-			});
-			addMouseMotionListener(new MouseMotionAdapter() {
-				public void mouseMoved(MouseEvent e) {
-					processMouseMoved(e);
-				}
-
-				public void mouseDragged(MouseEvent e) {
-					processMouseDragged(e);
-				}
-			});
 			popupMenu = new PagePopupMenu(this);
 			imagePopupMenu = new ImagePopupMenu(this);
 			colorBarPopupMenu = new ColorBarPopupMenu(this);
@@ -2434,7 +2435,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		getDocument().addDocumentListener(editResponder);
 		setFillMode(FillMode.getNoFillMode());
 		properties.clear();
-		resetUndoManager();
+		if (!asApplet)
+			resetUndoManager();
 		removeHighlights();
 		unhighlightEmbedded();
 		EventQueue.invokeLater(new Runnable() {
@@ -2443,9 +2445,11 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 					decoder.getProgressBar().setIndeterminate(false);
 					decoder.getProgressBar().setValue(0);
 				}
-				if (encoder.getProgressBar() != null) {
-					encoder.getProgressBar().setIndeterminate(false);
-					encoder.getProgressBar().setValue(0);
+				if (encoder != null) {
+					if (encoder.getProgressBar() != null) {
+						encoder.getProgressBar().setIndeterminate(false);
+						encoder.getProgressBar().setValue(0);
+					}
 				}
 			}
 		});
@@ -2559,7 +2563,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				});
 			}
 			finally {
-				saveReminder.setChanged(false);
+				if (saveReminder != null)
+					saveReminder.setChanged(false);
 			}
 		}
 	}
@@ -3802,7 +3807,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			decoder.threadIndex = threadIndex;
 			final Runnable r = new Runnable() {
 				public void run() {
-					saveReminder.setChanged(false);
+					if (saveReminder != null)
+						saveReminder.setChanged(false);
 					setReading(false);
 					if (!rememberViewPosition) {
 						rememberViewPosition = true;
@@ -4184,7 +4190,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 
 	private void saveCheck(final String address) {
 		int opt = -1;
-		if (saveReminder.isChanged()) {
+		if (saveReminder != null && saveReminder.isChanged()) {
 			opt = isRemote() ? JOptionPane.NO_OPTION : saveReminder.showConfirmDialog(this, FileUtilities
 					.getFileName(pageAddress));
 		}
@@ -4398,6 +4404,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	void processMousePressed(MouseEvent e) {
 		requestFocusInWindow();
 		removeHighlights();
+		if (asApplet)
+			return;
 		if (ModelerUtilities.isRightClick(e)) {
 			Point p = new Point(e.getX(), e.getY());
 			String link = isHyperlinked(p);

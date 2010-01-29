@@ -1657,6 +1657,8 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 	}
 
 	private void setToolbarButtons() {
+		if (Page.isApplet())
+			return;
 		if (page.isRemote()) {
 			if (editCheckBox.isSelected()) {
 				setEditable(false);
@@ -1743,10 +1745,12 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 			loadModelAndPageList.clear();
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					setToolbarButtons();
-					enableDisabledComponentsWhileLoading(true);
-					statusBar.getProgressBar().setIndeterminate(false);
-					statusBar.tipBar.setText(editCheckBox.isSelected() ? "Editing" : "Loaded");
+					if (!Page.isApplet()) {
+						setToolbarButtons();
+						enableDisabledComponentsWhileLoading(true);
+						statusBar.getProgressBar().setIndeterminate(false);
+						statusBar.tipBar.setText(editCheckBox.isSelected() ? "Editing" : "Loaded");
+					}
 					page.requestFocusInWindow();
 					setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 					page.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
