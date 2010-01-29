@@ -3653,7 +3653,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 
 	public Icon loadImage(String path) {
 		Icon icon = null;
-		if (isRemote()) {
+		if (isApplet() || isRemote()) {
 			String fileName = FileUtilities.httpEncode(FileUtilities.getFileName(path));
 			URL baseURL = null, url = null;
 			boolean urlIsCorrect = true;
