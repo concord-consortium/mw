@@ -420,8 +420,10 @@ public class PageApplet extends PagePlugin {
 
 	public void destroy() {
 		super.destroy();
-		if (executorService != null)
-			executorService.shutdownNow();
+		if (!Page.isApplet()) {
+			if (executorService != null)
+				executorService.shutdownNow();
+		}
 		destroyApplet();
 		page = null;
 		if (maker != null)
@@ -569,6 +571,8 @@ public class PageApplet extends PagePlugin {
 	}
 
 	void snapshot() {
+		if (Page.isApplet())
+			return;
 		boolean b = false;
 		if (implementMwService()) {
 			Method method;

@@ -114,25 +114,27 @@ public class ImageQuestion extends JPanel implements Embeddable, TransferListene
 
 		imageContainer = new ImageContainer();
 		splitPane.setTopComponent(imageContainer);
-		SnapshotGallery.sharedInstance().addSnapshotListener(imageContainer);
-
-		thumbnailPanel = SnapshotGallery.sharedInstance().createThumbnailImagePanel();
-		thumbnailPanel.addTransferListener(this);
-		thumbnailPanel.addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent e) {
-				// make sure the scaled size will be current
-				imageContainer.setScaledSize(splitPane.getWidth(), splitPane.getHeight());
-				thumbnailPanel.processMousePressedEvent(e);
-				if (e.getClickCount() < 2)
-					return;
-				ImageIcon icon = SnapshotGallery.sharedInstance().loadSelectedAnnotatedImage();
-				imageContainer.setImage(icon);
-				imageContainer.repaint();
-				storeAnswer();
-			}
-		});
+		if (!Page.isApplet()) {
+			SnapshotGallery.sharedInstance().addSnapshotListener(imageContainer);
+			thumbnailPanel = SnapshotGallery.sharedInstance().createThumbnailImagePanel();
+			thumbnailPanel.addTransferListener(this);
+			thumbnailPanel.addMouseListener(new MouseAdapter() {
+				public void mousePressed(MouseEvent e) {
+					// make sure the scaled size will be current
+					imageContainer.setScaledSize(splitPane.getWidth(), splitPane.getHeight());
+					thumbnailPanel.processMousePressedEvent(e);
+					if (e.getClickCount() < 2)
+						return;
+					ImageIcon icon = SnapshotGallery.sharedInstance().loadSelectedAnnotatedImage();
+					imageContainer.setImage(icon);
+					imageContainer.repaint();
+					storeAnswer();
+				}
+			});
+		}
 		scroller = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		scroller.getViewport().setView(thumbnailPanel);
+		if (!Page.isApplet())
+			scroller.getViewport().setView(thumbnailPanel);
 
 		toolBarPanel = new JPanel();
 		lowerPanel.add(toolBarPanel, BorderLayout.SOUTH);
@@ -332,12 +334,14 @@ public class ImageQuestion extends JPanel implements Embeddable, TransferListene
 	}
 
 	public void destroy() {
-		SnapshotGallery.sharedInstance().removeSnapshotListener(imageContainer);
+		if (!Page.isApplet()) {
+			SnapshotGallery.sharedInstance().removeSnapshotListener(imageContainer);
+			thumbnailPanel.removeTransferListener(this);
+			thumbnailPanel.destroy();
+		}
+		imageContainer.destroy();
 		questionArea.destroy();
 		page = null;
-		thumbnailPanel.removeTransferListener(this);
-		thumbnailPanel.destroy();
-		imageContainer.destroy();
 		if (inputListeners != null)
 			inputListeners.clear();
 		if (maker != null)
