@@ -43,6 +43,7 @@ import org.concord.modeler.util.FileUtilities;
 import org.concord.modeler.util.GifDecoder;
 import org.concord.mw2d.MDView;
 import org.concord.mw2d.ViewAttribute;
+import org.concord.mw2d.ui.MDContainer;
 
 /**
  * An ImageComponent is a ModelComponent that is an image. The animated GIF format is supported.
@@ -162,7 +163,7 @@ public class ImageComponent implements ModelComponent, Layered, Rotatable {
 			else {
 				// Workaround: somehow loading image through ImageIcon doesn't work when MW is embedded.
 				// The API doc doesn't say this method utilizes MediaTracker.
-				if (FileUtilities.isRemote(address)) {
+				if (MDContainer.isApplet() || FileUtilities.isRemote(address)) {
 					images[0] = Toolkit.getDefaultToolkit().createImage(new URL(address));
 				}
 				else {

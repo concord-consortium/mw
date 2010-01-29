@@ -222,6 +222,8 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 	private JPanel topPanel;
 	private BottomBar bottomBar;
 
+	private static boolean asApplet;
+
 	public JmolContainer() {
 
 		super(new BorderLayout());
@@ -270,6 +272,14 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 		roverManager = new RoverManager(this);
 		motionGenerator = new MotionGenerator(this);
 
+	}
+
+	public static void setApplet(boolean b) {
+		asApplet = b;
+	}
+
+	public static boolean isApplet() {
+		return asApplet;
 	}
 
 	protected static String getInternationalText(String name) {
@@ -1342,7 +1352,7 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 		scenes.clear();
 		if (s == null)
 			return;
-		if (FileUtilities.isRemote(s)) {
+		if (isApplet() || FileUtilities.isRemote(s)) {
 			s = FileUtilities.httpEncode(s);
 			URL u = null;
 			try {

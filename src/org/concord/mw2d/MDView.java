@@ -2080,7 +2080,7 @@ public abstract class MDView extends PrintableComponent {
 				if (fileName != null) {
 					String s = codeBase + fileName;
 					ImageIcon icon = null;
-					if (FileUtilities.isRemote(s)) {
+					if (MDContainer.isApplet() || FileUtilities.isRemote(s)) {
 						try {
 							icon = ConnectionManager.sharedInstance().loadImage(new URL(FileUtilities.httpEncode(s)));
 						}

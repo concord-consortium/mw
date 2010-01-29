@@ -25,6 +25,7 @@ import java.net.URL;
 
 import javax.swing.JApplet;
 
+import org.concord.jmol.JmolContainer;
 import org.concord.modeler.text.Page;
 import org.concord.mw2d.ui.MDContainer;
 import org.concord.mw3d.MolecularContainer;
@@ -44,6 +45,7 @@ public class MwApplet extends JApplet {
 		ConnectionManager.sharedInstance().setCachingAllowed(false);
 		MDContainer.setApplet(Page.isApplet());
 		MolecularContainer.setApplet(Page.isApplet());
+		JmolContainer.setApplet(Page.isApplet());
 
 		editor = new Editor(null) {
 			@Override
