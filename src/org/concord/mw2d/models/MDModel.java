@@ -2397,9 +2397,11 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 					monitor.hide();
 				}
 				else {
-					monitor.show(getView().getLocationOnScreen().x + (getView().getWidth() - monitor.getSize().width)
-							/ 2, getView().getLocationOnScreen().y + (getView().getHeight() - monitor.getSize().height)
-							/ 2);
+					if (getView().isShowing())
+						monitor.show(getView().getLocationOnScreen().x
+								+ (getView().getWidth() - monitor.getSize().width) / 2,
+								getView().getLocationOnScreen().y + (getView().getHeight() - monitor.getSize().height)
+										/ 2);
 				}
 			}
 		});
