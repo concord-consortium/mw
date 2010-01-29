@@ -2525,10 +2525,12 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			// this disables the SaveReminder when the file is in the "/cache/tmpzip/" zone
 			if (!isRemote()) {
 				if (runOnCD) {
-					saveReminder.setEnabled(false);
+					if (saveReminder != null)
+						saveReminder.setEnabled(false);
 				}
 				else {
-					saveReminder.setEnabled(uri.indexOf(TMPZIP) == -1);
+					if (saveReminder != null)
+						saveReminder.setEnabled(uri.indexOf(TMPZIP) == -1);
 				}
 			}
 			else {
@@ -4276,10 +4278,12 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		}
 		else if (eventType == HyperlinkEvent.EventType.ENTERED) {
 			reassureDocumentBase(e.getSource());
-			urlDisplay.setText(e.getURL() == null ? desc : e.getURL().toString());
+			if (urlDisplay != null)
+				urlDisplay.setText(e.getURL() == null ? desc : e.getURL().toString());
 		}
 		else if (eventType == HyperlinkEvent.EventType.EXITED) {
-			urlDisplay.setText(null);
+			if (urlDisplay != null)
+				urlDisplay.setText(null);
 		}
 	}
 
