@@ -135,9 +135,10 @@ public class PageMolecularViewer extends JmolContainer implements BasicModel, Em
 		createActions();
 
 		addMouseListenerToViewer(mouseAdapter);
-		setFileChooser(ModelerUtilities.fileChooser);
-
-		setScreenshotAction(new ScreenshotSaver(ModelerUtilities.fileChooser, getView(), true));
+		if (!isApplet()) {
+			setFileChooser(ModelerUtilities.fileChooser);
+			setScreenshotAction(new ScreenshotSaver(ModelerUtilities.fileChooser, getView(), true));
+		}
 		setSnapshotListener(snapshotAction);
 
 		setAtomColorSelectionMenu(createColorSelectionMenu("atoms"), false);
@@ -1571,7 +1572,8 @@ public class PageMolecularViewer extends JmolContainer implements BasicModel, Em
 				}
 			}
 		}
-		addPageComponentListener(p.getSaveReminder());
+		if (p.getSaveReminder() != null)
+			addPageComponentListener(p.getSaveReminder());
 	}
 
 	public Page getPage() {

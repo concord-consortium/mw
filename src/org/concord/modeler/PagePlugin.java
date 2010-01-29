@@ -224,7 +224,7 @@ abstract public class PagePlugin extends JPanel implements Embeddable, Scriptabl
 		InputStream is = null;
 		String address = getResourceAddress();
 		File file = null;
-		if (page.isRemote()) {
+		if (Page.isApplet() || page.isRemote()) {
 			try {
 				file = ConnectionManager.sharedInstance().shouldUpdate(address);
 				if (file == null)

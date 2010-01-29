@@ -95,7 +95,7 @@ public class PageApplet extends PagePlugin {
 		int n = jarName.size();
 		final URL[] url = new URL[n];
 		final File[] file = new File[n];
-		if (page.isRemote()) {
+		if (Page.isApplet() || page.isRemote()) {
 			for (int i = 0; i < url.length; i++) {
 				try {
 					url[i] = new URL(FileUtilities.getCodeBase(page.getAddress()) + jarName.get(i));
@@ -105,21 +105,23 @@ public class PageApplet extends PagePlugin {
 					setErrorMessage("Errors in forming URL: " + url[i]);
 					return;
 				}
-				if (cachingAllowed) {
-					try {
-						file[i] = ConnectionManager.sharedInstance().shouldUpdate(url[i]);
-						if (file[i] == null)
-							file[i] = ConnectionManager.sharedInstance().cache(url[i]);
-						// this thread can run for a while and it will set the checkupdate flag in the Cache
-						// Manager to false when it is done. This will result in the cml file to be unable to
-						// update. Hence, we should set the checkupdate flag to true afterwards.
-						ConnectionManager.sharedInstance().setCheckUpdate(true);
-						url[i] = file[i].toURI().toURL();
-					}
-					catch (IOException e) {
-						e.printStackTrace();
-						setErrorMessage("Errors in caching jar file: " + url[i]);
-						return;
+				if (!Page.isApplet()) {
+					if (cachingAllowed) {
+						try {
+							file[i] = ConnectionManager.sharedInstance().shouldUpdate(url[i]);
+							if (file[i] == null)
+								file[i] = ConnectionManager.sharedInstance().cache(url[i]);
+							// this thread can run for a while and it will set the checkupdate flag in the Cache
+							// Manager to false when it is done. This will result in the cml file to be unable to
+							// update. Hence, we should set the checkupdate flag to true afterwards.
+							ConnectionManager.sharedInstance().setCheckUpdate(true);
+							url[i] = file[i].toURI().toURL();
+						}
+						catch (IOException e) {
+							e.printStackTrace();
+							setErrorMessage("Errors in caching jar file: " + url[i]);
+							return;
+						}
 					}
 				}
 			}
