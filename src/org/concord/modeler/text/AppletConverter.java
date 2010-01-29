@@ -70,17 +70,19 @@ final class AppletConverter {
 		sb.append("  <body>");
 		sb.append(LINE_SEPARATOR);
 
-		sb.append("    <p><font color=\"red\">If nothing shows up below, download <a href=\"" + Modeler.getStaticRoot()
-				+ "lib/mw.jar\">mw.jar</a> to where this HTML file is located, and then refresh this page.</font></p>");
+		sb
+				.append("    <p><font color=\"red\">If nothing shows up below, download <a href=\""
+						+ Modeler.getStaticRoot()
+						+ "lib/mwapplet.jar\">mwapplet.jar</a> to where this HTML file is located, and then refresh this page.</font></p>");
 		sb.append(LINE_SEPARATOR);
 
 		sb.append("    <center>");
 		sb.append(LINE_SEPARATOR);
 
 		sb
-				.append("      <applet code=\"org.concord.modeler.MwApplet\" archive=\"mw.jar\" width=\"100%\" height=\"600\">");
+				.append("      <applet code=\"org.concord.modeler.MwApplet\" archive=\"mwapplet.jar\" width=\"100%\" height=\"600\">");
 		sb.append(LINE_SEPARATOR);
-		// sb.append("        <param name=\"cache_archive\" value=\"mw.jar\">");
+		// sb.append("        <param name=\"cache_archive\" value=\"mwapplet.jar\">");
 		// sb.append(LINE_SEPARATOR);
 		// sb.append("        <param name=\"java_arguments\" value=\"-Djnlp.packEnabled=true\"/>");
 		// sb.append(LINE_SEPARATOR);
@@ -126,4 +128,5 @@ final class AppletConverter {
 		}
 
 	}
+
 }
