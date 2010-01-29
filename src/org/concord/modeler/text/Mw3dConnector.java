@@ -74,7 +74,7 @@ class Mw3dConnector {
 				for (PageMd3d md : mdList) {
 					address = FileUtilities.removeSuffix(page.getAddress()) + "$" + md.getIndex() + ".mdd";
 					try {
-						md.input(new URL(page.getCodeBase(), FileUtilities.getFileName(address)), false);
+						md.input(new URL(address), false);
 					}
 					catch (MalformedURLException e) {
 						e.printStackTrace();

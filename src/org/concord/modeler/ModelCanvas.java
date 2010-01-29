@@ -256,15 +256,12 @@ public class ModelCanvas extends JComponent implements Embeddable, Scriptable, E
 
 	public void loadCurrentResource() {
 		if (Page.isApplet()) {
-			String fileName = FileUtilities.httpEncode(FileUtilities.getFileName(resourceAddress));
-			URL url = null;
 			try {
-				url = new URL(page.getCodeBase(), fileName);
+				container.getModel().input(new URL(resourceAddress));
 			}
 			catch (MalformedURLException mue) {
 				mue.printStackTrace();
 			}
-			container.getModel().input(url);
 		}
 		else {
 			if (!page.isRemote()) {

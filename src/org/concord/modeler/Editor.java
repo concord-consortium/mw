@@ -1814,11 +1814,13 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 			break;
 
 		case PageEvent.LOAD_ERROR:
-			page.getSaveReminder().setChanged(false);
+			if (page.getSaveReminder() != null)
+				page.getSaveReminder().setChanged(false);
 			final String s = e.getDescription();
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					statusBar.getProgressBar().setIndeterminate(false);
+					if (statusBar != null)
+						statusBar.getProgressBar().setIndeterminate(false);
 					try {
 						JOptionPane.getFrameForComponent(Editor.this).setTitle(
 								s + " - " + Modeler.NAME + " V" + Modeler.VERSION);
