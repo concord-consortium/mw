@@ -96,14 +96,28 @@ public class PageApplet extends PagePlugin {
 		final URL[] url = new URL[n];
 		final File[] file = new File[n];
 		if (Page.isApplet() || page.isRemote()) {
+			String jarAddress = null;
 			for (int i = 0; i < url.length; i++) {
+				jarAddress = FileUtilities.getCodeBase(page.getAddress()) + jarName.get(i);
 				try {
-					url[i] = new URL(FileUtilities.getCodeBase(page.getAddress()) + jarName.get(i));
+					url[i] = new URL(jarAddress);
 				}
 				catch (MalformedURLException e) {
 					e.printStackTrace();
-					setErrorMessage("Errors in forming URL: " + url[i]);
-					return;
+					if (!FileUtilities.isRemote(jarAddress)) {
+						try {
+							url[i] = new File(jarAddress).toURI().toURL();
+						}
+						catch (MalformedURLException e1) {
+							e1.printStackTrace();
+							setErrorMessage("Error in forming URL: " + url[i]);
+							return;
+						}
+					}
+					else {
+						setErrorMessage("Errors in forming URL: " + url[i]);
+						return;
+					}
 				}
 				if (!Page.isApplet()) {
 					if (cachingAllowed) {
