@@ -95,11 +95,14 @@ final class AppletConverter {
 		sb.append("      <br><br>");
 		sb.append(LINE_SEPARATOR);
 
-		sb.append("      <form action=\"" + Modeler.getContextRoot() + "tmp.jnlp\" method=\"GET\">");
+		sb.append("      <p>If you have any problem with the above applet, use the following button to run it.");
+		sb.append(LINE_SEPARATOR);
+
+		sb.append("      <p><form action=\"" + Modeler.getContextRoot() + "tmp.jnlp\" method=\"GET\">");
 		sb.append(LINE_SEPARATOR);
 		sb.append("        <input type=\"HIDDEN\" name=\"address\" value=\"" + page.getAddress() + "\">");
 		sb.append(LINE_SEPARATOR);
-		sb.append("        <input type=\"SUBMIT\" value=\"Get this simulation using Molecular Workbench\">");
+		sb.append("        <input type=\"SUBMIT\" value=\"Run this simulation using Molecular Workbench\">");
 		sb.append(LINE_SEPARATOR);
 		sb.append("      </form>");
 		sb.append(LINE_SEPARATOR);

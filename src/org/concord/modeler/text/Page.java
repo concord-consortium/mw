@@ -3783,7 +3783,12 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			g.setFont(new Font("Verdana", Font.BOLD | Font.ITALIC, 12));
 			String s = getSoftwareName();
 			int x = getWidth() - g.getFontMetrics().stringWidth(s) - 10;
-			int y = getHeight() - 15;
+			int y = getHeight() - 30;
+			g.setColor(new Color(0x227722));
+			g.drawString(s, x, y);
+			s = "http://mw.concord.org";
+			x = getWidth() - g.getFontMetrics().stringWidth(s) - 10;
+			y = getHeight() - 15;
 			g.setColor(new Color(0x227722));
 			g.drawString(s, x, y);
 		}
