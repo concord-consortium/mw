@@ -21,7 +21,6 @@
 package org.concord.modeler.g2d;
 
 import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
@@ -75,7 +74,7 @@ public class Curve implements Serializable {
 				}
 			}
 		}
-		catch (IntrospectionException e) {
+		catch (Throwable e) {
 		}
 	}
 

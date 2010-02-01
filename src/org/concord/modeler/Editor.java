@@ -483,21 +483,21 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		getActionMap().clear();
 		getInputMap().clear();
 
-		SnapshotGallery.sharedInstance().removeFlashComponent(snapshotButton);
-		SnapshotGallery.sharedInstance().setOwner(null);
+		if (!Page.isApplet()) {
+			SnapshotGallery.sharedInstance().removeFlashComponent(snapshotButton);
+			SnapshotGallery.sharedInstance().setOwner(null);
+			fontNameComboBox.removeActionListener(fontFamilyAction);
+			fontSizeComboBox.removeActionListener(fontSizeAction);
+			fontColorComboBox.removeActionListener(fontColorAction);
+			inputImageButton.setAction(null);
+			if (toolBar[0] != null)
+				destroyToolBar(toolBar[0]);
+			if (toolBar[1] != null)
+				destroyToolBar(toolBar[1]);
+			if (toolBar[2] != null)
+				destroyToolBar(toolBar[2]);
+		}
 		actionNotifier.setParentComponent(null);
-
-		fontNameComboBox.removeActionListener(fontFamilyAction);
-		fontSizeComboBox.removeActionListener(fontSizeAction);
-		fontColorComboBox.removeActionListener(fontColorAction);
-		inputImageButton.setAction(null);
-
-		if (toolBar[0] != null)
-			destroyToolBar(toolBar[0]);
-		if (toolBar[1] != null)
-			destroyToolBar(toolBar[1]);
-		if (toolBar[2] != null)
-			destroyToolBar(toolBar[2]);
 
 		page.destroy();
 		componentPool.destroy();
@@ -511,7 +511,8 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		}
 		desktopPane.removeAll();
 		desktopHostPanel.removeAll();
-		toolBarPanel.removeAll();
+		if (toolBarPanel != null)
+			toolBarPanel.removeAll();
 		removeAll();
 
 		if (floatingButtons != null)
