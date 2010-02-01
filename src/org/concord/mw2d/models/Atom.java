@@ -28,7 +28,6 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
@@ -87,7 +86,7 @@ public class Atom extends Particle {
 				}
 			}
 		}
-		catch (IntrospectionException e) {
+		catch (Throwable e) {
 		}
 	}
 
