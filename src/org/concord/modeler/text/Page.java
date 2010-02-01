@@ -615,10 +615,14 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	 */
 	public void destroy() {
 
-		undoManager.discardAllEdits();
-		getDocument().removeUndoableEditListener(undoHandler);
-		getDocument().removeDocumentListener(editResponder);
+		if (!asApplet) {
+			undoManager.discardAllEdits();
+			getDocument().removeUndoableEditListener(undoHandler);
+			getDocument().removeDocumentListener(editResponder);
+			editResponder.setPage(null);
+		}
 		stopSound();
+		stopAllRunningModels();
 		if (midiPlayer != null)
 			midiPlayer.destroy();
 		if (sampledAudioPlayer != null)
@@ -638,9 +642,9 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 
 		if (pageLoadingThread != null)
 			pageLoadingThread.interrupt();
-		editResponder.setPage(null);
 
-		actions.clear();
+		if (actions != null)
+			actions.clear();
 		getInputMap().clear();
 		getActionMap().clear();
 		activityActionMap.clear();
@@ -649,11 +653,14 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		selectedImages.clear();
 		properties.clear();
 
-		imageReader.setParent(null);
-		imageReader.getImageImporters().clear();
-		imageReader = null;
+		if (imageReader != null) {
+			imageReader.setParent(null);
+			imageReader.getImageImporters().clear();
+			imageReader = null;
+		}
 
-		navigator.destroy();
+		if (navigator != null)
+			navigator.destroy();
 		setNavigator(null);
 		setProgressBar(null);
 		setURLDisplay(null);
@@ -675,9 +682,11 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				removeKeyListener(i);
 		}
 
-		encoder.destroy();
+		if (encoder != null) {
+			encoder.destroy();
+			encoder = null;
+		}
 		decoder.destroy();
-		encoder = null;
 		decoder = null;
 		plainTextWriter = null;
 		myHighlightPainter = null;
@@ -1122,7 +1131,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 
 	public void setProgressBar(JProgressBar pb) {
 		decoder.setProgressBar(pb);
-		encoder.setProgressBar(pb);
+		if (encoder != null)
+			encoder.setProgressBar(pb);
 	}
 
 	public JProgressBar getProgressBar() {

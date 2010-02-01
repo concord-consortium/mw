@@ -73,7 +73,7 @@ final class AppletConverter {
 		sb
 				.append("    <p><font color=\"red\">If nothing shows up below, download <a href=\""
 						+ Modeler.getStaticRoot()
-						+ "lib/mwapplet.jar\">mwapplet.jar</a> to where this HTML file is located, and then refresh this page.</font></p>");
+						+ "lib/mwapplet.jar\">mwapplet.jar</a> to where this HTML file is located, and then refresh this page. This line of message should be removed if the applet works.</font></p>");
 		sb.append(LINE_SEPARATOR);
 
 		sb.append("    <center>");

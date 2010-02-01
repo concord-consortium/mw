@@ -76,7 +76,7 @@ public class MwApplet extends JApplet {
 
 	@Override
 	public void destroy() {
-		// page.destroy();
+		editor.destroy();
 	}
 
 }
