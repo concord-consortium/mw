@@ -69,9 +69,13 @@ public class MwApplet extends JApplet {
 			s = null;
 		}
 		if (s != null) {
-			editor.getPage().executeMwScripts(s);
+			runMwScript(s);
 		}
 
+	}
+
+	public void runMwScript(String script) {
+		editor.getPage().executeMwScripts(script);
 	}
 
 	@Override
