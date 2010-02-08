@@ -231,8 +231,18 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 							dnaScroller.doOneStep();
 						}
 						else if (codon != null) {
-							if (codon.toString().equalsIgnoreCase(s) || "STOP".equals(s)) {
+							String codonString = codon.toString();
+							if (codonString.equalsIgnoreCase(s)) {
 								dnaScroller.doOneStep();
+							}
+							else if ("STOP".equals(s)) {
+								if (codonString.equalsIgnoreCase("UAA") || codonString.equalsIgnoreCase("UAG")
+										|| codonString.equalsIgnoreCase("UGA")) {
+									dnaScroller.doOneStep();
+								}
+								else {
+									Toolkit.getDefaultToolkit().beep();
+								}
 							}
 							else {
 								Toolkit.getDefaultToolkit().beep();
