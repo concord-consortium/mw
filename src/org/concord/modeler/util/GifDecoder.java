@@ -35,6 +35,7 @@ import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.metadata.IIOMetadataNode;
 import javax.imageio.stream.ImageInputStream;
 
+import org.concord.modeler.text.Page;
 import org.w3c.dom.Node;
 
 /**
@@ -66,7 +67,7 @@ public class GifDecoder {
 	public void read(String path) throws IOException {
 		if (path == null)
 			return;
-		if (FileUtilities.isRemote(path)) {
+		if (Page.isApplet() || FileUtilities.isRemote(path)) {
 			URL url = null;
 			try {
 				url = new URL(path);

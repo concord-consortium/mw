@@ -107,7 +107,7 @@ public class PageTextBox extends BasicPageTextBox {
 		if (FileUtilities.isRelative(address))
 			address = FileUtilities.getCodeBase(page.getAddress()) + address;
 		InputStream is = null;
-		if (FileUtilities.isRemote(address)) {
+		if (Page.isApplet() || FileUtilities.isRemote(address)) {
 			String formMethod = null;
 			int i = address.indexOf("&formmethodtemporary=");
 			if (i > 0) {
@@ -158,7 +158,8 @@ public class PageTextBox extends BasicPageTextBox {
 						}
 					}
 					storeCookie(conn.getHeaderField("Set-Cookie"));
-					Initializer.sharedInstance().recognizeUser();
+					if (!Page.isApplet())
+						Initializer.sharedInstance().recognizeUser();
 					try {
 						// Is it wise to pass instructions to the client through HTTP headers?
 						// This is not standard HTML behavior. But it is very useful for the
