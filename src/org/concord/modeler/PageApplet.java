@@ -60,6 +60,7 @@ public class PageApplet extends PagePlugin {
 	private AppletScripter scripter;
 	private Object popInvoker;
 	private int permanentMenuItemCount;
+	private URL codeBase;
 
 	public PageApplet() {
 		super();
@@ -184,6 +185,7 @@ public class PageApplet extends PagePlugin {
 
 		// initialize
 		if (o instanceof Applet) {
+			codeBase = fetchCodeBase(url[0], file[0]);
 			applet = (Applet) o;
 			applet.setStub(new AppletStub() {
 
@@ -195,33 +197,9 @@ public class PageApplet extends PagePlugin {
 				}
 
 				public URL getCodeBase() {
-					String s = FileUtilities.getCodeBase(url[0].toString());
-					URL u = null;
-					if (FileUtilities.isRemote(s)) {
-						try {
-							u = new URL(s);
-						}
-						catch (MalformedURLException e) {
-							e.printStackTrace();
-							return null;
-						}
-					}
-					else {
-						if (file[0] != null) {
-							s = FileUtilities.getCodeBase(file[0].toString());
-							u = ConnectionManager.sharedInstance().getRemoteLocation(s);
-							if (u != null)
-								return u;
-						}
-						try {
-							u = new File(ModelerUtilities.convertURLToFilePath(s)).toURI().toURL();
-						}
-						catch (MalformedURLException e) {
-							e.printStackTrace();
-						}
-						// javax.swing.JOptionPane.showMessageDialog(PageApplet.this, "codebase=" + u);
-					}
-					return u;
+					if (codeBase != null)
+						return codeBase;
+					return fetchCodeBase(url[0], file[0]);
 				}
 
 				public URL getDocumentBase() {
@@ -248,6 +226,35 @@ public class PageApplet extends PagePlugin {
 			setErrorMessage("Error: The main class does not implement " + Applet.class.getName());
 		}
 
+	}
+
+	private URL fetchCodeBase(URL url0, File file0) {
+		String s = FileUtilities.getCodeBase(url0.toString());
+		URL u = null;
+		if (FileUtilities.isRemote(s)) {
+			try {
+				u = new URL(s);
+			}
+			catch (MalformedURLException e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+		else {
+			if (file0 != null) {
+				s = FileUtilities.getCodeBase(file0.toString());
+				u = ConnectionManager.sharedInstance().getRemoteLocation(s);
+				if (u != null)
+					return u;
+			}
+			try {
+				u = new File(ModelerUtilities.convertURLToFilePath(s)).toURI().toURL();
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return u;
 	}
 
 	private void addPopupMouseListener() {

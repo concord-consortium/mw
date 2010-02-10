@@ -4060,21 +4060,27 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		catch (NumberFormatException e) {
 		}
 		if (n > 0) { // use index
-			if (token[2] != null && token[2].trim().length() > 0) {
-				Object o = getEmbeddedComponent(klass, n - 1);
-				if (o instanceof Scriptable)
-					return ((Scriptable) o).runScript(token[2].trim());
-				if (o instanceof NativelyScriptable)
-					return ((NativelyScriptable) o).runNativeScript(token[2].trim());
+			if (token[2] != null) {
+				token[2] = token[2].trim();
+				if (token[2].length() > 0) {
+					Object o = getEmbeddedComponent(klass, n - 1);
+					if (o instanceof Scriptable)
+						return ((Scriptable) o).runScript(token[2]);
+					if (o instanceof NativelyScriptable)
+						return ((NativelyScriptable) o).runNativeScript(token[2]);
+				}
 			}
 		}
 		else { // try UID
-			if (token[2] != null && token[2].trim().length() > 0) {
-				Embeddable o = getEmbeddedComponent(token[1].trim());
-				if (o instanceof Scriptable)
-					return ((Scriptable) o).runScript(token[2].trim());
-				if (o instanceof NativelyScriptable)
-					return ((NativelyScriptable) o).runNativeScript(token[2].trim());
+			if (token[2] != null) {
+				token[2] = token[2].trim();
+				if (token[2].length() > 0) {
+					Embeddable o = getEmbeddedComponent(token[1].trim());
+					if (o instanceof Scriptable)
+						return ((Scriptable) o).runScript(token[2]);
+					if (o instanceof NativelyScriptable)
+						return ((NativelyScriptable) o).runNativeScript(token[2]);
+				}
 			}
 		}
 		return writeErrorMessage(Arrays.asList(token) + " for " + klass);

@@ -243,10 +243,16 @@ public class Initializer {
 			}
 			else {
 				String tmpDir = System.getProperty("java.io.tmpdir");
-				userName = "\\" + userName;
-				index = tmpDir.indexOf(userName);
+				String un2;
+				if (userName.length() > 8) {
+					un2 = "\\" + userName.substring(0, 6).toUpperCase() + "~1";
+				}
+				else {
+					un2 = "\\" + userName;
+				}
+				index = tmpDir.indexOf(un2);
 				if (index != -1)
-					userHome = tmpDir.substring(0, index) + userName;
+					userHome = tmpDir.substring(0, index) + "\\" + userName;
 			}
 			root = new File(userHome, "AppData");
 		}
