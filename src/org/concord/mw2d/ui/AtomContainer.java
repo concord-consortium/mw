@@ -195,10 +195,9 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 							Nucleotide n = Nucleotide.getNucleotide(dna.charAt(i + 1)).getComplementaryNucleotide(true);
 							if (n.toString().equals(s)) {
 								dnaScroller.doOneStep();
+								return "3\'-5\': " + dnaScroller.getModel().getDNA35String();
 							}
-							else {
-								Toolkit.getDefaultToolkit().beep();
-							}
+							Toolkit.getDefaultToolkit().beep();
 						}
 					}
 				}
@@ -229,20 +228,21 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 						org.concord.molbio.engine.Codon codon = dnaScroller.getModel().get53Codon(i);
 						if (aa != null && aa.equalsIgnoreCase(s)) {
 							dnaScroller.doOneStep();
+							return dnaScroller.get35CurrAminoacidAbbreviation();
 						}
 						else if (codon != null) {
 							String codonString = codon.toString();
 							if (codonString.equalsIgnoreCase(s)) {
 								dnaScroller.doOneStep();
+								return dnaScroller.get35CurrAminoacidAbbreviation();
 							}
 							else if ("STOP".equals(s)) {
 								if (codonString.equalsIgnoreCase("UAA") || codonString.equalsIgnoreCase("UAG")
 										|| codonString.equalsIgnoreCase("UGA")) {
 									dnaScroller.doOneStep();
+									return dnaScroller.get35CurrAminoacidAbbreviation();
 								}
-								else {
-									Toolkit.getDefaultToolkit().beep();
-								}
+								Toolkit.getDefaultToolkit().beep();
 							}
 							else {
 								Toolkit.getDefaultToolkit().beep();
