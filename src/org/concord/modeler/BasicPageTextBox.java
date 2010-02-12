@@ -83,6 +83,14 @@ public abstract class BasicPageTextBox extends TextBox implements AutoResizable,
 		return scripter.runScript(script);
 	}
 
+	public String runScriptImmediately(String script) {
+		return runScript(script);
+	}
+
+	public Object get(String variable) {
+		return null;
+	}
+
 	public void setIndex(int i) {
 		index = i;
 	}

@@ -28,6 +28,13 @@ public interface Scriptable {
 	/** Returned error message should carry this header to be distinguished. */
 	public final static String ERROR_HEADER = "Error: ";
 
+	/** run script in the scriptable's scripting thread */
 	public String runScript(String script);
+
+	/** run script immediately---not in the scriptable's scripting thread */
+	public String runScriptImmediately(String script);
+
+	/** This allows a variable to be exported to JavaScript */
+	public Object get(String variable);
 
 }

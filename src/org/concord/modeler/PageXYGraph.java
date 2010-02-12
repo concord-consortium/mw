@@ -250,6 +250,14 @@ public class PageXYGraph extends XYGrapher implements Embeddable, Scriptable, Mo
 		return scripter.runScript(script);
 	}
 
+	public String runScriptImmediately(String script) {
+		return runScript(script);
+	}
+
+	public Object get(String variable) {
+		return null;
+	}
+
 	public void destroy() {
 		removeSnapshotListeners();
 		Model m = getModel();

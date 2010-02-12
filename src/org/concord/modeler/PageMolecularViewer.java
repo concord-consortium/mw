@@ -797,6 +797,14 @@ public class PageMolecularViewer extends JmolContainer implements BasicModel, Em
 		return super.runScript(standardJmolScript);
 	}
 
+	public String runScriptImmediately(String script) {
+		return runScript(script);
+	}
+
+	public Object get(String variable) {
+		return null;
+	}
+
 	private void invokePopupMenu(int x, int y) {
 		selectedAnnotationHostAtom = getAnnotationHost(Attachment.ATOM_HOST, x, y);
 		selectedAnnotationHostBond = getAnnotationHost(Attachment.BOND_HOST, x, y);

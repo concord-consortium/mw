@@ -4053,34 +4053,26 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	}
 
 	private String sendScript(String[] token, Class klass) {
-		int n = -1;
-		try {
-			n = Integer.valueOf(token[1].trim()).intValue();
-		}
-		catch (NumberFormatException e) {
-		}
-		if (n > 0) { // use index
-			if (token[2] != null) {
-				token[2] = token[2].trim();
-				if (token[2].length() > 0) {
-					Object o = getEmbeddedComponent(klass, n - 1);
-					if (o instanceof Scriptable)
-						return ((Scriptable) o).runScript(token[2]);
-					if (o instanceof NativelyScriptable)
-						return ((NativelyScriptable) o).runNativeScript(token[2]);
+		if (token[2] != null) {
+			token[2] = token[2].trim();
+			if (token[2].length() > 0) {
+				int n = -1;
+				try {
+					n = Integer.valueOf(token[1].trim()).intValue();
 				}
-			}
-		}
-		else { // try UID
-			if (token[2] != null) {
-				token[2] = token[2].trim();
-				if (token[2].length() > 0) {
-					Embeddable o = getEmbeddedComponent(token[1].trim());
-					if (o instanceof Scriptable)
-						return ((Scriptable) o).runScript(token[2]);
-					if (o instanceof NativelyScriptable)
-						return ((NativelyScriptable) o).runNativeScript(token[2]);
+				catch (NumberFormatException e) {
 				}
+				Object o = null;
+				if (n > 0) { // use index
+					o = getEmbeddedComponent(klass, n - 1);
+				}
+				else { // try UID
+					o = getEmbeddedComponent(token[1].trim());
+				}
+				if (o instanceof Scriptable)
+					return ((Scriptable) o).runScript(token[2]);
+				if (o instanceof NativelyScriptable)
+					return ((NativelyScriptable) o).runNativeScript(token[2]);
 			}
 		}
 		return writeErrorMessage(Arrays.asList(token) + " for " + klass);
@@ -4093,16 +4085,15 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		}
 		catch (NumberFormatException e) {
 		}
+		Object o = null;
 		if (n > 0) { // use index
-			if (token[2] != null && token[2].trim().length() > 0) {
-				Object o = getEmbeddedComponent(klass, n - 1);
-				if (o instanceof NativelyScriptable)
-					return ((NativelyScriptable) o).runNativeScript(token[2].trim());
-			}
+			o = getEmbeddedComponent(klass, n - 1);
 		}
 		else { // try UID
-			Embeddable o = getEmbeddedComponent(token[1].trim());
-			if (o instanceof NativelyScriptable)
+			o = getEmbeddedComponent(token[1].trim());
+		}
+		if (o instanceof NativelyScriptable) {
+			if (token[2] != null)
 				return ((NativelyScriptable) o).runNativeScript(token[2].trim());
 		}
 		return writeErrorMessage(Arrays.asList(token) + " for " + klass);

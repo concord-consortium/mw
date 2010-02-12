@@ -845,6 +845,10 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	}
 
 	private void runTaskScript(String script) {
+		runScriptImmediately(script);
+	}
+
+	public String runScriptImmediately(String script) {
 		initEvalTask();
 		evalTask.appendScript(script);
 		try {
@@ -854,6 +858,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			e.printStackTrace();
 		}
 		getView().repaint();
+		return null;
 	}
 
 	public void runMouseScript(int eventType, int x, int y) {
