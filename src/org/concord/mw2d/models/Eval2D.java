@@ -5379,8 +5379,8 @@ class Eval2D extends AbstractEval {
 	private boolean evaluateGetClause(String str) {
 		if (str == null)
 			return false;
-		if (str.equals("dna")) {
-			model.containerScriptCallback.setScript("get dna");
+		if (str.equals("dna") || str.equals("protein")) {
+			model.containerScriptCallback.setScript("get " + str);
 			model.containerScriptCallback.execute();
 		}
 		else {
