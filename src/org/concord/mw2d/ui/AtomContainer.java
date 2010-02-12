@@ -818,6 +818,12 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 		return dna.getCodingRegionAsString();
 	}
 
+	public String getTranscribedDNA() {
+		if (dnaScroller == null)
+			return null;
+		return dnaScroller.getTranscribedDNA();
+	}
+
 	/** set the transcription animation speed: every step per i milliseconds. */
 	public void setTranscriptionTimeStep(int i) {
 		if (dnaScroller == null) {

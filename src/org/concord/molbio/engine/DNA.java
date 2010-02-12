@@ -468,7 +468,7 @@ public class DNA implements Cloneable {
 		return getFragmentAsString(startIndex, endIndex, DNA_STRAND_BASE);
 	}
 
-	private String getFragmentAsString(int startIndex, int endIndex, int strandIndex) throws IllegalArgumentException {
+	public String getFragmentAsString(int startIndex, int endIndex, int strandIndex) throws IllegalArgumentException {
 		if (strandIndex != DNA_STRAND_BASE && strandIndex != DNA_STRAND_COMPL)
 			throw new IllegalArgumentException("DNA.getFragmentAsString strandIndex isn't correct " + strandIndex);
 		if (strands == null || strands[strandIndex] == null)
