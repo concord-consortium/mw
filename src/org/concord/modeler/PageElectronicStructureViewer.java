@@ -104,6 +104,14 @@ public class PageElectronicStructureViewer extends ElectronicStructureViewer imp
 		return scripter.runScript(script);
 	}
 
+	public String runScriptImmediately(String script) {
+		return runScript(script);
+	}
+
+	public Object get(String variable) {
+		return null;
+	}
+
 	public void destroy() {
 		if (modelID != -1) {
 			ModelCanvas mc = page.getComponentPool().get(modelID);

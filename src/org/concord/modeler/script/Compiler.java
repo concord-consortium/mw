@@ -84,6 +84,7 @@ public class Compiler {
 	public final static Pattern MESSAGE = compile("(^(?i)message\\b){1}");
 	public final static Pattern FORMAT_VARIABLE = compile("(((?i)formatvar)(\\s*)\\((.+),(.+)\\)){1}");
 
+	public final static Pattern GET = compile("(^(?i)get\\b){1}");
 	public final static Pattern DELAY = compile("(^(?i)delay\\b){1}");
 	public final static Pattern LOAD = compile("(^(?i)load\\b){1}");
 	public final static Pattern SOURCE = compile("(^(?i)(script|source)\\b){1}");

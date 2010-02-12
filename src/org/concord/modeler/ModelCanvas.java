@@ -249,6 +249,16 @@ public class ModelCanvas extends JComponent implements Embeddable, Scriptable, E
 		return container.getModel().runScript(script);
 	}
 
+	public String runScriptImmediately(String script) {
+		return container.getModel().runScriptImmediately(script);
+	}
+
+	public Object get(String variable) {
+		if (variable == null)
+			throw new IllegalArgumentException("variable cannot be null.");
+		return container.getModel().getProperty(variable.toLowerCase());
+	}
+
 	public void showBorder(boolean b) {
 		setBorder(b ? defaultBorder : emptyBorder);
 		container.getView().setBorder(b ? innerBorder : emptyBorder);

@@ -71,6 +71,7 @@ import org.concord.modeler.ModelerUtilities;
 import org.concord.modeler.ScriptCallback;
 import org.concord.modeler.process.AbstractLoadable;
 import org.concord.modeler.process.Loadable;
+import org.concord.modeler.script.Compiler;
 import org.concord.modeler.ui.CustomBevelBorder;
 import org.concord.modeler.ui.CustomBorderLayout;
 import org.concord.modeler.ui.IconPool;
@@ -170,6 +171,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 
 	// run the scripts that are not supported by models.
 	private String runScript(String script) {
+
 		Matcher matcher = TRANSCRIBE.matcher(script);
 		if (matcher.find()) {
 			if (dnaScroller != null) {
@@ -203,6 +205,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 				}
 			}
 		}
+
 		matcher = TRANSLATE.matcher(script);
 		if (matcher.find()) {
 			if (dnaScroller != null) {
@@ -260,7 +263,19 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 				}
 			}
 		}
+
+		matcher = Compiler.GET.matcher(script);
+		if (matcher.find()) {
+			if (dnaScroller != null) {
+				String s = script.substring(matcher.end()).trim().toLowerCase();
+				if (s.equals("dna")) {
+					model.putProperty(s, getTranscribedDNA());
+				}
+			}
+		}
+
 		return null;
+
 	}
 
 	private void createActions() {

@@ -960,6 +960,13 @@ class Eval2D extends AbstractEval {
 		// System.out.println(definition);
 		// System.out.println("After using definitions ---> " + useDefinitions(ci));
 
+		// get
+		matcher = GET.matcher(ci);
+		if (matcher.find()) {
+			if (evaluateGetClause(ci.substring(matcher.end()).trim().toLowerCase()))
+				return true;
+		}
+
 		// increment or decrement operator
 		matcher = INCREMENT_DECREMENT.matcher(ci);
 		if (matcher.find())
@@ -5366,6 +5373,19 @@ class Eval2D extends AbstractEval {
 			return true;
 		}
 		out(ScriptEvent.SUCCEEDED, str);
+		return true;
+	}
+
+	private boolean evaluateGetClause(String str) {
+		if (str == null)
+			return false;
+		if (str.equals("dna")) {
+			model.containerScriptCallback.setScript("get dna");
+			model.containerScriptCallback.execute();
+		}
+		else {
+			model.putProperty(str, useDefinitions(str));
+		}
 		return true;
 	}
 

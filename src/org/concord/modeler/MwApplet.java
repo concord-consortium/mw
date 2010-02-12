@@ -60,7 +60,6 @@ public class MwApplet extends JApplet {
 
 	@Override
 	public void init() {
-
 		String s = null;
 		try {
 			s = getParameter("script");
@@ -71,16 +70,67 @@ public class MwApplet extends JApplet {
 		if (s != null) {
 			runMwScript(s);
 		}
-
-	}
-
-	public String runMwScript(String script) {
-		return editor.getPage().executeMwScripts(script);
 	}
 
 	@Override
 	public void destroy() {
 		editor.destroy();
+	}
+
+	public String runMwScript(String script) {
+		if (script == null)
+			return null;
+		String[] token = script.split(":");
+		if (token.length >= 3) {
+			// reconnect "http://......" and others that should not have been broken up
+			if (token.length >= 4) {
+				for (int k = 3; k < token.length; k++)
+					token[2] += ":" + token[k];
+			}
+			if (token[2] != null) {
+				token[2] = token[2].trim();
+				if (token[2].length() > 0) {
+					String t2 = token[2].toLowerCase();
+					if (t2.startsWith("get")) {
+						String t0 = token[0].trim().intern();
+						if (t0 == "jmol")
+							return get(token, PageMolecularViewer.class);
+						if (t0 == "mw2d")
+							return get(token, ModelCanvas.class);
+						if (t0 == "mw3d")
+							return get(token, PageMd3d.class);
+					}
+				}
+			}
+		}
+		return editor.getPage().executeMwScripts(script);
+	}
+
+	private String get(String[] token, Class klass) {
+		String t2 = token[2].toLowerCase().substring(3).trim();
+		if (t2 != null && t2.length() > 0) {
+			int n = -1;
+			try {
+				n = Integer.valueOf(token[1].trim()).intValue();
+			}
+			catch (NumberFormatException e) {
+			}
+			Object o = null;
+			if (n > 0) { // use index
+				o = editor.getPage().getEmbeddedComponent(klass, n - 1);
+			}
+			else { // try UID
+				o = editor.getPage().getEmbeddedComponent(token[1].trim());
+			}
+			if (o instanceof Scriptable) {
+				Scriptable s = (Scriptable) o;
+				s.runScriptImmediately(token[2]);
+				Object o2 = s.get(t2);
+				if (o2 != null)
+					return o2.toString();
+			}
+		}
+		return "Error: " + t2 + " is not found.";
 	}
 
 }
