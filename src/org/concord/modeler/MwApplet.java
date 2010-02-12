@@ -80,6 +80,7 @@ public class MwApplet extends JApplet {
 	public String runMwScript(String script) {
 		if (script == null)
 			return null;
+		// special treatment of the get command
 		String[] token = script.split(":");
 		if (token.length >= 3) {
 			// reconnect "http://......" and others that should not have been broken up
@@ -106,6 +107,7 @@ public class MwApplet extends JApplet {
 		return editor.getPage().executeMwScripts(script);
 	}
 
+	/* the get command should not use the scripting thread, otherwise, it is unpredictable what result it will get. */
 	private String get(String[] token, Class klass) {
 		String t2 = token[2].toLowerCase().substring(3).trim();
 		if (t2 != null && t2.length() > 0) {

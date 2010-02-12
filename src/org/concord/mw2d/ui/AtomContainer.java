@@ -271,6 +271,11 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 				if (s.equals("dna")) {
 					model.putProperty(s, getTranscribedDNA());
 				}
+				else if (s.equals("protein")) {
+					Molecule mol = model.getMolecules().get(0);
+					if (mol instanceof Polypeptide)
+						model.putProperty(s, ((Polypeptide) mol).getAminoAcidCode(false));
+				}
 			}
 		}
 
