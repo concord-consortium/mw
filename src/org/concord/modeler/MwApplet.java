@@ -36,7 +36,7 @@ import org.concord.mw3d.MolecularContainer;
  */
 public class MwApplet extends JApplet {
 
-	private Editor editor;
+	Editor editor;
 
 	public MwApplet() {
 

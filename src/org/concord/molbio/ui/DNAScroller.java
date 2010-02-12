@@ -365,6 +365,13 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 		return s;
 	}
 
+	public String getTranscribedDNA() {
+		int promoterOffset = model.getDNA().getOffsetToTheCodingRegion();
+		if (currentBase + 2 <= promoterOffset)
+			return null;
+		return model.getDNA().getFragmentAsString(promoterOffset, currentBase + 2, DNA.DNA_STRAND_BASE);
+	}
+
 	protected Border getDefaultBorder() {
 		if (emptyBorder == null)
 			emptyBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
