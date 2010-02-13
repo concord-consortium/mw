@@ -1568,7 +1568,6 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 			updateScrollBar();
 			repaint();
 		}
-
 	}
 
 	int getMaxCodonsInScroller() {

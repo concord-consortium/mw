@@ -279,6 +279,28 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			}
 		}
 
+		matcher = Compiler.SET.matcher(script);
+		if (matcher.find()) {
+			if (dnaScroller != null) {
+				String s = script.substring(matcher.end()).trim().toLowerCase();
+				if (s.startsWith("dna")) {
+					final String s2 = s.substring(3).trim();
+					if (s2.length() % 3 != 0) {
+						JOptionPane.showMessageDialog(view, "Input DNA code must be 3xn! Please try again.",
+								"Triplets required", JOptionPane.ERROR_MESSAGE, null);
+						return null;
+					}
+					dnaScroller.reset();
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							dnaScroller.setDNA(new DNA(s2, contextDNA));
+							dnaScroller.repaint();
+						}
+					});
+				}
+			}
+		}
+
 		return null;
 
 	}
@@ -1100,10 +1122,19 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 		}
 		if (JOptionPane.showConfirmDialog(view, dnaField, "Type/copy/paste DNA code on sense (5'-3') strand",
 				JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE) == JOptionPane.OK_OPTION) {
+			if (dnaField.getText().length() % 3 != 0) {
+				JOptionPane.showMessageDialog(view, "Input DNA code must be 3xn! Please try again.",
+						"Triplets required", JOptionPane.ERROR_MESSAGE, null);
+				return false;
+			}
 			dnaPlayButton.setEnabled(true);
 			dnaScroller.reset();
-			dnaScroller.setDNA(new DNA(dnaField.getText(), contextDNA));
-			dnaScroller.repaint();
+			EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					dnaScroller.setDNA(new DNA(dnaField.getText(), contextDNA));
+					dnaScroller.repaint();
+				}
+			});
 			return true;
 		}
 		return false;
