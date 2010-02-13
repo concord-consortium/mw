@@ -3515,7 +3515,26 @@ class Eval2D extends AbstractEval {
 		return false;
 	}
 
+	private boolean evaluateGetClause(String str) {
+		if (str == null)
+			return false;
+		if (str.equals("dna") || str.equals("protein")) {
+			model.containerScriptCallback.setScript("get " + str);
+			model.containerScriptCallback.execute();
+		}
+		else {
+			model.putProperty(str, useDefinitions(str));
+		}
+		return true;
+	}
+
 	private boolean evaluateSetClause(String str) {
+
+		if (str.toLowerCase().startsWith("dna")) {
+			model.containerScriptCallback.setScript("set " + str);
+			model.containerScriptCallback.execute();
+			return true;
+		}
 
 		String[] s = null;
 
@@ -5373,19 +5392,6 @@ class Eval2D extends AbstractEval {
 			return true;
 		}
 		out(ScriptEvent.SUCCEEDED, str);
-		return true;
-	}
-
-	private boolean evaluateGetClause(String str) {
-		if (str == null)
-			return false;
-		if (str.equals("dna") || str.equals("protein")) {
-			model.containerScriptCallback.setScript("get " + str);
-			model.containerScriptCallback.execute();
-		}
-		else {
-			model.putProperty(str, useDefinitions(str));
-		}
 		return true;
 	}
 
