@@ -1386,7 +1386,6 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		return properties.remove(key);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void putProperty(Object key, Object value) {
 		if (key instanceof String) {
 			String s = ((String) key).toLowerCase();
