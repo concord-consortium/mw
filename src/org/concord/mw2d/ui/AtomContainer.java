@@ -290,6 +290,17 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 								"Triplets required", JOptionPane.ERROR_MESSAGE, null);
 						return null;
 					}
+					char c;
+					for (int i = 0; i < s2.length(); i++) {
+						c = s2.charAt(i);
+						if (c != 'a' && c != 'A' && c != 'c' && c != 'C' && c != 'g' && c != 'G' && c != 't'
+								&& c != 'T') {
+							JOptionPane.showMessageDialog(view,
+									"Input DNA code must contain only A, C, G, or T. Please try again.",
+									"Illegal DNA code", JOptionPane.ERROR_MESSAGE, null);
+							return null;
+						}
+					}
 					dnaScroller.reset();
 					EventQueue.invokeLater(new Runnable() {
 						public void run() {
