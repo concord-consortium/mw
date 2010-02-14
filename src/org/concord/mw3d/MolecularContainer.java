@@ -418,6 +418,12 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 		return model.runScript(s);
 	}
 
+	public String runMwScriptImmediately(String s) {
+		model.addScriptExecutionListener(this);
+		model.runScriptImmediately(s);
+		return null;
+	}
+
 	public void setInitializationScriptToRun(boolean b) {
 		model.setInitializationScriptToRun(b);
 	}
@@ -2680,13 +2686,12 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 	public void stopInput() {
 	}
 
-	// TODO
 	public Object getProperty(Object key) {
-		return null;
+		return model.getProperty(key);
 	}
 
-	// TODO
 	public void putProperty(Object key, Object value) {
+		model.putProperty(key, value);
 	}
 
 	private abstract class DefaultAction extends AbstractAction {
