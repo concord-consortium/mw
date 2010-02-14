@@ -171,6 +171,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 
 	private Eval2D evalAction; // evaluator for action scripts
 	private Eval2D evalTask; // evaluator for task scripts
+	private Eval2D evalJs; // evaluator for scripts called from JavaScript
 	private Thread evalThread;
 	private ScriptCallback externalScriptCallback;
 	ScriptCallback containerScriptCallback;
@@ -554,6 +555,10 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			evalTask.removeAllScriptListeners();
 			evalTask = null;
 		}
+		if (evalJs != null) {
+			evalJs.removeAllScriptListeners();
+			evalJs = null;
+		}
 		actionReminder = null;
 		movieUpdater = null;
 		watchdog = null;
@@ -821,6 +826,8 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			evalAction.clearScriptQueue();
 		if (evalTask != null)
 			evalTask.clearScriptQueue();
+		if (evalJs != null)
+			evalJs.clearScriptQueue();
 	}
 
 	public void setInitializationScriptToRun(boolean b) {
@@ -845,10 +852,6 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	}
 
 	private void runTaskScript(String script) {
-		runScriptImmediately(script);
-	}
-
-	public String runScriptImmediately(String script) {
 		initEvalTask();
 		evalTask.appendScript(script);
 		try {
@@ -856,6 +859,28 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		}
 		catch (InterruptedException e) {
 			e.printStackTrace();
+		}
+		getView().repaint();
+	}
+
+	private void initEvalJs() {
+		if (evalJs == null) {
+			evalJs = new Eval2D(this, true);
+			evalJs.setExternalScriptCallback(externalScriptCallback);
+		}
+		initEvalAction();
+		evalJs.setDefinition(evalAction.getDefinition()); // share the same definitions with the action scripts
+	}
+
+	public String runScriptImmediately(String script) {
+		initEvalJs();
+		evalJs.appendScript(script);
+		try {
+			evalJs.evaluate2();
+		}
+		catch (InterruptedException e) {
+			e.printStackTrace();
+			return e.getMessage();
 		}
 		getView().repaint();
 		return null;

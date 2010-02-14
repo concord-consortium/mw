@@ -108,7 +108,7 @@ public class MolecularModel {
 
 	MolecularView view;
 	private ScriptCallback externalScriptCallback;
-	private Eval3D evalAction, evalTask;
+	private Eval3D evalAction, evalTask, evalJs;
 	private Thread evalThread;
 	float modelTime;
 	float timeStep = 0.5f;
@@ -440,10 +440,6 @@ public class MolecularModel {
 	}
 
 	private void runTaskScript(String script) {
-		runScriptImmediately(script);
-	}
-
-	public void runScriptImmediately(String script) {
 		initEvalTask();
 		evalTask.appendScript(script);
 		try {
@@ -453,6 +449,29 @@ public class MolecularModel {
 			e.printStackTrace();
 		}
 		view.repaint();
+	}
+
+	private void initEvalJs() {
+		if (evalJs == null) {
+			evalJs = new Eval3D(this, true);
+			evalJs.setExternalScriptCallback(externalScriptCallback);
+		}
+		initEvalAction();
+		evalJs.setDefinition(evalAction.getDefinition()); // share the same definitions with the action scripts
+	}
+
+	public String runScriptImmediately(String script) {
+		initEvalJs();
+		evalJs.appendScript(script);
+		try {
+			evalJs.evaluate2();
+		}
+		catch (InterruptedException e) {
+			e.printStackTrace();
+			return e.getMessage();
+		}
+		view.repaint();
+		return null;
 	}
 
 	public boolean isActionScriptRunning() {
@@ -567,6 +586,8 @@ public class MolecularModel {
 			evalAction.clearScriptQueue();
 		if (evalTask != null)
 			evalTask.clearScriptQueue();
+		if (evalJs != null)
+			evalJs.clearScriptQueue();
 	}
 
 	public void addScriptListener(ScriptListener listener) {

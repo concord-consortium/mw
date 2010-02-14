@@ -60,6 +60,7 @@ import org.concord.modeler.ScriptCallback;
 import org.concord.modeler.Scriptable;
 import org.concord.modeler.event.ScriptEvent;
 import org.concord.modeler.event.ScriptListener;
+import org.concord.modeler.text.Page;
 import org.concord.modeler.ui.HTMLPane;
 import org.concord.modeler.util.Evaluator;
 import org.concord.modeler.util.FileUtilities;
@@ -1498,7 +1499,8 @@ public abstract class AbstractEval {
 		h.setEditable(false);
 		if (basePath != null) {
 			try {
-				h.setBase(FileUtilities.isRemote(basePath) ? new URL(basePath) : new File(basePath).toURI().toURL());
+				h.setBase(Page.isApplet() || FileUtilities.isRemote(basePath) ? new URL(basePath) : new File(basePath)
+						.toURI().toURL());
 			}
 			catch (MalformedURLException e) {
 				e.printStackTrace();
@@ -1514,7 +1516,7 @@ public abstract class AbstractEval {
 			return null;
 		}
 		InputStream is = null;
-		if (FileUtilities.isRemote(address)) {
+		if (Page.isApplet() || FileUtilities.isRemote(address)) {
 			URL url = null;
 			try {
 				url = new URL(address);
@@ -1604,7 +1606,7 @@ public abstract class AbstractEval {
 		if (address == null)
 			return;
 		File f = null;
-		if (FileUtilities.isRemote(address)) {
+		if (Page.isApplet() || FileUtilities.isRemote(address)) {
 			URL u = null;
 			try {
 				u = new URL(address);
@@ -1662,7 +1664,7 @@ public abstract class AbstractEval {
 		if (address == null)
 			return null;
 		File f = null;
-		if (FileUtilities.isRemote(address)) {
+		if (Page.isApplet() || FileUtilities.isRemote(address)) {
 			URL u = null;
 			try {
 				u = new URL(address);

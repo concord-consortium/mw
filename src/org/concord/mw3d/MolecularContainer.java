@@ -420,8 +420,7 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 
 	public String runMwScriptImmediately(String s) {
 		model.addScriptExecutionListener(this);
-		model.runScriptImmediately(s);
-		return null;
+		return model.runScriptImmediately(s);
 	}
 
 	public void setInitializationScriptToRun(boolean b) {
