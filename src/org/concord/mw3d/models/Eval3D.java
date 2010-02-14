@@ -560,8 +560,15 @@ class Eval3D extends AbstractEval {
 		if (!checkParenthesisBalance(ci))
 			return false;
 
+		// get
+		Matcher matcher = GET.matcher(ci);
+		if (matcher.find()) {
+			if (evaluateGetClause(ci.substring(matcher.end()).trim().toLowerCase()))
+				return true;
+		}
+
 		// plot
-		Matcher matcher = PLOT.matcher(ci);
+		matcher = PLOT.matcher(ci);
 		if (matcher.find()) {
 			if (evaluatePlotClause(ci.substring(matcher.end()).trim()))
 				return true;
@@ -1406,6 +1413,13 @@ class Eval3D extends AbstractEval {
 		}
 		out(ScriptEvent.FAILED, "Unrecognized keyword: " + str);
 		return false;
+	}
+
+	private boolean evaluateGetClause(String str) {
+		if (str == null)
+			return false;
+		model.putProperty(str, useDefinitions(str));
+		return true;
 	}
 
 	private boolean evaluateSetClause(String str) {

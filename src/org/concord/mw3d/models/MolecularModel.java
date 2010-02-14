@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -174,6 +175,7 @@ public class MolecularModel {
 	private List<Atom> atomList1, atomList2;
 
 	Map<String, float[]> paramMap = new LinkedHashMap<String, float[]>();
+	private Map<Object, Object> properties;
 
 	/* the subtask of painting the view at a given frequency */
 	private Loadable paintView = new AbstractLoadable(50) {
@@ -246,6 +248,7 @@ public class MolecularModel {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
+		properties = new HashMap<Object, Object>();
 	}
 
 	public MolecularModel(int tapeLength) {
@@ -308,6 +311,18 @@ public class MolecularModel {
 
 		Arrays.fill(channels, 0);
 
+	}
+
+	public Object getProperty(Object key) {
+		return properties.get(key);
+	}
+
+	public Object removeProperty(Object key) {
+		return properties.remove(key);
+	}
+
+	public void putProperty(Object key, Object value) {
+		properties.put(key, value);
 	}
 
 	public void setFrameInterval(int i) {
@@ -425,6 +440,10 @@ public class MolecularModel {
 	}
 
 	private void runTaskScript(String script) {
+		runScriptImmediately(script);
+	}
+
+	public void runScriptImmediately(String script) {
 		initEvalTask();
 		evalTask.appendScript(script);
 		try {
