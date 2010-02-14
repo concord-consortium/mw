@@ -507,11 +507,11 @@ public class PageMd3d extends MolecularContainer implements Embeddable, Scriptab
 	}
 
 	public String runScriptImmediately(String script) {
-		return runScript(script);
+		return runMwScriptImmediately(script);
 	}
 
 	public Object get(String variable) {
-		return null;
+		return getProperty(variable);
 	}
 
 	/** runs Jmol scripts. */
