@@ -24,6 +24,7 @@ import java.awt.Dimension;
 import java.net.URL;
 
 import javax.swing.JApplet;
+import javax.swing.UIManager;
 
 import org.concord.jmol.JmolContainer;
 import org.concord.modeler.text.Page;
@@ -40,6 +41,12 @@ public class MwApplet extends JApplet {
 
 	public MwApplet() {
 
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 		Page.setApplet(true);
 		Page.setSoftwareName(Modeler.NAME);
 		ConnectionManager.sharedInstance().setCachingAllowed(false);
