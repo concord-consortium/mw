@@ -339,6 +339,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	private Thread pageLoadingThread;
 	private boolean embeddedImageFound;
 	private PageScripter scripter;
+	private boolean frank = true;
 
 	Action printAction, saveAsAppletAction, saveAsAction;
 	private Action gradeAction, hintAction, bulletAction, selectAllAction, hyperlinkAction, propertiesAction;
@@ -553,6 +554,14 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 
 	public static boolean isApplet() {
 		return asApplet;
+	}
+
+	public void setFrank(boolean b) {
+		frank = b;
+	}
+
+	public boolean getFrank() {
+		return frank;
 	}
 
 	public void setEditor(Editor editor) {
@@ -3789,7 +3798,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			g2.fillRect(0, 0, getWidth(), getHeight());
 		}
 		super.paintComponent(g);
-		if (isApplet()) {
+		if (isApplet() && frank) {
 			g.setFont(new Font("Verdana", Font.BOLD | Font.ITALIC, 12));
 			String s = getSoftwareName();
 			int x = getWidth() - g.getFontMetrics().stringWidth(s) - 10;
