@@ -85,6 +85,16 @@ class PageScripter extends ComponentScripter {
 			return;
 		}
 
+		// set
+		matcher = Compiler.SET.matcher(ci);
+		if (matcher.find()) {
+			String s = ci.substring(matcher.end()).trim().toLowerCase();
+			if (s.startsWith("frank")) {
+				page.setFrank(!s.endsWith("false"));
+			}
+			return;
+		}
+
 		// load
 		matcher = Compiler.LOAD.matcher(ci);
 		if (matcher.find()) {
