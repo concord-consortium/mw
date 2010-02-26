@@ -143,7 +143,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 	static String userdir;
 	static Icon toolBarSeparatorIcon = new ImageIcon(Modeler.class.getResource("images/ToolBarSeparator.gif"));
 	private static Icon toolBarHeaderIcon = new ImageIcon(Modeler.class.getResource("images/ToolBarHeaderBar.gif"));
-	static ImageIcon frameIcon = new ImageIcon(Modeler.class.getResource("images/FrameIcon.gif"));
+	private static ImageIcon frameIcon = new ImageIcon(Modeler.class.getResource("images/mwlogo.png"));
 
 	static byte windowCount;
 	static int tapeLength = DataQueue.DEFAULT_SIZE;
