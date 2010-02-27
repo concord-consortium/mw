@@ -420,7 +420,11 @@ public class MolecularModel extends AtomicModel {
 		}
 	}
 
-	private void updateBondTable() {
+	void updateBondTable() {
+		if (this instanceof ReactionModel)
+			return;
+		if (ljBetweenBondPairs)
+			return;
 		resetBondTable();
 		if (bonds.isEmpty())
 			return;
@@ -472,10 +476,7 @@ public class MolecularModel extends AtomicModel {
 	}
 
 	public void run() {
-		if (!(this instanceof ReactionModel)) {
-			if (!ljBetweenBondPairs)
-				updateBondTable();
-		}
+		updateBondTable();
 		super.run();
 	}
 
