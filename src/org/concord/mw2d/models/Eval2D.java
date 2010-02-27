@@ -7741,6 +7741,7 @@ class Eval2D extends AbstractEval {
 			mm.removeGhostAngularBonds();
 			if (b) {
 				mm.view.bondChanged(null);
+				mm.updateBondTable();
 				MoleculeCollection.sort(mm);
 			}
 			// mm.view.removeSelectedComponent();
