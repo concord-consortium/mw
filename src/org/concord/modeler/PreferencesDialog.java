@@ -823,6 +823,10 @@ class PreferencesDialog extends JDialog {
 			comboBox.setSelectedIndex(2);
 		else if (Locale.getDefault().equals(new Locale("ru")))
 			comboBox.setSelectedIndex(3);
+		else if (Locale.getDefault().equals(new Locale("iw")))
+			comboBox.setSelectedIndex(4);
+		else if (Locale.getDefault().equals(new Locale("no")))
+			comboBox.setSelectedIndex(5);
 		for (ItemListener i : il)
 			comboBox.addItemListener(i);
 	}
