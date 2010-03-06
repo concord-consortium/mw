@@ -2976,6 +2976,8 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 				Locale.setDefault(new Locale("ru"));
 			else if (userLocale.startsWith("es"))
 				Locale.setDefault(new Locale("es"));
+			else if (userLocale.startsWith("no"))
+				Locale.setDefault(new Locale("no"));
 			else if (userLocale.startsWith("he") || userLocale.startsWith("iw"))
 				Locale.setDefault(new Locale("iw"));
 		}
