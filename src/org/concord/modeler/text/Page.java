@@ -2767,10 +2767,12 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 
 		else if (uriLC.endsWith(".jnlp")) {
 			ExternalClient.open(ExternalClient.JNLP_CLIENT, uri);
+			notifyPageListeners(new PageEvent(this, PageEvent.PAGE_READ_END));
 		}
 
 		else if (uriLC.endsWith(".html") || uriLC.endsWith(".htm")) {
 			ExternalClient.open(ExternalClient.HTML_CLIENT, uri);
+			notifyPageListeners(new PageEvent(this, PageEvent.PAGE_READ_END));
 		}
 
 		// unrecognized format
@@ -2781,6 +2783,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			}
 			if (FileUtilities.isRemote(uri)) {
 				ExternalClient.open(ExternalClient.HTML_CLIENT, uri);
+				notifyPageListeners(new PageEvent(this, PageEvent.PAGE_READ_END));
 				return true;
 			}
 			throw new UnsupportedFormatException(uri);
