@@ -1063,7 +1063,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 
 		menuItem = new JMenuItem(page.getAction(Page.SAVE_PAGE_AS_APPLET));
 		menuItem.setMnemonic(KeyEvent.VK_H);
-		s = getInternationalText("SavePageAsHTML");
+		s = getInternationalText("SavePageAsApplet");
 		menuItem.setText((s != null ? s : "Save As Applet") + "...");
 		menuItem.setToolTipText("Save this page as an applet");
 		menu.add(menuItem);
