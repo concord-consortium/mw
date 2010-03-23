@@ -625,6 +625,9 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 				if ("ru".equals(l.getLanguage())) {
 					navigator.visitLocation(s + "ru/index.cml");
 				}
+				else if ("no".equals(l.getLanguage())) {
+					navigator.visitLocation(s + "no/index.cml");
+				}
 				else {
 					navigator.visitLocation(s + "index.cml");
 				}
@@ -2541,6 +2544,9 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 				else {
 					if (l.getLanguage().equals("ru")) {
 						navigator.visitLocation(s + "ru/index.cml");
+					}
+					else if (l.getLanguage().equals("no")) {
+						navigator.visitLocation(s + "no/index.cml");
 					}
 					else {
 						navigator.visitLocation(s + "index.cml");
