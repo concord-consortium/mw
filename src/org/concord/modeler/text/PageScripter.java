@@ -88,9 +88,9 @@ class PageScripter extends ComponentScripter {
 		// set
 		matcher = Compiler.SET.matcher(ci);
 		if (matcher.find()) {
-			String s = ci.substring(matcher.end()).trim().toLowerCase();
-			if (s.startsWith("frank")) {
-				page.setFrank(!s.endsWith("false"));
+			String s = ci.substring(matcher.end()).trim();
+			if (s.toLowerCase().startsWith("frank")) {
+				page.setFrank(!s.toLowerCase().endsWith("false"));
 			}
 			return;
 		}
