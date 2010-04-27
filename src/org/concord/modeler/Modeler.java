@@ -564,24 +564,28 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 			page.setCharacterEncoding("EUC-JP");
 		else if (d.equals(Locale.KOREA))
 			page.setCharacterEncoding("EUC-KR");
-		else if (s.equals("el"))
+		else if (s.equals(new Locale("el", "", "").getLanguage()))
 			page.setCharacterEncoding("ISO-8859-7");
-		else if (s.equals("he"))
+		else if (sameLanguage(s, "he"))
 			page.setCharacterEncoding("ISO-8859-8");
-		else if (s.equals("ru"))
+		else if (sameLanguage(s, "ru"))
 			page.setCharacterEncoding("UTF-8");
-		else if (s.equals("ar"))
+		else if (sameLanguage(s, "ar"))
 			page.setCharacterEncoding("ISO-8859-6");
-		else if (s.equals("th"))
+		else if (sameLanguage(s, "th"))
 			page.setCharacterEncoding("ISO-8859-11");
-		else if (s.equals("tr"))
+		else if (sameLanguage(s, "tr"))
 			page.setCharacterEncoding("ISO-8859-9");
-		else if (s.equals("bs") || s.equals("pl") || s.equals("hr") || s.equals("sk") || s.equals("sl")
-				|| s.equals("hu") || s.equals("cs"))
+		else if (sameLanguage(s, "bs") || sameLanguage(s, "pl") || sameLanguage(s, "hr") || sameLanguage(s, "sk")
+				|| sameLanguage(s, "sl") || sameLanguage(s, "hu") || sameLanguage(s, "cs"))
 			page.setCharacterEncoding("ISO-8859-2");
 		else {
 			page.setCharacterEncoding("UTF-8");
 		}
+	}
+
+	private static boolean sameLanguage(String language, String country) {
+		return language.equals(new Locale(country, "", "").getLanguage());
 	}
 
 	public Editor getEditor() {
@@ -617,19 +621,22 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		if (startingURL == null && PreferencesDialog.DEFAULT_HOME_PAGE.equals(spt)) {
 			String s = getStaticRoot();
 			Locale l = Locale.getDefault();
-			if (Locale.PRC.equals(l))
-				navigator.visitLocation(s + "cn/index.cml");
-			else if (Locale.TAIWAN.equals(l))
-				navigator.visitLocation(s + "tw/index.cml");
-			else {
-				if ("ru".equals(l.getLanguage())) {
-					navigator.visitLocation(s + "ru/index.cml");
-				}
-				else if ("no".equals(l.getLanguage())) {
-					navigator.visitLocation(s + "no/index.cml");
-				}
+			if (l != null) {
+				if (Locale.PRC.equals(l))
+					navigator.visitLocation(s + "cn/index.cml");
+				else if (Locale.TAIWAN.equals(l))
+					navigator.visitLocation(s + "tw/index.cml");
 				else {
-					navigator.visitLocation(s + "index.cml");
+					String language = l.getLanguage();
+					if (sameLanguage(language, "ru")) {
+						navigator.visitLocation(s + "ru/index.cml");
+					}
+					else if (sameLanguage(language, "no")) {
+						navigator.visitLocation(s + "no/index.cml");
+					}
+					else {
+						navigator.visitLocation(s + "index.cml");
+					}
 				}
 			}
 		}
@@ -2537,19 +2544,22 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 				editor.getPage().rememberViewPosition(false);
 				String s = getStaticRoot();
 				Locale l = Locale.getDefault();
-				if (l.equals(Locale.PRC))
-					navigator.visitLocation(s + "cn/index.cml");
-				else if (l.equals(Locale.TAIWAN))
-					navigator.visitLocation(s + "tw/index.cml");
-				else {
-					if (l.getLanguage().equals("ru")) {
-						navigator.visitLocation(s + "ru/index.cml");
-					}
-					else if (l.getLanguage().equals("no")) {
-						navigator.visitLocation(s + "no/index.cml");
-					}
+				if (l != null) {
+					if (l.equals(Locale.PRC))
+						navigator.visitLocation(s + "cn/index.cml");
+					else if (l.equals(Locale.TAIWAN))
+						navigator.visitLocation(s + "tw/index.cml");
 					else {
-						navigator.visitLocation(s + "index.cml");
+						String language = l.getLanguage();
+						if (sameLanguage(language, "ru")) {
+							navigator.visitLocation(s + "ru/index.cml");
+						}
+						else if (sameLanguage(language, "no")) {
+							navigator.visitLocation(s + "no/index.cml");
+						}
+						else {
+							navigator.visitLocation(s + "index.cml");
+						}
 					}
 				}
 			}
