@@ -279,7 +279,8 @@ public abstract class AbstractEval {
 			x = mathEval.eval();
 		}
 		catch (Exception e) {
-			out(ScriptEvent.FAILED, expression + " cannot be parsed as a number.");
+			e.printStackTrace();
+			out(ScriptEvent.FAILED, expression + " cannot be parsed as a number. " + e.getLocalizedMessage());
 			return Double.NaN;
 		}
 		return x;
