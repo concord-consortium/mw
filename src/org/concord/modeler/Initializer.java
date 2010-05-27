@@ -233,7 +233,8 @@ public class Initializer {
 				root = new File(System.getProperty("user.home"), "Application Data");
 			}
 		}
-		else if (System.getProperty("os.name").startsWith("Windows Vista")) {
+		else if (System.getProperty("os.name").startsWith("Windows Vista")
+				|| System.getProperty("os.name").startsWith("Windows 7")) {
 			// workaround for the Java bug on Vista (http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6519127)
 			String userName = System.getProperty("user.name");
 			String userHome = System.getProperty("user.home");
