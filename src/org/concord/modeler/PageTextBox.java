@@ -20,7 +20,6 @@
 
 package org.concord.modeler;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
@@ -498,9 +497,7 @@ public class PageTextBox extends BasicPageTextBox {
 				+ "</height>\n");
 		sb.append("<title>" + encodeText() + "</title>\n");
 		if (isOpaque()) {
-			if (!getBackground().equals(Color.white)) {
-				sb.append("<bgcolor>" + Integer.toString(getBackground().getRGB(), 16) + "</bgcolor>\n");
-			}
+			sb.append("<bgcolor>" + Integer.toString(getBackground().getRGB(), 16) + "</bgcolor>\n");
 		}
 		else {
 			sb.append("<opaque>false</opaque>\n");
