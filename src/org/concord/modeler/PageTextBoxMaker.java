@@ -246,7 +246,7 @@ class PageTextBoxMaker extends ComponentMaker {
 		s = Modeler.getInternationalText("HeightLabel");
 		label = new JLabel(s != null ? s : "Height", SwingConstants.LEFT);
 		p.add(label);
-		heightField = new FloatNumberTextField(100, 0.01f, 1000);
+		heightField = new FloatNumberTextField(100, 0.01f, 2000);
 		heightField.setMaximumFractionDigits(4);
 		heightField.setAction(okAction);
 		p.add(heightField);
