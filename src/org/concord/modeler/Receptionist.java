@@ -35,6 +35,9 @@ final class Receptionist {
 
 	void checkin() {
 
+		if (!Modeler.directMW)
+			return;
+
 		StringBuffer sb = new StringBuffer();
 		String os = System.getProperty("os.name") + " " + System.getProperty("os.version");
 		String user = ModelerUtilities.getUnicode(System.getProperty("user.name"));
