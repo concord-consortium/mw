@@ -7,10 +7,6 @@
       <description>Molecular Workbench</description>
       <icon href="mwlogo.jpg"/>
       <offline-allowed/>
-      <shortcut online="true">
-         <desktop/>
-         <menu/>
-      </shortcut>
    </information>
    <resources>
       <j2se version="1.5+"/>
