@@ -59,6 +59,7 @@ class ModelProperties extends JDialog {
 	private JLabel atomCountLabel, rbondCountLabel, abondCountLabel, tbondCountLabel, moleculeCountLabel;
 	private JTabbedPane tabbedPane;
 	private JLabel gLabel, eLabel, bLabel;
+	private JPanel scriptPanel;
 
 	public ModelProperties(Frame owner, MolecularModel m) {
 
@@ -286,18 +287,18 @@ class ModelProperties extends JDialog {
 
 		/* script */
 
-		panel = new JPanel(new BorderLayout(2, 2));
-		panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory
+		scriptPanel = new JPanel(new BorderLayout(2, 2));
+		scriptPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory
 				.createEmptyBorder(8, 8, 8, 8)));
 		s = MolecularContainer.getInternationalText("Script");
-		tabbedPane.add(s != null ? s : "Script", panel);
+		tabbedPane.add(s != null ? s : "Script", scriptPanel);
 
 		p = new JPanel(new BorderLayout(10, 10));
-		p.setPreferredSize(new Dimension(360, 200));
+		p.setPreferredSize(new Dimension(500, 300));
 		s = MolecularContainer.getInternationalText("ScriptToRunAfterLoadingModel");
 		p.setBorder(new TitledBorder(BorderFactory.createEtchedBorder(), s != null ? s
 				: "Script to run right after loading model", 0, 0));
-		panel.add(p, BorderLayout.CENTER);
+		scriptPanel.add(p, BorderLayout.CENTER);
 
 		scriptArea = new PastableTextArea(model.getInitializationScript());
 		JScrollPane scrollPane = new JScrollPane(scriptArea);
@@ -330,6 +331,10 @@ class ModelProperties extends JDialog {
 
 		model.notifyChange();
 
+	}
+
+	void selectInitializationScriptTab() {
+		tabbedPane.setSelectedComponent(scriptPanel);
 	}
 
 }

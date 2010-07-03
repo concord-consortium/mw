@@ -1815,6 +1815,12 @@ public class MolecularModel {
 				}
 
 			};
+			job.setInitTaskAction(new Runnable() {
+				public void run() {
+					getView().getActionMap().get("properties").actionPerformed(null);
+				}
+			});
+
 		}
 		if (!recorderDisabled && !job.contains(movieUpdater))
 			job.add(movieUpdater);
