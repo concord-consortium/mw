@@ -1350,6 +1350,8 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 			public void actionPerformed(ActionEvent e) {
 				ModelProperties modelProperties = new ModelProperties(JOptionPane
 						.getFrameForComponent(MolecularContainer.this), model);
+				if (e == null)
+					modelProperties.selectInitializationScriptTab();
 				modelProperties.setLocationRelativeTo(MolecularContainer.this);
 				modelProperties.setVisible(true);
 			}
