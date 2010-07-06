@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.EmptyStackException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -1637,6 +1638,72 @@ class Eval3D extends AbstractEval {
 				model.notifyChange();
 				return true;
 			}
+			else if (s0 == "strength") {
+				if (!model.rBonds.isEmpty()) {
+					RBond rb;
+					synchronized (model.rBonds) {
+						for (Iterator it = model.rBonds.iterator(); it.hasNext();) {
+							rb = (RBond) it.next();
+							if (rb.isSelected()) {
+								if (x > ZERO) {
+									rb.setStrength((float) x);
+								}
+								else {
+									it.remove();
+								}
+							}
+						}
+					}
+				}
+				if (!model.aBonds.isEmpty()) {
+					ABond ab;
+					synchronized (model.aBonds) {
+						for (Iterator it = model.aBonds.iterator(); it.hasNext();) {
+							ab = (ABond) it.next();
+							if (ab.isSelected()) {
+								if (x > ZERO) {
+									ab.setStrength((float) x);
+								}
+								else {
+									it.remove();
+								}
+							}
+						}
+					}
+				}
+				model.removeGhostABonds();
+				model.removeGhostTBonds();
+				model.notifyChange();
+				return true;
+			}
+			else if (s0 == "bondlength") {
+				if (!model.rBonds.isEmpty()) {
+					RBond rb;
+					synchronized (model.rBonds) {
+						for (Iterator it = model.rBonds.iterator(); it.hasNext();) {
+							rb = (RBond) it.next();
+							if (rb.isSelected())
+								rb.setLength((float) x);
+						}
+					}
+					model.notifyChange();
+				}
+				return true;
+			}
+			else if (s0 == "bondangle") {
+				if (!model.aBonds.isEmpty()) {
+					ABond ab;
+					synchronized (model.aBonds) {
+						for (Iterator it = model.aBonds.iterator(); it.hasNext();) {
+							ab = (ABond) it.next();
+							if (ab.isSelected())
+								ab.setAngle((float) Math.toRadians(x));
+						}
+					}
+					model.notifyChange();
+				}
+				return true;
+			}
 			else if (s0 == "timestep") {
 				model.setTimeStep((float) x);
 				model.notifyChange();
@@ -2269,6 +2336,8 @@ class Eval3D extends AbstractEval {
 		if (!deletedRBond.isEmpty()) {
 			for (RBond rb : deletedRBond)
 				view.removeRBond(rb);
+			model.removeGhostABonds();
+			model.removeGhostTBonds();
 		}
 		int n = model.getAtomCount();
 		BitSet bs = new BitSet(n);
