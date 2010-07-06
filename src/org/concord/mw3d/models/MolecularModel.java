@@ -1419,6 +1419,37 @@ public class MolecularModel {
 		}
 	}
 
+	/* this method is called by the script interpreter after radial bonds are removed. */
+	void removeGhostABonds() {
+		if (aBonds.isEmpty())
+			return;
+		ABond ab;
+		synchronized (aBonds) {
+			for (Iterator i = aBonds.iterator(); i.hasNext();) {
+				ab = (ABond) i.next();
+				if (getRBond(ab.atom1, ab.atom3) == null || getRBond(ab.atom2, ab.atom3) == null) {
+					i.remove();
+				}
+			}
+		}
+	}
+
+	/* this method is called by the script interpreter after radial bonds are removed. */
+	void removeGhostTBonds() {
+		if (tBonds.isEmpty())
+			return;
+		TBond tb;
+		synchronized (tBonds) {
+			for (Iterator i = tBonds.iterator(); i.hasNext();) {
+				tb = (TBond) i.next();
+				if (getRBond(tb.atom1, tb.atom2) == null || getRBond(tb.atom2, tb.atom3) == null
+						|| getRBond(tb.atom3, tb.atom4) == null) {
+					i.remove();
+				}
+			}
+		}
+	}
+
 	public ABond getABond(int index) {
 		synchronized (aBonds) {
 			if (index < 0 || index >= aBonds.size())
