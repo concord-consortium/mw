@@ -1412,6 +1412,12 @@ class Eval3D extends AbstractEval {
 			view.repaint();
 			return true;
 		}
+		result = parseOnOff("velocity", s);
+		if (result != -1) {
+			view.showVelocity(result == ON);
+			view.repaint();
+			return true;
+		}
 		out(ScriptEvent.FAILED, "Unrecognized keyword: " + str);
 		return false;
 	}

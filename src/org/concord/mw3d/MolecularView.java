@@ -1228,6 +1228,17 @@ public class MolecularView extends Draw {
 		return trajectoryBitSet.get(index);
 	}
 
+	public void showVelocity(boolean on) {
+		for (int i = 0; i < model.getAtomCount(); i++) {
+			if (on) {
+				Atom at = model.getAtom(i);
+				viewer.setAtomVelocities(i, at.getVx(), at.getVy(), at.getVz());
+			}
+			velocityBitSet.set(i, on);
+		}
+		repaint();
+	}
+
 	public void showVelocity(int index, boolean on) {
 		if (index < 0 || index >= MolecularModel.SIZE)
 			return;
