@@ -766,7 +766,7 @@ class PreferencesDialog extends JDialog {
 		String s1 = Modeler.getInternationalText("TraditionalChinese");
 		final JComboBox languageComboBox = new JComboBox(new String[] { "English (United States)",
 				s != null ? s : "Simplied Chinese (PRC)", s1 != null ? s1 : "Traditional Chinese (Taiwan)", "Russian",
-				"Hebrew", "Norwegian" });
+				"Hebrew", "Norwegian", "Spanish" });
 		languageComboBox.setToolTipText("This sets character encoding for saving page too.");
 		setLanguageComboBox(languageComboBox);
 		languageComboBox.addItemListener(new ItemListener() {
@@ -790,6 +790,9 @@ class PreferencesDialog extends JDialog {
 						break;
 					case 5:
 						Modeler.preference.put("Locale", "no");
+						break;
+					case 6:
+						Modeler.preference.put("Locale", "es");
 						break;
 					}
 					if (okToRestart())
@@ -827,6 +830,8 @@ class PreferencesDialog extends JDialog {
 			comboBox.setSelectedIndex(4);
 		else if (Locale.getDefault().equals(new Locale("no")))
 			comboBox.setSelectedIndex(5);
+		else if (Locale.getDefault().equals(new Locale("es")))
+			comboBox.setSelectedIndex(6);
 		for (ItemListener i : il)
 			comboBox.addItemListener(i);
 	}
