@@ -3543,6 +3543,7 @@ public abstract class AtomicModel extends MDModel {
 		}
 		electronicDynamics = null;
 		updateGrid = null;
+		neighborList = null;
 	}
 
 	public void clear() {

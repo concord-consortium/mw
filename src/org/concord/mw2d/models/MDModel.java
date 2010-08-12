@@ -559,6 +559,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			evalJs.removeAllScriptListeners();
 			evalJs = null;
 		}
+		evalThread = null;
 		actionReminder = null;
 		movieUpdater = null;
 		watchdog = null;

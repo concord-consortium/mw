@@ -183,7 +183,8 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 	private static boolean initPageFlag;
 	private static boolean createUsingEDT;
 
-	private Action createReportAction, createReportForPageGroupAction;
+	private CreateReportAction createReportAction;
+	private CreateReportForPageGroupAction createReportForPageGroupAction;
 
 	public Modeler() {
 
@@ -511,7 +512,13 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		colorMenu.destroy();
 
 		KeyboardFocusManager.getCurrentKeyboardFocusManager().clearGlobalFocusOwner();
-
+		editor = null;
+		
+		createReportAction.setModeler(null);
+		createReportAction = null;
+		
+		createReportForPageGroupAction.setModeler(null);
+		createReportForPageGroupAction = null;
 	}
 
 	private void destroyMenu(JMenu menu) {
