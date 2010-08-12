@@ -147,7 +147,8 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 	private Page page;
 	private FindDialog findDialog;
 	private JDialog projectorScreen;
-	private JComboBox fontNameComboBox, fontSizeComboBox, fontColorComboBox;
+	private JComboBox fontNameComboBox, fontSizeComboBox;
+	private ColorComboBox fontColorComboBox;
 	private JCheckBox boldCheckBox, italicCheckBox, underlineCheckBox;
 	private JCheckBox leftAlignmentCheckBox, rightAlignmentCheckBox, centerAlignmentCheckBox;
 	private JButton cutButton, copyButton, pasteButton;
@@ -498,6 +499,9 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 				destroyToolBar(toolBar[2]);
 		}
 		actionNotifier.setParentComponent(null);
+		
+		fontColorComboBox.setParent(null);
+		fontColorComboBox = null;
 
 		page.destroy();
 		componentPool.destroy();

@@ -649,8 +649,10 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		// cause the AbstractDocument.fireChangedUpdate() method to be called.
 		removeAllDocumentListeners();
 
-		if (pageLoadingThread != null)
+		if (pageLoadingThread != null) {
 			pageLoadingThread.interrupt();
+			pageLoadingThread = null;
+		}
 
 		if (actions != null)
 			actions.clear();
@@ -760,7 +762,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		propertiesAction = null;
 		saveAsAppletAction = null;
 		colorBarAction = null;
-
+		editor = null;
 	}
 
 	private static void destroyPopupMenu(JPopupMenu pm) {

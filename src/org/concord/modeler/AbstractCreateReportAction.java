@@ -133,5 +133,9 @@ abstract class AbstractCreateReportAction extends AbstractAction {
 			justPrint = true;
 		return provider.isOK;
 	}
+	
+	public void setModeler(Modeler modeler) {
+		this.modeler = modeler;
+	}
 
 }
