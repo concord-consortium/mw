@@ -66,7 +66,6 @@ import java.util.prefs.Preferences;
 import javax.net.ServerSocketFactory;
 import javax.net.SocketFactory;
 import javax.swing.AbstractButton;
-import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.Icon;
@@ -1641,7 +1640,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		menuItem.setMnemonic(KeyEvent.VK_G);
 		menuItem.setName("Gauge");
 		s = getInternationalText("InsertGauge");
-		menuItem.setText((s != null ? s : "Guage") + "...");
+		menuItem.setText((s != null ? s : "Gauge") + "...");
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.ALT_MASK | KeyEvent.SHIFT_MASK, true));
 		subMenu.add(menuItem);
 		editor.addEnabledComponentWhenEditable(menuItem);
