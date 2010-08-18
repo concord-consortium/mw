@@ -105,9 +105,6 @@ public class Atom extends Particle {
 	}
 
 	public void setModel(MDModel m) {
-		if (m == null) {
-			model = null;
-		}
 		if (m != null && !(m instanceof AtomicModel))
 			throw new IllegalArgumentException("wrong type of model");
 		model = (MolecularModel) m;
@@ -164,14 +161,14 @@ public class Atom extends Particle {
 	}
 
 	public void destroy() {
-	    if (hasElectrons()) {
-            synchronized (electrons) {
-                for (Electron e : electrons) {
-                    e.setModel(null);
-                	e.setAtom(null);
-                }
-            }
-        }
+		if (hasElectrons()) {
+			synchronized (electrons) {
+				for (Electron e : electrons) {
+					e.setModel(null);
+					e.setAtom(null);
+				}
+			}
+		}
 		super.destroy();
 		radicalQ = null;
 		excitationQ = null;
