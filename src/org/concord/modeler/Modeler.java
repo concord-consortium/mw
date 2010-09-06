@@ -1771,19 +1771,6 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		subMenu2.add(menuItem);
 		editor.addEnabledComponentWhenEditable(menuItem);
 
-		s = getInternationalText("InsertProteinAndDNA");
-		subMenu2 = new JMenu(s != null ? s : "Proteins and DNA");
-		subMenu2.setMnemonic(KeyEvent.VK_P);
-		subMenu.add(subMenu2);
-
-		menuItem = new JMenuItem(page.getAction(Page.INSERT_COMPONENT));
-		menuItem.setMnemonic(KeyEvent.VK_S);
-		menuItem.setName("DNA Scroller");
-		s = getInternationalText("InsertDNAScroller");
-		menuItem.setText((s != null ? s : menuItem.getName()) + "...");
-		subMenu2.add(menuItem);
-		editor.addEnabledComponentWhenEditable(menuItem);
-
 		s = getInternationalText("InsertLightMatterInteraction");
 		subMenu2 = new JMenu(s != null ? s : "Light-Matter Interactions");
 		subMenu2.setMnemonic(KeyEvent.VK_L);
