@@ -944,6 +944,11 @@ public class MesoModel extends MDModel {
 			p.setDraggable(true);
 			p.setRestraint(null);
 			p.setCharge(0.0);
+			p.setVx(0);
+			p.setVy(0);
+			p.setOmega(0);
+			p.setHx(0);
+			p.setHy(0);
 			p.custom = 0;
 			p.setUserField(null);
 			p.setShowRTraj(false);
