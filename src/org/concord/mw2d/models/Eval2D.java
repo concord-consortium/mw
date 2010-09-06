@@ -77,6 +77,10 @@ import org.concord.mw2d.ui.MDContainer;
 import static java.util.regex.Pattern.compile;
 import static org.concord.modeler.script.Compiler.*;
 
+/**
+ * @author Charles Xie
+ */
+
 class Eval2D extends AbstractEval {
 
 	private final static byte BY_ATOM = 11;

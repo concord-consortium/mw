@@ -30,7 +30,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
@@ -75,8 +74,8 @@ class PageXYGraphMaker extends ComponentMaker {
 	private PageXYGraph pageXYGraph;
 	private JDialog dialog;
 	private JTextField uidField;
-	private JComboBox modelComboBox, xComboBox, xFilterComboBox, borderComboBox;
-	private JComboBox[] yComboBox, yFilterComboBox, smootherComboBox;
+	private JComboBox modelComboBox, xComboBox, borderComboBox;
+	private JComboBox[] yComboBox, smootherComboBox;
 	private JComboBox[] lineStyleComboBox;
 	private JComboBox[] lineSymbolComboBox;
 	private JComboBox[] lineWidthComboBox;
@@ -95,8 +94,6 @@ class PageXYGraphMaker extends ComponentMaker {
 	private JButton okButton;
 	private JPanel contentPane;
 	private static Font smallFont;
-	private int xFilterType;
-	private int[] yFilterType;
 	private JTabbedPane tabbedPane;
 	private JTextComponent focusTextComponent;
 
@@ -141,8 +138,6 @@ class PageXYGraphMaker extends ComponentMaker {
 	};
 
 	PageXYGraphMaker(PageXYGraph pxyg) {
-		yFilterType = new int[MAX];
-		Arrays.fill(yFilterType, 0);
 		setObject(pxyg);
 	}
 
@@ -378,13 +373,9 @@ class PageXYGraphMaker extends ComponentMaker {
 		modelComboBox.removeItemListener(modelSelectionListener);
 		modelComboBox.removeAllItems();
 		xComboBox.removeItemListener(timeSeriesSelectionListener);
-		if (xFilterComboBox != null)
-			xFilterComboBox.setSelectedIndex(0);
 		for (int i = 0; i < MAX; i++) {
 			if (yComboBox[i] != null)
 				yComboBox[i].removeItemListener(timeSeriesSelectionListener);
-			if (yFilterComboBox[i] != null)
-				yFilterComboBox[i].setSelectedIndex(0);
 		}
 
 		xLabelTextField.setText(pageXYGraph.getXAxis().getTitleText());
@@ -527,26 +518,11 @@ class PageXYGraphMaker extends ComponentMaker {
 		}
 	}
 
-	private static void addFilteredTimeSeries(int filterType, DataQueue q, JComboBox comboBox) {
-		String s;
-		switch (filterType) {
-		case 0:
+	private static void addExportedTimeSeries(DataQueue q, JComboBox comboBox) {
+		String s = q.toString();
+		if (!s.startsWith("Rx:") && !s.startsWith("Ry:") && !s.startsWith("Vx:") && !s.startsWith("Vy:")
+				&& !s.startsWith("Ax:") && !s.startsWith("Ay:")) {
 			comboBox.addItem(q);
-			break;
-		case 1:
-			s = q.toString();
-			if (s.startsWith("Rx:") || s.startsWith("Ry:") || s.startsWith("Vx:") || s.startsWith("Vy:")
-					|| s.startsWith("Ax:") || s.startsWith("Ay:")) {
-				comboBox.addItem(q);
-			}
-			break;
-		case 2:
-			s = q.toString();
-			if (!s.startsWith("Rx:") && !s.startsWith("Ry:") && !s.startsWith("Vx:") && !s.startsWith("Vy:")
-					&& !s.startsWith("Ax:") && !s.startsWith("Ay:")) {
-				comboBox.addItem(q);
-			}
-			break;
 		}
 	}
 
@@ -569,12 +545,11 @@ class PageXYGraphMaker extends ComponentMaker {
 				synchronized (qg.getSynchronizedLock()) {
 					for (Iterator it = qg.iterator(); it.hasNext();) {
 						q = (DataQueue) it.next();
-						addFilteredTimeSeries(xFilterType, q, comboBox);
+						addExportedTimeSeries(q, comboBox);
 					}
 				}
 			}
-			if (xFilterType != 1)
-				comboBox.addItem(model.getModelTimeQueue());
+			comboBox.addItem(model.getModelTimeQueue());
 			nitem = comboBox.getItemCount();
 			for (int i = 0; i < nitem; i++) {
 				q = (DataQueue) comboBox.getItemAt(i);
@@ -603,7 +578,7 @@ class PageXYGraphMaker extends ComponentMaker {
 				synchronized (qg.getSynchronizedLock()) {
 					for (Iterator it = qg.iterator(); it.hasNext();) {
 						q = (DataQueue) it.next();
-						addFilteredTimeSeries(yFilterType[n], q, comboBox);
+						addExportedTimeSeries(q, comboBox);
 					}
 				}
 			}
@@ -669,22 +644,6 @@ class PageXYGraphMaker extends ComponentMaker {
 		p.add(yComboBox[n]);
 
 		// row 2
-		s = Modeler.getInternationalText("VariableFilter");
-		p.add(new JLabel(s != null ? s : "Variable filter", SwingConstants.LEFT));
-		yFilterComboBox[n] = new JComboBox(new Object[] { "All variables", "Particle variables", "System variables" });
-		yFilterComboBox[n].setToolTipText("Filter variables by types to find them more easily.");
-		final int n2 = n;
-		yFilterComboBox[n].addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				if (e.getStateChange() == ItemEvent.SELECTED) {
-					yFilterType[n2] = yFilterComboBox[n2].getSelectedIndex();
-					fillTimeSeriesComboBox(yComboBox[n2]);
-				}
-			}
-		});
-		p.add(yFilterComboBox[n]);
-
-		// row 3
 		s = Modeler.getInternationalText("CurveSmoother");
 		p.add(new JLabel(s != null ? s : "Smoother", SwingConstants.LEFT));
 		smootherComboBox[n] = new JComboBox(new Object[] { "None", "Simple running average",
@@ -710,19 +669,19 @@ class PageXYGraphMaker extends ComponentMaker {
 		});
 		p.add(smootherComboBox[n]);
 
-		// row 4
+		// row 3
 		p.add(new JLabel("Multiplier for Y" + (n + 1), SwingConstants.LEFT));
 		yMultiplierField[n] = new FloatNumberTextField(pageXYGraph.yMultiplier[n], -Float.MAX_VALUE, Float.MAX_VALUE);
 		yMultiplierField[n].setToolTipText("Type in a value to multiply the y" + (n + 1) + " output.");
 		p.add(yMultiplierField[n]);
 
-		// row 5
+		// row 4
 		p.add(new JLabel("Addend to Y" + (n + 1), SwingConstants.LEFT));
 		yAddendField[n] = new FloatNumberTextField(pageXYGraph.yAddend[n], -Float.MAX_VALUE, Float.MAX_VALUE);
 		yAddendField[n].setToolTipText("Type in a value to be added to the y" + (n + 1) + " output.");
 		p.add(yAddendField[n]);
 
-		// row 6
+		// row 5
 		s = Modeler.getInternationalText("LineStyle");
 		p.add(new JLabel((s != null ? s : "Line style for ") + "Y" + (n + 1) + "(X)", SwingConstants.LEFT));
 		lineStyleComboBox[n] = new JComboBox();
@@ -735,7 +694,7 @@ class PageXYGraphMaker extends ComponentMaker {
 		lineStyleComboBox[n].addItem(new Integer(LineStyle.STROKE_NUMBER_5));
 		p.add(lineStyleComboBox[n]);
 
-		// row 7
+		// row 6
 		s = Modeler.getInternationalText("LineSymbol");
 		p.add(new JLabel((s != null ? s : "Line symbol for ") + "Y" + (n + 1) + "(X)", SwingConstants.LEFT));
 		lineSymbolComboBox[n] = new JComboBox();
@@ -765,7 +724,7 @@ class PageXYGraphMaker extends ComponentMaker {
 		});
 		p.add(lineSymbolComboBox[n]);
 
-		// row 8
+		// row 7
 		p.add(symbolSpacingLabel);
 		symbolSpacingSpinner[n] = new JSpinner(new SpinnerNumberModel(5, 1, 10, 1));
 		((JSpinner.DefaultEditor) symbolSpacingSpinner[n].getEditor()).getTextField().setToolTipText(
@@ -773,7 +732,7 @@ class PageXYGraphMaker extends ComponentMaker {
 		((JSpinner.DefaultEditor) symbolSpacingSpinner[n].getEditor()).getTextField().addActionListener(okListener);
 		p.add(symbolSpacingSpinner[n]);
 
-		// row 9
+		// row 8
 		p.add(symbolSizeLabel);
 		symbolSizeSpinner[n] = new JSpinner(new SpinnerNumberModel(6, 4, 12, 1));
 		((JSpinner.DefaultEditor) symbolSizeSpinner[n].getEditor()).getTextField().setToolTipText(
@@ -781,7 +740,7 @@ class PageXYGraphMaker extends ComponentMaker {
 		((JSpinner.DefaultEditor) symbolSizeSpinner[n].getEditor()).getTextField().addActionListener(okListener);
 		p.add(symbolSizeSpinner[n]);
 
-		// row 10
+		// row 9
 		s = Modeler.getInternationalText("LineWidth");
 		p.add(new JLabel((s != null ? s : "Line width for ") + "Y" + (n + 1) + "(X)", SwingConstants.LEFT));
 		lineWidthComboBox[n] = new JComboBox();
@@ -796,7 +755,7 @@ class PageXYGraphMaker extends ComponentMaker {
 		lineWidthComboBox[n].setSelectedIndex(1);
 		p.add(lineWidthComboBox[n]);
 
-		// row 11
+		// row 10
 		s = Modeler.getInternationalText("LineColor");
 		p.add(new JLabel((s != null ? s : "Line color for ") + "Y" + (n + 1) + "(X)", SwingConstants.LEFT));
 		lineColorComboBox[n] = new ColorComboBox(pageXYGraph);
@@ -806,7 +765,7 @@ class PageXYGraphMaker extends ComponentMaker {
 		lineColorComboBox[n].setRequestFocusEnabled(false);
 		p.add(lineColorComboBox[n]);
 
-		ModelerUtilities.makeCompactGrid(p, 11, 2, 5, 5, 10, 2);
+		ModelerUtilities.makeCompactGrid(p, 10, 2, 5, 5, 10, 2);
 
 		return p;
 
@@ -829,7 +788,6 @@ class PageXYGraphMaker extends ComponentMaker {
 		};
 
 		yComboBox = new JComboBox[MAX];
-		yFilterComboBox = new JComboBox[MAX];
 		smootherComboBox = new JComboBox[MAX];
 		yMultiplierField = new FloatNumberTextField[MAX];
 		yAddendField = new FloatNumberTextField[MAX];
@@ -906,21 +864,6 @@ class PageXYGraphMaker extends ComponentMaker {
 		p2.add(xComboBox);
 
 		// row 3
-		s = Modeler.getInternationalText("VariableFilter");
-		p2.add(new JLabel(s != null ? s : "Variable filter", SwingConstants.LEFT));
-		xFilterComboBox = new JComboBox(new Object[] { "All variables", "Particle variables", "System variables" });
-		xFilterComboBox.setToolTipText("Filter variables by types to find them more easily.");
-		xFilterComboBox.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				if (e.getStateChange() == ItemEvent.SELECTED) {
-					xFilterType = xFilterComboBox.getSelectedIndex();
-					fillTimeSeriesComboBox(xComboBox);
-				}
-			}
-		});
-		p2.add(xFilterComboBox);
-
-		// row 4
 		s = Modeler.getInternationalText("UniqueIdentifier");
 		p2.add(new JLabel(s != null ? s : "Unique identifier", SwingConstants.LEFT));
 		uidField = new JTextField();
@@ -928,19 +871,19 @@ class PageXYGraphMaker extends ComponentMaker {
 		uidField.addActionListener(okListener);
 		p2.add(uidField);
 
-		// row 5
+		// row 4
 		p2.add(new JLabel("Multiplier for X", SwingConstants.LEFT));
 		xMultiplierField = new FloatNumberTextField(pageXYGraph.xMultiplier, -Float.MAX_VALUE, Float.MAX_VALUE);
 		xMultiplierField.setToolTipText("Type in a value to multiply the x output.");
 		p2.add(xMultiplierField);
 
-		// row 6
+		// row 5
 		p2.add(new JLabel("Addend to X", SwingConstants.LEFT));
 		xAddendField = new FloatNumberTextField(pageXYGraph.xAddend, -Float.MAX_VALUE, Float.MAX_VALUE);
 		xAddendField.setToolTipText("Type in a value to be added to the x output.");
 		p2.add(xAddendField);
 
-		// row 7
+		// row 6
 		s = Modeler.getInternationalText("TitleForXAxis");
 		p2.add(new JLabel(s != null ? s : "Title for X axis", SwingConstants.LEFT));
 		xLabelTextField = new JTextField("x");
@@ -948,7 +891,7 @@ class PageXYGraphMaker extends ComponentMaker {
 		xLabelTextField.setToolTipText("Type in the title for the x axis.");
 		p2.add(xLabelTextField);
 
-		// row 8
+		// row 7
 		s = Modeler.getInternationalText("TitleForYAxis");
 		p2.add(new JLabel(s != null ? s : "Title for Y axis", SwingConstants.LEFT));
 		yLabelTextField = new JTextField("y");
@@ -956,7 +899,7 @@ class PageXYGraphMaker extends ComponentMaker {
 		yLabelTextField.setToolTipText("Type in the title for the y axis.");
 		p2.add(yLabelTextField);
 
-		// row 9
+		// row 8
 		s = Modeler.getInternationalText("AutoScaleXAxis");
 		p2.add(new JLabel(s != null ? s : "Auto scale X axis", SwingConstants.LEFT));
 		String[] yesno = new String[] { "Yes", "No" };
@@ -976,7 +919,7 @@ class PageXYGraphMaker extends ComponentMaker {
 		});
 		p2.add(autoScaleXComboBox);
 
-		// row 10
+		// row 9
 		s = Modeler.getInternationalText("AutoScaleYAxis");
 		p2.add(new JLabel(s != null ? s : "Auto scale Y axis", SwingConstants.LEFT));
 		autoScaleYComboBox = new JComboBox(yesno);
@@ -989,7 +932,7 @@ class PageXYGraphMaker extends ComponentMaker {
 		});
 		p2.add(autoScaleYComboBox);
 
-		// row 11
+		// row 10
 		s = Modeler.getInternationalText("AutoUpdate");
 		p2.add(new JLabel(s != null ? s : "Auto update", SwingConstants.LEFT));
 		autoUpdateComboBox = new JComboBox(yesno);
@@ -1002,7 +945,7 @@ class PageXYGraphMaker extends ComponentMaker {
 		});
 		p2.add(autoUpdateComboBox);
 
-		// row 12
+		// row 11
 		s = Modeler.getInternationalText("InsideBackgroundColor");
 		p2.add(new JLabel(s != null ? s : "Inside background color", SwingConstants.LEFT));
 		fgComboBox = new ColorComboBox(pageXYGraph);
@@ -1011,7 +954,7 @@ class PageXYGraphMaker extends ComponentMaker {
 		fgComboBox.setRequestFocusEnabled(false);
 		p2.add(fgComboBox);
 
-		// row 13
+		// row 12
 		s = Modeler.getInternationalText("OutsideBackgroundColor");
 		p2.add(new JLabel(s != null ? s : "Outside background color", SwingConstants.LEFT));
 		bgComboBox = new ColorComboBox(pageXYGraph);
@@ -1020,7 +963,7 @@ class PageXYGraphMaker extends ComponentMaker {
 		bgComboBox.setRequestFocusEnabled(false);
 		p2.add(bgComboBox);
 
-		// row 14
+		// row 13
 		s = Modeler.getInternationalText("BorderLabel");
 		p2.add(new JLabel(s != null ? s : "Outside border type", SwingConstants.LEFT));
 		borderComboBox = new JComboBox(BorderManager.BORDER_TYPE);
@@ -1029,7 +972,7 @@ class PageXYGraphMaker extends ComponentMaker {
 		borderComboBox.setToolTipText("Select the border type.");
 		p2.add(borderComboBox);
 
-		ModelerUtilities.makeCompactGrid(p2, 14, 2, 5, 5, 10, 2);
+		ModelerUtilities.makeCompactGrid(p2, 13, 2, 5, 5, 10, 2);
 
 		p2 = new JPanel(new GridLayout(1, 2, 5, 5));
 		p.add(p2, BorderLayout.SOUTH);
