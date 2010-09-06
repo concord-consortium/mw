@@ -3271,11 +3271,8 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		// signify the web launcher who is monitoring this process
 		if (mwLauncher)
 			System.err.println("launched"); // why do we have to use the err stream?
-		if (!hostIsLocal) {
+		if (!hostIsLocal)
 			LogDumper.sharedInstance().redirectSystemOutput();
-		}
-
-		ModelerUtilities.testQuicktime();
 
 	}
 
