@@ -512,10 +512,10 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 
 		KeyboardFocusManager.getCurrentKeyboardFocusManager().clearGlobalFocusOwner();
 		editor = null;
-		
+
 		createReportAction.setModeler(null);
 		createReportAction = null;
-		
+
 		createReportForPageGroupAction.setModeler(null);
 		createReportForPageGroupAction = null;
 	}
@@ -2909,8 +2909,8 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 	 * references.
 	 */
 	private void login() {
-		if (ConnectionManager.sharedInstance().getWorkOffline())
-			return;
+		// sometimes ping can fail due to other reaons. so don't rely on the offline flag
+		// if (ConnectionManager.sharedInstance().getWorkOffline()) return;
 		new SwingWorker("Check-in", Thread.MIN_PRIORITY) {
 			public Object construct() {
 				new Receptionist().checkin();
