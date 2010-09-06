@@ -65,7 +65,6 @@ class PageNumericBoxMaker extends ComponentMaker {
 	private JTextField uidField;
 	private JComboBox modelComboBox;
 	private JComboBox timeSeriesComboBox;
-	private JComboBox filterComboBox;
 	private JComboBox dataComboBox;
 	private JComboBox formatComboBox;
 	private JComboBox fontNameComboBox;
@@ -78,7 +77,6 @@ class PageNumericBoxMaker extends ComponentMaker {
 	private FloatNumberTextField multiplierField;
 	private FloatNumberTextField addendField;
 	private JButton okButton;
-	private int filterType;
 	private JPanel contentPane;
 	private static Font smallFont;
 
@@ -199,7 +197,6 @@ class PageNumericBoxMaker extends ComponentMaker {
 		modelComboBox.removeItemListener(modelSelectionListener);
 		modelComboBox.removeAllItems();
 		timeSeriesComboBox.removeItemListener(timeSeriesSelectionListener);
-		filterComboBox.setSelectedIndex(0);
 
 		if (pageNumericBox.isMaximumSizeSet()) {
 			widthField.setValue(pageNumericBox.getMaximumSize().width);
@@ -303,24 +300,10 @@ class PageNumericBoxMaker extends ComponentMaker {
 			synchronized (qg.getSynchronizedLock()) {
 				for (Iterator it = qg.iterator(); it.hasNext();) {
 					q = (DataQueue) it.next();
-					switch (filterType) {
-					case 0:
+					s = q.toString();
+					if (!s.startsWith("Rx:") && !s.startsWith("Ry:") && !s.startsWith("Vx:") && !s.startsWith("Vy:")
+							&& !s.startsWith("Ax:") && !s.startsWith("Ay:")) {
 						timeSeriesComboBox.addItem(q);
-						break;
-					case 1:
-						s = q.toString();
-						if (s.startsWith("Rx:") || s.startsWith("Ry:") || s.startsWith("Vx:") || s.startsWith("Vy:")
-								|| s.startsWith("Ax:") || s.startsWith("Ay:")) {
-							timeSeriesComboBox.addItem(q);
-						}
-						break;
-					case 2:
-						s = q.toString();
-						if (!s.startsWith("Rx:") && !s.startsWith("Ry:") && !s.startsWith("Vx:")
-								&& !s.startsWith("Vy:") && !s.startsWith("Ax:") && !s.startsWith("Ay:")) {
-							timeSeriesComboBox.addItem(q);
-						}
-						break;
 					}
 				}
 			}
@@ -410,21 +393,6 @@ class PageNumericBoxMaker extends ComponentMaker {
 		p.add(timeSeriesComboBox);
 
 		// row 3
-		s = Modeler.getInternationalText("VariableFilter");
-		p.add(new JLabel(s != null ? s : "Variable filter", SwingConstants.LEFT));
-		filterComboBox = new JComboBox(new Object[] { "All variables", "Particle variables", "System variables" });
-		filterComboBox.setToolTipText("Filter variables by types to find them more easily.");
-		filterComboBox.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				if (e.getStateChange() == ItemEvent.SELECTED) {
-					filterType = filterComboBox.getSelectedIndex();
-					fillTimeSeriesComboBox();
-				}
-			}
-		});
-		p.add(filterComboBox);
-
-		// row 4
 		s = Modeler.getInternationalText("UniqueIdentifier");
 		p.add(new JLabel(s != null ? s : "Unique identifier", SwingConstants.LEFT));
 		uidField = new JTextField();
@@ -432,7 +400,7 @@ class PageNumericBoxMaker extends ComponentMaker {
 		uidField.addActionListener(okListener);
 		p.add(uidField);
 
-		// row 5
+		// row 4
 		s = Modeler.getInternationalText("NumericDataType");
 		p.add(new JLabel(s != null ? s : "Data type", SwingConstants.LEFT));
 		dataComboBox = new JComboBox(
@@ -441,28 +409,28 @@ class PageNumericBoxMaker extends ComponentMaker {
 				.setToolTipText("Select the instantaneous value, time average value, or root mean square deviation to display.");
 		p.add(dataComboBox);
 
-		// row 6
+		// row 5
 		p.add(new JLabel("Multiplier", SwingConstants.LEFT));
 		multiplierField = new FloatNumberTextField(1, -Float.MAX_VALUE, Float.MAX_VALUE);
 		multiplierField.setToolTipText("Type in a value to multiply the output.");
 		multiplierField.addActionListener(okListener);
 		p.add(multiplierField);
 
-		// row 7
+		// row 6
 		p.add(new JLabel("Addend", SwingConstants.LEFT));
 		addendField = new FloatNumberTextField(0, -Float.MAX_VALUE, Float.MAX_VALUE);
 		addendField.setToolTipText("Type in a value to be added to the output.");
 		addendField.addActionListener(okListener);
 		p.add(addendField);
 
-		// row 8
+		// row 7
 		s = Modeler.getInternationalText("DigitalFormat");
 		p.add(new JLabel(s != null ? s : "Digital format", SwingConstants.LEFT));
 		formatComboBox = new JComboBox(new String[] { "Fixed point", "Scientific notation" });
 		formatComboBox.setToolTipText("Select the digital format to display numbers.");
 		p.add(formatComboBox);
 
-		// row 9
+		// row 8
 		s = Modeler.getInternationalText("MaximumFractionDigits");
 		p.add(new JLabel(s != null ? s : "Maximum fraction digits", SwingConstants.LEFT));
 		maximumFractionDigitField = new IntegerTextField(5, 0, 20);
@@ -471,7 +439,7 @@ class PageNumericBoxMaker extends ComponentMaker {
 		maximumFractionDigitField.addActionListener(okListener);
 		p.add(maximumFractionDigitField);
 
-		// row 10
+		// row 9
 		s = Modeler.getInternationalText("MaximumIntegerDigits");
 		p.add(new JLabel(s != null ? s : "Maximum integer digits", SwingConstants.LEFT));
 		maximumIntegerDigitField = new IntegerTextField(1, 0, 20);
@@ -480,7 +448,7 @@ class PageNumericBoxMaker extends ComponentMaker {
 		maximumIntegerDigitField.addActionListener(okListener);
 		p.add(maximumIntegerDigitField);
 
-		// row 11
+		// row 10
 		s = Modeler.getInternationalText("WidthLabel");
 		p.add(new JLabel(s != null ? s : "Width", SwingConstants.LEFT));
 		widthField = new IntegerTextField(SwingUtilities.computeStringWidth(pageNumericBox
@@ -489,7 +457,7 @@ class PageNumericBoxMaker extends ComponentMaker {
 		widthField.addActionListener(okListener);
 		p.add(widthField);
 
-		// row 12
+		// row 11
 		s = Modeler.getInternationalText("HeightLabel");
 		p.add(new JLabel(s != null ? s : "Height", SwingConstants.LEFT));
 		heightField = new IntegerTextField(20, 10, 200);
@@ -497,7 +465,7 @@ class PageNumericBoxMaker extends ComponentMaker {
 		heightField.addActionListener(okListener);
 		p.add(heightField);
 
-		// row 13
+		// row 12
 		s = Modeler.getInternationalText("NumericFontColor");
 		p.add(new JLabel(s != null ? s : "Font color", SwingConstants.LEFT));
 		fontColorComboBox = new ColorComboBox(pageNumericBox);
@@ -505,21 +473,21 @@ class PageNumericBoxMaker extends ComponentMaker {
 		fontColorComboBox.setRequestFocusEnabled(false);
 		p.add(fontColorComboBox);
 
-		// row 14
+		// row 13
 		s = Modeler.getInternationalText("NumericFontType");
 		p.add(new JLabel(s != null ? s : "Font type", SwingConstants.LEFT));
 		fontNameComboBox = ModelerUtilities.createFontNameComboBox();
 		fontNameComboBox.setSelectedItem(Page.getDefaultFontFamily());
 		p.add(fontNameComboBox);
 
-		// row 15
+		// row 14
 		s = Modeler.getInternationalText("NumericFontSize");
 		p.add(new JLabel(s != null ? s : "Font size", SwingConstants.LEFT));
 		fontSizeComboBox = ModelerUtilities.createFontSizeComboBox();
 		fontSizeComboBox.setSelectedItem(new Integer(Page.getDefaultFontSize()));
 		p.add(fontSizeComboBox);
 
-		// row 16
+		// row 15
 		s = Modeler.getInternationalText("BorderLabel");
 		p.add(new JLabel(s != null ? s : "Border", SwingConstants.LEFT));
 		borderComboBox = new JComboBox(BorderManager.BORDER_TYPE);
@@ -528,7 +496,7 @@ class PageNumericBoxMaker extends ComponentMaker {
 		borderComboBox.setToolTipText("Select the border type.");
 		p.add(borderComboBox);
 
-		ModelerUtilities.makeCompactGrid(p, 16, 2, 5, 5, 10, 2);
+		ModelerUtilities.makeCompactGrid(p, 15, 2, 5, 5, 10, 2);
 
 	}
 

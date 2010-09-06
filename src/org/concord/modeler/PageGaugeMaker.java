@@ -66,11 +66,10 @@ import org.concord.mw2d.models.MDModel;
 class PageGaugeMaker extends ComponentMaker {
 
 	private PageGauge pageGauge;
-	private int filterType;
 	private JDialog dialog;
 	private JTextField uidField;
 	private JTextField descriptionField;
-	private JComboBox modelComboBox, timeSeriesComboBox, filterComboBox;
+	private JComboBox modelComboBox, timeSeriesComboBox;
 	private JComboBox borderComboBox, tickComboBox, labelComboBox, titleComboBox;
 	private JComboBox typeComboBox;
 	private JComboBox formatComboBox;
@@ -245,7 +244,6 @@ class PageGaugeMaker extends ComponentMaker {
 		modelComboBox.removeItemListener(modelSelectionListener);
 		modelComboBox.removeAllItems();
 		timeSeriesComboBox.removeItemListener(timeSeriesSelectionListener);
-		filterComboBox.setSelectedIndex(0);
 		switch (pageGauge.getAverageType()) {
 		case PageGauge.INSTANTANEOUS:
 			typeComboBox.setSelectedIndex(0);
@@ -381,24 +379,10 @@ class PageGaugeMaker extends ComponentMaker {
 			synchronized (qg.getSynchronizedLock()) {
 				for (Iterator it = qg.iterator(); it.hasNext();) {
 					q = (DataQueue) it.next();
-					switch (filterType) {
-					case 0:
+					s = q.toString();
+					if (!s.startsWith("Rx:") && !s.startsWith("Ry:") && !s.startsWith("Vx:") && !s.startsWith("Vy:")
+							&& !s.startsWith("Ax:") && !s.startsWith("Ay:")) {
 						timeSeriesComboBox.addItem(q);
-						break;
-					case 1:
-						s = q.toString();
-						if (s.startsWith("Rx:") || s.startsWith("Ry:") || s.startsWith("Vx:") || s.startsWith("Vy:")
-								|| s.startsWith("Ax:") || s.startsWith("Ay:")) {
-							timeSeriesComboBox.addItem(q);
-						}
-						break;
-					case 2:
-						s = q.toString();
-						if (!s.startsWith("Rx:") && !s.startsWith("Ry:") && !s.startsWith("Vx:")
-								&& !s.startsWith("Vy:") && !s.startsWith("Ax:") && !s.startsWith("Ay:")) {
-							timeSeriesComboBox.addItem(q);
-						}
-						break;
 					}
 				}
 			}
@@ -517,21 +501,6 @@ class PageGaugeMaker extends ComponentMaker {
 		p.add(timeSeriesComboBox);
 
 		// row 3
-		s = Modeler.getInternationalText("VariableFilter");
-		p.add(new JLabel(s != null ? s : "Variable filter", SwingConstants.LEFT));
-		filterComboBox = new JComboBox(new Object[] { "All variables", "Particle variables", "System variables" });
-		filterComboBox.setToolTipText("Filter variables by types to find them more easily.");
-		filterComboBox.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				if (e.getStateChange() == ItemEvent.SELECTED) {
-					filterType = filterComboBox.getSelectedIndex();
-					fillTimeSeriesComboBox();
-				}
-			}
-		});
-		p.add(filterComboBox);
-
-		// row 4
 		s = Modeler.getInternationalText("UniqueIdentifier");
 		p.add(new JLabel(s != null ? s : "Unique identifier", SwingConstants.LEFT));
 		uidField = new JTextField();
@@ -539,7 +508,7 @@ class PageGaugeMaker extends ComponentMaker {
 		uidField.addActionListener(okListener);
 		p.add(uidField);
 
-		// row 5
+		// row 4
 		s = Modeler.getInternationalText("Type");
 		p.add(new JLabel(s != null ? s : "Type", SwingConstants.LEFT));
 		typeComboBox = new JComboBox(new String[] { "Instantaneous", "Growing-point running average",
@@ -578,14 +547,14 @@ class PageGaugeMaker extends ComponentMaker {
 		});
 		p.add(typeComboBox);
 
-		// row 6
+		// row 5
 		parameterLabel = new JLabel();
 		p.add(parameterLabel);
 		parameterField = new FloatNumberTextField(0.0f, -Float.MAX_VALUE, Float.MAX_VALUE);
 		parameterField.addActionListener(okListener);
 		p.add(parameterField);
 
-		// row 7
+		// row 6
 		s = Modeler.getInternationalText("TextLabel");
 		p.add(new JLabel(s != null ? s : "Description", SwingConstants.LEFT));
 		descriptionField = new JTextField();
@@ -593,7 +562,7 @@ class PageGaugeMaker extends ComponentMaker {
 		descriptionField.setToolTipText("Type in the text to be displayed in the gauge.");
 		p.add(descriptionField);
 
-		// row 8
+		// row 7
 		s = Modeler.getInternationalText("UpperBoundLabel");
 		p.add(new JLabel(s != null ? s : "Set upper bound", SwingConstants.LEFT));
 		maxField = new FloatNumberTextField(1.0f, -Float.MAX_VALUE, Float.MAX_VALUE);
@@ -601,7 +570,7 @@ class PageGaugeMaker extends ComponentMaker {
 		maxField.setToolTipText("Type in the upper bound this gauge displays.");
 		p.add(maxField);
 
-		// row 9
+		// row 8
 		s = Modeler.getInternationalText("LowerBoundLabel");
 		p.add(new JLabel(s != null ? s : "Set lower bound", SwingConstants.LEFT));
 		minField = new FloatNumberTextField(-1.0f, -Float.MAX_VALUE, Float.MAX_VALUE);
@@ -609,7 +578,7 @@ class PageGaugeMaker extends ComponentMaker {
 		minField.setToolTipText("Type in the lower bound this gauge displays.");
 		p.add(minField);
 
-		// row 10
+		// row 9
 		s = Modeler.getInternationalText("CurrentValueLabel");
 		p.add(new JLabel(s != null ? s : "Current value", SwingConstants.LEFT));
 		valueField = new FloatNumberTextField(0.0f, -Float.MAX_VALUE, Float.MAX_VALUE);
@@ -617,7 +586,7 @@ class PageGaugeMaker extends ComponentMaker {
 		valueField.setToolTipText("The current value of the output.");
 		p.add(valueField);
 
-		// row 11
+		// row 10
 		s = Modeler.getInternationalText("WidthLabel");
 		p.add(new JLabel(s != null ? s : "Width", SwingConstants.LEFT));
 		widthField = new IntegerTextField(100, 10, 800);
@@ -625,7 +594,7 @@ class PageGaugeMaker extends ComponentMaker {
 		widthField.addActionListener(okListener);
 		p.add(widthField);
 
-		// row 12
+		// row 11
 		s = Modeler.getInternationalText("HeightLabel");
 		p.add(new JLabel(s != null ? s : "Height", SwingConstants.LEFT));
 		heightField = new IntegerTextField(200, 10, 800);
@@ -633,7 +602,7 @@ class PageGaugeMaker extends ComponentMaker {
 		heightField.addActionListener(okListener);
 		p.add(heightField);
 
-		ModelerUtilities.makeCompactGrid(p, 12, 2, 5, 5, 10, 2);
+		ModelerUtilities.makeCompactGrid(p, 11, 2, 5, 5, 10, 2);
 
 		/* right panel */
 
