@@ -209,16 +209,6 @@ public final class ModelerUtilities {
 		return b;
 	}
 
-	static boolean testQuicktime() {
-		try {
-			Class.forName("quicktime.QTSession");
-			return true;
-		}
-		catch (Throwable e) {
-			return false;
-		}
-	}
-
 	public static Certificate getCertificate(Class klass) {
 		Certificate[] c = klass.getProtectionDomain().getCodeSource().getCertificates();
 		if (c == null || c.length <= 0)
