@@ -3556,6 +3556,10 @@ public abstract class AtomicModel extends MDModel {
 			a.setCharge(0.0);
 			a.setRestraint(null);
 			a.setUserField(null);
+			a.setVx(0);
+			a.setVy(0);
+			a.setHx(0);
+			a.setHy(0);
 			a.setShowRTraj(false);
 			a.setShowRMean(false);
 			a.setShowFMean(false);
