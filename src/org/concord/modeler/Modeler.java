@@ -1209,18 +1209,6 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		menu.add(menuItem);
 		menu.addSeparator();
 
-		s = getInternationalText("WorkOffline");
-		menuItem = new JCheckBoxMenuItem(s != null ? s : "Work Offline");
-		menuItem.setMnemonic(KeyEvent.VK_K);
-		menuItem.setSelected(ConnectionManager.sharedInstance().getWorkOffline());
-		menuItem.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				JMenuItem mi = (JMenuItem) e.getSource();
-				ConnectionManager.sharedInstance().setWorkOffline(mi.isSelected());
-			}
-		});
-		menu.add(menuItem);
-
 		if (!IS_MAC) {
 			menuItem = menu.add(page.getActionMap().get(Page.CLOSE_PAGE));
 			s = getInternationalText("Exit");
@@ -3219,8 +3207,8 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					Initializer.sharedInstance().setMessage("Testing connection to the main MW server...");
-					ConnectionManager.sharedInstance().setWorkOffline(!ModelerUtilities.pingMwServer());
+					// Initializer.sharedInstance().setMessage("Testing connection to the main MW server...");
+					// ConnectionManager.sharedInstance().setWorkOffline(!ModelerUtilities.pingMwServer());
 					Initializer.init();
 					final Modeler m = createModeler();
 					m.pack();
@@ -3237,8 +3225,8 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 			final SwingWorker worker = new SwingWorker("Main loader", Thread.MIN_PRIORITY) {
 				public Object construct() {
 					Debugger.print("Starting main loader");
-					Initializer.sharedInstance().setMessage("Testing connection to the main MW server...");
-					ConnectionManager.sharedInstance().setWorkOffline(!ModelerUtilities.pingMwServer());
+					// Initializer.sharedInstance().setMessage("Testing connection to the main MW server...");
+					// ConnectionManager.sharedInstance().setWorkOffline(!ModelerUtilities.pingMwServer());
 					Initializer.init();
 					return createModeler();
 				}
