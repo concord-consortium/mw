@@ -63,6 +63,10 @@ import org.concord.mw3d.UserAction;
 import static java.util.regex.Pattern.compile;
 import static org.concord.modeler.script.Compiler.*;
 
+/**
+ * @author Charles Xie
+ */
+
 class Eval3D extends AbstractEval {
 
 	private final static byte BY_ATOM = 11;
@@ -1898,8 +1902,17 @@ class Eval3D extends AbstractEval {
 	}
 
 	private boolean evaluateMoveClause(String str) {
-		out(ScriptEvent.FAILED, "Unable to parse number pairs: " + str);
-		return false;
+		float[] x = parseCoordinates(str);
+		if (x == null)
+			return false;
+		int n = model.getAtomCount();
+		for (int k = 0; k < n; k++) {
+			if (model.atom[k].isSelected())
+				model.atom[k].translate(x[0], x[1], x[2]);
+		}
+		view.repaint();
+		model.notifyChange();
+		return true;
 	}
 
 	private boolean evaluateDelayClause(String str) throws InterruptedException {
