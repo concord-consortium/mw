@@ -1910,6 +1910,7 @@ class Eval3D extends AbstractEval {
 			if (model.atom[k].isSelected())
 				model.atom[k].translate(x[0], x[1], x[2]);
 		}
+		view.refresh();
 		view.repaint();
 		model.notifyChange();
 		return true;
