@@ -654,7 +654,6 @@ public abstract class AbstractEval {
 	/** evaluate individual command. */
 	protected abstract boolean evalCommand(String ci) throws InterruptedException;
 
-	@SuppressWarnings("unused")
 	protected boolean evaluateSingleKeyword(String str) throws InterruptedException {
 		if ("break".equalsIgnoreCase(str)) {
 			stopLoops();
