@@ -109,7 +109,7 @@ import org.concord.modeler.util.FileUtilities;
 import org.concord.modeler.util.SwingWorker;
 
 /**
- * This is the "browser" of <code>Page</code>.
+ * This is the "browser" for <code>Page</code>.
  * 
  * @version 2.0 (JSE 5.0+)
  * @see org.concord.modeler.text.Page
