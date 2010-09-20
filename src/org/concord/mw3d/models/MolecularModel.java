@@ -2023,15 +2023,7 @@ public class MolecularModel {
 		if (job.isTurnedOff())
 			return;
 		job.turnOff();
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				view.repaint();
-				/*
-				 * view.enableEditor(true); stop.setEnabled(false); play.setEnabled(true); revert.setEnabled(true);
-				 * notifyModelListeners(new ModelEvent(MDModel.this, ModelEvent.MODEL_STOP));
-				 */
-			}
-		});
+		view.repaint();
 	}
 
 	public boolean isTapeFull() {
