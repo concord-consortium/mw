@@ -112,8 +112,10 @@ class Eval3D extends AbstractEval {
 
 	private void notifyExecution(String description) {
 		ScriptExecutionEvent e = new ScriptExecutionEvent(this, description);
-		for (ScriptExecutionListener x : executionListeners)
-			x.scriptExecuted(e);
+		if (executionListeners != null) {
+			for (ScriptExecutionListener x : executionListeners)
+				x.scriptExecuted(e);
+		}
 	}
 
 	protected Object getModel() {
