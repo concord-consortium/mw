@@ -160,7 +160,7 @@ public abstract class BasicPageTextBox extends TextBox implements AutoResizable,
 				t = "Color bar: #" + (index + 1) + " (" + getWidth() + "x" + getHeight() + ")";
 			}
 			else {
-				t = "Color bar: #" + (index + 1) + " UID = " + uid + " (" + getWidth() + "x" + getHeight() + ")";
+				t = "Color bar: #" + (index + 1) + ", UID = " + uid + " (" + getWidth() + "x" + getHeight() + ")";
 			}
 		}
 		else {
@@ -168,7 +168,7 @@ public abstract class BasicPageTextBox extends TextBox implements AutoResizable,
 				t = "Text box: #" + (index + 1) + " (" + getWidth() + "x" + getHeight() + ")";
 			}
 			else {
-				t = "Text box: #" + (index + 1) + " UID = " + uid + " (" + getWidth() + "x" + getHeight() + ")";
+				t = "Text box: #" + (index + 1) + ", UID = " + uid + " (" + getWidth() + "x" + getHeight() + ")";
 			}
 		}
 		String s = (String) getClientProperty("border");
