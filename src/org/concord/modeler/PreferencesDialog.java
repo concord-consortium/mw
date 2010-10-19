@@ -39,6 +39,7 @@ import java.util.prefs.Preferences;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -81,6 +82,8 @@ class PreferencesDialog extends JDialog {
 	private static JLabel portLabel;
 	private static JLabel nameLabel;
 	private static JLabel passwordLabel;
+	private JButton clearCacheButton, clearHistoryButton;
+	private JCheckBox cacheCheckBox;
 
 	PreferencesDialog(Modeler modeler0) {
 
@@ -584,9 +587,27 @@ class PreferencesDialog extends JDialog {
 		total.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
 
 		JPanel panel = new JPanel(new BorderLayout(5, 5));
-		String s = Modeler.getInternationalText("CacheWebFiles");
-		panel.setBorder(BorderFactory.createTitledBorder((s != null ? s : "Caching Web files") + ":"));
 		total.add(panel, BorderLayout.NORTH);
+
+		String s = Modeler.getInternationalText("Caching");
+		cacheCheckBox = new JCheckBox(s != null ? s : "Caching");
+		cacheCheckBox.setSelected(true);
+		cacheCheckBox.setToolTipText("Enable or disable caching");
+		cacheCheckBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				boolean b = cacheCheckBox.isSelected();
+				clearCacheButton.setEnabled(b);
+				clearHistoryButton.setEnabled(b);
+				dayField.setEnabled(b);
+				ConnectionManager.sharedInstance().setCachingAllowed(b);
+			}
+		});
+		panel.add(cacheCheckBox);
+
+		panel = new JPanel(new BorderLayout(5, 5));
+		s = Modeler.getInternationalText("CacheWebFiles");
+		panel.setBorder(BorderFactory.createTitledBorder((s != null ? s : "Caching Web files") + ":"));
+		total.add(panel, BorderLayout.CENTER);
 
 		String s2 = ConnectionManager.getCacheDirectory().toString();
 		s = Modeler.getInternationalText("CacheInfo");
@@ -604,8 +625,8 @@ class PreferencesDialog extends JDialog {
 		JPanel p = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
 		s = Modeler.getInternationalText("ClearCache");
-		JButton button = new JButton(s != null ? s : "Clear Cache");
-		button.addActionListener(new ActionListener() {
+		clearCacheButton = new JButton(s != null ? s : "Clear Cache");
+		clearCacheButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (JOptionPane.showConfirmDialog(PreferencesDialog.this,
 						"Do you really want to remove all cached files?\n(you normally should not do this)",
@@ -614,14 +635,14 @@ class PreferencesDialog extends JDialog {
 				}
 			}
 		});
-		p.add(button);
+		p.add(clearCacheButton);
 
 		panel.add(p, BorderLayout.SOUTH);
 
 		panel = new JPanel(new BorderLayout(5, 5));
 		s = Modeler.getInternationalText("VisitHistory");
 		panel.setBorder(BorderFactory.createTitledBorder((s != null ? s : "History") + ":"));
-		total.add(panel, BorderLayout.CENTER);
+		total.add(panel, BorderLayout.SOUTH);
 
 		p = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		panel.add(p, BorderLayout.CENTER);
@@ -638,13 +659,13 @@ class PreferencesDialog extends JDialog {
 		panel.add(p, BorderLayout.SOUTH);
 
 		s = Modeler.getInternationalText("ClearVisitHistory");
-		button = new JButton(s != null ? s : "Clear History");
-		button.addActionListener(new ActionListener() {
+		clearHistoryButton = new JButton(s != null ? s : "Clear History");
+		clearHistoryButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				HistoryManager.sharedInstance().clear();
 			}
 		});
-		p.add(button);
+		p.add(clearHistoryButton);
 
 		return total;
 
@@ -862,6 +883,7 @@ class PreferencesDialog extends JDialog {
 
 	void setPreferences(Preferences pref) {
 
+		cacheCheckBox.setSelected(ConnectionManager.sharedInstance().isCachingAllowed());
 		dayField.setValue(HistoryManager.sharedInstance().getDays());
 
 		if (pref == null)

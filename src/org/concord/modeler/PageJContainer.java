@@ -220,8 +220,10 @@ public class PageJContainer extends PagePlugin {
 			for (int i = 0; i < n; i++) {
 				pluginJar = new File(pluginDir, jarName.get(i));
 				if (!pluginJar.exists() || shouldReplace(pluginJar, file[i])) {
-					FileUtilities.copy(file[i], pluginJar);
-					pluginJar.setLastModified(file[i].lastModified());
+					if (file[i] != null) {
+						FileUtilities.copy(file[i], pluginJar);
+						pluginJar.setLastModified(file[i].lastModified());
+					}
 				}
 				try {
 					url[i] = pluginJar.toURI().toURL();
