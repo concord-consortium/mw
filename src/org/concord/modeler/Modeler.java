@@ -239,6 +239,9 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 			if (timeout != 30)
 				ConnectionManager.setReadTimeout(1000 * timeout);
 
+			boolean cacheEnabled = preference.getBoolean("Cache Enabled", true);
+			ConnectionManager.sharedInstance().setCachingAllowed(cacheEnabled);
+
 			int historyDays = preference.getInt("History", 7);
 			if (historyDays != 7)
 				HistoryManager.sharedInstance().setDays(historyDays);
@@ -857,7 +860,8 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		/* save tape length */
 		preference.putInt("Tape Length", tapeLength);
 
-		/* save history days */
+		/* cache options */
+		preference.putBoolean("Cache Enabled", ConnectionManager.sharedInstance().isCachingAllowed());
 		preference.putInt("History", HistoryManager.sharedInstance().getDays());
 
 		BookmarkManager.sharedInstance().writeBookmarks(

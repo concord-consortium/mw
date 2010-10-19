@@ -130,7 +130,8 @@ public class PageApplet extends PagePlugin {
 							// Manager to false when it is done. This will result in the cml file to be unable to
 							// update. Hence, we should set the checkupdate flag to true afterwards.
 							ConnectionManager.sharedInstance().setCheckUpdate(true);
-							url[i] = file[i].toURI().toURL();
+							if (file[i] != null)
+								url[i] = file[i].toURI().toURL();
 						}
 						catch (IOException e) {
 							e.printStackTrace();
