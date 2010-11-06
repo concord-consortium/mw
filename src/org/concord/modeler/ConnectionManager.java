@@ -34,6 +34,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.zip.GZIPInputStream;
 
 import javax.swing.ImageIcon;
 
@@ -91,6 +92,7 @@ public class ConnectionManager {
 		URLConnection connection;
 		try {
 			connection = u.openConnection();
+			connection.setRequestProperty("Accept-Encoding", "gzip");
 		}
 		catch (IOException e) {
 			e.printStackTrace();
@@ -355,19 +357,32 @@ public class ConnectionManager {
 		// if (!ModelerUtilities.ping(url, 10000)) return null;
 
 		URLConnection connect = getConnection(url);
+		String encoding = connect.getContentEncoding();
+		
 		if (connect == null)
 			return null;
 
 		InputStream is = null;
-		try {
-			is = connect.getInputStream();
-		}
-		catch (FileNotFoundException e) {
-			throw new FileNotFoundException(e.getMessage());
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-			return null;
+
+		if (encoding != null && encoding.equalsIgnoreCase("gzip")) {
+			try {
+				is = new GZIPInputStream(connect.getInputStream());
+			}
+			catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			try {
+				is = connect.getInputStream();
+			}
+			catch (FileNotFoundException e) {
+				throw new FileNotFoundException(e.getMessage());
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+				return null;
+			}
 		}
 
 		File cachedFile = new File(Initializer.sharedInstance().getCacheDirectory(), convertURLToFileName(url));

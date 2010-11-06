@@ -52,6 +52,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.zip.GZIPInputStream;
 
 import javax.swing.Action;
 import javax.swing.JComponent;
@@ -2641,14 +2642,27 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 					handleFailure("Error in connecting to " + url);
 					return;
 				}
-				try {
-					is = connect.getInputStream();
+				String encoding = connect.getContentEncoding();
+
+				if (encoding != null && encoding.equalsIgnoreCase("gzip")) {
+					try {
+						is = new GZIPInputStream(connect.getInputStream());
+					}
+					catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				} else {
+					try {
+						is = connect.getInputStream();
+					}
+					catch (IOException e) {
+						handleFailure("Error in getting input stream from " + url);
+						e.printStackTrace();
+						return;
+					}
 				}
-				catch (IOException e) {
-					handleFailure("Error in getting input stream from " + url);
-					e.printStackTrace();
-					return;
-				}
+
 				// cache the model files if necessary
 				if (ConnectionManager.sharedInstance().isCachingAllowed()) {
 					String cachedFile = ConnectionManager.convertURLToFileName(url);
