@@ -46,7 +46,7 @@ import org.w3c.dom.Node;
 
 public class GifDecoder {
 
-	private static ImageReader reader;
+	private ImageReader reader;
 	private int logicalScreenWidth, logicalScreenHeight;
 	private Image[] images;
 	private Point[] offsets;
@@ -54,14 +54,12 @@ public class GifDecoder {
 	private String[] disposalMethods;
 
 	public GifDecoder() throws IOException {
-		if (reader == null) {
-			Iterator it = ImageIO.getImageReadersBySuffix("gif");
-			if (!it.hasNext())
-				throw new IOException("No gif reader was found.");
-			reader = (ImageReader) it.next();
-			if (it.hasNext())
-				System.out.println("Extra gif readers were found.");
-		}
+		Iterator it = ImageIO.getImageReadersBySuffix("gif");
+		if (!it.hasNext())
+			throw new IOException("No gif reader was found.");
+		reader = (ImageReader) it.next();
+		if (it.hasNext())
+			System.out.println("Extra gif readers were found.");
 	}
 
 	public void read(String path) throws IOException {
@@ -176,8 +174,8 @@ public class GifDecoder {
 	public void dispose() {
 		reader.dispose();
 		if (images != null) {
-			for (int i = 0; i < images.length; i++)
-				images[i].flush();
+			for (Image i : images)
+				i.flush();
 		}
 	}
 
