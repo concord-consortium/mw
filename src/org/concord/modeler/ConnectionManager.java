@@ -357,11 +357,12 @@ public class ConnectionManager {
 		// if (!ModelerUtilities.ping(url, 10000)) return null;
 
 		URLConnection connect = getConnection(url);
-		String encoding = connect.getContentEncoding();
-		
+
 		if (connect == null)
 			return null;
 
+		String encoding = connect.getContentEncoding();
+		
 		InputStream is = null;
 
 		if (encoding != null && encoding.equalsIgnoreCase("gzip")) {
