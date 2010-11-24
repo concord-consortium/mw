@@ -281,6 +281,17 @@ public class Initializer {
 			newDir.mkdirs();
 		}
 		
+		if (!newDir.exists() || ! newDir.isDirectory()) {
+			// we failed to create it in the intended location. Use the java temp dir as backup
+			String tmpDirStr = System.getProperty("java.io.tmpdir");
+			newDir = new File(tmpDirStr + File.separator + "mw" + File.separator + directoryName);
+			newDir.mkdirs();
+		}
+		
+		if (!newDir.exists() || ! newDir.isDirectory()) {
+			// TODO we still failed to create it... 
+		}
+		
 		return newDir;
 	}
 
