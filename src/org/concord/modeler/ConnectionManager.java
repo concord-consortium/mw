@@ -22,10 +22,12 @@ package org.concord.modeler;
 
 import java.awt.Toolkit;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -38,6 +40,7 @@ import java.util.zip.GZIPInputStream;
 
 import javax.swing.ImageIcon;
 
+import org.concord.modeler.ConnectionLocker.Mode;
 import org.concord.modeler.event.ProgressListener;
 import org.concord.modeler.util.FileUtilities;
 
@@ -143,9 +146,14 @@ public class ConnectionManager {
 	 * get the cached file for a resource specified by the URL, return null if not cached
 	 */
 	public File getLocalCopy(URL url) {
-		if (url == null)
-			throw new IllegalArgumentException("Null URL");
-		return new File(getCacheDirectory(), convertURLToFileName(url));
+		ConnectionLocker.lock(url, Mode.READ);
+		try {
+			if (url == null)
+				throw new IllegalArgumentException("Null URL");
+			return new File(getCacheDirectory(), convertURLToFileName(url));
+		} finally {
+			ConnectionLocker.unlock(url, Mode.READ);
+		}
 	}
 
 	/**
@@ -304,7 +312,12 @@ public class ConnectionManager {
 	}
 
 	public static void clearCache() {
-		FileUtilities.deleteAllFiles(getCacheDirectory());
+		ConnectionLocker.lockAll(Mode.WRITE);
+		try {
+			FileUtilities.deleteAllFiles(getCacheDirectory());
+		} finally {
+			ConnectionLocker.unlockAll(Mode.WRITE);
+		}
 	}
 
 	public static File getCacheDirectory() {
@@ -318,7 +331,12 @@ public class ConnectionManager {
 			throw new IllegalArgumentException("Null URL");
 		if (url.toString().toLowerCase().startsWith("jar:"))
 			return false;
-		return new File(getCacheDirectory(), convertURLToFileName(url)).exists();
+		ConnectionLocker.lock(url, Mode.READ);
+		try {
+			return new File(getCacheDirectory(), convertURLToFileName(url)).exists();
+		} finally {
+			ConnectionLocker.unlock(url, Mode.READ);
+		}
 	}
 
 	/**
@@ -356,79 +374,131 @@ public class ConnectionManager {
 
 		// if (!ModelerUtilities.ping(url, 10000)) return null;
 
-		URLConnection connect = getConnection(url);
-
-		if (connect == null)
-			return null;
-
-		String encoding = connect.getContentEncoding();
+		ConnectionLocker.lock(url, Mode.WRITE);
+		try {
+			URLConnection connect = getConnection(url);
+			if (connect == null)
+				return null;
+	
+			String encoding = connect.getContentEncoding();
 		
-		InputStream is = null;
+			InputStream is = null;
 
-		if (encoding != null && encoding.equalsIgnoreCase("gzip")) {
-			try {
-				is = new GZIPInputStream(connect.getInputStream());
+			if (encoding != null && encoding.equalsIgnoreCase("gzip")) {
+				try {
+					is = new GZIPInputStream(connect.getInputStream());
+				}
+				catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} else {
+				try {
+					is = connect.getInputStream();
+				}
+				catch (FileNotFoundException e) {
+					throw new FileNotFoundException(e.getMessage());
+				}
+				catch (IOException e) {
+					e.printStackTrace();
+					return null;
+				}
 			}
-			catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} else {
+	
+			// download first to a temp file, then copy the file to the correct filename after completion
+			File cachedFile = new File(Initializer.sharedInstance().getCacheDirectory(), convertURLToFileName(url));
+			File tempCachedFile;
 			try {
-				is = connect.getInputStream();
+				tempCachedFile = File.createTempFile(convertURLToFileName(url), ".tmp");
+			}
+			catch (IOException e1) {
+				try {
+					tempCachedFile = File.createTempFile(convertURLToFileName(url) + ".tmp", Initializer.sharedInstance().getCacheDirectory().getAbsolutePath());
+				}
+				catch (IOException e) {
+					e.printStackTrace();
+					return null;
+				}
+			}
+			cachedFile.getParentFile().mkdirs();
+			tempCachedFile.getParentFile().mkdirs();
+	
+			FileOutputStream fos = null;
+			try {
+				fos = new FileOutputStream(tempCachedFile);
 			}
 			catch (FileNotFoundException e) {
+				e.printStackTrace();
 				throw new FileNotFoundException(e.getMessage());
+			}
+	
+			byte b[] = new byte[1024];
+			int amount = 0;
+			boolean error = false;
+			try {
+				while ((amount = is.read(b)) != -1)
+					fos.write(b, 0, amount);
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+				error = true;
+			}
+			finally {
+				if (is != null) {
+					try {
+						is.close();
+					}
+					catch (IOException e) {
+					}
+				}
+				try {
+					fos.close();
+				}
+				catch (IOException e) {
+				}
+			}
+			if (error) {
+				cachedFile.delete();
+				tempCachedFile.delete();
+				return null;
+			}
+			
+			try {
+				moveFile(tempCachedFile, cachedFile);
+				cachedFile.setLastModified(connect.getLastModified());
 			}
 			catch (IOException e) {
 				e.printStackTrace();
 				return null;
 			}
+	
+			return cachedFile;
+		} finally {
+			ConnectionLocker.unlock(url, Mode.WRITE);
 		}
+	}
+	
+	protected void moveFile(File orig, File dest) throws IOException {
+		byte[] buffer = new byte[4096];
+		if (! orig.renameTo(dest)) {
+			// we couldn't rename. try copy/delete
+			FileInputStream fis = new FileInputStream(orig);
+			FileOutputStream fos = new FileOutputStream(dest);
+			downloadStream(buffer, fis, fos);
+			orig.delete();
+		}
+	}
 
-		File cachedFile = new File(Initializer.sharedInstance().getCacheDirectory(), convertURLToFileName(url));
-		cachedFile.getParentFile().mkdirs();
-
-		FileOutputStream fos = null;
-		try {
-			fos = new FileOutputStream(cachedFile);
+	private void downloadStream(byte[] buffer, InputStream inputStream, OutputStream outputStream)
+			throws FileNotFoundException, IOException {
+		int len;
+		while ((len = inputStream.read(buffer)) >= 0) {
+			outputStream.write(buffer, 0, len);					
 		}
-		catch (FileNotFoundException e) {
-			e.printStackTrace();
-			throw new FileNotFoundException(e.getMessage());
-		}
-
-		byte b[] = new byte[1024];
-		int amount = 0;
-		boolean error = false;
-		try {
-			while ((amount = is.read(b)) != -1)
-				fos.write(b, 0, amount);
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-			error = true;
-		}
-		finally {
-			if (is != null) {
-				try {
-					is.close();
-				}
-				catch (IOException e) {
-				}
-			}
-			try {
-				fos.close();
-			}
-			catch (IOException e) {
-			}
-		}
-		if (error)
-			return null;
-		cachedFile.setLastModified(connect.getLastModified());
-
-		return cachedFile;
-
+		
+		inputStream.close();
+		outputStream.flush();
+		outputStream.close();
 	}
 
 	/**
