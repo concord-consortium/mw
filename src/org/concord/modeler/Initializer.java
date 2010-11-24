@@ -226,11 +226,11 @@ public class Initializer {
 			try {
 				int kApplicationSupportFolder = 0x61737570;// asup
 				short kUserDomain = -32763;
-				root = new File(FileManager.findFolder(kUserDomain, kApplicationSupportFolder));
+				root = setupDirectory(FileManager.findFolder(kUserDomain, kApplicationSupportFolder), null);
 			}
 			catch (Exception e) {
 				e.printStackTrace();
-				root = new File(System.getProperty("user.home"), "Application Data");
+				root = setupDirectory(System.getProperty("user.home"), "Application Data");
 			}
 		}
 		else if (System.getProperty("os.name").startsWith("Windows Vista")
@@ -255,34 +255,33 @@ public class Initializer {
 				if (index != -1)
 					userHome = tmpDir.substring(0, index) + "\\" + userName;
 			}
-			root = new File(userHome, "AppData");
+			root = setupDirectory(userHome, "AppData");
 		}
 		else {
-			root = new File(System.getProperty("user.home"), "Application Data");
+			root = setupDirectory(System.getProperty("user.home"), "Application Data");
 		}
-		if (!root.exists())
-			root.mkdir();
 
-		File baseDir = new File(root, Modeler.NAME);
-		if (!baseDir.exists())
-			baseDir.mkdirs();
-
-		cacheDirectory = new File(baseDir, "cache");
-		if (!cacheDirectory.exists())
-			cacheDirectory.mkdir();
-
-		pluginDirectory = new File(baseDir, "plugin");
-		if (!pluginDirectory.exists())
-			pluginDirectory.mkdir();
-
-		propDirectory = new File(baseDir, "properties");
-		if (!propDirectory.exists())
-			propDirectory.mkdir();
-
-		galleryDirectory = new File(baseDir, "gallery");
-		if (!galleryDirectory.exists())
-			galleryDirectory.mkdir();
-
+		File baseDir = setupDirectory(root, Modeler.NAME);
+		cacheDirectory = setupDirectory(baseDir, "cache");
+		pluginDirectory = setupDirectory(baseDir, "plugin");
+		propDirectory = setupDirectory(baseDir, "properties");
+		galleryDirectory = setupDirectory(baseDir, "gallery");
+	}
+	
+	final File setupDirectory(String parentDir, String directoryName) {
+		return setupDirectory(new File(parentDir), directoryName);
+	}
+	
+	final File setupDirectory(File parentDir, String directoryName) {
+		File newDir = parentDir;
+		if (directoryName != null) {
+			newDir = new File(parentDir, directoryName);
+		}
+		if (!newDir.exists()) {
+			newDir.mkdirs();
+		}
+		
+		return newDir;
 	}
 
 	final void putSystemProperty(String key, String val) {
@@ -369,6 +368,7 @@ public class Initializer {
 		splash = new JWindow();
 		Container c = splash.getContentPane();
 		c.add(new JLabel(icon) {
+			@Override
 			public void paintComponent(Graphics g) {
 				Icon icon = getIcon();
 				icon.paintIcon(this, g, 0, 0);
