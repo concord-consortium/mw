@@ -391,20 +391,23 @@ public class ConnectionManager {
 	
 			// download first to a temp file, then copy the file to the correct filename after completion
 			File cachedFile = new File(Initializer.sharedInstance().getCacheDirectory(), convertURLToFileName(url));
+			cachedFile.getParentFile().mkdirs();
+			
 			File tempCachedFile;
 			try {
-				tempCachedFile = File.createTempFile(convertURLToFileName(url), ".tmp");
+				tempCachedFile = File.createTempFile("molecular-workbench-", ".tmp");
 			}
 			catch (IOException e1) {
+				e1.printStackTrace();
 				try {
-					tempCachedFile = File.createTempFile(convertURLToFileName(url) + ".tmp", Initializer.sharedInstance().getCacheDirectory().getAbsolutePath());
+					tempCachedFile = File.createTempFile("molecular-workbench-", ".tmp", Initializer.sharedInstance().getCacheDirectory());
 				}
 				catch (IOException e) {
 					e.printStackTrace();
 					return null;
 				}
 			}
-			cachedFile.getParentFile().mkdirs();
+			
 			tempCachedFile.getParentFile().mkdirs();
 	
 			FileOutputStream fos = null;
