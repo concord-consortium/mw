@@ -739,7 +739,13 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		else if (System.getProperty("os.name").startsWith("Windows")) {
 			jarLocation = "\"" + jarLocation + "\"";
 		}
-		String s = "java -Xmx128M -jar " + jarLocation;
+		String maxHeap = System.getProperty("mw.maxHeapSize");
+		String s;
+		if (maxHeap != null) {
+			s = "java -Xmx" + maxHeap + " -jar " + jarLocation;
+		} else {
+			s = "java -Xmx128M -jar " + jarLocation;			
+		}
 		s += hostIsLocal ? " local" : " remote";
 		if (startingURL != null)
 			s += " " + startingURL;
