@@ -50,6 +50,7 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.html.FormView;
+import javax.swing.text.html.parser.ParserDelegator;
 
 import org.concord.modeler.HtmlService;
 import org.concord.modeler.ModelerUtilities;
@@ -89,6 +90,8 @@ public class TextBox extends JPanel implements HtmlService, Searchable {
 		super(new BorderLayout());
 		// setBackground(Color.white);
 
+		// This is a workaround for this Java bug: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6993691
+		new ParserDelegator();
 		textBody = new HTMLPane("text/html", text);
 		textBody.setBorder(BorderFactory.createEmptyBorder());
 		scroller = new JScrollPane(textBody, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -433,12 +436,7 @@ public class TextBox extends JPanel implements HtmlService, Searchable {
 		else {
 			setContentType(text.trim().startsWith("<") ? "text/html" : "text/plain");
 		}
-		try {
-			textBody.setText(text);
-		}
-		catch (Throwable e) {
-			e.printStackTrace();
-		}
+		textBody.setText(text);
 	}
 
 	public String getText() {
