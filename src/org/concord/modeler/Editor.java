@@ -499,9 +499,11 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 				destroyToolBar(toolBar[2]);
 		}
 		actionNotifier.setParentComponent(null);
-		
-		fontColorComboBox.setParent(null);
-		fontColorComboBox = null;
+
+		if (fontColorComboBox != null) {
+			fontColorComboBox.setParent(null);
+			fontColorComboBox = null;
+		}
 
 		page.destroy();
 		componentPool.destroy();

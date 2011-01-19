@@ -433,7 +433,12 @@ public class TextBox extends JPanel implements HtmlService, Searchable {
 		else {
 			setContentType(text.trim().startsWith("<") ? "text/html" : "text/plain");
 		}
-		textBody.setText(text);
+		try {
+			textBody.setText(text);
+		}
+		catch (Throwable e) {
+			e.printStackTrace();
+		}
 	}
 
 	public String getText() {
