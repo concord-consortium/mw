@@ -57,6 +57,7 @@ import org.concord.modeler.ModelerUtilities;
 import org.concord.modeler.Searchable;
 import org.concord.modeler.event.HotlinkListener;
 import org.concord.modeler.event.SelfScriptListener;
+import org.concord.modeler.text.Page;
 import org.concord.modeler.text.XMLCharacterDecoder;
 import org.concord.modeler.text.XMLCharacterEncoder;
 
@@ -91,7 +92,9 @@ public class TextBox extends JPanel implements HtmlService, Searchable {
 		// setBackground(Color.white);
 
 		// This is a workaround for this Java bug: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6993691
-		new ParserDelegator();
+		// This bug occurs only in applets--standalone applications are not affected
+		if (Page.isApplet())
+			new ParserDelegator();
 		textBody = new HTMLPane("text/html", text);
 		textBody.setBorder(BorderFactory.createEmptyBorder());
 		scroller = new JScrollPane(textBody, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
