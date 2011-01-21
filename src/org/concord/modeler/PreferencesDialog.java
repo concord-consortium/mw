@@ -592,6 +592,7 @@ class PreferencesDialog extends JDialog {
 		String s = Modeler.getInternationalText("Caching");
 		cacheCheckBox = new JCheckBox(s != null ? s : "Caching");
 		cacheCheckBox.setSelected(true);
+		cacheCheckBox.setEnabled(false);
 		cacheCheckBox.setToolTipText("Enable or disable caching");
 		cacheCheckBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {

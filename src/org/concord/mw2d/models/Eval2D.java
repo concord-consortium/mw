@@ -3475,6 +3475,11 @@ class Eval2D extends AbstractEval {
 				av.showVDWLines(result == ON);
 				return true;
 			}
+			result = parseOnOff("electrostatic_force_line", s);
+			if (result != -1) {
+				av.showChargeLines(result == ON);
+				return true;
+			}
 			result = parseOnOff("keshading", s);
 			if (result != -1) {
 				av.showShading(result == ON);
