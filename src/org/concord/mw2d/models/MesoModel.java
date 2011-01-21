@@ -1258,6 +1258,7 @@ public class MesoModel extends MDModel {
 		view.setDrawExternalForce(vs.getDrawExternalForce());
 		view.setShowParticleIndex(vs.getShowParticleIndex());
 		view.setShowClock(vs.getShowClock());
+		view.setShowHeatBath(vs.getShowHeatBath());
 		view.showLinearMomenta(vs.getShowVVectors());
 		view.showAngularMomenta(vs.getShowOmegas());
 
@@ -1333,6 +1334,7 @@ public class MesoModel extends MDModel {
 		vs.setDrawExternalForce(view.getDrawExternalForce());
 		vs.setShowParticleIndex(view.getShowParticleIndex());
 		vs.setShowClock(view.getShowClock());
+		vs.setShowHeatBath(view.getShowHeatBath());
 		vs.setShowVVectors(view.linearMomentaShown());
 		vs.setShowOmegas(view.angularMomentaShown());
 		ImageComponent[] im = view.getImages();

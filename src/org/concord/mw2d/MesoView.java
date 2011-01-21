@@ -799,14 +799,10 @@ public class MesoView extends MDView {
 		if (getEnergizer())
 			energizer.paint(g2);
 
-		if (model.heatBathActivated()) {
-			if (drawString) {
-				g2.setFont(ViewAttribute.SMALL_FONT);
-				g2.setColor(contrastBackground());
-				// String s = MDView.getInternationalText("HeatBath");
-				// g2.drawString(s != null ? s : "Heat bath", 10, 15);
-				IconPool.getIcon("heat bath").paintIcon(this, g2, 8, 8);
-			}
+		if (model.heatBathActivated() && showHeatBath) {
+			g2.setFont(ViewAttribute.SMALL_FONT);
+			g2.setColor(contrastBackground());
+			IconPool.getIcon("heat bath").paintIcon(this, g2, 8, 8);
 		}
 
 		if (actionID == CPOS_ID || actionID == CNEG_ID) {

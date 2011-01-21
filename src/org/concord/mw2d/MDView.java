@@ -179,7 +179,7 @@ public abstract class MDView extends PrintableComponent {
 	long mousePressedTime;
 	int mouseHeldX, mouseHeldY;
 	boolean popupMenuEnabled = true;
-	boolean drawString = true;
+	boolean showHeatBath = true;
 	double relativeKEForShading = 1.0;
 	boolean showClock = true, showParticleIndex, drawCharge = true, showSelectionHalo = true;
 	boolean drawExternalForce;
@@ -975,11 +975,6 @@ public abstract class MDView extends PrintableComponent {
 
 	/** @return the <tt>Model</tt> associated with this view */
 	public abstract MDModel getModel();
-
-	/** hide all messages to be shown in this view */
-	public void hideAllMessages(boolean b) {
-		drawString = !b;
-	}
 
 	public void enableScripterMenu(boolean b) {
 	}
@@ -2308,8 +2303,6 @@ public abstract class MDView extends PrintableComponent {
 	}
 
 	void paintInfo(Graphics g) {
-		if (!drawString)
-			return;
 		if (getModel().isActionScriptRunning()) {
 			if (waitIcon == null)
 				waitIcon = new ImageIcon(getClass().getResource("images/wait.gif"));
@@ -2446,6 +2439,18 @@ public abstract class MDView extends PrintableComponent {
 
 	public boolean getShowClock() {
 		return showClock;
+	}
+
+	public void setShowHeatBath(boolean b) {
+		if (showHeatBath == b)
+			return;
+		showHeatBath = b;
+		getModel().notifyChange();
+		repaint();
+	}
+
+	public boolean getShowHeatBath() {
+		return showHeatBath;
 	}
 
 	public void setShowMirrorImages(boolean b) {
@@ -3595,8 +3600,8 @@ public abstract class MDView extends PrintableComponent {
 		private Color background = Color.white;
 		private int markColor = 0xffccccff;
 		private boolean energizer;
-		private boolean showParticleIndex, showClock = true, drawCharge = true, showMirrorImages = true,
-				drawExternalForce;
+		private boolean showParticleIndex, showClock = true, showHeatBath = true, drawCharge = true,
+				showMirrorImages = true, drawExternalForce;
 		private boolean propertyDialogEnabled = true;
 		private FillMode fillMode;
 		private VectorFlavor velocityFlavor;
@@ -3753,6 +3758,14 @@ public abstract class MDView extends PrintableComponent {
 
 		public boolean getShowClock() {
 			return showClock;
+		}
+
+		public void setShowHeatBath(boolean b) {
+			showHeatBath = b;
+		}
+
+		public boolean getShowHeatBath() {
+			return showHeatBath;
 		}
 
 		public void setShowMirrorImages(boolean b) {

@@ -3642,7 +3642,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		if (getEnergizer())
 			energizer.paint(g2);
 
-		if (model.heatBathActivated() && drawString) {
+		if (model.heatBathActivated() && showHeatBath) {
 			g2.setFont(ViewAttribute.SMALL_FONT);
 			g2.setColor(contrastBackground());
 			IconPool.getIcon("heat bath").paintIcon(this, g2, 8, 8);

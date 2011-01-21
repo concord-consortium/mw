@@ -3439,6 +3439,11 @@ class Eval2D extends AbstractEval {
 			view.setShowClock(result == ON);
 			return true;
 		}
+		result = parseOnOff("heatbath", s);
+		if (result != -1) {
+			view.setShowHeatBath(result == ON);
+			return true;
+		}
 		result = parseOnOff("selectionhalo", s);
 		if (result != -1) {
 			view.setShowSelectionHalo(result == ON);
