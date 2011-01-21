@@ -541,7 +541,7 @@ class PageMultipleChoiceMaker extends ComponentMaker {
 		}
 		char c = 'A';
 		for (int i = 0; i < n; i++) {
-			scriptTabbedPane.addTab("" + (c++), scriptArea[i]);
+			scriptTabbedPane.addTab("" + (c++), new JScrollPane(scriptArea[i]));
 		}
 	}
 
