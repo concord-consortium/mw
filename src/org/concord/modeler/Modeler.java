@@ -2654,7 +2654,11 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		setToolBarButton(forwardButton, true);
 
 		homeButton = new JButton(navigator.getAction(Navigator.HOME));
-		homeButton.setText(null);
+		if (showToolBarText) {
+			s = getInternationalText("HomeButton");
+			if (s != null)
+				homeButton.setText(s);
+		}
 		toolBar.add(homeButton);
 		editor.addEnabledComponentWhenNotEditable(homeButton);
 		editor.addDisabledComponentWhileLoading(homeButton);
@@ -2676,6 +2680,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		int fontSize = navigator.getComboBox().getFont().getSize();
 		navigator.getComboBox().setPreferredSize(new Dimension(400, fontSize * 2));
 		toolBar.add(navigator.getComboBox());
+		toolBar.validate();
 		editor.addDisabledComponentWhileLoading(navigator.getComboBox());
 
 	}
