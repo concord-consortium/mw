@@ -826,14 +826,20 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				for (Embeddable e : list) {
 					e.setChangable(b);
 					if (e instanceof PageTextBox) {
-						((PageTextBox) e).setIndex(i++);
-						if (EventQueue.isDispatchThread())
-							((PageTextBox) e).showBoundary(b);
+						PageTextBox ptb = (PageTextBox) e;
+						ptb.setIndex(i++);
+						if (EventQueue.isDispatchThread()) {
+							ptb.showBoundary(b);
+							ptb.setToolTipText(b ? ptb.getBoundaryText() : null);
+						}
 					}
 					else if (e instanceof IconWrapper) {
-						((IconWrapper) e).setIndex(j++);
-						if (EventQueue.isDispatchThread())
-							((IconWrapper) e).showBoundary(b);
+						IconWrapper iw = (IconWrapper) e;
+						iw.setIndex(j++);
+						if (EventQueue.isDispatchThread()) {
+							iw.showBoundary(b);
+							iw.setToolTipText(b ? iw.getBoundaryText() : null);
+						}
 					}
 					else if (e instanceof ModelCanvas) {
 						((ModelCanvas) e).getMdContainer().getView().setEditable(b);

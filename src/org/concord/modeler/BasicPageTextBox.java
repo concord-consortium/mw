@@ -153,7 +153,7 @@ public abstract class BasicPageTextBox extends TextBox implements AutoResizable,
 				.getRGB()));
 	}
 
-	public void showBoundary(boolean b) {
+	public String getBoundaryText() {
 		String t = "";
 		if (this instanceof IconWrapper) {
 			if (uid == null) {
@@ -171,6 +171,11 @@ public abstract class BasicPageTextBox extends TextBox implements AutoResizable,
 				t = "Text box: #" + (index + 1) + ", UID = " + uid + " (" + getWidth() + "x" + getHeight() + ")";
 			}
 		}
+		return t;
+	}
+
+	public void showBoundary(boolean b) {
+		String t = getBoundaryText();
 		String s = (String) getClientProperty("border");
 		if (s == null || BorderRectangle.EMPTY_BORDER.equals(s)) {
 			if (b) {
