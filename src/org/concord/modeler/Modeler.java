@@ -998,7 +998,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		s = getInternationalText("CreateJNLP");
 		final JMenuItem jnlpMI = new JMenuItem((s != null ? s : "Create a Customized JNLP Launching File") + "...");
 		s = getInternationalText("CreateLaunchingUrlInSystemClipboard");
-		final JMenuItem jnlpUrlMI = new JMenuItem(s != null ? s : "Create a Launching URL in System Clipboard");
+		final JMenuItem jnlpUrlMI = new JMenuItem(s != null ? s : "Copy and Paste the Launching URL");
 		s = getInternationalText("CompressPage");
 		final JMenuItem compressPageMI = new JMenuItem((s != null ? s : "Compress Current Page") + "...");
 		s = getInternationalText("CompressFolder");
