@@ -39,7 +39,7 @@ public class EvaluatorVisitor implements ParserVisitor
 	private boolean errorFlag;
 	
 	/** Debug flag */
-	private static final boolean debug = false;
+	private static boolean debug = false;
 	
 	
 	/** Constructor. Initialize the stack member */
