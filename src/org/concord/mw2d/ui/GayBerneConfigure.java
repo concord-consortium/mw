@@ -366,10 +366,6 @@ public class GayBerneConfigure extends JPanel {
 			addMouseMotionListener(this);
 		}
 
-		public byte getState() {
-			return state;
-		}
-
 		public void setState(byte state) {
 			this.state = state;
 			if (state == ROTATE) {

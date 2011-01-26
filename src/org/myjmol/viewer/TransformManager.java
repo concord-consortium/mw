@@ -343,7 +343,6 @@ abstract class TransformManager {
 		 * 
 		 * The new position of old point is the new rotation center set this, rotate about it, and it will APPEAR that
 		 * the rotation was about the desired point and axis!
-		 * 
 		 */
 
 		// fractional OPPOSITE of angle of rotation
@@ -700,7 +699,6 @@ abstract class TransformManager {
 		 * 
 		 * also that we do not want it to be possible for the model to rotate out of bounds of the applet. For internal
 		 * spinning I had to turn of any calculation that would change the rotation radius. hansonr
-		 * 
 		 */
 		return screenPixelCount / (2f * radius);
 	}
@@ -1185,13 +1183,9 @@ abstract class TransformManager {
 		}
 		float tX = getTranslationXPercent();
 		float tY = getTranslationYPercent();
-		if (true || zoomPercent != 100 || tX != 0 || tY != 0) {
-			truncate1(sb, zoomPercent);
-			if (true || tX != 0 || tY != 0) {
-				truncate1(sb, tX);
-				truncate1(sb, tY);
-			}
-		}
+		truncate1(sb, zoomPercent);
+		truncate1(sb, tX);
+		truncate1(sb, tY);
 		sb.append(" ");
 		sb.append(getCenterText());
 		truncate1(sb, rotationRadius);

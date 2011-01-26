@@ -98,10 +98,7 @@ public class Parser implements ParserTreeConstants, ParserConstants {
 				jj_consume_token(0);
 				jjtree.closeNodeScope(jjtn000, true);
 				jjtc000 = false;
-				{
-					if (true)
-						return jjtn000;
-				}
+				return jjtn000;
 			}
 			else {
 				switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {
@@ -109,16 +106,7 @@ public class Parser implements ParserTreeConstants, ParserConstants {
 					jj_consume_token(0);
 					jjtree.closeNodeScope(jjtn000, true);
 					jjtc000 = false;
-					{
-						if (true)
-							throw new ParseException("No expression entered");
-					}
-					addToErrorList("No expression entered");
-					{
-						if (true)
-							return null;
-					}
-					break;
+					throw new ParseException("No expression entered");
 				default:
 					jj_la1[0] = jj_gen;
 					jj_consume_token(-1);
@@ -135,28 +123,18 @@ public class Parser implements ParserTreeConstants, ParserConstants {
 				jjtree.popNode();
 			}
 			if (jjte000 instanceof RuntimeException) {
-				{
-					if (true)
-						throw (RuntimeException) jjte000;
-				}
+				throw (RuntimeException) jjte000;
 			}
 			if (jjte000 instanceof ParseException) {
-				{
-					if (true)
-						throw (ParseException) jjte000;
-				}
+				throw (ParseException) jjte000;
 			}
-			{
-				if (true)
-					throw (Error) jjte000;
-			}
+			throw (Error) jjte000;
 		}
 		finally {
 			if (jjtc000) {
 				jjtree.closeNodeScope(jjtn000, true);
 			}
 		}
-		throw new Error("Missing return statement in function");
 	}
 
 	final public void Expression() throws ParseException {
@@ -1186,11 +1164,7 @@ public class Parser implements ParserTreeConstants, ParserConstants {
 	final public String Identifier() throws ParseException {
 		Token t;
 		t = jj_consume_token(IDENTIFIER);
-		{
-			if (true)
-				return t.image;
-		}
-		throw new Error("Missing return statement in function");
+		return t.image;
 	}
 
 	final public void AnyConstant() throws ParseException {
@@ -1285,11 +1259,7 @@ public class Parser implements ParserTreeConstants, ParserConstants {
 			result.addElement(value);
 		}
 		jj_consume_token(32);
-		{
-			if (true)
-				return result;
-		}
-		throw new Error("Missing return statement in function");
+		return result;
 	}
 
 	final public Object RealConstant() throws ParseException {
@@ -1315,12 +1285,7 @@ public class Parser implements ParserTreeConstants, ParserConstants {
 			value = null;
 			addToErrorList("Can't parse \"" + t.image + "\"");
 		}
-
-		{
-			if (true)
-				return value;
-		}
-		throw new Error("Missing return statement in function");
+		return value;
 	}
 
 	final private boolean jj_2_1(int xla) {

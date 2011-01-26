@@ -220,8 +220,6 @@ public final class Frame {
 				.getAtomSetCollectionAuxiliaryInfo(clientFile));
 		initializeModel(adapter, clientFile);
 		adapter.finish(clientFile);
-		if (false)
-			dumpAtomSetNameDiagnostics(adapter, clientFile);
 	}
 
 	void initializeFrame(String name, int nAtoms, Properties properties, Hashtable info) {

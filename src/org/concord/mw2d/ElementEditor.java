@@ -75,7 +75,7 @@ class ElementEditor {
 	private SigmaField sigAA, sigBB, sigCC, sigDD;
 	private int selectedInteraction = 1;
 	private MolecularModel model;
-	private TabbedPane tabbedPane;
+	private JTabbedPane tabbedPane;
 	private CrossPanel abPanel, acPanel, adPanel, bcPanel, bdPanel, cdPanel;
 	private JButton closeButton;
 	private JButton cutoffButton;
@@ -518,7 +518,7 @@ class ElementEditor {
 		bdPanel = new CrossPanel(Pl, Ck);
 		cdPanel = new CrossPanel(Ws, Ck);
 
-		tabbedPane = new TabbedPane();
+		tabbedPane = new JTabbedPane();
 		tabbedPane.setFont(new Font(null, Font.PLAIN, 9));
 		String s = MDView.getInternationalText("SameElements");
 		tabbedPane.addTab(s != null ? s : "Same Elements", null, panel);
@@ -960,23 +960,6 @@ class ElementEditor {
 
 			add(p);
 
-		}
-
-	}
-
-	private class TabbedPane extends JTabbedPane {
-
-		public TabbedPane() {
-			super();
-		}
-
-		public Component getComponentWithTitle(String title) {
-			int n = getTabCount();
-			for (int i = 0; i < n; i++) {
-				if (getTitleAt(i).equals(title))
-					return getComponentAt(i);
-			}
-			return null;
 		}
 
 	}

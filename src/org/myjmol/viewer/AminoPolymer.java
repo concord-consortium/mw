@@ -56,7 +56,7 @@ class AminoPolymer extends AlphaPolymer {
     //hbondMax2 = frame.hbondMax * frame.hbondMax;
     calcProteinMainchainHydrogenBonds(bsA, bsB);
     
-    if (false && debugHbonds) {
+    if (debugHbonds) {
       Logger.debug("calcHydrogenBonds");
       for (int i = 0; i < monomerCount; ++i) {
         Logger.debug("  min1Indexes=" + min1Indexes[i] +
@@ -216,7 +216,7 @@ class AminoPolymer extends AlphaPolymer {
                                  BitSet bsA, BitSet bsB) {
     short order;
     int aminoBackboneHbondOffset = indexAminoGroup - indexCarbonylGroup;
-    if (false && debugHbonds) 
+    if (debugHbonds) 
       Logger.debug("aminoBackboneHbondOffset=" +
                          aminoBackboneHbondOffset +
                          " amino:" +

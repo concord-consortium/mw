@@ -163,18 +163,18 @@ abstract class MeshRenderer extends ShapeRenderer {
 
 	void renderNormals(Mesh mesh, Point3i[] screens, int vertexCount) {
 		// Logger.debug("mesh renderPoints: " + vertexCount);
-		for (int i = vertexCount; --i >= 0;)
-			if (true || vertexValues != null && !Float.isNaN(vertexValues[i]))
-				if ((i % 3) == 0) { // investigate vertex normixes
-					ptTemp.set(mesh.vertices[i]);
-					short n = mesh.normixes[i];
-					// -n is an intensity2sided and does not correspond to a true normal index
-					if (n > 0) {
-						ptTemp.add(g3d.getNormixVector(n));
-						viewer.transformPoint(ptTemp, ptTempi);
-						g3d.fillCylinder(Graphics3D.WHITE, Graphics3D.ENDCAPS_SPHERICAL, 1, screens[i], ptTempi);
-					}
+		for (int i = vertexCount; --i >= 0;) {
+			if ((i % 3) == 0) { // investigate vertex normixes
+				ptTemp.set(mesh.vertices[i]);
+				short n = mesh.normixes[i];
+				// -n is an intensity2sided and does not correspond to a true normal index
+				if (n > 0) {
+					ptTemp.add(g3d.getNormixVector(n));
+					viewer.transformPoint(ptTemp, ptTempi);
+					g3d.fillCylinder(Graphics3D.WHITE, Graphics3D.ENDCAPS_SPHERICAL, 1, screens[i], ptTempi);
 				}
+			}
+		}
 	}
 
 	void renderTriangles(Mesh mesh, Point3i[] screens, boolean fill) {
@@ -219,9 +219,7 @@ abstract class MeshRenderer extends ShapeRenderer {
 			}
 			if (iB == iC) {
 				if (screens != null)
-					g3d
-							.fillCylinder(colixA, Graphics3D.ENDCAPS_SPHERICAL, (iA == iB ? 6 : 3), screens[iA],
-									screens[iB]);
+					g3d.fillCylinder(colixA, Graphics3D.ENDCAPS_SPHERICAL, (iA == iB ? 6 : 3), screens[iA], screens[iB]);
 			}
 			else if (vertexIndexes.length == 3) {
 				if (fill)

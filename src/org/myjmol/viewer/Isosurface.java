@@ -4798,7 +4798,7 @@ class Isosurface extends MeshCollection {
 				createSet(p[0], p[1], p[2]);
 				continue;
 			}
-			if (pt0 == pt1 && pt2 == pt2)
+			if (pt0 == pt1)
 				continue;
 			if (pt0 >= 0) {
 				surfaceSet[pt0].set(p[1]);

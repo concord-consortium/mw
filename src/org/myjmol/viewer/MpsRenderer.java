@@ -378,19 +378,6 @@ abstract class MpsRenderer extends MeshRenderer {
 	void renderCone(int i, Point3f pointBegin, Point3f pointEnd, Point3f screenPtBegin, Point3f screenPtEnd,
 			short colix, int mad) {
 		int coneDiameter = viewer.scaleToScreen((int) Math.floor(screenPtBegin.z), mad + (mad >> 2));
-		if (false && aspectRatio > 0 && checkDiameter(coneDiameter)) {
-			try {
-				if (meshes[i] == null || !meshReady[i])
-					createMeshCone(i, pointBegin, pointEnd, mad);
-				meshes[i].colix = colix;
-				render1(meshes[i]);
-				return;
-			}
-			catch (Exception e) {
-				System.out.println("render mesh error: renderCone" + e.toString());
-				// e.printStackTrace();
-			}
-		}
 		g3d.fillCone(colix, Graphics3D.ENDCAPS_FLAT, coneDiameter, screenPtBegin, screenPtEnd);
 	}
 

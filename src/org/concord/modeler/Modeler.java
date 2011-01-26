@@ -2106,9 +2106,8 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		});
 		colorMenu.addHexColorListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Color c = colorMenu
-						.getHexInputColor(page.getFillMode() instanceof FillMode.ColorFill ? ((FillMode.ColorFill) page
-								.getFillMode()).getColor() : null);
+				Color c = colorMenu.getHexInputColor(page.getFillMode() instanceof FillMode.ColorFill ? ((FillMode.ColorFill) page
+						.getFillMode()).getColor() : null);
 				if (c == null)
 					return;
 				page.changeFillMode(new FillMode.ColorFill(c));
@@ -2501,8 +2500,11 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 							JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 				}
 				if (opt == JOptionPane.YES_OPTION) {
-					BookmarkManager.sharedInstance().getBookmarks().put(
-							editor.getTitle() == null ? editor.getAddress() : editor.getTitle(), editor.getAddress());
+					BookmarkManager
+							.sharedInstance()
+							.getBookmarks()
+							.put(editor.getTitle() == null ? editor.getAddress() : editor.getTitle(),
+									editor.getAddress());
 					updateBookmarks();
 				}
 			}
@@ -2995,7 +2997,8 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 			serverSocket.bind(new InetSocketAddress(PORT_LAUNCH));
 		}
 		catch (Exception e) {
-			if (true) {
+			boolean b = true;
+			if (b) {
 				Socket socket = null;
 				PrintWriter out = null;
 				try {
@@ -3196,8 +3199,8 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		setLocale();
 
 		if (IS_MAC) {
-			System.setProperty("apple.laf.useScreenMenuBar", "false".equalsIgnoreCase(System
-					.getProperty("mw.window.menubar")) ? "false" : "true");
+			System.setProperty("apple.laf.useScreenMenuBar",
+					"false".equalsIgnoreCase(System.getProperty("mw.window.menubar")) ? "false" : "true");
 			System.setProperty("apple.awt.brushMetalLook", "true");
 		}
 

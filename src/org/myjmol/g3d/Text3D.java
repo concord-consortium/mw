@@ -147,30 +147,6 @@ class Text3D {
       bitmap[offset >> 5] = shifter;
     }
 
-    if (false) {
-      // error checking
-      // shifter error checking
-      boolean[] bits = new boolean[size];
-      for (int i = 0; i < size; ++i)
-        bits[i] = (pixels[i] & 0x00FFFFFF) != 0;
-      //
-      for (offset = 0; offset < size; ++offset, shifter <<= 1) {
-        if ((offset & 31) == 0)
-          shifter = bitmap[offset >> 5];
-        if (shifter < 0) {
-          if (!bits[offset]) {
-            Logger.debug("false positive @" + offset);
-            Logger.debug("size = " + size);
-          }
-        } else {
-          if (bits[offset]) {
-            Logger.debug("false negative @" + offset);
-            Logger.debug("size = " + size);
-          }
-        }
-      }
-      // error checking
-    }
   }
 
   static Hashtable htFont3d = new Hashtable();
