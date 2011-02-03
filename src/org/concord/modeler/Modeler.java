@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2008  The Concord Consortium, Inc.,
+ *   Copyright (C) 2011  The Concord Consortium, Inc.,
  *   25 Love Lane, Concord, MA 01742
  *
  *   This program is free software; you can redistribute it and/or modify
@@ -202,14 +202,6 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 			pi.addFile(REMOTE_STATIC_ROOT + "plugin/netscape.jar");
 			pi.setMainClass("org.jmol.applet.MwPlugin");
 			PluginManager.addPlugInfo(pi);
-			// pi = new PluginInfo("Flash");
-			// pi.addFile(REMOTE_STATIC_ROOT + "plugin/mwflash.jar");
-			// pi.addFile(REMOTE_STATIC_ROOT + "plugin/jflashplayer.jar");
-			// pi.addFile(REMOTE_STATIC_ROOT + "plugin/atl2k.dll");
-			// pi.addFile(REMOTE_STATIC_ROOT + "plugin/atl98.dll");
-			// pi.addFile(REMOTE_STATIC_ROOT + "plugin/jflash.dll");
-			// pi.setMainClass("org.concord.jflash.MwFlashPlayer");
-			// PluginManager.addPlugInfo(pi);
 
 			// check look&feel installations
 			lf = UIManager.getInstalledLookAndFeels();
@@ -2106,8 +2098,9 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		});
 		colorMenu.addHexColorListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Color c = colorMenu.getHexInputColor(page.getFillMode() instanceof FillMode.ColorFill ? ((FillMode.ColorFill) page
-						.getFillMode()).getColor() : null);
+				Color c = colorMenu
+						.getHexInputColor(page.getFillMode() instanceof FillMode.ColorFill ? ((FillMode.ColorFill) page
+								.getFillMode()).getColor() : null);
 				if (c == null)
 					return;
 				page.changeFillMode(new FillMode.ColorFill(c));
@@ -2500,11 +2493,8 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 							JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 				}
 				if (opt == JOptionPane.YES_OPTION) {
-					BookmarkManager
-							.sharedInstance()
-							.getBookmarks()
-							.put(editor.getTitle() == null ? editor.getAddress() : editor.getTitle(),
-									editor.getAddress());
+					BookmarkManager.sharedInstance().getBookmarks().put(
+							editor.getTitle() == null ? editor.getAddress() : editor.getTitle(), editor.getAddress());
 					updateBookmarks();
 				}
 			}
@@ -3199,8 +3189,8 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		setLocale();
 
 		if (IS_MAC) {
-			System.setProperty("apple.laf.useScreenMenuBar",
-					"false".equalsIgnoreCase(System.getProperty("mw.window.menubar")) ? "false" : "true");
+			System.setProperty("apple.laf.useScreenMenuBar", "false".equalsIgnoreCase(System
+					.getProperty("mw.window.menubar")) ? "false" : "true");
 			System.setProperty("apple.awt.brushMetalLook", "true");
 		}
 
