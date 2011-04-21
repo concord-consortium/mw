@@ -632,6 +632,9 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 					if (sameLanguage(language, "ru")) {
 						navigator.visitLocation(s + "ru/index.cml");
 					}
+					else if (sameLanguage(language, "es")) {
+						navigator.visitLocation(s + "es/index.cml");
+					}
 					else if (sameLanguage(language, "no")) {
 						navigator.visitLocation(s + "no/index.cml");
 					}
@@ -2098,9 +2101,8 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		});
 		colorMenu.addHexColorListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Color c = colorMenu
-						.getHexInputColor(page.getFillMode() instanceof FillMode.ColorFill ? ((FillMode.ColorFill) page
-								.getFillMode()).getColor() : null);
+				Color c = colorMenu.getHexInputColor(page.getFillMode() instanceof FillMode.ColorFill ? ((FillMode.ColorFill) page
+						.getFillMode()).getColor() : null);
 				if (c == null)
 					return;
 				page.changeFillMode(new FillMode.ColorFill(c));
@@ -2493,8 +2495,11 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 							JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 				}
 				if (opt == JOptionPane.YES_OPTION) {
-					BookmarkManager.sharedInstance().getBookmarks().put(
-							editor.getTitle() == null ? editor.getAddress() : editor.getTitle(), editor.getAddress());
+					BookmarkManager
+							.sharedInstance()
+							.getBookmarks()
+							.put(editor.getTitle() == null ? editor.getAddress() : editor.getTitle(),
+									editor.getAddress());
 					updateBookmarks();
 				}
 			}
@@ -2530,6 +2535,9 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 						String language = l.getLanguage();
 						if (sameLanguage(language, "ru")) {
 							navigator.visitLocation(s + "ru/index.cml");
+						}
+						else if (sameLanguage(language, "es")) {
+							navigator.visitLocation(s + "es/index.cml");
 						}
 						else if (sameLanguage(language, "no")) {
 							navigator.visitLocation(s + "no/index.cml");
@@ -3189,8 +3197,8 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		setLocale();
 
 		if (IS_MAC) {
-			System.setProperty("apple.laf.useScreenMenuBar", "false".equalsIgnoreCase(System
-					.getProperty("mw.window.menubar")) ? "false" : "true");
+			System.setProperty("apple.laf.useScreenMenuBar",
+					"false".equalsIgnoreCase(System.getProperty("mw.window.menubar")) ? "false" : "true");
 			System.setProperty("apple.awt.brushMetalLook", "true");
 		}
 
