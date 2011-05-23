@@ -72,9 +72,8 @@ public class FillEffectChooser extends JTabbedPane implements ImageImporter {
 	private final static int ONE_COLOR = 8531;
 	private final static int TWO_COLOR = 8532;
 	private final static int PRESET = 8533;
-	private final static float[] dash = { 2.0f };
-	private final static BasicStroke dashed = new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1.0f,
-			dash, 0.0f);
+	private final static BasicStroke highlightStrokeOutside = new BasicStroke(4);
+	private final static BasicStroke highlightStrokeInside = new BasicStroke(2);
 	private static ResourceBundle bundle;
 	private static boolean isUSLocale;
 
@@ -200,8 +199,8 @@ public class FillEffectChooser extends JTabbedPane implements ImageImporter {
 		if (bundle == null) {
 			isUSLocale = Locale.getDefault().equals(Locale.US);
 			try {
-				bundle = ResourceBundle.getBundle("org.concord.modeler.ui.images.FillEffectChooser", Locale
-						.getDefault());
+				bundle = ResourceBundle.getBundle("org.concord.modeler.ui.images.FillEffectChooser",
+						Locale.getDefault());
 			}
 			catch (MissingResourceException e) {
 			}
@@ -467,7 +466,6 @@ public class FillEffectChooser extends JTabbedPane implements ImageImporter {
 
 		gp = new GradientPanel[4];
 		gp[0] = new GradientPanel(GradientFactory.VARIANT1);
-		gp[0].setSelected(true);
 		gp[1] = new GradientPanel(GradientFactory.VARIANT2);
 		gp[2] = new GradientPanel(GradientFactory.VARIANT3);
 		gp[3] = new GradientPanel(GradientFactory.VARIANT4);
@@ -656,7 +654,6 @@ public class FillEffectChooser extends JTabbedPane implements ImageImporter {
 				}
 			});
 		}
-		pp[0].setSelected(true);
 
 		JPanel p4 = new JPanel(new GridLayout(1, 2, 10, 10));
 		p4.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -812,7 +809,10 @@ public class FillEffectChooser extends JTabbedPane implements ImageImporter {
 			g2d.setPaint(PatternFactory.createPattern(style, cellWidth, cellHeight, getForeground(), getBackground()));
 			g2d.fillRect(0, 0, w, h);
 			if (selected) {
-				g2d.setStroke(dashed);
+				g2d.setStroke(highlightStrokeOutside);
+				g2d.setColor(Color.black);
+				g2d.drawRect(2, 2, w - 5, h - 5);
+				g2d.setStroke(highlightStrokeInside);
 				g2d.setColor(Color.white);
 				g2d.drawRect(2, 2, w - 5, h - 5);
 			}
@@ -890,7 +890,10 @@ public class FillEffectChooser extends JTabbedPane implements ImageImporter {
 			int h = getHeight();
 			GradientFactory.paintRect(g2d, style, variant, color1, color2, 0, 0, w, h);
 			if (selected) {
-				g2d.setStroke(dashed);
+				g2d.setStroke(highlightStrokeOutside);
+				g2d.setColor(Color.black);
+				g2d.drawRect(3, 3, w - 6, h - 6);
+				g2d.setStroke(highlightStrokeInside);
 				g2d.setColor(Color.white);
 				g2d.drawRect(3, 3, w - 6, h - 6);
 			}
