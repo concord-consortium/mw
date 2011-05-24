@@ -636,7 +636,7 @@ public class FillEffectChooser extends JTabbedPane implements ImageImporter {
 				cell = 4;
 				break;
 			case PatternFactory.MEDIUM:
-				cell = 10;
+				cell = 8;
 				break;
 			case PatternFactory.LARGE:
 				cell = 12;
