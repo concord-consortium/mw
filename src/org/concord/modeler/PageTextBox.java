@@ -139,8 +139,6 @@ public class PageTextBox extends BasicPageTextBox {
 				}
 				if (file == null) {
 					URLConnection conn = ConnectionManager.getConnection(url);
-					if (!(conn instanceof HttpURLConnection))
-						return;
 					if (sendCookie) {
 						String userID = Modeler.user.getUserID();
 						String password = Modeler.user.getPassword();
@@ -149,11 +147,13 @@ public class PageTextBox extends BasicPageTextBox {
 						}
 					}
 					if (formMethod != null) {
-						try {
-							((HttpURLConnection) conn).setRequestMethod(formMethod);
-						}
-						catch (ProtocolException e) {
-							e.printStackTrace();
+						if (conn instanceof HttpURLConnection) {
+							try {
+								((HttpURLConnection) conn).setRequestMethod(formMethod);
+							}
+							catch (ProtocolException e) {
+								e.printStackTrace();
+							}
 						}
 					}
 					storeCookie(conn.getHeaderField("Set-Cookie"));
