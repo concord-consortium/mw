@@ -45,6 +45,7 @@ import javax.swing.JToggleButton;
 
 import org.concord.modeler.ModelerUtilities;
 import org.concord.modeler.event.PageComponentEvent;
+import org.concord.modeler.text.Page;
 import org.concord.modeler.ui.IconPool;
 import org.concord.modeler.util.ScreenshotSaver;
 import org.concord.modeler.util.SwingWorker;
@@ -248,22 +249,24 @@ public class DiffractionInstrument extends JPanel {
 		});
 		p.add(zoomOutButton);
 
-		button = new JButton(IconPool.getIcon("camera"));
-		button.setToolTipText("Take a snapshot");
-		button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (model != null)
-					model.notifyPageComponentListeners(new PageComponentEvent(pattern,
-							PageComponentEvent.SNAPSHOT_TAKEN));
-			}
-		});
-		p.add(button);
+		if (!Page.isApplet()) {
+			button = new JButton(IconPool.getIcon("camera"));
+			button.setToolTipText("Take a snapshot");
+			button.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if (model != null)
+						model.notifyPageComponentListeners(new PageComponentEvent(pattern,
+								PageComponentEvent.SNAPSHOT_TAKEN));
+				}
+			});
+			p.add(button);
 
-		button = new JButton(new ScreenshotSaver(ModelerUtilities.fileChooser, "Output Image", pattern, false));
-		button.setIcon(IconPool.getIcon("save"));
-		button.setText(null);
-		button.setToolTipText("Save this image to disk");
-		p.add(button);
+			button = new JButton(new ScreenshotSaver(ModelerUtilities.fileChooser, "Output Image", pattern, false));
+			button.setIcon(IconPool.getIcon("save"));
+			button.setText(null);
+			button.setToolTipText("Save this image to disk");
+			p.add(button);
+		}
 
 		if (addCloseButton) {
 			button = new JButton(IconPool.getIcon("exit"));
