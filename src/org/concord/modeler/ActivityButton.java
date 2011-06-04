@@ -34,6 +34,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
 import org.concord.modeler.text.Page;
@@ -116,6 +117,17 @@ public class ActivityButton extends JButton implements Embeddable {
 		popupMouseListener = new PopupMouseListener(this);
 		addMouseListener(popupMouseListener);
 		setFont(new Font(null, Font.PLAIN, Page.getDefaultFontSize() - 1));
+		if (Page.isApplet()) {
+			addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if (ActivityButton.this.getAction() == null && reportTitle != null) {
+						JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(ActivityButton.this),
+								"<html>Report doesn't work in the applet mode. If you need this functionality,<br>please run the "
+										+ Modeler.NAME + " software.</html>");
+					}
+				}
+			});
+		}
 	}
 
 	/** side effect of implementing Embeddable */

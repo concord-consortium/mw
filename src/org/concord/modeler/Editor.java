@@ -1161,9 +1161,8 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		});
 		colorMenu.addHexColorListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Color c = colorMenu
-						.getHexInputColor(page.getFillMode() instanceof FillMode.ColorFill ? ((FillMode.ColorFill) page
-								.getFillMode()).getColor() : null);
+				Color c = colorMenu.getHexInputColor(page.getFillMode() instanceof FillMode.ColorFill ? ((FillMode.ColorFill) page
+						.getFillMode()).getColor() : null);
 				if (c == null)
 					return;
 				page.changeFillMode(new FillMode.ColorFill(c));
@@ -1599,7 +1598,14 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		case PageComponentEvent.SNAPSHOT_TAKEN:
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					SnapshotGallery.sharedInstance().takeSnapshot(page.getAddress(), src);
+					if (Page.isApplet()) {
+						JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(Editor.this),
+								"<html>Snapshot doesn't work in the applet mode. If you need this functionality,<br>please run the "
+										+ Modeler.NAME + " software.</html>");
+					}
+					else {
+						SnapshotGallery.sharedInstance().takeSnapshot(page.getAddress(), src);
+					}
 				}
 			});
 			break;

@@ -147,9 +147,9 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 	static byte windowCount;
 	static int tapeLength = DataQueue.DEFAULT_SIZE;
 	static boolean isUSLocale;
-	static String[] precacheFiles = new String[] { "zip/student.zip", "All Models in The Library", "zip/molecules.zip",
-			"All Molecules in The Library", "zip/part1.zip", "Activities: Part One", "zip/part2.zip",
-			"Activities: Part Two", "zip/tutorial.zip", "The User's Manual", "zip/teacher.zip", "Author Materials" };
+	static String[] precacheFiles = new String[] { "zip/student.zip", "All Models in the Library", "zip/molecules.zip",
+			"All Molecules in the Library", "zip/part1.zip", "Curriculum Modules: Part One", "zip/part2.zip",
+			"Curriculum Modules: Part Two", "zip/tutorial.zip", "The User's Manual" };
 
 	boolean stopListening;
 	InputStream socketInputStream;

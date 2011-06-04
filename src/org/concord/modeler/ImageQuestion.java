@@ -39,6 +39,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -221,20 +222,27 @@ public class ImageQuestion extends JPanel implements Embeddable, TransferListene
 	}
 
 	private void toggleThumbnailPanel() {
-		String s1 = Modeler.getInternationalText("Open");
-		String s2 = Modeler.getInternationalText("Close");
-		openButton.setText(opened ? (s1 != null ? s1 : "Open") : (s2 != null ? s2 : "Close"));
-		if (opened) {
-			splitPane.setDividerLocation(splitPane.getHeight());
+		if (Page.isApplet()) {
+			JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(ImageQuestion.this),
+					"<html>Image question doesn't work in the applet mode. If you need this functionality,<br>please run the "
+							+ Modeler.NAME + " software.</html>");
 		}
 		else {
-			if (splitPane.getBottomComponent() == null)
-				splitPane.setBottomComponent(scroller);
-			splitPane.setDividerLocation(splitPane.getHeight() - ThumbnailImagePanel.IMAGE_HEIGHT - 36);
+			String s1 = Modeler.getInternationalText("Open");
+			String s2 = Modeler.getInternationalText("Close");
+			openButton.setText(opened ? (s1 != null ? s1 : "Open") : (s2 != null ? s2 : "Close"));
+			if (opened) {
+				splitPane.setDividerLocation(splitPane.getHeight());
+			}
+			else {
+				if (splitPane.getBottomComponent() == null)
+					splitPane.setBottomComponent(scroller);
+				splitPane.setDividerLocation(splitPane.getHeight() - ThumbnailImagePanel.IMAGE_HEIGHT - 36);
+			}
+			setInstruction(opened);
+			opened = !opened;
+			thumbnailPanel.respondToSnapshotEvent(null);
 		}
-		setInstruction(opened);
-		opened = !opened;
-		thumbnailPanel.respondToSnapshotEvent(null);
 	}
 
 	void storeAnswer() {

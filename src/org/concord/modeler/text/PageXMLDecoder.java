@@ -1039,8 +1039,8 @@ final class PageXMLDecoder {
 					str = page.resolvePath(str);
 				if (!FileUtilities.isRemote(str))
 					str = FileUtilities.useSystemFileSeparator(str);
-				StyleConstants.setForeground(currentStyle, HistoryManager.sharedInstance().wasVisited(str) ? Page
-						.getVisitedColor() : Page.getLinkColor());
+				StyleConstants.setForeground(currentStyle,
+						HistoryManager.sharedInstance().wasVisited(str) ? Page.getVisitedColor() : Page.getLinkColor());
 			}
 
 			else if (qName == "target") {
@@ -3131,8 +3131,8 @@ final class PageXMLDecoder {
 				}
 			}
 			else {
-				qa = new QuestionAndAnswer(m.getQuestion() + '\n' + m.formatChoices() + "\nMy answer is ", "-1", m
-						.answerToString());
+				qa = new QuestionAndAnswer(m.getQuestion() + '\n' + m.formatChoices() + "\nMy answer is ", "-1",
+						m.answerToString());
 				UserData.sharedInstance().putData(key, qa);
 			}
 			htmlComponentConnector.enroll(m.getQuestionTextBox());
