@@ -828,6 +828,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		if (chargeShading == state)
 			return;
 		chargeShading = state;
+		molecules.setChargeShading(state);
 		model.notifyChange();
 		refreshJmol();
 		repaint();
@@ -1586,8 +1587,8 @@ public class AtomisticView extends MDView implements BondChangeListener {
 							atom[liveAtomMap.get(origin)].setRadical(true);
 							atom[deadAtomMap.get(destin)].setRadical(true);
 						}
-						RadialBond.Delegate d = addDeadBond(liveAtomMap.get(origin) + atom.length, deadAtomMap
-								.get(destin), rBond);
+						RadialBond.Delegate d = addDeadBond(liveAtomMap.get(origin) + atom.length,
+								deadAtomMap.get(destin), rBond);
 						if (l != null)
 							deadLayered.put(d, l);
 					}
@@ -1627,12 +1628,12 @@ public class AtomisticView extends MDView implements BondChangeListener {
 						addDeadBend(deadAtomMap.get(origin), deadAtomMap.get(destin), deadAtomMap.get(middle), aBond);
 					}
 					else if (liveSet.contains(origin) && deadSet.contains(destin) && deadSet.contains(middle)) {
-						addDeadBend(liveAtomMap.get(origin) + atom.length, deadAtomMap.get(destin), deadAtomMap
-								.get(middle), aBond);
+						addDeadBend(liveAtomMap.get(origin) + atom.length, deadAtomMap.get(destin),
+								deadAtomMap.get(middle), aBond);
 					}
 					else if (deadSet.contains(origin) && liveSet.contains(destin) && deadSet.contains(middle)) {
-						addDeadBend(deadAtomMap.get(origin), liveAtomMap.get(destin) + atom.length, deadAtomMap
-								.get(middle), aBond);
+						addDeadBend(deadAtomMap.get(origin), liveAtomMap.get(destin) + atom.length,
+								deadAtomMap.get(middle), aBond);
 					}
 					else if (deadSet.contains(origin) && deadSet.contains(destin) && liveSet.contains(middle)) {
 						addDeadBend(deadAtomMap.get(origin), deadAtomMap.get(destin), liveAtomMap.get(middle)
@@ -1643,14 +1644,12 @@ public class AtomisticView extends MDView implements BondChangeListener {
 								deadAtomMap.get(middle), aBond);
 					}
 					else if (liveSet.contains(origin) && deadSet.contains(destin) && liveSet.contains(middle)) {
-						addDeadBend(liveAtomMap.get(origin) + atom.length, deadAtomMap.get(destin), liveAtomMap
-								.get(middle)
-								+ atom.length, aBond);
+						addDeadBend(liveAtomMap.get(origin) + atom.length, deadAtomMap.get(destin),
+								liveAtomMap.get(middle) + atom.length, aBond);
 					}
 					else if (deadSet.contains(origin) && liveSet.contains(destin) && liveSet.contains(middle)) {
-						addDeadBend(deadAtomMap.get(origin), liveAtomMap.get(destin) + atom.length, liveAtomMap
-								.get(middle)
-								+ atom.length, aBond);
+						addDeadBend(deadAtomMap.get(origin), liveAtomMap.get(destin) + atom.length,
+								liveAtomMap.get(middle) + atom.length, aBond);
 					}
 				}
 			}
@@ -1678,8 +1677,8 @@ public class AtomisticView extends MDView implements BondChangeListener {
 	}
 
 	private RadialBond.Delegate addDeadBond(int i, int j, RadialBond r) {
-		RadialBond.Delegate d = new RadialBond.Delegate(i, j, r.getBondLength(), r.getBondStrength(), r.isSmart(), r
-				.isSolid(), r.isClosed());
+		RadialBond.Delegate d = new RadialBond.Delegate(i, j, r.getBondLength(), r.getBondStrength(), r.isSmart(),
+				r.isSolid(), r.isClosed());
 		d.setColor(r.getBondColor());
 		d.setStyle(r.getBondStyle());
 		d.setVisible(r.isVisible());
@@ -1696,8 +1695,8 @@ public class AtomisticView extends MDView implements BondChangeListener {
 	}
 
 	private RadialBond restoreDeadBond(int i, int j, RadialBond.Delegate d) {
-		RadialBond rb = new RadialBond.Builder(atom[i], atom[j]).bondLength(d.getBondLength()).bondStrength(
-				d.getBondStrength()).smart(d.isSmart()).solid(d.isSolid()).closed(d.isClosed()).build();
+		RadialBond rb = new RadialBond.Builder(atom[i], atom[j]).bondLength(d.getBondLength())
+				.bondStrength(d.getBondStrength()).smart(d.isSmart()).solid(d.isSolid()).closed(d.isClosed()).build();
 		rb.setBondColor(d.getColor());
 		rb.setVisible(d.isVisible());
 		if (d.getAmplitude() > 0) {
@@ -4769,8 +4768,8 @@ public class AtomisticView extends MDView implements BondChangeListener {
 						dragSelected = true;
 						tb.translateTo(x - clickPoint.x, y - clickPoint.y);
 						if (tb.getAttachmentPosition() == TextBoxComponent.BOX_CENTER)
-							moveHostTo(tb.getHost(), tb.getRx() + 0.5 * tb.getWidth(), tb.getRy() + 0.5
-									* tb.getHeight());
+							moveHostTo(tb.getHost(), tb.getRx() + 0.5 * tb.getWidth(),
+									tb.getRy() + 0.5 * tb.getHeight());
 					}
 					else if (selectedComponent instanceof LineComponent) {
 						LineComponent lc = (LineComponent) selectedComponent;
@@ -5508,8 +5507,9 @@ public class AtomisticView extends MDView implements BondChangeListener {
 						+ (nNt == 0 ? "" : nNt + " Nt, ")
 						+ (nPl == 0 ? "" : nPl + " Pl, ")
 						+ (nWs == 0 ? "" : nWs + " Ws, ")
-						+ (nCk == 0 ? "" : nCk + " Ck") + (m == 0 ? "" : '\n' + "and " + m + " bonds."), s != null ? s
-						: "Counting result", JOptionPane.INFORMATION_MESSAGE);
+						+ (nCk == 0 ? "" : nCk + " Ck")
+						+ (m == 0 ? "" : '\n' + "and " + m + " bonds."), s != null ? s : "Counting result",
+						JOptionPane.INFORMATION_MESSAGE);
 			}
 			selectedArea.setSize(0, 0);
 			repaint();

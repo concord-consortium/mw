@@ -45,6 +45,19 @@ public class MoleculeCollection {
 		model = m;
 	}
 
+	public void setChargeShading(boolean b) {
+		synchronized (list) {
+			for (Molecule m : list) {
+				if (m instanceof CurvedSurface) {
+					CurvedSurface s = (CurvedSurface) m;
+					if (b)
+						s.setColorMode(CurvedSurface.CHARGE);
+					else s.setColorMode(CurvedSurface.NONE);
+				}
+			}
+		}
+	}
+
 	public void add(int i, Molecule m) {
 		if (model == null)
 			throw new RuntimeException("null model");
