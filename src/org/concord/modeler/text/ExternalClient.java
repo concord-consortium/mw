@@ -143,9 +143,14 @@ public final class ExternalClient {
 				s = "Adobe PDF Reader";
 				break;
 			}
-			JOptionPane.showMessageDialog(null,
-					s != null ? "The " + s + " was not found." : "No such client supported", "External client",
-					JOptionPane.ERROR_MESSAGE);
+			if (Page.isApplet()) {
+				JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(null),
+						"The linked application is not permitted to run in the applet mode.");
+			}
+			else {
+				JOptionPane.showMessageDialog(null, s != null ? "The " + s + " was not found."
+						: "No such client supported", "External client", JOptionPane.ERROR_MESSAGE);
+			}
 		}
 	}
 
