@@ -146,6 +146,7 @@ public final class ExternalClient {
 			if (Page.isApplet()) {
 				JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(null),
 						"The linked application is not permitted to run in the applet mode.");
+
 			}
 			else {
 				JOptionPane.showMessageDialog(null, s != null ? "The " + s + " was not found."
