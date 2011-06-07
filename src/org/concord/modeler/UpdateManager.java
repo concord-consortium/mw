@@ -70,16 +70,14 @@ class UpdateManager {
 
 		String ls = System.getProperty("line.separator");
 		String s = Modeler.getInternationalText("UpdateNoticeContent");
-		String msg = s != null ? s : "An update is available. " + Modeler.NAME
-				+ " will restart shortly after downloading." + ls
-				+ "If it does not, or you keep seeing this message, please go to" + ls + Modeler.getContextRoot()
-				+ " to download the new version.";
+		String msg = s != null ? s : "An update is available. " + Modeler.NAME + " will restart shortly after downloading." + ls
+				+ "If it does not, or you keep seeing this message, please go to" + ls + Modeler.getContextRoot() + " to download the new version.";
 
 		s = Modeler.getInternationalText("UpdateNotice");
 		JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(modeler), msg, s != null ? s : "Update Notice",
 				JOptionPane.INFORMATION_MESSAGE, icon);
 		if (!downloadUpdates(modeler, download))
-			ExternalClient.open(ExternalClient.HTML_CLIENT, Modeler.getContextRoot());
+			ExternalClient.open(ExternalClient.HTML_CLIENT, Modeler.getContextRoot(), modeler);
 
 	}
 
@@ -156,8 +154,8 @@ class UpdateManager {
 			br.close();
 			isr.close();
 			if (p.waitFor() != 0) {
-				JOptionPane.showMessageDialog(null, "There is a problem in unpacking " + PACK_NAME + ".",
-						"Unpack200 error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "There is a problem in unpacking " + PACK_NAME + ".", "Unpack200 error",
+						JOptionPane.ERROR_MESSAGE);
 			}
 			else {
 				File jarFile = new File(jarLocation);

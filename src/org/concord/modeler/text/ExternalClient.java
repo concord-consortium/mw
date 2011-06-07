@@ -20,6 +20,8 @@
 
 package org.concord.modeler.text;
 
+import java.awt.Component;
+
 import javax.swing.JOptionPane;
 
 public final class ExternalClient {
@@ -43,7 +45,7 @@ public final class ExternalClient {
 	 * @param address
 	 *            in http, file and mailto protocols.
 	 */
-	public static void open(byte type, String address) {
+	public static void open(byte type, String address, Component owner) {
 		boolean clientOK = false;
 		switch (type) {
 		case HTML_CLIENT:
@@ -144,11 +146,11 @@ public final class ExternalClient {
 				break;
 			}
 			if (Page.isApplet()) {
-				JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(null),
+				JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(owner),
 						"The linked application is not permitted to run in the applet mode.");
 			}
 			else {
-				JOptionPane.showMessageDialog(null, s != null ? "The " + s + " was not found."
+				JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(owner), s != null ? "The " + s + " was not found."
 						: "No such client supported", "External client", JOptionPane.ERROR_MESSAGE);
 			}
 		}
@@ -172,8 +174,8 @@ public final class ExternalClient {
 				clientOK = false;
 			}
 		}
-		else if (Page.OS.startsWith("Windows 95") || Page.OS.startsWith("Windows 98")
-				|| Page.OS.startsWith("Windows NT") || Page.OS.startsWith("Windows ME")) {
+		else if (Page.OS.startsWith("Windows 95") || Page.OS.startsWith("Windows 98") || Page.OS.startsWith("Windows NT")
+				|| Page.OS.startsWith("Windows ME")) {
 			try {
 				if (param == null) {
 					Runtime.getRuntime().exec(new String[] { "start", command });

@@ -209,8 +209,7 @@ import org.concord.mw2d.models.MesoModel;
 import org.concord.mw2d.models.MolecularModel;
 import org.concord.mw2d.models.Solvent;
 
-public class Page extends JTextPane implements Navigable, HotlinkListener, HyperlinkListener, ProgressListener,
-		ImageImporter, ClipboardOwner {
+public class Page extends JTextPane implements Navigable, HotlinkListener, HyperlinkListener, ProgressListener, ImageImporter, ClipboardOwner {
 
 	final static int LOADER_THREAD_PRIORITY = Thread.MIN_PRIORITY;
 	final static String OS = System.getProperty("os.name");
@@ -244,8 +243,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	public final static String INSERT_MW3D = "3D Molecular Simulator";
 	public final static String INSERT_COMPONENT = "Embedded Component";
 
-	private final static Object[] RADIO_BUTTON_OPTIONS = new Object[] { (byte) 2, (byte) 3, (byte) 4, (byte) 5,
-			(byte) 6, "None" };
+	private final static Object[] RADIO_BUTTON_OPTIONS = new Object[] { (byte) 2, (byte) 3, (byte) 4, (byte) 5, (byte) 6, "None" };
 
 	private final static String UNKNOWN_LOCATION = "? unknown location......";
 	private final static Pattern SCRIPT_PATTERN = Pattern.compile("(?i)((native)?)script(\\s*):");
@@ -256,8 +254,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 
 	final static float INDENT_STEP = 20;
 	private static final Date DATE = new Date();
-	private final static String TMPZIP = System.getProperty("file.separator") + "cache"
-			+ System.getProperty("file.separator") + "tmpzip" + System.getProperty("file.separator");
+	private final static String TMPZIP = System.getProperty("file.separator") + "cache" + System.getProperty("file.separator") + "tmpzip"
+			+ System.getProperty("file.separator");
 
 	private FontDialog fontDialog;
 	private ParagraphDialog paragraphDialog;
@@ -373,8 +371,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 					processHyperlink((String) script);
 				}
 				else { // backward compatible
-					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(Page.this),
-							"No script has been set.");
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(Page.this), "No script has been set.");
 				}
 			}
 		};
@@ -396,8 +393,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		refreshAction.putValue(Action.SMALL_ICON, new ImageIcon(Page.class.getResource("images/reload.png")));
 		if (!asApplet) {
 			refreshAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_R);
-			refreshAction.putValue(Action.ACCELERATOR_KEY, Modeler.isMac() ? KeyStroke.getKeyStroke(KeyEvent.VK_R,
-					KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0, true));
+			refreshAction.putValue(Action.ACCELERATOR_KEY, Modeler.isMac() ? KeyStroke.getKeyStroke(KeyEvent.VK_R, KeyEvent.META_MASK, true)
+					: KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0, true));
 		}
 
 		hintAction = new HintAction(this);
@@ -1207,8 +1204,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					boolean context = JOptionPane.showConfirmDialog(JOptionPane.getFrameForComponent(Page.this),
-							"Would you like to include a promoter and a terminator in the DNA string?", "DNA setting",
-							JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION;
+							"Would you like to include a promoter and a terminator in the DNA string?", "DNA setting", JOptionPane.YES_NO_OPTION,
+							JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION;
 					mc.setBackground(getBackground());
 					mc.setUsed(true);
 					mc.removeMenuBar();
@@ -1243,11 +1240,9 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	private void showContainerUsedUpMessage() {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(Page.this),
-						"Sorry, you have used up the model containers. Only two\n"
-								+ "containers are allowed for this type of model on a single window.\n"
-								+ "if your purpose is to change a model on the page, you can\n"
-								+ "change the content of a container.", "Model Container",
+				JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(Page.this), "Sorry, you have used up the model containers. Only two\n"
+						+ "containers are allowed for this type of model on a single window.\n"
+						+ "if your purpose is to change a model on the page, you can\n" + "change the content of a container.", "Model Container",
 						JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
@@ -1301,9 +1296,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					int i = JOptionPane.showOptionDialog(JOptionPane.getFrameForComponent(Page.this),
-							"How many radio buttons would you like to create for this group?",
-							"Number of Radio Buttons", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
-							RADIO_BUTTON_OPTIONS, RADIO_BUTTON_OPTIONS[2]);
+							"How many radio buttons would you like to create for this group?", "Number of Radio Buttons", JOptionPane.YES_NO_OPTION,
+							JOptionPane.QUESTION_MESSAGE, null, RADIO_BUTTON_OPTIONS, RADIO_BUTTON_OPTIONS[2]);
 					if (i == JOptionPane.CLOSED_OPTION || i == RADIO_BUTTON_OPTIONS.length - 1)
 						return;
 					long t = System.currentTimeMillis();
@@ -1570,8 +1564,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 					name = enum3.nextElement();
 					attr = content.getAttribute(name);
 					if (type.equals("Question")) {
-						if (attr instanceof PageTextField || attr instanceof PageTextArea
-								|| attr instanceof PageMultipleChoice || attr instanceof ImageQuestion) {
+						if (attr instanceof PageTextField || attr instanceof PageTextArea || attr instanceof PageMultipleChoice
+								|| attr instanceof ImageQuestion) {
 							list.add(attr);
 						}
 						else if (attr instanceof PageTextBox) {
@@ -1796,8 +1790,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 					EventQueue.invokeLater(new Runnable() {
 						public void run() {
 							JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(Page.this),
-									"Sorry, currently a model container cannot be transfered to a new window.",
-									"Model Container", JOptionPane.INFORMATION_MESSAGE);
+									"Sorry, currently a model container cannot be transfered to a new window.", "Model Container",
+									JOptionPane.INFORMATION_MESSAGE);
 						}
 					});
 				}
@@ -1982,8 +1976,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				for (Enumeration k = content.getAttributeNames(); k.hasMoreElements();) {
 					name = k.nextElement();
 					attr = content.getAttribute(name);
-					if ((attr instanceof Icon && attr == image)
-							|| (attr instanceof IconWrapper && ((IconWrapper) attr).getIcon() == image)) {
+					if ((attr instanceof Icon && attr == image) || (attr instanceof IconWrapper && ((IconWrapper) attr).getIcon() == image)) {
 						select(content.getStartOffset(), content.getEndOffset());
 						cut();
 						return true;
@@ -2011,8 +2004,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				for (Enumeration k = content.getAttributeNames(); k.hasMoreElements();) {
 					name = k.nextElement();
 					attr = content.getAttribute(name);
-					if ((attr instanceof Icon && attr == icon)
-							|| (attr instanceof IconWrapper && ((IconWrapper) attr).getIcon() == icon)) {
+					if ((attr instanceof Icon && attr == icon) || (attr instanceof IconWrapper && ((IconWrapper) attr).getIcon() == icon)) {
 						select(content.getStartOffset(), content.getEndOffset());
 						copy();
 						if (content.getEndOffset() < getDocument().getLength() - 1)
@@ -2299,13 +2291,11 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	}
 
 	private Action[] augmentActions() {
-		Action[] defaultActions = { new UndoAction(), new RedoAction(), refreshAction, saveAction, saveAsAction,
-				saveAsAppletAction, openAction, newAction, insertFileAction, increaseIndentAction,
-				decreaseIndentAction, increaseFontSizeAction, decreaseFontSizeAction, bulletAction, printPreviewAction,
-				pageSetupAction, printAction, propertiesAction, symbolAction, hyperlinkAction, imageReader,
-				colorBarAction, insertAtomContainerAction, insertGBContainerAction, insertChemContainerAction,
-				insertProsynContainerAction, insertComponentAction, fontAction, paragraphAction, insertBulletAction,
-				pastePlainTextAction };
+		Action[] defaultActions = { new UndoAction(), new RedoAction(), refreshAction, saveAction, saveAsAction, saveAsAppletAction, openAction,
+				newAction, insertFileAction, increaseIndentAction, decreaseIndentAction, increaseFontSizeAction, decreaseFontSizeAction,
+				bulletAction, printPreviewAction, pageSetupAction, printAction, propertiesAction, symbolAction, hyperlinkAction, imageReader,
+				colorBarAction, insertAtomContainerAction, insertGBContainerAction, insertChemContainerAction, insertProsynContainerAction,
+				insertComponentAction, fontAction, paragraphAction, insertBulletAction, pastePlainTextAction };
 		Action[] old = super.getActions();
 		/* change the select all action and its key binding */
 		for (Action a : old) {
@@ -2774,12 +2764,12 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		}
 
 		else if (uriLC.endsWith(".jnlp")) {
-			ExternalClient.open(ExternalClient.JNLP_CLIENT, uri);
+			ExternalClient.open(ExternalClient.JNLP_CLIENT, uri, Page.this);
 			notifyPageListeners(new PageEvent(this, PageEvent.PAGE_READ_END));
 		}
 
 		else if (uriLC.endsWith(".html") || uriLC.endsWith(".htm")) {
-			ExternalClient.open(ExternalClient.HTML_CLIENT, uri);
+			ExternalClient.open(ExternalClient.HTML_CLIENT, uri, Page.this);
 			notifyPageListeners(new PageEvent(this, PageEvent.PAGE_READ_END));
 		}
 
@@ -2790,7 +2780,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				return true;
 			}
 			if (FileUtilities.isRemote(uri)) {
-				ExternalClient.open(ExternalClient.HTML_CLIENT, uri);
+				ExternalClient.open(ExternalClient.HTML_CLIENT, uri, Page.this);
 				notifyPageListeners(new PageEvent(this, PageEvent.PAGE_READ_END));
 				return true;
 			}
@@ -2812,16 +2802,14 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	private boolean loadMDModel(final String uri) {
 		if (uri == null)
 			return false;
-		final ModelCanvas mc = insertModel(uri.toLowerCase().endsWith("gbl") ? GBContainer.getCompatibleName()
-				: ChemContainer.getCompatibleName());
+		final ModelCanvas mc = insertModel(uri.toLowerCase().endsWith("gbl") ? GBContainer.getCompatibleName() : ChemContainer.getCompatibleName());
 		if (mc == null)
 			return false;
 		final boolean b = isEditable();
 		if (!b)
 			setEditable(true);
 		notifyPageListeners(new PageEvent(this, PageEvent.PAGE_READ_BEGIN));
-		new SwingWorker("Page:loadMDModel()", LOADER_THREAD_PRIORITY, new DisasterHandler(DisasterHandler.LOAD_ERROR,
-				null, null, Page.this)) {
+		new SwingWorker("Page:loadMDModel()", LOADER_THREAD_PRIORITY, new DisasterHandler(DisasterHandler.LOAD_ERROR, null, null, Page.this)) {
 			public Object construct() {
 				Model model = mc.getMdContainer().getModel();
 				mc.setResourceAddress(uri);
@@ -2857,8 +2845,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	private boolean loadMoleculeFile(final String uri) {
 		if (uri == null)
 			return false;
-		final PageMolecularViewer mv = (PageMolecularViewer) InstancePool.sharedInstance().getUnusedInstance(
-				PageMolecularViewer.class);
+		final PageMolecularViewer mv = (PageMolecularViewer) InstancePool.sharedInstance().getUnusedInstance(PageMolecularViewer.class);
 		if (mv == null)
 			return false;
 		notifyPageListeners(new PageEvent(this, PageEvent.PAGE_READ_BEGIN));
@@ -2878,8 +2865,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				mv.setPreferredSize(new Dimension(getWidth() - 2, getHeight() - 2));
 				mv.setResourceAddress(uri);
 				mv.setCustomInitializationScript("reset;set frank on;");
-				SwingWorker worker = new SwingWorker("Load molecule (full-page mode)", LOADER_THREAD_PRIORITY,
-						new DisasterHandler(DisasterHandler.LOAD_ERROR, null, null, Page.this)) {
+				SwingWorker worker = new SwingWorker("Load molecule (full-page mode)", LOADER_THREAD_PRIORITY, new DisasterHandler(
+						DisasterHandler.LOAD_ERROR, null, null, Page.this)) {
 					public Object construct() {
 						mv.loadCurrentResource();
 						return null;
@@ -3058,8 +3045,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				success = true;
 			}
 			else {
-				JOptionPane.showMessageDialog(frame, file + " does not exist.", "File does not exist",
-						JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(frame, file + " does not exist.", "File does not exist", JOptionPane.ERROR_MESSAGE);
 				fileChooser.resetChoosableFileFilters();
 				return false;
 			}
@@ -3105,8 +3091,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			}
 			else {
 				JOptionPane.showMessageDialog(frame, file + " does not exist.\n"
-						+ "If you meant to create a new file, please use the <New> menu or button, then save it.",
-						"File does not exist", JOptionPane.ERROR_MESSAGE);
+						+ "If you meant to create a new file, please use the <New> menu or button, then save it.", "File does not exist",
+						JOptionPane.ERROR_MESSAGE);
 				fileChooser.resetChoosableFileFilters();
 				return false;
 			}
@@ -3133,16 +3119,14 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 						m.putProperty("old url", m.getProperty("url"));
 						ext = "mml";
 						m.putProperty("url", FileUtilities.changeExtension(file.toString(), ext, incr_mml));
-						m.putProperty("filename", FileUtilities.changeExtension(FileUtilities.getFileName(file
-								.toString()), ext, incr_mml));
+						m.putProperty("filename", FileUtilities.changeExtension(FileUtilities.getFileName(file.toString()), ext, incr_mml));
 						incr_mml++;
 					}
 					else if (m instanceof MesoModel) {
 						m.putProperty("old url", m.getProperty("url"));
 						ext = "gbl";
 						m.putProperty("url", FileUtilities.changeExtension(file.toString(), ext, incr_gbl));
-						m.putProperty("filename", FileUtilities.changeExtension(FileUtilities.getFileName(file
-								.toString()), ext, incr_gbl));
+						m.putProperty("filename", FileUtilities.changeExtension(FileUtilities.getFileName(file.toString()), ext, incr_gbl));
 						incr_gbl++;
 					}
 				}
@@ -3155,13 +3139,12 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			return false;
 		switch (FileUtilities.checkFileName(file)) {
 		case FileUtilities.DIRECTORY_ERROR:
-			JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(this), "Directory error: " + file,
-					"Path error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane
+					.showMessageDialog(JOptionPane.getFrameForComponent(this), "Directory error: " + file, "Path error", JOptionPane.ERROR_MESSAGE);
 			return false;
 		case FileUtilities.ILLEGAL_CHARACTER:
 			JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(this),
-					"A file name cannot contain any of the following characters:\n\\/:*?\"<>|", "Path error",
-					JOptionPane.ERROR_MESSAGE);
+					"A file name cannot contain any of the following characters:\n\\/:*?\"<>|", "Path error", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
 		return true;
@@ -3198,10 +3181,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			catch (Exception e) {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
-						JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(Page.this),
-								"The content on this page contains errors that\n"
-										+ "cannot be saved. Please correct them, and try\n" + "again.",
-								"Output data error", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(Page.this), "The content on this page contains errors that\n"
+								+ "cannot be saved. Please correct them, and try\n" + "again.", "Output data error", JOptionPane.ERROR_MESSAGE);
 					}
 				});
 				e.printStackTrace();
@@ -3227,8 +3208,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			}
 			plainTextWriter.write(file);
 		}
-		else if (s.endsWith(".gif") || s.endsWith(".jpg") || s.endsWith(".png") || s.endsWith(".jpeg")
-				|| s.endsWith(".pdb") || s.endsWith(".xyz")) {
+		else if (s.endsWith(".gif") || s.endsWith(".jpg") || s.endsWith(".png") || s.endsWith(".jpeg") || s.endsWith(".pdb") || s.endsWith(".xyz")) {
 			if (!pageAddress.equalsIgnoreCase(s))
 				ModelerUtilities.copyResource(pageAddress, file);
 		}
@@ -3250,17 +3230,15 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		String filename = FileUtilities.getFileName(pageAddress);
 		fileChooser.setSelectedFile(new File(FileUtilities.changeExtension(filename, "html")));
 		if (fileChooser.showSaveDialog(frame) == JFileChooser.APPROVE_OPTION) {
-			filename = FileUtilities.fileNameAutoExtend(FileFilterFactory.getFilter("html"), fileChooser
-					.getSelectedFile());
+			filename = FileUtilities.fileNameAutoExtend(FileFilterFactory.getFilter("html"), fileChooser.getSelectedFile());
 			File file = new File(filename);
 			if (file.exists()) {
 				s = Modeler.getInternationalText("FileExists");
 				String s1 = Modeler.getInternationalText("File");
 				String s2 = Modeler.getInternationalText("Overwrite");
 				String s3 = Modeler.getInternationalText("Exists");
-				if (JOptionPane.showConfirmDialog(frame, (s1 != null ? s1 : "File") + " " + file.getName() + " "
-						+ (s3 != null ? s3 : "exists") + ", " + (s2 != null ? s2 : "overwrite") + "?", s != null ? s
-						: "File exists", JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION) {
+				if (JOptionPane.showConfirmDialog(frame, (s1 != null ? s1 : "File") + " " + file.getName() + " " + (s3 != null ? s3 : "exists")
+						+ ", " + (s2 != null ? s2 : "overwrite") + "?", s != null ? s : "File exists", JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION) {
 					fileChooser.resetChoosableFileFilters();
 					return;
 				}
@@ -3310,8 +3288,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			if (latestPath != null)
 				fileChooser.setCurrentDirectory(new File(latestPath));
 			if (fileChooser.showSaveDialog(win) == JFileChooser.APPROVE_OPTION) {
-				final String filename = FileUtilities.fileNameAutoExtend(FileFilterFactory.getFilter("cml"),
-						fileChooser.getSelectedFile());
+				final String filename = FileUtilities.fileNameAutoExtend(FileFilterFactory.getFilter("cml"), fileChooser.getSelectedFile());
 				final File file2 = new File(filename);
 				boolean b = true;
 				if (file2.exists()) {
@@ -3319,9 +3296,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 					String s1 = Modeler.getInternationalText("File");
 					String s2 = Modeler.getInternationalText("Overwrite");
 					String s3 = Modeler.getInternationalText("Exists");
-					if (JOptionPane.showConfirmDialog(win, (s1 != null ? s1 : "File") + " " + file2.getName() + " "
-							+ (s3 != null ? s3 : "exists") + ", " + (s2 != null ? s2 : "overwrite") + "?",
-							s != null ? s : "File exists", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION
+					if (JOptionPane.showConfirmDialog(win, (s1 != null ? s1 : "File") + " " + file2.getName() + " " + (s3 != null ? s3 : "exists")
+							+ ", " + (s2 != null ? s2 : "overwrite") + "?", s != null ? s : "File exists", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION
 							|| isWriting()) {
 						b = false;
 					}
@@ -3417,8 +3393,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		fileChooser.setAccessory(null);
 		if (isRemote()) {
 			try {
-				fileChooser.setSelectedFile(new File(fileChooser.getCurrentDirectory(), FileUtilities
-						.getFileName(pageAddress)));
+				fileChooser.setSelectedFile(new File(fileChooser.getCurrentDirectory(), FileUtilities.getFileName(pageAddress)));
 			}
 			catch (NullPointerException npe) {
 				npe.printStackTrace();
@@ -3429,8 +3404,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			try {
 				File f2 = new File(fileChooser.getCurrentDirectory(), FileUtilities.getFileName(pageAddress));
 				if (f2.exists()) {
-					fileChooser.setSelectedFile(new File(fileChooser.getCurrentDirectory(), "Copy of "
-							+ FileUtilities.getFileName(pageAddress)));
+					fileChooser.setSelectedFile(new File(fileChooser.getCurrentDirectory(), "Copy of " + FileUtilities.getFileName(pageAddress)));
 				}
 				else {
 					fileChooser.setSelectedFile(f2);
@@ -3453,19 +3427,16 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				String s1 = Modeler.getInternationalText("File");
 				String s2 = Modeler.getInternationalText("Overwrite");
 				String s3 = Modeler.getInternationalText("Exists");
-				if (JOptionPane.showConfirmDialog(frame, (s1 != null ? s1 : "File") + " " + file.getName() + " "
-						+ (s3 != null ? s3 : "exists") + ", " + (s2 != null ? s2 : "overwrite") + "?", s != null ? s
-						: "File exists", JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION) {
+				if (JOptionPane.showConfirmDialog(frame, (s1 != null ? s1 : "File") + " " + file.getName() + " " + (s3 != null ? s3 : "exists")
+						+ ", " + (s2 != null ? s2 : "overwrite") + "?", s != null ? s : "File exists", JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION) {
 					fileChooser.resetChoosableFileFilters();
 					return false;
 				}
 				overwrite = true;
 			}
 
-			final PageEvent pe_beg = new PageEvent(this, overwrite ? PageEvent.PAGE_OVERWRITE_BEGIN
-					: PageEvent.PAGE_WRITE_BEGIN);
-			final PageEvent pe_end = new PageEvent(this, overwrite ? PageEvent.PAGE_OVERWRITE_END
-					: PageEvent.PAGE_WRITE_END);
+			final PageEvent pe_beg = new PageEvent(this, overwrite ? PageEvent.PAGE_OVERWRITE_BEGIN : PageEvent.PAGE_WRITE_BEGIN);
+			final PageEvent pe_end = new PageEvent(this, overwrite ? PageEvent.PAGE_OVERWRITE_END : PageEvent.PAGE_WRITE_END);
 
 			if (!isWriting()) {
 				final String newPageAddress = newAddress;
@@ -3528,8 +3499,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	public boolean writePage(ZipOutputStream zos) {
 		if (zos == null)
 			return false;
-		File zipDir = new File(Initializer.sharedInstance().getCacheDirectory(), FileUtilities
-				.removeSuffix(FileUtilities.getFileName(pageAddress)));
+		File zipDir = new File(Initializer.sharedInstance().getCacheDirectory(), FileUtilities.removeSuffix(FileUtilities.getFileName(pageAddress)));
 		zipDir.mkdir();
 		if (!isWriting()) {
 			synchronized (lock) {
@@ -3624,9 +3594,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			if (file.exists()) {
 				s = Modeler.getInternationalText("FileExists");
 				if (JOptionPane.showConfirmDialog(frame, "Zip file " + file.getName() + " exists, overwrite?\n\n"
-						+ "WARNING: The old files contained in the existing zip\n"
-						+ "file will be deleted if you choose to overwrite.", s != null ? s : "File exists",
-						JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION) {
+						+ "WARNING: The old files contained in the existing zip\n" + "file will be deleted if you choose to overwrite.",
+						s != null ? s : "File exists", JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION) {
 					fileChooser.resetChoosableFileFilters();
 					return false;
 				}
@@ -3723,8 +3692,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		}
 		else {
 			String fileName = FileUtilities.getFileName(path);
-			icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(
-					FileUtilities.getCodeBase(getAddress()) + fileName));
+			icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(FileUtilities.getCodeBase(getAddress()) + fileName));
 			((ImageIcon) icon).setDescription(fileName);
 			if (icon.getIconWidth() <= 0 || icon.getIconHeight() <= 0) {
 				icon = BulletIcon.ImageNotFoundIcon.sharedInstance();
@@ -3800,8 +3768,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		}
 		if (fillMode instanceof FillMode.GradientFill) {
 			FillMode.GradientFill gfm = (FillMode.GradientFill) fillMode;
-			GradientFactory.paintRect((Graphics2D) g, gfm.getStyle(), gfm.getVariant(), gfm.getColor1(), gfm
-					.getColor2(), 0, 0, getWidth(), getHeight());
+			GradientFactory.paintRect((Graphics2D) g, gfm.getStyle(), gfm.getVariant(), gfm.getColor1(), gfm.getColor2(), 0, 0, getWidth(),
+					getHeight());
 		}
 		else if (fillMode instanceof FillMode.PatternFill) {
 			Graphics2D g2 = (Graphics2D) g;
@@ -3878,12 +3846,11 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				}
 			};
 			pageLoadingThread.setPriority(LOADER_THREAD_PRIORITY);
-			pageLoadingThread.setUncaughtExceptionHandler(new DisasterHandler(DisasterHandler.LOAD_ERROR,
-					new Runnable() {
-						public void run() {
-							pageLoadingThread = null;
-						}
-					}, null, this));
+			pageLoadingThread.setUncaughtExceptionHandler(new DisasterHandler(DisasterHandler.LOAD_ERROR, new Runnable() {
+				public void run() {
+					pageLoadingThread = null;
+				}
+			}, null, this));
 			pageLoadingThread.start();
 		}
 	}
@@ -3914,8 +3881,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		t.setIndex(0);
 		insertComponent(t);
 		final String s = address;
-		SwingWorker worker = new SwingWorker("Load HTML", LOADER_THREAD_PRIORITY, new DisasterHandler(
-				DisasterHandler.LOAD_ERROR, null, null, this)) {
+		SwingWorker worker = new SwingWorker("Load HTML", LOADER_THREAD_PRIORITY, new DisasterHandler(DisasterHandler.LOAD_ERROR, null, null, this)) {
 			public Object construct() {
 				t.load(s, sendID);
 				return null;
@@ -3998,12 +3964,10 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		else {
 			boolean valid = true;
 			final String s = href.toLowerCase();
-			boolean mwClient = s.indexOf("client=mw") != -1
-					|| (s.startsWith(Modeler.getContextRoot()) && s.endsWith(".jsp"));
-			if (mwClient || s.endsWith(".cml") || s.endsWith(".mml") || s.endsWith(".gbl") || s.endsWith(".gif")
-					|| s.endsWith(".png") || s.endsWith(".jpg") || s.endsWith(".jpeg") || s.endsWith(".txt")
-					|| s.endsWith(".pdb") || s.endsWith(".xyz") || s.endsWith(".mws")
-					|| s.indexOf("/cgi-bin/htsearch?") != -1) {
+			boolean mwClient = s.indexOf("client=mw") != -1 || (s.startsWith(Modeler.getContextRoot()) && s.endsWith(".jsp"));
+			if (mwClient || s.endsWith(".cml") || s.endsWith(".mml") || s.endsWith(".gbl") || s.endsWith(".gif") || s.endsWith(".png")
+					|| s.endsWith(".jpg") || s.endsWith(".jpeg") || s.endsWith(".txt") || s.endsWith(".pdb") || s.endsWith(".xyz")
+					|| s.endsWith(".mws") || s.indexOf("/cgi-bin/htsearch?") != -1) {
 				if (targetIsBlank) {
 					notifyPageListeners(new PageEvent(this, PageEvent.OPEN_NEW_WINDOW, href, linkParam));
 				}
@@ -4022,36 +3986,36 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				visit(href);
 			}
 			else if (s.endsWith(".htm") || s.endsWith(".html")) {
-				ExternalClient.open(ExternalClient.HTML_CLIENT, href);
+				ExternalClient.open(ExternalClient.HTML_CLIENT, href, Page.this);
 			}
 			else if (s.endsWith(".pdf")) {
-				ExternalClient.open(ExternalClient.PDF_CLIENT, href);
+				ExternalClient.open(ExternalClient.PDF_CLIENT, href, Page.this);
 			}
 			else if (s.endsWith(".swf")) {
-				ExternalClient.open(ExternalClient.FLASH_CLIENT, href);
+				ExternalClient.open(ExternalClient.FLASH_CLIENT, href, Page.this);
 			}
 			else if (s.endsWith(".rm") || s.endsWith(".ram") || s.endsWith(".avi")) {
-				ExternalClient.open(ExternalClient.REALPLAYER_CLIENT, href);
+				ExternalClient.open(ExternalClient.REALPLAYER_CLIENT, href, Page.this);
 			}
 			else if (s.endsWith(".qt") || s.endsWith(".mov")) {
-				ExternalClient.open(ExternalClient.QUICKTIME_CLIENT, href);
+				ExternalClient.open(ExternalClient.QUICKTIME_CLIENT, href, Page.this);
 			}
 			else if (s.endsWith(".mpg") || s.endsWith(".mpeg") || s.endsWith(".mp3")) {
 				if (OS.startsWith("Mac")) {
-					ExternalClient.open(ExternalClient.QUICKTIME_CLIENT, href);
+					ExternalClient.open(ExternalClient.QUICKTIME_CLIENT, href, Page.this);
 				}
 				else {
-					ExternalClient.open(ExternalClient.REALPLAYER_CLIENT, href);
+					ExternalClient.open(ExternalClient.REALPLAYER_CLIENT, href, Page.this);
 				}
 			}
 			else if (s.endsWith(".jnlp")) {
-				ExternalClient.open(ExternalClient.JNLP_CLIENT, href);
+				ExternalClient.open(ExternalClient.JNLP_CLIENT, href, Page.this);
 			}
 			else if (FileUtilities.isRemote(href)) {
-				ExternalClient.open(ExternalClient.HTML_CLIENT, href);
+				ExternalClient.open(ExternalClient.HTML_CLIENT, href, Page.this);
 			}
 			else if (s.startsWith("mailto:") && href.indexOf("@") != -1) {
-				ExternalClient.open(ExternalClient.EMAIL_CLIENT, href.substring(href.indexOf(":") + 1, href.length()));
+				ExternalClient.open(ExternalClient.EMAIL_CLIENT, href.substring(href.indexOf(":") + 1, href.length()), Page.this);
 			}
 			else {
 				valid = false;
@@ -4059,9 +4023,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(Page.this),
-								"This hyperlink connects to an unrecognized type of document,\n"
-										+ "or an unsupported action.\n" + s0, "Hyperlink error",
-								JOptionPane.ERROR_MESSAGE);
+								"This hyperlink connects to an unrecognized type of document,\n" + "or an unsupported action.\n" + s0,
+								"Hyperlink error", JOptionPane.ERROR_MESSAGE);
 					}
 				});
 			}
@@ -4234,8 +4197,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	private void saveCheck(final String address) {
 		int opt = -1;
 		if (saveReminder != null && saveReminder.isChanged()) {
-			opt = isRemote() ? JOptionPane.NO_OPTION : saveReminder.showConfirmDialog(this, FileUtilities
-					.getFileName(pageAddress));
+			opt = isRemote() ? JOptionPane.NO_OPTION : saveReminder.showConfirmDialog(this, FileUtilities.getFileName(pageAddress));
 		}
 		boolean readAction = true;
 		switch (opt) {
@@ -4406,9 +4368,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			insertWrappedIcon(new ImageIcon(e.getImage(), e.getPath()));
 		}
 		else {
-			JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(Page.this),
-					"This document is not editable. Make it editable first.", "Document not editable",
-					JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(Page.this), "This document is not editable. Make it editable first.",
+					"Document not editable", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
@@ -4499,8 +4460,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	void processMouseMoved(MouseEvent e) {
 		if (!isEditable() && !isReading() && !isReadingModel()) {
 			String href = isHyperlinked(new Point(e.getX(), e.getY()));
-			setCursor(href != null ? Cursor.getPredefinedCursor(Cursor.HAND_CURSOR) : Cursor
-					.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			setCursor(href != null ? Cursor.getPredefinedCursor(Cursor.HAND_CURSOR) : Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 			if (urlDisplay != null)
 				urlDisplay.setText(href);
 		}
@@ -4932,8 +4892,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			for (Icon icon : selectedImages) {
 				if (icon instanceof ImageIcon) {
 					ImageIcon imageIcon = (ImageIcon) icon;
-					BufferedImage bi = new BufferedImage(imageIcon.getIconWidth(), imageIcon.getIconHeight(),
-							BufferedImage.TYPE_INT_RGB);
+					BufferedImage bi = new BufferedImage(imageIcon.getIconWidth(), imageIcon.getIconHeight(), BufferedImage.TYPE_INT_RGB);
 					Graphics bg = bi.getGraphics();
 					bg.setColor(Color.white);
 					bg.fillRect(0, 0, imageIcon.getIconWidth(), imageIcon.getIconHeight());
@@ -5265,8 +5224,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				Icon bi = BulletIcon.get(type);
 				if (bi == null) {
 					SimpleAttributeSet sas = new SimpleAttributeSet(as);
-					StyleConstants
-							.setLeftIndent(sas, currentIndent - INDENT_STEP > 0 ? currentIndent - INDENT_STEP : 0);
+					StyleConstants.setLeftIndent(sas, currentIndent - INDENT_STEP > 0 ? currentIndent - INDENT_STEP : 0);
 					doc.setParagraphAttributes(e.getStartOffset(), e.getEndOffset() - e.getStartOffset(), sas, false);
 					try {
 						doc.remove(e.getStartOffset(), 3);
@@ -5363,8 +5321,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	private boolean askToCreateNewPage() {
 		if (!isRemote() && isEditable()) {
 			if (saveReminder.isChanged()) {
-				int opt = isRemote() ? JOptionPane.NO_OPTION : saveReminder.showConfirmDialog(this, FileUtilities
-						.getFileName(pageAddress));
+				int opt = isRemote() ? JOptionPane.NO_OPTION : saveReminder.showConfirmDialog(this, FileUtilities.getFileName(pageAddress));
 				boolean newAction = false;
 				switch (opt) {
 				case JOptionPane.YES_OPTION: // save page first and continue to empty the page
@@ -5453,8 +5410,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		};
 		insertAtomContainerAction.putValue(Action.NAME, INSERT_ATOM_CONTAINER);
 		insertAtomContainerAction.putValue(Action.SHORT_DESCRIPTION, "Insert " + INSERT_ATOM_CONTAINER);
-		insertAtomContainerAction.putValue(Action.SMALL_ICON, new ImageIcon(Page.class
-				.getResource("images/MolecularModel.gif")));
+		insertAtomContainerAction.putValue(Action.SMALL_ICON, new ImageIcon(Page.class.getResource("images/MolecularModel.gif")));
 
 		insertGBContainerAction = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
@@ -5463,8 +5419,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		};
 		insertGBContainerAction.putValue(Action.NAME, INSERT_GB_CONTAINER);
 		insertGBContainerAction.putValue(Action.SHORT_DESCRIPTION, "Insert " + INSERT_GB_CONTAINER);
-		insertGBContainerAction
-				.putValue(Action.SMALL_ICON, new ImageIcon(getClass().getResource("images/GBModel.gif")));
+		insertGBContainerAction.putValue(Action.SMALL_ICON, new ImageIcon(getClass().getResource("images/GBModel.gif")));
 
 		insertChemContainerAction = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
@@ -5473,8 +5428,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		};
 		insertChemContainerAction.putValue(Action.NAME, INSERT_CHEM_CONTAINER);
 		insertChemContainerAction.putValue(Action.SHORT_DESCRIPTION, "Insert " + INSERT_CHEM_CONTAINER);
-		insertChemContainerAction.putValue(Action.SMALL_ICON, new ImageIcon(getClass().getResource(
-				"images/ChemReaction.gif")));
+		insertChemContainerAction.putValue(Action.SMALL_ICON, new ImageIcon(getClass().getResource("images/ChemReaction.gif")));
 
 		insertProsynContainerAction = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
@@ -5483,8 +5437,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		};
 		insertProsynContainerAction.putValue(Action.NAME, INSERT_PROSYN_CONTAINER);
 		insertProsynContainerAction.putValue(Action.SHORT_DESCRIPTION, "Insert " + INSERT_PROSYN_CONTAINER);
-		insertProsynContainerAction.putValue(Action.SMALL_ICON, new ImageIcon(getClass().getResource(
-				"images/Prosyn.gif")));
+		insertProsynContainerAction.putValue(Action.SMALL_ICON, new ImageIcon(getClass().getResource("images/Prosyn.gif")));
 
 		insertFileAction = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
@@ -5502,9 +5455,10 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		};
 		newAction.putValue(Action.NAME, "New Blank Page");
 		newAction.putValue(Action.SHORT_DESCRIPTION, "Create a new blank page");
-		newAction.putValue(Action.ACCELERATOR_KEY, mac ? KeyStroke
-				.getKeyStroke(KeyEvent.VK_N, KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_N,
-				KeyEvent.CTRL_MASK, true));
+		newAction.putValue(
+				Action.ACCELERATOR_KEY,
+				mac ? KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.CTRL_MASK,
+						true));
 
 		closeAction = new DefaultAction() {
 			public void actionPerformed(ActionEvent e) {
@@ -5515,8 +5469,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		};
 		closeAction.putValue(Action.NAME, CLOSE_PAGE);
 		closeAction.putValue(Action.SHORT_DESCRIPTION, "Close this page");
-		closeAction.putValue(Action.ACCELERATOR_KEY, mac ? KeyStroke.getKeyStroke(KeyEvent.VK_W, KeyEvent.META_MASK)
-				: KeyStroke.getKeyStroke(KeyEvent.VK_W, KeyEvent.CTRL_MASK));
+		closeAction.putValue(Action.ACCELERATOR_KEY,
+				mac ? KeyStroke.getKeyStroke(KeyEvent.VK_W, KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_W, KeyEvent.CTRL_MASK));
 
 		openAction = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
@@ -5525,8 +5479,10 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		};
 		openAction.putValue(Action.NAME, OPEN_PAGE);
 		openAction.putValue(Action.SHORT_DESCRIPTION, "Open a page");
-		openAction.putValue(Action.ACCELERATOR_KEY, mac ? KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.META_MASK,
-				true) : KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_MASK, true));
+		openAction.putValue(
+				Action.ACCELERATOR_KEY,
+				mac ? KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_MASK,
+						true));
 
 		saveAction = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
@@ -5535,8 +5491,10 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		};
 		saveAction.putValue(Action.NAME, SAVE_PAGE);
 		saveAction.putValue(Action.SHORT_DESCRIPTION, "Save this page");
-		saveAction.putValue(Action.ACCELERATOR_KEY, mac ? KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.META_MASK,
-				true) : KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_MASK, true));
+		saveAction.putValue(
+				Action.ACCELERATOR_KEY,
+				mac ? KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_MASK,
+						true));
 
 		saveAsAction = new DefaultAction() {
 			public void actionPerformed(ActionEvent e) {
@@ -5545,9 +5503,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		};
 		saveAsAction.putValue(Action.NAME, SAVE_PAGE_AS);
 		saveAsAction.putValue(Action.SHORT_DESCRIPTION, "Save this page as");
-		saveAsAction.putValue(Action.ACCELERATOR_KEY, mac ? KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.META_MASK
-				| KeyEvent.SHIFT_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_MASK
-				| KeyEvent.SHIFT_MASK, true));
+		saveAsAction.putValue(Action.ACCELERATOR_KEY, mac ? KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.META_MASK | KeyEvent.SHIFT_MASK, true)
+				: KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK, true));
 
 		saveAsAppletAction = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
@@ -5609,9 +5566,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		};
 		pageSetupAction.putValue(Action.NAME, "Page Setup");
 		pageSetupAction.putValue(Action.SHORT_DESCRIPTION, "Set up printing format");
-		pageSetupAction.putValue(Action.ACCELERATOR_KEY, mac ? KeyStroke.getKeyStroke(KeyEvent.VK_P, KeyEvent.META_MASK
-				| KeyEvent.SHIFT_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_P, KeyEvent.CTRL_MASK
-				| KeyEvent.SHIFT_MASK, true));
+		pageSetupAction.putValue(Action.ACCELERATOR_KEY, mac ? KeyStroke.getKeyStroke(KeyEvent.VK_P, KeyEvent.META_MASK | KeyEvent.SHIFT_MASK, true)
+				: KeyStroke.getKeyStroke(KeyEvent.VK_P, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK, true));
 
 		printAction = new DefaultAction() {
 			public void actionPerformed(ActionEvent e) {
@@ -5627,8 +5583,10 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		};
 		printAction.putValue(Action.NAME, "Print");
 		printAction.putValue(Action.SHORT_DESCRIPTION, "Print this page");
-		printAction.putValue(Action.ACCELERATOR_KEY, mac ? KeyStroke.getKeyStroke(KeyEvent.VK_P, KeyEvent.META_MASK,
-				true) : KeyStroke.getKeyStroke(KeyEvent.VK_P, KeyEvent.CTRL_MASK, true));
+		printAction.putValue(
+				Action.ACCELERATOR_KEY,
+				mac ? KeyStroke.getKeyStroke(KeyEvent.VK_P, KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_P, KeyEvent.CTRL_MASK,
+						true));
 
 		selectAllAction = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
@@ -5639,9 +5597,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		};
 		selectAllAction.putValue(Action.NAME, DefaultEditorKit.selectAllAction);
 		selectAllAction.putValue(Action.SHORT_DESCRIPTION, DefaultEditorKit.selectAllAction);
-		selectAllAction.putValue(Action.ACCELERATOR_KEY, mac ? KeyStroke
-				.getKeyStroke(KeyEvent.VK_A, KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_A,
-				KeyEvent.CTRL_MASK));
+		selectAllAction.putValue(Action.ACCELERATOR_KEY,
+				mac ? KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.CTRL_MASK));
 
 		symbolAction = new DefaultAction() {
 			public void actionPerformed(ActionEvent e) {
@@ -5664,15 +5621,16 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		hyperlinkAction.putValue(Action.NAME, "Hyperlink");
 		hyperlinkAction.putValue(Action.SHORT_DESCRIPTION, "Add a hyperlink to the selected area");
 		hyperlinkAction.putValue(Action.SMALL_ICON, new ImageIcon(getClass().getResource("images/hyperlink.png")));
-		hyperlinkAction.putValue(Action.ACCELERATOR_KEY, mac ? KeyStroke.getKeyStroke(KeyEvent.VK_K,
-				KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_K, KeyEvent.CTRL_MASK, true));
+		hyperlinkAction.putValue(
+				Action.ACCELERATOR_KEY,
+				mac ? KeyStroke.getKeyStroke(KeyEvent.VK_K, KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_K, KeyEvent.CTRL_MASK,
+						true));
 
 		fontAction = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
 				if (fontDialog == null)
 					fontDialog = new FontDialog(Page.this);
-				AttributeSet a = ((DefaultStyledDocument) Page.this.getDocument()).getCharacterElement(
-						getCaretPosition() - 1).getAttributes();
+				AttributeSet a = ((DefaultStyledDocument) Page.this.getDocument()).getCharacterElement(getCaretPosition() - 1).getAttributes();
 				fontDialog.setAttributes(a);
 				fontDialog.setVisible(true);
 				if (fontDialog.getOption() == JOptionPane.OK_OPTION) {
@@ -5685,16 +5643,14 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		fontAction.putValue(Action.NAME, "Font");
 		fontAction.putValue(Action.SHORT_DESCRIPTION, "Font");
 		fontAction.putValue(Action.SMALL_ICON, new ImageIcon(getClass().getResource("images/Font.gif")));
-		fontAction.putValue(Action.ACCELERATOR_KEY, mac ? KeyStroke.getKeyStroke(KeyEvent.VK_F, KeyEvent.META_MASK
-				| KeyEvent.SHIFT_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_F, KeyEvent.CTRL_MASK
-				| KeyEvent.SHIFT_MASK, true));
+		fontAction.putValue(Action.ACCELERATOR_KEY, mac ? KeyStroke.getKeyStroke(KeyEvent.VK_F, KeyEvent.META_MASK | KeyEvent.SHIFT_MASK, true)
+				: KeyStroke.getKeyStroke(KeyEvent.VK_F, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK, true));
 
 		paragraphAction = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
 				if (paragraphDialog == null)
 					paragraphDialog = new ParagraphDialog(Page.this);
-				AttributeSet a = ((DefaultStyledDocument) getDocument()).getParagraphElement(
-						Page.this.getCaretPosition()).getAttributes();
+				AttributeSet a = ((DefaultStyledDocument) getDocument()).getParagraphElement(Page.this.getCaretPosition()).getAttributes();
 				paragraphDialog.setAttributes(a);
 				paragraphDialog.setVisible(true);
 				if (paragraphDialog.getOption() == JOptionPane.OK_OPTION) {
@@ -5706,9 +5662,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		paragraphAction.putValue(Action.NAME, "Paragraph");
 		paragraphAction.putValue(Action.SHORT_DESCRIPTION, "Change paragraph");
 		paragraphAction.putValue(Action.SMALL_ICON, new ImageIcon(getClass().getResource("images/Paragraph.gif")));
-		paragraphAction.putValue(Action.ACCELERATOR_KEY, mac ? KeyStroke.getKeyStroke(KeyEvent.VK_G, KeyEvent.META_MASK
-				| KeyEvent.SHIFT_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_G, KeyEvent.CTRL_MASK
-				| KeyEvent.SHIFT_MASK, true));
+		paragraphAction.putValue(Action.ACCELERATOR_KEY, mac ? KeyStroke.getKeyStroke(KeyEvent.VK_G, KeyEvent.META_MASK | KeyEvent.SHIFT_MASK, true)
+				: KeyStroke.getKeyStroke(KeyEvent.VK_G, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK, true));
 
 		insertBulletAction = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
@@ -5721,9 +5676,10 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		insertBulletAction.putValue(Action.NAME, "Bullet");
 		insertBulletAction.putValue(Action.SHORT_DESCRIPTION, "Insert Bullet");
 		insertBulletAction.putValue(Action.SMALL_ICON, new ImageIcon(getClass().getResource("images/Bullet.gif")));
-		insertBulletAction.putValue(Action.ACCELERATOR_KEY, mac ? KeyStroke.getKeyStroke(KeyEvent.VK_B,
-				KeyEvent.META_MASK | KeyEvent.SHIFT_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_B,
-				KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK, true));
+		insertBulletAction.putValue(
+				Action.ACCELERATOR_KEY,
+				mac ? KeyStroke.getKeyStroke(KeyEvent.VK_B, KeyEvent.META_MASK | KeyEvent.SHIFT_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_B,
+						KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK, true));
 
 		propertiesAction = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
@@ -5767,8 +5723,10 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		public UndoAction() {
 			super(UNDO);
 			putValue(NAME, UNDO);
-			putValue(ACCELERATOR_KEY, OS.startsWith("Mac") ? KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.META_MASK)
-					: KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.CTRL_MASK));
+			putValue(
+					ACCELERATOR_KEY,
+					OS.startsWith("Mac") ? KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_Z,
+							KeyEvent.CTRL_MASK));
 		}
 
 		public void actionPerformed(ActionEvent e) {
@@ -5800,8 +5758,8 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		public RedoAction() {
 			super(REDO);
 			putValue(NAME, REDO);
-			putValue(ACCELERATOR_KEY, OS.startsWith("Mac") ? KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.META_MASK
-					| KeyEvent.SHIFT_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_Y, KeyEvent.CTRL_MASK));
+			putValue(ACCELERATOR_KEY, OS.startsWith("Mac") ? KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.META_MASK | KeyEvent.SHIFT_MASK)
+					: KeyStroke.getKeyStroke(KeyEvent.VK_Y, KeyEvent.CTRL_MASK));
 		}
 
 		public void actionPerformed(ActionEvent e) {

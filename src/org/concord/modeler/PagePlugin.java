@@ -24,6 +24,7 @@ import static javax.swing.Action.SHORT_DESCRIPTION;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
@@ -154,9 +155,8 @@ abstract public class PagePlugin extends JPanel implements Embeddable, Scriptabl
 				e.printStackTrace();
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
-						JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(PagePlugin.this),
-								"Fatal error in starting plugin: " + className + ", thrown by: " + e, "Error",
-								JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(PagePlugin.this), "Fatal error in starting plugin: "
+								+ className + ", thrown by: " + e, "Error", JOptionPane.ERROR_MESSAGE);
 					}
 				});
 			}
@@ -649,8 +649,8 @@ abstract public class PagePlugin extends JPanel implements Embeddable, Scriptabl
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				removeAll();
-				add(new JLabel("<html>Starting " + (PagePlugin.this instanceof PageApplet ? "Applet " : "Plugin ")
-						+ className + "......</html>", SwingConstants.CENTER), BorderLayout.CENTER);
+				add(new JLabel("<html>Starting " + (PagePlugin.this instanceof PageApplet ? "Applet " : "Plugin ") + className + "......</html>",
+						SwingConstants.CENTER), BorderLayout.CENTER);
 				validate();
 				repaint();
 			}
@@ -666,8 +666,7 @@ abstract public class PagePlugin extends JPanel implements Embeddable, Scriptabl
 			public void run() {
 				removeAll();
 				StringBuffer b = new StringBuffer("<html><table width=100%><tr><td><b>"
-						+ (PagePlugin.this instanceof PageApplet ? "Applet" : "Plugin")
-						+ " Info</b><hr></td></tr><tr><td>");
+						+ (PagePlugin.this instanceof PageApplet ? "Applet" : "Plugin") + " Info</b><hr></td></tr><tr><td>");
 				b.append(s);
 				b.append("</td></tr>");
 				if (parameterMap != null) {
@@ -693,7 +692,7 @@ abstract public class PagePlugin extends JPanel implements Embeddable, Scriptabl
 									page.getNavigator().visitLocation(url);
 								}
 								else {
-									openLink(url);
+									openLink(url, page);
 								}
 							}
 						});
@@ -708,35 +707,35 @@ abstract public class PagePlugin extends JPanel implements Embeddable, Scriptabl
 		});
 	}
 
-	static void openLink(String t) {
+	static void openLink(String t, Component parent) {
 		if (t == null)
 			return;
 		String s = t.toLowerCase();
 		if (s.endsWith(".htm") || s.endsWith(".html")) {
-			ExternalClient.open(ExternalClient.HTML_CLIENT, t);
+			ExternalClient.open(ExternalClient.HTML_CLIENT, t, parent);
 		}
 		else if (s.endsWith(".swf")) {
-			ExternalClient.open(ExternalClient.FLASH_CLIENT, t);
+			ExternalClient.open(ExternalClient.FLASH_CLIENT, t, parent);
 		}
 		else if (s.endsWith(".rm") || s.endsWith(".ram") || s.endsWith(".avi")) {
-			ExternalClient.open(ExternalClient.REALPLAYER_CLIENT, t);
+			ExternalClient.open(ExternalClient.REALPLAYER_CLIENT, t, parent);
 		}
 		else if (s.endsWith(".qt") || s.endsWith(".mov")) {
-			ExternalClient.open(ExternalClient.QUICKTIME_CLIENT, t);
+			ExternalClient.open(ExternalClient.QUICKTIME_CLIENT, t, parent);
 		}
 		else if (s.endsWith(".mpg") || s.endsWith(".mpeg") || s.endsWith(".mp3")) {
 			if (Modeler.isMac()) {
-				ExternalClient.open(ExternalClient.QUICKTIME_CLIENT, t);
+				ExternalClient.open(ExternalClient.QUICKTIME_CLIENT, t, parent);
 			}
 			else {
-				ExternalClient.open(ExternalClient.REALPLAYER_CLIENT, t);
+				ExternalClient.open(ExternalClient.REALPLAYER_CLIENT, t, parent);
 			}
 		}
 		else if (s.endsWith(".jnlp")) {
-			ExternalClient.open(ExternalClient.JNLP_CLIENT, t);
+			ExternalClient.open(ExternalClient.JNLP_CLIENT, t, parent);
 		}
 		else {
-			ExternalClient.open(ExternalClient.HTML_CLIENT, t);
+			ExternalClient.open(ExternalClient.HTML_CLIENT, t, parent);
 		}
 	}
 
@@ -846,8 +845,7 @@ abstract public class PagePlugin extends JPanel implements Embeddable, Scriptabl
 		if (uid != null)
 			sb.append("<uid>" + uid + "</uid>\n");
 
-		sb.append("<resource>" + XMLCharacterEncoder.encode(FileUtilities.getFileName(getResourceAddress()))
-				+ "</resource>");
+		sb.append("<resource>" + XMLCharacterEncoder.encode(FileUtilities.getFileName(getResourceAddress())) + "</resource>");
 
 		String s = parametersToString();
 		if (s != null)

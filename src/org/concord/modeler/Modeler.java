@@ -1939,7 +1939,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 				true) : KeyStroke.getKeyStroke(KeyEvent.VK_U, KeyEvent.CTRL_MASK, true));
 		menuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ExternalClient.open(ExternalClient.HTML_CLIENT, page.getAddress());
+				ExternalClient.open(ExternalClient.HTML_CLIENT, page.getAddress(), page);
 			}
 		});
 		menu.add(menuItem);
