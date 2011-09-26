@@ -133,8 +133,7 @@ class PageBarGraphMaker extends ComponentMaker {
 		if (!checkAndSetUid(uidField.getText(), pageBarGraph, dialog))
 			return false;
 		if (minField.getValue() >= maxField.getValue()) {
-			JOptionPane.showMessageDialog(dialog, "Upper bound must be greater than lower bound.", "Input error",
-					JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(dialog, "Upper bound must be greater than lower bound.", "Input error", JOptionPane.ERROR_MESSAGE);
 			focusTextComponent = maxField;
 			return false;
 		}
@@ -146,8 +145,8 @@ class PageBarGraphMaker extends ComponentMaker {
 			pageBarGraph.setAverageType(PageBarGraph.SIMPLE_RUNNING_AVERAGE);
 			int n = (int) parameterField.getValue();
 			if (n < 10 || n > Modeler.tapeLength) {
-				JOptionPane.showMessageDialog(dialog, "The number of sampling points you set " + n + " is illegal.",
-						"Sampling points error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(dialog, "The number of sampling points you set " + n + " is illegal.", "Sampling points error",
+						JOptionPane.ERROR_MESSAGE);
 				return false;
 			}
 			pageBarGraph.setSamplingPoints(n);
@@ -156,8 +155,8 @@ class PageBarGraphMaker extends ComponentMaker {
 			pageBarGraph.setAverageType(PageBarGraph.EXPONENTIAL_RUNNING_AVERAGE);
 			float sf = parameterField.getValue();
 			if (sf < 0 || sf > 1) {
-				JOptionPane.showMessageDialog(dialog, "The smoothing factor you set " + sf + " is illegal.",
-						"Smoothing factor error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(dialog, "The smoothing factor you set " + sf + " is illegal.", "Smoothing factor error",
+						JOptionPane.ERROR_MESSAGE);
 				return false;
 			}
 			pageBarGraph.setSmoothingFactor(sf);
@@ -171,8 +170,7 @@ class PageBarGraphMaker extends ComponentMaker {
 		pageBarGraph.setMaximumIntegerDigits(maximumIntegerDigitField.getValue());
 		pageBarGraph.setMinorTicks(((Integer) minorTickSpinner.getValue()));
 		pageBarGraph.setMajorTicks(((Integer) majorTickSpinner.getValue()));
-		pageBarGraph.setOrientation(orieComboBox.getSelectedIndex() == 0 ? PageBarGraph.HORIZONTAL
-				: PageBarGraph.VERTICAL);
+		pageBarGraph.setOrientation(orieComboBox.getSelectedIndex() == 0 ? PageBarGraph.HORIZONTAL : PageBarGraph.VERTICAL);
 		pageBarGraph.setBackground(bgComboBox.getSelectedColor());
 		pageBarGraph.setForeground(fgComboBox.getSelectedColor());
 		pageBarGraph.setPaintTitle(titleComboBox.getSelectedIndex() == 0);
@@ -184,8 +182,8 @@ class PageBarGraphMaker extends ComponentMaker {
 		if (obj instanceof DataQueue) {
 			pageBarGraph.setTimeSeriesName(((DataQueue) obj).getName());
 		}
-		if (descriptionField.getText() != null && !descriptionField.getText().trim().equals(""))
-			pageBarGraph.setDescription(descriptionField.getText());
+		// if (descriptionField.getText() != null && !descriptionField.getText().trim().equals(""))
+		pageBarGraph.setDescription(descriptionField.getText());
 		Model m = (Model) modelComboBox.getSelectedItem();
 		m.addModelListener(pageBarGraph);
 		m.getMovie().addMovieListener(pageBarGraph);
@@ -369,8 +367,8 @@ class PageBarGraphMaker extends ComponentMaker {
 				for (Iterator it = qg.iterator(); it.hasNext();) {
 					q = (DataQueue) it.next();
 					s = q.toString();
-					if (!s.startsWith("Rx:") && !s.startsWith("Ry:") && !s.startsWith("Vx:") && !s.startsWith("Vy:")
-							&& !s.startsWith("Ax:") && !s.startsWith("Ay:")) {
+					if (!s.startsWith("Rx:") && !s.startsWith("Ry:") && !s.startsWith("Vx:") && !s.startsWith("Vy:") && !s.startsWith("Ax:")
+							&& !s.startsWith("Ay:")) {
 						timeSeriesComboBox.addItem(q);
 					}
 				}
@@ -453,8 +451,7 @@ class PageBarGraphMaker extends ComponentMaker {
 		button = new JButton(s != null ? s : "Help");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Modeler.openWithNewInstance(pageBarGraph.getPage().getNavigator().getHomeDirectory()
-						+ "tutorial/insertBarGraph.cml");
+				Modeler.openWithNewInstance(pageBarGraph.getPage().getNavigator().getHomeDirectory() + "tutorial/insertBarGraph.cml");
 			}
 		});
 		p.add(button);
@@ -477,8 +474,7 @@ class PageBarGraphMaker extends ComponentMaker {
 			smallFont = new Font(modelComboBox.getFont().getFamily(), modelComboBox.getFont().getStyle(), 10);
 		modelComboBox.setFont(smallFont);
 		modelComboBox.setRenderer(new LabelRenderer());
-		modelComboBox
-				.setToolTipText("If there are multiple models on the page, select the one that outputs to this bar graph.");
+		modelComboBox.setToolTipText("If there are multiple models on the page, select the one that outputs to this bar graph.");
 		p.add(modelComboBox);
 
 		// row 2
@@ -500,8 +496,7 @@ class PageBarGraphMaker extends ComponentMaker {
 		// row 4
 		s = Modeler.getInternationalText("AverageType");
 		p.add(new JLabel(s != null ? s : "Average type", SwingConstants.LEFT));
-		averageTypeComboBox = new JComboBox(new String[] { "Growing-point running average", "Simple running average",
-				"Exponential running average" });
+		averageTypeComboBox = new JComboBox(new String[] { "Growing-point running average", "Simple running average", "Exponential running average" });
 		averageTypeComboBox.setToolTipText("Select the method of calculating the running average.");
 		averageTypeComboBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
@@ -656,8 +651,7 @@ class PageBarGraphMaker extends ComponentMaker {
 		s = Modeler.getInternationalText("MajorTicks");
 		p.add(new JLabel(s != null ? s : "Major ticks", SwingConstants.LEFT));
 		majorTickSpinner = new JSpinner(new SpinnerNumberModel(pageBarGraph.getMajorTicks(), 0, 20, 1));
-		((JSpinner.DefaultEditor) majorTickSpinner.getEditor()).getTextField().setToolTipText(
-				"Select the major tick spacing.");
+		((JSpinner.DefaultEditor) majorTickSpinner.getEditor()).getTextField().setToolTipText("Select the major tick spacing.");
 		((JSpinner.DefaultEditor) majorTickSpinner.getEditor()).getTextField().addActionListener(okListener);
 		p.add(majorTickSpinner);
 
@@ -665,8 +659,7 @@ class PageBarGraphMaker extends ComponentMaker {
 		s = Modeler.getInternationalText("MinorTicks");
 		p.add(new JLabel(s != null ? s : "Minor ticks", SwingConstants.LEFT));
 		minorTickSpinner = new JSpinner(new SpinnerNumberModel(pageBarGraph.getMinorTicks(), 0, 100, 1));
-		((JSpinner.DefaultEditor) minorTickSpinner.getEditor()).getTextField().setToolTipText(
-				"Select the minor tick spacing.");
+		((JSpinner.DefaultEditor) minorTickSpinner.getEditor()).getTextField().setToolTipText("Select the minor tick spacing.");
 		((JSpinner.DefaultEditor) minorTickSpinner.getEditor()).getTextField().addActionListener(okListener);
 		p.add(minorTickSpinner);
 
@@ -681,8 +674,7 @@ class PageBarGraphMaker extends ComponentMaker {
 		s = Modeler.getInternationalText("MaximumFractionDigits");
 		p.add(new JLabel(s != null ? s : "Maximum fraction digits", SwingConstants.LEFT));
 		maximumFractionDigitField = new IntegerTextField(5, 0, 20);
-		maximumFractionDigitField
-				.setToolTipText("Sets the maximum number of digits allowed in the fraction portion of a number");
+		maximumFractionDigitField.setToolTipText("Sets the maximum number of digits allowed in the fraction portion of a number");
 		maximumFractionDigitField.addActionListener(okListener);
 		p.add(maximumFractionDigitField);
 
@@ -690,8 +682,7 @@ class PageBarGraphMaker extends ComponentMaker {
 		s = Modeler.getInternationalText("MaximumIntegerDigits");
 		p.add(new JLabel(s != null ? s : "Maximum integer digits", SwingConstants.LEFT));
 		maximumIntegerDigitField = new IntegerTextField(1, 0, 20);
-		maximumIntegerDigitField
-				.setToolTipText("Sets the maximum number of digits allowed in the integer portion of a number");
+		maximumIntegerDigitField.setToolTipText("Sets the maximum number of digits allowed in the integer portion of a number");
 		maximumIntegerDigitField.addActionListener(okListener);
 		p.add(maximumIntegerDigitField);
 

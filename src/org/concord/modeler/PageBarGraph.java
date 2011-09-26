@@ -300,8 +300,6 @@ public class PageBarGraph extends BarGraph implements Embeddable, Scriptable, Mo
 
 	public void setTimeSeriesName(String s) {
 		timeSeriesName = s;
-		if (getDescription() == null || getDescription().trim().equals(""))
-			setDescription(s);
 	}
 
 	public String getTimeSeriesName() {
