@@ -91,6 +91,7 @@ public class PageBarGraph extends BarGraph implements Embeddable, Scriptable, Mo
 			smoothingFactor = g.smoothingFactor;
 			break;
 		}
+		setAverageOnly(g.getAverageOnly());
 		setTimeSeriesName(g.timeSeriesName);
 		setDescription(g.getDescription());
 		setMultiplier(g.getMultiplier());
