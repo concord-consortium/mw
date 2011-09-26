@@ -125,12 +125,8 @@ public class BarGraph extends JComponent implements SwingConstants {
 	}
 
 	public void setValue(double d) {
-		if (multiplier == 1.0f) {
-			value = d + addend;
-		}
-		else {
-			value = d * multiplier + addend;
-		}
+		value = d * multiplier + addend;
+		setToolTipText(description + ": " + formatter.format(value));
 	}
 
 	public double getValue() {
@@ -138,12 +134,7 @@ public class BarGraph extends JComponent implements SwingConstants {
 	}
 
 	public void setAverage(double d) {
-		if (multiplier == 1.0f) {
-			average = d + addend;
-		}
-		else {
-			average = d * multiplier + addend;
-		}
+		average = d * multiplier + addend;
 	}
 
 	public double getAverage() {
@@ -245,8 +236,7 @@ public class BarGraph extends JComponent implements SwingConstants {
 	}
 
 	private Color getMedianColor() {
-		return new Color((getBackground().getRed() + getForeground().getRed()) / 2,
-				(getBackground().getGreen() + getForeground().getGreen()) / 2,
+		return new Color((getBackground().getRed() + getForeground().getRed()) / 2, (getBackground().getGreen() + getForeground().getGreen()) / 2,
 				(getBackground().getBlue() + getForeground().getBlue()) / 2);
 	}
 
@@ -292,14 +282,14 @@ public class BarGraph extends JComponent implements SwingConstants {
 			int aver = 0;
 			if (max * min >= 0.0) {
 				if (averageOnly) {
-					tube = (int) ((average - min) * tubeUnit);
+					tube = (int) Math.round((average - min) * tubeUnit);
 					g2.fillRect(0, dim.height - tube, tubeWidth, tube);
 				}
 				else {
-					tube = (int) ((value - min) * tubeUnit);
+					tube = (int) Math.round((value - min) * tubeUnit);
 					g2.fillRect(0, dim.height - tube, tubeWidth, tube);
 					if (average != 0.0) {
-						aver = (int) ((average - min) * tubeUnit);
+						aver = (int) Math.round((average - min) * tubeUnit);
 						g2.setColor(getMedianColor());
 						int delta = tubeWidth / 2 > 5 ? 5 : tubeWidth / 2;
 						int tubeh = dim.height - aver;
@@ -321,8 +311,8 @@ public class BarGraph extends JComponent implements SwingConstants {
 			}
 			else {
 				if (averageOnly) {
-					tube = (int) (average * tubeUnit);
-					int zero = (int) (max * tubeUnit);
+					tube = (int) Math.round(average * tubeUnit);
+					int zero = (int) Math.round(max * tubeUnit);
 					if (tube >= 0) {
 						g2.fillRect(0, zero - tube, tubeWidth, tube);
 					}
@@ -331,8 +321,8 @@ public class BarGraph extends JComponent implements SwingConstants {
 					}
 				}
 				else {
-					tube = (int) (value * tubeUnit);
-					int zero = (int) (max * tubeUnit);
+					tube = (int) Math.round(value * tubeUnit);
+					int zero = (int) Math.round(max * tubeUnit);
 					if (tube >= 0) {
 						g2.fillRect(0, zero - tube, tubeWidth, tube);
 					}
@@ -340,7 +330,7 @@ public class BarGraph extends JComponent implements SwingConstants {
 						g2.fillRect(0, zero, tubeWidth, -tube);
 					}
 					if (average != 0.0) {
-						aver = (int) (average * tubeUnit);
+						aver = (int) Math.round(average * tubeUnit);
 						g2.setColor(getMedianColor());
 						int delta = tubeWidth / 2 > 5 ? 5 : tubeWidth / 2;
 						int tubeh = zero - aver;
@@ -363,28 +353,28 @@ public class BarGraph extends JComponent implements SwingConstants {
 			g2.setColor(Color.black);
 			g2.drawRect(0, 0, tubeWidth, dim.height - 1);
 			if (paintTicks) {
-				float dely = (float) dim.height / (float) minorTicks;
-				int mult = (int) (minorTicks * inverseMajorTicks);
+				float dely = (float) (dim.height - 1) / (float) minorTicks;
+				int mult = (int) Math.round(minorTicks * inverseMajorTicks);
 				if (mult == 0)
 					mult = 1;
-				for (int i = 0; i < minorTicks; i++) {
+				for (int i = 0; i <= minorTicks; i++) {
 					if (i % mult == 0) {
-						g2.drawLine(tubeWidth, (int) (dely * i), tubeWidth + 4, (int) (dely * i));
+						g2.drawLine(tubeWidth, (int) Math.round(dely * i), tubeWidth + 4, (int) Math.round(dely * i));
 					}
 					else {
-						g2.drawLine(tubeWidth, (int) (dely * i), tubeWidth + 2, (int) (dely * i));
+						g2.drawLine(tubeWidth, (int) Math.round(dely * i), tubeWidth + 2, (int) Math.round(dely * i));
 					}
 				}
 			}
 			if (paintLabels) {
-				float dely = dim.height * inverseMajorTicks;
+				float dely = (dim.height - 1) * inverseMajorTicks;
 				String s = formatter.format(min);
 				g2.drawString(s, tubeWidth + 8, dim.height - h / 4);
 				s = formatter.format(max);
 				g2.drawString(s, tubeWidth + 8, h);
 				for (int i = 1; i < majorTicks; i++) {
 					s = formatter.format(min + i * (max - min) * inverseMajorTicks);
-					g2.drawString(s, tubeWidth + 8, dim.height - (int) (dely * i) + h / 4);
+					g2.drawString(s, tubeWidth + 8, dim.height - (int) Math.round(dely * i) + h / 4);
 				}
 			}
 			if (paintTitle) {
@@ -414,14 +404,14 @@ public class BarGraph extends JComponent implements SwingConstants {
 			g2.setColor(getForeground());
 			if (min * max >= 0) {
 				if (averageOnly) {
-					tube = (int) ((average - min) * tubeUnit);
-					g2.fillRect(0, 0, tube, tubeHeight);
+					tube = (int) Math.round((average - min) * tubeUnit);
+					g2.fillRect(1, 0, tube, tubeHeight);
 				}
 				else {
-					tube = (int) ((value - min) * tubeUnit);
-					g2.fillRect(0, 0, tube, tubeHeight);
+					tube = (int) Math.round((value - min) * tubeUnit);
+					g2.fillRect(1, 0, tube, tubeHeight);
 					if (average != 0.0) {
-						aver = (int) ((average - min) * tubeUnit);
+						aver = (int) Math.round((average - min) * tubeUnit);
 						g2.setColor(getMedianColor());
 						int delta = tubeHeight / 2 > 5 ? 5 : tubeHeight / 2;
 						if (a == null)
@@ -442,8 +432,8 @@ public class BarGraph extends JComponent implements SwingConstants {
 			}
 			else {
 				if (averageOnly) {
-					tube = (int) (average * tubeUnit);
-					int zero = -(int) (min * tubeUnit);
+					tube = (int) Math.round(average * tubeUnit);
+					int zero = -(int) Math.round(min * tubeUnit);
 					if (tube >= 0) {
 						g2.fillRect(zero, 0, tube, tubeHeight);
 					}
@@ -452,8 +442,8 @@ public class BarGraph extends JComponent implements SwingConstants {
 					}
 				}
 				else {
-					tube = (int) (value * tubeUnit);
-					int zero = -(int) (min * tubeUnit);
+					tube = (int) Math.round(value * tubeUnit);
+					int zero = -(int) Math.round(min * tubeUnit);
 					if (tube >= 0) {
 						g2.fillRect(zero, 0, tube, tubeHeight);
 					}
@@ -461,7 +451,7 @@ public class BarGraph extends JComponent implements SwingConstants {
 						g2.fillRect(zero + tube, 0, -tube, tubeHeight);
 					}
 					if (average != 0.0) {
-						aver = (int) (average * tubeUnit);
+						aver = (int) Math.round(average * tubeUnit);
 						g2.setColor(getMedianColor());
 						int delta = tubeHeight / 2 > 5 ? 5 : tubeHeight / 2;
 						int tubeh = zero + aver;
@@ -484,21 +474,21 @@ public class BarGraph extends JComponent implements SwingConstants {
 			g2.setColor(Color.black);
 			g2.drawRect(0, 0, dim.width - 1, tubeHeight);
 			if (paintTicks) {
-				float delx = (float) dim.width / (float) minorTicks;
-				int mult = (int) (minorTicks * inverseMajorTicks);
+				float delx = (float) (dim.width - 1) / (float) minorTicks;
+				int mult = (int) Math.round(minorTicks * inverseMajorTicks);
 				if (mult == 0)
 					mult = 1;
-				for (int i = 0; i < minorTicks; i++) {
+				for (int i = 0; i <= minorTicks; i++) {
 					if (i % mult == 0) {
-						g2.drawLine((int) (delx * i), tubeHeight, (int) (delx * i), tubeHeight + 4);
+						g2.drawLine((int) Math.round(delx * i), tubeHeight, (int) Math.round(delx * i), tubeHeight + 4);
 					}
 					else {
-						g2.drawLine((int) (delx * i), tubeHeight, (int) (delx * i), tubeHeight + 2);
+						g2.drawLine((int) Math.round(delx * i), tubeHeight, (int) Math.round(delx * i), tubeHeight + 2);
 					}
 				}
 			}
 			if (paintLabels) {
-				float delx = dim.width * inverseMajorTicks;
+				float delx = (dim.width - 1) * inverseMajorTicks;
 				String s = formatter.format(min);
 				int w = fm.stringWidth(s);
 				g2.drawString(s, 0, tubeHeight + h + h);
@@ -508,13 +498,13 @@ public class BarGraph extends JComponent implements SwingConstants {
 				for (int i = 1; i < majorTicks; i++) {
 					s = formatter.format(min + i * (max - min) * inverseMajorTicks);
 					w = fm.stringWidth(s);
-					g2.drawString(s, (int) (delx * i) - w / 2, tubeHeight + h + h);
+					g2.drawString(s, (int) Math.round(delx * i - w / 2.0), tubeHeight + h + h);
 				}
 			}
 			if (paintTitle) {
 				if (description != null) {
 					int w = fm.stringWidth(description);
-					g2.drawString(description, (dim.width - w) / 2, dim.height - h - 4);
+					g2.drawString(description, (dim.width - w - 1) / 2, dim.height - h - 4);
 				}
 			}
 			break;
