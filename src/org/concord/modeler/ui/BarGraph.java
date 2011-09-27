@@ -267,7 +267,7 @@ public class BarGraph extends JComponent implements SwingConstants {
 
 		case VERTICAL:
 
-			double tubeUnit = dim.height / (max - min);
+			double tubeUnit = (dim.height - 1) / (max - min);
 			int tubeWidth = dim.width - 1;
 			if (paintTicks)
 				tubeWidth -= 6;
@@ -391,7 +391,7 @@ public class BarGraph extends JComponent implements SwingConstants {
 
 		case HORIZONTAL:
 
-			tubeUnit = dim.width / (max - min);
+			tubeUnit = (dim.width - 1) / (max - min);
 			int tubeHeight = dim.height - 1;
 			if (paintTicks)
 				tubeHeight -= 6;
