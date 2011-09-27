@@ -143,8 +143,8 @@ class PageBarGraphMaker extends ComponentMaker {
 			break;
 		case 1:
 			pageBarGraph.setAverageType(PageBarGraph.SIMPLE_RUNNING_AVERAGE);
-			int n = (int) parameterField.getValue();
-			if (n < 10 || n > Modeler.tapeLength) {
+			int n = (int) Math.round(parameterField.getValue());
+			if (n < 1 || n > Modeler.tapeLength) {
 				JOptionPane.showMessageDialog(dialog, "The number of sampling points you set " + n + " is illegal.", "Sampling points error",
 						JOptionPane.ERROR_MESSAGE);
 				return false;
@@ -251,7 +251,7 @@ class PageBarGraphMaker extends ComponentMaker {
 			s = Modeler.getInternationalText("SamplingPoints");
 			parameterLabel.setText(s != null ? s : "Sampling points");
 			parameterField.setValue(pageBarGraph.samplingPoints);
-			parameterField.setMinValue(10);
+			parameterField.setMinValue(1);
 			parameterField.setMaxValue(Modeler.tapeLength);
 			parameterField.setEditable(true);
 			break;
@@ -514,7 +514,7 @@ class PageBarGraphMaker extends ComponentMaker {
 					parameterLabel.setEnabled(true);
 					parameterField.setValue(pageBarGraph.samplingPoints);
 					parameterField.setEditable(true);
-					parameterField.setMinValue(10);
+					parameterField.setMinValue(1);
 					parameterField.setMaxValue(Modeler.tapeLength);
 					break;
 				case 2:

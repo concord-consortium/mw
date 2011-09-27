@@ -258,8 +258,8 @@ public class FloatQueue extends DataQueue {
 	 * @return the n-moving average
 	 */
 	public float getSimpleRunningAverage(int n, int frame) {
-		if (n < 2)
-			throw new IllegalArgumentException("n must be greater than 1.");
+		if (n < 1)
+			throw new IllegalArgumentException("n must be greater than 0.");
 		int m = Math.min(frame, getLength());
 		if (m <= 0)
 			return 0;
