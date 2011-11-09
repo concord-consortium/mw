@@ -130,8 +130,7 @@ class StatusManager {
 			jmolStatusListener.notifyAtomHovered(iatom, strInfo);
 	}
 
-	synchronized void setStatusFileLoaded(String fullPathName, String fileName, String modelName, Object clientFile,
-			String errorMsg, int ptLoad) {
+	synchronized void setStatusFileLoaded(String fullPathName, String fileName, String modelName, Object clientFile, String errorMsg, int ptLoad) {
 		setStatusChanged("fileLoaded", ptLoad, fullPathName, false);
 		if (errorMsg != null)
 			setStatusChanged("fileLoadError", ptLoad, errorMsg, false);
@@ -206,8 +205,7 @@ class StatusManager {
 		setStatusChanged((isError ? "scriptError" : "scriptStatus"), 0, strStatus, false);
 
 		if (isError || strStatus.equals("Script completed"))
-			setStatusChanged("scriptTerminated", 1, "Jmol script terminated"
-					+ (isError ? " unsuccesscully: " + strStatus : " successfully"), false);
+			setStatusChanged("scriptTerminated", 1, "Jmol script terminated" + (isError ? " unsuccesscully: " + strStatus : " successfully"), false);
 
 		if (jmolStatusListener != null)
 			jmolStatusListener.sendConsoleMessage(strStatus);
@@ -322,11 +320,9 @@ class StatusManager {
 		if (setStatusList(statusNameList))
 			return msgList;
 		Enumeration e = messageQueue.keys();
-		int n = 0;
 		while (e.hasMoreElements()) {
 			String statusName = (String) e.nextElement();
 			msgList.add(messageQueue.remove(statusName));
-			n++;
 		}
 		return msgList;
 	}

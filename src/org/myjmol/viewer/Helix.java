@@ -124,13 +124,11 @@ class Helix extends ProteinStructure {
     Vector3f a = new Vector3f(axisUnitVector);
 
     float sum_Xi2 = 0;
-    float sum_Yi2 = 0;
     for (int i = monomerIndex + monomerCount; --i >= monomerIndex;) {
       pt.set(apolymer.getLeadPoint(i));
       ptProj.set(pt);
       projectOntoAxis(ptProj);
       vTemp.sub(pt, ptProj);
-      sum_Yi2 += vTemp.lengthSquared();
       vTemp.cross(vectorProjection, vTemp);
       sumXiYi.add(vTemp);
       sum_Xi2 += vectorProjection.lengthSquared();
