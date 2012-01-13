@@ -110,8 +110,7 @@ import org.concord.mw2d.models.Polypeptide;
 import org.concord.mw2d.models.RadialBond;
 import org.concord.mw2d.models.StructureFactor;
 
-public class AtomContainer extends MDContainer implements RNATranscriptionListener, RNATranslationListener,
-		MutationListener, ItemListener {
+public class AtomContainer extends MDContainer implements RNATranscriptionListener, RNATranslationListener, MutationListener, ItemListener {
 
 	private final static Pattern TRANSCRIBE = compile("(^(?i)transcribe\\b){1}");
 	private final static Pattern TRANSLATE = compile("(^(?i)translate\\b){1}");
@@ -192,14 +191,20 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 								return null;
 							}
 						}
-						String dna = dnaScroller.getModel().getFullDNA35String();
-						if (i + 1 < dna.length()) {
-							Nucleotide n = Nucleotide.getNucleotide(dna.charAt(i + 1)).getComplementaryNucleotide(true);
-							if (n.toString().equals(s)) {
-								dnaScroller.doOneStep();
-								return "3\'-5\': " + dnaScroller.getModel().getDNA35String();
+						if ("".equals(s)) {
+							dnaScroller.doOneStep();
+							return "3\'-5\': " + dnaScroller.getModel().getDNA35String();
+						}
+						else {
+							String dna = dnaScroller.getModel().getFullDNA35String();
+							if (i + 1 < dna.length()) {
+								Nucleotide n = Nucleotide.getNucleotide(dna.charAt(i + 1)).getComplementaryNucleotide(true);
+								if (n.toString().equals(s)) {
+									dnaScroller.doOneStep();
+									return "3\'-5\': " + dnaScroller.getModel().getDNA35String();
+								}
+								Toolkit.getDefaultToolkit().beep();
 							}
-							Toolkit.getDefaultToolkit().beep();
 						}
 					}
 				}
@@ -217,11 +222,9 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 					else {
 						if (!dnaScroller.isTranscriptionEnded()) {
 							Toolkit.getDefaultToolkit().beep();
-							JOptionPane
-									.showMessageDialog(
-											JOptionPane.getFrameForComponent(view),
-											"Translation cannot start without transcription, or before the\ncompletion of transcription.",
-											"Message", JOptionPane.INFORMATION_MESSAGE);
+							JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view),
+									"Translation cannot start without transcription, or before the\ncompletion of transcription.", "Message",
+									JOptionPane.INFORMATION_MESSAGE);
 							return null;
 						}
 						int i = dnaScroller.getModel().getCurrIndex() + 3;
@@ -229,34 +232,40 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 							i = 0;
 						String aa = dnaScroller.get53CurrAminoacidAbbreviation(i);
 						org.concord.molbio.engine.Codon codon = dnaScroller.getModel().get53Codon(i);
-						if (aa != null && aa.equalsIgnoreCase(s)) {
+						if ("".equals(s)) {
 							dnaScroller.doOneStep();
 							return dnaScroller.get35CurrAminoacidAbbreviation();
 						}
-						else if (codon != null) {
-							String codonString = codon.toString();
-							if (codonString.equalsIgnoreCase(s)) {
+						else {
+							if (aa != null && aa.equalsIgnoreCase(s)) {
 								dnaScroller.doOneStep();
 								return dnaScroller.get35CurrAminoacidAbbreviation();
 							}
-							else if ("STOP".equals(s)) {
-								if (codonString.equalsIgnoreCase("UAA") || codonString.equalsIgnoreCase("UAG")
-										|| codonString.equalsIgnoreCase("UGA")) {
+							else if (codon != null) {
+								String codonString = codon.toString();
+								if (codonString.equalsIgnoreCase(s)) {
 									dnaScroller.doOneStep();
 									return dnaScroller.get35CurrAminoacidAbbreviation();
 								}
-								Toolkit.getDefaultToolkit().beep();
+								else if ("STOP".equals(s)) {
+									if (codonString.equalsIgnoreCase("UAA") || codonString.equalsIgnoreCase("UAG")
+											|| codonString.equalsIgnoreCase("UGA")) {
+										dnaScroller.doOneStep();
+										return dnaScroller.get35CurrAminoacidAbbreviation();
+									}
+									Toolkit.getDefaultToolkit().beep();
+								}
+								else {
+									Toolkit.getDefaultToolkit().beep();
+								}
 							}
 							else {
-								Toolkit.getDefaultToolkit().beep();
-							}
-						}
-						else {
-							if (i == dnaScroller.getModel().getDNALength()) {
-								dnaScroller.doOneStep(); // release the protein strand from the RNA strand
-							}
-							else {
-								Toolkit.getDefaultToolkit().beep();
+								if (i == dnaScroller.getModel().getDNALength()) {
+									dnaScroller.doOneStep(); // release the protein strand from the RNA strand
+								}
+								else {
+									Toolkit.getDefaultToolkit().beep();
+								}
 							}
 						}
 					}
@@ -286,17 +295,15 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 				if (s.startsWith("dna")) {
 					final String s2 = s.substring(3).trim();
 					if (s2.length() % 3 != 0) {
-						JOptionPane.showMessageDialog(view, "Input DNA code must be 3xn! Please try again.",
-								"Triplets required", JOptionPane.ERROR_MESSAGE, null);
+						JOptionPane.showMessageDialog(view, "Input DNA code must be 3xn! Please try again.", "Triplets required",
+								JOptionPane.ERROR_MESSAGE, null);
 						return null;
 					}
 					char c;
 					for (int i = 0; i < s2.length(); i++) {
 						c = s2.charAt(i);
-						if (c != 'a' && c != 'A' && c != 'c' && c != 'C' && c != 'g' && c != 'G' && c != 't'
-								&& c != 'T') {
-							JOptionPane.showMessageDialog(view,
-									"Input DNA code must contain only A, C, G, or T. Please try again.",
+						if (c != 'a' && c != 'A' && c != 'c' && c != 'C' && c != 'g' && c != 'G' && c != 't' && c != 'T') {
+							JOptionPane.showMessageDialog(view, "Input DNA code must contain only A, C, G, or T. Please try again.",
 									"Illegal DNA code", JOptionPane.ERROR_MESSAGE, null);
 							return null;
 						}
@@ -415,8 +422,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			}
 		};
 		translationAction2.putValue(Action.NAME, "Translation2");
-		translationAction2.putValue(Action.SHORT_DESCRIPTION,
-				"Translate mRNA to protein (without removing existing setup)");
+		translationAction2.putValue(Action.SHORT_DESCRIPTION, "Translate mRNA to protein (without removing existing setup)");
 
 		resetDNAScrollerAction = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
@@ -476,11 +482,9 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 				if (dnaScroller.isTranslationEnded())
 					return;
 				if (!dnaScroller.isTranscriptionEnded()) {
-					JOptionPane
-							.showMessageDialog(
-									JOptionPane.getFrameForComponent(view),
-									"Translation cannot start without transcription, or before the\ncompletion of transcription.",
-									"Message", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view),
+							"Translation cannot start without transcription, or before the\ncompletion of transcription.", "Message",
+							JOptionPane.INFORMATION_MESSAGE);
 					return;
 				}
 				dnaScroller.doOneStep();
@@ -774,18 +778,14 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 		if (b) {
 			if (dnaPanel == null)
 				createDNAPanel();
-			model.getActions()
-					.put((String) transcriptionAction.getValue(Action.SHORT_DESCRIPTION), transcriptionAction);
+			model.getActions().put((String) transcriptionAction.getValue(Action.SHORT_DESCRIPTION), transcriptionAction);
 			model.getActions().put((String) translationAction.getValue(Action.SHORT_DESCRIPTION), translationAction);
 			model.getActions().put((String) translationAction2.getValue(Action.SHORT_DESCRIPTION), translationAction2);
 			model.getActions().put((String) inputDNAAction.getValue(Action.SHORT_DESCRIPTION), inputDNAAction);
-			model.getActions().put((String) transcribeStepAction.getValue(Action.SHORT_DESCRIPTION),
-					transcribeStepAction);
-			model.getActions()
-					.put((String) translateStepAction.getValue(Action.SHORT_DESCRIPTION), translateStepAction);
+			model.getActions().put((String) transcribeStepAction.getValue(Action.SHORT_DESCRIPTION), transcribeStepAction);
+			model.getActions().put((String) translateStepAction.getValue(Action.SHORT_DESCRIPTION), translateStepAction);
 			model.getActions().put((String) stopDNAAction.getValue(Action.SHORT_DESCRIPTION), stopDNAAction);
-			model.getActions().put((String) resetDNAScrollerAction.getValue(Action.SHORT_DESCRIPTION),
-					resetDNAScrollerAction);
+			model.getActions().put((String) resetDNAScrollerAction.getValue(Action.SHORT_DESCRIPTION), resetDNAScrollerAction);
 			Dimension dim = dnaPanel.getPreferredSize();
 			CustomBorderLayout layout = new CustomBorderLayout(0, -dim.height / 2);
 			layout.setOverlapableSide(BorderLayout.SOUTH);
@@ -967,12 +967,11 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			e.setConsumed(true);
 			break;
 		case RNATranslationListener.MODE_TRANSLATION_NEW_AMINO:
-			Rectangle ribosomeArea = SwingUtilities
-					.convertRectangle(dnaScroller.getParent(), e.getRibosomeRect(), view);
+			Rectangle ribosomeArea = SwingUtilities.convertRectangle(dnaScroller.getParent(), e.getRibosomeRect(), view);
 			if (ribosomeArea.x < 0)
 				ribosomeArea.x = 50;
-			boolean success = view.growPolypeptide(ribosomeArea.x + ribosomeArea.width / 3, ribosomeArea.y
-					+ ribosomeArea.height / 2 - 8, Math.PI * 0.25, AminoAcidAdapter.getElementID(e.getAminoacid()));
+			boolean success = view.growPolypeptide(ribosomeArea.x + ribosomeArea.width / 3, ribosomeArea.y + ribosomeArea.height / 2 - 8,
+					Math.PI * 0.25, AminoAcidAdapter.getElementID(e.getAminoacid()));
 			Atom at = model.getAtom(model.getNumberOfAtoms() - 1);
 			if (at != null) {
 				at.setCodon(e.getCodon().toString().replaceAll("U", "T"));
@@ -1131,11 +1130,11 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 		catch (NullPointerException npe) {
 			dnaField.setText(null);
 		}
-		if (JOptionPane.showConfirmDialog(view, dnaField, "Type/copy/paste DNA code on sense (5'-3') strand",
-				JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE) == JOptionPane.OK_OPTION) {
+		if (JOptionPane.showConfirmDialog(view, dnaField, "Type/copy/paste DNA code on sense (5'-3') strand", JOptionPane.OK_CANCEL_OPTION,
+				JOptionPane.PLAIN_MESSAGE) == JOptionPane.OK_OPTION) {
 			if (dnaField.getText().length() % 3 != 0) {
-				JOptionPane.showMessageDialog(view, "Input DNA code must be 3xn! Please try again.",
-						"Triplets required", JOptionPane.ERROR_MESSAGE, null);
+				JOptionPane.showMessageDialog(view, "Input DNA code must be 3xn! Please try again.", "Triplets required", JOptionPane.ERROR_MESSAGE,
+						null);
 				return false;
 			}
 			dnaPlayButton.setEnabled(true);
@@ -1432,8 +1431,8 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			bg.add(rbMenuItem0);
 
 			s = getInternationalText("AtomsOnGrid");
-			JRadioButtonMenuItem rbMenuItem = new JRadioButtonMenuItem(s != null ? s : "Atoms on Grid", new ImageIcon(
-					getClass().getResource("images/gridShow.gif")));
+			JRadioButtonMenuItem rbMenuItem = new JRadioButtonMenuItem(s != null ? s : "Atoms on Grid", new ImageIcon(getClass().getResource(
+					"images/gridShow.gif")));
 			rbMenuItem.setMnemonic(KeyEvent.VK_A);
 			rbMenuItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -1446,8 +1445,8 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			bg.add(rbMenuItem);
 
 			s = getInternationalText("DensityDistribution");
-			rbMenuItem = new JRadioButtonMenuItem(s != null ? s : "Density Distribution", new ImageIcon(getClass()
-					.getResource("images/gridDens.gif")));
+			rbMenuItem = new JRadioButtonMenuItem(s != null ? s : "Density Distribution",
+					new ImageIcon(getClass().getResource("images/gridDens.gif")));
 			rbMenuItem.setMnemonic(KeyEvent.VK_D);
 			rbMenuItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -1460,8 +1459,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			bg.add(rbMenuItem);
 
 			s = getInternationalText("MassDistribution");
-			rbMenuItem = new JRadioButtonMenuItem(s != null ? s : "Mass Distribution", new ImageIcon(getClass()
-					.getResource("images/gridMass.gif")));
+			rbMenuItem = new JRadioButtonMenuItem(s != null ? s : "Mass Distribution", new ImageIcon(getClass().getResource("images/gridMass.gif")));
 			rbMenuItem.setMnemonic(KeyEvent.VK_M);
 			rbMenuItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -1474,8 +1472,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			bg.add(rbMenuItem);
 
 			s = getInternationalText("ChargeDistribution");
-			rbMenuItem = new JRadioButtonMenuItem(s != null ? s : "Charge Distribution", new ImageIcon(getClass()
-					.getResource("images/gridChar.gif")));
+			rbMenuItem = new JRadioButtonMenuItem(s != null ? s : "Charge Distribution", new ImageIcon(getClass().getResource("images/gridChar.gif")));
 			rbMenuItem.setMnemonic(KeyEvent.VK_C);
 			rbMenuItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -1488,8 +1485,8 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			bg.add(rbMenuItem);
 
 			s = getInternationalText("TemperatureDistribution");
-			rbMenuItem = new JRadioButtonMenuItem(s != null ? s : "Temperature Distribution", new ImageIcon(getClass()
-					.getResource("images/gridKine.gif")));
+			rbMenuItem = new JRadioButtonMenuItem(s != null ? s : "Temperature Distribution", new ImageIcon(getClass().getResource(
+					"images/gridKine.gif")));
 			rbMenuItem.setMnemonic(KeyEvent.VK_T);
 			rbMenuItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -1516,8 +1513,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			bg.add(rbMenuItem);
 
 			s = getInternationalText("ForceDistribution");
-			rbMenuItem = new JRadioButtonMenuItem(s != null ? s : "Force Distribution", new ImageIcon(getClass()
-					.getResource("images/gridStrs.gif")));
+			rbMenuItem = new JRadioButtonMenuItem(s != null ? s : "Force Distribution", new ImageIcon(getClass().getResource("images/gridStrs.gif")));
 			rbMenuItem.setMnemonic(KeyEvent.VK_F);
 			rbMenuItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -1604,8 +1600,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 					final byte j2 = j;
 					menuItem.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							int rmax = (int) (Math
-									.max(model.getElement(i2).getSigma(), model.getElement(j2).getSigma()) * .5);
+							int rmax = (int) (Math.max(model.getElement(i2).getSigma(), model.getElement(j2).getSigma()) * .5);
 							model.runScript("pcf " + i2 + " " + j2 + " " + rmax);
 						}
 					});
@@ -1739,8 +1734,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 					setMenuItemWithoutNotifyingListeners(enablePropertyDialogMenuItem, view.isPropertyDialogEnabled());
 					setupFlowMenuItem.setEnabled(model.getRecorderDisabled() && model.isAtomFlowEnabled());
 					enableFlowMenuItem.setEnabled(model.getRecorderDisabled());
-					disableRecorderItem.setEnabled(!model.hasGraphs() && !hasDNAScroller()
-							&& !model.isAtomFlowEnabled());
+					disableRecorderItem.setEnabled(!model.hasGraphs() && !hasDNAScroller() && !model.isAtomFlowEnabled());
 				}
 
 				public void menuCanceled(MenuEvent e) {
@@ -2172,8 +2166,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			final Runnable run8 = new Runnable() {
 				public void run() {
 					if (growthModeDialog == null) {
-						growthModeDialog = new GrowthModeDialog(JOptionPane.getFrameForComponent(AtomContainer.this),
-								model);
+						growthModeDialog = new GrowthModeDialog(JOptionPane.getFrameForComponent(AtomContainer.this), model);
 						growthModeDialog.pack();
 						growthModeDialog.setLocationRelativeTo(view);
 					}
