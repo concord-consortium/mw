@@ -4205,7 +4205,6 @@ class Isosurface extends MeshCollection {
 		solvent_modelIndex = -1;
 		int iAtom = 0;
 		int nAtoms = viewer.getAtomCount();
-		int nSelected = 0;
 		iUseBitSets = true;
 		if (bsIgnore == null) {
 			bsIgnore = new BitSet();
@@ -4217,7 +4216,6 @@ class Isosurface extends MeshCollection {
 					continue;
 				}
 				bsSolventSelected.set(i);
-				nSelected++;
 			}
 		}
 		atomSet = new BitSet();

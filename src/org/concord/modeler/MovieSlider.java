@@ -38,6 +38,7 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.RoundRectangle2D;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JComponent;
 
@@ -54,6 +55,7 @@ public class MovieSlider extends JComponent implements MovieListener {
 	private int flasher;
 	private RoundRectangle2D grabber;
 	private Movie movie;
+	private BufferedImage bimg;
 
 	MovieSlider(Movie m) {
 		movie = m;
@@ -165,8 +167,7 @@ public class MovieSlider extends JComponent implements MovieListener {
 	private void processMouseMovedEvent(MouseEvent e) {
 		if (!isEnabled())
 			return;
-		setCursor(Cursor.getPredefinedCursor(knob.contains(e.getX(), e.getY()) ? Cursor.HAND_CURSOR
-				: Cursor.DEFAULT_CURSOR));
+		setCursor(Cursor.getPredefinedCursor(knob.contains(e.getX(), e.getY()) ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
 	}
 
 	private void processKeyPressedEvent(KeyEvent e) {
@@ -242,39 +243,54 @@ public class MovieSlider extends JComponent implements MovieListener {
 		currentFrame = (int) (((float) knob.x / (float) (getWidth() - knob.width) * (totalFrame - 1)));
 	}
 
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		update(g);
+	private Graphics2D createGraphics2D() {
+		int w = getWidth();
+		int h = getHeight();
+		Graphics2D g;
+		if (bimg == null || bimg.getWidth() != w || bimg.getHeight() != h) {
+			bimg = (BufferedImage) createImage(w, h);
+		}
+		g = bimg.createGraphics();
+		g.setBackground(getBackground());
+		g.clearRect(0, 0, w, h);
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+		return g;
 	}
 
-	public void update(Graphics g) {
+	@Override
+	public void paint(Graphics g) {
+		Graphics2D g2 = createGraphics2D();
+		draw(g2);
+		if (bimg != null)
+			g.drawImage(bimg, 0, 0, this);
+		g2.dispose();
+	}
 
-		Graphics2D g2 = (Graphics2D) g;
+	private void draw(Graphics2D g) {
 
-		g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g2.setFont(font);
+		g.setFont(font);
 
 		Dimension dim = getSize();
 
 		if (knob == null)
 			knob = new Rectangle(0, 0, dim.width / 5, dim.height);
 
-		g2.setColor(getBackground());
-		g2.fillRect(0, 0, dim.width, dim.height);
-		g2.setColor(Color.white);
-		g2.fillRect(5, 5, dim.width - knob.width, dim.height - 10);
-		g2.setColor(Color.blue);
-		g2.fillRect(dim.width - knob.width + 1, 5, knob.width - 6, dim.height - 9);
-		g2.drawRect(5, 5, dim.width - knob.width, dim.height - 10);
+		g.setColor(getBackground());
+		g.fillRect(0, 0, dim.width, dim.height);
+		g.setColor(Color.white);
+		g.fillRect(5, 5, dim.width - knob.width, dim.height - 10);
+		g.setColor(Color.blue);
+		g.fillRect(dim.width - knob.width + 1, 5, knob.width - 6, dim.height - 9);
+		g.drawRect(5, 5, dim.width - knob.width, dim.height - 10);
 
 		calculateFillLocator();
-		g2.setColor(SystemColor.controlShadow);
-		g2.fillRect(6, 7, fillLocator, dim.height - 13);
+		g.setColor(SystemColor.controlShadow);
+		g.fillRect(6, 7, fillLocator, dim.height - 13);
 		int i = 9 + flasher;
 		while (i <= fillLocator) {
-			g2.drawLine(i, 5, i, 7);
-			g2.drawLine(i, dim.height - 6, i, dim.height - 8);
+			g.drawLine(i, 5, i, 7);
+			g.drawLine(i, dim.height - 6, i, dim.height - 8);
 			i += 3;
 		}
 
@@ -284,14 +300,14 @@ public class MovieSlider extends JComponent implements MovieListener {
 		else {
 			grabber.setRoundRect(knob.x + 2, knob.y + 2, knob.width - 4, knob.height - 5, 8, 8);
 		}
-		g2.setColor(SystemColor.control);
-		g2.fill(grabber);
-		g2.setColor(isEnabled() ? Color.blue : SystemColor.textInactiveText);
-		g2.draw(grabber);
+		g.setColor(SystemColor.control);
+		g.fill(grabber);
+		g.setColor(isEnabled() ? Color.blue : SystemColor.textInactiveText);
+		g.draw(grabber);
 
-		FontMetrics fm = g2.getFontMetrics();
+		FontMetrics fm = g.getFontMetrics();
 		int h = fm.getAscent();
-		g2.setColor(isEnabled() ? SystemColor.controlText : SystemColor.textInactiveText);
+		g.setColor(isEnabled() ? SystemColor.controlText : SystemColor.textInactiveText);
 		String s = "0";
 		if (movie.length() > 0) {
 			if (currentFrame == movie.getCapacity()) {
@@ -302,10 +318,10 @@ public class MovieSlider extends JComponent implements MovieListener {
 			}
 		}
 		int w = fm.stringWidth(s);
-		g2.drawString(s, knob.x + knob.width / 2 - w / 2, knob.y + knob.height / 2 + h / 4);
+		g.drawString(s, knob.x + knob.width / 2 - w / 2, knob.y + knob.height / 2 + h / 4);
 
 		if (getBorder() != null)
-			paintBorder(g2);
+			paintBorder(g);
 
 	}
 

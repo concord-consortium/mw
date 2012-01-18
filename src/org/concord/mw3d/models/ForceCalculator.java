@@ -56,7 +56,7 @@ class ForceCalculator {
 	private float rxij, ryij, rzij, rij, rijsq;
 	private float rxkj, rykj, rzkj, rkj, rkjsq;
 	private float rxlk, rylk, rzlk, rlk, rlksq;
-	private float virialLJ, virialEL;
+	float virialLJ, virialEL;
 	private float sr2, sr6, sr12, vij, wij, fij;
 	private float fxij, fyij, fzij;
 	private float rCutOff = 2.5f, rList = rCutOff + 1.0f;

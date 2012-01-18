@@ -209,7 +209,7 @@ class VectorDisplay extends JDialog {
 		}
 	}
 
-	public byte getType() {
+	public byte getVectorType() {
 		return type;
 	}
 

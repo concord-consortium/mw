@@ -155,7 +155,7 @@ class ReactionDialog extends JDialog {
 		}
 	}
 
-	public Reaction getType() {
+	public Reaction getReactionType() {
 		return reactionType;
 	}
 

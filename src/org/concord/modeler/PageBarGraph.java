@@ -91,6 +91,7 @@ public class PageBarGraph extends BarGraph implements Embeddable, Scriptable, Mo
 			smoothingFactor = g.smoothingFactor;
 			break;
 		}
+		setAverageOnly(g.getAverageOnly());
 		setTimeSeriesName(g.timeSeriesName);
 		setDescription(g.getDescription());
 		setMultiplier(g.getMultiplier());
@@ -299,8 +300,6 @@ public class PageBarGraph extends BarGraph implements Embeddable, Scriptable, Mo
 
 	public void setTimeSeriesName(String s) {
 		timeSeriesName = s;
-		if (getDescription() == null || getDescription().trim().equals(""))
-			setDescription(s);
 	}
 
 	public String getTimeSeriesName() {
@@ -416,7 +415,7 @@ public class PageBarGraph extends BarGraph implements Embeddable, Scriptable, Mo
 		if (uid != null)
 			sb.append("<uid>" + uid + "</uid>\n");
 		sb.append("<timeseries>" + timeSeriesName + "</timeseries>\n");
-		if (!getDescription().equals(timeSeriesName))
+		if (getDescription() != null && !getDescription().equals(timeSeriesName))
 			sb.append("<description>" + XMLCharacterEncoder.encode(getDescription()) + "</description>\n");
 		if (getOrientation() != VERTICAL)
 			sb.append("<orientation>" + getOrientation() + "</orientation>\n");
