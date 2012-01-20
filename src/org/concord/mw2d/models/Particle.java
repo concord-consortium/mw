@@ -91,6 +91,8 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	/* Friction coefficent. The friction force is proportional to the velocity. */
 	float friction;
 
+	byte dampType = MDModel.AIR_DRAG;
+
 	/* the x coordinate of the center of mass */
 	volatile double rx;
 
@@ -197,8 +199,8 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 			PropertyDescriptor[] propertyDescriptors = info.getPropertyDescriptors();
 			for (PropertyDescriptor pd : propertyDescriptors) {
 				String name = pd.getName();
-				if (name.equals("name") || name.equals("index") || name.equals("ax") || name.equals("ay")
-						|| name.equals("fx") || name.equals("fy") || name.equals("selected") || name.equals("blinking")) {
+				if (name.equals("name") || name.equals("index") || name.equals("ax") || name.equals("ay") || name.equals("fx") || name.equals("fy")
+						|| name.equals("selected") || name.equals("blinking")) {
 					pd.setValue("transient", Boolean.TRUE);
 				}
 			}
@@ -570,6 +572,14 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 		hydrophobic = a;
 	}
 
+	public byte getDampType() {
+		return dampType;
+	}
+
+	public void setDampType(byte dampType) {
+		this.dampType = dampType;
+	}
+
 	public float getFriction() {
 		return friction;
 	}
@@ -642,9 +652,7 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	}
 
 	void putVHotSpotAtVelocityTip() {
-		vHotSpot.setLocation((int) (rx + getView().getVelocityFlavor().getLength() * vx), (int) (ry + getView()
-				.getVelocityFlavor().getLength()
-				* vy));
+		vHotSpot.setLocation((int) (rx + getView().getVelocityFlavor().getLength() * vx), (int) (ry + getView().getVelocityFlavor().getLength() * vy));
 	}
 
 	/**
@@ -724,6 +732,7 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 		setName(null);
 		setCharge(0);
 		setFriction(0);
+		setDampType(MDModel.AIR_DRAG);
 		setUserField(null);
 		setShowRTraj(false);
 		setShowRMean(false);
@@ -758,6 +767,7 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 		name = p.name;
 		charge = p.charge;
 		friction = p.friction;
+		dampType = p.dampType;
 		chargeColor = p.chargeColor;
 		marked = p.marked;
 		movable = p.movable;
@@ -1192,12 +1202,10 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 		float arrowLength = Math.max(5, 3 * flavor.getWidth());
 		wingx = arrowLength * (arrowx * COS45 + arrowy * SIN45);
 		wingy = arrowLength * (arrowy * COS45 - arrowx * SIN45);
-		g.drawLine((int) (rx + lengthx), (int) (ry + lengthy), (int) (rx + lengthx - wingx),
-				(int) (ry + lengthy - wingy));
+		g.drawLine((int) (rx + lengthx), (int) (ry + lengthy), (int) (rx + lengthx - wingx), (int) (ry + lengthy - wingy));
 		wingx = arrowLength * (arrowx * COS45 - arrowy * SIN45);
 		wingy = arrowLength * (arrowy * COS45 + arrowx * SIN45);
-		g.drawLine((int) (rx + lengthx), (int) (ry + lengthy), (int) (rx + lengthx - wingx),
-				(int) (ry + lengthy - wingy));
+		g.drawLine((int) (rx + lengthx), (int) (ry + lengthy), (int) (rx + lengthx - wingx), (int) (ry + lengthy - wingy));
 	}
 
 	/**
@@ -1255,8 +1263,8 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 			public void actionPerformed(ActionEvent e) {
 				if (blinkIndex < 8) {
 					blinkIndex++;
-					blinkColor = blinkIndex % 2 == 0 ? ((MDView) getHostModel().getView()).contrastBackground()
-							: getHostModel().getView().getBackground();
+					blinkColor = blinkIndex % 2 == 0 ? ((MDView) getHostModel().getView()).contrastBackground() : getHostModel().getView()
+							.getBackground();
 				}
 				else {
 					timer.stop();

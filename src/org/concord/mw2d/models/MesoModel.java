@@ -171,11 +171,9 @@ public class MesoModel extends MDModel {
 				GayBerneParticle p = gb[i];
 				sinTheta = Math.sin(p.getTheta());
 				cosTheta = Math.cos(p.getTheta());
-				dx = p.getBreadth() * p.getBreadth() * sinTheta * sinTheta + p.getLength() * p.getLength() * cosTheta
-						* cosTheta;
+				dx = p.getBreadth() * p.getBreadth() * sinTheta * sinTheta + p.getLength() * p.getLength() * cosTheta * cosTheta;
 				dx = Math.sqrt(dx) * 0.5;
-				dy = p.getBreadth() * p.getBreadth() * cosTheta * cosTheta + p.getLength() * p.getLength() * sinTheta
-						* sinTheta;
+				dy = p.getBreadth() * p.getBreadth() * cosTheta * cosTheta + p.getLength() * p.getLength() * sinTheta * sinTheta;
 				dy = Math.sqrt(dy) * 0.5;
 				if (p.getRx() + dx > range_xmax) {
 					range_xmax = (float) (p.getRx() + dx);
@@ -344,8 +342,7 @@ public class MesoModel extends MDModel {
 			data[i + numberOfParticles * 4] = gb[i].vy;
 			data[i + numberOfParticles * 5] = gb[i].omega;
 		}
-		stateHolder = new StateHolder(getModelTime(), heatBathActivated() ? heatBath.getExpectedTemperature() : 0,
-				getNumberOfParticles(), data);
+		stateHolder = new StateHolder(getModelTime(), heatBathActivated() ? heatBath.getExpectedTemperature() : 0, getNumberOfParticles(), data);
 		super.run();
 	}
 
@@ -570,8 +567,7 @@ public class MesoModel extends MDModel {
 	 * align atoms in a two-dimensional lattice. You may choose any number for the inputs, but only those that fall
 	 * within the current box will be added.
 	 */
-	public void alignParticles(int m, int n, double length, double breadth, double xoffset, double yoffset,
-			double xspacing, double yspacing) {
+	public void alignParticles(int m, int n, double length, double breadth, double xoffset, double yoffset, double xspacing, double yspacing) {
 		if (xspacing < length || yspacing < breadth)
 			throw new IllegalArgumentException("spacings may be too small");
 		if (xoffset < 0 || yoffset < 0)
@@ -1032,11 +1028,19 @@ public class MesoModel extends MDModel {
 			gb[0].tau = gb[0].gamma / gb[0].inertia;
 
 			if (gb[0].friction > 0.0f) {
-				double dmp = GF_CONVERSION_CONSTANT * gb[0].friction * universe.getViscosity() / gb[0].mass;
-				gb[0].fx -= dmp * gb[0].vx;
-				gb[0].fy -= dmp * gb[0].vy;
-				gb[0].tau -= GF_CONVERSION_CONSTANT * gb[0].friction * universe.getViscosity() * gb[0].omega
-						/ gb[0].inertia;
+				double dmp = GF_CONVERSION_CONSTANT * gb[0].friction / gb[0].mass;
+				switch (gb[0].dampType) {
+				case AIR_DRAG:
+					gb[0].fx -= dmp * gb[0].vx * universe.getViscosity();
+					gb[0].fy -= dmp * gb[0].vy * universe.getViscosity();
+					gb[0].tau -= GF_CONVERSION_CONSTANT * gb[0].friction * gb[0].omega * universe.getViscosity() / gb[0].inertia;
+					break;
+				case DRY_FRICTION:
+					gb[0].fx -= dmp * Math.signum(gb[0].vx) * DRY_FRICTION_CONVERTOR;
+					gb[0].fy -= dmp * Math.signum(gb[0].vy) * DRY_FRICTION_CONVERTOR;
+					gb[0].tau -= GF_CONVERSION_CONSTANT * gb[0].friction * Math.signum(gb[0].omega) / gb[0].inertia;
+					break;
+				}
 			}
 
 			synchronized (fields) {
@@ -1150,10 +1154,19 @@ public class MesoModel extends MDModel {
 				vsum += p.restraint.getEnergy(p);
 			}
 			if (p.friction > 0.0f) {
-				inverseMass = GF_CONVERSION_CONSTANT * universe.getViscosity() * p.friction / p.mass;
-				p.fx -= inverseMass * p.vx;
-				p.fy -= inverseMass * p.vy;
-				p.tau -= GF_CONVERSION_CONSTANT * universe.getViscosity() * p.friction * p.omega / p.inertia;
+				inverseMass = GF_CONVERSION_CONSTANT * p.friction / p.mass;
+				switch (p.dampType) {
+				case AIR_DRAG:
+					p.fx -= inverseMass * p.vx * universe.getViscosity();
+					p.fy -= inverseMass * p.vy * universe.getViscosity();
+					p.tau -= GF_CONVERSION_CONSTANT * p.friction * p.omega * universe.getViscosity() / p.inertia;
+					break;
+				case DRY_FRICTION:
+					p.fx -= inverseMass * Math.signum(p.vx) * DRY_FRICTION_CONVERTOR;
+					p.fy -= inverseMass * Math.signum(p.vy) * DRY_FRICTION_CONVERTOR;
+					p.tau -= GF_CONVERSION_CONSTANT * p.friction * Math.signum(p.omega) / p.inertia;
+					break;
+				}
 			}
 			if (p.getUserField() != null) {
 				p.getUserField().dyn(p);
@@ -1224,8 +1237,7 @@ public class MesoModel extends MDModel {
 		String mprop = null;
 		for (Iterator it = state.getProperties().keySet().iterator(); it.hasNext();) {
 			mprop = (String) it.next();
-			if (!mprop.equals("url") && !mprop.equals("filename") && !mprop.equals("codebase") && !mprop.equals("date")
-					&& !mprop.equals("size"))
+			if (!mprop.equals("url") && !mprop.equals("filename") && !mprop.equals("codebase") && !mprop.equals("date") && !mprop.equals("size"))
 				putProperty(mprop, state.getProperties().get(mprop));
 		}
 		monitor.setProgressMessage("Retrieving obstacles...");
@@ -1267,8 +1279,8 @@ public class MesoModel extends MDModel {
 			n = gb.length;
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view),
-							"The model contains more particles than default.", "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view), "The model contains more particles than default.", "Error",
+							JOptionPane.ERROR_MESSAGE);
 				}
 			});
 		}

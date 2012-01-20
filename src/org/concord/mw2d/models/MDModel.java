@@ -162,6 +162,10 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 
 	final static Random RANDOM = new Random();
 
+	public final static byte AIR_DRAG = 0;
+	public final static byte DRY_FRICTION = 1;
+	final static float DRY_FRICTION_CONVERTOR = 0.01f;
+
 	/*
 	 * In reality, Planck's constant = 6.626E-34 m^2kg/s. Here it is an adjustable parameter. The greater it is, the
 	 * more significant the quantum effect will be.
@@ -298,10 +302,8 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			if (modelTime > Float.MAX_VALUE - 10000.0f) {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
-						JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()),
-								"This model has been run for " + modelTime
-										+ " fs.\nTo avoid overflow, it must be reset to zero.", "Time overflow",
-								JOptionPane.WARNING_MESSAGE);
+						JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), "This model has been run for " + modelTime
+								+ " fs.\nTo avoid overflow, it must be reset to zero.", "Time overflow", JOptionPane.WARNING_MESSAGE);
 					}
 				});
 				setModelTime(0.0f);
@@ -316,12 +318,9 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 						EventQueue.invokeLater(new Runnable() {
 							public void run() {
 								JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()),
-										"The total energy increases too fast. The\n"
-												+ "numerical simulation may have diverged.\n"
-												+ "Please check the model to see:\n\n"
-												+ "1. If the model is overheated.\n"
-												+ "2. If the time step is too big.", "Divergence warning",
-										JOptionPane.WARNING_MESSAGE);
+										"The total energy increases too fast. The\n" + "numerical simulation may have diverged.\n"
+												+ "Please check the model to see:\n\n" + "1. If the model is overheated.\n"
+												+ "2. If the time step is too big.", "Divergence warning", JOptionPane.WARNING_MESSAGE);
 							}
 						});
 						stopImmediately();
@@ -333,12 +332,9 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 						EventQueue.invokeLater(new Runnable() {
 							public void run() {
 								JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()),
-										"The kinetic energy increases too fast. The\n"
-												+ "numerical simulation may have diverged.\n"
-												+ "Please check the model to see:\n\n"
-												+ "1. If the model is overheated.\n"
-												+ "2. If the time step is too big.", "Divergence warning",
-										JOptionPane.WARNING_MESSAGE);
+										"The kinetic energy increases too fast. The\n" + "numerical simulation may have diverged.\n"
+												+ "Please check the model to see:\n\n" + "1. If the model is overheated.\n"
+												+ "2. If the time step is too big.", "Divergence warning", JOptionPane.WARNING_MESSAGE);
 							}
 						});
 						stopImmediately();
@@ -677,8 +673,8 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			final String name = file.toString();
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), "Error in writing to "
-							+ name, "Write Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), "Error in writing to " + name, "Write Error",
+							JOptionPane.ERROR_MESSAGE);
 				}
 			});
 			return;
@@ -700,8 +696,8 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			final String name = file.toString();
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), "Encoding error: "
-							+ name, "Write Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), "Encoding error: " + name, "Write Error",
+							JOptionPane.ERROR_MESSAGE);
 				}
 			});
 		}
@@ -973,8 +969,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		if (!evalAction.isStopped())
 			return null;
 		if (evalThread == null) {
-			evalThread = new Thread("2D Model Script Runner: "
-					+ (MDModel.this instanceof MesoModel ? "Gay-Berne Model" : "Molecular Model")) {
+			evalThread = new Thread("2D Model Script Runner: " + (MDModel.this instanceof MesoModel ? "Gay-Berne Model" : "Molecular Model")) {
 				public void run() {
 					try {
 						evalAction.evaluate();
@@ -2145,9 +2140,9 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		RectangularObstacle.Delegate d;
 		for (Iterator it = delegates.iterator(); it.hasNext();) {
 			d = (RectangularObstacle.Delegate) it.next();
-			RectangularObstacle o = new RectangularObstacle(d.getX(), d.getY(), d.getWidth() == 0 ? 1 : d.getWidth(), d
-					.getHeight() == 0 ? 1 : d.getHeight(), d.getVx(), d.getVy(), d.getExternalFx(), d.getExternalFy(),
-					d.isWestProbe(), d.isNorthProbe(), d.isEastProbe(), d.isSouthProbe(), d.isRoundCornered());
+			RectangularObstacle o = new RectangularObstacle(d.getX(), d.getY(), d.getWidth() == 0 ? 1 : d.getWidth(), d.getHeight() == 0 ? 1
+					: d.getHeight(), d.getVx(), d.getVy(), d.getExternalFx(), d.getExternalFy(), d.isWestProbe(), d.isNorthProbe(), d.isEastProbe(),
+					d.isSouthProbe(), d.isRoundCornered());
 			o.setElasticity(d.getElasticity());
 			o.setFriction(d.getFriction());
 			o.setDensity(d.getDensity());
@@ -2338,17 +2333,16 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			public void run() {
 				switch (i) {
 				case FileUtilities.SOURCE_NOT_FOUND:
-					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), "Source " + name
-							+ " is not found.", "File not found", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), "Source " + name + " is not found.", "File not found",
+							JOptionPane.ERROR_MESSAGE);
 					break;
 				case FileUtilities.FILE_ACCESS_ERROR:
-					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), "Directory " + parent
-							+ " inaccessible.", "File access error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), "Directory " + parent + " inaccessible.",
+							"File access error", JOptionPane.ERROR_MESSAGE);
 					break;
 				case FileUtilities.WRITING_ERROR:
-					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()),
-							"Encountered error while writing to directory " + parent, "Writing error",
-							JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), "Encountered error while writing to directory "
+							+ parent, "Writing error", JOptionPane.ERROR_MESSAGE);
 					break;
 				}
 			}
@@ -2361,16 +2355,16 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			public void run() {
 				switch (i) {
 				case FileUtilities.SOURCE_NOT_FOUND:
-					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), "Source " + s
-							+ " is not found.", "File not found", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), "Source " + s + " is not found.", "File not found",
+							JOptionPane.ERROR_MESSAGE);
 					break;
 				case FileUtilities.FILE_ACCESS_ERROR:
-					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), "Destination " + d
-							+ " cannot be created.", "File access error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), "Destination " + d + " cannot be created.",
+							"File access error", JOptionPane.ERROR_MESSAGE);
 					break;
 				case FileUtilities.WRITING_ERROR:
-					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()),
-							"Encountered error while writing to " + d, "Writing error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), "Encountered error while writing to " + d,
+							"Writing error", JOptionPane.ERROR_MESSAGE);
 					break;
 				}
 			}
@@ -2466,10 +2460,8 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 				}
 				else {
 					if (getView().isShowing())
-						monitor.show(getView().getLocationOnScreen().x
-								+ (getView().getWidth() - monitor.getSize().width) / 2,
-								getView().getLocationOnScreen().y + (getView().getHeight() - monitor.getSize().height)
-										/ 2);
+						monitor.show(getView().getLocationOnScreen().x + (getView().getWidth() - monitor.getSize().width) / 2, getView()
+								.getLocationOnScreen().y + (getView().getHeight() - monitor.getSize().height) / 2);
 				}
 			}
 		});
@@ -2663,8 +2655,8 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 					e.printStackTrace();
 					EventQueue.invokeLater(new Runnable() {
 						public void run() {
-							JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), file
-									+ " was not found or has a problem.", "File error", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), file + " was not found or has a problem.",
+									"File error", JOptionPane.ERROR_MESSAGE);
 						}
 					});
 					return;
@@ -2781,8 +2773,8 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 						public void run() {
 							stopJob();
 							// prepareToRead();
-							JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()),
-									"Error in XML-decoding", "Error", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), "Error in XML-decoding", "Error",
+									JOptionPane.ERROR_MESSAGE);
 						}
 					});
 					e.printStackTrace();
@@ -2948,9 +2940,8 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			RectangularObstacle o = null;
 			for (Iterator it = obs.iterator(); it.hasNext();) {
 				o = (RectangularObstacle) it.next();
-				RectangularObstacle.Delegate rod = new RectangularObstacle.Delegate(o.x, o.y, o.width, o.height, o
-						.getVx(), o.getVy(), o.getHx(), o.getHy(), o.isWestProbe(), o.isNorthProbe(), o.isEastProbe(),
-						o.isSouthProbe());
+				RectangularObstacle.Delegate rod = new RectangularObstacle.Delegate(o.x, o.y, o.width, o.height, o.getVx(), o.getVy(), o.getHx(),
+						o.getHy(), o.isWestProbe(), o.isNorthProbe(), o.isEastProbe(), o.isSouthProbe());
 				rod.setDensity(o.getDensity());
 				rod.setUserField(o.getUserField());
 				rod.setElasticity(o.getElasticity());
