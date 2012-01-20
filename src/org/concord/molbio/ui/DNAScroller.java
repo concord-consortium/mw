@@ -265,9 +265,7 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 				int index = dnamodel.getCurrIndex();
 				int startIndex = dnamodel.getStartWindowIndex();
 				if (index < startIndex || index >= startIndex + nbasesinscroller) {
-					int xl = scrollOffset
-							+ (int) Math.round((double) ((w - 2 * scrollOffset) * index)
-									/ (double) dnamodel.getDNALength());
+					int xl = scrollOffset + (int) Math.round((double) ((w - 2 * scrollOffset) * index) / (double) dnamodel.getDNALength());
 					Graphics gc = g.create();
 					gc.setColor(Color.green);
 					gc.drawLine(xl, 0, xl, getSize().height);
@@ -322,8 +320,7 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 					dsi.strandType = DNA.DNA_STRAND_53;
 					dsi.baseIndex = dnamodel.getCurrIndex();
 					dsi.codon = dnamodel.get53Codon(dsi.baseIndex);
-					notifyItemListener(new ItemEvent(DNAScroller.this, ItemEvent.ITEM_STATE_CHANGED, dsi,
-							ItemEvent.SELECTED));
+					notifyItemListener(new ItemEvent(DNAScroller.this, ItemEvent.ITEM_STATE_CHANGED, dsi, ItemEvent.SELECTED));
 				}
 			}
 		});
@@ -490,13 +487,11 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 							dsi.rect = charRectangles53[i];
 							currentBase = dsi.baseIndex;
 							currentStrand = dsi.strandType;
-							if (!inPredefinedFragment(i + dnamodel.getStartWindowIndex()) && isMutationEnabled()
-									&& needPopupMenu(evt)) {
+							if (!inPredefinedFragment(i + dnamodel.getStartWindowIndex()) && isMutationEnabled() && needPopupMenu(evt)) {
 								handleMutationMenu(evt, dsi);
 							}
 							if (normalCodons) {
-								notifyItemListener(new ItemEvent(DNAScroller.this, ItemEvent.ITEM_STATE_CHANGED, dsi,
-										ItemEvent.SELECTED));
+								notifyItemListener(new ItemEvent(DNAScroller.this, ItemEvent.ITEM_STATE_CHANGED, dsi, ItemEvent.SELECTED));
 								setOpOffset();
 								scroller.repaint();
 								scrollBar.repaint();
@@ -519,13 +514,11 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 							dsi.rect = charRectangles35[i];
 							currentBase = dsi.baseIndex;
 							currentStrand = dsi.strandType;
-							if (!inPredefinedFragment(i + dnamodel.getStartWindowIndex()) && isMutationEnabled()
-									&& needPopupMenu(evt)) {
+							if (!inPredefinedFragment(i + dnamodel.getStartWindowIndex()) && isMutationEnabled() && needPopupMenu(evt)) {
 								handleMutationMenu(evt, dsi);
 							}
 							if (normalCodons) {
-								notifyItemListener(new ItemEvent(DNAScroller.this, ItemEvent.ITEM_STATE_CHANGED, dsi,
-										ItemEvent.SELECTED));
+								notifyItemListener(new ItemEvent(DNAScroller.this, ItemEvent.ITEM_STATE_CHANGED, dsi, ItemEvent.SELECTED));
 								setOpOffset();
 								scroller.repaint();
 								scrollBar.repaint();
@@ -623,35 +616,31 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 				switch (i) {
 				case 0:
 					if (baseChar != Nucleotide.ADENINE_NAME) {
-						substitutionMenu.add(new DNAScrollerMenuItem("<html>" + baseChar + " &#10140; A</html>", this,
-								M_SUBSTITUTION_A, dnaScrollerItem));
+						substitutionMenu.add(new DNAScrollerMenuItem("<html>" + baseChar + " &#10140; A</html>", this, M_SUBSTITUTION_A,
+								dnaScrollerItem));
 					}
-					insertionMenu.add(new DNAScrollerMenuItem(insertionString + " A", this, M_INSERTION_A,
-							dnaScrollerItem));
+					insertionMenu.add(new DNAScrollerMenuItem(insertionString + " A", this, M_INSERTION_A, dnaScrollerItem));
 					break;
 				case 1:
 					if (baseChar != Nucleotide.CYTOSINE_NAME) {
-						substitutionMenu.add(new DNAScrollerMenuItem("<html>" + baseChar + " &#10140; C</html>", this,
-								M_SUBSTITUTION_C, dnaScrollerItem));
+						substitutionMenu.add(new DNAScrollerMenuItem("<html>" + baseChar + " &#10140; C</html>", this, M_SUBSTITUTION_C,
+								dnaScrollerItem));
 					}
-					insertionMenu.add(new DNAScrollerMenuItem(insertionString + " C", this, M_INSERTION_C,
-							dnaScrollerItem));
+					insertionMenu.add(new DNAScrollerMenuItem(insertionString + " C", this, M_INSERTION_C, dnaScrollerItem));
 					break;
 				case 2:
 					if (baseChar != Nucleotide.GUANINE_NAME) {
-						substitutionMenu.add(new DNAScrollerMenuItem("<html>" + baseChar + " &#10140; G</html>", this,
-								M_SUBSTITUTION_G, dnaScrollerItem));
+						substitutionMenu.add(new DNAScrollerMenuItem("<html>" + baseChar + " &#10140; G</html>", this, M_SUBSTITUTION_G,
+								dnaScrollerItem));
 					}
-					insertionMenu.add(new DNAScrollerMenuItem(insertionString + " G", this, M_INSERTION_G,
-							dnaScrollerItem));
+					insertionMenu.add(new DNAScrollerMenuItem(insertionString + " G", this, M_INSERTION_G, dnaScrollerItem));
 					break;
 				case 3:
 					if (baseChar != Nucleotide.THYMINE_NAME) {
-						substitutionMenu.add(new DNAScrollerMenuItem("<html>" + baseChar + " &#10140; T</html>", this,
-								M_SUBSTITUTION_T, dnaScrollerItem));
+						substitutionMenu.add(new DNAScrollerMenuItem("<html>" + baseChar + " &#10140; T</html>", this, M_SUBSTITUTION_T,
+								dnaScrollerItem));
 					}
-					insertionMenu.add(new DNAScrollerMenuItem(insertionString + " T", this, M_INSERTION_T,
-							dnaScrollerItem));
+					insertionMenu.add(new DNAScrollerMenuItem(insertionString + " T", this, M_INSERTION_T, dnaScrollerItem));
 					break;
 				}
 			}
@@ -883,7 +872,7 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 			return null;
 		Rectangle[] rs = new Rectangle[model.get53StrandLengthFromCurrIndex()];
 		FontMetrics fm = g.getFontMetrics();
-		int sy = /* scroller.getLocation().y+ */scroller.getSize().height / 2 - 1;
+		int sy = scroller.getSize().height / 2 - 1;
 		Rectangle r = fm.getStringBounds(model.getDNA53String(), g).getBounds();
 		r.width = charw;
 		r.height = charh;
@@ -922,8 +911,7 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 		bim2 = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB_PRE);
 		createMagnifyGlassOp();
 		gplr = new GradientPaint(10, 5, Color.darkGray, bim.getWidth() - 10, 5, Color.lightGray);
-		gprl = new GradientPaint(10, bim.getHeight() - 5, Color.lightGray, bim.getWidth() - 10, bim.getHeight() - 5,
-				Color.darkGray);
+		gprl = new GradientPaint(10, bim.getHeight() - 5, Color.lightGray, bim.getWidth() - 10, bim.getHeight() - 5, Color.darkGray);
 	}
 
 	void createMagnifyGlassOp() {
@@ -1012,7 +1000,7 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 		return null;
 	}
 
-	synchronized void drawInUsageMode(Graphics g) {
+	private synchronized void drawInUsageMode(Graphics g) {
 		Color oldColor = g.getColor();
 		int startBase = currentBase;
 		if (startBase < 0)
@@ -1025,8 +1013,7 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 			Shape clip = g.getClip();
 			Rectangle visRect = clip.getBounds();
 			visRect.y = Math.min(charRectangles53[0].y, charRectangles35[0].y);
-			visRect.height = Math.max(charRectangles53[0].y + charRectangles53[0].height, charRectangles35[0].y
-					+ charRectangles35[0].height)
+			visRect.height = Math.max(charRectangles53[0].y + charRectangles53[0].height, charRectangles35[0].y + charRectangles35[0].height)
 					- visRect.y;
 			DNA dna = model.getDNA();
 			if (dna == null)
@@ -1054,8 +1041,8 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 				int needOffsetToCodon = 3 * (codonIndex / 3) + needOffset;
 				if (needOffsetToCodon + 2 > nBases - 1)
 					continue;
-				currCodon = Codon.getCodon(dnaString.charAt(needOffsetToCodon),
-						dnaString.charAt(needOffsetToCodon + 1), dnaString.charAt(needOffsetToCodon + 2));
+				currCodon = Codon.getCodon(dnaString.charAt(needOffsetToCodon), dnaString.charAt(needOffsetToCodon + 1),
+						dnaString.charAt(needOffsetToCodon + 2));
 				if (currCodon != prevCodon || (codonColor == null)) {
 					prevCodon = currCodon;
 					if (currCodon == null) {
@@ -1085,11 +1072,12 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 			}
 		}
 		catch (Throwable t) {
+			t.printStackTrace();
 		}
 		g.setColor(oldColor);
 	}
 
-	void draw35Codon(int i, Graphics g, char[] chars, FontMetrics fm) {
+	private void draw35Codon(int i, Graphics g, char[] chars, FontMetrics fm) {
 		if (fm == null)
 			fm = g.getFontMetrics();
 		int offsety = fm.getDescent();
@@ -1131,7 +1119,7 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 		}
 	}
 
-	void draw53Codon(int i, Graphics g, char[] chars, FontMetrics fm) {
+	private void draw53Codon(int i, Graphics g, char[] chars, FontMetrics fm) {
 		if (fm == null)
 			fm = g.getFontMetrics();
 		int offsety = fm.getHeight() - fm.getDescent();
@@ -1240,8 +1228,7 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 					backboneTipRectUp = new Rectangle(rBackBone.x, rBackBone.y - 2, 2, 2);
 				}
 				else {
-					backboneTipRectUp.translate(rBackBone.x - backboneTipRectUp.x, rBackBone.y - 2
-							- backboneTipRectUp.y);
+					backboneTipRectUp.translate(rBackBone.x - backboneTipRectUp.x, rBackBone.y - 2 - backboneTipRectUp.y);
 				}
 				backboneTipRect = backboneTipRectUp;
 			}
@@ -1253,8 +1240,7 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 					backboneTipRectDown = new Rectangle(rBackBone.x, rBackBone.y, 2, 2);
 				}
 				else {
-					backboneTipRectDown.translate(rBackBone.x - backboneTipRectDown.x, rBackBone.y + rBackBone.height
-							+ 1 - backboneTipRectDown.y);
+					backboneTipRectDown.translate(rBackBone.x - backboneTipRectDown.x, rBackBone.y + rBackBone.height + 1 - backboneTipRectDown.y);
 				}
 				backboneTipRect = backboneTipRectDown;
 			}
@@ -1809,8 +1795,7 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 			setDNAScrollerMenuItem(dnaScrollerItem);
 			addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent evt) {
-					DNAScrollerMenuItem.this.owner.doMutation(DNAScrollerMenuItem.this.mutationKind,
-							DNAScrollerMenuItem.this.dnaScrollerItem);
+					DNAScrollerMenuItem.this.owner.doMutation(DNAScrollerMenuItem.this.mutationKind, DNAScrollerMenuItem.this.dnaScrollerItem);
 				}
 			});
 		}
@@ -1846,8 +1831,7 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 	}
 
 	private static boolean needPopupMenu(MouseEvent e) {
-		return ((e.getModifiers() & InputEvent.CTRL_MASK) != 0) || e.isPopupTrigger()
-				|| SwingUtilities.isRightMouseButton(e);
+		return ((e.getModifiers() & InputEvent.CTRL_MASK) != 0) || e.isPopupTrigger() || SwingUtilities.isRightMouseButton(e);
 	}
 
 	public int print(Graphics g, PageFormat pf, int pi) throws PrinterException {

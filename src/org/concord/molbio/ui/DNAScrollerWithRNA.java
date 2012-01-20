@@ -99,15 +99,12 @@ public class DNAScrollerWithRNA extends DNAScroller {
 
 	public DNAScrollerWithRNA() {
 		super();
-		transcriptionEndEffect = new EndTranscriptionEffect(this, SCROLLER_TRANSCRIPTION_READY_STATE,
-				SCROLLER_TRANSLATION_READY_STATE);
-		transcriptionBeginEffect = new BeginTranscriptionEffect(this, SCROLLER_NORMAL_STATE,
-				SCROLLER_TRANSCRIPTION_READY_STATE);
+		transcriptionEndEffect = new EndTranscriptionEffect(this, SCROLLER_TRANSCRIPTION_READY_STATE, SCROLLER_TRANSLATION_READY_STATE);
+		transcriptionBeginEffect = new BeginTranscriptionEffect(this, SCROLLER_NORMAL_STATE, SCROLLER_TRANSCRIPTION_READY_STATE);
 		addRNATranscriptionListener(new RNATranscriptionListener() {
 			public void baseTranscripted(RNATranscriptionEvent evt) {
 				evt.setConsumed(true);
-				if (evt.getMode() == RNATranscriptionListener.MODE_TRANSCRIPTION_END
-						&& gotoTranslationAfterTranscription) {
+				if (evt.getMode() == RNATranscriptionListener.MODE_TRANSCRIPTION_END && gotoTranslationAfterTranscription) {
 					if (!oneStepMode)
 						startTranslation();
 				}
@@ -507,8 +504,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 	public boolean isMutationEnabled() {
 		if (mutationEnabled && (scrollerState == SCROLLER_NORMAL_STATE))
 			return true;
-		if (mutationAfterTranslationDoneAllowed && mutationEnabled
-				&& (scrollerState == SCROLLER_TRANSLATION_READY_STATE) && isTranslationEnded())
+		if (mutationAfterTranslationDoneAllowed && mutationEnabled && (scrollerState == SCROLLER_TRANSLATION_READY_STATE) && isTranslationEnded())
 			return true;
 		return false;
 	}
@@ -537,8 +533,8 @@ public class DNAScrollerWithRNA extends DNAScroller {
 	}
 
 	Shape getDefaultClipForStrands() {
-		Rectangle r = new Rectangle(getInsets().left + getLeftOffset(), 0, getSize().width - 2 * getLeftOffset()
-				- getInsets().left - getInsets().right, getSize().height);
+		Rectangle r = new Rectangle(getInsets().left + getLeftOffset(), 0, getSize().width - 2 * getLeftOffset() - getInsets().left
+				- getInsets().right, getSize().height);
 		return r;
 	}
 
@@ -736,20 +732,18 @@ public class DNAScrollerWithRNA extends DNAScroller {
 		if (op == null || model == null)
 			return;
 		if (scrollerState == SCROLLER_TRANSLATION_READY_STATE) {
-			float xop = getLeftOffset() + (model.getCurrIndex() - model.getStartWindowIndex()) / 3 * getCodonWidth()
-					+ getCodonWidth();
+			float xop = getLeftOffset() + (model.getCurrIndex() - model.getStartWindowIndex()) / 3 * getCodonWidth() + getCodonWidth();
 			op.setX(xop);
 			return;
 		}
 		if (scrollerState == SCROLLER_NORMAL_STATE) {
-			float xop = getLeftOffset() + (model.getCurrIndex() - model.getStartWindowIndex()) * getCodonWidth() / 3
-					+ getCodonWidth() / 2;
+			float xop = getLeftOffset() + (model.getCurrIndex() - model.getStartWindowIndex()) * getCodonWidth() / 3 + getCodonWidth() / 2;
 			op.setX(xop);
 			return;
 		}
 
-		float xop = getLeftOffset() + (model.getCurrIndex() - model.getStartWindowIndex()) * getCodonWidth() / 3
-				+ charw / 2 + getCodonDistance() + RNA_POLYMERASE_SIZE / 2;
+		float xop = getLeftOffset() + (model.getCurrIndex() - model.getStartWindowIndex()) * getCodonWidth() / 3 + charw / 2 + getCodonDistance()
+				+ RNA_POLYMERASE_SIZE / 2;
 		int reminder = currentBase % 3;
 		xop += reminder * getCodonWidth() / 3;
 		op.setX(xop);
@@ -836,8 +830,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 				Rectangle r = (rRNA != null && i >= 0 && i < rRNA.length) ? rRNA[i] : null;
 				if (r != null) {
 					drawCodonFrame(g, !isTranslationState, currChar, r);
-					g.drawChars(charsRNA, i, 1, r.x + r.width / 2 - cw / 2, isTranslationState ? r.y + r.height
-							- offsety : r.y + offsety);
+					g.drawChars(charsRNA, i, 1, r.x + r.width / 2 - cw / 2, isTranslationState ? r.y + r.height - offsety : r.y + offsety);
 					drawBackbone(g, r, !isTranslationState, true, ((startIndex + i) % 3 == 0));
 				}
 				if (oldComp != null) {
@@ -879,8 +872,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 				dy = -r.y
 						+ UPP_OFFSET
 						+ (int) Math.round((double) currentEffect.getCurrentStep()
-								* (double) (scroller.getSize().height - DOWN_OFFSET - 2 * charh - UPP_OFFSET)
-								/ currentEffect.getMaximumStep());
+								* (double) (scroller.getSize().height - DOWN_OFFSET - 2 * charh - UPP_OFFSET) / currentEffect.getMaximumStep());
 			}
 			else {
 				dy = -r.y + UPP_OFFSET;
@@ -894,8 +886,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 			dy = -r.y + scroller.getSize().height - DOWN_OFFSET - 2 * charh;
 			if (isInEffect()) {
 				dy -= (int) Math.round((double) currentEffect.getCurrentStep()
-						* (double) (scroller.getSize().height - DOWN_OFFSET - 2 * charh - UPP_OFFSET)
-						/ currentEffect.getMaximumStep());
+						* (double) (scroller.getSize().height - DOWN_OFFSET - 2 * charh - UPP_OFFSET) / currentEffect.getMaximumStep());
 			}
 			break;
 		}
@@ -947,8 +938,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 		Color currColor = g.getColor();
 		char currChar;
 		if (charRectangles35 != null && chars != null && i < charRectangles35.length && i < chars.length) {
-			boolean currentBaseBoolean = currentStrand == DNA.DNA_STRAND_35 && i == currentBase - startIndex
-					&& highlightCurrentBase();
+			boolean currentBaseBoolean = currentStrand == DNA.DNA_STRAND_35 && i == currentBase - startIndex && highlightCurrentBase();
 			currChar = chars[i];
 			int cw = fm.charWidth(currChar);
 			Rectangle r = charRectangles35[i];
@@ -999,8 +989,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 		Color currColor = g.getColor();
 		char currChar;
 		if (charRectangles53 != null && chars != null && i >= 0 && i < charRectangles53.length && i < chars.length) {
-			boolean currentBaseBoolean = currentStrand == DNA.DNA_STRAND_53 && i == currentBase - startIndex
-					&& highlightCurrentBase();
+			boolean currentBaseBoolean = currentStrand == DNA.DNA_STRAND_53 && i == currentBase - startIndex && highlightCurrentBase();
 			currChar = chars[i];
 			int cw = fm.charWidth(currChar);
 			Rectangle r = charRectangles53[i];
@@ -1049,8 +1038,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 				ret = UPP_OFFSET
 						+ charh
 						+ (int) Math.round((double) currentEffect.getCurrentStep()
-								* (double) (bim.getHeight() - DOWN_OFFSET - 2 * charh - UPP_OFFSET)
-								/ currentEffect.getMaximumStep());
+								* (double) (bim.getHeight() - DOWN_OFFSET - 2 * charh - UPP_OFFSET) / currentEffect.getMaximumStep());
 			}
 			else {
 				ret = bim.getHeight() - DOWN_OFFSET - charh;
@@ -1072,9 +1060,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 
 	public static void sayString(String str) {
 		try {
-			Runtime.getRuntime().exec(
-					new String[] { "osascript", "-e",
-							"say \"" + str + "\" using \"Agnes\" waiting until completion false" });
+			Runtime.getRuntime().exec(new String[] { "osascript", "-e", "say \"" + str + "\" using \"Agnes\" waiting until completion false" });
 		}
 		catch (Throwable t) {
 		}
@@ -1519,11 +1505,11 @@ public class DNAScrollerWithRNA extends DNAScroller {
 				int xop = insets.left + (int) op.getX() - getCodonWidth() / 2;
 				int yop = insets.top + rRNA[0].y;
 				Point pt = SwingUtilities.convertPoint(this, xop, yop, getParent());
-				Rectangle ribosomeRect = new Rectangle(insets.left + (int) op.getX() - Math.round(op.getR() - 2), yop
-						- Math.round(op.getH()), Math.round(2 * (op.getR() - 2)), Math.round(2 * op.getH()));
+				Rectangle ribosomeRect = new Rectangle(insets.left + (int) op.getX() - Math.round(op.getR() - 2), yop - Math.round(op.getH()),
+						Math.round(2 * (op.getR() - 2)), Math.round(2 * op.getH()));
 				ribosomeRect = SwingUtilities.convertRectangle(this, ribosomeRect, getParent());
-				notifyTranslationListeners(aminoacids[currentCodon], model.get53Codon(3 * currentCodon), pt,
-						ribosomeRect, RNATranslationListener.MODE_TRANSLATION_NEW_AMINO);
+				notifyTranslationListeners(aminoacids[currentCodon], model.get53Codon(3 * currentCodon), pt, ribosomeRect,
+						RNATranslationListener.MODE_TRANSLATION_NEW_AMINO);
 			}
 		}
 		else {
@@ -1594,8 +1580,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 		notifyTranslationListeners(null, null, null, null, mode);
 	}
 
-	private void notifyTranslationListeners(Aminoacid aminoacid, Codon codon, Point where, Rectangle ribosomeRect,
-			int mode) {
+	private void notifyTranslationListeners(Aminoacid aminoacid, Codon codon, Point where, Rectangle ribosomeRect, int mode) {
 		if (rNATranslationListeners == null || rNATranslationListeners.isEmpty())
 			return;
 		RNATranslationEvent evt = new RNATranslationEvent(this, aminoacid, codon, where, ribosomeRect, mode);
