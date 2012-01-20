@@ -402,7 +402,14 @@ public class Atom extends Particle {
 			codon = new String(Codon.getComplementaryCode(Aminoacid.getByAbbreviation(e.getName()).encode()));
 			Aminoacid aa = Codon.expressFromDNA(codon.toCharArray());
 			if (aa != null) {
-				setName("" + aa.getAbbreviation());
+				switch (model.aminoAcidNameStyle) {
+				case MolecularModel.ABBREVIATION:
+					setName(aa.getAbbreviation());
+					break;
+				case MolecularModel.ONE_LETTER:
+					setName("" + aa.getLetter());
+					break;
+				}
 				setCharge(aa.getCharge());
 				setHydrophobicity((int) aa.getHydrophobicity());
 			}
@@ -620,8 +627,7 @@ public class Atom extends Particle {
 		int x0 = (int) (rx - 0.5 * sigma) - skin;
 		int y0 = (int) (ry - 0.5 * sigma) - skin;
 		int d = (int) sigma + skin + skin;
-		return SwingUtilities.computeIntersection(0, 0, model.view.getWidth(), model.view.getHeight(), new Rectangle(
-				x0, y0, d, d));
+		return SwingUtilities.computeIntersection(0, 0, model.view.getWidth(), model.view.getHeight(), new Rectangle(x0, y0, d, d));
 	}
 
 	private Ellipse2D getShape() {
@@ -704,20 +710,17 @@ public class Atom extends Particle {
 		if (GrowthModeDialog.getMode() == GrowthModeDialog.ZIGZAG) {
 			if (model.view.insertAnAtom(rx + d * COS120, ry + d * SIN120, id, true)
 					|| model.view.insertAnAtom(rx + d * COS240, ry + d * SIN240, id, true)) {
-				model.bonds.add(new RadialBond.Builder(this, model.atom[model.getNumberOfAtoms() - 1]).bondLength(d)
-						.build());
+				model.bonds.add(new RadialBond.Builder(this, model.atom[model.getNumberOfAtoms() - 1]).bondLength(d).build());
 				MoleculeCollection.sort(model);
 				return true;
 			}
 		}
 		else if (GrowthModeDialog.getMode() == GrowthModeDialog.SPIRAL) {
-			if (model.view.insertAnAtom(rx - d, ry, id, true)
-					|| model.view.insertAnAtom(rx + d * COS120, ry + d * SIN120, id, true)
+			if (model.view.insertAnAtom(rx - d, ry, id, true) || model.view.insertAnAtom(rx + d * COS120, ry + d * SIN120, id, true)
 					|| model.view.insertAnAtom(rx + d * COS60, ry + d * SIN60, id, true)
 					|| model.view.insertAnAtom(rx + d * COS240, ry + d * SIN240, id, true)
 					|| model.view.insertAnAtom(rx + d * COS300, ry + d * SIN300, id, true)) {
-				model.bonds.add(new RadialBond.Builder(this, model.atom[model.getNumberOfAtoms() - 1]).bondLength(d)
-						.build());
+				model.bonds.add(new RadialBond.Builder(this, model.atom[model.getNumberOfAtoms() - 1]).bondLength(d).build());
 				MoleculeCollection.sort(model);
 				return true;
 			}
@@ -749,8 +752,7 @@ public class Atom extends Particle {
 	}
 
 	boolean outOfView() {
-		return rx + 0.5 * sigma < 0 || ry + 0.5 * sigma < 0 || rx - 0.5 * sigma > model.view.getWidth()
-				|| ry - 0.5 * sigma > model.view.getHeight();
+		return rx + 0.5 * sigma < 0 || ry + 0.5 * sigma < 0 || rx - 0.5 * sigma > model.view.getWidth() || ry - 0.5 * sigma > model.view.getHeight();
 	}
 
 	public void render(Graphics2D g) {
@@ -827,8 +829,7 @@ public class Atom extends Particle {
 						if (es.indexOf(e.getEnergyLevel()) != 0) {
 							g.setColor(model.view.contrastBackground());
 							g.setStroke(ViewAttribute.DASHED);
-							g.drawOval((int) (rx - 0.7 * sigma), (int) (ry - 0.7 * sigma), (int) (1.4 * sigma),
-									(int) (1.4 * sigma));
+							g.drawOval((int) (rx - 0.7 * sigma), (int) (ry - 0.7 * sigma), (int) (1.4 * sigma), (int) (1.4 * sigma));
 						}
 					}
 				}
@@ -845,8 +846,8 @@ public class Atom extends Particle {
 		if (isBlinking()) {
 			g.setColor(blinkColor);
 			g.setStroke(ViewAttribute.DASHED);
-			g.drawOval((int) Math.round(rx - 0.7 * sigma), (int) Math.round(ry - 0.7 * sigma), (int) Math
-					.round(1.4 * sigma), (int) Math.round(1.4 * sigma));
+			g.drawOval((int) Math.round(rx - 0.7 * sigma), (int) Math.round(ry - 0.7 * sigma), (int) Math.round(1.4 * sigma),
+					(int) Math.round(1.4 * sigma));
 		}
 
 	}

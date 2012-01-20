@@ -57,6 +57,10 @@ public class MolecularModel extends AtomicModel {
 	private double theta, costheta, sintheta;
 	private double forceInXForI, forceInXForK, forceInYForI, forceInYForK;
 
+	final static byte ABBREVIATION = 0;
+	final static byte ONE_LETTER = 1;
+	byte aminoAcidNameStyle = ABBREVIATION;
+
 	public MolecularModel() {
 		super();
 		suplement();
@@ -80,6 +84,10 @@ public class MolecularModel extends AtomicModel {
 	public MolecularModel(int xbox, int ybox, int tapeLength) {
 		super(xbox, ybox, tapeLength);
 		suplement();
+	}
+
+	void setAminoAcidNameStyle(byte style) {
+		aminoAcidNameStyle = style;
 	}
 
 	public void addBondChangeListener(BondChangeListener bcl) {
@@ -123,8 +131,7 @@ public class MolecularModel extends AtomicModel {
 		if (getCutOff() < 1.001f)
 			return vdwLines;
 		double ratio = view.getVDWLinesRatio() * view.getVDWLinesRatio();
-		if (((hasEmbeddedMovie() && movie.getCurrentFrameIndex() == movie.length() - 1) || !hasEmbeddedMovie())
-				&& (job != null && !job.isStopped())) {
+		if (((hasEmbeddedMovie() && movie.getCurrentFrameIndex() == movie.length() - 1) || !hasEmbeddedMovie()) && (job != null && !job.isStopped())) {
 			// neighbor list can be used
 			double rxi, ryi, rxij, ryij, rijsq, sig, eps;
 			int jbeg, jend, jnab, j;
@@ -199,8 +206,7 @@ public class MolecularModel extends AtomicModel {
 		else {
 			chargeLines.clear();
 		}
-		if ((hasEmbeddedMovie() && movie.getCurrentFrameIndex() == movie.length() - 1) || !hasEmbeddedMovie()
-				&& (job != null && !job.isStopped())) {
+		if ((hasEmbeddedMovie() && movie.getCurrentFrameIndex() == movie.length() - 1) || !hasEmbeddedMovie() && (job != null && !job.isStopped())) {
 			// neighbor list can be used
 			double rxi, ryi, rxij, ryij, rijsq, sig;
 			int jbeg, jend, jnab, j;
@@ -269,8 +275,7 @@ public class MolecularModel extends AtomicModel {
 		else {
 			ssLines.clear();
 		}
-		if ((hasEmbeddedMovie() && movie.getCurrentFrameIndex() == movie.length() - 1) || !hasEmbeddedMovie()
-				&& (job != null && !job.isStopped())) {
+		if ((hasEmbeddedMovie() && movie.getCurrentFrameIndex() == movie.length() - 1) || !hasEmbeddedMovie() && (job != null && !job.isStopped())) {
 			// neighbor list can be used
 			double rxi, ryi, rxij, ryij, rijsq, sig;
 			int jbeg, jend, jnab, j;
@@ -286,8 +291,7 @@ public class MolecularModel extends AtomicModel {
 						j = neighborList[jnab];
 						if (atom[j].outOfView())
 							continue;
-						if ((atom[i].getID() == ID_CYS || atom[i].getID() == ID_MET)
-								&& (atom[j].getID() == ID_CYS || atom[j].getID() == ID_MET)) {
+						if ((atom[i].getID() == ID_CYS || atom[i].getID() == ID_MET) && (atom[j].getID() == ID_CYS || atom[j].getID() == ID_MET)) {
 							if (bonds.getBond(atom[i], atom[j]) == null) {
 								rxij = rxi - atom[j].rx;
 								ryij = ryi - atom[j].ry;
@@ -315,8 +319,7 @@ public class MolecularModel extends AtomicModel {
 				for (j = i + 1; j < numberOfAtoms; j++) {
 					if (atom[j].outOfView())
 						continue;
-					if ((atom[i].getID() == ID_CYS || atom[i].getID() == ID_MET)
-							&& (atom[j].getID() == ID_CYS || atom[j].getID() == ID_MET)) {
+					if ((atom[i].getID() == ID_CYS || atom[i].getID() == ID_MET) && (atom[j].getID() == ID_CYS || atom[j].getID() == ID_MET)) {
 						if (bonds.getBond(atom[i], atom[j]) == null) {
 							rxij = rxi - atom[j].rx;
 							ryij = ryi - atom[j].ry;
@@ -341,8 +344,7 @@ public class MolecularModel extends AtomicModel {
 		else {
 			bpLines.clear();
 		}
-		if ((hasEmbeddedMovie() && movie.getCurrentFrameIndex() == movie.length() - 1) || !hasEmbeddedMovie()
-				&& (job != null && !job.isStopped())) {
+		if ((hasEmbeddedMovie() && movie.getCurrentFrameIndex() == movie.length() - 1) || !hasEmbeddedMovie() && (job != null && !job.isStopped())) {
 			// neighbor list can be used
 			double rxi, ryi, rxij, ryij, rijsq, sig;
 			int jbeg, jend, jnab, j;
@@ -405,8 +407,8 @@ public class MolecularModel extends AtomicModel {
 			return false;
 		int iID = atom[i].getID();
 		int jID = atom[j].getID();
-		return (iID == ID_A && jID == ID_T) || (iID == ID_T && jID == ID_A) || (iID == ID_C && jID == ID_G)
-				|| (iID == ID_G && jID == ID_C) || (iID == ID_A && jID == ID_U) || (iID == ID_U && jID == ID_A);
+		return (iID == ID_A && jID == ID_T) || (iID == ID_T && jID == ID_A) || (iID == ID_C && jID == ID_G) || (iID == ID_G && jID == ID_C)
+				|| (iID == ID_A && jID == ID_U) || (iID == ID_U && jID == ID_A);
 	}
 
 	private void resetBondTable() {
@@ -662,8 +664,7 @@ public class MolecularModel extends AtomicModel {
 						if (sintheta < 0.0001)
 							sintheta = 0.0001;
 
-						commonPrefactor = bendStrength * (theta - bendAngle) / (sintheta * rij * rkj)
-								* GF_CONVERSION_CONSTANT;
+						commonPrefactor = bendStrength * (theta - bendAngle) / (sintheta * rij * rkj) * GF_CONVERSION_CONSTANT;
 						etemp = xij * xkj + yij * ykj;
 
 						forceInXForI = commonPrefactor * (xkj - etemp * xij / rijsq);
@@ -721,8 +722,7 @@ public class MolecularModel extends AtomicModel {
 				Point2D com = null;
 				double rxij = 0.0, ryij = 0.0, temp = 0.0, rij = 0.0, fxij = 0.0, fyij = 0.0;
 				// double sumx=0.0, sumy=0.0;
-				double factor = 5 * solvent.getTemperatureFactor(heatBathActivated() ? heatBath
-						.getExpectedTemperature() : getTemperature());
+				double factor = 5 * solvent.getTemperatureFactor(heatBathActivated() ? heatBath.getExpectedTemperature() : getTemperature());
 				synchronized (molecules.getSynchronizationLock()) {
 					for (int im1 = 0, nm1 = molecules.size(); im1 < nm1; im1++) {
 						mol = molecules.get(im1);
@@ -908,8 +908,8 @@ public class MolecularModel extends AtomicModel {
 		for (i = 0; i < n; i++) {
 			abd = (AngularBond.Delegate) in.readObject();
 			monitor.setProgressMessage("Reading " + abd + "...");
-			aBond = new AngularBond(atom[abd.getAtom1()], atom[abd.getAtom2()], atom[abd.getAtom3()], abd
-					.getBondAngle(), abd.getBondStrength(), abd.getChemicalEnergy());
+			aBond = new AngularBond(atom[abd.getAtom1()], atom[abd.getAtom2()], atom[abd.getAtom3()], abd.getBondAngle(), abd.getBondStrength(),
+					abd.getChemicalEnergy());
 			aBond.setModel(this);
 			bends.add(aBond);
 		}
