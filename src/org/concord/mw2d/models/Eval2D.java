@@ -256,8 +256,7 @@ class Eval2D extends AbstractEval {
 
 	private String useParticleVariables(String s, int frame) {
 		if (frame >= model.getTapePointer()) {
-			out(ScriptEvent.FAILED, "There is no such frame: " + frame + ". (Total frames: " + model.getTapePointer()
-					+ ".)");
+			out(ScriptEvent.FAILED, "There is no such frame: " + frame + ". (Total frames: " + model.getTapePointer() + ".)");
 			return null;
 		}
 		int n = model.getNumberOfParticles();
@@ -352,8 +351,7 @@ class Eval2D extends AbstractEval {
 					break;
 				i = (int) Math.round(x);
 				if (i < 0 || i >= n) {
-					out(ScriptEvent.FAILED, i + " is an invalid index: must be between 0 and " + (n - 1)
-							+ " (inclusive).");
+					out(ScriptEvent.FAILED, i + " is an invalid index: must be between 0 and " + (n - 1) + " (inclusive).");
 					break;
 				}
 				v = escapeMetaCharacters(v);
@@ -1367,8 +1365,7 @@ class Eval2D extends AbstractEval {
 					public void run() {
 						readdMouseAndKeyScripts(model.getInitializationScript());
 						model.notifyModelListeners(new ModelEvent(model, ModelEvent.MODEL_RESET));
-						model.notifyPageComponentListeners(new PageComponentEvent(model,
-								PageComponentEvent.COMPONENT_RESET));
+						model.notifyPageComponentListeners(new PageComponentEvent(model, PageComponentEvent.COMPONENT_RESET));
 					}
 				});
 				return true;
@@ -1383,8 +1380,7 @@ class Eval2D extends AbstractEval {
 			if ("snapshot".equals(strLC)) { // snapshot
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
-						model.notifyPageComponentListeners(new PageComponentEvent(view,
-								PageComponentEvent.SNAPSHOT_TAKEN));
+						model.notifyPageComponentListeners(new PageComponentEvent(view, PageComponentEvent.SNAPSHOT_TAKEN));
 					}
 				});
 				return true;
@@ -1392,8 +1388,7 @@ class Eval2D extends AbstractEval {
 			if ("nodescription".equals(strLC.substring(8).trim())) { // snapshot nodescription
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
-						model.notifyPageComponentListeners(new PageComponentEvent(view,
-								PageComponentEvent.SNAPSHOT_TAKEN_NODESCRIPTION));
+						model.notifyPageComponentListeners(new PageComponentEvent(view, PageComponentEvent.SNAPSHOT_TAKEN_NODESCRIPTION));
 					}
 				});
 				return true;
@@ -1459,8 +1454,7 @@ class Eval2D extends AbstractEval {
 				selection = selectTextBoxes(str);
 			}
 			if (!getAsTask())
-				out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0)
-						+ " text boxes are selected.");
+				out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0) + " text boxes are selected.");
 			return true;
 		}
 
@@ -1490,8 +1484,7 @@ class Eval2D extends AbstractEval {
 				selection = selectRectangles(str);
 			}
 			if (!getAsTask())
-				out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0)
-						+ " rectangles are selected.");
+				out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0) + " rectangles are selected.");
 			return true;
 		}
 
@@ -1506,8 +1499,7 @@ class Eval2D extends AbstractEval {
 				selection = selectTriangles(str);
 			}
 			if (!getAsTask())
-				out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0)
-						+ " triangles are selected.");
+				out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0) + " triangles are selected.");
 			return true;
 		}
 
@@ -1522,8 +1514,7 @@ class Eval2D extends AbstractEval {
 				selection = selectEllipses(str);
 			}
 			if (!getAsTask())
-				out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0)
-						+ " ellipses are selected.");
+				out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0) + " ellipses are selected.");
 			return true;
 		}
 
@@ -1555,8 +1546,7 @@ class Eval2D extends AbstractEval {
 					selection = selectRadialBonds(str);
 				}
 				if (!getAsTask())
-					out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0)
-							+ " radial bonds are selected.");
+					out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0) + " radial bonds are selected.");
 				return true;
 			}
 
@@ -1571,8 +1561,7 @@ class Eval2D extends AbstractEval {
 					selection = selectAngularBonds(str);
 				}
 				if (!getAsTask())
-					out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0)
-							+ " angular bonds are selected.");
+					out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0) + " angular bonds are selected.");
 				return true;
 			}
 
@@ -1587,8 +1576,7 @@ class Eval2D extends AbstractEval {
 					selection = selectMolecules(str);
 				}
 				if (!getAsTask())
-					out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0)
-							+ " molecules are selected.");
+					out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0) + " molecules are selected.");
 				return true;
 			}
 
@@ -1603,8 +1591,7 @@ class Eval2D extends AbstractEval {
 					selection = selectObstacles(str);
 				}
 				if (!getAsTask())
-					out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0)
-							+ " obstacles are selected.");
+					out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0) + " obstacles are selected.");
 				return true;
 			}
 
@@ -1619,8 +1606,7 @@ class Eval2D extends AbstractEval {
 					selection = selectElements(str);
 				}
 				if (!getAsTask())
-					out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0)
-							+ " atoms are selected.");
+					out(ScriptEvent.SUCCEEDED, (selection != null ? selection.cardinality() : 0) + " atoms are selected.");
 				return true;
 			}
 
@@ -1818,8 +1804,7 @@ class Eval2D extends AbstractEval {
 		RadialBond rb = mm.bonds.getBond(at1, at2);
 		if (rb == null) {
 			if (x > ZERO) {
-				rb = new RadialBond.Builder(at1, at2).bondLength(Math.sqrt(at1.distanceSquare(at2))).bondStrength(x)
-						.build();
+				rb = new RadialBond.Builder(at1, at2).bondLength(Math.sqrt(at1.distanceSquare(at2))).bondStrength(x).build();
 				mm.bonds.add(rb);
 				MoleculeCollection.sort(mm);
 				view.repaint();
@@ -1885,8 +1870,7 @@ class Eval2D extends AbstractEval {
 		Atom at2 = mm.atom[j];
 		Atom at3 = mm.atom[k];
 		if (mm.bonds.getBond(at1, at2) == null || mm.bonds.getBond(at2, at3) == null) {
-			out(ScriptEvent.FAILED, "Cannot build an angular bond for atom " + at2.getIndex()
-					+ " that has only one radial bond.");
+			out(ScriptEvent.FAILED, "Cannot build an angular bond for atom " + at2.getIndex() + " that has only one radial bond.");
 			return false;
 		}
 		AngularBond ab = mm.bends.getBond(at1, at2, at3);
@@ -2088,8 +2072,7 @@ class Eval2D extends AbstractEval {
 			final String s2 = s1;
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view), s2, "Counting results",
-							JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view), s2, "Counting results", JOptionPane.INFORMATION_MESSAGE);
 				}
 			});
 		}
@@ -3653,8 +3636,7 @@ class Eval2D extends AbstractEval {
 			if (s2.startsWith("%")) {
 				s2 = s2.substring(1);
 			}
-			if ("visible".equalsIgnoreCase(s[0]) || "style".equalsIgnoreCase(s[0])
-					|| "torquetype".equalsIgnoreCase(s[0])) {
+			if ("visible".equalsIgnoreCase(s[0]) || "style".equalsIgnoreCase(s[0]) || "torquetype".equalsIgnoreCase(s[0])) {
 				setRbondField(s2, s[0], s[1]);
 			}
 			else {
@@ -4727,8 +4709,7 @@ class Eval2D extends AbstractEval {
 						x[i] *= IR_CONVERTER;
 					RectangularObstacle obs = new RectangularObstacle(x[0], x[1], x[2], x[3]);
 					if (((AtomisticView) view).intersects(obs)) {
-						out(ScriptEvent.FAILED,
-								"Cannot add an obstacle of the specified size to the specified location: " + str);
+						out(ScriptEvent.FAILED, "Cannot add an obstacle of the specified size to the specified location: " + str);
 					}
 					else {
 						model.obstacles.add(obs);
@@ -4785,8 +4766,8 @@ class Eval2D extends AbstractEval {
 					final String errorAddress = address;
 					EventQueue.invokeLater(new Runnable() {
 						public void run() {
-							JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view), "Image "
-									+ errorAddress + " was not found.", "Image not found", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view), "Image " + errorAddress + " was not found.",
+									"Image not found", JOptionPane.ERROR_MESSAGE);
 						}
 					});
 					return false;
@@ -5199,8 +5180,7 @@ class Eval2D extends AbstractEval {
 		if (Double.isNaN(x))
 			return false;
 		if (!model.rotateSelectedParticles(x)) {
-			out(ScriptEvent.FAILED,
-					"Rotation by this angle is not permitted, because some particles may be placed in inappropriate locations.");
+			out(ScriptEvent.FAILED, "Rotation by this angle is not permitted, because some particles may be placed in inappropriate locations.");
 		}
 		if (view instanceof AtomisticView) {
 			((AtomisticView) view).refreshJmol();
@@ -5615,6 +5595,8 @@ class Eval2D extends AbstractEval {
 			m.gb[i].mass = x / M_CONVERTER;
 		else if (s == "friction")
 			m.gb[i].friction = (float) x;
+		else if (s == "damp_type")
+			m.gb[i].dampType = (byte) x;
 		else if (s == "inertia")
 			m.gb[i].inertia = x;
 		else if (s == "breadth")
@@ -5688,6 +5670,8 @@ class Eval2D extends AbstractEval {
 		}
 		else if (s == "friction")
 			m.atom[i].friction = (float) x;
+		else if (s == "damp_type")
+			m.atom[i].dampType = (byte) x;
 		else if (s == "restraint") {
 			if (m.atom[i].restraint == null) {
 				m.atom[i].restraint = new PointRestraint(x * 0.01, m.atom[i].rx, m.atom[i].ry);
@@ -6991,8 +6975,7 @@ class Eval2D extends AbstractEval {
 					Atom p;
 					for (int k = 0; k < nop; k++) {
 						p = (Atom) model.getParticle(k);
-						if (p.getID() <= end && p.getID() >= start && p.getRx() >= x && p.getRx() <= x + w
-								&& p.getRy() >= y && p.getRy() <= y + h)
+						if (p.getID() <= end && p.getID() >= start && p.getRx() >= x && p.getRx() <= x + w && p.getRy() >= y && p.getRy() <= y + h)
 							bs.set(k);
 					}
 				}
@@ -7036,8 +7019,7 @@ class Eval2D extends AbstractEval {
 					Atom p;
 					for (int k = 0; k < nop; k++) {
 						p = (Atom) model.getParticle(k);
-						if (p.getID() == id && p.getRx() >= x && p.getRx() <= x + w && p.getRy() >= y
-								&& p.getRy() <= y + h)
+						if (p.getID() == id && p.getRx() >= x && p.getRx() <= x + w && p.getRy() >= y && p.getRy() <= y + h)
 							bs.set(k);
 					}
 				}
@@ -7164,8 +7146,7 @@ class Eval2D extends AbstractEval {
 			synchronized (mm.bonds.getSynchronizationLock()) {
 				for (Iterator it = mm.bonds.iterator(); it.hasNext();) {
 					rb = (RadialBond) it.next();
-					if (inRangeInclusive(rb.atom1.getIndex(), beg, end)
-							|| inRangeInclusive(rb.atom1.getIndex(), beg, end)) {
+					if (inRangeInclusive(rb.atom1.getIndex(), beg, end) || inRangeInclusive(rb.atom1.getIndex(), beg, end)) {
 						bs.set(rb.getIndex());
 					}
 				}
@@ -7250,8 +7231,7 @@ class Eval2D extends AbstractEval {
 			synchronized (mm.bends.getSynchronizationLock()) {
 				for (Iterator it = mm.bends.iterator(); it.hasNext();) {
 					ab = (AngularBond) it.next();
-					if (inRangeInclusive(ab.atom1.getIndex(), beg, end)
-							|| inRangeInclusive(ab.atom2.getIndex(), beg, end)
+					if (inRangeInclusive(ab.atom1.getIndex(), beg, end) || inRangeInclusive(ab.atom2.getIndex(), beg, end)
 							|| inRangeInclusive(ab.atom3.getIndex(), beg, end)) {
 						bs.set(ab.getIndex());
 					}

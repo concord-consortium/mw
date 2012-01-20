@@ -479,8 +479,7 @@ public abstract class AtomicModel extends MDModel {
 	 * align atoms in a two-dimensional lattice. You may choose any number for the inputs, but only those that fall
 	 * within the current boundary will be added.
 	 */
-	public void alignParticles(int id, int m, int n, double xoffset, double yoffset, double xspacing, double yspacing,
-			boolean randomize) {
+	public void alignParticles(int id, int m, int n, double xoffset, double yoffset, double xspacing, double yspacing, boolean randomize) {
 		Element e = getElement(id);
 		if (e == null)
 			throw new IllegalArgumentException("atom id incorrect");
@@ -501,8 +500,7 @@ public abstract class AtomicModel extends MDModel {
 			for (int j = 0; j < n; j++) {
 				rx = xoffset + i * xspacing;
 				ry = yoffset + j * yspacing;
-				if (rx - sigma * 0.5 >= x && rx + sigma * 0.5 < x + w && ry - sigma * 0.5 >= y
-						&& ry + sigma * 0.5 < y + h) {
+				if (rx - sigma * 0.5 >= x && rx + sigma * 0.5 < x + w && ry - sigma * 0.5 >= y && ry + sigma * 0.5 < y + h) {
 					atom[k].rx = rx;
 					atom[k].ry = ry;
 					if (randomize) {
@@ -1210,8 +1208,7 @@ public abstract class AtomicModel extends MDModel {
 			data[i + numberOfAtoms * 3] = atom[i].vy;
 		}
 		if (obstacles.isEmpty()) {
-			stateHolder = new StateHolder(getModelTime(), heatBathActivated() ? heatBath.getExpectedTemperature() : 0,
-					getNumberOfParticles(), data);
+			stateHolder = new StateHolder(getModelTime(), heatBathActivated() ? heatBath.getExpectedTemperature() : 0, getNumberOfParticles(), data);
 		}
 		else {
 			int nmov = 0;
@@ -1220,8 +1217,8 @@ public abstract class AtomicModel extends MDModel {
 					nmov++;
 			}
 			if (nmov == 0) {
-				stateHolder = new StateHolder(getModelTime(), heatBathActivated() ? heatBath.getExpectedTemperature()
-						: 0, getNumberOfParticles(), data);
+				stateHolder = new StateHolder(getModelTime(), heatBathActivated() ? heatBath.getExpectedTemperature() : 0, getNumberOfParticles(),
+						data);
 			}
 			else {
 				double[] data2 = new double[nmov * 4];
@@ -1237,8 +1234,8 @@ public abstract class AtomicModel extends MDModel {
 						k++;
 					}
 				}
-				stateHolder = new StateHolder(getModelTime(), heatBathActivated() ? heatBath.getExpectedTemperature()
-						: 0, getNumberOfParticles(), data, nmov, data2);
+				stateHolder = new StateHolder(getModelTime(), heatBathActivated() ? heatBath.getExpectedTemperature() : 0, getNumberOfParticles(),
+						data, nmov, data2);
 			}
 		}
 		super.run();
@@ -1627,8 +1624,7 @@ public abstract class AtomicModel extends MDModel {
 	}
 
 	private static boolean isComplementary(int i, int j) {
-		return ((i == ID_A && j == ID_T) || (i == ID_T && j == ID_A))
-				|| ((i == ID_C && j == ID_G) || (i == ID_G && j == ID_C))
+		return ((i == ID_A && j == ID_T) || (i == ID_T && j == ID_A)) || ((i == ID_C && j == ID_G) || (i == ID_G && j == ID_C))
 				|| ((i == ID_A && j == ID_U) || (i == ID_U && j == ID_A));
 	}
 
@@ -1729,20 +1725,17 @@ public abstract class AtomicModel extends MDModel {
 				if (hate) {
 					poten_LJ[i][j] = 4.0 * epsij[i][j] * sr6 * crossRepulsionIntensity;
 					rtemp = 1.0 / (cutoff * sigij[i][j]);
-					slope_LJ[i][j] = -24.0 * epsij[i][j] * sr6 * rtemp * crossRepulsionIntensity
-							* GF_CONVERSION_CONSTANT;
+					slope_LJ[i][j] = -24.0 * epsij[i][j] * sr6 * rtemp * crossRepulsionIntensity * GF_CONVERSION_CONSTANT;
 				}
 				else if (!hate && !mix) {
 					poten_LJ[i][j] = 4.0 * epsij[i][j] * (sr12 - sr6);
 					rtemp = 1.0 / (cutoff * sigij[i][j]);
-					slope_LJ[i][j] = 4.0 * epsij[i][j] * (-12.0 * sr12 * rtemp + 6.0 * sr6 * rtemp)
-							* GF_CONVERSION_CONSTANT;
+					slope_LJ[i][j] = 4.0 * epsij[i][j] * (-12.0 * sr12 * rtemp + 6.0 * sr6 * rtemp) * GF_CONVERSION_CONSTANT;
 				}
 				else {
 					poten_LJ[i][j] = 2.0 * (eps[i] + eps[j]) * (sr12 - sr6);
 					rtemp = 1.0 / (cutoff * Math.sqrt(sig[i] * sig[j]));
-					slope_LJ[i][j] = 2.0 * (eps[i] + eps[j]) * (-12.0 * sr12 * rtemp + 6.0 * sr6 * rtemp)
-							* GF_CONVERSION_CONSTANT;
+					slope_LJ[i][j] = 2.0 * (eps[i] + eps[j]) * (-12.0 * sr12 * rtemp + 6.0 * sr6 * rtemp) * GF_CONVERSION_CONSTANT;
 				}
 			}
 		}
@@ -1770,8 +1763,7 @@ public abstract class AtomicModel extends MDModel {
 			for (int j = i + 1; j < n; j++) {
 				// Christie Williams@colostate.edu pointed out that the listSquareMatrix elements for A-T and C-G pairs
 				// should be doubled as those of cutOffSquareMatrix
-				listSquareMatrix[j][i] = listSquareMatrix[i][j] = sig[j] * sig[i] * rList * rList
-						* (isComplementary(i, j) ? 4 : 1);
+				listSquareMatrix[j][i] = listSquareMatrix[i][j] = sig[j] * sig[i] * rList * rList * (isComplementary(i, j) ? 4 : 1);
 			}
 		}
 		for (int i = 0; i < n; i++) {
@@ -1792,7 +1784,6 @@ public abstract class AtomicModel extends MDModel {
 	 * 
 	 * @GuardedBy("this")
 	 */
-	 
 
 	public synchronized int getNumberOfAtoms() {
 		return numberOfAtoms;
@@ -1803,7 +1794,6 @@ public abstract class AtomicModel extends MDModel {
 	 * 
 	 * @GuardedBy("this")
 	 */
-	 
 
 	public synchronized void setNumberOfAtoms(int n) {
 		if (n < 0)
@@ -1877,7 +1867,6 @@ public abstract class AtomicModel extends MDModel {
 	 * 
 	 * @GuardedBy("this")
 	 */
-	 
 
 	public synchronized void setTemperature(double temperature) {
 		if (temperature < ZERO)
@@ -1961,7 +1950,6 @@ public abstract class AtomicModel extends MDModel {
 	 * 
 	 * @GuardedBy("this")
 	 */
-	 
 
 	public synchronized void setTemperature(List<Atom> list, double temperature) {
 		if (list == null || list.isEmpty())
@@ -2864,9 +2852,17 @@ public abstract class AtomicModel extends MDModel {
 		double etemp;
 
 		if (atom[0].friction > ZERO) {
-			double dmp = GF_CONVERSION_CONSTANT * universe.getViscosity() * atom[0].friction / atom[0].mass;
-			atom[0].fx -= dmp * atom[0].vx;
-			atom[0].fy -= dmp * atom[0].vy;
+			double dmp = GF_CONVERSION_CONSTANT * atom[0].friction / atom[0].mass;
+			switch (atom[0].dampType) {
+			case AIR_DRAG:
+				atom[0].fx -= dmp * atom[0].vx * universe.getViscosity();
+				atom[0].fy -= dmp * atom[0].vy * universe.getViscosity();
+				break;
+			case DRY_FRICTION:
+				atom[0].fx -= dmp * Math.signum(atom[0].vx) * DRY_FRICTION_CONVERTOR;
+				atom[0].fy -= dmp * Math.signum(atom[0].vy) * DRY_FRICTION_CONVERTOR;
+				break;
+			}
 		}
 
 		for (VectorField f : fields) {
@@ -2975,7 +2971,6 @@ public abstract class AtomicModel extends MDModel {
 	 * @return potential energy per atom
 	 * @GuardedBy("this")
 	 */
-	 
 
 	public synchronized double computeForce(final int time) {
 
@@ -3223,9 +3218,17 @@ public abstract class AtomicModel extends MDModel {
 				vsum += etemp;
 			}
 			if (a.friction > ZERO) {
-				inverseMass = GF_CONVERSION_CONSTANT * universe.getViscosity() * a.friction / a.mass;
-				a.fx -= inverseMass * a.vx;
-				a.fy -= inverseMass * a.vy;
+				inverseMass = GF_CONVERSION_CONSTANT * a.friction / a.mass;
+				switch (a.dampType) {
+				case AIR_DRAG:
+					a.fx -= inverseMass * a.vx * universe.getViscosity();
+					a.fy -= inverseMass * a.vy * universe.getViscosity();
+					break;
+				case DRY_FRICTION:
+					a.fx -= inverseMass * Math.signum(a.vx) * DRY_FRICTION_CONVERTOR;
+					a.fy -= inverseMass * Math.signum(a.vy) * DRY_FRICTION_CONVERTOR;
+					break;
+				}
 			}
 			if (a.getUserField() != null) {
 				a.getUserField().dyn(a);
@@ -3339,7 +3342,6 @@ public abstract class AtomicModel extends MDModel {
 	 * 
 	 * @GuardedBy("this")
 	 */
-	 
 
 	public synchronized void steepestDescent(double stepLength) {
 		if (numberOfAtoms == 1)
@@ -3380,7 +3382,6 @@ public abstract class AtomicModel extends MDModel {
 	 * @return average kinetic energy per atom
 	 * @GuardedBy("this")
 	 */
-	 
 
 	public synchronized double getKE() {
 		double x = 0.0;
@@ -3522,8 +3523,7 @@ public abstract class AtomicModel extends MDModel {
 				notifyChange();
 				view.repaint();
 			}
-			else if (name.equals("Excited state moved") || name.equals("Excited state inserted")
-					|| name.equals("Lifetime changed")) {
+			else if (name.equals("Excited state moved") || name.equals("Excited state inserted") || name.equals("Lifetime changed")) {
 				notifyChange();
 			}
 
@@ -3857,8 +3857,7 @@ public abstract class AtomicModel extends MDModel {
 
 		/* special treatment of same nucleotides */
 		if ((idOfI == ID_A && idOfJ == ID_A) || (idOfI == ID_C && idOfJ == ID_C) || (idOfI == ID_G && idOfJ == ID_G)
-				|| (idOfI == ID_T && idOfJ == ID_T) || (idOfI == ID_U && idOfJ == ID_U)
-				|| (idOfI == ID_SP && idOfJ == ID_SP))
+				|| (idOfI == ID_T && idOfJ == ID_T) || (idOfI == ID_U && idOfJ == ID_U) || (idOfI == ID_SP && idOfJ == ID_SP))
 			return true;
 
 		/* same element other than nucleotides */
@@ -4192,8 +4191,7 @@ public abstract class AtomicModel extends MDModel {
 		String mprop = null;
 		for (Iterator it = state.getProperties().keySet().iterator(); it.hasNext();) {
 			mprop = (String) it.next();
-			if (!mprop.equals("url") && !mprop.equals("filename") && !mprop.equals("codebase") && !mprop.equals("date")
-					&& !mprop.equals("size"))
+			if (!mprop.equals("url") && !mprop.equals("filename") && !mprop.equals("codebase") && !mprop.equals("date") && !mprop.equals("size"))
 				putProperty(mprop, state.getProperties().get(mprop));
 		}
 		monitor.setProgressMessage("Retrieving obstacles...");
@@ -4269,8 +4267,8 @@ public abstract class AtomicModel extends MDModel {
 			nas = atom.length;
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view),
-							"The model contains more particles than default.", "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view), "The model contains more particles than default.", "Error",
+							JOptionPane.ERROR_MESSAGE);
 				}
 			});
 		}
@@ -4472,8 +4470,7 @@ public abstract class AtomicModel extends MDModel {
 					obs = (RectangularObstacle) it.next();
 					if (obs.isMovable()) {
 						if (obs.rxryQ != null && !obs.rxryQ.isEmpty()) {
-							obs.setRect(obs.rxryQ.getQueue1().getData(frame), obs.rxryQ.getQueue2().getData(frame), obs
-									.getWidth(), obs.getHeight());
+							obs.setRect(obs.rxryQ.getQueue1().getData(frame), obs.rxryQ.getQueue2().getData(frame), obs.getWidth(), obs.getHeight());
 						}
 						if (obs.vxvyQ != null && !obs.vxvyQ.isEmpty()) {
 							obs.vx = obs.vxvyQ.getQueue1().getData(frame);
@@ -4488,8 +4485,7 @@ public abstract class AtomicModel extends MDModel {
 				if (atom[i].getElectrons().isEmpty())
 					continue;
 				atom[i].getElectron(0).setEnergyLevel(
-						getElement(atom[i].id).getElectronicStructure().getEnergyLevel(
-								atom[i].excitationQ.getData(frame)));
+						getElement(atom[i].id).getElectronicStructure().getEnergyLevel(atom[i].excitationQ.getData(frame)));
 			}
 			notifyUpdateListeners(new UpdateEvent(AtomicModel.this, UpdateEvent.VIEW_UPDATED));
 		}
