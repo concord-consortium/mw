@@ -4461,6 +4461,13 @@ class Eval2D extends AbstractEval {
 				notifyChange();
 				return true;
 			}
+			else if (s0 == "amino_acid_name_style") {
+				if (model instanceof MolecularModel) {
+					((MolecularModel) model).setAminoAcidNameStyle((byte) Math.round(x));
+					notifyChange();
+				}
+				return true;
+			}
 			else if (s0 == "view_refresh_interval") {
 				model.paintView.setInterval((int)x);
 				notifyChange();
