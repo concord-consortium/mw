@@ -344,8 +344,7 @@ public class DNAScrollerModel implements MutationListener {
 		Strand s35 = dna.getComplimentaryStrand(DNA.DNA_STRAND_BASE);
 		dnaString53 = s53.toString().substring(startWindowIndex);
 		dnaString35 = s35.toString().substring(startWindowIndex);
-		rnaString = (rna != null && (startWindowIndex < rna.getLength())) ? rna.toString().substring(startWindowIndex)
-				: "";
+		rnaString = (rna != null && (startWindowIndex < rna.getLength())) ? rna.toString().substring(startWindowIndex) : "";
 	}
 
 	public String getDNA53String() {
