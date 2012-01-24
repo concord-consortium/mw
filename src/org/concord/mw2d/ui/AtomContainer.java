@@ -48,6 +48,7 @@ import java.util.regex.Pattern;
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
 import javax.swing.Action;
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -138,7 +139,6 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 	private JButton dnaPlayButton;
 	private JButton dnaStopButton;
 	private JButton dnaStepButton;
-	private CodonTextField dnaField;
 	private ProteinSynthesisModelProperties proSynProp;
 	private DiatomicConfigure diatomicConfigure;
 	private TriatomicConfigure triatomicConfigure;
@@ -294,9 +294,10 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 				String s = script.substring(matcher.end()).trim().toLowerCase();
 				if (s.startsWith("dna")) {
 					final String s2 = s.substring(3).trim();
-					if (s2.length() % 3 != 0) {
-						JOptionPane.showMessageDialog(view, "Input DNA code must be 3xn! Please try again.", "Triplets required",
-								JOptionPane.ERROR_MESSAGE, null);
+					int remainder = s2.length() % 3;
+					if (remainder != 0) {
+						JOptionPane.showMessageDialog(view, "Input DNA code must be 3xn! Please add " + (3 - remainder) + " or remove " + remainder
+								+ " nucleotide(s).", "Triplets required", JOptionPane.ERROR_MESSAGE, null);
 						return null;
 					}
 					char c;
@@ -1117,37 +1118,83 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 		}
 	}
 
-	private boolean inputDNAString() {
+	private void inputDNAString() {
+
 		if (!EventQueue.isDispatchThread())
 			throw new RuntimeException("must be called in the event thread.");
-		if (dnaField == null) {
-			dnaField = new CodonTextField();
-			dnaField.setPreferredSize(new Dimension(250, 20));
-		}
+
+		final CodonTextField dnaField = new CodonTextField();
+		dnaField.setPreferredSize(new Dimension(400, 25));
 		try {
 			dnaField.setText(dnaScroller.getModel().getDNA().getCodingRegionAsString());
 		}
-		catch (NullPointerException npe) {
+		catch (Exception e) {
 			dnaField.setText(null);
 		}
-		if (JOptionPane.showConfirmDialog(view, dnaField, "Type/copy/paste DNA code on sense (5'-3') strand", JOptionPane.OK_CANCEL_OPTION,
-				JOptionPane.PLAIN_MESSAGE) == JOptionPane.OK_OPTION) {
-			if (dnaField.getText().length() % 3 != 0) {
-				JOptionPane.showMessageDialog(view, "Input DNA code must be 3xn! Please try again.", "Triplets required", JOptionPane.ERROR_MESSAGE,
-						null);
-				return false;
+
+		final JDialog dialog = new JDialog(JOptionPane.getFrameForComponent(view), "Type/copy/paste DNA code on sense (5'-3') strand", true);
+		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		dialog.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				dialog.dispose();
 			}
-			dnaPlayButton.setEnabled(true);
-			dnaScroller.reset();
-			EventQueue.invokeLater(new Runnable() {
-				public void run() {
-					dnaScroller.setDNA(new DNA(dnaField.getText(), contextDNA));
-					dnaScroller.repaint();
+
+			public void windowActivated(WindowEvent e) {
+				dnaField.requestFocusInWindow();
+			}
+		});
+
+		JPanel p = new JPanel(new BorderLayout());
+		dialog.setContentPane(p);
+
+		JPanel buttonPanel = new JPanel();
+		p.add(buttonPanel, BorderLayout.SOUTH);
+
+		JPanel fieldPanel = new JPanel(new BorderLayout());
+		fieldPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+		p.add(fieldPanel, BorderLayout.CENTER);
+		fieldPanel.add(dnaField, BorderLayout.CENTER);
+
+		ActionListener okListener = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				final String s2 = dnaField.getText().trim();
+				int remainder = s2.length() % 3;
+				if (remainder != 0) {
+					JOptionPane.showMessageDialog(view, "Input DNA code must be 3xn! Please add " + (3 - remainder) + " or remove " + remainder
+							+ " nucleotide(s).", "Triplets required", JOptionPane.ERROR_MESSAGE, null);
+					return;
 				}
-			});
-			return true;
-		}
-		return false;
+				dnaPlayButton.setEnabled(true);
+				dnaScroller.reset();
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						dnaScroller.setDNA(new DNA(s2, contextDNA));
+						dnaScroller.repaint();
+					}
+				});
+				dialog.dispose();
+			}
+		};
+		dnaField.addActionListener(okListener);
+
+		String s = getInternationalText("OK");
+		JButton okButton = new JButton(s != null ? s : "OK");
+		okButton.addActionListener(okListener);
+		buttonPanel.add(okButton);
+
+		s = getInternationalText("Cancel");
+		JButton cancelButton = new JButton(s != null ? s : "Cancel");
+		cancelButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dialog.dispose();
+			}
+		});
+		buttonPanel.add(cancelButton);
+
+		dialog.pack();
+		dialog.setLocationRelativeTo(this);
+		dialog.setVisible(true);
+
 	}
 
 	public void createDNAPanel() {
