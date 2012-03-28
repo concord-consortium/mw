@@ -173,7 +173,7 @@ public class LinePropertiesPanel extends PropertiesPanel {
 		label = new JLabel("<html>X<sub>1</sub> (" + (s != null ? s : "in pixels") + "):</html>", JLabel.LEFT);
 		label.setBorder(margin);
 		p.add(label);
-		IntegerTextField tf = new IntegerTextField((int) line.getX1(), 0, 1000);
+		IntegerTextField tf = new IntegerTextField((int) line.getX1(), 0, 10000);
 		tf.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				IntegerTextField tf = (IntegerTextField) e.getSource();
@@ -193,7 +193,7 @@ public class LinePropertiesPanel extends PropertiesPanel {
 		label = new JLabel("<html>Y<sub>1</sub> (" + (s != null ? s : "in pixels") + "):</html>", JLabel.LEFT);
 		label.setBorder(margin);
 		p.add(label);
-		tf = new IntegerTextField((int) line.getY1(), 0, 1000);
+		tf = new IntegerTextField((int) line.getY1(), 0, 10000);
 		tf.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				IntegerTextField tf = (IntegerTextField) e.getSource();
@@ -213,7 +213,7 @@ public class LinePropertiesPanel extends PropertiesPanel {
 		label = new JLabel("<html>X<sub>2</sub> (" + (s != null ? s : "in pixels") + "):</html>", JLabel.LEFT);
 		label.setBorder(margin);
 		p.add(label);
-		tf = new IntegerTextField((int) line.getX2(), 0, 1000);
+		tf = new IntegerTextField((int) line.getX2(), 0, 10000);
 		tf.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				IntegerTextField tf = (IntegerTextField) e.getSource();
@@ -233,7 +233,7 @@ public class LinePropertiesPanel extends PropertiesPanel {
 		label = new JLabel("<html>Y<sub>2</sub> (" + (s != null ? s : "in pixels") + "):</html>", JLabel.LEFT);
 		label.setBorder(margin);
 		p.add(label);
-		tf = new IntegerTextField((int) line.getY2(), 0, 1000);
+		tf = new IntegerTextField((int) line.getY2(), 0, 10000);
 		tf.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				IntegerTextField tf = (IntegerTextField) e.getSource();

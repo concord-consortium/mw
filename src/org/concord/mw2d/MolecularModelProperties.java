@@ -137,13 +137,11 @@ class MolecularModelProperties extends ModelProperties {
 		ljCheckBox.setEnabled(false);
 
 		JPanel panel = new JPanel(new GridLayout(1, 3, 5, 3));
-		panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory
-				.createEmptyBorder(10, 10, 10, 10)));
+		panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory.createEmptyBorder(10, 10, 10, 10)));
 
 		panel.add(new JLabel("Reaction Interval", SwingConstants.LEFT));
 		try {
-			reactionIntervalField = new IntegerTextField(m.getJob().getTaskByName(ReactionModel.REACT).getInterval(),
-					1, 100);
+			reactionIntervalField = new IntegerTextField(m.getJob().getTaskByName(ReactionModel.REACT).getInterval(), 1, 100);
 		}
 		catch (Exception e) {
 			reactionIntervalField = new IntegerTextField(10, 1, 100);
@@ -162,8 +160,7 @@ class MolecularModelProperties extends ModelProperties {
 
 	private void setModel2(MolecularModel m) {
 
-		setTitle((m instanceof ReactionModel ? "Chemical Reaction Simulator" : "Basic 2D Molecular Simulator")
-				+ " Properties");
+		setTitle((m instanceof ReactionModel ? "Chemical Reaction Simulator" : "Basic 2D Molecular Simulator") + " Properties");
 		String s = null;
 		if (m instanceof ReactionModel) {
 			s = MDView.getInternationalText("ChemicalReactorProperties");
@@ -181,16 +178,15 @@ class MolecularModelProperties extends ModelProperties {
 		model = m;
 
 		Rectangle2D.Double dim = (Rectangle2D.Double) model.getBoundary().getView();
-		widthField = new RealNumberTextField(0.1 * dim.width, 25.0, 0.1 * SCREEN_SIZE.width);
-		heightField = new RealNumberTextField(0.1 * dim.height, 10.0, 0.1 * SCREEN_SIZE.height);
+		widthField = new RealNumberTextField(0.1 * dim.width, 25.0, 4000);
+		heightField = new RealNumberTextField(0.1 * dim.height, 10.0, 4000);
 		viscosityField = new RealNumberTextField(m.getUniverse().getViscosity(), 0.1, 5.0);
 		stepField = new RealNumberTextField(model.getTimeStep(), 0.00001, 5.0, 8);
 
 		/* objects */
 
 		JPanel panel = new JPanel(new BorderLayout());
-		panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory
-				.createEmptyBorder(8, 8, 8, 8)));
+		panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory.createEmptyBorder(8, 8, 8, 8)));
 		s = MDView.getInternationalText("ObjectTab");
 		tabbedPane.add(s != null ? s : "Objects", panel);
 
@@ -229,8 +225,7 @@ class MolecularModelProperties extends ModelProperties {
 		p.add(new JLabel(" \u00c5"));
 
 		s = MDView.getInternationalText("BoundaryLabel");
-		label = new HyperlinkLabel("<html><font color=\"#0000ff\"><u>" + (s != null ? s : "Boundary")
-				+ "</u></font></html>", SwingConstants.LEFT);
+		label = new HyperlinkLabel("<html><font color=\"#0000ff\"><u>" + (s != null ? s : "Boundary") + "</u></font></html>", SwingConstants.LEFT);
 		label.setToolTipText("Click to open the Boundary Tool");
 		((HyperlinkLabel) label).setAction(new Runnable() {
 			public void run() {
@@ -272,9 +267,9 @@ class MolecularModelProperties extends ModelProperties {
 
 		s = MDView.getInternationalText("PhysicalBoundLabel");
 		p.add(new JLabel(s != null ? s : "Physical Bound", SwingConstants.LEFT));
-		label = new JLabel(bound.getType() == RectangularBoundary.DBC_ID ? "(0 / 0 / " + format(0.1 * dim.width)
-				+ " / " + format(0.1 * dim.height) + ")" : "(" + format(0.1 * bound.x) + " / " + format(0.1 * bound.y)
-				+ " / " + format(0.1 * bound.width) + " / " + format(0.1 * bound.height) + ")");
+		label = new JLabel(bound.getType() == RectangularBoundary.DBC_ID ? "(0 / 0 / " + format(0.1 * dim.width) + " / " + format(0.1 * dim.height)
+				+ ")" : "(" + format(0.1 * bound.x) + " / " + format(0.1 * bound.y) + " / " + format(0.1 * bound.width) + " / "
+				+ format(0.1 * bound.height) + ")");
 		label.setBorder(BUTTON_BORDER);
 		p.add(label);
 		p.add(new JLabel(" \u00c5"));
@@ -302,24 +297,21 @@ class MolecularModelProperties extends ModelProperties {
 			info += (s != null ? s : "<b>File</b>") + ": " + str + "<br>";
 		Date date = (Date) model.getProperty("date");
 		s = MDView.getInternationalText("LastModifiedLabel");
-		info += (date != null ? (s != null ? s : "<b>Last modified</b>") + ": " + date
-				: "The current model has never been saved.")
+		info += (date != null ? (s != null ? s : "<b>Last modified</b>") + ": " + date : "The current model has never been saved.")
 				+ "</font></body></html>";
 		panel.add(new JLabel(info), BorderLayout.SOUTH);
 
 		/* interations */
 
 		panel = new JPanel(new BorderLayout());
-		panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory
-				.createEmptyBorder(8, 8, 8, 8)));
+		panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory.createEmptyBorder(8, 8, 8, 8)));
 		s = MDView.getInternationalText("InteractionTab");
 		tabbedPane.add(s != null ? s : "Interactions", panel);
 
 		p = new JPanel(new GridLayout(9, 2, 2, 2));
 		panel.add(p, BorderLayout.NORTH);
 
-		label = new HyperlinkLabel("<html><font color=\"#0000ff\"><u>Lennard-Jones</u></font></html>",
-				SwingConstants.LEFT);
+		label = new HyperlinkLabel("<html><font color=\"#0000ff\"><u>Lennard-Jones</u></font></html>", SwingConstants.LEFT);
 		label.setToolTipText("Click to open the Lennard-Jones Potential Editor");
 		((HyperlinkLabel) label).setAction(new Runnable() {
 			public void run() {
@@ -357,8 +349,8 @@ class MolecularModelProperties extends ModelProperties {
 		p.add(label);
 
 		s = MDView.getInternationalText("GravitationalFieldLabel");
-		label = new HyperlinkLabel("<html><font color=\"#0000ff\"><u>" + (s != null ? s : "Gravitational Field")
-				+ "</u></font></html>", SwingConstants.LEFT);
+		label = new HyperlinkLabel("<html><font color=\"#0000ff\"><u>" + (s != null ? s : "Gravitational Field") + "</u></font></html>",
+				SwingConstants.LEFT);
 		label.setToolTipText("Click to open the Gravity Tool");
 		((HyperlinkLabel) label).setAction(new Runnable() {
 			public void run() {
@@ -371,8 +363,8 @@ class MolecularModelProperties extends ModelProperties {
 		p.add(label);
 
 		s = MDView.getInternationalText("ElectricFieldLabel");
-		label = new HyperlinkLabel("<html><font color=\"#0000ff\"><u>" + (s != null ? s : "Electric Field")
-				+ "</u></font></html>", SwingConstants.LEFT);
+		label = new HyperlinkLabel("<html><font color=\"#0000ff\"><u>" + (s != null ? s : "Electric Field") + "</u></font></html>",
+				SwingConstants.LEFT);
 		label.setToolTipText("Click to open the Electric Field Tool");
 		((HyperlinkLabel) label).setAction(new Runnable() {
 			public void run() {
@@ -385,8 +377,8 @@ class MolecularModelProperties extends ModelProperties {
 		p.add(label);
 
 		s = MDView.getInternationalText("MagneticFieldLabel");
-		label = new HyperlinkLabel("<html><font color=\"#0000ff\"><u>" + (s != null ? s : "Magnetic Field")
-				+ "</u></font></html>", SwingConstants.LEFT);
+		label = new HyperlinkLabel("<html><font color=\"#0000ff\"><u>" + (s != null ? s : "Magnetic Field") + "</u></font></html>",
+				SwingConstants.LEFT);
 		label.setToolTipText("Click to open the Magnetic Field Tool");
 		((HyperlinkLabel) label).setAction(new Runnable() {
 			public void run() {
@@ -422,8 +414,7 @@ class MolecularModelProperties extends ModelProperties {
 
 		/* atom profile */
 		panel = new JPanel(new BorderLayout());
-		panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory
-				.createEmptyBorder(8, 8, 8, 8)));
+		panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory.createEmptyBorder(8, 8, 8, 8)));
 		s = MDView.getInternationalText("CompositionTab");
 		tabbedPane.add(s != null ? s : "Composition", panel);
 		panel.add(new AtomComposition(model), BorderLayout.CENTER);
@@ -431,8 +422,7 @@ class MolecularModelProperties extends ModelProperties {
 		/* dielectric constant */
 
 		panel = new JPanel(new BorderLayout());
-		panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory
-				.createEmptyBorder(8, 8, 8, 8)));
+		panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory.createEmptyBorder(8, 8, 8, 8)));
 		s = MDView.getInternationalText("DielectricsTab");
 		tabbedPane.add(s != null ? s : "Dielectics", panel);
 
@@ -446,8 +436,7 @@ class MolecularModelProperties extends ModelProperties {
 		slider.setMajorTickSpacing(20);
 		slider.setMinorTickSpacing(1);
 		slider.setValue((int) model.getUniverse().getDielectricConstant());
-		slider.setBorder(new TitledBorder(BorderFactory.createEtchedBorder(), s != null ? s
-				: "Dielectric Constant (Dimensionless)", 0, 0));
+		slider.setBorder(new TitledBorder(BorderFactory.createEtchedBorder(), s != null ? s : "Dielectric Constant (Dimensionless)", 0, 0));
 
 		Hashtable<Integer, JLabel> tableOfLabels = new Hashtable<Integer, JLabel>();
 		JLabel label4 = new JLabel("80 (water)");
@@ -479,22 +468,20 @@ class MolecularModelProperties extends ModelProperties {
 			}
 		});
 		panel.add(slider, BorderLayout.CENTER);
-		panel.add(new JLabel(new ImageIcon(model.getView().getClass().getResource("images/Dielectrics.gif"))),
-				BorderLayout.NORTH);
+		panel.add(new JLabel(new ImageIcon(model.getView().getClass().getResource("images/Dielectrics.gif"))), BorderLayout.NORTH);
 
 		/* script */
 
 		scriptPanel = new JPanel(new BorderLayout(2, 2));
-		scriptPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory
-				.createEmptyBorder(8, 8, 8, 8)));
+		scriptPanel
+				.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory.createEmptyBorder(8, 8, 8, 8)));
 		s = MDView.getInternationalText("ScriptTab");
 		tabbedPane.add(s != null ? s : "Script", scriptPanel);
 
 		p = new JPanel(new BorderLayout(10, 10));
 		p.setPreferredSize(new Dimension(360, 200));
 		s = MDView.getInternationalText("ScriptToRunAfterLoadingModelLabel");
-		p.setBorder(new TitledBorder(BorderFactory.createEtchedBorder(), s != null ? s
-				: "Script to run right after loading page", 0, 0));
+		p.setBorder(new TitledBorder(BorderFactory.createEtchedBorder(), s != null ? s : "Script to run right after loading page", 0, 0));
 		scriptPanel.add(p, BorderLayout.CENTER);
 
 		scriptArea = new PastableTextArea(model.getInitializationScript());

@@ -22,10 +22,8 @@ package org.concord.mw2d;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Frame;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -45,7 +43,6 @@ abstract class ModelProperties extends JDialog {
 
 	final static BasicBorders.ButtonBorder BUTTON_BORDER = new BasicBorders.ButtonBorder(Color.lightGray, Color.white,
 			Color.black, Color.gray);
-	final static Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
 
 	JTabbedPane tabbedPane;
 

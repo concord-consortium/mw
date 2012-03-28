@@ -108,16 +108,15 @@ class MesoModelProperties extends ModelProperties {
 		model = m;
 
 		Dimension dim = model.getView().getSize();
-		widthField = new RealNumberTextField(dim.width * 0.1, 10.0, SCREEN_SIZE.width * 0.1);
-		heightField = new RealNumberTextField(dim.height * 0.1, 10.0, SCREEN_SIZE.height * 0.1);
+		widthField = new RealNumberTextField(dim.width * 0.1, 10.0, 4000);
+		heightField = new RealNumberTextField(dim.height * 0.1, 10.0, 4000);
 		viscosityField = new RealNumberTextField(m.getUniverse().getViscosity(), 0.1, 5.0);
 		stepField = new RealNumberTextField(model.getTimeStep(), 0.00001, 5.0, 8);
 
 		/* objects */
 
 		JPanel panel = new JPanel(new BorderLayout());
-		panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory
-				.createEmptyBorder(8, 8, 8, 8)));
+		panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory.createEmptyBorder(8, 8, 8, 8)));
 		s = MDView.getInternationalText("ObjectTab");
 		tabbedPane.add(s != null ? s : "Objects", panel);
 
@@ -168,9 +167,8 @@ class MesoModelProperties extends ModelProperties {
 
 		s = MDView.getInternationalText("PhysicalBoundLabel");
 		p.add(new JLabel(s != null ? s : "Physical Bound", SwingConstants.LEFT));
-		label = new JLabel(model.getBoundary().getType() == RectangularBoundary.DBC_ID ? "(0 / 0 / "
-				+ format(0.1 * dim.width) + " / " + format(0.1 * dim.height) + ")" : "("
-				+ format(0.1 * model.getBoundary().x) + " / " + format(0.1 * model.getBoundary().y) + " / "
+		label = new JLabel(model.getBoundary().getType() == RectangularBoundary.DBC_ID ? "(0 / 0 / " + format(0.1 * dim.width) + " / "
+				+ format(0.1 * dim.height) + ")" : "(" + format(0.1 * model.getBoundary().x) + " / " + format(0.1 * model.getBoundary().y) + " / "
 				+ format(0.1 * model.getBoundary().width) + " / " + format(0.1 * model.getBoundary().height) + ")");
 		label.setBorder(BUTTON_BORDER);
 		p.add(label);
@@ -199,16 +197,14 @@ class MesoModelProperties extends ModelProperties {
 			info += (s != null ? s : "<b>File</b>") + ": " + str + "<br>";
 		Date date = (Date) model.getProperty("date");
 		s = MDView.getInternationalText("LastModifiedLabel");
-		info += (date != null ? (s != null ? s : "<b>Last modified</b>") + ": " + date
-				: "The current model has never been saved.")
+		info += (date != null ? (s != null ? s : "<b>Last modified</b>") + ": " + date : "The current model has never been saved.")
 				+ "</font></body></html>";
 		panel.add(new JLabel(info), BorderLayout.SOUTH);
 
 		/* interations */
 
 		panel = new JPanel(new BorderLayout());
-		panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory
-				.createEmptyBorder(8, 8, 8, 8)));
+		panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory.createEmptyBorder(8, 8, 8, 8)));
 		s = MDView.getInternationalText("InteractionTab");
 		tabbedPane.add(s != null ? s : "Interactions", panel);
 
@@ -221,8 +217,8 @@ class MesoModelProperties extends ModelProperties {
 		p.add(label);
 
 		s = MDView.getInternationalText("GravitationalFieldLabel");
-		label = new HyperlinkLabel("<html><font color=\"#0000ff\"><u>" + (s != null ? s : "Gravitational Field")
-				+ "</u></font></html>", SwingConstants.LEFT);
+		label = new HyperlinkLabel("<html><font color=\"#0000ff\"><u>" + (s != null ? s : "Gravitational Field") + "</u></font></html>",
+				SwingConstants.LEFT);
 		label.setToolTipText("Click to open the Gravity Tool");
 		((HyperlinkLabel) label).setAction(new Runnable() {
 			public void run() {
@@ -236,8 +232,8 @@ class MesoModelProperties extends ModelProperties {
 
 		s = MDView.getInternationalText("ElectricFieldLabel");
 		s = MDView.getInternationalText("ElectricFieldLabel");
-		label = new HyperlinkLabel("<html><font color=\"#0000ff\"><u>" + (s != null ? s : "Electric Field")
-				+ "</u></font></html>", SwingConstants.LEFT);
+		label = new HyperlinkLabel("<html><font color=\"#0000ff\"><u>" + (s != null ? s : "Electric Field") + "</u></font></html>",
+				SwingConstants.LEFT);
 		label.setToolTipText("Click to open the Electric Field Tool");
 		((HyperlinkLabel) label).setAction(new Runnable() {
 			public void run() {
@@ -251,8 +247,8 @@ class MesoModelProperties extends ModelProperties {
 
 		s = MDView.getInternationalText("MagneticFieldLabel");
 		s = MDView.getInternationalText("MagneticFieldLabel");
-		label = new HyperlinkLabel("<html><font color=\"#0000ff\"><u>" + (s != null ? s : "Magnetic Field")
-				+ "</u></font></html>", SwingConstants.LEFT);
+		label = new HyperlinkLabel("<html><font color=\"#0000ff\"><u>" + (s != null ? s : "Magnetic Field") + "</u></font></html>",
+				SwingConstants.LEFT);
 		label.setToolTipText("Click to open the Magnetic Field Tool");
 		((HyperlinkLabel) label).setAction(new Runnable() {
 			public void run() {
@@ -267,8 +263,7 @@ class MesoModelProperties extends ModelProperties {
 		/* dielectric constant */
 
 		panel = new JPanel(new BorderLayout());
-		panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory
-				.createEmptyBorder(8, 8, 8, 8)));
+		panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory.createEmptyBorder(8, 8, 8, 8)));
 		s = MDView.getInternationalText("DielectricsTab");
 		tabbedPane.add(s != null ? s : "Dielectics", panel);
 
@@ -312,22 +307,20 @@ class MesoModelProperties extends ModelProperties {
 			}
 		});
 		panel.add(slider, BorderLayout.CENTER);
-		panel.add(new JLabel(new ImageIcon(model.getView().getClass().getResource("images/Dielectrics.gif"))),
-				BorderLayout.NORTH);
+		panel.add(new JLabel(new ImageIcon(model.getView().getClass().getResource("images/Dielectrics.gif"))), BorderLayout.NORTH);
 
 		/* script */
 
 		scriptPanel = new JPanel(new BorderLayout(5, 5));
-		scriptPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory
-				.createEmptyBorder(8, 8, 8, 8)));
+		scriptPanel
+				.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory.createEmptyBorder(8, 8, 8, 8)));
 		s = MDView.getInternationalText("ScriptTab");
 		tabbedPane.add(s != null ? s : "Script", scriptPanel);
 
 		p = new JPanel(new BorderLayout(10, 10));
 		p.setPreferredSize(new Dimension(400, 150));
 		s = MDView.getInternationalText("ScriptToRunAfterLoadingModelLabel");
-		p.setBorder(new TitledBorder(BorderFactory.createEtchedBorder(), s != null ? s
-				: "Script to run right after loading page", 0, 0));
+		p.setBorder(new TitledBorder(BorderFactory.createEtchedBorder(), s != null ? s : "Script to run right after loading page", 0, 0));
 
 		scriptArea = new PastableTextArea(model.getInitializationScript());
 		JScrollPane scrollPane = new JScrollPane(scriptArea);
@@ -335,13 +328,11 @@ class MesoModelProperties extends ModelProperties {
 		p.add(scrollPane, BorderLayout.CENTER);
 
 		s = MDView.getInternationalText("CautionLabel");
-		p
-				.add(
-						new JLabel(
-								"<html><body><font size=2><b>"
-										+ (s != null ? s : "Caution")
-										+ ":</b><br>(a) These scripts won't run if the model is not loaded via page loading.<br>(b) Long-running scripts can interfer with authoring.<br>(c) Don't use motion scripts if the model won't be seen upon loading.</font></body></html>"),
-						BorderLayout.SOUTH);
+		p.add(new JLabel(
+				"<html><body><font size=2><b>"
+						+ (s != null ? s : "Caution")
+						+ ":</b><br>(a) These scripts won't run if the model is not loaded via page loading.<br>(b) Long-running scripts can interfer with authoring.<br>(c) Don't use motion scripts if the model won't be seen upon loading.</font></body></html>"),
+				BorderLayout.SOUTH);
 
 		scriptPanel.add(p, BorderLayout.CENTER);
 
