@@ -54,7 +54,7 @@ public class MwApplet extends JApplet {
 		MolecularContainer.setApplet(Page.isApplet());
 		JmolContainer.setApplet(Page.isApplet());
 
-		editor = new Editor(null) {
+		editor = new Editor(null, true) {
 			@Override
 			public URL getCodeBase() {
 				return MwApplet.this.getCodeBase();

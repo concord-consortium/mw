@@ -147,9 +147,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 	static byte windowCount;
 	static int tapeLength = DataQueue.DEFAULT_SIZE;
 	static boolean isUSLocale;
-	static String[] precacheFiles = new String[] { "zip/student.zip", "All Models in the Library", "zip/molecules.zip",
-			"All Molecules in the Library", "zip/part1.zip", "Curriculum Modules: Part One", "zip/part2.zip",
-			"Curriculum Modules: Part Two", "zip/tutorial.zip", "The User's Manual" };
+	static String[] precacheFiles = new String[] { "zip/student.zip", "All Models in the Library", "zip/molecules.zip", "All Molecules in the Library", "zip/part1.zip", "Curriculum Modules: Part One", "zip/part2.zip", "Curriculum Modules: Part Two", "zip/tutorial.zip", "The User's Manual" };
 
 	boolean stopListening;
 	InputStream socketInputStream;
@@ -292,7 +290,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		ConnectionManager.sharedInstance().addProgressListener(statusBar);
 
 		Initializer.sharedInstance().setMessage("Creating editor...");
-		editor = new Editor(statusBar);
+		editor = new Editor(statusBar, true);
 		editor.addEditorListener(this);
 		Page page = editor.getPage();
 		navigator = new Navigator(page);
@@ -431,13 +429,11 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 	}
 
 	public static String getMyModelSpaceAddress() {
-		return (hostIsLocal ? LOCAL_CONTEXT_ROOT : REMOTE_CONTEXT_ROOT) + "mymodelspace.jsp?client=mw&author="
-				+ user.getUserID();
+		return (hostIsLocal ? LOCAL_CONTEXT_ROOT : REMOTE_CONTEXT_ROOT) + "mymodelspace.jsp?client=mw&author=" + user.getUserID();
 	}
 
 	public static String getMyReportAddress() {
-		return (hostIsLocal ? LOCAL_CONTEXT_ROOT : REMOTE_CONTEXT_ROOT) + "myreportspace.jsp?client=mw&author="
-				+ user.getUserID();
+		return (hostIsLocal ? LOCAL_CONTEXT_ROOT : REMOTE_CONTEXT_ROOT) + "myreportspace.jsp?client=mw&author=" + user.getUserID();
 	}
 
 	private boolean setLookAndFeel(String className) {
@@ -577,8 +573,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 			page.setCharacterEncoding("ISO-8859-11");
 		else if (sameLanguage(s, "tr"))
 			page.setCharacterEncoding("ISO-8859-9");
-		else if (sameLanguage(s, "bs") || sameLanguage(s, "pl") || sameLanguage(s, "hr") || sameLanguage(s, "sk")
-				|| sameLanguage(s, "sl") || sameLanguage(s, "hu") || sameLanguage(s, "cs"))
+		else if (sameLanguage(s, "bs") || sameLanguage(s, "pl") || sameLanguage(s, "hr") || sameLanguage(s, "sk") || sameLanguage(s, "sl") || sameLanguage(s, "hu") || sameLanguage(s, "cs"))
 			page.setCharacterEncoding("ISO-8859-2");
 		else {
 			page.setCharacterEncoding("UTF-8");
@@ -687,9 +682,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 			if (windowCount == 1) {
 				if (!SnapshotGallery.sharedInstance().isEmpty()) {
 					String s = getInternationalText("Snapshot");
-					if (JOptionPane.showConfirmDialog(Modeler.this,
-							"You have taken some snapshots. Do you want to save them?", s != null ? s : "Snapshot",
-							JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+					if (JOptionPane.showConfirmDialog(Modeler.this, "You have taken some snapshots. Do you want to save them?", s != null ? s : "Snapshot", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
 						editor.getPage().importSnapshots();
 						SnapshotGallery.sharedInstance().clear();
 						opt = JOptionPane.CANCEL_OPTION;
@@ -721,8 +714,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		else if (System.getProperty("os.name").startsWith("Windows")) {
 			jarLocation = "\"" + jarLocation + "\"";
 		}
-		String s = "java -Xmx128M -Dmw.newinstance=true -Dmw.window.left=50 -Dmw.window.top=20 -jar " + jarLocation
-				+ (hostIsLocal ? " local" : " remote") + " " + url;
+		String s = "java -Xmx128M -Dmw.newinstance=true -Dmw.window.left=50 -Dmw.window.top=20 -jar " + jarLocation + (hostIsLocal ? " local" : " remote") + " " + url;
 		try {
 			Runtime.getRuntime().exec(s);
 		}
@@ -806,8 +798,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 			preference.putInt("Height", editor.getHeight());
 		}
 
-		Initializer.sharedInstance().putSystemProperty(PreferencesDialog.LAST_VISITED_PAGE,
-				editor.getPage().getAddress());
+		Initializer.sharedInstance().putSystemProperty(PreferencesDialog.LAST_VISITED_PAGE, editor.getPage().getAddress());
 		if (preferencesDialog != null) {
 
 			// save home page settings, if the preferences dialog has ever been invoked.
@@ -865,12 +856,9 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		preference.putBoolean("Cache Enabled", ConnectionManager.sharedInstance().isCachingAllowed());
 		preference.putInt("History", HistoryManager.sharedInstance().getDays());
 
-		BookmarkManager.sharedInstance().writeBookmarks(
-				new File(Initializer.sharedInstance().getPropertyDirectory(), "bookmarks.xml"));
-		HistoryManager.sharedInstance().writeHistory(
-				new File(Initializer.sharedInstance().getPropertyDirectory(), "history.xml"));
-		ModelerUtilities.fileChooser.writeHistory(new File(Initializer.sharedInstance().getPropertyDirectory(),
-				"filechooser.xml"));
+		BookmarkManager.sharedInstance().writeBookmarks(new File(Initializer.sharedInstance().getPropertyDirectory(), "bookmarks.xml"));
+		HistoryManager.sharedInstance().writeHistory(new File(Initializer.sharedInstance().getPropertyDirectory(), "history.xml"));
+		ModelerUtilities.fileChooser.writeHistory(new File(Initializer.sharedInstance().getPropertyDirectory(), "filechooser.xml"));
 		Initializer.sharedInstance().writeSystemProperties();
 
 	}
@@ -889,8 +877,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 	Modeler openNewWindow(boolean currentPage, boolean offspring) {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		if (offspring)
-			return openNewWindow(currentPage, editor.getPage().getAddress(), 200, 100, screenSize.width - 250,
-					screenSize.height - 300, true, true, true, true, false);
+			return openNewWindow(currentPage, editor.getPage().getAddress(), 200, 100, screenSize.width - 250, screenSize.height - 300, true, true, true, true, false);
 		int w = Initializer.sharedInstance().getPreferences().getInt("Width", screenSize.width - 200);
 		int h = Initializer.sharedInstance().getPreferences().getInt("Height", screenSize.height - 300);
 		xOffset += offset;
@@ -903,8 +890,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 	Modeler openNewWindowWithoutBars(boolean currentPage, boolean offspring) {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		if (offspring)
-			return openNewWindow(currentPage, editor.getPage().getAddress(), 200, 100, screenSize.width - 250,
-					screenSize.height - 300, true, false, false, false, false);
+			return openNewWindow(currentPage, editor.getPage().getAddress(), 200, 100, screenSize.width - 250, screenSize.height - 300, true, false, false, false, false);
 		int w = Initializer.sharedInstance().getPreferences().getInt("Width", screenSize.width - 200);
 		int h = Initializer.sharedInstance().getPreferences().getInt("Height", screenSize.height - 300);
 		xOffset += offset;
@@ -914,8 +900,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		return openNewWindow(currentPage, editor.getPage().getAddress(), x, y, w, h, true, false, false, false, false);
 	}
 
-	static Modeler openNewWindow(boolean currentPage, String currentAddress, int x, int y, int w, int h,
-			boolean resizable, boolean hasToolbar, boolean hasMenubar, boolean hasStatusbar, boolean fullscreen) {
+	static Modeler openNewWindow(boolean currentPage, String currentAddress, int x, int y, int w, int h, boolean resizable, boolean hasToolbar, boolean hasMenubar, boolean hasStatusbar, boolean fullscreen) {
 		// unregisterComponentWithToolTip();
 		try {
 			final Modeler m = new Modeler();
@@ -947,8 +932,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		}
 		catch (Throwable t) {
 			t.printStackTrace();
-			JOptionPane.showMessageDialog(null, "Failed in creating a new window. It may be good to start " + NAME
-					+ " now.\nCaused by: " + t, "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Failed in creating a new window. It may be good to start " + NAME + " now.\nCaused by: " + t, "Error", JOptionPane.ERROR_MESSAGE);
 			return null;
 		}
 	}
@@ -1048,9 +1032,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		s = getInternationalText("NewWindow");
 		menuItem = new JMenuItem(s != null ? s : "New Window");
 		menuItem.setMnemonic(KeyEvent.VK_W);
-		menuItem.setAccelerator(IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_N,
-				KeyEvent.META_MASK | KeyEvent.SHIFT_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_N,
-				KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK, true));
+		menuItem.setAccelerator(IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.META_MASK | KeyEvent.SHIFT_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK, true));
 		menuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				openNewWindow(true, false);
@@ -1117,8 +1099,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 					return;
 				for (String s : fn)
 					comboBox.addItem(s);
-				if (JOptionPane.showConfirmDialog(Modeler.this, comboBox, "Please select the first page:",
-						JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.OK_OPTION) {
+				if (JOptionPane.showConfirmDialog(Modeler.this, comboBox, "Please select the first page:", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.OK_OPTION) {
 					new FolderCompressor(editor).compressCurrentFolder((String) comboBox.getSelectedItem());
 				}
 			}
@@ -1128,11 +1109,9 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 
 		jnlpUrlMI.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				StringSelection ss = new StringSelection(getContextRoot() + "tmp.jnlp?address="
-						+ FileUtilities.httpEncode(page.getAddress()));
+				StringSelection ss = new StringSelection(getContextRoot() + "tmp.jnlp?address=" + FileUtilities.httpEncode(page.getAddress()));
 				Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ss, null);
-				JOptionPane.showMessageDialog(Modeler.this,
-						"An URL for opening the current MW page from outside MW\nis now available for pasting.");
+				JOptionPane.showMessageDialog(Modeler.this, "An URL for opening the current MW page from outside MW\nis now available for pasting.");
 			}
 		});
 		menu.add(jnlpUrlMI);
@@ -1173,9 +1152,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		s = getInternationalText("ToggleEditor");
 		menuItem = new JMenuItem(s != null ? s : "Toggle Lock on Editor");
 		menuItem.setMnemonic(KeyEvent.VK_L);
-		menuItem.setAccelerator(IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_L,
-				KeyEvent.META_MASK | KeyEvent.SHIFT_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_L,
-				KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK, true));
+		menuItem.setAccelerator(IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_L, KeyEvent.META_MASK | KeyEvent.SHIFT_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_L, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK, true));
 		menuItem.setRequestFocusEnabled(false);
 		menuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -1268,24 +1245,21 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		s = getInternationalText("Cut");
 		cutMI.setText(s != null ? s : "Cut");
 		cutMI.setMnemonic(KeyEvent.VK_T);
-		cutMI.setAccelerator(IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_MASK) : KeyStroke
-				.getKeyStroke(KeyEvent.VK_X, KeyEvent.CTRL_MASK));
+		cutMI.setAccelerator(IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.CTRL_MASK));
 		menu.add(cutMI);
 		editor.addEnabledComponentWhenEditable(cutMI);
 
 		s = getInternationalText("Copy");
 		copyMI.setText(s != null ? s : "Copy");
 		copyMI.setMnemonic(KeyEvent.VK_C);
-		copyMI.setAccelerator(IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_MASK) : KeyStroke
-				.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_MASK));
+		copyMI.setAccelerator(IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_MASK));
 		menu.add(copyMI);
 
 		menuItem = new JMenuItem(page.getAction(DefaultEditorKit.pasteAction));
 		s = getInternationalText("Paste");
 		menuItem.setText(s != null ? s : "Paste");
 		menuItem.setMnemonic(KeyEvent.VK_P);
-		menuItem.setAccelerator(IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_MASK) : KeyStroke
-				.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_MASK));
+		menuItem.setAccelerator(IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_MASK));
 		menu.add(menuItem);
 		editor.addEnabledComponentWhenEditable(menuItem);
 
@@ -1299,8 +1273,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		s = getInternationalText("Title");
 		menuItem = new JMenuItem((s != null ? s : "Title") + "...");
 		menuItem.setMnemonic(KeyEvent.VK_T);
-		menuItem.setAccelerator(IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_T, KeyEvent.META_MASK, true) : KeyStroke
-				.getKeyStroke(KeyEvent.VK_T, KeyEvent.CTRL_MASK, true));
+		menuItem.setAccelerator(IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_T, KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_T, KeyEvent.CTRL_MASK, true));
 		menuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				page.inputTitle();
@@ -1476,8 +1449,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		menuItem = new JMenuItem((s != null ? s : "Find on This Page") + "...");
 		menuItem.setMnemonic(KeyEvent.VK_F);
 		menuItem.addActionListener(editor.findAction);
-		menuItem.setAccelerator(IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_F, KeyEvent.META_MASK, true) : KeyStroke
-				.getKeyStroke(KeyEvent.VK_F, KeyEvent.CTRL_MASK, true));
+		menuItem.setAccelerator(IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_F, KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_F, KeyEvent.CTRL_MASK, true));
 		menu.add(menuItem);
 
 		// create the Insert Menu
@@ -1941,8 +1913,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		s = getInternationalText("PageSource");
 		menuItem = new JMenuItem((s != null ? s : "Page Source") + "...");
 		menuItem.setMnemonic(KeyEvent.VK_O);
-		menuItem.setAccelerator(IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.ALT_MASK | KeyEvent.META_MASK,
-				true) : KeyStroke.getKeyStroke(KeyEvent.VK_U, KeyEvent.CTRL_MASK, true));
+		menuItem.setAccelerator(IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.ALT_MASK | KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_U, KeyEvent.CTRL_MASK, true));
 		menuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ExternalClient.open(ExternalClient.HTML_CLIENT, page.getAddress(), page);
@@ -2002,9 +1973,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		s = getInternationalText("IncreaseFont");
 		menuItem = new JMenuItem(s != null ? s : "Increase");
 		menuItem.setMnemonic(KeyEvent.VK_I);
-		menuItem.setAccelerator(IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_CLOSE_BRACKET, KeyEvent.META_MASK
-				| KeyEvent.ALT_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_CLOSE_BRACKET, KeyEvent.CTRL_MASK
-				| KeyEvent.ALT_MASK, true));
+		menuItem.setAccelerator(IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_CLOSE_BRACKET, KeyEvent.META_MASK | KeyEvent.ALT_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_CLOSE_BRACKET, KeyEvent.CTRL_MASK | KeyEvent.ALT_MASK, true));
 		menuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				FontSizeChanger.step(page, 1);
@@ -2016,9 +1985,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		s = getInternationalText("DecreaseFont");
 		menuItem = new JMenuItem(s != null ? s : "Decrease");
 		menuItem.setMnemonic(KeyEvent.VK_D);
-		menuItem.setAccelerator(IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_OPEN_BRACKET, KeyEvent.META_MASK
-				| KeyEvent.ALT_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_OPEN_BRACKET, KeyEvent.CTRL_MASK
-				| KeyEvent.ALT_MASK, true));
+		menuItem.setAccelerator(IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_OPEN_BRACKET, KeyEvent.META_MASK | KeyEvent.ALT_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_OPEN_BRACKET, KeyEvent.CTRL_MASK | KeyEvent.ALT_MASK, true));
 		menuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				FontSizeChanger.step(page, -1);
@@ -2031,9 +1998,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		s = getInternationalText("ActualSize");
 		menuItem = new JMenuItem(s != null ? s : "Actual Size");
 		menuItem.setMnemonic(KeyEvent.VK_A);
-		menuItem.setAccelerator(IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, KeyEvent.META_MASK
-				| KeyEvent.ALT_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, KeyEvent.CTRL_MASK
-				| KeyEvent.ALT_MASK, true));
+		menuItem.setAccelerator(IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, KeyEvent.META_MASK | KeyEvent.ALT_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, KeyEvent.CTRL_MASK | KeyEvent.ALT_MASK, true));
 		menuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				FontSizeChanger.step(page, -page.getFontIncrement());
@@ -2076,8 +2041,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		menu.addSeparator();
 
 		s = getInternationalText("Background");
-		colorMenu = new ColorMenu(editor, s != null ? s : "Background", ModelerUtilities.colorChooser,
-				ModelerUtilities.fillEffectChooser);
+		colorMenu = new ColorMenu(editor, s != null ? s : "Background", ModelerUtilities.colorChooser, ModelerUtilities.fillEffectChooser);
 		colorMenu.addMenuListener(new MenuListener() {
 			public void menuSelected(MenuEvent e) {
 				colorMenu.setColor(page.getBackground());
@@ -2107,8 +2071,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		});
 		colorMenu.addHexColorListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Color c = colorMenu.getHexInputColor(page.getFillMode() instanceof FillMode.ColorFill ? ((FillMode.ColorFill) page
-						.getFillMode()).getColor() : null);
+				Color c = colorMenu.getHexInputColor(page.getFillMode() instanceof FillMode.ColorFill ? ((FillMode.ColorFill) page.getFillMode()).getColor() : null);
 				if (c == null)
 					return;
 				page.changeFillMode(new FillMode.ColorFill(c));
@@ -2131,10 +2094,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		ItemListener il = new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
-					JOptionPane.showMessageDialog(Modeler.this, NAME + " has to restart for the selected\n"
-							+ "theme to display properly.\n\n"
-							+ "(If it does not restart automatically, please click\n" + "to restart it.)",
-							"Theme change", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(Modeler.this, NAME + " has to restart for the selected\n" + "theme to display properly.\n\n" + "(If it does not restart automatically, please click\n" + "to restart it.)", "Theme change", JOptionPane.INFORMATION_MESSAGE);
 					lookandfeel = ((AbstractButton) e.getSource()).getText();
 					restart = true;
 					if (launchedByJWS) {
@@ -2216,8 +2176,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		s = getInternationalText("SubmitCurrentPage");
 		final JMenuItem uploadMI = new JMenuItem((s != null ? s : "Submit Current Page") + "...");
 		s = getInternationalText("SubmitCurrentFolder");
-		final JMenuItem uploadCurrentFolderMI = new JMenuItem((s != null ? s : "Submit Current Activity Folder")
-				+ "...");
+		final JMenuItem uploadCurrentFolderMI = new JMenuItem((s != null ? s : "Submit Current Activity Folder") + "...");
 		final JMenuItem commentMI = new JMenuItem();
 		final JMenuItem viewCommentMI = new JMenuItem();
 
@@ -2490,22 +2449,15 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		s = getInternationalText("AddBookmark");
 		JMenuItem menuItem = new JMenuItem(s != null ? s : "Add Bookmark");
 		menuItem.setMnemonic(KeyEvent.VK_A);
-		menuItem.setAccelerator(IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.META_MASK, true) : KeyStroke
-				.getKeyStroke(KeyEvent.VK_D, KeyEvent.CTRL_MASK, true));
+		menuItem.setAccelerator(IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.CTRL_MASK, true));
 		menuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int opt = JOptionPane.YES_OPTION;
 				if (BookmarkManager.sharedInstance().getBookmarks().containsKey(editor.getTitle())) {
-					opt = JOptionPane.showConfirmDialog(Modeler.this, "There is already a bookmark with the name: "
-							+ editor.getTitle() + "\nWould you like to overwrite it?", "Bookmark name exists",
-							JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+					opt = JOptionPane.showConfirmDialog(Modeler.this, "There is already a bookmark with the name: " + editor.getTitle() + "\nWould you like to overwrite it?", "Bookmark name exists", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 				}
 				if (opt == JOptionPane.YES_OPTION) {
-					BookmarkManager
-							.sharedInstance()
-							.getBookmarks()
-							.put(editor.getTitle() == null ? editor.getAddress() : editor.getTitle(),
-									editor.getAddress());
+					BookmarkManager.sharedInstance().getBookmarks().put(editor.getTitle() == null ? editor.getAddress() : editor.getTitle(), editor.getAddress());
 					updateBookmarks();
 				}
 			}
@@ -2515,8 +2467,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		s = getInternationalText("ManageBookmark");
 		menuItem = new JMenuItem((s != null ? s : "Manage Bookmarks") + "...");
 		menuItem.setMnemonic(KeyEvent.VK_M);
-		menuItem.setAccelerator(IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_B, KeyEvent.META_MASK | KeyEvent.ALT_MASK,
-				true) : KeyStroke.getKeyStroke(KeyEvent.VK_B, KeyEvent.CTRL_MASK | KeyEvent.ALT_MASK, true));
+		menuItem.setAccelerator(IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_B, KeyEvent.META_MASK | KeyEvent.ALT_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_B, KeyEvent.CTRL_MASK | KeyEvent.ALT_MASK, true));
 		menuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				BookmarkManager.sharedInstance().showDialog(Modeler.this);
@@ -2633,8 +2584,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 
 	void createToolBar() {
 
-		toolBar = new BackgroundToolBar(new ImageIcon(Modeler.class.getResource(IS_MAC ? "images/toolbar_bg_mac.png"
-				: "images/toolbar_bg_win.png")));
+		toolBar = new BackgroundToolBar(new ImageIcon(Modeler.class.getResource(IS_MAC ? "images/toolbar_bg_mac.png" : "images/toolbar_bg_win.png")));
 		toolBar.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		toolBar.setFloatable(false);
 		toolBar.setLayout(new FlowLayout(FlowLayout.LEFT, 2, 1));
@@ -2794,8 +2744,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 							if (y1 >= 0)
 								y = y1;
 						}
-						Modeler m = openNewWindow(false, editor.getPage().getAddress(), x, y, w, h, resizable,
-								hasToolbar, hasMenubar, hasStatusbar, fullscreen);
+						Modeler m = openNewWindow(false, editor.getPage().getAddress(), x, y, w, h, resizable, hasToolbar, hasMenubar, hasStatusbar, fullscreen);
 						m.editor.getPage().openHyperlink(str);
 					}
 				});
@@ -2937,8 +2886,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 					public void run() {
 						Initializer.sharedInstance().hideSplashScreen();
 						if (System.getProperty("os.name").startsWith("Windows")) {
-							JOptionPane.showMessageDialog(null, "Your current Java version is " + version
-									+ ". A newer version is needed.\nPlease go to http://java.com to get it.");
+							JOptionPane.showMessageDialog(null, "Your current Java version is " + version + ". A newer version is needed.\nPlease go to http://java.com to get it.");
 							try {
 								Runtime.getRuntime().exec(new String[] { "explorer", "http://java.com" });
 							}
@@ -2946,12 +2894,10 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 							}
 						}
 						else if (System.getProperty("os.name").startsWith("Linux")) {
-							JOptionPane.showMessageDialog(null, "Your current Java version is " + version
-									+ ". A newer version is needed.\nPlease go to http://java.com to get it.");
+							JOptionPane.showMessageDialog(null, "Your current Java version is " + version + ". A newer version is needed.\nPlease go to http://java.com to get it.");
 						}
 						else if (IS_MAC) {
-							JOptionPane.showMessageDialog(null, "Your current Java version is " + version
-									+ ". A newer version is needed.\nPlease update it.");
+							JOptionPane.showMessageDialog(null, "Your current Java version is " + version + ". A newer version is needed.\nPlease update it.");
 						}
 						System.exit(0);
 					}
@@ -3129,20 +3075,14 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 			}
 			else {
 				if (!s.startsWith("mw.jar") && !s.startsWith("dist/mw.jar")) {
-					JOptionPane.showMessageDialog(Initializer.sharedInstance().getSplash(),
-							"The file name must be exactly mw.jar in order to run in this mode.", "Security Error",
-							JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(Initializer.sharedInstance().getSplash(), "The file name must be exactly mw.jar in order to run in this mode.", "Security Error", JOptionPane.ERROR_MESSAGE);
 					System.exit(-1);
 				}
 			}
 		}
 		else {
 			if (resourceURL.indexOf("mw.jar") == -1) {
-				JOptionPane
-						.showMessageDialog(
-								Initializer.sharedInstance().getSplash(),
-								"You cannot run mw.jar directly from a web page. Save it\nto your computer and then double-click on it.",
-								"Security Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(Initializer.sharedInstance().getSplash(), "You cannot run mw.jar directly from a web page. Save it\nto your computer and then double-click on it.", "Security Error", JOptionPane.ERROR_MESSAGE);
 				System.exit(-1);
 			}
 		}
@@ -3177,8 +3117,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 						startingURL = startingURL.replace('/', '\\');
 					}
 					if (FileUtilities.isRelative(startingURL)) {
-						startingURL = System.getProperty("user.dir") + System.getProperty("file.separator")
-								+ startingURL;
+						startingURL = System.getProperty("user.dir") + System.getProperty("file.separator") + startingURL;
 					}
 				}
 			}
@@ -3203,8 +3142,7 @@ public class Modeler extends JFrame implements BookmarkListener, EditorListener,
 		setLocale();
 
 		if (IS_MAC) {
-			System.setProperty("apple.laf.useScreenMenuBar",
-					"false".equalsIgnoreCase(System.getProperty("mw.window.menubar")) ? "false" : "true");
+			System.setProperty("apple.laf.useScreenMenuBar", "false".equalsIgnoreCase(System.getProperty("mw.window.menubar")) ? "false" : "true");
 			System.setProperty("apple.awt.brushMetalLook", "true");
 		}
 
