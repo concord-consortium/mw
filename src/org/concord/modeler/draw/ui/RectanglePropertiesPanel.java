@@ -254,7 +254,7 @@ public class RectanglePropertiesPanel extends PropertiesPanel {
 		label = new JLabel("X (" + (s != null ? s : "pixels") + ")", JLabel.LEFT);
 		label.setBorder(margin);
 		p.add(label);
-		IntegerTextField tf = new IntegerTextField((int) rect.getX(), 0, 1000);
+		IntegerTextField tf = new IntegerTextField((int) rect.getX(), 0, 10000);
 		tf.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				IntegerTextField tf = (IntegerTextField) e.getSource();
@@ -274,7 +274,7 @@ public class RectanglePropertiesPanel extends PropertiesPanel {
 		label = new JLabel("Y (" + (s != null ? s : "pixels") + ")", JLabel.LEFT);
 		label.setBorder(margin);
 		p.add(label);
-		tf = new IntegerTextField((int) rect.getY(), 0, 1000);
+		tf = new IntegerTextField((int) rect.getY(), 0, 10000);
 		tf.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				IntegerTextField tf = (IntegerTextField) e.getSource();
@@ -295,7 +295,7 @@ public class RectanglePropertiesPanel extends PropertiesPanel {
 		label = new JLabel((s1 != null ? s1 : "Width") + " (" + (s != null ? s : "pixels") + ")", JLabel.LEFT);
 		label.setBorder(margin);
 		p.add(label);
-		tf = new IntegerTextField(Math.round(rect.getWidth()), 1, 1000);
+		tf = new IntegerTextField(Math.round(rect.getWidth()), 1, 10000);
 		tf.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				IntegerTextField tf = (IntegerTextField) e.getSource();
@@ -316,7 +316,7 @@ public class RectanglePropertiesPanel extends PropertiesPanel {
 		label = new JLabel((s1 != null ? s1 : "Height") + " (" + (s != null ? s : "pixels") + ")", JLabel.LEFT);
 		label.setBorder(margin);
 		p.add(label);
-		tf = new IntegerTextField(Math.round(rect.getHeight()), 1, 1000);
+		tf = new IntegerTextField(Math.round(rect.getHeight()), 1, 10000);
 		tf.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				IntegerTextField tf = (IntegerTextField) e.getSource();
