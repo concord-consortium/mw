@@ -198,8 +198,7 @@ public class RectangleComponent extends AbstractRectangle implements ModelCompon
 		double y1 = getY() + getHeight();
 		double radius = a.sigma * 0.5;
 		if (a.rx - radius < x1 && a.rx + radius > x0 && a.ry - radius < y1 && a.ry + radius > y0) {
-			switch (RectangularObstacle.borderCross(getBounds().getBounds2D(), radius, a.rx, a.ry, a.dx, a.dy, x0, y0,
-					x1, y1)) {
+			switch (RectangularObstacle.borderCross(getBounds().getBounds2D(), radius, a.rx, a.ry, a.dx, a.dy, x0, y0, x1, y1)) {
 			case RectangularObstacle.EAST:
 				a.vx = Math.abs(a.vx);
 				break;

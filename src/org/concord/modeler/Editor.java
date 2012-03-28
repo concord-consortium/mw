@@ -119,8 +119,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 	private static StyledEditorKit.ForegroundAction[] fga;
 	private static StyledEditorKit.FontFamilyAction[] ffa;
 
-	private static final Border SELECTED_BORDER = new BasicBorders.ButtonBorder(Color.lightGray, Color.white,
-			Color.black, Color.gray);
+	private static final Border SELECTED_BORDER = new BasicBorders.ButtonBorder(Color.lightGray, Color.white, Color.black, Color.gray);
 	private final static Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
 	private static ImageIcon editIcon, viewIcon;
 	private static Icon toolBarHeaderIcon = new ImageIcon(Editor.class.getResource("images/ToolBarHeaderBar.gif"));
@@ -138,8 +137,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 	private static ActionNotifier actionNotifier;
 	private StatusBar statusBar;
 	private JInternalFrame floatingButtons;
-	private List<Component> enabledComponentsWhenEditable, enabledComponentsWhenNotEditable,
-			disabledComponentsWhileLoading;
+	private List<Component> enabledComponentsWhenEditable, enabledComponentsWhenNotEditable, disabledComponentsWhileLoading;
 	private ComponentPool componentPool;
 	private JToolBar[] toolBar;
 	private BackgroundPanel toolBarPanel;
@@ -175,7 +173,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 	private ItemListener bulletAction;
 	private Action fullScreenAction;
 
-	public Editor(StatusBar statusBar) {
+	public Editor(StatusBar statusBar, boolean scrollable) {
 
 		if (!Page.isApplet()) {
 			init();
@@ -217,8 +215,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		componentPool.setSelectionColor(page.getSelectionColor());
 		page.setComponentPool(componentPool);
 
-		scroller = new JScrollPane(page, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scroller = new JScrollPane(page, scrollable ? JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED : JScrollPane.VERTICAL_SCROLLBAR_NEVER, scrollable ? JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED : JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scroller.setBorder(BorderFactory.createEmptyBorder());
 		positionMap = new HashMap<String, Point>();
 		desktopPane.add(scroller, JLayeredPane.DEFAULT_LAYER);
@@ -271,22 +268,19 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		fga = new StyledEditorKit.ForegroundAction[ColorRectangle.COLORS.length + 1];
 		ffa = new StyledEditorKit.FontFamilyAction[ModelerUtilities.FONT_FAMILY_NAMES.length];
 		for (int i = 0; i < fsa.length; i++) {
-			fsa[i] = new StyledEditorKit.FontSizeAction(ModelerUtilities.FONT_SIZE[i].toString(),
-					ModelerUtilities.FONT_SIZE[i].intValue());
+			fsa[i] = new StyledEditorKit.FontSizeAction(ModelerUtilities.FONT_SIZE[i].toString(), ModelerUtilities.FONT_SIZE[i].intValue());
 		}
 		for (int i = 0; i < fga.length - 1; i++) {
 			fga[i] = new StyledEditorKit.ForegroundAction(ColorRectangle.COLORS[i].toString(), ColorRectangle.COLORS[i]);
 		}
 		for (int i = 0; i < ffa.length; i++) {
-			ffa[i] = new StyledEditorKit.FontFamilyAction(ModelerUtilities.FONT_FAMILY_NAMES[i],
-					ModelerUtilities.FONT_FAMILY_NAMES[i]);
+			ffa[i] = new StyledEditorKit.FontFamilyAction(ModelerUtilities.FONT_FAMILY_NAMES[i], ModelerUtilities.FONT_FAMILY_NAMES[i]);
 		}
 
 		lockAction = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (page.isRemote()) {
-					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(Editor.this),
-							"A page that is not on your disk cannot be edited.", "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(Editor.this), "A page that is not on your disk cannot be edited.", "Error", JOptionPane.ERROR_MESSAGE);
 					setEditable(false);
 					editCheckBox.setToolTipText(isEditable() ? "Go to the viewing mode" : "Go to the editing mode");
 					return;
@@ -609,8 +603,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		Initializer.sharedInstance().setMessage("Creating Editor's tool bar 3...");
 		toolBar[2] = createToolBar3();
 
-		toolBarPanel = new BackgroundPanel(new BorderLayout(0, 0), new ImageIcon(Modeler.class.getResource(Modeler
-				.isMac() ? "images/toolbar_bg_mac.png" : "images/toolbar_bg_win.png")));
+		toolBarPanel = new BackgroundPanel(new BorderLayout(0, 0), new ImageIcon(Modeler.class.getResource(Modeler.isMac() ? "images/toolbar_bg_mac.png" : "images/toolbar_bg_win.png")));
 		toolBarPanel.setBorder(BorderFactory.createEmptyBorder());
 		toolBarPanel.add(toolBar[0], BorderLayout.CENTER);
 
@@ -875,8 +868,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 				enableActions(b);
 				editCheckBox.setToolTipText(b ? "Go to the viewing mode" : "Go to the editing mode");
 				statusBar.tipBar.setText(b ? "Editing" : "Viewing");
-				notifyEditorListeners(new EditorEvent(Editor.this, b ? EditorEvent.EDITOR_ENABLED
-						: EditorEvent.EDITOR_DISABLED));
+				notifyEditorListeners(new EditorEvent(Editor.this, b ? EditorEvent.EDITOR_ENABLED : EditorEvent.EDITOR_DISABLED));
 			}
 		});
 	}
@@ -1142,8 +1134,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 	}
 
 	private ColorMenu createColorMenu() {
-		final ColorMenu colorMenu = new ColorMenu(this, "Background", ModelerUtilities.colorChooser,
-				ModelerUtilities.fillEffectChooser);
+		final ColorMenu colorMenu = new ColorMenu(this, "Background", ModelerUtilities.colorChooser, ModelerUtilities.fillEffectChooser);
 		colorMenu.addNoFillListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				page.changeFillMode(FillMode.getNoFillMode());
@@ -1161,8 +1152,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 		});
 		colorMenu.addHexColorListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Color c = colorMenu.getHexInputColor(page.getFillMode() instanceof FillMode.ColorFill ? ((FillMode.ColorFill) page
-						.getFillMode()).getColor() : null);
+				Color c = colorMenu.getHexInputColor(page.getFillMode() instanceof FillMode.ColorFill ? ((FillMode.ColorFill) page.getFillMode()).getColor() : null);
 				if (c == null)
 					return;
 				page.changeFillMode(new FillMode.ColorFill(c));
@@ -1599,9 +1589,7 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					if (Page.isApplet()) {
-						JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(Editor.this),
-								"<html>Snapshot doesn't work in the applet mode. If you need this functionality,<br>please run the "
-										+ Modeler.NAME + " software.</html>");
+						JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(Editor.this), "<html>Snapshot doesn't work in the applet mode. If you need this functionality,<br>please run the " + Modeler.NAME + " software.</html>");
 					}
 					else {
 						SnapshotGallery.sharedInstance().takeSnapshot(page.getAddress(), src);
@@ -1835,26 +1823,18 @@ public class Editor extends JComponent implements PageListener, PageComponentLis
 					if (statusBar != null)
 						statusBar.getProgressBar().setIndeterminate(false);
 					try {
-						JOptionPane.getFrameForComponent(Editor.this).setTitle(
-								s + " - " + Modeler.NAME + " V" + Modeler.VERSION);
+						JOptionPane.getFrameForComponent(Editor.this).setTitle(s + " - " + Modeler.NAME + " V" + Modeler.VERSION);
 					}
 					catch (NullPointerException npe) {
 						// If there is no parent frame, skip
 					}
 				}
 			});
-			if (s.equalsIgnoreCase("failed in connecting") || s.equalsIgnoreCase("unknown host")
-					|| s.equalsIgnoreCase("no route to host")) {
+			if (s.equalsIgnoreCase("failed in connecting") || s.equalsIgnoreCase("unknown host") || s.equalsIgnoreCase("no route to host")) {
 				if (page.getAddress().indexOf(Modeler.getStaticRoot() + "tutorial/") != -1) {
 					EventQueue.invokeLater(new Runnable() {
 						public void run() {
-							JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(Editor.this),
-									"To download the User's Manual for offline use,\n"
-											+ "connect to the Internet, select the Option Menu, and\n"
-											+ "select The User's Manual from the Prefetch to Cache\n"
-											+ "Submenu. Wait until the download process is complete,\n"
-											+ "then reload the page.", "Needs to download the User's Manual",
-									JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(Editor.this), "To download the User's Manual for offline use,\n" + "connect to the Internet, select the Option Menu, and\n" + "select The User's Manual from the Prefetch to Cache\n" + "Submenu. Wait until the download process is complete,\n" + "then reload the page.", "Needs to download the User's Manual", JOptionPane.ERROR_MESSAGE);
 						}
 					});
 				}

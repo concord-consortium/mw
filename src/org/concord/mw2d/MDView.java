@@ -410,10 +410,7 @@ public abstract class MDView extends PrintableComponent {
 		a.putValue(Action.NAME, UNDO);
 		a.putValue(Action.SMALL_ICON, IconPool.getIcon("undo"));
 		a.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_U);
-		a.putValue(
-				Action.ACCELERATOR_KEY,
-				macOS ? KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.CTRL_MASK,
-						true));
+		a.putValue(Action.ACCELERATOR_KEY, macOS ? KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.CTRL_MASK, true));
 		getInputMap().put((KeyStroke) a.getValue(Action.ACCELERATOR_KEY), UNDO);
 		getActionMap().put(UNDO, a);
 
@@ -441,10 +438,7 @@ public abstract class MDView extends PrintableComponent {
 		a.putValue(Action.NAME, REDO);
 		a.putValue(Action.SMALL_ICON, IconPool.getIcon("redo"));
 		a.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_R);
-		a.putValue(
-				Action.ACCELERATOR_KEY,
-				macOS ? KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.META_MASK | KeyEvent.SHIFT_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_Y,
-						KeyEvent.CTRL_MASK, true));
+		a.putValue(Action.ACCELERATOR_KEY, macOS ? KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.META_MASK | KeyEvent.SHIFT_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_Y, KeyEvent.CTRL_MASK, true));
 		getInputMap().put((KeyStroke) a.getValue(Action.ACCELERATOR_KEY), REDO);
 		getActionMap().put(REDO, a);
 
@@ -463,10 +457,7 @@ public abstract class MDView extends PrintableComponent {
 		a.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_Q);
 		a.putValue(Action.SHORT_DESCRIPTION, "Heat and cool the system at exponential rate");
 		a.putValue(Action.SMALL_ICON, IconPool.getIcon("thermometer"));
-		a.putValue(
-				Action.ACCELERATOR_KEY,
-				macOS ? KeyStroke.getKeyStroke(KeyEvent.VK_T, KeyEvent.ALT_MASK | KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_T,
-						KeyEvent.ALT_MASK | KeyEvent.CTRL_MASK, true));
+		a.putValue(Action.ACCELERATOR_KEY, macOS ? KeyStroke.getKeyStroke(KeyEvent.VK_T, KeyEvent.ALT_MASK | KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_T, KeyEvent.ALT_MASK | KeyEvent.CTRL_MASK, true));
 		getInputMap().put((KeyStroke) a.getValue(Action.ACCELERATOR_KEY), "Energizer");
 		getActionMap().put("Energizer", a);
 
@@ -479,10 +470,7 @@ public abstract class MDView extends PrintableComponent {
 		a.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_B);
 		a.putValue(Action.SHORT_DESCRIPTION, "Set heat bath");
 		a.putValue(Action.SMALL_ICON, IconPool.getIcon("heat bath"));
-		a.putValue(
-				Action.ACCELERATOR_KEY,
-				macOS ? KeyStroke.getKeyStroke(KeyEvent.VK_H, KeyEvent.ALT_MASK | KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_H,
-						KeyEvent.ALT_MASK | KeyEvent.CTRL_MASK, true));
+		a.putValue(Action.ACCELERATOR_KEY, macOS ? KeyStroke.getKeyStroke(KeyEvent.VK_H, KeyEvent.ALT_MASK | KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_H, KeyEvent.ALT_MASK | KeyEvent.CTRL_MASK, true));
 		getInputMap().put((KeyStroke) a.getValue(Action.ACCELERATOR_KEY), "Heat Bath");
 		getActionMap().put("Heat Bath", a);
 
@@ -495,10 +483,7 @@ public abstract class MDView extends PrintableComponent {
 		a.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_V);
 		a.putValue(Action.SHORT_DESCRIPTION, "Show view options");
 		a.putValue(Action.SMALL_ICON, IconPool.getIcon("view"));
-		a.putValue(
-				Action.ACCELERATOR_KEY,
-				macOS ? KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.ALT_MASK | KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_V,
-						KeyEvent.ALT_MASK | KeyEvent.CTRL_MASK, true));
+		a.putValue(Action.ACCELERATOR_KEY, macOS ? KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.ALT_MASK | KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.ALT_MASK | KeyEvent.CTRL_MASK, true));
 		getInputMap().put((KeyStroke) a.getValue(Action.ACCELERATOR_KEY), "View Options");
 		getActionMap().put("View Options", a);
 
@@ -523,10 +508,7 @@ public abstract class MDView extends PrintableComponent {
 		a.putValue(Action.SMALL_ICON, IconPool.getIcon("properties"));
 		a.putValue(Action.NAME, "Access Model Properties");
 		a.putValue(Action.SHORT_DESCRIPTION, "Access model properties");
-		a.putValue(
-				Action.ACCELERATOR_KEY,
-				macOS ? KeyStroke.getKeyStroke(KeyEvent.VK_M, KeyEvent.ALT_MASK | KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_M,
-						KeyEvent.ALT_MASK | KeyEvent.CTRL_MASK, true));
+		a.putValue(Action.ACCELERATOR_KEY, macOS ? KeyStroke.getKeyStroke(KeyEvent.VK_M, KeyEvent.ALT_MASK | KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_M, KeyEvent.ALT_MASK | KeyEvent.CTRL_MASK, true));
 		getInputMap().put((KeyStroke) a.getValue(Action.ACCELERATOR_KEY), "Properties");
 		getActionMap().put("Properties", a);
 
@@ -698,8 +680,7 @@ public abstract class MDView extends PrintableComponent {
 			job.show(this);
 		}
 		else {
-			JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(this), "There is no task yet. Please run the model.", "No task assigned",
-					JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(this), "There is no task yet. Please run the model.", "No task assigned", JOptionPane.WARNING_MESSAGE);
 		}
 	}
 
@@ -731,10 +712,7 @@ public abstract class MDView extends PrintableComponent {
 				if (!boundary.contains(new Rectangle((int) (xmin + 1), (int) (ymin + 1), (int) (xmax - xmin - 2), (int) (ymax - ymin - 2)))) {
 					EventQueue.invokeLater(new Runnable() {
 						public void run() {
-							JOptionPane.showMessageDialog(
-									JOptionPane.getFrameForComponent(MDView.this),
-									"Some objects overlap with the boundary lines. This may have been caused by changing periodic boundary\nto reflecting boundary. Please move those particles off the border and re-save.",
-									"Size Error", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(MDView.this), "Some objects overlap with the boundary lines. This may have been caused by changing periodic boundary\nto reflecting boundary. Please move those particles off the border and re-save.", "Size Error", JOptionPane.ERROR_MESSAGE);
 						}
 					});
 					return newSize;
@@ -747,9 +725,7 @@ public abstract class MDView extends PrintableComponent {
 						resizeTo(d, false, false);
 						EventQueue.invokeLater(new Runnable() {
 							public void run() {
-								JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(MDView.this),
-										"The Model Container cannot be resized to the specified dimension.\nSome objects would be out of boundary.",
-										"Resizing Error", JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(MDView.this), "The Model Container cannot be resized to the specified dimension.\nSome objects would be out of boundary.", "Resizing Error", JOptionPane.ERROR_MESSAGE);
 							}
 						});
 						return d;
@@ -770,8 +746,7 @@ public abstract class MDView extends PrintableComponent {
 		Dimension oldSize = getSize();
 		if (oldSize.width == 0 || oldSize.height == 0)
 			System.err.println("view size error");
-		ancestor.setBounds(ancestor.getX(), ancestor.getY(), ancestor.getWidth() + newSize.width - oldSize.width, ancestor.getHeight()
-				+ newSize.height - oldSize.height);
+		ancestor.setBounds(ancestor.getX(), ancestor.getY(), ancestor.getWidth() + newSize.width - oldSize.width, ancestor.getHeight() + newSize.height - oldSize.height);
 		ancestor.validate();
 		if (!getSize().equals(getPreferredSize())) {
 			getModel().notifyModelListeners(new ModelEvent(getModel(), "Resize error", getSize(), getPreferredSize()));
@@ -917,10 +892,7 @@ public abstract class MDView extends PrintableComponent {
 		a.putValue(Action.NAME, CUT);
 		a.putValue(Action.SMALL_ICON, IconPool.getIcon("cut"));
 		a.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_U);
-		a.putValue(
-				Action.ACCELERATOR_KEY,
-				macOS ? KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.CTRL_MASK,
-						true));
+		a.putValue(Action.ACCELERATOR_KEY, macOS ? KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.CTRL_MASK, true));
 		getInputMap().put((KeyStroke) a.getValue(Action.ACCELERATOR_KEY), CUT);
 		getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0, true), CUT);
 		getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0, true), CUT);
@@ -934,10 +906,7 @@ public abstract class MDView extends PrintableComponent {
 		a.putValue(Action.NAME, COPY);
 		a.putValue(Action.SMALL_ICON, getIcon(DUPL_ID));
 		a.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_C);
-		a.putValue(
-				Action.ACCELERATOR_KEY,
-				macOS ? KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_MASK,
-						true));
+		a.putValue(Action.ACCELERATOR_KEY, macOS ? KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_MASK, true));
 		getInputMap().put((KeyStroke) a.getValue(Action.ACCELERATOR_KEY), COPY);
 		getActionMap().put(COPY, a);
 
@@ -952,17 +921,13 @@ public abstract class MDView extends PrintableComponent {
 		a.putValue(Action.SMALL_ICON, IconPool.getIcon("paste"));
 		a.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_P);
 		a.putValue(Action.SHORT_DESCRIPTION, "Paste to the last clicked point");
-		a.putValue(
-				Action.ACCELERATOR_KEY,
-				macOS ? KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_MASK,
-						true));
+		a.putValue(Action.ACCELERATOR_KEY, macOS ? KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_MASK, true));
 		getInputMap().put((KeyStroke) a.getValue(Action.ACCELERATOR_KEY), PASTE);
 		getActionMap().put(PASTE, a);
 
 		a = new DefaultModelAction(getModel(), new Executable() {
 			public void execute() {
-				if (JOptionPane.showConfirmDialog(JOptionPane.getFrameForComponent(MDView.this), "Do you really want to remove all the objects?",
-						"Object removal", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+				if (JOptionPane.showConfirmDialog(JOptionPane.getFrameForComponent(MDView.this), "Do you really want to remove all the objects?", "Object removal", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 					removeAllObjects();
 				}
 			}
@@ -971,10 +936,7 @@ public abstract class MDView extends PrintableComponent {
 		a.putValue(Action.SMALL_ICON, IconPool.getIcon("erase"));
 		a.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_L);
 		a.putValue(Action.SHORT_DESCRIPTION, "Remove all objects");
-		a.putValue(
-				Action.ACCELERATOR_KEY,
-				macOS ? KeyStroke.getKeyStroke(KeyEvent.VK_E, KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_E, KeyEvent.CTRL_MASK,
-						true));
+		a.putValue(Action.ACCELERATOR_KEY, macOS ? KeyStroke.getKeyStroke(KeyEvent.VK_E, KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_E, KeyEvent.CTRL_MASK, true));
 		getInputMap().put((KeyStroke) a.getValue(Action.ACCELERATOR_KEY), CLEAR);
 		getActionMap().put(CLEAR, a);
 
@@ -1190,8 +1152,7 @@ public abstract class MDView extends PrintableComponent {
 				}
 			}
 			if (!doNotFireUndoEvent) {
-				getModel().getUndoManager().undoableEditHappened(
-						new UndoableEditEvent(getModel(), new UndoableModelOperation(UndoAction.TRANSLATE_MODEL, dx, dy)));
+				getModel().getUndoManager().undoableEditHappened(new UndoableEditEvent(getModel(), new UndoableModelOperation(UndoAction.TRANSLATE_MODEL, dx, dy)));
 				updateUndoUIComponents();
 			}
 			return true;
@@ -1208,8 +1169,7 @@ public abstract class MDView extends PrintableComponent {
 	public boolean rotateWholeModel(double angle) {
 		if (getModel().rotateWholeModel(angle)) {
 			if (!doNotFireUndoEvent) {
-				getModel().getUndoManager().undoableEditHappened(
-						new UndoableEditEvent(getModel(), new UndoableModelOperation(UndoAction.ROTATE_MODEL, angle)));
+				getModel().getUndoManager().undoableEditHappened(new UndoableEditEvent(getModel(), new UndoableModelOperation(UndoAction.ROTATE_MODEL, angle)));
 				updateUndoUIComponents();
 			}
 			return true;
@@ -1252,8 +1212,7 @@ public abstract class MDView extends PrintableComponent {
 		getModel().notifyChange();
 		if (!doNotFireUndoEvent) {
 			ic.setSelected(true);
-			getModel().getUndoManager().undoableEditHappened(
-					new UndoableEditEvent(getModel(), new UndoableLayeredComponentOperation(UndoAction.INSERT_LAYERED_COMPONENT, ic)));
+			getModel().getUndoManager().undoableEditHappened(new UndoableEditEvent(getModel(), new UndoableLayeredComponentOperation(UndoAction.INSERT_LAYERED_COMPONENT, ic)));
 			updateUndoUIComponents();
 		}
 	}
@@ -1273,8 +1232,7 @@ public abstract class MDView extends PrintableComponent {
 		getModel().notifyChange();
 		if (!doNotFireUndoEvent) {
 			ic.setSelected(true);
-			getModel().getUndoManager().undoableEditHappened(
-					new UndoableEditEvent(getModel(), new UndoableLayeredComponentOperation(UndoAction.INSERT_LAYERED_COMPONENT, ic)));
+			getModel().getUndoManager().undoableEditHappened(new UndoableEditEvent(getModel(), new UndoableLayeredComponentOperation(UndoAction.INSERT_LAYERED_COMPONENT, ic)));
 			updateUndoUIComponents();
 		}
 	}
@@ -1290,8 +1248,7 @@ public abstract class MDView extends PrintableComponent {
 			layerBasket.add(i - 1, c);
 		getModel().notifyChange();
 		if (!doNotFireUndoEvent) {
-			getModel().getUndoManager().undoableEditHappened(
-					new UndoableEditEvent(getModel(), new UndoableLayeredComponentOperation(UndoAction.SEND_BACK_LAYERED_COMPONENT, c)));
+			getModel().getUndoManager().undoableEditHappened(new UndoableEditEvent(getModel(), new UndoableLayeredComponentOperation(UndoAction.SEND_BACK_LAYERED_COMPONENT, c)));
 			updateUndoUIComponents();
 		}
 	}
@@ -1306,8 +1263,7 @@ public abstract class MDView extends PrintableComponent {
 			layerBasket.add(0, c);
 		getModel().notifyChange();
 		if (!doNotFireUndoEvent) {
-			getModel().getUndoManager().undoableEditHappened(
-					new UndoableEditEvent(getModel(), new UndoableLayeredComponentOperation(UndoAction.SEND_BACK_LAYERED_COMPONENT, c)));
+			getModel().getUndoManager().undoableEditHappened(new UndoableEditEvent(getModel(), new UndoableLayeredComponentOperation(UndoAction.SEND_BACK_LAYERED_COMPONENT, c)));
 			updateUndoUIComponents();
 		}
 	}
@@ -1323,8 +1279,7 @@ public abstract class MDView extends PrintableComponent {
 			layerBasket.add(i + 1, c);
 		getModel().notifyChange();
 		if (!doNotFireUndoEvent) {
-			getModel().getUndoManager().undoableEditHappened(
-					new UndoableEditEvent(getModel(), new UndoableLayeredComponentOperation(UndoAction.BRING_FORWARD_LAYERED_COMPONENT, c)));
+			getModel().getUndoManager().undoableEditHappened(new UndoableEditEvent(getModel(), new UndoableLayeredComponentOperation(UndoAction.BRING_FORWARD_LAYERED_COMPONENT, c)));
 			updateUndoUIComponents();
 		}
 	}
@@ -1339,8 +1294,7 @@ public abstract class MDView extends PrintableComponent {
 			layerBasket.add(c);
 		getModel().notifyChange();
 		if (!doNotFireUndoEvent) {
-			getModel().getUndoManager().undoableEditHappened(
-					new UndoableEditEvent(getModel(), new UndoableLayeredComponentOperation(UndoAction.BRING_FORWARD_LAYERED_COMPONENT, c)));
+			getModel().getUndoManager().undoableEditHappened(new UndoableEditEvent(getModel(), new UndoableLayeredComponentOperation(UndoAction.BRING_FORWARD_LAYERED_COMPONENT, c)));
 			updateUndoUIComponents();
 		}
 	}
@@ -1349,8 +1303,7 @@ public abstract class MDView extends PrintableComponent {
 		c.setLayer(Layered.BEHIND_PARTICLES);
 		getModel().notifyChange();
 		if (!doNotFireUndoEvent) {
-			getModel().getUndoManager().undoableEditHappened(
-					new UndoableEditEvent(getModel(), new UndoableLayeredComponentOperation(UndoAction.BACK_LAYERED_COMPONENT, c)));
+			getModel().getUndoManager().undoableEditHappened(new UndoableEditEvent(getModel(), new UndoableLayeredComponentOperation(UndoAction.BACK_LAYERED_COMPONENT, c)));
 			updateUndoUIComponents();
 		}
 	}
@@ -1359,8 +1312,7 @@ public abstract class MDView extends PrintableComponent {
 		c.setLayer(Layered.IN_FRONT_OF_PARTICLES);
 		getModel().notifyChange();
 		if (!doNotFireUndoEvent) {
-			getModel().getUndoManager().undoableEditHappened(
-					new UndoableEditEvent(getModel(), new UndoableLayeredComponentOperation(UndoAction.FRONT_LAYERED_COMPONENT, c)));
+			getModel().getUndoManager().undoableEditHappened(new UndoableEditEvent(getModel(), new UndoableLayeredComponentOperation(UndoAction.FRONT_LAYERED_COMPONENT, c)));
 			updateUndoUIComponents();
 		}
 	}
@@ -1371,8 +1323,7 @@ public abstract class MDView extends PrintableComponent {
 		double rmin = 100000000;
 		double rcur = 0;
 		Particle a = null;
-		if (c instanceof ImageComponent || c instanceof RectangleComponent || c instanceof EllipseComponent || c instanceof TriangleComponent
-				|| c instanceof LineComponent) {
+		if (c instanceof ImageComponent || c instanceof RectangleComponent || c instanceof EllipseComponent || c instanceof TriangleComponent || c instanceof LineComponent) {
 			Point p = c.getCenter();
 			for (int i = 0; i < n; i++) {
 				a = getModel().getParticle(i);
@@ -1415,8 +1366,7 @@ public abstract class MDView extends PrintableComponent {
 			repaint();
 			getModel().notifyChange();
 			if (!doNotFireUndoEvent) {
-				getModel().getUndoManager().undoableEditHappened(
-						new UndoableEditEvent(getModel(), new UndoableLayeredComponentOperation(UndoAction.ATTACH_LAYERED_COMPONENT, c)));
+				getModel().getUndoManager().undoableEditHappened(new UndoableEditEvent(getModel(), new UndoableLayeredComponentOperation(UndoAction.ATTACH_LAYERED_COMPONENT, c)));
 				updateUndoUIComponents();
 			}
 		}
@@ -1431,16 +1381,14 @@ public abstract class MDView extends PrintableComponent {
 			return;
 		getModel().notifyChange();
 		if (!doNotFireUndoEvent) {
-			getModel().getUndoManager().undoableEditHappened(
-					new UndoableEditEvent(getModel(), new UndoableLayeredComponentOperation(UndoAction.ATTACH_LAYERED_COMPONENT, c)));
+			getModel().getUndoManager().undoableEditHappened(new UndoableEditEvent(getModel(), new UndoableLayeredComponentOperation(UndoAction.ATTACH_LAYERED_COMPONENT, c)));
 			updateUndoUIComponents();
 		}
 	}
 
 	void detach(Layered c) {
 		if (!doNotFireUndoEvent) {
-			getModel().getUndoManager().undoableEditHappened(
-					new UndoableEditEvent(getModel(), new UndoableLayeredComponentOperation(UndoAction.DETACH_LAYERED_COMPONENT, c)));
+			getModel().getUndoManager().undoableEditHappened(new UndoableEditEvent(getModel(), new UndoableLayeredComponentOperation(UndoAction.DETACH_LAYERED_COMPONENT, c)));
 			updateUndoUIComponents();
 		}
 		c.setHost(null);
@@ -1467,8 +1415,7 @@ public abstract class MDView extends PrintableComponent {
 			layerBasket.remove(c);
 			getModel().notifyChange();
 			if (!doNotFireUndoEvent) {
-				getModel().getUndoManager().undoableEditHappened(
-						new UndoableEditEvent(getModel(), new UndoableLayeredComponentOperation(UndoAction.REMOVE_LAYERED_COMPONENT, c)));
+				getModel().getUndoManager().undoableEditHappened(new UndoableEditEvent(getModel(), new UndoableLayeredComponentOperation(UndoAction.REMOVE_LAYERED_COMPONENT, c)));
 				updateUndoUIComponents();
 			}
 		}
@@ -1811,8 +1758,7 @@ public abstract class MDView extends PrintableComponent {
 		getModel().notifyChange();
 		if (!doNotFireUndoEvent) {
 			((ModelComponent) a).setSelected(true);
-			getModel().getUndoManager().undoableEditHappened(
-					new UndoableEditEvent(getModel(), new UndoableLayeredComponentOperation(UndoAction.INSERT_LAYERED_COMPONENT, a)));
+			getModel().getUndoManager().undoableEditHappened(new UndoableEditEvent(getModel(), new UndoableLayeredComponentOperation(UndoAction.INSERT_LAYERED_COMPONENT, a)));
 			updateUndoUIComponents();
 		}
 	}
@@ -1825,8 +1771,7 @@ public abstract class MDView extends PrintableComponent {
 		layerBasket.remove(a);
 		getModel().notifyChange();
 		if (!doNotFireUndoEvent) {
-			getModel().getUndoManager().undoableEditHappened(
-					new UndoableEditEvent(getModel(), new UndoableLayeredComponentOperation(UndoAction.REMOVE_LAYERED_COMPONENT, a)));
+			getModel().getUndoManager().undoableEditHappened(new UndoableEditEvent(getModel(), new UndoableLayeredComponentOperation(UndoAction.REMOVE_LAYERED_COMPONENT, a)));
 			updateUndoUIComponents();
 		}
 	}
@@ -2397,10 +2342,8 @@ public abstract class MDView extends PrintableComponent {
 			break;
 		case TRIA_ID:
 			g.drawLine(selectedArea.x + selectedArea.width / 2, selectedArea.y, selectedArea.x, selectedArea.y + selectedArea.height);
-			g.drawLine(selectedArea.x + selectedArea.width / 2, selectedArea.y, selectedArea.x + selectedArea.width, selectedArea.y
-					+ selectedArea.height);
-			g.drawLine(selectedArea.x, selectedArea.y + selectedArea.height, selectedArea.x + selectedArea.width, selectedArea.y
-					+ selectedArea.height);
+			g.drawLine(selectedArea.x + selectedArea.width / 2, selectedArea.y, selectedArea.x + selectedArea.width, selectedArea.y + selectedArea.height);
+			g.drawLine(selectedArea.x, selectedArea.y + selectedArea.height, selectedArea.x + selectedArea.width, selectedArea.y + selectedArea.height);
 			break;
 		case ELLI_ID:
 			g.drawOval(selectedArea.x, selectedArea.y, selectedArea.width, selectedArea.height);
@@ -2876,8 +2819,7 @@ public abstract class MDView extends PrintableComponent {
 				repaint();
 				getModel().notifyChange();
 				if (!doNotFireUndoEvent) {
-					getModel().getUndoManager().undoableEditHappened(
-							new UndoableEditEvent(getModel(), new UndoableLayeredComponentOperation(UndoAction.RESIZE_LINE, lc)));
+					getModel().getUndoManager().undoableEditHappened(new UndoableEditEvent(getModel(), new UndoableLayeredComponentOperation(UndoAction.RESIZE_LINE, lc)));
 					updateUndoUIComponents();
 				}
 				return true;
@@ -2915,8 +2857,7 @@ public abstract class MDView extends PrintableComponent {
 				repaint();
 				getModel().notifyChange();
 				if (!doNotFireUndoEvent) {
-					getModel().getUndoManager().undoableEditHappened(
-							new UndoableEditEvent(getModel(), new UndoableLayeredComponentOperation(UndoAction.RESIZE_RECTANGLE, rc)));
+					getModel().getUndoManager().undoableEditHappened(new UndoableEditEvent(getModel(), new UndoableLayeredComponentOperation(UndoAction.RESIZE_RECTANGLE, rc)));
 					updateUndoUIComponents();
 				}
 				return true;
@@ -2946,8 +2887,7 @@ public abstract class MDView extends PrintableComponent {
 				repaint();
 				getModel().notifyChange();
 				if (!doNotFireUndoEvent) {
-					getModel().getUndoManager().undoableEditHappened(
-							new UndoableEditEvent(getModel(), new UndoableLayeredComponentOperation(UndoAction.RESIZE_ELLIPSE, ec)));
+					getModel().getUndoManager().undoableEditHappened(new UndoableEditEvent(getModel(), new UndoableLayeredComponentOperation(UndoAction.RESIZE_ELLIPSE, ec)));
 					updateUndoUIComponents();
 				}
 				return true;
@@ -2961,8 +2901,7 @@ public abstract class MDView extends PrintableComponent {
 				repaint();
 				getModel().notifyChange();
 				if (!doNotFireUndoEvent) {
-					getModel().getUndoManager().undoableEditHappened(
-							new UndoableEditEvent(getModel(), new UndoableLayeredComponentOperation(UndoAction.RESIZE_TRIANGLE, tc)));
+					getModel().getUndoManager().undoableEditHappened(new UndoableEditEvent(getModel(), new UndoableLayeredComponentOperation(UndoAction.RESIZE_TRIANGLE, tc)));
 					updateUndoUIComponents();
 				}
 				return true;
@@ -3060,6 +2999,12 @@ public abstract class MDView extends PrintableComponent {
 			break;
 		case KeyEvent.VK_T:
 			getModel().reset();
+			break;
+		case KeyEvent.VK_ESCAPE:
+			Object o = getClientProperty("close_full_screen");
+			if (o instanceof Runnable) {
+				((Runnable) o).run();
+			}
 			break;
 		}
 	}
