@@ -446,6 +446,8 @@ public class FileUtilities {
 		String s1 = s.toLowerCase().trim();
 		if (s1.startsWith("http://"))
 			return true;
+		if (s1.startsWith("https://"))
+			return true;
 		if (s1.startsWith("jar:"))
 			return true;
 		return false;
