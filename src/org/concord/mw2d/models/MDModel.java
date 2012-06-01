@@ -2650,7 +2650,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 					}
 					catch (IOException e1) {
 						try {
-							is = connect.getInputStream();
+							is = ConnectionManager.getConnection(url).getInputStream();
 						}
 						catch (IOException e2) {
 							// TODO Auto-generated catch block
