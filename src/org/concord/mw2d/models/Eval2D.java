@@ -195,6 +195,7 @@ class Eval2D extends AbstractEval {
 		s = replaceAll(s, "%keycode", keyCode);
 		s = replaceAll(s, "%model_time", model.modelTime);
 		s = replaceAll(s, "%time_step", model.getTimeStep());
+		s = replaceAll(s, "%recorder_default_length", model.getDefaultTapeLength());
 		s = replaceAll(s, "%pot", model.pot);
 		s = replaceAll(s, "%kin", model.kin);
 		s = replaceAll(s, "%tot", model.tot);
@@ -4477,6 +4478,11 @@ class Eval2D extends AbstractEval {
 			}
 			else if (s0 == "time_step") {
 				model.setTimeStep(x);
+				notifyChange();
+				return true;
+			}
+			else if (s0 == "recorder_default_length") {
+				model.setDefaultTapeLength((int)x);
 				notifyChange();
 				return true;
 			}
