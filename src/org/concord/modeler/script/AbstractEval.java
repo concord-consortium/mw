@@ -64,6 +64,7 @@ import org.concord.modeler.text.Page;
 import org.concord.modeler.ui.HTMLPane;
 import org.concord.modeler.util.Evaluator;
 import org.concord.modeler.util.FileUtilities;
+import org.concord.modeler.util.FloatQueue;
 
 import static java.util.regex.Pattern.*;
 import static org.concord.modeler.script.Compiler.*;
@@ -1478,6 +1479,11 @@ public abstract class AbstractEval {
 
 	protected static String replaceAll(String expression, String variable, String value) {
 		String replacement = Matcher.quoteReplacement(value);
+		return expression.replaceAll("(?i)" + variable, replacement);
+	}
+
+	protected static String replaceAll(String expression, String variable, FloatQueue value) {
+		String replacement = value.toString();
 		return expression.replaceAll("(?i)" + variable, replacement);
 	}
 

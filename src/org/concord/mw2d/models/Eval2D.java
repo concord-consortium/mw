@@ -196,6 +196,9 @@ class Eval2D extends AbstractEval {
 		s = replaceAll(s, "%model_time", model.modelTime);
 		s = replaceAll(s, "%time_step", model.getTimeStep());
 		s = replaceAll(s, "%recorder_default_length", model.getDefaultTapeLength());
+		s = replaceAll(s, "%pote", model.getPotTS());
+		s = replaceAll(s, "%kine", model.getKinTS());
+		s = replaceAll(s, "%tote", model.getTotTS());
 		s = replaceAll(s, "%pot", model.pot);
 		s = replaceAll(s, "%kin", model.kin);
 		s = replaceAll(s, "%tot", model.tot);

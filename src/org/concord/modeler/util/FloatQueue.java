@@ -168,6 +168,17 @@ public class FloatQueue extends DataQueue {
 		data[i] = f;
 	}
 
+	public String toString() {
+		if (pointer <= 0) return "";
+		int n = pointer < data.length ? pointer : data.length;
+	    String result = "";
+		for (int i = 0; i < n-1; i++) {
+			result = result + data[i] + ",";
+		}
+		result = result + data[n-1];
+		return result;
+	}
+
 	/** if there is no data in this queue, return 0 */
 	public float getCurrentValue() {
 		if (data == null)
