@@ -1476,6 +1476,11 @@ public abstract class AbstractEval {
 		return expression.replaceAll("(?i)" + variable, "" + value);
 	}
 
+	protected static String replaceAll(String expression, String variable, String value) {
+		String replacement = Matcher.quoteReplacement(value);
+		return expression.replaceAll("(?i)" + variable, replacement);
+	}
+
 	private short getNLoop(String ci) {
 		int i = ci.toLowerCase().lastIndexOf("loop") + 4;
 		if (i < ci.length() - 1) {

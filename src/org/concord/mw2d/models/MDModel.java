@@ -28,6 +28,7 @@ import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -724,6 +725,42 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	public void output(String fileName) {
 		File file = new File(fileName);
 		output(file);
+	}
+
+	public String outputStr() {
+		clearScriptQueue();
+		haltScriptExecution();
+		stopImmediately();
+		blockView(true);
+		OutputStream os = null;
+		os = new ByteArrayOutputStream();
+		XMLEncoder out = new XMLEncoder(os);
+		try {
+			synchronized (((MDView) getView()).getUpdateLock()) {
+				encode(out);
+			}
+			blockView(false);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return e.getMessage();
+		}
+		finally {
+			out.close();
+			try {
+				os.close();
+			}
+			catch (IOException iox) {
+			}
+		}
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				play.setEnabled(true);
+				stop.setEnabled(false);
+			}
+		});
+		String xml = os.toString();
+		return xml;
 	}
 
 	abstract void encode(XMLEncoder out) throws Exception;

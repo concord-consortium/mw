@@ -216,6 +216,7 @@ class Eval2D extends AbstractEval {
 		s = replaceAll(s, "%cell_y", model.boundary.y * R_CONVERTER);
 		s = replaceAll(s, "%cell_width", model.boundary.width * R_CONVERTER);
 		s = replaceAll(s, "%cell_height", model.boundary.height * R_CONVERTER);
+		s = replaceAll(s, "%mml", model.outputStr());
 		if (model instanceof MolecularModel) {
 			s = replaceAll(s, "%number_of_atoms", model.getNumberOfParticles());
 			s = replaceAll(s, "%number_of_rbonds", ((MolecularModel) model).bonds.size());
