@@ -194,6 +194,9 @@ class Eval2D extends AbstractEval {
 		s = replaceAll(s, "%mouse_y", mouseLocation.y);
 		s = replaceAll(s, "%keycode", keyCode);
 		s = replaceAll(s, "%model_time", model.modelTime);
+		s = replaceAll(s, "%pot", model.pot);
+		s = replaceAll(s, "%kin", model.kin);
+		s = replaceAll(s, "%tot", model.tot);
 		s = replaceAll(s, "%temperature", model.getTemperature());
 		s = replaceAll(s, "%index_of_selected_particle", iosp);
 		s = replaceAll(s, "%number_of_particles", model.getNumberOfParticles());
