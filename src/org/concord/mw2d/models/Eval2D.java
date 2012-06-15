@@ -194,6 +194,7 @@ class Eval2D extends AbstractEval {
 		s = replaceAll(s, "%mouse_y", mouseLocation.y);
 		s = replaceAll(s, "%keycode", keyCode);
 		s = replaceAll(s, "%model_time", model.modelTime);
+		s = replaceAll(s, "%time_step", model.getTimeStep());
 		s = replaceAll(s, "%pot", model.pot);
 		s = replaceAll(s, "%kin", model.kin);
 		s = replaceAll(s, "%tot", model.tot);
@@ -4470,6 +4471,11 @@ class Eval2D extends AbstractEval {
 			}
 			else if (s0 == "temperature") {
 				model.setTemperature(x);
+				notifyChange();
+				return true;
+			}
+			else if (s0 == "time_step") {
+				model.setTimeStep(x);
 				notifyChange();
 				return true;
 			}
