@@ -219,12 +219,13 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 					if ("READY".equalsIgnoreCase(s)) {
 						dnaScroller.startTranscriptionEffectEndWithoutGoingToTranslation();
 					}
+					else if ("START".equalsIgnoreCase(s)) {
+						dnaScroller.startTranslation();
+					}
 					else {
 						if (!dnaScroller.isTranscriptionEnded()) {
 							Toolkit.getDefaultToolkit().beep();
-							JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view),
-									"Translation cannot start without transcription, or before the\ncompletion of transcription.", "Message",
-									JOptionPane.INFORMATION_MESSAGE);
+							JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view), "Translation cannot start without transcription, or before the\ncompletion of transcription.", "Message", JOptionPane.INFORMATION_MESSAGE);
 							return null;
 						}
 						int i = dnaScroller.getModel().getCurrIndex() + 3;
@@ -248,8 +249,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 									return dnaScroller.get35CurrAminoacidAbbreviation();
 								}
 								else if ("STOP".equals(s)) {
-									if (codonString.equalsIgnoreCase("UAA") || codonString.equalsIgnoreCase("UAG")
-											|| codonString.equalsIgnoreCase("UGA")) {
+									if (codonString.equalsIgnoreCase("UAA") || codonString.equalsIgnoreCase("UAG") || codonString.equalsIgnoreCase("UGA")) {
 										dnaScroller.doOneStep();
 										return dnaScroller.get35CurrAminoacidAbbreviation();
 									}
@@ -296,16 +296,14 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 					final String s2 = s.substring(3).trim();
 					int remainder = s2.length() % 3;
 					if (remainder != 0) {
-						JOptionPane.showMessageDialog(view, "Input DNA code must be 3xn! Please add " + (3 - remainder) + " or remove " + remainder
-								+ " nucleotide(s).", "Triplets required", JOptionPane.ERROR_MESSAGE, null);
+						JOptionPane.showMessageDialog(view, "Input DNA code must be 3xn! Please add " + (3 - remainder) + " or remove " + remainder + " nucleotide(s).", "Triplets required", JOptionPane.ERROR_MESSAGE, null);
 						return null;
 					}
 					char c;
 					for (int i = 0; i < s2.length(); i++) {
 						c = s2.charAt(i);
 						if (c != 'a' && c != 'A' && c != 'c' && c != 'C' && c != 'g' && c != 'G' && c != 't' && c != 'T') {
-							JOptionPane.showMessageDialog(view, "Input DNA code must contain only A, C, G, or T. Please try again.",
-									"Illegal DNA code", JOptionPane.ERROR_MESSAGE, null);
+							JOptionPane.showMessageDialog(view, "Input DNA code must contain only A, C, G, or T. Please try again.", "Illegal DNA code", JOptionPane.ERROR_MESSAGE, null);
 							return null;
 						}
 					}
@@ -483,9 +481,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 				if (dnaScroller.isTranslationEnded())
 					return;
 				if (!dnaScroller.isTranscriptionEnded()) {
-					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view),
-							"Translation cannot start without transcription, or before the\ncompletion of transcription.", "Message",
-							JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view), "Translation cannot start without transcription, or before the\ncompletion of transcription.", "Message", JOptionPane.INFORMATION_MESSAGE);
 					return;
 				}
 				dnaScroller.doOneStep();
@@ -971,8 +967,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			Rectangle ribosomeArea = SwingUtilities.convertRectangle(dnaScroller.getParent(), e.getRibosomeRect(), view);
 			if (ribosomeArea.x < 0)
 				ribosomeArea.x = 50;
-			boolean success = view.growPolypeptide(ribosomeArea.x + ribosomeArea.width / 3, ribosomeArea.y + ribosomeArea.height / 2 - 8,
-					Math.PI * 0.25, AminoAcidAdapter.getElementID(e.getAminoacid()));
+			boolean success = view.growPolypeptide(ribosomeArea.x + ribosomeArea.width / 3, ribosomeArea.y + ribosomeArea.height / 2 - 8, Math.PI * 0.25, AminoAcidAdapter.getElementID(e.getAminoacid()));
 			Atom at = model.getAtom(model.getNumberOfAtoms() - 1);
 			if (at != null) {
 				at.setCodon(e.getCodon().toString().replaceAll("U", "T"));
@@ -1160,8 +1155,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 				final String s2 = dnaField.getText().trim();
 				int remainder = s2.length() % 3;
 				if (remainder != 0) {
-					JOptionPane.showMessageDialog(view, "Input DNA code must be 3xn! Please add " + (3 - remainder) + " or remove " + remainder
-							+ " nucleotide(s).", "Triplets required", JOptionPane.ERROR_MESSAGE, null);
+					JOptionPane.showMessageDialog(view, "Input DNA code must be 3xn! Please add " + (3 - remainder) + " or remove " + remainder + " nucleotide(s).", "Triplets required", JOptionPane.ERROR_MESSAGE, null);
 					return;
 				}
 				dnaPlayButton.setEnabled(true);
@@ -1478,8 +1472,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			bg.add(rbMenuItem0);
 
 			s = getInternationalText("AtomsOnGrid");
-			JRadioButtonMenuItem rbMenuItem = new JRadioButtonMenuItem(s != null ? s : "Atoms on Grid", new ImageIcon(getClass().getResource(
-					"images/gridShow.gif")));
+			JRadioButtonMenuItem rbMenuItem = new JRadioButtonMenuItem(s != null ? s : "Atoms on Grid", new ImageIcon(getClass().getResource("images/gridShow.gif")));
 			rbMenuItem.setMnemonic(KeyEvent.VK_A);
 			rbMenuItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -1492,8 +1485,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			bg.add(rbMenuItem);
 
 			s = getInternationalText("DensityDistribution");
-			rbMenuItem = new JRadioButtonMenuItem(s != null ? s : "Density Distribution",
-					new ImageIcon(getClass().getResource("images/gridDens.gif")));
+			rbMenuItem = new JRadioButtonMenuItem(s != null ? s : "Density Distribution", new ImageIcon(getClass().getResource("images/gridDens.gif")));
 			rbMenuItem.setMnemonic(KeyEvent.VK_D);
 			rbMenuItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -1532,8 +1524,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			bg.add(rbMenuItem);
 
 			s = getInternationalText("TemperatureDistribution");
-			rbMenuItem = new JRadioButtonMenuItem(s != null ? s : "Temperature Distribution", new ImageIcon(getClass().getResource(
-					"images/gridKine.gif")));
+			rbMenuItem = new JRadioButtonMenuItem(s != null ? s : "Temperature Distribution", new ImageIcon(getClass().getResource("images/gridKine.gif")));
 			rbMenuItem.setMnemonic(KeyEvent.VK_T);
 			rbMenuItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -1546,8 +1537,7 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			bg.add(rbMenuItem);
 
 			s = getInternationalText("VelocityDistribution");
-			rbMenuItem = new JRadioButtonMenuItem(s != null ? s : "Velocity Distribution", new ImageIcon(getClass()
-					.getResource("images/gridVelo.gif")));
+			rbMenuItem = new JRadioButtonMenuItem(s != null ? s : "Velocity Distribution", new ImageIcon(getClass().getResource("images/gridVelo.gif")));
 			rbMenuItem.setMnemonic(KeyEvent.VK_V);
 			rbMenuItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {

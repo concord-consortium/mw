@@ -167,12 +167,9 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 							if (s != null)
 								REMINDER_OPTIONS[2] = s;
 							s = MDView.getInternationalText("AutomaticReminder");
-							int i = JOptionPane.showOptionDialog(JOptionPane.getFrameForComponent(getView()), message,
-									s != null ? s : "Automatical Reminder", JOptionPane.YES_NO_CANCEL_OPTION,
-									JOptionPane.INFORMATION_MESSAGE, null, REMINDER_OPTIONS, REMINDER_OPTIONS[0]);
+							int i = JOptionPane.showOptionDialog(JOptionPane.getFrameForComponent(getView()), message, s != null ? s : "Automatical Reminder", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, REMINDER_OPTIONS, REMINDER_OPTIONS[0]);
 							if (i == JOptionPane.NO_OPTION) {
-								model.notifyPageComponentListeners(new PageComponentEvent(getView(),
-										PageComponentEvent.SNAPSHOT_TAKEN));
+								model.notifyPageComponentListeners(new PageComponentEvent(getView(), PageComponentEvent.SNAPSHOT_TAKEN));
 							}
 							else if (i == JOptionPane.CANCEL_OPTION) {
 								Action play = model.getView().getActionMap().get("Play");
@@ -458,9 +455,7 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 			public void actionPerformed(ActionEvent e) {
 				String s = getInternationalText("DoYouReallyWantToRemoveButton");
 				String t = getInternationalText("RemoveButton");
-				if (JOptionPane.showConfirmDialog(MDContainer.this, s != null ? s
-						: "Do you really want to remove this button from the toolbar?", t != null ? t
-						: "Remove Toolbar Button", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+				if (JOptionPane.showConfirmDialog(MDContainer.this, s != null ? s : "Do you really want to remove this button from the toolbar?", t != null ? t : "Remove Toolbar Button", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
 					Component invoker = buttonMenu.getInvoker();
 					if (invoker instanceof AbstractButton) {
 						removeToolBarButton((AbstractButton) invoker);
@@ -479,9 +474,7 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 			public void actionPerformed(ActionEvent e) {
 				String s = getInternationalText("DoYouReallyWantToRemoveToolBar");
 				String t = getInternationalText("RemoveEntireToolBar");
-				if (JOptionPane.showConfirmDialog(MDContainer.this, s != null ? s
-						: "Do you really want to remove the toolbar?", t != null ? t : "Remove Toolbar",
-						JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+				if (JOptionPane.showConfirmDialog(MDContainer.this, s != null ? s : "Do you really want to remove the toolbar?", t != null ? t : "Remove Toolbar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
 					removeToolbar();
 					getModel().notifyChange();
 				}
@@ -532,11 +525,7 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 					}
 				}
 				if (!isLoading) {
-					if (JOptionPane.showConfirmDialog(JOptionPane.getFrameForComponent(MDContainer.this),
-							"Disabling recorder will cause erasing data already\nrecorded in the tape. "
-									+ (hasGraphs ? "This will also affect graphs on the page." : "")
-									+ "Do you want to continue?", "Warning", JOptionPane.YES_NO_OPTION,
-							JOptionPane.WARNING_MESSAGE) == JOptionPane.NO_OPTION)
+					if (JOptionPane.showConfirmDialog(JOptionPane.getFrameForComponent(MDContainer.this), "Disabling recorder will cause erasing data already\nrecorded in the tape. " + (hasGraphs ? "This will also affect graphs on the page." : "") + "Do you want to continue?", "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.NO_OPTION)
 						return JOptionPane.NO_OPTION;
 				}
 			}
@@ -1250,24 +1239,20 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 		add(menu);
 
 		s = getInternationalText("OpenLocation");
-		JMenuItem menuItem = new JMenuItem((s != null ? s : "Open Model from Location") + "...", IconPool
-				.getIcon("openweb"));
+		JMenuItem menuItem = new JMenuItem((s != null ? s : "Open Model from Location") + "...", IconPool.getIcon("openweb"));
 		menuItem.setMnemonic(KeyEvent.VK_L);
-		menuItem.setAccelerator(System.getProperty("os.name").startsWith("Mac") ? KeyStroke.getKeyStroke(KeyEvent.VK_L,
-				KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_L, KeyEvent.CTRL_MASK, true));
+		menuItem.setAccelerator(System.getProperty("os.name").startsWith("Mac") ? KeyStroke.getKeyStroke(KeyEvent.VK_L, KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_L, KeyEvent.CTRL_MASK, true));
 		menuItem.setToolTipText("Open a model using its URL");
 		menuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				PastableTextField tf = new PastableTextField("http://");
 				String inputURL = getInternationalText("PleaseInputURL");
-				if (JOptionPane.showConfirmDialog(getView(), tf, inputURL != null ? inputURL : "Please input a URL:",
-						JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE) == JOptionPane.OK_OPTION) {
+				if (JOptionPane.showConfirmDialog(getView(), tf, inputURL != null ? inputURL : "Please input a URL:", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE) == JOptionPane.OK_OPTION) {
 					final String s = tf.getText();
 					if (s == null || s.trim().equals(""))
 						return;
 					if (!s.toLowerCase().endsWith("mml")) {
-						JOptionPane.showMessageDialog(getView(), "File must be in MML format.", "Format error",
-								JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(getView(), "File must be in MML format.", "Format error", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 					Thread t = new Thread() {
@@ -1530,9 +1515,7 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 			public void actionPerformed(ActionEvent e) {
 				String s = getInternationalText("DoYouReallyWantToRemoveToolBar");
 				String t = getInternationalText("RemoveEntireToolBar");
-				if (JOptionPane.showConfirmDialog(getView(), s != null ? s
-						: "Do you really want to remove the toolbar?", t != null ? t : "Remove Toolbar",
-						JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+				if (JOptionPane.showConfirmDialog(getView(), s != null ? s : "Do you really want to remove the toolbar?", t != null ? t : "Remove Toolbar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
 					removeToolbar();
 					getModel().notifyChange();
 				}
@@ -1637,16 +1620,15 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 						});
 					}
 					String s = getInternationalText("TrajectoryColor");
-					trajColorArrayPane.createDialog(getView(), s != null ? s : "Trajectory Color",
-							ModelerUtilities.colorChooser, new ActionListener() {
-								public void actionPerformed(ActionEvent e) {
-									ModelComponent mc = getView().getSelectedComponent();
-									if (mc instanceof Particle) {
-										((Particle) mc).setTrajectoryColor(ModelerUtilities.colorChooser.getColor());
-										getView().repaint();
-									}
-								}
-							}).setVisible(true);
+					trajColorArrayPane.createDialog(getView(), s != null ? s : "Trajectory Color", ModelerUtilities.colorChooser, new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							ModelComponent mc = getView().getSelectedComponent();
+							if (mc instanceof Particle) {
+								((Particle) mc).setTrajectoryColor(ModelerUtilities.colorChooser.getColor());
+								getView().repaint();
+							}
+						}
+					}).setVisible(true);
 				}
 			};
 			trajButton.addMouseListener(new MouseAdapter() {
@@ -1684,9 +1666,7 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 				public void mouseClicked(MouseEvent e) {
 					if (e.getClickCount() < 2)
 						return;
-					if (JOptionPane.showConfirmDialog(MDContainer.this,
-							"Do you really want to remove all the objects?", "Object removal",
-							JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+					if (JOptionPane.showConfirmDialog(MDContainer.this, "Do you really want to remove all the objects?", "Object removal", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 						getView().removeAllObjects();
 					}
 				}
@@ -1708,15 +1688,14 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 						});
 					}
 					String s = getInternationalText("MarkColor");
-					markColorArrayPane.createDialog(getView(), s != null ? s : "Mark Color",
-							ModelerUtilities.colorChooser, new ActionListener() {
-								public void actionPerformed(ActionEvent e) {
-									getView().setMarkColor(ModelerUtilities.colorChooser.getColor());
-									if (getView() instanceof AtomisticView)
-										((AtomisticView) getView()).refreshJmol();
-									getView().repaint();
-								}
-							}).setVisible(true);
+					markColorArrayPane.createDialog(getView(), s != null ? s : "Mark Color", ModelerUtilities.colorChooser, new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							getView().setMarkColor(ModelerUtilities.colorChooser.getColor());
+							if (getView() instanceof AtomisticView)
+								((AtomisticView) getView()).refreshJmol();
+							getView().repaint();
+						}
+					}).setVisible(true);
 				}
 			};
 			markButton.addMouseListener(new MouseAdapter() {
