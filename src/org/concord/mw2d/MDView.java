@@ -229,11 +229,12 @@ public abstract class MDView extends PrintableComponent {
 
 	public MDView() {
 
-		if (bundle == null && !isUSLocale) {
+		if (bundle == null && !isUSLocale && !MDContainer.isApplet()) {
+			// for some reason, trying to load resource bundle from the default locale causes the applet to fail
 			try {
 				bundle = ResourceBundle.getBundle("org.concord.mw2d.images.ViewBundle", Locale.getDefault());
 			}
-			catch (MissingResourceException e) {
+			catch (Exception e) {
 			}
 		}
 

@@ -228,7 +228,8 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 
 		super(new BorderLayout());
 
-		if (bundle == null) {
+		if (bundle == null && !asApplet) {
+			// for some reason, trying to load resource bundle from the default locale causes the applet to fail
 			isUSLocale = Locale.getDefault().equals(Locale.US);
 			try {
 				bundle = ResourceBundle.getBundle("org.concord.jmol.resources.Jmol", Locale.getDefault());
@@ -695,16 +696,12 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 				while (!stopBlinkingInteraction) {
 					if (!atomInteractions.isEmpty()) {
 						for (InteractionCenter c : atomInteractions.values()) {
-							jmol.viewer.setAttachmentKeyColor(c.getHostType(), c.getHost(),
-									blinkInteractionFlag ? jmol.viewer.getBackgroundArgb() : c.getKeyRgb(),
-									InteractionCenter.class);
+							jmol.viewer.setAttachmentKeyColor(c.getHostType(), c.getHost(), blinkInteractionFlag ? jmol.viewer.getBackgroundArgb() : c.getKeyRgb(), InteractionCenter.class);
 						}
 					}
 					if (!bondInteractions.isEmpty()) {
 						for (InteractionCenter c : bondInteractions.values()) {
-							jmol.viewer.setAttachmentKeyColor(c.getHostType(), c.getHost(),
-									blinkInteractionFlag ? jmol.viewer.getBackgroundArgb() : c.getKeyRgb(),
-									InteractionCenter.class);
+							jmol.viewer.setAttachmentKeyColor(c.getHostType(), c.getHost(), blinkInteractionFlag ? jmol.viewer.getBackgroundArgb() : c.getKeyRgb(), InteractionCenter.class);
 						}
 					}
 					jmol.repaint();
@@ -895,8 +892,7 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 			saveAsNewScene();
 			return;
 		}
-		if (JOptionPane.showConfirmDialog(this, "Are you sure you want to overwrite the current scene?",
-				"Warning: Overwriting scene", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+		if (JOptionPane.showConfirmDialog(this, "Are you sure you want to overwrite the current scene?", "Warning: Overwriting scene", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
 			String s = getCurrentOrientation();
 			if (s != null) {
 				String[] t = s.split("\\s");
@@ -915,8 +911,7 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 				currentScene.setYTrans(jmol.viewer.getTranslationYPercent());
 				setSceneProperties(currentScene);
 				int index = scenes.indexOf(currentScene);
-				notifyNavigationListeners(new NavigationEvent(this, NavigationEvent.ARRIVAL, index, index, scenes
-						.size(), null, null));
+				notifyNavigationListeners(new NavigationEvent(this, NavigationEvent.ARRIVAL, index, index, scenes.size(), null, null));
 			}
 		}
 	}
@@ -937,8 +932,7 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 			currentScene.setYTrans(jmol.viewer.getTranslationYPercent());
 			setSceneProperties(currentScene);
 			scenes.add(currentScene);
-			notifyNavigationListeners(new NavigationEvent(this, NavigationEvent.ARRIVAL, scenes.size() - 1, scenes
-					.size() - 1, scenes.size(), null, null));
+			notifyNavigationListeners(new NavigationEvent(this, NavigationEvent.ARRIVAL, scenes.size() - 1, scenes.size() - 1, scenes.size(), null, null));
 		}
 	}
 
@@ -996,16 +990,14 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 			public void run() {
 				setMoving(true);
 				int i = scenes.indexOf(currentScene);
-				notifyNavigationListeners(new NavigationEvent(this, NavigationEvent.DEPARTURE, i, index, scenes.size(),
-						null, null));
+				notifyNavigationListeners(new NavigationEvent(this, NavigationEvent.DEPARTURE, i, index, scenes.size(), null, null));
 				Scene s0 = currentScene;
 				currentScene = index >= 0 ? scenes.get(index) : jmol.getStartingScene();
 				if (currentScene != null) {
 					currentScene.setPrevious(s0);
 					moveCameraToScene(currentScene, immediately);
 				}
-				notifyNavigationListeners(new NavigationEvent(this, NavigationEvent.ARRIVAL, index, index, scenes
-						.size(), null, null));
+				notifyNavigationListeners(new NavigationEvent(this, NavigationEvent.ARRIVAL, index, index, scenes.size(), null, null));
 				setMoving(false);
 			}
 		};
@@ -1022,8 +1014,7 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 			public void run() {
 				setMoving(true);
 				int i = scenes.indexOf(currentScene);
-				notifyNavigationListeners(new NavigationEvent(this, NavigationEvent.DEPARTURE, i, next ? i + 1 : i - 1,
-						scenes.size(), null, null));
+				notifyNavigationListeners(new NavigationEvent(this, NavigationEvent.DEPARTURE, i, next ? i + 1 : i - 1, scenes.size(), null, null));
 				if (next) {
 					moveToNextScene();
 				}
@@ -1031,8 +1022,7 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 					moveToPreviousScene();
 				}
 				i = scenes.indexOf(currentScene);
-				notifyNavigationListeners(new NavigationEvent(this, NavigationEvent.ARRIVAL, i, i, scenes.size(), null,
-						null));
+				notifyNavigationListeners(new NavigationEvent(this, NavigationEvent.ARRIVAL, i, i, scenes.size(), null, null));
 				setMoving(false);
 			}
 		};
@@ -1098,8 +1088,7 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 					if (requestStopMoveTo)
 						break;
 					i = scenes.indexOf(currentScene);
-					notifyNavigationListeners(new NavigationEvent(this, NavigationEvent.DEPARTURE, i, i + 1, scenes
-							.size(), null, null));
+					notifyNavigationListeners(new NavigationEvent(this, NavigationEvent.DEPARTURE, i, i + 1, scenes.size(), null, null));
 					b = moveToNextScene();
 					if (currentScene != null) {
 						try {
@@ -1110,8 +1099,7 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 					}
 				} while (b);
 				i = scenes.indexOf(currentScene);
-				notifyNavigationListeners(new NavigationEvent(this, NavigationEvent.ARRIVAL, i, i, scenes.size(), null,
-						null));
+				notifyNavigationListeners(new NavigationEvent(this, NavigationEvent.ARRIVAL, i, i, scenes.size(), null, null));
 				setMoving(false);
 			}
 		};
@@ -1134,8 +1122,7 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 	public void compilerErrorReported(final CommandEvent e) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(JmolContainer.this), e.getDescription(),
-						"Script Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(JmolContainer.this), e.getDescription(), "Script Error", JOptionPane.ERROR_MESSAGE);
 			}
 		});
 	}
@@ -1225,8 +1212,7 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 			e.printStackTrace();
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(JmolContainer.this),
-							"Error in writing to " + resourceAddress, "Write Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(JmolContainer.this), "Error in writing to " + resourceAddress, "Write Error", JOptionPane.ERROR_MESSAGE);
 				}
 			});
 			return;
@@ -1239,8 +1225,7 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 			e.printStackTrace();
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(JmolContainer.this),
-							"Encoding error: " + resourceAddress, "Write Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(JmolContainer.this), "Encoding error: " + resourceAddress, "Write Error", JOptionPane.ERROR_MESSAGE);
 				}
 			});
 		}
@@ -1279,8 +1264,7 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 				script.append("moveto 0 " + currentScene.rotationToString() + ";");
 			}
 			else {
-				script.append("moveto 0 " + currentScene.rotationToString() + " " + currentScene.getXTrans() + " "
-						+ currentScene.getYTrans() + ";");
+				script.append("moveto 0 " + currentScene.rotationToString() + " " + currentScene.getXTrans() + " " + currentScene.getYTrans() + ";");
 			}
 			setViewerProperties(currentScene);
 		}
@@ -1399,8 +1383,7 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 			e.printStackTrace();
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(JmolContainer.this), url
-							+ " was not found or has a problem.", "File error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(JmolContainer.this), url + " was not found or has a problem.", "File error", JOptionPane.ERROR_MESSAGE);
 				}
 			});
 		}
@@ -1424,8 +1407,7 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 			e.printStackTrace();
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(JmolContainer.this), file
-							+ " was not found or has a problem.", "File error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(JmolContainer.this), file + " was not found or has a problem.", "File error", JOptionPane.ERROR_MESSAGE);
 				}
 			});
 		}
@@ -1462,8 +1444,7 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 				s.setYTrans(ss.getYTrans());
 				scenes.add(s);
 			}
-			notifyNavigationListeners(new NavigationEvent(this, NavigationEvent.ARRIVAL, 0, 0, scenes.size(), null,
-					null));
+			notifyNavigationListeners(new NavigationEvent(this, NavigationEvent.ARRIVAL, 0, 0, scenes.size(), null, null));
 		}
 		setCollisionDetectionForAllAtoms(state.getPauliRepulsionForAllAtoms());
 		Map<Integer, SiteAnnotation> map1 = state.getAtomAnnotations();
@@ -1529,8 +1510,7 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 				x[i] = Float.parseFloat(t[i]);
 			}
 			if (scenes.isEmpty()) {
-				SceneState ss = new SceneState(new Scene(jmol.viewer.getCameraPosition(),
-						new Vector3f(x[0], x[1], x[2]), x[3], x[4]));
+				SceneState ss = new SceneState(new Scene(jmol.viewer.getCameraPosition(), new Vector3f(x[0], x[1], x[2]), x[3], x[4]));
 				ss.setAtomSelection(atomSelection);
 				ss.setAtomColoring(atomColoring);
 				ss.setScheme(scheme);
@@ -2196,9 +2176,7 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 			String s4 = getInternationalText("CameraPosition");
 			String s5 = getInternationalText("WhereToMoveCamera");
 			String[] s = { s1 != null ? s1 : "Center", s2 != null ? s2 : "Front" };
-			int i = JOptionPane.showOptionDialog(JmolContainer.this, s5 != null ? s5
-					: "Where do you want to move the camera?", s4 != null ? s4 : "Camera Position",
-					JOptionPane.OK_OPTION, JOptionPane.QUESTION_MESSAGE, null, s, s[0]);
+			int i = JOptionPane.showOptionDialog(JmolContainer.this, s5 != null ? s5 : "Where do you want to move the camera?", s4 != null ? s4 : "Camera Position", JOptionPane.OK_OPTION, JOptionPane.QUESTION_MESSAGE, null, s, s[0]);
 			jmol.viewer.setNavigationMode(true);
 			String orie = jmol.viewer.getCurrentOrientation();
 			jmol.viewer.runScriptImmediatelyWithoutThread("reset");
@@ -2254,8 +2232,7 @@ public abstract class JmolContainer extends JPanel implements LoadMoleculeListen
 				else {
 					jmol.home();
 				}
-				notifyNavigationListeners(new NavigationEvent(this, NavigationEvent.ARRIVAL, 0, 0, scenes.size(), null,
-						null));
+				notifyNavigationListeners(new NavigationEvent(this, NavigationEvent.ARRIVAL, 0, 0, scenes.size(), null, null));
 			}
 			notifyChange();
 		}
