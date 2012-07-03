@@ -20,7 +20,6 @@
 
 package org.concord.mw3d;
 
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -128,8 +127,7 @@ import org.concord.mw3d.models.XyzWriter;
 import static javax.swing.Action.*;
 import static org.concord.mw3d.UserAction.*;
 
-public abstract class MolecularContainer extends JComponent implements Model, JmolStatusListener, CommandListener,
-		ProgressListener, ScriptExecutionListener {
+public abstract class MolecularContainer extends JComponent implements Model, JmolStatusListener, CommandListener, ProgressListener, ScriptExecutionListener {
 
 	final static String REGEX_SEPARATOR = "[\\s&&[^\\r\\n]]+";
 
@@ -183,7 +181,8 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 		fileChooser = ModelerUtilities.fileChooser;
 		setLayout(new BorderLayout());
 
-		if (bundle == null) {
+		if (bundle == null && !asApplet) {
+			// for some reason, trying to load resource bundle from the default locale causes the applet to fail
 			isUSLocale = Locale.getDefault().equals(Locale.US);
 			try {
 				bundle = ResourceBundle.getBundle("org.concord.mw3d.resources.MolecularContainer", Locale.getDefault());
@@ -555,8 +554,7 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 			e.printStackTrace();
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view), resourceAddress
-							+ " was not found or has a problem.", "File error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view), resourceAddress + " was not found or has a problem.", "File error", JOptionPane.ERROR_MESSAGE);
 				}
 			});
 		}
@@ -650,8 +648,7 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 			e.printStackTrace();
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view), resourceAddress
-							+ " was not found or has a problem.", "File error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view), resourceAddress + " was not found or has a problem.", "File error", JOptionPane.ERROR_MESSAGE);
 				}
 			});
 		}
@@ -718,8 +715,7 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 			e.printStackTrace();
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view), "Error in writing to "
-							+ resourceAddress, "Write Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view), "Error in writing to " + resourceAddress, "Write Error", JOptionPane.ERROR_MESSAGE);
 				}
 			});
 			return;
@@ -734,8 +730,7 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 			e.printStackTrace();
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view), "Encoding error: "
-							+ resourceAddress, "Write Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view), "Encoding error: " + resourceAddress, "Write Error", JOptionPane.ERROR_MESSAGE);
 				}
 			});
 		}
@@ -881,14 +876,12 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 		ABond abond;
 		for (int i = 0; i < model.getABondCount(); i++) {
 			abond = model.getABond(i);
-			view.getViewer().addABond(abond.getAtom1().getIndex(), abond.getAtom2().getIndex(),
-					abond.getAtom3().getIndex());
+			view.getViewer().addABond(abond.getAtom1().getIndex(), abond.getAtom2().getIndex(), abond.getAtom3().getIndex());
 		}
 		TBond tbond;
 		for (int i = 0; i < model.getTBondCount(); i++) {
 			tbond = model.getTBond(i);
-			view.getViewer().addTBond(tbond.getAtom1().getIndex(), tbond.getAtom2().getIndex(),
-					tbond.getAtom3().getIndex(), tbond.getAtom4().getIndex());
+			view.getViewer().addTBond(tbond.getAtom1().getIndex(), tbond.getAtom2().getIndex(), tbond.getAtom3().getIndex(), tbond.getAtom4().getIndex());
 		}
 	}
 
@@ -968,8 +961,7 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 			model.activateHeatBath(false);
 		}
 		if (state.getGravitationalAcceleration() > 0) {
-			model.setGField(state.getGravitationalAcceleration(), state.getGFieldDirection() == null ? null
-					: new Vector3f(state.getGFieldDirection()));
+			model.setGField(state.getGravitationalAcceleration(), state.getGFieldDirection() == null ? null : new Vector3f(state.getGFieldDirection()));
 		}
 		else {
 			model.setGField(0, null);
@@ -1064,16 +1056,14 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 					CuboidObstacleState cos = (CuboidObstacleState) o;
 					CuboidObstacle obs = new CuboidObstacle(cos);
 					model.addObstacle(obs);
-					view.getViewer().addCuboidObstacle(obs.getCenter().x, obs.getCenter().y, obs.getCenter().z,
-							obs.getCorner().x, obs.getCorner().y, obs.getCorner().z);
+					view.getViewer().addCuboidObstacle(obs.getCenter().x, obs.getCenter().y, obs.getCenter().z, obs.getCorner().x, obs.getCorner().y, obs.getCorner().z);
 					view.setObstacleColor(obs, new Color(cos.getColor()), cos.isTranslucent());
 				}
 				else if (o instanceof CylinderObstacleState) {
 					CylinderObstacleState cos = (CylinderObstacleState) o;
 					CylinderObstacle obs = new CylinderObstacle(cos);
 					model.addObstacle(obs);
-					view.getViewer().addCylinderObstacle(obs.getCenter().x, obs.getCenter().y, obs.getCenter().z,
-							obs.getAxis(), obs.getHeight(), obs.getRadius());
+					view.getViewer().addCylinderObstacle(obs.getCenter().x, obs.getCenter().y, obs.getCenter().z, obs.getAxis(), obs.getHeight(), obs.getRadius());
 					view.setObstacleColor(obs, new Color(cos.getColor()), cos.isTranslucent());
 				}
 			}
@@ -1102,8 +1092,7 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 		}
 	}
 
-	public void notifyFileLoaded(String fullPathName, String fileName, String modelName, Object clientFile,
-			String errorMessage) {
+	public void notifyFileLoaded(String fullPathName, String fileName, String modelName, Object clientFile, String errorMessage) {
 		view.getViewer().setSelectionHaloEnabled(true);
 		view.setLoadingMessagePainted(false);
 		if (view.isRenderingCallTriggeredByLoading()) {
@@ -1243,8 +1232,7 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 					run();
 				}
 				notifyModelListeners(new ModelEvent(MolecularContainer.this, ModelEvent.MODEL_RUN));
-				notifyPageComponentListeners(new PageComponentEvent(MolecularContainer.this,
-						PageComponentEvent.COMPONENT_RUN));
+				notifyPageComponentListeners(new PageComponentEvent(MolecularContainer.this, PageComponentEvent.COMPONENT_RUN));
 			}
 		};
 		runAction.putValue(NAME, "Run");
@@ -1298,8 +1286,7 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 				else reset();
 				model.readdMouseAndKeyScripts();
 				notifyModelListeners(new ModelEvent(MolecularContainer.this, ModelEvent.MODEL_RESET));
-				notifyPageComponentListeners(new PageComponentEvent(MolecularContainer.this,
-						PageComponentEvent.COMPONENT_RESET));
+				notifyPageComponentListeners(new PageComponentEvent(MolecularContainer.this, PageComponentEvent.COMPONENT_RESET));
 			}
 		};
 		resetAction.putValue(NAME, "Reset");
@@ -1341,16 +1328,13 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 		a.putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_V));
 		a.putValue(SHORT_DESCRIPTION, "Show view options");
 		a.putValue(SMALL_ICON, IconPool.getIcon("view"));
-		a.putValue(ACCELERATOR_KEY, System.getProperty("os.name").startsWith("Mac") ? KeyStroke.getKeyStroke(
-				KeyEvent.VK_V, KeyEvent.ALT_MASK | KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_V,
-				KeyEvent.ALT_MASK | KeyEvent.CTRL_MASK, true));
+		a.putValue(ACCELERATOR_KEY, System.getProperty("os.name").startsWith("Mac") ? KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.ALT_MASK | KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.ALT_MASK | KeyEvent.CTRL_MASK, true));
 		view.getInputMap().put((KeyStroke) a.getValue(ACCELERATOR_KEY), "view options");
 		view.getActionMap().put("view options", a);
 
 		a = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
-				ModelProperties modelProperties = new ModelProperties(JOptionPane
-						.getFrameForComponent(MolecularContainer.this), model);
+				ModelProperties modelProperties = new ModelProperties(JOptionPane.getFrameForComponent(MolecularContainer.this), model);
 				if (e == null)
 					modelProperties.selectInitializationScriptTab();
 				modelProperties.setLocationRelativeTo(MolecularContainer.this);
@@ -1361,9 +1345,7 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 		a.putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_P));
 		a.putValue(SHORT_DESCRIPTION, "Access model properties");
 		a.putValue(SMALL_ICON, IconPool.getIcon("properties"));
-		a.putValue(ACCELERATOR_KEY, System.getProperty("os.name").startsWith("Mac") ? KeyStroke.getKeyStroke(
-				KeyEvent.VK_M, KeyEvent.ALT_MASK | KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_M,
-				KeyEvent.ALT_MASK | KeyEvent.CTRL_MASK, true));
+		a.putValue(ACCELERATOR_KEY, System.getProperty("os.name").startsWith("Mac") ? KeyStroke.getKeyStroke(KeyEvent.VK_M, KeyEvent.ALT_MASK | KeyEvent.META_MASK, true) : KeyStroke.getKeyStroke(KeyEvent.VK_M, KeyEvent.ALT_MASK | KeyEvent.CTRL_MASK, true));
 		view.getInputMap().put((KeyStroke) a.getValue(ACCELERATOR_KEY), "properties");
 		view.getActionMap().put("properties", a);
 
@@ -1391,8 +1373,7 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 	}
 
 	public void compilerErrorReported(CommandEvent e) {
-		JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(this), e.getDescription(), "Script Error",
-				JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(this), e.getDescription(), "Script Error", JOptionPane.ERROR_MESSAGE);
 	}
 
 	public void setScreenshotAction(Action a) {
@@ -1584,8 +1565,7 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 		mi = new JMenuItem((s != null ? s : "Print Model") + "...");
 		mi.setIcon(IconPool.getIcon("printer"));
 		mi.setMnemonic(KeyEvent.VK_P);
-		mi.setAccelerator(System.getProperty("os.name").startsWith("Mac") ? KeyStroke.getKeyStroke(KeyEvent.VK_P,
-				KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_P, KeyEvent.CTRL_MASK));
+		mi.setAccelerator(System.getProperty("os.name").startsWith("Mac") ? KeyStroke.getKeyStroke(KeyEvent.VK_P, KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_P, KeyEvent.CTRL_MASK));
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				view.print();
@@ -1713,15 +1693,13 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 		JMenu menu = new JMenu(s != null ? s : "View");
 
 		s = getInternationalText("NavigationMode");
-		final JMenuItem miNavigation = new JCheckBoxMenuItem(s != null ? s : "Navigation Mode", new ImageIcon(
-				MolecularContainer.class.getResource("resources/Immersive.gif")));
+		final JMenuItem miNavigation = new JCheckBoxMenuItem(s != null ? s : "Navigation Mode", new ImageIcon(MolecularContainer.class.getResource("resources/Immersive.gif")));
 		miNavigation.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				view.getViewer().setNavigationMode(e.getStateChange() == ItemEvent.SELECTED);
 				if (view.getViewer().getNavigationMode()) {
 					if (!view.getViewer().getPerspectiveDepth()) {
-						JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(MolecularContainer.this),
-								"Perspective depth is required for the navigation mode. It will be turned on.");
+						JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(MolecularContainer.this), "Perspective depth is required for the navigation mode. It will be turned on.");
 						view.getViewer().setPerspectiveDepth(true);
 					}
 				}
@@ -1734,8 +1712,7 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 		menu.add(miNavigation);
 
 		s = getInternationalText("DetachCameraFromMovingObject");
-		final JMenuItem miDetach = new JMenuItem(s != null ? s : "Detach Camera from Moving Object", new ImageIcon(
-				MolecularContainer.class.getResource("resources/DetachCamera.gif")));
+		final JMenuItem miDetach = new JMenuItem(s != null ? s : "Detach Camera from Moving Object", new ImageIcon(MolecularContainer.class.getResource("resources/DetachCamera.gif")));
 		miDetach.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				view.setCameraAtom(-1);
@@ -1800,8 +1777,7 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 		menu.add(miSpin);
 
 		s = getInternationalText("ShowGlassSimulationBox");
-		final JMenuItem miGlassBox = new JCheckBoxMenuItem(s != null ? s : "Show Glass Simulation Box", new ImageIcon(
-				MolecularContainer.class.getResource("resources/GlassBox.gif")));
+		final JMenuItem miGlassBox = new JCheckBoxMenuItem(s != null ? s : "Show Glass Simulation Box", new ImageIcon(MolecularContainer.class.getResource("resources/GlassBox.gif")));
 		miGlassBox.setSelected(true);
 		miGlassBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
@@ -1822,8 +1798,7 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 		menu.add(mi);
 
 		s = getInternationalText("ShowAllAtoms");
-		mi = new JMenuItem(s != null ? s : "Show All Atoms", new ImageIcon(MolecularContainer.class
-				.getResource("resources/ShowAllAtoms.gif")));
+		mi = new JMenuItem(s != null ? s : "Show All Atoms", new ImageIcon(MolecularContainer.class.getResource("resources/ShowAllAtoms.gif")));
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				view.showAllAtoms();
@@ -1981,8 +1956,7 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 		menu.add(subMenu);
 
 		s = getInternationalText("HeatCool");
-		final JMenuItem miEnergizer = new JCheckBoxMenuItem(s != null ? s : "Quick Heat and Cool", IconPool
-				.getIcon("thermometer"));
+		final JMenuItem miEnergizer = new JCheckBoxMenuItem(s != null ? s : "Quick Heat and Cool", IconPool.getIcon("thermometer"));
 		miEnergizer.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				view.setShowEnergizer(e.getStateChange() == ItemEvent.SELECTED);
@@ -2086,8 +2060,7 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 
 		// rotation tool
 
-		rotateButton = new JToggleButton(new ImageIcon(MolecularContainer.class
-				.getResource("resources/DefaultMode.gif")));
+		rotateButton = new JToggleButton(new ImageIcon(MolecularContainer.class.getResource("resources/DefaultMode.gif")));
 		rotateButton.setSelected(true);
 		rotateButton.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
@@ -2109,8 +2082,7 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 
 		// pan tool
 
-		AbstractButton button = new JToggleButton(new ImageIcon(MolecularContainer.class
-				.getResource("resources/Pan.gif")));
+		AbstractButton button = new JToggleButton(new ImageIcon(MolecularContainer.class.getResource("resources/Pan.gif")));
 		button.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -2143,8 +2115,7 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 				}
 			}
 		};
-		button = new RightClickToggleButton(new ImageIcon(MolecularContainer.class
-				.getResource("resources/selectrect.gif")), buttonDimension);
+		button = new RightClickToggleButton(new ImageIcon(MolecularContainer.class.getResource("resources/selectrect.gif")), buttonDimension);
 		button.addMouseListener(selectMouseAdapter);
 		button.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
@@ -2651,8 +2622,7 @@ public abstract class MolecularContainer extends JComponent implements Model, Jm
 			job.show(getView());
 		}
 		else {
-			JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(MolecularContainer.this),
-					"There is no task yet. Please run the model.", "No task assigned", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(MolecularContainer.this), "There is no task yet. Please run the model.", "No task assigned", JOptionPane.WARNING_MESSAGE);
 		}
 	}
 

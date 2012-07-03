@@ -196,11 +196,12 @@ public abstract class MDContainer extends JComponent implements ActionStateListe
 	};
 
 	public MDContainer() {
-		if (bundle == null && !isUSLocale) {
+		if (bundle == null && !isUSLocale && !asApplet) {
+			// for some reason, trying to load resource bundle from the default locale causes the applet to fail
 			try {
 				bundle = ResourceBundle.getBundle("org.concord.mw2d.ui.images.ContainerBundle", Locale.getDefault());
 			}
-			catch (MissingResourceException e) {
+			catch (Exception e) {
 			}
 		}
 		loadImages();
