@@ -3524,7 +3524,7 @@ class Eval2D extends AbstractEval {
 	private boolean evaluateGetClause(String str) {
 		if (str == null)
 			return false;
-		if (str.equals("dna") || str.equals("protein")) {
+		if (str.equals("dna") || str.equals("protein")) { // ugly handling of dna/protein part that runs outside MDModel
 			model.containerScriptCallback.setScript("get " + str);
 			model.containerScriptCallback.execute();
 		}
@@ -4792,8 +4792,7 @@ class Eval2D extends AbstractEval {
 					final String errorAddress = address;
 					EventQueue.invokeLater(new Runnable() {
 						public void run() {
-							JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view), "Image " + errorAddress + " was not found.",
-									"Image not found", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view), "Image " + errorAddress + " was not found.", "Image not found", JOptionPane.ERROR_MESSAGE);
 						}
 					});
 					return false;
@@ -7257,8 +7256,7 @@ class Eval2D extends AbstractEval {
 			synchronized (mm.bends.getSynchronizationLock()) {
 				for (Iterator it = mm.bends.iterator(); it.hasNext();) {
 					ab = (AngularBond) it.next();
-					if (inRangeInclusive(ab.atom1.getIndex(), beg, end) || inRangeInclusive(ab.atom2.getIndex(), beg, end)
-							|| inRangeInclusive(ab.atom3.getIndex(), beg, end)) {
+					if (inRangeInclusive(ab.atom1.getIndex(), beg, end) || inRangeInclusive(ab.atom2.getIndex(), beg, end) || inRangeInclusive(ab.atom3.getIndex(), beg, end)) {
 						bs.set(ab.getIndex());
 					}
 				}
