@@ -23,7 +23,7 @@
       <url>http://www.gnu.org/copyleft/gpl.html</url>
     </license>
   </licenses>
-  
+
   <build>
   	<plugins>
   		<plugin>
@@ -38,7 +38,18 @@
   				</excludes>
   			</configuration>
   		</plugin>
-  	</plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>org.concord.modeler.ModelerLauncher</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+    </plugins>
   </build>
 
   <properties>
