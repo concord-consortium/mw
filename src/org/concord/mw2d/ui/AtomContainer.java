@@ -180,6 +180,9 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 						dnaScroller.setGotoTranslationAfterTranscription(false);
 						dnaScroller.startTranscription();
 					}
+					else if (s.equals("PAUSE")) {
+						dnaScroller.stopTranscription();
+					}
 					else {
 						int i = dnaScroller.getCurrentBase();
 						if (i < 0) {
@@ -221,6 +224,9 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 					}
 					else if ("START".equalsIgnoreCase(s)) {
 						dnaScroller.startTranslation();
+					}
+					else if (s.equals("PAUSE")) {
+						dnaScroller.stopTranslation();
 					}
 					else {
 						if (!dnaScroller.isTranscriptionEnded()) {
@@ -1154,10 +1160,10 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 			public void actionPerformed(ActionEvent e) {
 				final String s2 = dnaField.getText().trim();
 				int remainder = s2.length() % 3;
-				if (remainder != 0) {
-					JOptionPane.showMessageDialog(view, "Input DNA code must be 3xn! Please add " + (3 - remainder) + " or remove " + remainder + " nucleotide(s).", "Triplets required", JOptionPane.ERROR_MESSAGE, null);
-					return;
-				}
+				//if (remainder != 0) {
+					//JOptionPane.showMessageDialog(view, "Input DNA code must be 3xn! Please add " + (3 - remainder) + " or remove " + remainder + " nucleotide(s).", "Triplets required", JOptionPane.ERROR_MESSAGE, null);
+					//return;
+				//}
 				dnaPlayButton.setEnabled(true);
 				dnaScroller.reset();
 				EventQueue.invokeLater(new Runnable() {

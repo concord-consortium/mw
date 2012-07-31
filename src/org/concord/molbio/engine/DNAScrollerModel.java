@@ -264,8 +264,8 @@ public class DNAScrollerModel implements MutationListener {
 		for (int i = 0; i < dna.getLength(); i += 3) {
 			if (i > dna.getLength() - 2 || i > dna.getLength() - 3)
 				continue;
-			codons53[i / 3] = Codon.getCodon(s53.charAt(i), s53.charAt(i + 1), s53.charAt(i + 2))/* .getTranscripted() */;
-			codons35[i / 3] = Codon.getCodon(s35.charAt(i + 2), s35.charAt(i + 1), s35.charAt(i))/* .getTranscripted() */;
+			codons53[i / 3] = Codon.getCodon(s53.charAt(i), s53.charAt(i + 1), s53.charAt(i + 2));
+			codons35[i / 3] = Codon.getCodon(s35.charAt(i + 2), s35.charAt(i + 1), s35.charAt(i));
 		}
 		unfinishedCodon = (dna.getLength() % 3) != 0;
 	}

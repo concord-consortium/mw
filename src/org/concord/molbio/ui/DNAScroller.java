@@ -616,29 +616,25 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 				switch (i) {
 				case 0:
 					if (baseChar != Nucleotide.ADENINE_NAME) {
-						substitutionMenu.add(new DNAScrollerMenuItem("<html>" + baseChar + " &#10140; A</html>", this, M_SUBSTITUTION_A,
-								dnaScrollerItem));
+						substitutionMenu.add(new DNAScrollerMenuItem("<html>" + baseChar + " &#10140; A</html>", this, M_SUBSTITUTION_A, dnaScrollerItem));
 					}
 					insertionMenu.add(new DNAScrollerMenuItem(insertionString + " A", this, M_INSERTION_A, dnaScrollerItem));
 					break;
 				case 1:
 					if (baseChar != Nucleotide.CYTOSINE_NAME) {
-						substitutionMenu.add(new DNAScrollerMenuItem("<html>" + baseChar + " &#10140; C</html>", this, M_SUBSTITUTION_C,
-								dnaScrollerItem));
+						substitutionMenu.add(new DNAScrollerMenuItem("<html>" + baseChar + " &#10140; C</html>", this, M_SUBSTITUTION_C, dnaScrollerItem));
 					}
 					insertionMenu.add(new DNAScrollerMenuItem(insertionString + " C", this, M_INSERTION_C, dnaScrollerItem));
 					break;
 				case 2:
 					if (baseChar != Nucleotide.GUANINE_NAME) {
-						substitutionMenu.add(new DNAScrollerMenuItem("<html>" + baseChar + " &#10140; G</html>", this, M_SUBSTITUTION_G,
-								dnaScrollerItem));
+						substitutionMenu.add(new DNAScrollerMenuItem("<html>" + baseChar + " &#10140; G</html>", this, M_SUBSTITUTION_G, dnaScrollerItem));
 					}
 					insertionMenu.add(new DNAScrollerMenuItem(insertionString + " G", this, M_INSERTION_G, dnaScrollerItem));
 					break;
 				case 3:
 					if (baseChar != Nucleotide.THYMINE_NAME) {
-						substitutionMenu.add(new DNAScrollerMenuItem("<html>" + baseChar + " &#10140; T</html>", this, M_SUBSTITUTION_T,
-								dnaScrollerItem));
+						substitutionMenu.add(new DNAScrollerMenuItem("<html>" + baseChar + " &#10140; T</html>", this, M_SUBSTITUTION_T, dnaScrollerItem));
 					}
 					insertionMenu.add(new DNAScrollerMenuItem(insertionString + " T", this, M_INSERTION_T, dnaScrollerItem));
 					break;
@@ -816,7 +812,7 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 			scrollBar.setValue(0);
 			return;
 		}
-		else if (!scrollBar.isVisible()) {
+		if (!scrollBar.isVisible()) {
 			scrollBar.setVisible(true);
 		}
 		int index = dnamodel.getCurrIndex();
@@ -971,7 +967,7 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 			FontMetrics fm = gbim.getFontMetrics();
 			char[] chars53 = model.get53Chars();
 			char[] chars35 = model.get35Chars();
-			if (chars53 == null)
+			if (chars53 == null || chars35 == null)
 				return;
 			Shape oldClip = gbim.getClip();
 			Shape clipShape = getDefaultClipForStrands();
@@ -1013,8 +1009,7 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 			Shape clip = g.getClip();
 			Rectangle visRect = clip.getBounds();
 			visRect.y = Math.min(charRectangles53[0].y, charRectangles35[0].y);
-			visRect.height = Math.max(charRectangles53[0].y + charRectangles53[0].height, charRectangles35[0].y + charRectangles35[0].height)
-					- visRect.y;
+			visRect.height = Math.max(charRectangles53[0].y + charRectangles53[0].height, charRectangles35[0].y + charRectangles35[0].height) - visRect.y;
 			DNA dna = model.getDNA();
 			if (dna == null)
 				return;
@@ -1041,8 +1036,7 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 				int needOffsetToCodon = 3 * (codonIndex / 3) + needOffset;
 				if (needOffsetToCodon + 2 > nBases - 1)
 					continue;
-				currCodon = Codon.getCodon(dnaString.charAt(needOffsetToCodon), dnaString.charAt(needOffsetToCodon + 1),
-						dnaString.charAt(needOffsetToCodon + 2));
+				currCodon = Codon.getCodon(dnaString.charAt(needOffsetToCodon), dnaString.charAt(needOffsetToCodon + 1), dnaString.charAt(needOffsetToCodon + 2));
 				if (currCodon != prevCodon || (codonColor == null)) {
 					prevCodon = currCodon;
 					if (currCodon == null) {
@@ -1083,39 +1077,70 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 		int offsety = fm.getDescent();
 		int startIndex = model.getStartWindowIndex();
 		Codon codon = model.get35CodonFromOffset(i);
-		if (codon == null)
-			return;
-		codon = codon.getTranscripted(true);
-		g.setColor(codonColors[((startIndex + i) / 3) % 2]);
-		Color currColor = g.getColor();
-		char currChar;
-		if (charRectangles35 != null && chars != null && i < charRectangles35.length && i < chars.length) {
-			boolean currentBaseBoolean = ((currentStrand == DNA.DNA_STRAND_35 && i == currentBase - startIndex) && highlightCurrentBase());
-			currChar = chars[i];
-			int cw = fm.charWidth(currChar);
-			Rectangle r = charRectangles35[i];
-			if (currentBaseBoolean) {
-				r.translate(0, DEFAULT_CURRENT_BASE_OFFSETY);
+		if (codon != null) {
+			codon = codon.getTranscripted(true);
+			g.setColor(codonColors[((startIndex + i) / 3) % 2]);
+			Color currColor = g.getColor();
+			char currChar;
+			if (charRectangles35 != null && chars != null && i < charRectangles35.length && i < chars.length) {
+				boolean currentBaseBoolean = ((currentStrand == DNA.DNA_STRAND_35 && i == currentBase - startIndex) && highlightCurrentBase());
+				currChar = chars[i];
+				int cw = fm.charWidth(currChar);
+				Rectangle r = charRectangles35[i];
+				if (currentBaseBoolean) {
+					r.translate(0, DEFAULT_CURRENT_BASE_OFFSETY);
+				}
+				drawCodonFrame(g, false, currChar, r, currentBaseBoolean);
+				Color needColor = Color.black;
+				if (!model.isStrand35Available() || codon == null)
+					needColor = disableColor;
+				else if (codon.isCodonStop())
+					needColor = stopCodonColor;
+				Font oldFont = g.getFont();
+				if (currentBaseBoolean) {
+					g.setFont(oldFont.deriveFont(Font.BOLD | Font.ITALIC));
+					g.setColor(needColor);
+				}
+				else g.setColor(needColor);
+				g.drawChars(chars, i, 1, r.x + r.width / 2 - cw / 2, r.y + r.height - offsety);
+				if (currentBaseBoolean) {
+					g.setFont(oldFont);
+					r.translate(0, -DEFAULT_CURRENT_BASE_OFFSETY);
+				}
+				if (codon == null || codon.isCodonStop() || !model.isStrand35Available())
+					g.setColor(currColor);
 			}
-			drawCodonFrame(g, false, currChar, r, currentBaseBoolean);
-			Color needColor = Color.black;
-			if (!model.isStrand35Available() || codon == null)
-				needColor = disableColor;
-			else if (codon.isCodonStop())
-				needColor = stopCodonColor;
-			Font oldFont = g.getFont();
-			if (currentBaseBoolean) {
-				g.setFont(oldFont.deriveFont(Font.BOLD | Font.ITALIC));
-				g.setColor(needColor);
+		}
+		else { // remaining code
+			g.setColor(codonColors[((startIndex + i) / 3) % 2]);
+			Color currColor = g.getColor();
+			char currChar;
+			if (charRectangles35 != null && chars != null && i < charRectangles35.length && i < chars.length) {
+				boolean currentBaseBoolean = ((currentStrand == DNA.DNA_STRAND_35 && i == currentBase - startIndex) && highlightCurrentBase());
+				currChar = chars[i];
+				int cw = fm.charWidth(currChar);
+				Rectangle r = charRectangles35[i];
+				if (currentBaseBoolean) {
+					r.translate(0, DEFAULT_CURRENT_BASE_OFFSETY);
+				}
+				drawCodonFrame(g, false, currChar, r, currentBaseBoolean);
+				Color needColor = Color.black;
+				if (!model.isStrand35Available())
+					needColor = disableColor;
+				Font oldFont = g.getFont();
+				if (currentBaseBoolean) {
+					g.setFont(oldFont.deriveFont(Font.BOLD | Font.ITALIC));
+					g.setColor(needColor);
+				}
+				else g.setColor(needColor);
+				g.drawChars(chars, i, 1, r.x + r.width / 2 - cw / 2, r.y + r.height - offsety);
+				if (currentBaseBoolean) {
+					g.setFont(oldFont);
+					r.translate(0, -DEFAULT_CURRENT_BASE_OFFSETY);
+				}
+				if (!model.isStrand35Available())
+					g.setColor(currColor);
 			}
-			else g.setColor(needColor);
-			g.drawChars(chars, i, 1, r.x + r.width / 2 - cw / 2, r.y + r.height - offsety);
-			if (currentBaseBoolean) {
-				g.setFont(oldFont);
-				r.translate(0, -DEFAULT_CURRENT_BASE_OFFSETY);
-			}
-			if (codon == null || codon.isCodonStop() || !model.isStrand35Available())
-				g.setColor(currColor);
 		}
 	}
 
@@ -1125,41 +1150,70 @@ public class DNAScroller extends JPanel implements ItemSelectable, PropertyChang
 		int offsety = fm.getHeight() - fm.getDescent();
 		int startIndex = model.getStartWindowIndex();
 		Codon codon = model.get53CodonFromOffset(i);
-		if (codon == null)
-			return;
-		codon = codon.getTranscripted(true);
-		g.setColor(codonColors[((startIndex + i) / 3) % 2]);
-		Color currColor = g.getColor();
-		char currChar;
-		if (charRectangles53 != null && chars != null && i >= 0 && i < charRectangles53.length && i < chars.length) {
-			boolean currentBaseBoolean = ((currentStrand == DNA.DNA_STRAND_53 && i == currentBase - startIndex) && highlightCurrentBase());
-			currChar = chars[i];
-			int cw = fm.charWidth(currChar);
-			Rectangle r = charRectangles53[i];
-			if (currentBaseBoolean) {
-				r.translate(0, -DEFAULT_CURRENT_BASE_OFFSETY);
+		if (codon != null) {
+			codon = codon.getTranscripted(true);
+			g.setColor(codonColors[((startIndex + i) / 3) % 2]);
+			Color currColor = g.getColor();
+			char currChar;
+			if (charRectangles53 != null && chars != null && i >= 0 && i < charRectangles53.length && i < chars.length) {
+				boolean currentBaseBoolean = currentStrand == DNA.DNA_STRAND_53 && i == currentBase - startIndex && highlightCurrentBase();
+				currChar = chars[i];
+				int cw = fm.charWidth(currChar);
+				Rectangle r = charRectangles53[i];
+				if (currentBaseBoolean) {
+					r.translate(0, -DEFAULT_CURRENT_BASE_OFFSETY);
+				}
+				drawCodonFrame(g, true, currChar, r, currentBaseBoolean);
+				Color needColor = Color.black;
+				if (!model.isStrand53Available() || codon == null)
+					needColor = disableColor;
+				else if (codon.isCodonStop())
+					needColor = stopCodonColor;
+				Font oldFont = g.getFont();
+				if (currentBaseBoolean) {
+					g.setFont(oldFont.deriveFont(Font.BOLD | Font.ITALIC));
+					g.setColor(needColor);
+				}
+				else g.setColor(needColor);
+				g.drawChars(chars, i, 1, r.x + r.width / 2 - cw / 2, r.y + offsety);
+				if (currentBaseBoolean) {
+					g.setFont(oldFont);
+					r.translate(0, DEFAULT_CURRENT_BASE_OFFSETY);
+				}
+				if (codon == null || codon.isCodonStop() || !model.isStrand53Available())
+					g.setColor(currColor);
 			}
-			drawCodonFrame(g, true, currChar, r, currentBaseBoolean);
-
-			Color needColor = Color.black;
-			if (!model.isStrand53Available() || codon == null)
-				needColor = disableColor;
-			else if (codon.isCodonStop())
-				needColor = stopCodonColor;
-			Font oldFont = g.getFont();
-			if (currentBaseBoolean) {
-				g.setFont(oldFont.deriveFont(Font.BOLD | Font.ITALIC));
-				g.setColor(needColor);
+		}
+		else { // remaining code
+			g.setColor(codonColors[((startIndex + i) / 3) % 2]);
+			Color currColor = g.getColor();
+			char currChar;
+			if (charRectangles53 != null && chars != null && i >= 0 && i < charRectangles53.length && i < chars.length) {
+				boolean currentBaseBoolean = currentStrand == DNA.DNA_STRAND_53 && i == currentBase - startIndex && highlightCurrentBase();
+				currChar = chars[i];
+				int cw = fm.charWidth(currChar);
+				Rectangle r = charRectangles53[i];
+				if (currentBaseBoolean) {
+					r.translate(0, -DEFAULT_CURRENT_BASE_OFFSETY);
+				}
+				drawCodonFrame(g, true, currChar, r, currentBaseBoolean);
+				Color needColor = Color.black;
+				if (!model.isStrand53Available())
+					needColor = disableColor;
+				Font oldFont = g.getFont();
+				if (currentBaseBoolean) {
+					g.setFont(oldFont.deriveFont(Font.BOLD | Font.ITALIC));
+					g.setColor(needColor);
+				}
+				else g.setColor(needColor);
+				g.drawChars(chars, i, 1, r.x + r.width / 2 - cw / 2, r.y + offsety);
+				if (currentBaseBoolean) {
+					g.setFont(oldFont);
+					r.translate(0, DEFAULT_CURRENT_BASE_OFFSETY);
+				}
+				if (!model.isStrand53Available())
+					g.setColor(currColor);
 			}
-			else g.setColor(needColor);
-			g.drawChars(chars, i, 1, r.x + r.width / 2 - cw / 2, r.y + offsety);
-			if (currentBaseBoolean) {
-				g.setFont(oldFont);
-				r.translate(0, DEFAULT_CURRENT_BASE_OFFSETY);
-			}
-			if (codon == null || codon.isCodonStop() || !model.isStrand53Available())
-				g.setColor(currColor);
-
 		}
 	}
 

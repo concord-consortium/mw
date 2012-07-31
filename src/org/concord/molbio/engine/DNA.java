@@ -51,8 +51,7 @@ public class DNA implements Cloneable {
 
 	private final static Pattern PROMOTER_PATTERN = Pattern.compile("^" + PROMOTER_FRAGMENT_REG_STR);
 	private final static Pattern TERMINATOR_PATTERN = Pattern.compile(TERMINATOR_FRAGMENT_REG_STR + "$");
-	private final static Pattern PROMOTER_START_PATTERN = Pattern.compile("^" + PROMOTER_FRAGMENT_REG_STR
-			+ START_FRAGMENT_STR);
+	private final static Pattern PROMOTER_START_PATTERN = Pattern.compile("^" + PROMOTER_FRAGMENT_REG_STR + START_FRAGMENT_STR);
 	private final static Pattern END_PATTERN = Pattern.compile(END_FRAGMENT_REG_STR2 + "$");
 	private final static String PROMOTER_START_FRAGMENT_STR = PROMOTER_FRAGMENT_STR + START_FRAGMENT_STR;
 
@@ -278,7 +277,6 @@ public class DNA implements Cloneable {
 		else if (needEnd) {
 			appendEndDNAFragment(getLength() - TERMINATOR_FRAGMENT_STR.length());
 		}
-
 	}
 
 	public DNA[] replicate() {
