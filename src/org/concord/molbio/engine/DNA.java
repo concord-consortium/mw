@@ -388,7 +388,7 @@ public class DNA implements Cloneable {
 	public RNA transcript(int[] indexes, int strandIndex, int startIndex, int endIndex) {
 		int[] indx = indexes;
 		RNA rna = null;
-		int checkIndex = 0;// (startWithPromoter())?PROMOTER_LENGTH:0;
+		int checkIndex = 0;
 		if (startIndex < checkIndex)
 			startIndex = checkIndex;
 		if (endIndex < startIndex)
@@ -407,8 +407,7 @@ public class DNA implements Cloneable {
 			for (int i = startIndex; i < endIndex; i += 3) {
 				boolean endStrand = false;
 				for (int n = 0; n < 3; n++) {
-					// endStrand = (i+n >= endIndex);
-					endStrand = (i + n > endIndex);
+					endStrand = (i + n) > endIndex;
 					if (endStrand)
 						break;
 					nc[n] = strand.bases.elementAt(i + n);
@@ -420,13 +419,21 @@ public class DNA implements Cloneable {
 					break;
 				for (int n = 0; n < 3; n++)
 					rna.addNucleotide(nc[n].getComplementaryNucleotide(true));
+			}
+			int remainder = getLength() % 3;
+			int ncodon = getLength() / 3;
+			if (remainder != 0) {
+				for (int i = 0; i < remainder; i++) {
+					nc[i] = strand.bases.elementAt(ncodon * 3 + remainder - 1);
+					rna.addNucleotide(nc[i].getComplementaryNucleotide(true));
+				}
 			}
 		}
 		else {
 			for (int i = startIndex; i < endIndex; i += 3) {
 				boolean endStrand = false;
 				for (int n = 0; n < 3; n++) {
-					endStrand = (i + n > endIndex);
+					endStrand = (i + n) > endIndex;
 					if (endStrand)
 						break;
 					nc[n] = strand.bases.elementAt(i + n);
@@ -439,13 +446,14 @@ public class DNA implements Cloneable {
 				for (int n = 0; n < 3; n++)
 					rna.addNucleotide(nc[n].getComplementaryNucleotide(true));
 			}
-			/*
-			 * for(int i = endIndex; i > startIndex; i-=3){ boolean endStrand = false; for(int n = 0; n < 3; n++){
-			 * endStrand = (i - n <= startIndex); if(endStrand) break; nc[n] = (Nucleotide)strand.bases.elementAt(i-n);
-			 * } if(endStrand) break; Codon codon = new Codon(nc[0],nc[1],nc[2]); if(stopProduceRNAonStopCodon &&
-			 * codon.getTranscripted().isCodonStop()) break; for(int n = 0; n < 3; n++)
-			 * rna.addNucleotide(nc[n].getComplimentaryNucleotide(true)); }
-			 */
+			int remainder = getLength() % 3;
+			int ncodon = getLength() / 3;
+			if (remainder != 0) {
+				for (int i = 0; i < remainder; i++) {
+					nc[i] = strand.bases.elementAt(ncodon * 3 + remainder - 1);
+					rna.addNucleotide(nc[i].getComplementaryNucleotide(true));
+				}
+			}
 		}
 		if (indx != null)
 			for (int i = 1; i < indx.length; i++)
