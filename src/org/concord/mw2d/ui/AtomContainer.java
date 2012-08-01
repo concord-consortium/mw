@@ -300,11 +300,6 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 				String s = script.substring(matcher.end()).trim().toLowerCase();
 				if (s.startsWith("dna")) {
 					final String s2 = s.substring(3).trim();
-					int remainder = s2.length() % 3;
-					if (remainder != 0) {
-						JOptionPane.showMessageDialog(view, "Input DNA code must be 3xn! Please add " + (3 - remainder) + " or remove " + remainder + " nucleotide(s).", "Triplets required", JOptionPane.ERROR_MESSAGE, null);
-						return null;
-					}
 					char c;
 					for (int i = 0; i < s2.length(); i++) {
 						c = s2.charAt(i);
@@ -1158,14 +1153,9 @@ public class AtomContainer extends MDContainer implements RNATranscriptionListen
 
 		ActionListener okListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				final String s2 = dnaField.getText().trim();
-				int remainder = s2.length() % 3;
-				//if (remainder != 0) {
-					//JOptionPane.showMessageDialog(view, "Input DNA code must be 3xn! Please add " + (3 - remainder) + " or remove " + remainder + " nucleotide(s).", "Triplets required", JOptionPane.ERROR_MESSAGE, null);
-					//return;
-				//}
 				dnaPlayButton.setEnabled(true);
 				dnaScroller.reset();
+				final String s2 = dnaField.getText().trim();
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						dnaScroller.setDNA(new DNA(s2, contextDNA));
