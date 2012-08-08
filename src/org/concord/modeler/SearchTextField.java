@@ -49,9 +49,9 @@ public class SearchTextField extends JPanel implements Embeddable {
 	private final static String[] BASE_URL = new String[] {
 			Modeler.getContextRoot() + "modelspace?client=mw&action=search",
 			Modeler.getContextRoot() + "myreportspace?client=mw&action=search",
-			"http://www.concord.org/cgi-bin/htsearch?restrict=mw2.concord.org%2Fpublic/tutorial",
-			"http://www.concord.org/cgi-bin/htsearch?restrict=mw2.concord.org%2Fpublic/student",
-			"http://www.concord.org/cgi-bin/htsearch?restrict=mw2.concord.org%2Fpublic" };
+			"http://cgi.concord.org/cgi-bin/htsearch?restrict=mw2.concord.org%2Fpublic/tutorial",
+			"http://cgi.concord.org/cgi-bin/htsearch?restrict=mw2.concord.org%2Fpublic/student",
+			"http://cgi.concord.org/cgi-bin/htsearch?restrict=mw2.concord.org%2Fpublic" };
 
 	Page page;
 	private int index;
