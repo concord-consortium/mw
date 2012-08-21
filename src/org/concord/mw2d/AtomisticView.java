@@ -187,8 +187,8 @@ public class AtomisticView extends MDView implements BondChangeListener {
 
 	/* views */
 	private boolean useJmol;
-	private boolean shading, chargeShading, showVDWCircles, showVDWLines, showChargeLines, showSSLines, showBPLines, velocityVector, momentumVector,
-			accelerationVector, forceVector, showExcitation = true;
+	private boolean shading, chargeShading, showVDWCircles, showVDWLines, showChargeLines, showSSLines, showBPLines, velocityVector, momentumVector, accelerationVector, forceVector, showExcitation = true;
+	private boolean drawKeShadingRainbow = true;
 	private float vdwLinesRatio = 2;
 	private BasicStroke vdwLineStroke = (BasicStroke) ViewAttribute.THIN_DASHED;
 	private boolean contourPlot, eFieldLines, showSites;
@@ -764,24 +764,17 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			addAtomIndicator.setFrame(-1, -1, sigma, sigma);
 			break;
 		case ADDI_ID:
-			addObjectIndicator = new AddObjectIndicator.AddDiatomicMoleculeIndicator(model.getElement(DiatomicConfigure.typeOfA).getSigma(), model
-					.getElement(DiatomicConfigure.typeOfB).getSigma(), model.getElement(DiatomicConfigure.typeOfA).getMass(), model.getElement(
-					DiatomicConfigure.typeOfB).getMass(), DiatomicConfigure.distance);
+			addObjectIndicator = new AddObjectIndicator.AddDiatomicMoleculeIndicator(model.getElement(DiatomicConfigure.typeOfA).getSigma(), model.getElement(DiatomicConfigure.typeOfB).getSigma(), model.getElement(DiatomicConfigure.typeOfA).getMass(), model.getElement(DiatomicConfigure.typeOfB).getMass(), DiatomicConfigure.distance);
 			break;
 		case WATE_ID:
-			addObjectIndicator = new AddObjectIndicator.AddTriatomicMoleculeIndicator(model.getElement(TriatomicConfigure.typeOfA).getSigma(), model
-					.getElement(TriatomicConfigure.typeOfB).getSigma(), model.getElement(TriatomicConfigure.typeOfC).getSigma(), model.getElement(
-					TriatomicConfigure.typeOfA).getMass(), model.getElement(TriatomicConfigure.typeOfB).getMass(), model.getElement(
-					TriatomicConfigure.typeOfC).getMass(), TriatomicConfigure.d12, TriatomicConfigure.d23, TriatomicConfigure.angle);
+			addObjectIndicator = new AddObjectIndicator.AddTriatomicMoleculeIndicator(model.getElement(TriatomicConfigure.typeOfA).getSigma(), model.getElement(TriatomicConfigure.typeOfB).getSigma(), model.getElement(TriatomicConfigure.typeOfC).getSigma(), model.getElement(TriatomicConfigure.typeOfA).getMass(), model.getElement(TriatomicConfigure.typeOfB).getMass(), model.getElement(TriatomicConfigure.typeOfC).getMass(), TriatomicConfigure.d12, TriatomicConfigure.d23, TriatomicConfigure.angle);
 			break;
 		case BENZ_ID:
-			addObjectIndicator = new AddObjectIndicator.AddBenzeneMoleculeIndicator(model.getElement(Element.ID_NT).getSigma(), model.getElement(
-					Element.ID_PL).getSigma());
+			addObjectIndicator = new AddObjectIndicator.AddBenzeneMoleculeIndicator(model.getElement(Element.ID_NT).getSigma(), model.getElement(Element.ID_PL).getSigma());
 			break;
 		case ADCH_ID:
 			if (ChainConfigure.growMode != ChainConfigure.RANDOM) {
-				addObjectIndicator = new AddObjectIndicator.AddChainMoleculeIndicator(model.getElement(ChainConfigure.typeOfAtom).getSigma(),
-						ChainConfigure.number, ChainConfigure.growMode, ChainConfigure.distance, ChainConfigure.angle);
+				addObjectIndicator = new AddObjectIndicator.AddChainMoleculeIndicator(model.getElement(ChainConfigure.typeOfAtom).getSigma(), ChainConfigure.number, ChainConfigure.growMode, ChainConfigure.distance, ChainConfigure.angle);
 			}
 			break;
 		}
@@ -816,6 +809,10 @@ public class AtomisticView extends MDView implements BondChangeListener {
 
 	public boolean shadingShown() {
 		return shading;
+	}
+
+	public void setDrawKeShadingRainbow(boolean b) {
+		drawKeShadingRainbow = b;
 	}
 
 	public void showChargeShading(boolean state) {
@@ -1138,8 +1135,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				r.initializeMovieQ(-1);
 			pasteBuffer = selectedComponent;
 			if (!doNotFireUndoEvent) {
-				model.getUndoManager().undoableEditHappened(
-						new UndoableEditEvent(model, new UndoableDeletion(UndoAction.REMOVE_OBSTACLE, selectedComponent)));
+				model.getUndoManager().undoableEditHappened(new UndoableEditEvent(model, new UndoableDeletion(UndoAction.REMOVE_OBSTACLE, selectedComponent)));
 				updateUndoUIComponents();
 			}
 		}
@@ -1149,16 +1145,14 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			List ab = removeAssociatedBends((RadialBond) selectedComponent);
 			MoleculeCollection.sort(model);
 			if (!doNotFireUndoEvent) {
-				model.getUndoManager().undoableEditHappened(
-						new UndoableEditEvent(model, new UndoableDeletion(UndoAction.REMOVE_RADIAL_BOND, new Object[] { selectedComponent, ab })));
+				model.getUndoManager().undoableEditHappened(new UndoableEditEvent(model, new UndoableDeletion(UndoAction.REMOVE_RADIAL_BOND, new Object[] { selectedComponent, ab })));
 				updateUndoUIComponents();
 			}
 		}
 		else if (selectedComponent instanceof AngularBond) {
 			bends.remove((AngularBond) selectedComponent);
 			if (!doNotFireUndoEvent) {
-				model.getUndoManager().undoableEditHappened(
-						new UndoableEditEvent(model, new UndoableDeletion(UndoAction.REMOVE_ANGULAR_BOND, selectedComponent)));
+				model.getUndoManager().undoableEditHappened(new UndoableEditEvent(model, new UndoableDeletion(UndoAction.REMOVE_ANGULAR_BOND, selectedComponent)));
 				updateUndoUIComponents();
 			}
 		}
@@ -1263,8 +1257,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				probe = a;
 				contour.setProbe(probe, dim.width, dim.height);
 				contour.setConstant(model.getUniverse().getCoulombConstant(), model.getUniverse().getDielectricConstant());
-				contourMap = new ContourMap(dim.width / contour.getCellSize(), dim.height / contour.getCellSize(), contour.getContour(nAtom, atom,
-						boundary.getType()));
+				contourMap = new ContourMap(dim.width / contour.getCellSize(), dim.height / contour.getCellSize(), contour.getContour(nAtom, atom, boundary.getType()));
 				// contourMap.setNLevels(model.checkCharges()? 20 : 10);
 				contourMap.setNLevels(20);
 				contourMap.setRange(0, dim.width, 0, dim.height);
@@ -1286,8 +1279,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 	}
 
 	JPopupMenu[] getPopupMenus() {
-		return new JPopupMenu[] { defaultPopupMenu, atomPopupMenu, radialBondPopupMenu, angularBondPopupMenu, moleculePopupMenu, obstaclePopupMenu,
-				molecularObjectPopupMenu, popupMenuForLayeredComponent, acidPopupMenu, nucleotidePopupMenu, atomMutationPopupMenu };
+		return new JPopupMenu[] { defaultPopupMenu, atomPopupMenu, radialBondPopupMenu, angularBondPopupMenu, moleculePopupMenu, obstaclePopupMenu, molecularObjectPopupMenu, popupMenuForLayeredComponent, acidPopupMenu, nucleotidePopupMenu, atomMutationPopupMenu };
 	}
 
 	private boolean insertAnAtom(int x, int y, int id) {
@@ -1347,8 +1339,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 					atom[oldNOA].setSelected(true);
 					model.notifyChange();
 					if (!doNotFireUndoEvent) {
-						model.getUndoManager().undoableEditHappened(
-								new UndoableEditEvent(model, new UndoableInsertion(UndoAction.INSERT_A_PARTICLE, x, y)));
+						model.getUndoManager().undoableEditHappened(new UndoableEditEvent(model, new UndoableInsertion(UndoAction.INSERT_A_PARTICLE, x, y)));
 						updateUndoUIComponents();
 					}
 				}
@@ -1670,8 +1661,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 	}
 
 	private RadialBond restoreDeadBond(int i, int j, RadialBond.Delegate d) {
-		RadialBond rb = new RadialBond.Builder(atom[i], atom[j]).bondLength(d.getBondLength()).bondStrength(d.getBondStrength()).smart(d.isSmart())
-				.solid(d.isSolid()).closed(d.isClosed()).build();
+		RadialBond rb = new RadialBond.Builder(atom[i], atom[j]).bondLength(d.getBondLength()).bondStrength(d.getBondStrength()).smart(d.isSmart()).solid(d.isSolid()).closed(d.isClosed()).build();
 		rb.setBondColor(d.getColor());
 		rb.setVisible(d.isVisible());
 		if (d.getAmplitude() > 0) {
@@ -1812,8 +1802,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 							i2[j] = (Layered) lay.get(j);
 					}
 				}
-				model.getUndoManager().undoableEditHappened(
-						new UndoableEditEvent(model, new UndoableDeletion(UndoAction.BLOCK_REMOVE, atm != null ? atm.size() : 0, r2, i2)));
+				model.getUndoManager().undoableEditHappened(new UndoableEditEvent(model, new UndoableDeletion(UndoAction.BLOCK_REMOVE, atm != null ? atm.size() : 0, r2, i2)));
 				updateUndoUIComponents();
 			}
 		}
@@ -1997,8 +1986,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				rBond = (RadialBond) i.next();
 				atom1 = rBond.getAtom1();
 				atom2 = rBond.getAtom2();
-				if (((atom1 == hold1 && atom2 != hold2) || (atom1 != hold1 && atom2 == hold2))
-						|| ((atom1 == hold2 && atom2 != hold1) || (atom1 != hold2 && atom2 == hold1))) {
+				if (((atom1 == hold1 && atom2 != hold2) || (atom1 != hold1 && atom2 == hold2)) || ((atom1 == hold2 && atom2 != hold1) || (atom1 != hold2 && atom2 == hold1))) {
 					x0 = Math.min(atom1.getRx(), atom2.getRx()) - 2;
 					y0 = Math.min(atom1.getRy(), atom2.getRy()) - 2;
 					x1 = Math.max(atom1.getRx(), atom2.getRx()) + 2;
@@ -2602,8 +2590,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		model.setNumberOfAtoms(k);
 		model.notifyChange();
 		if (!doNotFireUndoEvent) {
-			model.getUndoManager().undoableEditHappened(
-					new UndoableEditEvent(model, new UndoableInsertion(UndoAction.FILL_AREA_WITH_PARTICLES, x, y, k - k0, area, lattice, id)));
+			model.getUndoManager().undoableEditHappened(new UndoableEditEvent(model, new UndoableInsertion(UndoAction.FILL_AREA_WITH_PARTICLES, x, y, k - k0, area, lattice, id)));
 			updateUndoUIComponents();
 		}
 	}
@@ -2956,8 +2943,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				}
 			}
 			if (!doNotFireUndoEvent) {
-				model.getUndoManager().undoableEditHappened(
-						new UndoableEditEvent(model, new UndoableInsertion(UndoAction.INSERT_A_MOLECULE, x, y, ((Molecule) pasteBuffer).size())));
+				model.getUndoManager().undoableEditHappened(new UndoableEditEvent(model, new UndoableInsertion(UndoAction.INSERT_A_MOLECULE, x, y, ((Molecule) pasteBuffer).size())));
 				updateUndoUIComponents();
 			}
 		}
@@ -3332,8 +3318,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 						model.notifyChange();
 						if (!doNotFireUndoEvent) {
 							molecules.get(molecules.size() - 1).setSelected(true);
-							model.getUndoManager().undoableEditHappened(
-									new UndoableEditEvent(model, new UndoableInsertion(actionID, new Object[] { new Boolean(closed), tempPoly })));
+							model.getUndoManager().undoableEditHappened(new UndoableEditEvent(model, new UndoableInsertion(actionID, new Object[] { new Boolean(closed), tempPoly })));
 							updateUndoUIComponents();
 						}
 					}
@@ -3580,22 +3565,24 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		molecules.render(g2);
 
 		if (shading) {
-			// Mac OS X has bugs in GradientPaint (09/10/2007)
-			if (Modeler.isMac()) {
-				g2.drawImage(biRect, 10, 10, null);
+			if (drawKeShadingRainbow) {
+				// Mac OS X has bugs in GradientPaint (09/10/2007)
+				if (Modeler.isMac()) {
+					g2.drawImage(biRect, 10, 10, null);
+				}
+				else {
+					g2.setPaint(colorScale);
+					g2.fillRect(10, 10, 10, 50);
+				}
+				g2.setStroke(ViewAttribute.THIN);
+				g2.setColor(contrastBackground());
+				g2.drawRect(10, 10, 10, 50);
+				g2.setFont(ViewAttribute.LITTLE_FONT);
+				String s = getInternationalText("High");
+				g2.drawString(s != null ? s : "High", 25, 20);
+				s = getInternationalText("Low");
+				g2.drawString(s != null ? s : "Low", 25, 60);
 			}
-			else {
-				g2.setPaint(colorScale);
-				g2.fillRect(10, 10, 10, 50);
-			}
-			g2.setStroke(ViewAttribute.THIN);
-			g2.setColor(contrastBackground());
-			g2.drawRect(10, 10, 10, 50);
-			g2.setFont(ViewAttribute.LITTLE_FONT);
-			String s = getInternationalText("High");
-			g2.drawString(s != null ? s : "High", 25, 20);
-			s = getInternationalText("Low");
-			g2.drawString(s != null ? s : "Low", 25, 60);
 		}
 
 		paintSteering(g2);
@@ -3712,10 +3699,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 
 		int clickCount = e.getClickCount();
 		if (clickCount >= 2) {
-			if (actionID != HEAT_ID && actionID != COOL_ID && actionID != IDMP_ID && actionID != DDMP_ID && actionID != IRES_ID
-					&& actionID != DRES_ID && actionID != CPOS_ID && actionID != CNEG_ID && actionID != AACD_ID && actionID != SACD_ID
-					&& actionID != ANTD_ID && actionID != SNTD_ID && actionID != SCUR_ID && actionID != RCUR_ID && actionID != SCIR_ID
-					&& actionID != RCIR_ID && actionID != SREC_ID && actionID != RREC_ID && actionID != SFRE_ID) {
+			if (actionID != HEAT_ID && actionID != COOL_ID && actionID != IDMP_ID && actionID != DDMP_ID && actionID != IRES_ID && actionID != DRES_ID && actionID != CPOS_ID && actionID != CNEG_ID && actionID != AACD_ID && actionID != SACD_ID && actionID != ANTD_ID && actionID != SNTD_ID && actionID != SCUR_ID && actionID != RCUR_ID && actionID != SCIR_ID && actionID != RCIR_ID && actionID != SREC_ID && actionID != RREC_ID && actionID != SFRE_ID) {
 				resetUndoManager();
 				setAction(SELE_ID);
 			}
@@ -3987,14 +3971,10 @@ public class AtomisticView extends MDView implements BondChangeListener {
 					if (at != null) {
 						at.setSelected(true);
 						if (e.isShiftDown()) {
-							at.addMeasurement(new Point(2 * at.getRx() < getWidth() ? (int) (at.getRx() + 20) : (int) (at.getRx() - 20), (int) at
-									.getRy()));
+							at.addMeasurement(new Point(2 * at.getRx() < getWidth() ? (int) (at.getRx() + 20) : (int) (at.getRx() - 20), (int) at.getRy()));
 						}
 						else {
-							showActionTip(
-									at.getNumberOfMeasurements() <= 0 ? "Hold down SHIFT and click to add a measurement."
-											: "<html>Drag the green hotspot at the tip to measure, or<br>hold down SHIFT and click to add one more measurement.</html>",
-									x + 10, y + 10);
+							showActionTip(at.getNumberOfMeasurements() <= 0 ? "Hold down SHIFT and click to add a measurement." : "<html>Drag the green hotspot at the tip to measure, or<br>hold down SHIFT and click to add one more measurement.</html>", x + 10, y + 10);
 						}
 					}
 				}
@@ -4152,25 +4132,21 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			if (addObjectIndicator instanceof AddObjectIndicator.AddTriatomicMoleculeIndicator)
 				addObjectIndicator.setPainted(false);
 			if (clickCount == 1)
-				insertAMolecule(x, y, new TriatomicMolecule(TriatomicConfigure.typeOfA, TriatomicConfigure.typeOfB, TriatomicConfigure.typeOfC,
-						TriatomicConfigure.d12, TriatomicConfigure.s12, TriatomicConfigure.d23, TriatomicConfigure.s23, TriatomicConfigure.angle,
-						TriatomicConfigure.strength));
+				insertAMolecule(x, y, new TriatomicMolecule(TriatomicConfigure.typeOfA, TriatomicConfigure.typeOfB, TriatomicConfigure.typeOfC, TriatomicConfigure.d12, TriatomicConfigure.s12, TriatomicConfigure.d23, TriatomicConfigure.s23, TriatomicConfigure.angle, TriatomicConfigure.strength));
 			break;
 
 		case ADDI_ID:
 			if (addObjectIndicator instanceof AddObjectIndicator.AddDiatomicMoleculeIndicator)
 				addObjectIndicator.setPainted(false);
 			if (clickCount == 1)
-				insertAMolecule(x, y, new DiatomicMolecule(DiatomicConfigure.typeOfA, DiatomicConfigure.typeOfB, DiatomicConfigure.distance,
-						DiatomicConfigure.strength));
+				insertAMolecule(x, y, new DiatomicMolecule(DiatomicConfigure.typeOfA, DiatomicConfigure.typeOfB, DiatomicConfigure.distance, DiatomicConfigure.strength));
 			break;
 
 		case ADCH_ID:
 			if (addObjectIndicator instanceof AddObjectIndicator.AddChainMoleculeIndicator)
 				addObjectIndicator.setPainted(false);
 			if (clickCount == 1 && nAtom < atom.length - ChainConfigure.MAXIMUM)
-				insertAMolecule(x, y, new ChainMolecule(ChainConfigure.typeOfAtom, ChainConfigure.number, ChainConfigure.growMode,
-						ChainConfigure.distance, ChainConfigure.angle));
+				insertAMolecule(x, y, new ChainMolecule(ChainConfigure.typeOfAtom, ChainConfigure.number, ChainConfigure.growMode, ChainConfigure.distance, ChainConfigure.angle));
 			break;
 
 		case IRES_ID:
@@ -4320,8 +4296,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 					mol.attachRandomNucleotide(null);
 				}
 				else if (a1 != null && a2 != null) {
-					boolean b = (a1.getRx() - x) * (a1.getRx() - x) + (a1.getRy() - y) * (a1.getRy() - y) > (a2.getRx() - x) * (a2.getRx() - x)
-							+ (a2.getRy() - y) * (a2.getRy() - y);
+					boolean b = (a1.getRx() - x) * (a1.getRx() - x) + (a1.getRy() - y) * (a1.getRy() - y) > (a2.getRx() - x) * (a2.getRx() - x) + (a2.getRy() - y) * (a2.getRy() - y);
 					mol.attachRandomNucleotide(b ? a2 : a1);
 				}
 				// WARNING!!! After calling attachRandomNucleotide, molecules will be re-generated.
@@ -4381,8 +4356,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				if (a1 != null && a2 != null) {
 					int idna = molecules.indexOf(mol);
 					List<Integer> list = new ArrayList<Integer>();
-					if ((a1.getRx() - x) * (a1.getRx() - x) + (a1.getRy() - y) * (a1.getRy() - y) > (a2.getRx() - x) * (a2.getRx() - x)
-							+ (a2.getRy() - y) * (a2.getRy() - y)) {
+					if ((a1.getRx() - x) * (a1.getRx() - x) + (a1.getRy() - y) * (a1.getRy() - y) > (a2.getRx() - x) * (a2.getRx() - x) + (a2.getRy() - y) * (a2.getRy() - y)) {
 						list.add(a2.getIndex());
 						Atom[] ats = model.getBonds().getBondedPartners(a2, false);
 						if (ats != null) {
@@ -4969,8 +4943,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 					}
 					break;
 				}
-				if (handle == RectangularBoundary.UPPER_LEFT || handle == RectangularBoundary.LOWER_LEFT || handle == RectangularBoundary.UPPER_RIGHT
-						|| handle == RectangularBoundary.LOWER_RIGHT) {
+				if (handle == RectangularBoundary.UPPER_LEFT || handle == RectangularBoundary.LOWER_LEFT || handle == RectangularBoundary.UPPER_RIGHT || handle == RectangularBoundary.LOWER_RIGHT) {
 					boundary.setRect(xmin, ymin, xbox, ybox);
 					repaint();
 				}
@@ -5315,8 +5288,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 					model.notifyChange();
 					model.setNumberOfParticles(nAtom);
 					if (!doNotFireUndoEvent) {
-						model.getUndoManager().undoableEditHappened(
-								new UndoableEditEvent(model, new UndoableInsertion(UndoAction.INSERT_A_PARTICLE, x, y)));
+						model.getUndoManager().undoableEditHappened(new UndoableEditEvent(model, new UndoableInsertion(UndoAction.INSERT_A_PARTICLE, x, y)));
 						updateUndoUIComponents();
 					}
 				}
@@ -5329,9 +5301,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 					model.notifyChange();
 					model.setNumberOfParticles(nAtom);
 					if (!doNotFireUndoEvent) {
-						model.getUndoManager().undoableEditHappened(
-								new UndoableEditEvent(model, new UndoableInsertion(UndoAction.INSERT_A_MOLECULE, x, y, ((Molecule) selectedComponent)
-										.size())));
+						model.getUndoManager().undoableEditHappened(new UndoableEditEvent(model, new UndoableInsertion(UndoAction.INSERT_A_MOLECULE, x, y, ((Molecule) selectedComponent).size())));
 						updateUndoUIComponents();
 					}
 				}
@@ -5348,9 +5318,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			else if (selectedComponent instanceof Layered) {
 				model.notifyChange();
 				if (!doNotFireUndoEvent) {
-					model.getUndoManager().undoableEditHappened(
-							new UndoableEditEvent(model, new UndoableLayeredComponentOperation(UndoAction.INSERT_LAYERED_COMPONENT,
-									(Layered) selectedComponent)));
+					model.getUndoManager().undoableEditHappened(new UndoableEditEvent(model, new UndoableLayeredComponentOperation(UndoAction.INSERT_LAYERED_COMPONENT, (Layered) selectedComponent)));
 					updateUndoUIComponents();
 				}
 			}
@@ -5419,8 +5387,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				synchronized (bonds.getSynchronizationLock()) {
 					for (Iterator it = bonds.iterator(); it.hasNext();) {
 						rb = (RadialBond) it.next();
-						if (selectedArea.contains(0.5 * (rb.getAtom1().getRx() + rb.getAtom2().getRx()), 0.5 * (rb.getAtom1().getRy() + rb.getAtom2()
-								.getRy())))
+						if (selectedArea.contains(0.5 * (rb.getAtom1().getRx() + rb.getAtom2().getRx()), 0.5 * (rb.getAtom1().getRy() + rb.getAtom2().getRy())))
 							m++;
 					}
 				}
@@ -5429,10 +5396,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				String s = MDView.getInternationalText("CountingResult");
 				String s1 = MDView.getInternationalText("SelectedAreaContains");
 				String s2 = MDView.getInternationalText("Particle");
-				JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(this), (s1 != null ? s1 : "The selected area contains ") + n
-						+ (s2 != null ? s2 : " particles") + ":\n" + (nNt == 0 ? "" : nNt + " Nt, ") + (nPl == 0 ? "" : nPl + " Pl, ")
-						+ (nWs == 0 ? "" : nWs + " Ws, ") + (nCk == 0 ? "" : nCk + " Ck") + (m == 0 ? "" : '\n' + "and " + m + " bonds."),
-						s != null ? s : "Counting result", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(this), (s1 != null ? s1 : "The selected area contains ") + n + (s2 != null ? s2 : " particles") + ":\n" + (nNt == 0 ? "" : nNt + " Nt, ") + (nPl == 0 ? "" : nPl + " Pl, ") + (nWs == 0 ? "" : nWs + " Ws, ") + (nCk == 0 ? "" : nCk + " Ck") + (m == 0 ? "" : '\n' + "and " + m + " bonds."), s != null ? s : "Counting result", JOptionPane.INFORMATION_MESSAGE);
 			}
 			selectedArea.setSize(0, 0);
 			repaint();
@@ -5444,8 +5408,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 
 		case SBOU_ID:
 			int handle = boundary.getHandle();
-			if (handle == RectangularBoundary.UPPER_LEFT || handle == RectangularBoundary.UPPER_RIGHT || handle == RectangularBoundary.LOWER_LEFT
-					|| handle == RectangularBoundary.LOWER_RIGHT) {
+			if (handle == RectangularBoundary.UPPER_LEFT || handle == RectangularBoundary.UPPER_RIGHT || handle == RectangularBoundary.LOWER_LEFT || handle == RectangularBoundary.LOWER_RIGHT) {
 				boundary.setHandle(-1);
 				setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 				model.notifyChange();
@@ -5696,8 +5659,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 			}
 		}
 		if (b) {
-			JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(this), "There are objects in this area. Please select an empty area.",
-					"Message", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(this), "There are objects in this area. Please select an empty area.", "Message", JOptionPane.ERROR_MESSAGE);
 		}
 		else {
 			fillAreaWithAtoms(selectedArea, HEXAGONAL_LATTICE, element);
@@ -6149,20 +6111,16 @@ public class AtomisticView extends MDView implements BondChangeListener {
 				}
 				break;
 			case ADDI_ID:
-				insertAMolecule(x, y, new DiatomicMolecule(DiatomicConfigure.typeOfA, DiatomicConfigure.typeOfB, DiatomicConfigure.distance,
-						DiatomicConfigure.strength));
+				insertAMolecule(x, y, new DiatomicMolecule(DiatomicConfigure.typeOfA, DiatomicConfigure.typeOfB, DiatomicConfigure.distance, DiatomicConfigure.strength));
 				break;
 			case WATE_ID:
-				insertAMolecule(x, y, new TriatomicMolecule(TriatomicConfigure.typeOfA, TriatomicConfigure.typeOfB, TriatomicConfigure.typeOfC,
-						TriatomicConfigure.d12, TriatomicConfigure.s12, TriatomicConfigure.d23, TriatomicConfigure.s23, TriatomicConfigure.angle,
-						TriatomicConfigure.strength));
+				insertAMolecule(x, y, new TriatomicMolecule(TriatomicConfigure.typeOfA, TriatomicConfigure.typeOfB, TriatomicConfigure.typeOfC, TriatomicConfigure.d12, TriatomicConfigure.s12, TriatomicConfigure.d23, TriatomicConfigure.s23, TriatomicConfigure.angle, TriatomicConfigure.strength));
 				break;
 			case BENZ_ID:
 				insertAMolecule(x, y, new Benzene());
 				break;
 			case ADCH_ID:
-				insertAMolecule(x, y, new ChainMolecule(ChainConfigure.typeOfAtom, ChainConfigure.number, ChainConfigure.growMode,
-						ChainConfigure.distance, ChainConfigure.angle));
+				insertAMolecule(x, y, new ChainMolecule(ChainConfigure.typeOfAtom, ChainConfigure.number, ChainConfigure.growMode, ChainConfigure.distance, ChainConfigure.angle));
 				break;
 			case UndoAction.INSERT_A_MOLECULE:
 				undoRemoveMarkedAtoms(nInserted);
@@ -6605,8 +6563,7 @@ public class AtomisticView extends MDView implements BondChangeListener {
 		private int probeID = Element.ID_NT;
 		private int efCellSize = 10;
 		private byte efShadingMode = ElectricForceField.TRANSPARENCY_SHADING_MODE;
-		private boolean shading, chargeShading, showVVectors, showVDWCircles, showVDWLines, showChargeLines, showSSLines, showBPLines, showPVectors,
-				showAVectors, showFVectors, showContour, showExcitation = true, showEFieldLines, useJmol;
+		private boolean shading, chargeShading, showVVectors, showVDWCircles, showVDWLines, showChargeLines, showSSLines, showBPLines, showPVectors, showAVectors, showFVectors, showContour, showExcitation = true, showEFieldLines, useJmol;
 		private double probeCharge;
 		private int[] elementColors; // an array to store the colors of the four adjustable elements
 		private Color[] moColors; // an array to store the colors of the molecular surface objects

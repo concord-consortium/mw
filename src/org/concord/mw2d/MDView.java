@@ -151,6 +151,7 @@ public abstract class MDView extends PrintableComponent {
 	Point anchorPoint = new Point();
 	private boolean dragging;
 	boolean doNotFireUndoEvent;
+	private int energizerX = -1;
 
 	Object pasteBuffer;
 	SelectedArea selectedArea = new SelectedArea();
@@ -2547,6 +2548,10 @@ public abstract class MDView extends PrintableComponent {
 		return energizerOn;
 	}
 
+	public void setEnergizerX(int x) {
+		energizerX = x;
+	}
+
 	void processMousePressed(MouseEvent e) {
 		requestFocusInWindow();
 		mouseHeldX = e.getX();
@@ -3385,7 +3390,7 @@ public abstract class MDView extends PrintableComponent {
 		}
 
 		void paint(Graphics2D g) {
-			setX(getWidth() - 18);
+			setX(energizerX < 0 ? getWidth() - 18 : energizerX);
 			int sk = (int) (100.0 * Math.log(1.0 + getModel().getKE()));
 			g.setStroke(ViewAttribute.THIN);
 			g.setColor(exitButtonColor);
