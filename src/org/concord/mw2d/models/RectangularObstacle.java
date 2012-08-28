@@ -173,7 +173,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 	private static Line2D tempLine;
 	static Color blinkColor;
 
-	private boolean soundEffect = true;
+	private boolean soundEffect;
 	private int noteNumber = 100;
 	private int soundInterval = 50;
 	private int soundCollisionCount = 0;
