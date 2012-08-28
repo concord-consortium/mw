@@ -81,9 +81,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 
 	private final static short HEAVY = 500;
 
-	private static Rectangle2D rectN = new Rectangle2D.Float(), rectS = new Rectangle2D.Float(),
-			rectE = new Rectangle2D.Float(), rectW = new Rectangle2D.Float(), rectNE = new Rectangle2D.Float(),
-			rectNW = new Rectangle2D.Float(), rectSE = new Rectangle2D.Float(), rectSW = new Rectangle2D.Float();
+	private static Rectangle2D rectN = new Rectangle2D.Float(), rectS = new Rectangle2D.Float(), rectE = new Rectangle2D.Float(), rectW = new Rectangle2D.Float(), rectNE = new Rectangle2D.Float(), rectNW = new Rectangle2D.Float(), rectSE = new Rectangle2D.Float(), rectSW = new Rectangle2D.Float();
 
 	private static Rectangle2D.Double ballRect, intersectRect;
 	private static int defaultRoundCornerRadius = 10;
@@ -175,6 +173,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 
 	private boolean soundEffect;
 	private int noteNumber = 100;
+	private float relativeVelocity = 1;
 	private int soundInterval = 50;
 	private int soundCollisionCount = 0;
 
@@ -194,8 +193,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 		setRect(x, y, w, h);
 	}
 
-	public RectangularObstacle(double x, double y, double w, double h, double vx, double vy, float hx, float hy,
-			boolean westProbe, boolean northProbe, boolean eastProbe, boolean southProbe, boolean roundCornered) {
+	public RectangularObstacle(double x, double y, double w, double h, double vx, double vy, float hx, float hy, boolean westProbe, boolean northProbe, boolean eastProbe, boolean southProbe, boolean roundCornered) {
 		this(x, y, w, h);
 		this.vx = vx;
 		this.vy = vy;
@@ -279,8 +277,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 				if (blinkIndex < 6) {
 					blinkIndex++;
 					if (model.getView() != null)
-						blinkColor = blinkIndex % 2 == 0 ? ((MDView) model.getView()).contrastBackground() : model
-								.getView().getBackground();
+						blinkColor = blinkIndex % 2 == 0 ? ((MDView) model.getView()).contrastBackground() : model.getView().getBackground();
 				}
 				else {
 					timer.stop();
@@ -288,8 +285,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 					setBlinking(false);
 				}
 				if (model.getView() != null)
-					model.getView().paintImmediately((int) (x - 20), (int) (y - 20), (int) (width + 40),
-							(int) (height + 40));
+					model.getView().paintImmediately((int) (x - 20), (int) (y - 20), (int) (width + 40), (int) (height + 40));
 			}
 
 		});
@@ -302,6 +298,10 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 
 	public void setSoundNoteNumber(int noteNumber) {
 		this.noteNumber = noteNumber;
+	}
+
+	public void setSoundRelativeVelocity(float relativeVelocity) {
+		this.relativeVelocity = relativeVelocity;
 	}
 
 	public void setSoundInterval(int soundInterval) {
@@ -557,8 +557,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 		double y0 = getMinY();
 		double x1 = getMaxX();
 		double y1 = getMaxY();
-		if (e.rx - Electron.radius < x1 && e.rx + Electron.radius > x0 && e.ry - Electron.radius < y1
-				&& e.ry + Electron.radius > y0) {
+		if (e.rx - Electron.radius < x1 && e.rx + Electron.radius > x0 && e.ry - Electron.radius < y1 && e.ry + Electron.radius > y0) {
 			byte xing = borderCross(this, Electron.radius, e.rx, e.ry, e.dx, e.dy, x0, y0, x1, y1);
 			switch (xing) {
 			case NORTH:
@@ -867,7 +866,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 			soundCollisionCount += colList.size();
 			if (model.getJob().getIndexOfStep() % soundInterval == 0) {
 				if (soundCollisionCount > 0) {
-					ModelerUtilities.beep(noteNumber, soundCollisionCount * 20);
+					ModelerUtilities.beep(noteNumber, (int) (soundCollisionCount * Math.sqrt(model.getTemperature()) * relativeVelocity));
 					soundCollisionCount = 0;
 				}
 			}
@@ -903,8 +902,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 		}
 	}
 
-	static byte borderCross(Rectangle2D rect, double rd, double rx, double ry, double dx, double dy, double x0,
-			double y0, double x1, double y1) {
+	static byte borderCross(Rectangle2D rect, double rd, double rx, double ry, double dx, double dy, double x0, double y0, double x1, double y1) {
 
 		if (ballRect == null) {
 			ballRect = new Rectangle2D.Double(rx - rd, ry - rd, rd * 2, rd * 2);
@@ -1315,8 +1313,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 			}
 			else if (fillMode instanceof FillMode.GradientFill) {
 				FillMode.GradientFill gfm = (FillMode.GradientFill) fillMode;
-				GradientFactory.paintRect(g, gfm.getStyle(), gfm.getVariant(), gfm.getColor1(), gfm.getColor2(),
-						(float) x, (float) y, (float) width, (float) height);
+				GradientFactory.paintRect(g, gfm.getStyle(), gfm.getVariant(), gfm.getColor1(), gfm.getColor2(), (float) x, (float) y, (float) width, (float) height);
 			}
 			else if (fillMode instanceof FillMode.PatternFill) {
 				FillMode.PatternFill tfm = (FillMode.PatternFill) fillMode;
@@ -1332,8 +1329,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 			else if (fillMode instanceof FillMode.ImageFill) {
 				if (bgImage != null) {
 					if (bgImage.getIconWidth() != (int) width || bgImage.getIconHeight() != (int) height) {
-						bgImage = new ImageIcon(fullImage.getScaledInstance((int) width, (int) height,
-								Image.SCALE_DEFAULT));
+						bgImage = new ImageIcon(fullImage.getScaledInstance((int) width, (int) height, Image.SCALE_DEFAULT));
 					}
 					bgImage.paintIcon(model.getView(), g, (int) x, (int) y);
 				}
@@ -1980,8 +1976,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 			Arrays.fill(permeableArray, false);
 		}
 
-		public Delegate(double x, double y, double width, double height, double vx, double vy, float hx, float hy,
-				boolean westProbe, boolean northProbe, boolean eastProbe, boolean southProbe) {
+		public Delegate(double x, double y, double width, double height, double vx, double vy, float hx, float hy, boolean westProbe, boolean northProbe, boolean eastProbe, boolean southProbe) {
 			this.x = x;
 			this.y = y;
 			this.width = width;
