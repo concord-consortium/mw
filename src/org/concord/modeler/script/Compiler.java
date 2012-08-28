@@ -37,20 +37,16 @@ public class Compiler {
 	public final static String REGEX_NONNEGATIVE_DECIMAL = "((\\d*\\.\\d+)|(\\d+\\.\\d*)|(\\d+))";
 
 	/** (a, b), a, b are integer */
-	public final static String REGEX_INTEGER_GROUP = "^\\(*" + REGEX_SEPARATOR + "*(\\d+){1}(" + REGEX_SEPARATOR
-			+ "+\\d+)*" + REGEX_SEPARATOR + "+(\\d+){1}" + REGEX_SEPARATOR + "*\\)*";
+	public final static String REGEX_INTEGER_GROUP = "^\\(*" + REGEX_SEPARATOR + "*(\\d+){1}(" + REGEX_SEPARATOR + "+\\d+)*" + REGEX_SEPARATOR + "+(\\d+){1}" + REGEX_SEPARATOR + "*\\)*";
 
 	/** (a, b) */
-	public final static String REGEX_NUMBER_PAIR = "^\\(" + REGEX_WHITESPACE + "*(-?)" + REGEX_NONNEGATIVE_DECIMAL
-			+ REGEX_SEPARATOR + "+(-?)" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*\\)";
+	public final static String REGEX_NUMBER_PAIR = "^\\(" + REGEX_WHITESPACE + "*(-?)" + REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+(-?)" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*\\)";
 
 	/** (a, b), a > 0, b > 0 */
-	public final static String REGEX_POSITIVE_NUMBER_PAIR = "^\\(" + REGEX_WHITESPACE + "*" + REGEX_NONNEGATIVE_DECIMAL
-			+ REGEX_SEPARATOR + "+" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*\\)";
+	public final static String REGEX_POSITIVE_NUMBER_PAIR = "^\\(" + REGEX_WHITESPACE + "*" + REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*\\)";
 
 	/** (a, b, c, d) */
-	public final static String QUADRUPLE = "\\(" + REGEX_WHITESPACE + "*((-?)" + REGEX_NONNEGATIVE_DECIMAL
-			+ REGEX_SEPARATOR + "+){3}(-?)" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*\\)";
+	public final static String QUADRUPLE = "\\(" + REGEX_WHITESPACE + "*((-?)" + REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+){3}(-?)" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*\\)";
 
 	public final static Pattern DEFINED_VARIABLE = compile("%\\w+");
 	public final static Pattern COMMAND_BREAK = compile("(;|\\r?\\n|\\r)+");
@@ -61,11 +57,8 @@ public class Compiler {
 	public final static Pattern AND_NOT = compile("(?i)and" + REGEX_WHITESPACE + "+not\\b");
 	public final static Pattern OR_NOT = compile("(?i)or" + REGEX_WHITESPACE + "+not\\b");
 
-	public final static Pattern RGB_COLOR = compile("^(\\[|\\()" + REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+"
-			+ REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+" + REGEX_NONNEGATIVE_DECIMAL + "(\\]|\\))");
-	public final static Pattern RGBA_COLOR = compile("^(\\[|\\()" + REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+"
-			+ REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+" + REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+"
-			+ REGEX_NONNEGATIVE_DECIMAL + "(\\]|\\))");
+	public final static Pattern RGB_COLOR = compile("^(\\[|\\()" + REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+" + REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+" + REGEX_NONNEGATIVE_DECIMAL + "(\\]|\\))");
+	public final static Pattern RGBA_COLOR = compile("^(\\[|\\()" + REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+" + REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+" + REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+" + REGEX_NONNEGATIVE_DECIMAL + "(\\]|\\))");
 
 	public final static Pattern ELEMENT = compile("(^(?i)element\\b){1}");
 	public final static Pattern ATOM = compile("(^(?i)(atom)|(particle)\\b){1}");
@@ -84,6 +77,7 @@ public class Compiler {
 	public final static Pattern MESSAGE = compile("(^(?i)message\\b){1}");
 	public final static Pattern FORMAT_VARIABLE = compile("(((?i)formatvar)(\\s*)\\((.+),(.+)\\)){1}");
 
+	public final static Pattern EXIT = compile("(^(?i)exit\\b){1}");
 	public final static Pattern SET = compile("(^(?i)set\\b){1}");
 	public final static Pattern GET = compile("(^(?i)get\\b){1}");
 	public final static Pattern DELAY = compile("(^(?i)delay\\b){1}");
@@ -112,24 +106,16 @@ public class Compiler {
 	// public final static Pattern FOUR_NUMBERS = compile(FOUR_NUMBERS_IN_PARENTHESIS);
 
 	/** within (x, y, w, h) */
-	public final static Pattern WITHIN_RECTANGLE = compile("((?i)within){1}" + REGEX_WHITESPACE + "*(\\(|\\[)"
-			+ REGEX_WHITESPACE + "*((-?)" + REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+){3}(-?)"
-			+ REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]|\\))\\z");
+	public final static Pattern WITHIN_RECTANGLE = compile("((?i)within){1}" + REGEX_WHITESPACE + "*(\\(|\\[)" + REGEX_WHITESPACE + "*((-?)" + REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+){3}(-?)" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]|\\))\\z");
 
 	/** i within (x, y, w, h) */
-	public final static Pattern INDEX_WITHIN_RECTANGLE = compile("\\d+" + REGEX_WHITESPACE + "+((?i)within){1}"
-			+ REGEX_WHITESPACE + "*(\\(|\\[)" + REGEX_WHITESPACE + "*((-?)" + REGEX_NONNEGATIVE_DECIMAL
-			+ REGEX_SEPARATOR + "+){3}(-?)" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]|\\))\\z");
+	public final static Pattern INDEX_WITHIN_RECTANGLE = compile("\\d+" + REGEX_WHITESPACE + "+((?i)within){1}" + REGEX_WHITESPACE + "*(\\(|\\[)" + REGEX_WHITESPACE + "*((-?)" + REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+){3}(-?)" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]|\\))\\z");
 
 	/** i-j within (x, y, w, h) */
-	public final static Pattern RANGE_WITHIN_RECTANGLE = compile("\\d+" + REGEX_WHITESPACE + "*-" + REGEX_WHITESPACE
-			+ "*\\d+" + REGEX_WHITESPACE + "+((?i)within){1}" + REGEX_WHITESPACE + "*(\\(|\\[)" + REGEX_WHITESPACE
-			+ "*((-?)" + REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+){3}(-?)" + REGEX_NONNEGATIVE_DECIMAL
-			+ REGEX_WHITESPACE + "*(\\]|\\))\\z");
+	public final static Pattern RANGE_WITHIN_RECTANGLE = compile("\\d+" + REGEX_WHITESPACE + "*-" + REGEX_WHITESPACE + "*\\d+" + REGEX_WHITESPACE + "+((?i)within){1}" + REGEX_WHITESPACE + "*(\\(|\\[)" + REGEX_WHITESPACE + "*((-?)" + REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+){3}(-?)" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]|\\))\\z");
 
 	/** within (radius, index) */
-	public final static Pattern WITHIN_RADIUS = compile("((?i)within\\b){1}" + REGEX_WHITESPACE + "*\\("
-			+ REGEX_WHITESPACE + "*" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*,");
+	public final static Pattern WITHIN_RADIUS = compile("((?i)within\\b){1}" + REGEX_WHITESPACE + "*\\(" + REGEX_WHITESPACE + "*" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*,");
 
 	public final static Pattern MARK_COLOR = compile("(^(?i)mark" + REGEX_WHITESPACE + "+color\\b){1}");
 	public final static Pattern SHOW = compile("(^(?i)show\\b){1}");
@@ -139,19 +125,10 @@ public class Compiler {
 	public final static Pattern ACTION = compile("(^(?i)action\\b){1}");
 	public final static Pattern ACTION_ID = compile("_ID");
 
-	public final static Pattern SET_EPSILON = compile("^(?i)epsilon" + REGEX_WHITESPACE + "+"
-			+ REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+" + REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+"
-			+ REGEX_NONNEGATIVE_DECIMAL + "\\z");
-	public final static Pattern BUILD_RBOND = compile("^(?i)(bond|rbond)" + REGEX_WHITESPACE + "+"
-			+ REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+" + REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+"
-			+ REGEX_NONNEGATIVE_DECIMAL + "\\z");
-	public final static Pattern BUILD_ABOND = compile("^(?i)(bond|abond)" + REGEX_WHITESPACE + "+"
-			+ REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+" + REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+"
-			+ REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+" + REGEX_NONNEGATIVE_DECIMAL + "\\z");
-	public final static Pattern BUILD_TBOND = compile("^(?i)(bond|tbond)" + REGEX_WHITESPACE + "+"
-			+ REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+" + REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+"
-			+ REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+" + REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+"
-			+ REGEX_NONNEGATIVE_DECIMAL + "\\z");
+	public final static Pattern SET_EPSILON = compile("^(?i)epsilon" + REGEX_WHITESPACE + "+" + REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+" + REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+" + REGEX_NONNEGATIVE_DECIMAL + "\\z");
+	public final static Pattern BUILD_RBOND = compile("^(?i)(bond|rbond)" + REGEX_WHITESPACE + "+" + REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+" + REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+" + REGEX_NONNEGATIVE_DECIMAL + "\\z");
+	public final static Pattern BUILD_ABOND = compile("^(?i)(bond|abond)" + REGEX_WHITESPACE + "+" + REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+" + REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+" + REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+" + REGEX_NONNEGATIVE_DECIMAL + "\\z");
+	public final static Pattern BUILD_TBOND = compile("^(?i)(bond|tbond)" + REGEX_WHITESPACE + "+" + REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+" + REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+" + REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+" + REGEX_NONNEGATIVE_DECIMAL + REGEX_SEPARATOR + "+" + REGEX_NONNEGATIVE_DECIMAL + "\\z");
 
 	public final static Pattern ADD = compile("(^(?i)add\\b){1}");
 	public final static Pattern MOVE = compile("(^(?i)move\\b){1}");
@@ -167,30 +144,18 @@ public class Compiler {
 	public final static Pattern CURSOR = compile("(^(?i)cursor\\b){1}");
 	public final static Pattern STORE = compile("(^(?i)store\\b){1}");
 
-	public final static Pattern ELEMENT_FIELD = compile("^%?((?i)element){1}(\\[){1}" + REGEX_WHITESPACE + "*"
-			+ REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
-	public final static Pattern ATOM_FIELD = compile("^%?((?i)atom){1}(\\[){1}" + REGEX_WHITESPACE + "*"
-			+ REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
-	public final static Pattern RBOND_FIELD = compile("^%?((?i)rbond){1}(\\[){1}" + REGEX_WHITESPACE + "*"
-			+ REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
-	public final static Pattern ABOND_FIELD = compile("^%?((?i)abond){1}(\\[){1}" + REGEX_WHITESPACE + "*"
-			+ REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
-	public final static Pattern PARTICLE_FIELD = compile("^%?((?i)particle){1}(\\[){1}" + REGEX_WHITESPACE + "*"
-			+ REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
-	public final static Pattern OBSTACLE_FIELD = compile("^%?((?i)obstacle){1}(\\[){1}" + REGEX_WHITESPACE + "*"
-			+ REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
-	public final static Pattern IMAGE_FIELD = compile("^%?((?i)image){1}(\\[){1}" + REGEX_WHITESPACE + "*"
-			+ REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
-	public final static Pattern LINE_FIELD = compile("^%?((?i)line){1}(\\[){1}" + REGEX_WHITESPACE + "*"
-			+ REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
-	public final static Pattern RECTANGLE_FIELD = compile("^%?((?i)rectangle){1}(\\[){1}" + REGEX_WHITESPACE + "*"
-			+ REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
-	public final static Pattern TRIANGLE_FIELD = compile("^%?((?i)triangle){1}(\\[){1}" + REGEX_WHITESPACE + "*"
-			+ REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
-	public final static Pattern ELLIPSE_FIELD = compile("^%?((?i)ellipse){1}(\\[){1}" + REGEX_WHITESPACE + "*"
-			+ REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
-	public final static Pattern TEXTBOX_FIELD = compile("^%?((?i)textbox){1}(\\[){1}" + REGEX_WHITESPACE + "*"
-			+ REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
+	public final static Pattern ELEMENT_FIELD = compile("^%?((?i)element){1}(\\[){1}" + REGEX_WHITESPACE + "*" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
+	public final static Pattern ATOM_FIELD = compile("^%?((?i)atom){1}(\\[){1}" + REGEX_WHITESPACE + "*" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
+	public final static Pattern RBOND_FIELD = compile("^%?((?i)rbond){1}(\\[){1}" + REGEX_WHITESPACE + "*" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
+	public final static Pattern ABOND_FIELD = compile("^%?((?i)abond){1}(\\[){1}" + REGEX_WHITESPACE + "*" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
+	public final static Pattern PARTICLE_FIELD = compile("^%?((?i)particle){1}(\\[){1}" + REGEX_WHITESPACE + "*" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
+	public final static Pattern OBSTACLE_FIELD = compile("^%?((?i)obstacle){1}(\\[){1}" + REGEX_WHITESPACE + "*" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
+	public final static Pattern IMAGE_FIELD = compile("^%?((?i)image){1}(\\[){1}" + REGEX_WHITESPACE + "*" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
+	public final static Pattern LINE_FIELD = compile("^%?((?i)line){1}(\\[){1}" + REGEX_WHITESPACE + "*" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
+	public final static Pattern RECTANGLE_FIELD = compile("^%?((?i)rectangle){1}(\\[){1}" + REGEX_WHITESPACE + "*" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
+	public final static Pattern TRIANGLE_FIELD = compile("^%?((?i)triangle){1}(\\[){1}" + REGEX_WHITESPACE + "*" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
+	public final static Pattern ELLIPSE_FIELD = compile("^%?((?i)ellipse){1}(\\[){1}" + REGEX_WHITESPACE + "*" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
+	public final static Pattern TEXTBOX_FIELD = compile("^%?((?i)textbox){1}(\\[){1}" + REGEX_WHITESPACE + "*" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
 
 	public final static Pattern IMAGE_EXTENSION = compile("(?)\\.((jpeg)|(jpg)|(gif)|(png))");
 	public final static Pattern TEXT_EXTENSION = compile("(?)\\.txt");

@@ -820,6 +820,8 @@ class Eval2D extends AbstractEval {
 			text = view.getTextBox(i);
 			s = replaceAll(s, "%textbox\\[" + v + "\\]\\.x", text.getRx() * R_CONVERTER);
 			s = replaceAll(s, "%textbox\\[" + v + "\\]\\.y", text.getRy() * R_CONVERTER);
+			s = replaceAll(s, "%textbox\\[" + v + "\\]\\.width", text.getWidth() * R_CONVERTER);
+			s = replaceAll(s, "%textbox\\[" + v + "\\]\\.height", text.getHeight() * R_CONVERTER);
 			s = replaceAll(s, "%textbox\\[" + v + "\\]\\.angle", text.getAngle());
 			lb0 = lb;
 			lb = s.indexOf("%textbox[");
@@ -987,6 +989,16 @@ class Eval2D extends AbstractEval {
 
 		// System.out.println(ci);
 		// System.out.println("-------------------------");
+
+		// exit
+		matcher = EXIT.matcher(ci);
+		if (matcher.find()) {
+			Object o = view.getClientProperty("close_full_screen");
+			if (o instanceof Runnable) {
+				((Runnable) o).run();
+			}
+			return true;
+		}
 
 		// load
 		matcher = LOAD.matcher(ci);
