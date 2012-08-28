@@ -84,7 +84,8 @@ public class FileUtilities {
 			return DIRECTORY_ERROR;
 		String s = FileUtilities.getFileName(file.toString());
 		if (OS.startsWith("Windows")) {
-			if (s.indexOf('*') != -1 || s.indexOf('?') != -1 || s.indexOf(':') != -1 || s.indexOf('<') != -1 || s.indexOf('>') != -1 || s.indexOf('|') != -1 || s.indexOf('/') != -1 || s.indexOf('\"') != -1)
+			if (s.indexOf('*') != -1 || s.indexOf('?') != -1 || s.indexOf(':') != -1 || s.indexOf('<') != -1
+					|| s.indexOf('>') != -1 || s.indexOf('|') != -1 || s.indexOf('/') != -1 || s.indexOf('\"') != -1)
 				return ILLEGAL_CHARACTER;
 		}
 		else {
@@ -314,6 +315,14 @@ public class FileUtilities {
 		}
 		catch (IOException e) {
 			e.printStackTrace();
+			if (is != null) {
+				try {
+					is.close();
+				}
+				catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
 			return FILE_ACCESS_ERROR;
 		}
 		byte b[] = new byte[1024];
