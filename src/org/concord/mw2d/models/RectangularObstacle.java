@@ -173,9 +173,10 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 
 	private boolean soundEffect;
 	private int noteNumber = 100;
-	private float relativeVelocity = 1;
+	private int noteVelocity = 50;
 	private int soundInterval = 50;
 	private int soundCollisionCount = 0;
+	private float relativeVolume = 1;
 
 	public RectangularObstacle() {
 		super();
@@ -296,12 +297,16 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 		soundEffect = on;
 	}
 
+	public void setRelativeVolume(float relativeVolume) {
+		this.relativeVolume = relativeVolume;
+	}
+
 	public void setSoundNoteNumber(int noteNumber) {
 		this.noteNumber = noteNumber;
 	}
 
-	public void setSoundRelativeVelocity(float relativeVelocity) {
-		this.relativeVelocity = relativeVelocity;
+	public void setSoundNoteVelocity(int noteVelocity) {
+		this.noteVelocity = noteVelocity;
 	}
 
 	public void setSoundInterval(int soundInterval) {
@@ -866,7 +871,10 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 			soundCollisionCount += colList.size();
 			if (model.getJob().getIndexOfStep() % soundInterval == 0) {
 				if (soundCollisionCount > 0) {
-					ModelerUtilities.beep(noteNumber, (int) (soundCollisionCount * Math.sqrt(model.getTemperature()) * relativeVelocity));
+					double temp = model.getTemperature();
+					int volume = (int) (Math.log10(temp) * soundCollisionCount * relativeVolume);
+					volume = Math.min(volume, 127);
+					ModelerUtilities.beep(noteNumber, noteVelocity, 7, volume);
 					soundCollisionCount = 0;
 				}
 			}

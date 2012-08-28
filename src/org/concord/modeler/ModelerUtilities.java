@@ -1218,7 +1218,7 @@ public final class ModelerUtilities {
 
 	private static Synthesizer synthesizer;
 
-	public static void beep(int noteNumber, int velocity) {
+	public static void beep(int noteNumber, int velocity, int controller, int volume) {
 		if (synthesizer == null) {
 			try {
 				synthesizer = MidiSystem.getSynthesizer();
@@ -1238,6 +1238,7 @@ public final class ModelerUtilities {
 			}
 			MidiChannel[] channels = synthesizer.getChannels();
 			channels[0].noteOn(noteNumber, velocity);
+			channels[0].controlChange(controller, volume);
 		}
 	}
 
