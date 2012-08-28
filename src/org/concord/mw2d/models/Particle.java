@@ -74,7 +74,7 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	Color chargeColor = Color.black;
 
 	/* color for the trajectory line */
-	Color trajectoryColor;
+	Color trajectoryColor = Color.gray;
 
 	/* the name of this particle */
 	transient String name;
@@ -199,8 +199,7 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 			PropertyDescriptor[] propertyDescriptors = info.getPropertyDescriptors();
 			for (PropertyDescriptor pd : propertyDescriptors) {
 				String name = pd.getName();
-				if (name.equals("name") || name.equals("index") || name.equals("ax") || name.equals("ay") || name.equals("fx") || name.equals("fy")
-						|| name.equals("selected") || name.equals("blinking")) {
+				if (name.equals("name") || name.equals("index") || name.equals("ax") || name.equals("ay") || name.equals("fx") || name.equals("fy") || name.equals("selected") || name.equals("blinking")) {
 					pd.setValue("transient", Boolean.TRUE);
 				}
 			}
@@ -1263,8 +1262,7 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 			public void actionPerformed(ActionEvent e) {
 				if (blinkIndex < 8) {
 					blinkIndex++;
-					blinkColor = blinkIndex % 2 == 0 ? ((MDView) getHostModel().getView()).contrastBackground() : getHostModel().getView()
-							.getBackground();
+					blinkColor = blinkIndex % 2 == 0 ? ((MDView) getHostModel().getView()).contrastBackground() : getHostModel().getView().getBackground();
 				}
 				else {
 					timer.stop();
