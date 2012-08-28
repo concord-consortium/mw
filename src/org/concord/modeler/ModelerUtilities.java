@@ -65,6 +65,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
+import javax.sound.midi.MidiChannel;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.MidiUnavailableException;
+import javax.sound.midi.Synthesizer;
 import javax.swing.AbstractButton;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
@@ -166,9 +170,7 @@ public final class ModelerUtilities {
 		}
 		catch (Throwable t) {
 			t.printStackTrace();
-			FONT_FAMILY_NAMES = new String[] { "Arial", "Arial Black", "Book Antiqua", "Comic Sans MS", "Courier New",
-					"Default", "Dialog", "DialogInput", "Monospaced", "SansSerif", "Serif", "Times New Roman",
-					"Verdana" };
+			FONT_FAMILY_NAMES = new String[] { "Arial", "Arial Black", "Book Antiqua", "Comic Sans MS", "Courier New", "Default", "Dialog", "DialogInput", "Monospaced", "SansSerif", "Serif", "Times New Roman", "Verdana" };
 		}
 		for (int i = 8; i <= 72; i++)
 			FONT_SIZE[i - 8] = i;
@@ -323,8 +325,7 @@ public final class ModelerUtilities {
 			}
 			if (clazz == null) {
 				try {
-					ClassLoader cocoaClassLoader = new AllPermissionClassLoader(new URL[] { new URL(
-							"file:///System/Library/Java/") }, ModelerUtilities.class.getClassLoader());
+					ClassLoader cocoaClassLoader = new AllPermissionClassLoader(new URL[] { new URL("file:///System/Library/Java/") }, ModelerUtilities.class.getClassLoader());
 					clazz = cocoaClassLoader.loadClass("com.apple.cocoa.application.NSMenu");
 				}
 				catch (Throwable t) {
@@ -394,17 +395,12 @@ public final class ModelerUtilities {
 
 	public static String currentTimeToString() {
 		Calendar c = Calendar.getInstance();
-		return Integer.toString(c.get(Calendar.YEAR)) + Integer.toString(c.get(Calendar.MONTH) + 1)
-				+ Integer.toString(c.get(Calendar.DATE)) + Integer.toString(c.get(Calendar.HOUR_OF_DAY))
-				+ Integer.toString(c.get(Calendar.MINUTE)) + Integer.toString(c.get(Calendar.SECOND));
+		return Integer.toString(c.get(Calendar.YEAR)) + Integer.toString(c.get(Calendar.MONTH) + 1) + Integer.toString(c.get(Calendar.DATE)) + Integer.toString(c.get(Calendar.HOUR_OF_DAY)) + Integer.toString(c.get(Calendar.MINUTE)) + Integer.toString(c.get(Calendar.SECOND));
 	}
 
 	public static String currentTimeMillisToString() {
 		Calendar c = Calendar.getInstance();
-		return Integer.toString(c.get(Calendar.YEAR)) + Integer.toString(c.get(Calendar.MONTH) + 1)
-				+ Integer.toString(c.get(Calendar.DATE)) + Integer.toString(c.get(Calendar.HOUR_OF_DAY))
-				+ Integer.toString(c.get(Calendar.MINUTE)) + Integer.toString(c.get(Calendar.SECOND))
-				+ Integer.toString(c.get(Calendar.MILLISECOND));
+		return Integer.toString(c.get(Calendar.YEAR)) + Integer.toString(c.get(Calendar.MONTH) + 1) + Integer.toString(c.get(Calendar.DATE)) + Integer.toString(c.get(Calendar.HOUR_OF_DAY)) + Integer.toString(c.get(Calendar.MINUTE)) + Integer.toString(c.get(Calendar.SECOND)) + Integer.toString(c.get(Calendar.MILLISECOND));
 	}
 
 	/**
@@ -435,8 +431,7 @@ public final class ModelerUtilities {
 		if (e == null)
 			return false;
 		int modifier = e.getModifiers();
-		if (modifier == (ActionEvent.META_MASK | ActionEvent.MOUSE_EVENT_MASK)
-				|| modifier == (ActionEvent.CTRL_MASK | ActionEvent.MOUSE_EVENT_MASK))
+		if (modifier == (ActionEvent.META_MASK | ActionEvent.MOUSE_EVENT_MASK) || modifier == (ActionEvent.CTRL_MASK | ActionEvent.MOUSE_EVENT_MASK))
 			return true;
 		return false;
 	}
@@ -642,8 +637,7 @@ public final class ModelerUtilities {
 
 	/** @return a median color of the input ones, including the alpha values. */
 	public static Color getMedianColor(Color c1, Color c2) {
-		return new Color(((c1.getAlpha() + c2.getAlpha()) >> 1) << 24 | ((c1.getRed() + c2.getRed()) >> 1) << 16
-				| ((c1.getGreen() + c2.getGreen()) >> 1) << 8 | ((c1.getBlue() + c2.getBlue()) >> 1));
+		return new Color(((c1.getAlpha() + c2.getAlpha()) >> 1) << 24 | ((c1.getRed() + c2.getRed()) >> 1) << 16 | ((c1.getGreen() + c2.getGreen()) >> 1) << 8 | ((c1.getBlue() + c2.getBlue()) >> 1));
 	}
 
 	public static JDialog getChildDialog(Component parent, boolean modal) {
@@ -833,8 +827,7 @@ public final class ModelerUtilities {
 			filename = FileUtilities.fileNameAutoExtend(filter, fileChooser.getSelectedFile());
 			final File file = new File(filename);
 			if (file.exists()) {
-				int opt = JOptionPane.showConfirmDialog(window, "File " + file.getName() + " exists, overwrite?",
-						"File exists", JOptionPane.YES_NO_OPTION);
+				int opt = JOptionPane.showConfirmDialog(window, "File " + file.getName() + " exists, overwrite?", "File exists", JOptionPane.YES_NO_OPTION);
 				if (opt != 0) {
 					if (filter != null)
 						fileChooser.removeChoosableFileFilter(filter);
@@ -846,8 +839,7 @@ public final class ModelerUtilities {
 
 			if (filter != null) {
 				if (!extension.equals(filter.getDescription())) {
-					JOptionPane.showMessageDialog(window, "Sorry, extension name should be " + filter.getDescription()
-							+ ". Write aborted.");
+					JOptionPane.showMessageDialog(window, "Sorry, extension name should be " + filter.getDescription() + ". Write aborted.");
 					success = false;
 				}
 			}
@@ -941,8 +933,7 @@ public final class ModelerUtilities {
 	}
 
 	/** create an ImageIcon delegate of a component with the specified scale */
-	public static ImageIcon componentToImageIcon(Component c, String description, boolean paintBorder, float scale,
-			int hints) {
+	public static ImageIcon componentToImageIcon(Component c, String description, boolean paintBorder, float scale, int hints) {
 		if (c == null)
 			return null;
 		if (!c.isShowing())
@@ -969,8 +960,7 @@ public final class ModelerUtilities {
 				}
 			}
 			if (robot != null) {
-				bi = robot.createScreenCapture(new Rectangle(c.getLocationOnScreen().x, c.getLocationOnScreen().y, c
-						.getWidth(), c.getHeight()));
+				bi = robot.createScreenCapture(new Rectangle(c.getLocationOnScreen().x, c.getLocationOnScreen().y, c.getWidth(), c.getHeight()));
 			}
 			else {
 				bi = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_RGB);
@@ -981,8 +971,7 @@ public final class ModelerUtilities {
 		}
 		ImageIcon icon = null;
 		if (scale < 1.0f) {
-			icon = new ImageIcon(bi.getScaledInstance((int) (bi.getWidth() * scale), (int) (bi.getHeight() * scale),
-					hints));
+			icon = new ImageIcon(bi.getScaledInstance((int) (bi.getWidth() * scale), (int) (bi.getHeight() * scale), hints));
 		}
 		else {
 			if (paintBorder) {
@@ -1030,8 +1019,7 @@ public final class ModelerUtilities {
 			filename = FileUtilities.fileNameAutoExtend(fileChooser.getFileFilter(), fileChooser.getSelectedFile());
 			final File file = new File(filename);
 			if (file.exists()) {
-				int opt = JOptionPane.showConfirmDialog(window, "File " + file.getName() + " exists, overwrite?",
-						"File exists", JOptionPane.YES_NO_OPTION);
+				int opt = JOptionPane.showConfirmDialog(window, "File " + file.getName() + " exists, overwrite?", "File exists", JOptionPane.YES_NO_OPTION);
 				if (opt != 0) {
 					fileChooser.resetChoosableFileFilters();
 					return false;
@@ -1041,8 +1029,7 @@ public final class ModelerUtilities {
 			String extension = filename.substring(idot + 1).toUpperCase();
 
 			if (!extension.equals(fileChooser.getFileFilter().getDescription())) {
-				JOptionPane.showMessageDialog(window, "Sorry, extension name should be "
-						+ fileChooser.getFileFilter().getDescription() + ". Write aborted.");
+				JOptionPane.showMessageDialog(window, "Sorry, extension name should be " + fileChooser.getFileFilter().getDescription() + ". Write aborted.");
 				success = false;
 			}
 
@@ -1090,8 +1077,7 @@ public final class ModelerUtilities {
 	 * @param yPad
 	 *            y padding between cells
 	 */
-	public static void makeCompactGrid(Container parent, int rows, int cols, int initialX, int initialY, int xPad,
-			int yPad) {
+	public static void makeCompactGrid(Container parent, int rows, int cols, int initialX, int initialY, int xPad, int yPad) {
 		SpringLayout layout;
 		try {
 			layout = (SpringLayout) parent.getLayout();
@@ -1227,6 +1213,38 @@ public final class ModelerUtilities {
 		if (cl != null) {
 			for (ChangeListener x : cl)
 				spinner.addChangeListener(x);
+		}
+	}
+
+	private static Synthesizer synthesizer;
+
+	public static void beep(int noteNumber, int velocity) {
+		if (synthesizer == null) {
+			try {
+				synthesizer = MidiSystem.getSynthesizer();
+			}
+			catch (MidiUnavailableException e) {
+				e.printStackTrace();
+				return;
+			}
+		}
+		if (synthesizer != null) {
+			try {
+				synthesizer.open();
+			}
+			catch (MidiUnavailableException e) {
+				e.printStackTrace();
+				return;
+			}
+			MidiChannel[] channels = synthesizer.getChannels();
+			channels[0].noteOn(noteNumber, velocity);
+		}
+	}
+
+	/** Release the system resources this class may have held. */
+	public static void shutdown() {
+		if (synthesizer != null) {
+			synthesizer.close();
 		}
 	}
 

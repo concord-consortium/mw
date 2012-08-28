@@ -84,8 +84,7 @@ public class FileUtilities {
 			return DIRECTORY_ERROR;
 		String s = FileUtilities.getFileName(file.toString());
 		if (OS.startsWith("Windows")) {
-			if (s.indexOf('*') != -1 || s.indexOf('?') != -1 || s.indexOf(':') != -1 || s.indexOf('<') != -1
-					|| s.indexOf('>') != -1 || s.indexOf('|') != -1 || s.indexOf('/') != -1 || s.indexOf('\"') != -1)
+			if (s.indexOf('*') != -1 || s.indexOf('?') != -1 || s.indexOf(':') != -1 || s.indexOf('<') != -1 || s.indexOf('>') != -1 || s.indexOf('|') != -1 || s.indexOf('/') != -1 || s.indexOf('\"') != -1)
 				return ILLEGAL_CHARACTER;
 		}
 		else {
@@ -172,7 +171,7 @@ public class FileUtilities {
 	public static String getCodeBase(String path) {
 		if (path == null)
 			return null;
-		if (path.toLowerCase().indexOf("http://") != -1) {
+		if (path.toLowerCase().indexOf("http://") != -1 || path.toLowerCase().indexOf("https://") != -1) {
 			int i = path.lastIndexOf('/');
 			if (i == -1)
 				return null;
@@ -271,8 +270,8 @@ public class FileUtilities {
 	}
 
 	/**
-	 * copy a file. This method should be used for renaming a file instead of <code>File.renameTo()</code>. The
-	 * latter involves native methods which cannot be predicted within a Java application.
+	 * copy a file. This method should be used for renaming a file instead of <code>File.renameTo()</code>. The latter
+	 * involves native methods which cannot be predicted within a Java application.
 	 * 
 	 * @param s
 	 *            the source
