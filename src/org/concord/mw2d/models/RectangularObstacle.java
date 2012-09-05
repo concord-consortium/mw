@@ -1486,34 +1486,55 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 		if (cumulativeFaceCollisions != null && !cumulativeFaceCollisions.isEmpty()) {
 			g.setColor(Color.yellow);
 			for (FaceCollision fc : cumulativeFaceCollisions) {
+				boolean fresh = model.job.getIndexOfStep() - fc.getIndexOfStep() < hitTraceInterval / 10;
 				switch (fc.getFace()) {
 				case WEST:
 					int rx = (int) x;
 					int ry = (int) fc.getRy();
-					g.drawLine(rx - 4, ry, rx, ry);
-					g.drawLine(rx - 2, ry - 4, rx, ry);
-					g.drawLine(rx - 2, ry + 4, rx, ry);
+					if (fresh) {
+						g.drawLine(rx - 8, ry, rx - 1, ry);
+						g.drawLine(rx - 6, ry - 8, rx, ry - 3);
+						g.drawLine(rx - 6, ry + 8, rx, ry + 3);
+					}
+					else {
+						g.fillOval(rx - 2, ry - 2, 4, 4);
+					}
 					break;
 				case EAST:
 					rx = (int) (x + width);
 					ry = (int) fc.getRy();
-					g.drawLine(rx + 4, ry, rx, ry);
-					g.drawLine(rx + 2, ry - 4, rx, ry);
-					g.drawLine(rx + 2, ry + 4, rx, ry);
+					if (fresh) {
+						g.drawLine(rx + 4, ry, rx, ry);
+						g.drawLine(rx + 2, ry - 4, rx, ry);
+						g.drawLine(rx + 2, ry + 4, rx, ry);
+					}
+					else {
+						g.fillOval(rx - 2, ry - 2, 4, 4);
+					}
 					break;
 				case NORTH:
 					ry = (int) y;
 					rx = (int) fc.getRx();
-					g.drawLine(rx, ry - 4, rx, ry);
-					g.drawLine(rx - 4, ry - 2, rx, ry);
-					g.drawLine(rx + 4, ry - 2, rx, ry);
+					if (fresh) {
+						g.drawLine(rx, ry - 4, rx, ry);
+						g.drawLine(rx - 4, ry - 2, rx, ry);
+						g.drawLine(rx + 4, ry - 2, rx, ry);
+					}
+					else {
+						g.fillOval(rx - 2, ry - 2, 4, 4);
+					}
 					break;
 				case SOUTH:
 					ry = (int) (y + height);
 					rx = (int) fc.getRx();
-					g.drawLine(rx, ry + 4, rx, ry);
-					g.drawLine(rx - 4, ry + 2, rx, ry);
-					g.drawLine(rx + 4, ry + 2, rx, ry);
+					if (fresh) {
+						g.drawLine(rx, ry + 4, rx, ry);
+						g.drawLine(rx - 4, ry + 2, rx, ry);
+						g.drawLine(rx + 4, ry + 2, rx, ry);
+					}
+					else {
+						g.fillOval(rx - 2, ry - 2, 4, 4);
+					}
 					break;
 				}
 			}
