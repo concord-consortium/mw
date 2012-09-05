@@ -167,6 +167,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 	private static double va1, vo1;
 	private List<Integer> colList;
 	private List<FaceCollision> faceColList;
+	private List<FaceCollision> cumulativeFaceCollisions;
 	private double delta = 10.0;
 	private static Line2D tempLine;
 	static Color blinkColor;
@@ -694,7 +695,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 					colList.add((int) i);
 				xing = borderCross(this, radius, a.rx, a.ry, a.dx, a.dy, x0, y0, x1, y1);
 				if (fireCollisionEvents)
-					faceColList.add(new FaceCollision(xing, i, a.rx, a.ry, a.vx, a.vy));
+					faceColList.add(new FaceCollision(xing, i, a.rx, a.ry, a.vx, a.vy, model.job.getIndexOfStep()));
 				switch (xing) {
 				case NORTH:
 					if (isFixed) {
@@ -878,6 +879,21 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 					soundCollisionCount = 0;
 				}
 			}
+		}
+
+		if (fireCollisionEvents) {
+			if (cumulativeFaceCollisions == null) {
+				cumulativeFaceCollisions = new ArrayList<FaceCollision>();
+			}
+			else {
+				FaceCollision fc;
+				for (Iterator<FaceCollision> it = cumulativeFaceCollisions.iterator(); it.hasNext();) {
+					fc = it.next();
+					if (model.job.getIndexOfStep() - fc.getIndexOfStep() > 1000)
+						it.remove();
+				}
+			}
+			cumulativeFaceCollisions.addAll(faceColList);
 		}
 
 		return faceColList;
@@ -1460,6 +1476,43 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 			g.setColor(cbg);
 			g.setFont(Particle.FONT_ON_TOP);
 			g.drawString("" + model.getObstacles().indexOf(this), (int) (x + width * 0.5), (int) (y + height * 0.5));
+		}
+
+		if (cumulativeFaceCollisions != null && !cumulativeFaceCollisions.isEmpty()) {
+			g.setColor(Color.yellow);
+			for (FaceCollision fc : cumulativeFaceCollisions) {
+				switch (fc.getFace()) {
+				case WEST:
+					int rx = (int) x;
+					int ry = (int) fc.getRy();
+					g.drawLine(rx - 4, ry, rx, ry);
+					g.drawLine(rx - 2, ry - 4, rx, ry);
+					g.drawLine(rx - 2, ry + 4, rx, ry);
+					break;
+				case EAST:
+					rx = (int) (x + width);
+					ry = (int) fc.getRy();
+					g.drawLine(rx + 4, ry, rx, ry);
+					g.drawLine(rx + 2, ry - 4, rx, ry);
+					g.drawLine(rx + 2, ry + 4, rx, ry);
+					break;
+				case NORTH:
+					ry = (int) y;
+					rx = (int) fc.getRx();
+					g.drawLine(rx, ry - 4, rx, ry);
+					g.drawLine(rx - 4, ry - 2, rx, ry);
+					g.drawLine(rx + 4, ry - 2, rx, ry);
+					break;
+				case SOUTH:
+					ry = (int) (y + height);
+					rx = (int) fc.getRx();
+					g.drawLine(rx, ry + 4, rx, ry);
+					g.drawLine(rx - 4, ry + 2, rx, ry);
+					g.drawLine(rx + 4, ry + 2, rx, ry);
+					break;
+				}
+			}
+
 		}
 
 	}

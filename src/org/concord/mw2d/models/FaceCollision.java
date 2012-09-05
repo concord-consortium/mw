@@ -22,9 +22,9 @@ package org.concord.mw2d.models;
 
 /**
  * This is a face collision event object. It records which side of an obstacle or boundary was hit by which particle
- * with what velocity at what location of the face.
+ * with what velocity at what location of the face at what time.
  * 
- * @author Qian Xie
+ * @author Charles Xie
  */
 
 class FaceCollision {
@@ -33,21 +33,27 @@ class FaceCollision {
 	private short index;
 	private double vx, vy;
 	private double rx, ry;
+	private int indexOfStep;
 
 	public FaceCollision() {
 	}
 
-	public FaceCollision(byte face, short index, double rx, double ry, double vx, double vy) {
+	public FaceCollision(byte face, short index, double rx, double ry, double vx, double vy, int indexOfStep) {
 		this.face = face;
 		this.index = index;
 		this.rx = rx;
 		this.ry = ry;
 		this.vx = vx;
 		this.vy = vy;
+		this.indexOfStep = indexOfStep;
 	}
 
 	public byte getFace() {
 		return face;
+	}
+
+	public int getIndexOfStep() {
+		return indexOfStep;
 	}
 
 	public short getParticleIndex() {
