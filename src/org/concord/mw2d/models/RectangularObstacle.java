@@ -178,6 +178,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 	private int soundInterval = 50;
 	private int soundCollisionCount = 0;
 	private float relativeVolume = 1;
+	private int hitTraceInterval = 500;
 
 	public RectangularObstacle() {
 		super();
@@ -312,6 +313,10 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 
 	public void setSoundInterval(int soundInterval) {
 		this.soundInterval = soundInterval;
+	}
+
+	public void setHitTraceInterval(int hitTraceInterval) {
+		this.hitTraceInterval = hitTraceInterval;
 	}
 
 	public static int getDefaultRoundCornerRadius() {
@@ -889,7 +894,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 				FaceCollision fc;
 				for (Iterator<FaceCollision> it = cumulativeFaceCollisions.iterator(); it.hasNext();) {
 					fc = it.next();
-					if (model.job.getIndexOfStep() - fc.getIndexOfStep() > 1000)
+					if (model.job.getIndexOfStep() - fc.getIndexOfStep() > hitTraceInterval)
 						it.remove();
 				}
 			}
