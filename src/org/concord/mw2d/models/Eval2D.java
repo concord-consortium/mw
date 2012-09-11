@@ -194,7 +194,7 @@ class Eval2D extends AbstractEval {
 		s = replaceAll(s, "%mouse_y", mouseLocation.y);
 		s = replaceAll(s, "%keycode", keyCode);
 		s = replaceAll(s, "%model_time", model.modelTime);
-		s = replaceAll(s, "%time_step", model.getTimeStep());
+		s = replaceAll(s, "%timestep", model.getTimeStep());
 		s = replaceAll(s, "%recorder_default_length", model.getDefaultTapeLength());
 		s = replaceAll(s, "%pote", model.getPotTS());
 		s = replaceAll(s, "%kine", model.getKinTS());
