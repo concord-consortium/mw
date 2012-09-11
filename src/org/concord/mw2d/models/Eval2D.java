@@ -4479,8 +4479,8 @@ class Eval2D extends AbstractEval {
 				notifyChange();
 				return true;
 			}
-			else if (s0 == "time_step") {
-				model.setTimeStep(x);
+			else if (s0 == "view_refresh_interval") {
+				model.paintView.setInterval((int)x);
 				notifyChange();
 				return true;
 			}
