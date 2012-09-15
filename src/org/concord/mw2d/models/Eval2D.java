@@ -3401,7 +3401,7 @@ class Eval2D extends AbstractEval {
 	private boolean evaluateTrajectoryClause(String str) {
 		if (str == null || str.equals(""))
 			return false;
-		boolean on = str.equalsIgnoreCase("on");
+		boolean on = str.toLowerCase().startsWith("on");
 		int n = model.getNumberOfParticles();
 		if (n <= 0)
 			return true;
@@ -3410,6 +3410,8 @@ class Eval2D extends AbstractEval {
 			if (p.isSelected())
 				p.setShowRTraj(on);
 		}
+		if (on && str.toLowerCase().endsWith("new"))
+			model.insertNewTape();
 		view.repaint();
 		notifyChange();
 		return true;
