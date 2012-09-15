@@ -5035,12 +5035,7 @@ class Eval2D extends AbstractEval {
 			}
 			int i2 = Math.round(Float.parseFloat(s[3]));
 			if ("atom".equals(s[2])) {
-				Atom at = ((MolecularModel) model).getAtom(i2);
-				if (at == null) {
-					out(ScriptEvent.FAILED, "Atom " + i2 + " does not exist.");
-					return false;
-				}
-				ec.setHost(at);
+				ec.setHost(((MolecularModel) model).getAtom(i2));
 				view.repaint();
 			}
 			return true;
