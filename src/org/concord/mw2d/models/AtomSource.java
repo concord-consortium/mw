@@ -66,9 +66,7 @@ class AtomSource extends AbstractLoadable {
 	}
 
 	private void work() {
-		double rtemp = Math.sqrt(model.heatBathActivated() ? model.getHeatBath().getExpectedTemperature() : model
-				.getTemperature())
-				* MDModel.VT_CONVERSION_CONSTANT * 10;
+		double rtemp = Math.sqrt(model.heatBathActivated() ? model.getHeatBath().getExpectedTemperature() : model.getTemperature()) * MDModel.VT_CONVERSION_CONSTANT * 100;
 		if (rtemp < Particle.ZERO)
 			rtemp = Particle.ZERO;
 		double v = type.length * Math.random();
@@ -80,23 +78,19 @@ class AtomSource extends AbstractLoadable {
 		double sigma = elem.getSigma();
 		switch (wall) {
 		case Wall.WEST:
-			if (model.view.insertAnAtom(sigma * 0.5 + 2, sigma * 0.5 + MDModel.RANDOM.nextFloat()
-					* (model.view.getHeight() - sigma), id, true))
+			if (model.view.insertAnAtom(sigma * 0.5 + 2, sigma * 0.5 + MDModel.RANDOM.nextFloat() * (model.view.getHeight() - sigma), id, true))
 				model.atom[model.numberOfAtoms - 1].setVx(rtemp);
 			break;
 		case Wall.EAST:
-			if (model.view.insertAnAtom(model.view.getWidth() - sigma * 0.5 - 2, sigma * 0.5
-					+ MDModel.RANDOM.nextFloat() * (model.view.getHeight() - sigma), id, true))
+			if (model.view.insertAnAtom(model.view.getWidth() - sigma * 0.5 - 2, sigma * 0.5 + MDModel.RANDOM.nextFloat() * (model.view.getHeight() - sigma), id, true))
 				model.atom[model.numberOfAtoms - 1].setVx(-rtemp);
 			break;
 		case Wall.SOUTH:
-			if (model.view.insertAnAtom(sigma * 0.5 + MDModel.RANDOM.nextFloat() * (model.view.getWidth() - sigma),
-					model.view.getHeight() - sigma * 0.5 - 2, id, true))
+			if (model.view.insertAnAtom(sigma * 0.5 + MDModel.RANDOM.nextFloat() * (model.view.getWidth() - sigma), model.view.getHeight() - sigma * 0.5 - 2, id, true))
 				model.atom[model.numberOfAtoms - 1].setVy(-rtemp);
 			break;
 		case Wall.NORTH:
-			if (model.view.insertAnAtom(sigma * 0.5 + MDModel.RANDOM.nextFloat() * (model.view.getWidth() - sigma),
-					sigma * 0.5 + 2, id, true))
+			if (model.view.insertAnAtom(sigma * 0.5 + MDModel.RANDOM.nextFloat() * (model.view.getWidth() - sigma), sigma * 0.5 + 2, id, true))
 				model.atom[model.numberOfAtoms - 1].setVy(rtemp);
 			break;
 		}

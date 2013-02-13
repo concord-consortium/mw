@@ -1445,8 +1445,11 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 						g.drawLine(rx - 6, ry - 8, rx, ry - 3);
 						g.drawLine(rx - 6, ry + 8, rx, ry + 3);
 					} else {
-						if (showCumulativeHits)
-							g.drawRect(rx, ry - 2, 2, 4);
+						if (showCumulativeHits) {
+							g.drawLine((int) (rx - 8 - Math.abs(50 * fc.getVx())), ry, rx, ry);
+							g.drawLine(rx - 2, ry - 2, rx, ry);
+							g.drawLine(rx - 2, ry + 2, rx, ry);
+						}
 					}
 					break;
 				case EAST:
@@ -1457,8 +1460,11 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 						g.drawLine(rx + 2, ry - 4, rx, ry);
 						g.drawLine(rx + 2, ry + 4, rx, ry);
 					} else {
-						if (showCumulativeHits)
-							g.drawRect(rx, ry - 2, 2, 4);
+						if (showCumulativeHits) {
+							g.drawLine(rx, ry, (int) (rx + 8 + Math.abs(50 * fc.getVx())), ry);
+							g.drawLine(rx, ry - 2, rx + 2, ry);
+							g.drawLine(rx, ry + 2, rx + 2, ry);
+						}
 					}
 					break;
 				case NORTH:
@@ -1469,8 +1475,11 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 						g.drawLine(rx - 4, ry - 2, rx, ry);
 						g.drawLine(rx + 4, ry - 2, rx, ry);
 					} else {
-						if (showCumulativeHits)
-							g.drawRect(rx, ry - 2, 2, 4);
+						if (showCumulativeHits) {
+							g.drawLine(rx, (int) (ry - 8 - Math.abs(50 * fc.getVx())), rx, ry);
+							g.drawLine(rx - 2, ry - 2, rx, ry);
+							g.drawLine(rx + 2, ry - 2, rx, ry);
+						}
 					}
 					break;
 				case SOUTH:
@@ -1481,8 +1490,11 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 						g.drawLine(rx - 4, ry + 2, rx, ry);
 						g.drawLine(rx + 4, ry + 2, rx, ry);
 					} else {
-						if (showCumulativeHits)
-							g.drawRect(rx, ry - 2, 2, 4);
+						if (showCumulativeHits) {
+							g.drawLine(rx, (int) (ry + 8 + Math.abs(50 * fc.getVx())), rx, ry);
+							g.drawLine(rx - 2, ry + 2, rx, ry);
+							g.drawLine(rx + 2, ry + 2, rx, ry);
+						}
 					}
 					break;
 				}
