@@ -30,10 +30,15 @@ class AtomSource extends AbstractLoadable {
 	private byte wall = Wall.WEST;
 	private byte[] type = new byte[] { Element.ID_NT };
 	private Runnable runnable;
+	private boolean flowAtomsMarked;
 
 	AtomSource(AtomicModel model) {
 		this.model = model;
 		setInterval(500);
+	}
+
+	void setFlowAtomsMarked(boolean b) {
+		flowAtomsMarked = b;
 	}
 
 	void setWall(byte wall) {
@@ -76,24 +81,35 @@ class AtomSource extends AbstractLoadable {
 		if (elem == null)
 			return;
 		double sigma = elem.getSigma();
+		Atom a = null;
 		switch (wall) {
 		case Wall.WEST:
-			if (model.view.insertAnAtom(sigma * 0.5 + 2, sigma * 0.5 + MDModel.RANDOM.nextFloat() * (model.view.getHeight() - sigma), id, true))
-				model.atom[model.numberOfAtoms - 1].setVx(rtemp);
+			if (model.view.insertAnAtom(sigma * 0.5 + 2, sigma * 0.5 + MDModel.RANDOM.nextFloat() * (model.view.getHeight() - sigma), id, true)) {
+				a = model.atom[model.numberOfAtoms - 1];
+				a.setVx(rtemp);
+			}
 			break;
 		case Wall.EAST:
-			if (model.view.insertAnAtom(model.view.getWidth() - sigma * 0.5 - 2, sigma * 0.5 + MDModel.RANDOM.nextFloat() * (model.view.getHeight() - sigma), id, true))
-				model.atom[model.numberOfAtoms - 1].setVx(-rtemp);
+			if (model.view.insertAnAtom(model.view.getWidth() - sigma * 0.5 - 2, sigma * 0.5 + MDModel.RANDOM.nextFloat() * (model.view.getHeight() - sigma), id, true)) {
+				a = model.atom[model.numberOfAtoms - 1];
+				a.setVx(-rtemp);
+			}
 			break;
 		case Wall.SOUTH:
-			if (model.view.insertAnAtom(sigma * 0.5 + MDModel.RANDOM.nextFloat() * (model.view.getWidth() - sigma), model.view.getHeight() - sigma * 0.5 - 2, id, true))
-				model.atom[model.numberOfAtoms - 1].setVy(-rtemp);
+			if (model.view.insertAnAtom(sigma * 0.5 + MDModel.RANDOM.nextFloat() * (model.view.getWidth() - sigma), model.view.getHeight() - sigma * 0.5 - 2, id, true)) {
+				a = model.atom[model.numberOfAtoms - 1];
+				a.setVy(-rtemp);
+			}
 			break;
 		case Wall.NORTH:
-			if (model.view.insertAnAtom(sigma * 0.5 + MDModel.RANDOM.nextFloat() * (model.view.getWidth() - sigma), sigma * 0.5 + 2, id, true))
-				model.atom[model.numberOfAtoms - 1].setVy(rtemp);
+			if (model.view.insertAnAtom(sigma * 0.5 + MDModel.RANDOM.nextFloat() * (model.view.getWidth() - sigma), sigma * 0.5 + 2, id, true)) {
+				a = model.atom[model.numberOfAtoms - 1];
+				a.setVy(rtemp);
+			}
 			break;
 		}
+		if (flowAtomsMarked && a != null)
+			a.setMarked(true);
 	}
 
 	public String getName() {
