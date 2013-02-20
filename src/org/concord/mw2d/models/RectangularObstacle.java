@@ -57,6 +57,8 @@ import org.concord.mw2d.ViewAttribute;
 /**
  * How we set 2D pressure unit from impulse: 2mv/dt? Imagine it were 3D, first we convert the internal units to the standard unit: 10^-11 m/10^-15 s * (10^-3 kg/(6*10^23)) / (10^-22 m^2 * 10^-15 s). This factor evaluates to 1.667*10^14 kg*m/s^2/m^2 = 1.667*10^14 Pa, which is too big. But the following two factors must be taken into account: (1) To convert 2D measurement into 3D one, imagine an extrusion of a slab that is approximately 10 angstrom thick, but not 0.1 angstrom thick as is in the above conversion. Molecules collide with the obstacle in such a thin slab as frequently as in the 2D case. This will reduce the factor 100 times to 1.667*10^12 Pa, which is 1.667*10^7 bar. (2) We assume that the collision between a molecule and the obstacle is perfectly rigid, which means that the impact energy is 100% elastic. In reality, the surface of the obstacle is composed of atoms that also interact with the incoming molecule. Assume the inelasticity makes the pressure conversion rate to be
  * as low as 10% (what a fake!). Then we arrive at 1.667*10^6 bar. This is the factor used to convert the computed pressure to the common unit: bar.
+ * 
+ * @author Charles Xie
  */
 
 public class RectangularObstacle extends Rectangle2D.Double implements Obstacle {
@@ -1433,9 +1435,10 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 		}
 
 		if (cumulativeFaceCollisions != null && !cumulativeFaceCollisions.isEmpty()) {
-			g.setColor(Color.yellow);
 			for (FaceCollision fc : cumulativeFaceCollisions) {
 				boolean fresh = model.job.getIndexOfStep() - fc.getIndexOfStep() < hitTraceInterval / 10;
+				double mass = 1000 * model.getParticle(fc.getParticleIndex()).getMass();
+				g.setColor(model.getParticle(fc.getParticleIndex()).getColor());
 				switch (fc.getFace()) {
 				case WEST:
 					int rx = (int) x;
@@ -1446,9 +1449,9 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 						g.drawLine(rx - 6, ry + 8, rx, ry + 3);
 					} else {
 						if (showCumulativeHits) {
-							g.drawLine((int) (rx - 8 - Math.abs(50 * fc.getVx())), ry, rx, ry);
-							g.drawLine(rx - 2, ry - 2, rx, ry);
-							g.drawLine(rx - 2, ry + 2, rx, ry);
+							g.drawLine((int) (rx - 8 - Math.abs(mass * fc.getVx())), ry, rx, ry);
+							g.drawLine(rx - 3, ry - 3, rx, ry);
+							g.drawLine(rx - 3, ry + 3, rx, ry);
 						}
 					}
 					break;
@@ -1461,9 +1464,9 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 						g.drawLine(rx + 2, ry + 4, rx, ry);
 					} else {
 						if (showCumulativeHits) {
-							g.drawLine(rx, ry, (int) (rx + 8 + Math.abs(50 * fc.getVx())), ry);
-							g.drawLine(rx, ry - 2, rx + 2, ry);
-							g.drawLine(rx, ry + 2, rx + 2, ry);
+							g.drawLine(rx, ry, (int) (rx + 8 + Math.abs(mass * fc.getVx())), ry);
+							g.drawLine(rx, ry - 3, rx + 3, ry);
+							g.drawLine(rx, ry + 3, rx + 3, ry);
 						}
 					}
 					break;
@@ -1476,9 +1479,9 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 						g.drawLine(rx + 4, ry - 2, rx, ry);
 					} else {
 						if (showCumulativeHits) {
-							g.drawLine(rx, (int) (ry - 8 - Math.abs(50 * fc.getVx())), rx, ry);
-							g.drawLine(rx - 2, ry - 2, rx, ry);
-							g.drawLine(rx + 2, ry - 2, rx, ry);
+							g.drawLine(rx, (int) (ry - 8 - Math.abs(mass * fc.getVx())), rx, ry);
+							g.drawLine(rx - 3, ry - 3, rx, ry);
+							g.drawLine(rx + 3, ry - 3, rx, ry);
 						}
 					}
 					break;
@@ -1491,9 +1494,9 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 						g.drawLine(rx + 4, ry + 2, rx, ry);
 					} else {
 						if (showCumulativeHits) {
-							g.drawLine(rx, (int) (ry + 8 + Math.abs(50 * fc.getVx())), rx, ry);
-							g.drawLine(rx - 2, ry + 2, rx, ry);
-							g.drawLine(rx + 2, ry + 2, rx, ry);
+							g.drawLine(rx, (int) (ry + 8 + Math.abs(mass * fc.getVx())), rx, ry);
+							g.drawLine(rx - 3, ry + 3, rx, ry);
+							g.drawLine(rx + 3, ry + 3, rx, ry);
 						}
 					}
 					break;

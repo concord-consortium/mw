@@ -141,8 +141,7 @@ class Eval2D extends AbstractEval {
 					model.notifyModelListeners(new ModelEvent(model, ModelEvent.SCRIPT_END));
 				if (model.initializationScriptToRun) {
 					model.setInitializationScriptToRun(false);
-				}
-				else {
+				} else {
 					notifyChange();
 				}
 			}
@@ -153,8 +152,7 @@ class Eval2D extends AbstractEval {
 		if (status == ScriptEvent.FAILED) {
 			notifyScriptListener(new ScriptEvent(model, status, "Aborted: " + description));
 			stop();
-		}
-		else {
+		} else {
 			notifyScriptListener(new ScriptEvent(model, status, description));
 		}
 	}
@@ -174,8 +172,7 @@ class Eval2D extends AbstractEval {
 			Loadable task = model.getJob().getTaskByName(taskName);
 			if (task == null) {
 				out(ScriptEvent.FAILED, "Task not found: " + taskName);
-			}
-			else {
+			} else {
 				list.add(task.getScript());
 			}
 			j++;
@@ -296,8 +293,7 @@ class Eval2D extends AbstractEval {
 					s = replaceAll(s, "%particle\\[" + v + "\\]\\.theta", p.theta);
 					s = replaceAll(s, "%particle\\[" + v + "\\]\\.omega", p.omega);
 					s = replaceAll(s, "%particle\\[" + v + "\\]\\.alpha", p.alpha);
-				}
-				else {
+				} else {
 					s = replaceAll(s, "%particle\\[" + v + "\\]\\.rx", p.rQ.getQueue1().getData(frame) * R_CONVERTER);
 					s = replaceAll(s, "%particle\\[" + v + "\\]\\.ry", p.rQ.getQueue2().getData(frame) * R_CONVERTER);
 					s = replaceAll(s, "%particle\\[" + v + "\\]\\.vx", p.vQ.getQueue1().getData(frame) * V_CONVERTER);
@@ -308,8 +304,7 @@ class Eval2D extends AbstractEval {
 					s = replaceAll(s, "%particle\\[" + v + "\\]\\.omega", p.omegaQ.getData(frame));
 					s = replaceAll(s, "%particle\\[" + v + "\\]\\.alpha", p.alphaQ.getData(frame));
 				}
-			}
-			else if (model instanceof AtomicModel) {
+			} else if (model instanceof AtomicModel) {
 				Atom a = ((AtomicModel) model).atom[i];
 				s = replaceAll(s, "%particle\\[" + v + "\\]\\.charge", a.charge);
 				s = replaceAll(s, "%particle\\[" + v + "\\]\\.friction", a.friction);
@@ -325,8 +320,7 @@ class Eval2D extends AbstractEval {
 					s = replaceAll(s, "%particle\\[" + v + "\\]\\.vy", a.vy * V_CONVERTER);
 					s = replaceAll(s, "%particle\\[" + v + "\\]\\.ax", a.ax * A_CONVERTER);
 					s = replaceAll(s, "%particle\\[" + v + "\\]\\.ay", a.ay * A_CONVERTER);
-				}
-				else {
+				} else {
 					s = replaceAll(s, "%particle\\[" + v + "\\]\\.rx", a.rQ.getQueue1().getData(frame) * R_CONVERTER);
 					s = replaceAll(s, "%particle\\[" + v + "\\]\\.ry", a.rQ.getQueue2().getData(frame) * R_CONVERTER);
 					s = replaceAll(s, "%particle\\[" + v + "\\]\\.vx", a.vQ.getQueue1().getData(frame) * V_CONVERTER);
@@ -373,8 +367,7 @@ class Eval2D extends AbstractEval {
 					s = replaceAll(s, "%atom\\[" + v + "\\]\\.vy", a.vy * V_CONVERTER);
 					s = replaceAll(s, "%atom\\[" + v + "\\]\\.ax", a.ax * A_CONVERTER);
 					s = replaceAll(s, "%atom\\[" + v + "\\]\\.ay", a.ay * A_CONVERTER);
-				}
-				else {
+				} else {
 					s = replaceAll(s, "%atom\\[" + v + "\\]\\.rx", a.rQ.getQueue1().getData(frame) * R_CONVERTER);
 					s = replaceAll(s, "%atom\\[" + v + "\\]\\.ry", a.rQ.getQueue2().getData(frame) * R_CONVERTER);
 					s = replaceAll(s, "%atom\\[" + v + "\\]\\.vx", a.vQ.getQueue1().getData(frame) * V_CONVERTER);
@@ -504,8 +497,7 @@ class Eval2D extends AbstractEval {
 				s = replaceAll(s, "%obstacle\\[" + v + "\\]\\.y", o.y * R_CONVERTER);
 				s = replaceAll(s, "%obstacle\\[" + v + "\\]\\.vx", o.vx * V_CONVERTER);
 				s = replaceAll(s, "%obstacle\\[" + v + "\\]\\.vy", o.vy * V_CONVERTER);
-			}
-			else {
+			} else {
 				s = replaceAll(s, "%obstacle\\[" + v + "\\]\\.x", o.rxryQ.getQueue1().getData(frame) * R_CONVERTER);
 				s = replaceAll(s, "%obstacle\\[" + v + "\\]\\.y", o.rxryQ.getQueue2().getData(frame) * R_CONVERTER);
 				s = replaceAll(s, "%obstacle\\[" + v + "\\]\\.vx", o.vxvyQ.getQueue1().getData(frame) * V_CONVERTER);
@@ -561,8 +553,7 @@ class Eval2D extends AbstractEval {
 				Point2D com = mol.getCenterOfMass2D();
 				s = replaceAll(s, "%molecule\\[" + v + "\\]\\.x", com.getX() * R_CONVERTER);
 				s = replaceAll(s, "%molecule\\[" + v + "\\]\\.y", com.getY() * R_CONVERTER);
-			}
-			else {
+			} else {
 				double xc = 0, yc = 0;
 				Atom at = null;
 				for (int k = 0; k < nmol; k++) {
@@ -852,9 +843,7 @@ class Eval2D extends AbstractEval {
 	}
 
 	/*
-	 * the thread that calls this method goes to "wait" until it is notified. When it returns, it will evaluate the
-	 * script. If you want to do a different script, pass in through the script setter. The "stop" flag indicates the
-	 * end of executing the current script.
+	 * the thread that calls this method goes to "wait" until it is notified. When it returns, it will evaluate the script. If you want to do a different script, pass in through the script setter. The "stop" flag indicates the end of executing the current script.
 	 */
 	void evaluate() throws InterruptedException {
 		while (true) {
@@ -899,15 +888,13 @@ class Eval2D extends AbstractEval {
 		String s = null;
 		try {
 			s = scriptQueue.removeFirst();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			s = null;
 		}
 		if (s != null) {
 			setScript(s);
 			evaluate2();
-		}
-		else {
+		} else {
 			stop();
 			if (view instanceof AtomisticView) {
 				AtomisticView av = (AtomisticView) view;
@@ -940,8 +927,7 @@ class Eval2D extends AbstractEval {
 						return false;
 					}
 					evaluateExternalClause(s);
-				}
-				else {
+				} else {
 					evaluateExternalClause(readText(address, view));
 				}
 			}
@@ -980,8 +966,7 @@ class Eval2D extends AbstractEval {
 		if (!matcher.find()) {
 			try {
 				ci = replaceVariablesWithValues(useDefinitions(ci));
-			}
-			catch (EvaluationException ex) {
+			} catch (EvaluationException ex) {
 				ex.printStackTrace();
 				return false;
 			}
@@ -1220,13 +1205,11 @@ class Eval2D extends AbstractEval {
 				if (!slc.endsWith("</html>")) {
 					info = info + "</html>";
 				}
-			}
-			else {
+			} else {
 				matcher = Compiler.HTML_EXTENSION.matcher(s);
 				if (matcher.find()) {
 					info = readText(s, view);
-				}
-				else {
+				} else {
 					info = "Unknown text";
 				}
 			}
@@ -1320,8 +1303,7 @@ class Eval2D extends AbstractEval {
 			// FIXME: Why do we need to do this to make "delay modeltime" to work with a prior "run" command?
 			try {
 				Thread.sleep(100);
-			}
-			catch (InterruptedException e) {
+			} catch (InterruptedException e) {
 			}
 			// must be invoked later for it to work properly, as it does from a button
 			EventQueue.invokeLater(new Runnable() {
@@ -1369,8 +1351,7 @@ class Eval2D extends AbstractEval {
 				});
 				return true;
 			}
-		}
-		else if (strLC.startsWith("reset")) {
+		} else if (strLC.startsWith("reset")) {
 			if ("reset".equals(strLC)) { // reset
 				evaluateLoadClause((String) model.getProperty("url"));
 				EventQueue.invokeLater(new Runnable() {
@@ -1387,8 +1368,7 @@ class Eval2D extends AbstractEval {
 				readdMouseAndKeyScripts(model.getInitializationScript());
 				return true;
 			}
-		}
-		else if (strLC.startsWith("snapshot")) {
+		} else if (strLC.startsWith("snapshot")) {
 			if ("snapshot".equals(strLC)) { // snapshot
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
@@ -1446,8 +1426,7 @@ class Eval2D extends AbstractEval {
 			BitSet selection = null;
 			if (LOGICAL_OPERATOR.matcher(str).find()) { // logical expressions
 				selection = parseLogicalExpression(str, BY_IMAGE);
-			}
-			else {
+			} else {
 				selection = selectImages(str);
 			}
 			if (!getAsTask())
@@ -1461,8 +1440,7 @@ class Eval2D extends AbstractEval {
 			BitSet selection = null;
 			if (LOGICAL_OPERATOR.matcher(str).find()) { // logical expressions
 				selection = parseLogicalExpression(str, BY_TEXTBOX);
-			}
-			else {
+			} else {
 				selection = selectTextBoxes(str);
 			}
 			if (!getAsTask())
@@ -1476,8 +1454,7 @@ class Eval2D extends AbstractEval {
 			BitSet selection = null;
 			if (LOGICAL_OPERATOR.matcher(str).find()) { // logical expressions
 				selection = parseLogicalExpression(str, BY_LINE);
-			}
-			else {
+			} else {
 				selection = selectLines(str);
 			}
 			if (!getAsTask())
@@ -1491,8 +1468,7 @@ class Eval2D extends AbstractEval {
 			BitSet selection = null;
 			if (LOGICAL_OPERATOR.matcher(str).find()) { // logical expressions
 				selection = parseLogicalExpression(str, BY_RECTANGLE);
-			}
-			else {
+			} else {
 				selection = selectRectangles(str);
 			}
 			if (!getAsTask())
@@ -1506,8 +1482,7 @@ class Eval2D extends AbstractEval {
 			BitSet selection = null;
 			if (LOGICAL_OPERATOR.matcher(str).find()) { // logical expressions
 				selection = parseLogicalExpression(str, BY_TRIANGLE);
-			}
-			else {
+			} else {
 				selection = selectTriangles(str);
 			}
 			if (!getAsTask())
@@ -1521,8 +1496,7 @@ class Eval2D extends AbstractEval {
 			BitSet selection = null;
 			if (LOGICAL_OPERATOR.matcher(str).find()) { // logical expressions
 				selection = parseLogicalExpression(str, BY_ELLIPSE);
-			}
-			else {
+			} else {
 				selection = selectEllipses(str);
 			}
 			if (!getAsTask())
@@ -1536,8 +1510,7 @@ class Eval2D extends AbstractEval {
 			String str = clause.substring(matcher.end()).trim();
 			if (LOGICAL_OPERATOR.matcher(str).find()) { // logical expressions
 				selection = parseLogicalExpression(str, BY_ATOM);
-			}
-			else {
+			} else {
 				selection = selectParticles(str);
 			}
 			if (!getAsTask())
@@ -1553,8 +1526,7 @@ class Eval2D extends AbstractEval {
 				BitSet selection = null;
 				if (LOGICAL_OPERATOR.matcher(str).find()) {// logical expressions
 					selection = parseLogicalExpression(str, BY_RBOND);
-				}
-				else {
+				} else {
 					selection = selectRadialBonds(str);
 				}
 				if (!getAsTask())
@@ -1568,8 +1540,7 @@ class Eval2D extends AbstractEval {
 				BitSet selection = null;
 				if (LOGICAL_OPERATOR.matcher(str).find()) {// logical expressions
 					selection = parseLogicalExpression(str, BY_ABOND);
-				}
-				else {
+				} else {
 					selection = selectAngularBonds(str);
 				}
 				if (!getAsTask())
@@ -1583,8 +1554,7 @@ class Eval2D extends AbstractEval {
 				BitSet selection = null;
 				if (LOGICAL_OPERATOR.matcher(str).find()) { // logical expressions
 					selection = parseLogicalExpression(str, BY_MOLECULE);
-				}
-				else {
+				} else {
 					selection = selectMolecules(str);
 				}
 				if (!getAsTask())
@@ -1598,8 +1568,7 @@ class Eval2D extends AbstractEval {
 				BitSet selection = null;
 				if (LOGICAL_OPERATOR.matcher(str).find()) { // logical expressions
 					selection = parseLogicalExpression(str, BY_OBSTACLE);
-				}
-				else {
+				} else {
 					selection = selectObstacles(str);
 				}
 				if (!getAsTask())
@@ -1613,8 +1582,7 @@ class Eval2D extends AbstractEval {
 				BitSet selection = null;
 				if (LOGICAL_OPERATOR.matcher(str).find()) {// logical expressions
 					selection = parseLogicalExpression(str, BY_ELEMENT);
-				}
-				else {
+				} else {
 					selection = selectElements(str);
 				}
 				if (!getAsTask())
@@ -1636,8 +1604,7 @@ class Eval2D extends AbstractEval {
 				return false;
 			view.setBackground(c);
 			view.setFillMode(new FillMode.ColorFill(c));
-		}
-		else if (str.toLowerCase().startsWith("image")) {
+		} else if (str.toLowerCase().startsWith("image")) {
 			String s = str.substring(5).trim();
 			Matcher matcher = IMAGE_EXTENSION.matcher(s);
 			if (matcher.find()) {
@@ -1656,14 +1623,12 @@ class Eval2D extends AbstractEval {
 				if (FileUtilities.isRemote(address)) {
 					try {
 						icon = ConnectionManager.sharedInstance().loadImage(new URL(FileUtilities.httpEncode(address)));
-					}
-					catch (MalformedURLException e) {
+					} catch (MalformedURLException e) {
 						e.printStackTrace();
 						view.setBackgroundImage(null);
 						return false;
 					}
-				}
-				else {
+				} else {
 					File file = new File(address);
 					if (!file.exists())
 						return false;
@@ -1725,12 +1690,10 @@ class Eval2D extends AbstractEval {
 			if (p.isSelected()) {
 				if (c < ZERO) {
 					p.setRestraint(null);
-				}
-				else {
+				} else {
 					if (p.restraint == null) {
 						p.setRestraint(new PointRestraint(c, p.rx, p.ry));
-					}
-					else {
+					} else {
 						p.restraint.k = c;
 					}
 				}
@@ -1821,12 +1784,10 @@ class Eval2D extends AbstractEval {
 				MoleculeCollection.sort(mm);
 				view.repaint();
 			}
-		}
-		else {
+		} else {
 			if (x > ZERO) {
 				rb.setBondStrength(x);
-			}
-			else {
+			} else {
 				mm.bonds.remove(rb);
 				mm.notifyBondChangeListeners();
 				MoleculeCollection.sort(mm);
@@ -1892,13 +1853,11 @@ class Eval2D extends AbstractEval {
 				mm.bends.add(ab);
 				ab.setSelected(true);
 			}
-		}
-		else {
+		} else {
 			if (x > ZERO) {
 				ab.setBondStrength(x);
 				ab.setSelected(true);
-			}
-			else {
+			} else {
 				mm.bends.remove(ab);
 			}
 		}
@@ -1927,8 +1886,7 @@ class Eval2D extends AbstractEval {
 				direction = s[1].trim();
 				vmax = Float.valueOf(s[2].trim()).floatValue();
 				id = Float.valueOf(s[3].trim()).byteValue();
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				out(ScriptEvent.FAILED, "Script error at: " + str + "\n" + e);
 				return false;
 			}
@@ -1941,8 +1899,7 @@ class Eval2D extends AbstractEval {
 						return false;
 					par[n] = new Mvd.Parameter(scalar, direction, vmax, id, area);
 				}
-			}
-			else {
+			} else {
 				par[n] = new Mvd.Parameter(scalar, direction, vmax, id, model.boundary);
 			}
 		}
@@ -1969,8 +1926,7 @@ class Eval2D extends AbstractEval {
 				funy = s[1];
 				length = Float.valueOf(s[2].trim()).shortValue();
 				id = Float.valueOf(s[3].trim()).byteValue();
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				out(ScriptEvent.FAILED, "Script error at: " + str + "\n" + e);
 				return false;
 			}
@@ -1983,8 +1939,7 @@ class Eval2D extends AbstractEval {
 						return false;
 					par[n] = new Tcf.Parameter(funx, funy, id, length, area);
 				}
-			}
-			else {
+			} else {
 				par[n] = new Tcf.Parameter(funx, funy, id, length, model.boundary);
 			}
 		}
@@ -2011,13 +1966,11 @@ class Eval2D extends AbstractEval {
 					id1 = Float.valueOf(s[0].trim()).byteValue();
 					id2 = Float.valueOf(s[1].trim()).byteValue();
 					length = Math.round((Float.valueOf(s[2].trim()) * IR_CONVERTER));
-				}
-				catch (Exception e) {
+				} catch (Exception e) {
 					out(ScriptEvent.FAILED, "Script error at: " + str + "\n" + e);
 					return false;
 				}
-			}
-			else {
+			} else {
 				out(ScriptEvent.FAILED, "Unrecognized clause: " + clause);
 				return false;
 			}
@@ -2030,8 +1983,7 @@ class Eval2D extends AbstractEval {
 						return false;
 					par[n] = new Pcf.Parameter(id1, id2, length, area);
 				}
-			}
-			else {
+			} else {
 				par[n] = new Pcf.Parameter(id1, id2, length, model.boundary);
 			}
 		}
@@ -2058,8 +2010,7 @@ class Eval2D extends AbstractEval {
 		}
 		if (model.getTapePointer() > 0) {
 			((AtomicModel) model).showTimeSeries(par);
-		}
-		else {
+		} else {
 			short[] count = new short[par.length];
 			boolean b = false;
 			for (int x = 0; x < par.length; x++) {
@@ -2149,8 +2100,7 @@ class Eval2D extends AbstractEval {
 		case 1:
 			try {
 				i = Integer.parseInt(t[0]);
-			}
-			catch (NumberFormatException e) {
+			} catch (NumberFormatException e) {
 				out(ScriptEvent.FAILED, t[0] + " cannot be parsed as an integer.");
 				return null;
 			}
@@ -2224,18 +2174,18 @@ class Eval2D extends AbstractEval {
 				out(ScriptEvent.FAILED, "Cannot parse : " + t[i]);
 				return null;
 			}
-			x[i - 1] = (float) z * IR_CONVERTER;
+			x[i - 1] = (float) z;
 		}
 		t[0] = t[0].trim();
 		List<Integer> result = null;
 		if (t[0].equalsIgnoreCase("PARTICLE") || t[0].equalsIgnoreCase("ATOM")) {
-			result = getParticlesWithin(x[0], x[1], x[2]);
-		}
-		else if (t[0].equalsIgnoreCase("RECTANGLE")) {
+			result = getParticlesWithin(x[0] * IR_CONVERTER, x[1] * IR_CONVERTER, x[2] * IR_CONVERTER);
+		} else if (t[0].equalsIgnoreCase("RECTANGLE")) {
 			result = getRectanglesWithin(x[0], x[1], x[2]);
-		}
-		else if (t[0].equalsIgnoreCase("TRIANGLE")) {
+		} else if (t[0].equalsIgnoreCase("TRIANGLE")) {
 			result = getTrianglesWithin(x[0], x[1], x[2]);
+		} else if (t[0].equalsIgnoreCase("TEXTBOX")) {
+			result = getTextBoxesWithin(x[0], x[1], x[2]);
 		}
 		if (result == null || result.isEmpty())
 			return null;
@@ -2288,6 +2238,21 @@ class Eval2D extends AbstractEval {
 				list.add(i);
 			}
 		}
+		return list;
+	}
+
+	private List<Integer> getTextBoxesWithin(float x, float y, float r) {
+		TextBoxComponent[] tb = view.getTextBoxes();
+		if (tb == null || tb.length == 0)
+			return null;
+		List<Integer> list = new ArrayList<Integer>();
+		Rectangle2D.Float rect = new Rectangle2D.Float(x - r, y - r, 2 * r, 2 * r);
+		for (int i = 0; i < tb.length; i++) {
+			if (tb[i].getBounds().intersects(rect)) {
+				list.add(i);
+			}
+		}
+		System.out.println(x + "," + y + "," + r);
 		return list;
 	}
 
@@ -2347,8 +2312,7 @@ class Eval2D extends AbstractEval {
 								imin = k;
 							}
 						}
-					}
-					else if (p instanceof GayBerneParticle) {
+					} else if (p instanceof GayBerneParticle) {
 						r = distanceSquare(p.rx - x[1], p.ry - x[2]);
 						if (r < dmin) {
 							dmin = r;
@@ -2380,8 +2344,7 @@ class Eval2D extends AbstractEval {
 								imin = k;
 							}
 						}
-					}
-					else if (p instanceof GayBerneParticle) {
+					} else if (p instanceof GayBerneParticle) {
 						r = distanceSquare(p.rx - x[1], p.ry - x[2]);
 						if (r < x[3] && r < dmin) {
 							dmin = r;
@@ -2414,8 +2377,7 @@ class Eval2D extends AbstractEval {
 								imin = k;
 							}
 						}
-					}
-					else if (p instanceof GayBerneParticle) {
+					} else if (p instanceof GayBerneParticle) {
 						r = distanceSquare(p.rx - x[1], p.ry - x[2]);
 						if (r < dmin) {
 							dmin = r;
@@ -3081,8 +3043,7 @@ class Eval2D extends AbstractEval {
 				if (Math.abs(custom - model.getParticle(i).custom) < ZERO)
 					return "" + i;
 			}
-		}
-		else if ("IMAGE".equalsIgnoreCase(t[0])) {
+		} else if ("IMAGE".equalsIgnoreCase(t[0])) {
 			int m = view.getNumberOfInstances(ImageComponent.class);
 			if (m <= 0)
 				return "-1";
@@ -3090,8 +3051,7 @@ class Eval2D extends AbstractEval {
 				if (Math.abs(custom - view.getImage(i).custom) < ZERO)
 					return "" + i;
 			}
-		}
-		else if ("OBSTACLE".equalsIgnoreCase(t[0])) {
+		} else if ("OBSTACLE".equalsIgnoreCase(t[0])) {
 			if (model instanceof AtomicModel) {
 				AtomicModel am = (AtomicModel) model;
 				int m = am.obstacles.size();
@@ -3102,8 +3062,7 @@ class Eval2D extends AbstractEval {
 						return "" + i;
 				}
 			}
-		}
-		else if ("RADIAL_BOND".equalsIgnoreCase(t[0])) {
+		} else if ("RADIAL_BOND".equalsIgnoreCase(t[0])) {
 			if (model instanceof MolecularModel) {
 				MolecularModel mm = (MolecularModel) model;
 				int m = mm.bonds.size();
@@ -3134,8 +3093,7 @@ class Eval2D extends AbstractEval {
 		case 2:
 			try {
 				i = Integer.parseInt(t[1].trim());
-			}
-			catch (NumberFormatException e) {
+			} catch (NumberFormatException e) {
 				out(ScriptEvent.FAILED, t[1] + " cannot be parsed as an integer.");
 				return null;
 			}
@@ -3187,8 +3145,7 @@ class Eval2D extends AbstractEval {
 		case 1:
 			try {
 				i = Integer.parseInt(t[0]);
-			}
-			catch (NumberFormatException e) {
+			} catch (NumberFormatException e) {
 				out(ScriptEvent.FAILED, t[0] + " cannot be parsed as an integer.");
 				return null;
 			}
@@ -3296,8 +3253,7 @@ class Eval2D extends AbstractEval {
 			y = Float.valueOf(s[1].trim()).floatValue() * IR_CONVERTER;
 			w = Float.valueOf(s[2].trim()).floatValue() * IR_CONVERTER;
 			h = Float.valueOf(s[3].trim()).floatValue() * IR_CONVERTER;
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			out(ScriptEvent.FAILED, "Within clause error at: " + within + "\n" + e);
 			return null;
 		}
@@ -3315,8 +3271,7 @@ class Eval2D extends AbstractEval {
 			try {
 				start = Byte.valueOf(s[0].trim()).byteValue();
 				end = Byte.valueOf(s[1].trim()).byteValue();
-			}
-			catch (NumberFormatException e) {
+			} catch (NumberFormatException e) {
 				out(ScriptEvent.FAILED, "Element limits must be integers (<256): " + str);
 				return null;
 			}
@@ -3337,8 +3292,7 @@ class Eval2D extends AbstractEval {
 				try {
 					for (int i = 0; i < s.length; i++)
 						elements[i] = Byte.valueOf(s[i].trim()).byteValue();
-				}
-				catch (NumberFormatException e) {
+				} catch (NumberFormatException e) {
 					out(ScriptEvent.FAILED, "Element types must be integers (<256): " + str);
 					return null;
 				}
@@ -3351,8 +3305,7 @@ class Eval2D extends AbstractEval {
 				byte id = 0;
 				try {
 					id = Byte.valueOf(str.substring(0, matcher.end()).trim()).byteValue();
-				}
-				catch (NumberFormatException e) {
+				} catch (NumberFormatException e) {
 					out(ScriptEvent.FAILED, "Element type must be an integer (<256): " + str);
 					return null;
 				}
@@ -3514,8 +3467,7 @@ class Eval2D extends AbstractEval {
 				av.repaint();
 				return true;
 			}
-		}
-		else if (model instanceof MesoModel) {
+		} else if (model instanceof MesoModel) {
 			result = parseOnOff("dipole", s);
 			if (result != -1) {
 				((MesoView) view).setDrawDipole(result == ON);
@@ -3532,8 +3484,7 @@ class Eval2D extends AbstractEval {
 		if (str.equals("dna") || str.equals("protein")) { // ugly handling of dna/protein part that runs outside MDModel
 			model.containerScriptCallback.setScript("get " + str);
 			model.containerScriptCallback.execute();
-		}
-		else {
+		} else {
 			model.putProperty(str, useDefinitions(str));
 		}
 		return true;
@@ -3583,15 +3534,12 @@ class Eval2D extends AbstractEval {
 			if ("on".equalsIgnoreCase(s[1]) || "off".equalsIgnoreCase(s[1])) {
 				if ("visible".equalsIgnoreCase(s[0])) {
 					setParticleField(s2, s[0], "on".equalsIgnoreCase(s[1]));
-				}
-				else if ("movable".equalsIgnoreCase(s[0])) {
+				} else if ("movable".equalsIgnoreCase(s[0])) {
+					setParticleField(s2, s[0], "on".equalsIgnoreCase(s[1]));
+				} else if ("draggable".equalsIgnoreCase(s[0])) {
 					setParticleField(s2, s[0], "on".equalsIgnoreCase(s[1]));
 				}
-				else if ("draggable".equalsIgnoreCase(s[0])) {
-					setParticleField(s2, s[0], "on".equalsIgnoreCase(s[1]));
-				}
-			}
-			else {
+			} else {
 				double x = parseMathExpression(s[1]);
 				if (Double.isNaN(x))
 					return false;
@@ -3618,15 +3566,12 @@ class Eval2D extends AbstractEval {
 			if ("on".equalsIgnoreCase(s[1]) || "off".equalsIgnoreCase(s[1])) {
 				if ("visible".equalsIgnoreCase(s[0])) {
 					setParticleField(s2, s[0], "on".equalsIgnoreCase(s[1]));
-				}
-				else if ("movable".equalsIgnoreCase(s[0])) {
+				} else if ("movable".equalsIgnoreCase(s[0])) {
+					setParticleField(s2, s[0], "on".equalsIgnoreCase(s[1]));
+				} else if ("draggable".equalsIgnoreCase(s[0])) {
 					setParticleField(s2, s[0], "on".equalsIgnoreCase(s[1]));
 				}
-				else if ("draggable".equalsIgnoreCase(s[0])) {
-					setParticleField(s2, s[0], "on".equalsIgnoreCase(s[1]));
-				}
-			}
-			else {
+			} else {
 				double x = parseMathExpression(s[1]);
 				if (Double.isNaN(x))
 					return false;
@@ -3652,8 +3597,7 @@ class Eval2D extends AbstractEval {
 			}
 			if ("visible".equalsIgnoreCase(s[0]) || "style".equalsIgnoreCase(s[0]) || "torquetype".equalsIgnoreCase(s[0])) {
 				setRbondField(s2, s[0], s[1]);
-			}
-			else {
+			} else {
 				double x = parseMathExpression(s[1]);
 				if (Double.isNaN(x))
 					return false;
@@ -3734,36 +3678,28 @@ class Eval2D extends AbstractEval {
 						s[k] = s[k].trim().toLowerCase().intern();
 						if (s[k] == "nt") {
 							obs.setPermeable((byte) 0, true);
-						}
-						else if (s[k] == "pl") {
+						} else if (s[k] == "pl") {
 							obs.setPermeable((byte) 1, true);
-						}
-						else if (s[k] == "ws") {
+						} else if (s[k] == "ws") {
 							obs.setPermeable((byte) 2, true);
-						}
-						else if (s[k] == "ck") {
+						} else if (s[k] == "ck") {
 							obs.setPermeable((byte) 3, true);
-						}
-						else if (s[k] == "photon") {
+						} else if (s[k] == "photon") {
 							obs.setPhotonPermeable(true);
-						}
-						else if (s[k] == "electron") {
+						} else if (s[k] == "electron") {
 							obs.setElectronPermeable(true);
 						}
 					}
 				}
-			}
-			else {
+			} else {
 				if (s.length == 2) {
 					if ("on".equalsIgnoreCase(s[1]) || "off".equalsIgnoreCase(s[1])) {
 						if ("visible".equalsIgnoreCase(s[0])) {
 							setObstacleField(str.substring(0, end - 1), s[0], "on".equalsIgnoreCase(s[1]));
-						}
-						else if ("draggable".equalsIgnoreCase(s[0])) {
+						} else if ("draggable".equalsIgnoreCase(s[0])) {
 							setObstacleField(str.substring(0, end - 1), s[0], "on".equalsIgnoreCase(s[1]));
 						}
-					}
-					else {
+					} else {
 						double x = parseMathExpression(s[1]);
 						if (Double.isNaN(x))
 							return false;
@@ -3786,8 +3722,7 @@ class Eval2D extends AbstractEval {
 					if (Double.isNaN(x))
 						return false;
 					mm.getLightSource().setAngleOfIncidence((float) Math.toRadians(x));
-				}
-				else if (t.startsWith(".wavelength")) {
+				} else if (t.startsWith(".wavelength")) {
 					t = t.substring(11).trim();
 					double x = parseMathExpression(t);
 					if (Double.isNaN(x))
@@ -3820,8 +3755,7 @@ class Eval2D extends AbstractEval {
 			if (s.length < 2) {
 				out(ScriptEvent.FAILED, "Argument error: " + str);
 				return false;
-			}
-			else if (s.length == 5) {
+			} else if (s.length == 5) {
 				s[1] += s[2] + s[3] + s[4];
 			}
 			setLineField(str.substring(0, end - 1), s[0], s[1]);
@@ -3836,8 +3770,7 @@ class Eval2D extends AbstractEval {
 			if (s.length < 2) {
 				out(ScriptEvent.FAILED, "Argument error: " + str);
 				return false;
-			}
-			else if (s.length == 5) {
+			} else if (s.length == 5) {
 				s[1] += s[2] + s[3] + s[4];
 			}
 			setRectangleField(str.substring(0, end - 1), s[0], s[1]);
@@ -3865,8 +3798,7 @@ class Eval2D extends AbstractEval {
 			if (s.length < 2) {
 				out(ScriptEvent.FAILED, "Argument error: " + str);
 				return false;
-			}
-			else if (s.length == 5) {
+			} else if (s.length == 5) {
 				s[1] += s[2] + s[3] + s[4];
 			}
 			setEllipseField(str.substring(0, end - 1), s[0], s[1]);
@@ -3901,22 +3833,18 @@ class Eval2D extends AbstractEval {
 				exp = evaluateTemperatureFunction(exp);
 				if (exp != null)
 					storeDefinition(isStatic, var, exp);
-			}
-			else if (exp.startsWith("kineticenergy(")) {
+			} else if (exp.startsWith("kineticenergy(")) {
 				exp = evaluateKineticEnergyFunction(exp);
 				if (exp != null)
 					storeDefinition(isStatic, var, exp);
-			}
-			else if (exp.startsWith("speed(")) {
+			} else if (exp.startsWith("speed(")) {
 				exp = evaluateSpeedFunction(exp);
 				if (exp != null)
 					storeDefinition(isStatic, var, exp);
-			}
-			else if (exp.startsWith("count(")) {
+			} else if (exp.startsWith("count(")) {
 				exp = evaluateCountFunction(exp);
 				storeDefinition(isStatic, var, exp != null ? exp : "0");
-			}
-			else if (exp.startsWith("within(")) {
+			} else if (exp.startsWith("within(")) {
 				removeDefinition(var);
 				String[] array = evaluateWithinFunction(exp);
 				if (array != null) {
@@ -3924,72 +3852,55 @@ class Eval2D extends AbstractEval {
 					for (int i = 0; i < array.length; i++) {
 						storeDefinition(isStatic, var + "[" + i + "]", array[i] != null ? array[i] : "-1");
 					}
-				}
-				else {
+				} else {
 					storeDefinition(isStatic, var + ".length", "0");
 				}
-			}
-			else if (exp.startsWith("nearest(")) {
+			} else if (exp.startsWith("nearest(")) {
 				exp = evaluateNearestParticleFunction(exp);
 				storeDefinition(isStatic, var, exp != null ? exp : "-1");
-			}
-			else if (exp.startsWith("nearestmolecule(")) {
+			} else if (exp.startsWith("nearestmolecule(")) {
 				exp = evaluateNearestMoleculeFunction(exp);
 				storeDefinition(isStatic, var, exp != null ? exp : "-1");
-			}
-			else if (exp.startsWith("nearesttoatom(")) {
+			} else if (exp.startsWith("nearesttoatom(")) {
 				exp = evaluateNearestToAtomFunction(exp);
 				storeDefinition(isStatic, var, exp != null ? exp : "-1");
-			}
-			else if (exp.startsWith("complementarytype(")) {
+			} else if (exp.startsWith("complementarytype(")) {
 				exp = evaluateComplementaryTypeFunction(exp);
 				storeDefinition(isStatic, var, exp != null ? exp : "-1");
-			}
-			else if (exp.startsWith("whichparticle(")) {
+			} else if (exp.startsWith("whichparticle(")) {
 				exp = evaluateWhichParticleFunction(exp);
 				storeDefinition(isStatic, var, exp != null ? exp : "-1");
-			}
-			else if (exp.startsWith("whichobstacle(")) {
+			} else if (exp.startsWith("whichobstacle(")) {
 				exp = evaluateWhichObstacleFunction(exp);
 				storeDefinition(isStatic, var, exp != null ? exp : "-1");
-			}
-			else if (exp.startsWith("whichrbond(")) {
+			} else if (exp.startsWith("whichrbond(")) {
 				exp = evaluateWhichRBondFunction(exp);
 				storeDefinition(isStatic, var, exp != null ? exp : "-1");
-			}
-			else if (exp.startsWith("countrbond(")) {
+			} else if (exp.startsWith("countrbond(")) {
 				exp = evaluateCountRBondFunction(exp);
 				storeDefinition(isStatic, var, exp != null ? exp : "0");
-			}
-			else if (exp.startsWith("whichabond(")) {
+			} else if (exp.startsWith("whichabond(")) {
 				exp = evaluateWhichABondFunction(exp);
 				storeDefinition(isStatic, var, exp != null ? exp : "-1");
-			}
-			else if (exp.startsWith("whichmolecule(")) {
+			} else if (exp.startsWith("whichmolecule(")) {
 				exp = evaluateWhichMoleculeFunction(exp);
 				storeDefinition(isStatic, var, exp != null ? exp : "-1");
-			}
-			else if (exp.startsWith("atomofmolecule(")) {
+			} else if (exp.startsWith("atomofmolecule(")) {
 				exp = evaluateAtomOfMoleculeFunction(exp);
 				storeDefinition(isStatic, var, exp != null ? exp : "-1");
-			}
-			else if (exp.startsWith("sequenceofmolecule(")) {
+			} else if (exp.startsWith("sequenceofmolecule(")) {
 				exp = evaluateSequenceOfMoleculeFunction(exp);
 				storeDefinition(isStatic, var, exp != null ? exp : "-1");
-			}
-			else if (exp.startsWith("whichimageisattached(")) {
+			} else if (exp.startsWith("whichimageisattached(")) {
 				exp = evaluateWhichImageIsAttachedFunction(exp);
 				storeDefinition(isStatic, var, exp != null ? exp : "-1");
-			}
-			else if (exp.startsWith("findindexbycustom(")) {
+			} else if (exp.startsWith("findindexbycustom(")) {
 				exp = evaluateFindIndexByCustomFunction(exp);
 				storeDefinition(isStatic, var, exp != null ? exp : "-1");
-			}
-			else if (exp.startsWith("ptsegdistsq(")) {
+			} else if (exp.startsWith("ptsegdistsq(")) {
 				exp = evaluatePtSegDistSqFunction(exp);
 				storeDefinition(isStatic, var, exp != null ? exp : "-1");
-			}
-			else {
+			} else {
 				evaluateDefineMathexClause(isStatic, var, exp);
 			}
 			return true;
@@ -4159,13 +4070,11 @@ class Eval2D extends AbstractEval {
 							if (f.getName().equalsIgnoreCase(s[1].trim())) {
 								try {
 									style = f.getByte(null);
-								}
-								catch (IllegalArgumentException e) {
+								} catch (IllegalArgumentException e) {
 									e.printStackTrace();
 									out(ScriptEvent.FAILED, "Incorrect bond style input.");
 									return false;
-								}
-								catch (IllegalAccessException e) {
+								} catch (IllegalAccessException e) {
 									e.printStackTrace();
 									out(ScriptEvent.FAILED, "Incorrect bond style input.");
 									return false;
@@ -4188,8 +4097,7 @@ class Eval2D extends AbstractEval {
 					}
 				}
 				return true;
-			}
-			else if (s0 == "bondcolor") {
+			} else if (s0 == "bondcolor") {
 				if (model instanceof MolecularModel) {
 					MolecularModel mm = (MolecularModel) model;
 					if (!mm.bonds.isEmpty()) {
@@ -4210,15 +4118,13 @@ class Eval2D extends AbstractEval {
 					}
 				}
 				return true;
-			}
-			else if (s0 == "efielddirection") {
+			} else if (s0 == "efielddirection") {
 				ElectricField eField = (ElectricField) model.getNonLocalField(ElectricField.class.getName());
 				if (eField != null) {
 					try {
 						Field fie = VectorField.class.getField(s[1]);
 						eField.setOrientation(fie.getShort(null));
-					}
-					catch (Exception e) {
+					} catch (Exception e) {
 						e.printStackTrace();
 						return false;
 					}
@@ -4238,8 +4144,7 @@ class Eval2D extends AbstractEval {
 				}
 				notifyChange();
 				return true;
-			}
-			else if (s0 == "vy") {
+			} else if (s0 == "vy") {
 				int n = model.getNumberOfParticles();
 				for (int i = 0; i < n; i++) {
 					Particle p = model.getParticle(i);
@@ -4248,8 +4153,7 @@ class Eval2D extends AbstractEval {
 				}
 				notifyChange();
 				return true;
-			}
-			else if (s0 == "hx") {
+			} else if (s0 == "hx") {
 				int n = model.getNumberOfParticles();
 				for (int i = 0; i < n; i++) {
 					Particle p = model.getParticle(i);
@@ -4258,8 +4162,7 @@ class Eval2D extends AbstractEval {
 				}
 				notifyChange();
 				return true;
-			}
-			else if (s0 == "hy") {
+			} else if (s0 == "hy") {
 				int n = model.getNumberOfParticles();
 				for (int i = 0; i < n; i++) {
 					Particle p = model.getParticle(i);
@@ -4268,8 +4171,7 @@ class Eval2D extends AbstractEval {
 				}
 				notifyChange();
 				return true;
-			}
-			else if (s0 == "kelvin") {
+			} else if (s0 == "kelvin") {
 				int n = model.getNumberOfParticles();
 				if (model instanceof AtomicModel) {
 					AtomicModel am = (AtomicModel) model;
@@ -4285,8 +4187,7 @@ class Eval2D extends AbstractEval {
 					}
 				}
 				return true;
-			}
-			else if (s0 == "charge") {
+			} else if (s0 == "charge") {
 				int n = model.getNumberOfParticles();
 				for (int i = 0; i < n; i++) {
 					Particle p = model.getParticle(i);
@@ -4295,8 +4196,7 @@ class Eval2D extends AbstractEval {
 				}
 				notifyChange();
 				return true;
-			}
-			else if (s0 == "omega") {
+			} else if (s0 == "omega") {
 				int n = model.getNumberOfParticles();
 				for (int i = 0; i < n; i++) {
 					Particle p = model.getParticle(i);
@@ -4306,8 +4206,7 @@ class Eval2D extends AbstractEval {
 				}
 				notifyChange();
 				return true;
-			}
-			else if (s0 == "dipole") {
+			} else if (s0 == "dipole") {
 				int n = model.getNumberOfParticles();
 				for (int i = 0; i < n; i++) {
 					Particle p = model.getParticle(i);
@@ -4317,8 +4216,7 @@ class Eval2D extends AbstractEval {
 				}
 				notifyChange();
 				return true;
-			}
-			else if (s0 == "strength") {
+			} else if (s0 == "strength") {
 				if (model instanceof MolecularModel) {
 					MolecularModel mm = (MolecularModel) model;
 					if (!mm.bonds.isEmpty()) {
@@ -4329,8 +4227,7 @@ class Eval2D extends AbstractEval {
 								if (rb.isSelected()) {
 									if (x > ZERO) {
 										rb.setBondStrength(x);
-									}
-									else {
+									} else {
 										it.remove();
 									}
 								}
@@ -4345,8 +4242,7 @@ class Eval2D extends AbstractEval {
 								if (ab.isSelected()) {
 									if (x > ZERO) {
 										ab.setBondStrength(x);
-									}
-									else {
+									} else {
 										it.remove();
 									}
 								}
@@ -4357,8 +4253,7 @@ class Eval2D extends AbstractEval {
 					notifyChange();
 				}
 				return true;
-			}
-			else if (s0 == "bondlength") {
+			} else if (s0 == "bondlength") {
 				if (model instanceof MolecularModel) {
 					MolecularModel mm = (MolecularModel) model;
 					if (!mm.bonds.isEmpty()) {
@@ -4374,8 +4269,7 @@ class Eval2D extends AbstractEval {
 					}
 				}
 				return true;
-			}
-			else if (s0 == "bondangle") {
+			} else if (s0 == "bondangle") {
 				if (model instanceof MolecularModel) {
 					MolecularModel mm = (MolecularModel) model;
 					if (!mm.bends.isEmpty()) {
@@ -4391,8 +4285,7 @@ class Eval2D extends AbstractEval {
 					}
 				}
 				return true;
-			}
-			else if (s0 == "torque") {
+			} else if (s0 == "torque") {
 				if (model instanceof MolecularModel) {
 					MolecularModel mm = (MolecularModel) model;
 					if (!mm.molecules.isEmpty()) {
@@ -4408,8 +4301,7 @@ class Eval2D extends AbstractEval {
 											mol.setTorque(mt);
 										}
 										mt.setForce((float) (x * IV_CONVERTER));
-									}
-									else {
+									} else {
 										mol.setTorque(null);
 									}
 								}
@@ -4419,8 +4311,7 @@ class Eval2D extends AbstractEval {
 					}
 				}
 				return true;
-			}
-			else if (s0 == "muscle_amplitude") {
+			} else if (s0 == "muscle_amplitude") {
 				if (model instanceof MolecularModel) {
 					MolecularModel mm = (MolecularModel) model;
 					if (!mm.bonds.isEmpty()) {
@@ -4437,8 +4328,7 @@ class Eval2D extends AbstractEval {
 					}
 				}
 				return true;
-			}
-			else if (s0 == "muscle_period") {
+			} else if (s0 == "muscle_period") {
 				if (model instanceof MolecularModel) {
 					MolecularModel mm = (MolecularModel) model;
 					if (!mm.bonds.isEmpty()) {
@@ -4455,87 +4345,71 @@ class Eval2D extends AbstractEval {
 					}
 				}
 				return true;
-			}
-			else if (s0 == "model_time") {
+			} else if (s0 == "model_time") {
 				model.setModelTime((float) x);
 				notifyChange();
 				return true;
-			}
-			else if (s0 == "temperature") {
+			} else if (s0 == "temperature") {
 				model.setTemperature(x);
 				notifyChange();
 				return true;
-			}
-			else if (s0 == "amino_acid_name_style") {
+			} else if (s0 == "amino_acid_name_style") {
 				if (model instanceof MolecularModel) {
 					((MolecularModel) model).setAminoAcidNameStyle((byte) Math.round(x));
 					notifyChange();
 				}
 				return true;
-			}
-			else if (s0 == "dielectric") {
+			} else if (s0 == "dielectric") {
 				model.universe.setDielectricConstant((float) x);
 				notifyChange();
 				return true;
-			}
-			else if (s0 == "viscosity") {
+			} else if (s0 == "viscosity") {
 				model.universe.setViscosity((float) x);
 				notifyChange();
 				return true;
-			}
-			else if (s0 == "timestep") {
+			} else if (s0 == "timestep") {
 				model.setTimeStepAndAdjustReminder(x);
 				notifyChange();
 				return true;
-			}
-			else if (s0 == "heatbath") {
+			} else if (s0 == "heatbath") {
 				model.activateHeatBath(x > 0);
 				if (model.heatBathActivated())
 					model.getHeatBath().setExpectedTemperature(x);
 				notifyChange();
 				return true;
-			}
-			else if (s0 == "cell_x") {
+			} else if (s0 == "cell_x") {
 				if (model.boundary.getType() == Boundary.DBC_ID) {
 					out(ScriptEvent.HARMLESS, "No effect for default boundary.");
-				}
-				else {
+				} else {
 					model.boundary.x = x * IR_CONVERTER;
 					notifyChange();
 				}
 				return true;
-			}
-			else if (s0 == "cell_y") {
+			} else if (s0 == "cell_y") {
 				if (model.boundary.getType() == Boundary.DBC_ID) {
 					out(ScriptEvent.HARMLESS, "No effect for default boundary.");
-				}
-				else {
+				} else {
 					model.boundary.y = x * IR_CONVERTER;
 					notifyChange();
 				}
 				return true;
-			}
-			else if (s0 == "cell_width") {
+			} else if (s0 == "cell_width") {
 				if (model.boundary.getType() == Boundary.DBC_ID) {
 					out(ScriptEvent.HARMLESS, "No effect for default boundary.");
-				}
-				else {
+				} else {
 					model.boundary.width = x * IR_CONVERTER;
 					notifyChange();
 				}
 				return true;
-			}
-			else if (s0 == "cell_height") {
+			} else if (s0 == "cell_height") {
 				if (model.boundary.getType() == Boundary.DBC_ID) {
 					out(ScriptEvent.HARMLESS, "No effect for default boundary.");
-				}
-				else {
+				} else {
 					model.boundary.height = x * IR_CONVERTER;
 					notifyChange();
 				}
 				return true;
-			}
-			else if (s0 == "width") {
+			} else if (s0 == "width") {
 				final Dimension dim = new Dimension((int) (x * IR_CONVERTER), view.getHeight());
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
@@ -4544,8 +4418,7 @@ class Eval2D extends AbstractEval {
 				});
 				notifyChange();
 				return true;
-			}
-			else if (s0 == "height") {
+			} else if (s0 == "height") {
 				final Dimension dim = new Dimension(view.getWidth(), (int) (x * IR_CONVERTER));
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
@@ -4554,8 +4427,7 @@ class Eval2D extends AbstractEval {
 				});
 				notifyChange();
 				return true;
-			}
-			else if (s0 == "gfield") {
+			} else if (s0 == "gfield") {
 				if (x < 0) {
 					out(ScriptEvent.FAILED, "Illegal parameter: gravitational acceleration cannot be negative: " + x);
 					return false;
@@ -4564,8 +4436,7 @@ class Eval2D extends AbstractEval {
 				if (x < ZERO) {
 					if (vf != null)
 						model.removeNonLocalField(vf);
-				}
-				else {
+				} else {
 					if (vf == null) {
 						vf = new GravitationalField(view.getBounds());
 						model.addNonLocalField(vf);
@@ -4574,14 +4445,12 @@ class Eval2D extends AbstractEval {
 				}
 				notifyChange();
 				return true;
-			}
-			else if (s0 == "efield") {
+			} else if (s0 == "efield") {
 				VectorField vf = model.getNonLocalField(ElectricField.class.getName());
 				if (Math.abs(x) < ZERO) {
 					if (vf != null)
 						model.removeNonLocalField(vf);
-				}
-				else {
+				} else {
 					if (vf == null) {
 						vf = new ElectricField(view.getBounds());
 						model.addNonLocalField(vf);
@@ -4590,14 +4459,12 @@ class Eval2D extends AbstractEval {
 				}
 				notifyChange();
 				return true;
-			}
-			else if (s0 == "bfield") {
+			} else if (s0 == "bfield") {
 				VectorField vf = model.getNonLocalField(MagneticField.class.getName());
 				if (Math.abs(x) < ZERO) {
 					if (vf != null)
 						model.removeNonLocalField(vf);
-				}
-				else {
+				} else {
 					if (vf == null) {
 						vf = new MagneticField(view.getBounds());
 						model.addNonLocalField(vf);
@@ -4606,8 +4473,7 @@ class Eval2D extends AbstractEval {
 				}
 				notifyChange();
 				return true;
-			}
-			else if (s0 == "weight") {
+			} else if (s0 == "weight") {
 				LineComponent[] lines = view.getLines();
 				for (LineComponent lc : lines) {
 					if (lc.isSelected())
@@ -4625,8 +4491,7 @@ class Eval2D extends AbstractEval {
 				}
 				return true;
 			}
-		}
-		else {
+		} else {
 
 			if (s.length == 4) {
 
@@ -4655,8 +4520,7 @@ class Eval2D extends AbstractEval {
 							return false;
 						if (i1 == i2) {
 							am.getElement(i1).setEpsilon(eps);
-						}
-						else {
+						} else {
 							Element e1 = am.getElement(i1);
 							Element e2 = am.getElement(i2);
 							am.getAffinity().setLBMixing(e1, e2, false);
@@ -4693,16 +4557,14 @@ class Eval2D extends AbstractEval {
 					RectangularBoundary boundary = model.getBoundary();
 					x = (float) (Math.random() * boundary.width + boundary.x);
 					y = (float) (Math.random() * boundary.height + boundary.y);
-				}
-				else {
+				} else {
 					s1 = str.substring(0, space).trim();
 					String s2 = str.substring(space + 1).trim();
 					float[] r = parseCoordinates(s2);
 					if (r != null) {
 						x = r[0];
 						y = r[1];
-					}
-					else {
+					} else {
 						out(ScriptEvent.FAILED, "Error: Cannot parse " + str);
 						return false;
 					}
@@ -4714,8 +4576,7 @@ class Eval2D extends AbstractEval {
 				if (((AtomisticView) view).insertAnAtom(x, y, id, true, false)) {
 					view.repaint();
 					notifyChange();
-				}
-				else {
+				} else {
 					out(ScriptEvent.HARMLESS, "Cannot insert an atom to the specified location: " + str);
 				}
 				return true;
@@ -4731,8 +4592,7 @@ class Eval2D extends AbstractEval {
 					RectangularObstacle obs = new RectangularObstacle(x[0], x[1], x[2], x[3]);
 					if (((AtomisticView) view).intersects(obs)) {
 						out(ScriptEvent.FAILED, "Cannot add an obstacle of the specified size to the specified location: " + str);
-					}
-					else {
+					} else {
 						model.obstacles.add(obs);
 					}
 					return true;
@@ -4781,8 +4641,7 @@ class Eval2D extends AbstractEval {
 				ImageComponent ic = null;
 				try {
 					ic = new ImageComponent(address);
-				}
-				catch (Exception e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 					final String errorAddress = address;
 					EventQueue.invokeLater(new Runnable() {
@@ -4802,8 +4661,7 @@ class Eval2D extends AbstractEval {
 						view.repaint();
 						return true;
 					}
-				}
-				else {
+				} else {
 					str = str.toLowerCase();
 					if (str.startsWith("atomno")) {
 						i = str.indexOf("=");
@@ -4841,8 +4699,7 @@ class Eval2D extends AbstractEval {
 				TextBoxComponent t = null;
 				try {
 					t = new TextBoxComponent(readText(address, view));
-				}
-				catch (InterruptedException e) {
+				} catch (InterruptedException e) {
 				}
 				if (t != null) {
 					str = str.substring(matcher.end()).trim();
@@ -4854,8 +4711,7 @@ class Eval2D extends AbstractEval {
 						return true;
 					}
 				}
-			}
-			else {
+			} else {
 				String slc = str.toLowerCase();
 				int a = slc.indexOf("<t>");
 				int b = slc.indexOf("</t>");
@@ -4983,8 +4839,7 @@ class Eval2D extends AbstractEval {
 				}
 				lc.setHost(at);
 				view.repaint();
-			}
-			else if ("bond".equals(s[2])) {
+			} else if ("bond".equals(s[2])) {
 				RadialBond rb = ((MolecularModel) model).getBonds().get(i2);
 				if (rb == null) {
 					out(ScriptEvent.FAILED, "Radial bond " + i2 + " does not exist.");
@@ -4994,8 +4849,7 @@ class Eval2D extends AbstractEval {
 				view.repaint();
 			}
 			return true;
-		}
-		else if (lcStr.startsWith("rectangle")) {
+		} else if (lcStr.startsWith("rectangle")) {
 			str = lcStr.substring(9).trim();
 			String[] s = str.split("\\s+");
 			if (s.length < 4)
@@ -5019,8 +4873,7 @@ class Eval2D extends AbstractEval {
 				view.repaint();
 			}
 			return true;
-		}
-		else if (lcStr.startsWith("ellipse")) {
+		} else if (lcStr.startsWith("ellipse")) {
 			str = lcStr.substring(7).trim();
 			String[] s = str.split("\\s+");
 			if (s.length < 4)
@@ -5039,8 +4892,7 @@ class Eval2D extends AbstractEval {
 				view.repaint();
 			}
 			return true;
-		}
-		else if (lcStr.startsWith("image")) {
+		} else if (lcStr.startsWith("image")) {
 			str = lcStr.substring(5).trim();
 			String[] s = str.split("\\s+");
 			if (s.length < 4)
@@ -5059,8 +4911,7 @@ class Eval2D extends AbstractEval {
 				ic.setHost(null);
 				ic.setHost(at);
 				view.repaint();
-			}
-			else if ("bond".equals(s[2])) {
+			} else if ("bond".equals(s[2])) {
 				RadialBond rb = ((MolecularModel) model).getBonds().get(i2);
 				if (rb == null) {
 					out(ScriptEvent.FAILED, "Radial bond " + i2 + " does not exist.");
@@ -5070,8 +4921,7 @@ class Eval2D extends AbstractEval {
 				view.repaint();
 			}
 			return true;
-		}
-		else if (lcStr.startsWith("textbox")) {
+		} else if (lcStr.startsWith("textbox")) {
 			str = lcStr.substring(7).trim();
 			String[] s = str.split("\\s+");
 			if (s.length < 4)
@@ -5136,8 +4986,7 @@ class Eval2D extends AbstractEval {
 		float[] hotspot = null;
 		if (lp != -1 && rp != -1) {
 			hotspot = parseArray(2, s.substring(lp, rp));
-		}
-		else {
+		} else {
 			out(ScriptEvent.FAILED, "Cursor's hot spot coordinate error: " + s);
 			return false;
 		}
@@ -5213,8 +5062,7 @@ class Eval2D extends AbstractEval {
 				try {
 					Thread.sleep(millis > DELAY_FRACTION ? DELAY_FRACTION : millis);
 					millis -= DELAY_FRACTION;
-				}
-				catch (InterruptedException e) {
+				} catch (InterruptedException e) {
 					stop();
 					interrupted = true;
 					throw new InterruptedException();
@@ -5245,8 +5093,7 @@ class Eval2D extends AbstractEval {
 					synchronized (this) {
 						Eval2D.this.wait();
 					}
-				}
-				catch (InterruptedException e) {
+				} catch (InterruptedException e) {
 					interrupted = true;
 					stop();
 					throw new InterruptedException();
@@ -5259,8 +5106,7 @@ class Eval2D extends AbstractEval {
 	}
 
 	/*
-	 * It is important to synchronized this method so that we do not have two loading processes running at the same
-	 * time, which causes the corruption of the model's states.
+	 * It is important to synchronized this method so that we do not have two loading processes running at the same time, which causes the corruption of the model's states.
 	 */
 	private synchronized boolean evaluateLoadClause(String address) throws InterruptedException {
 		if (address == null || address.equals("")) {
@@ -5272,8 +5118,7 @@ class Eval2D extends AbstractEval {
 			return false;
 		try {
 			Thread.sleep(100); // sleep 100 ms in order for the force calculation to finish
-		}
-		catch (InterruptedException e) {
+		} catch (InterruptedException e) {
 			throw new InterruptedException();
 		}
 		if (FileUtilities.isRelative(address)) {
@@ -5289,23 +5134,20 @@ class Eval2D extends AbstractEval {
 			URL url = null;
 			try {
 				url = new URL(FileUtilities.httpEncode(address));
-			}
-			catch (MalformedURLException e) {
+			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			}
 			if (url != null) {
 				ConnectionManager.sharedInstance().setCheckUpdate(true);
 				model.input(url);
 			}
-		}
-		else {
+		} else {
 			model.input(new File(address));
 		}
 		/* Do we really need to sleep in the following? */
 		try {
 			Thread.sleep(100);
-		}
-		catch (InterruptedException e) {
+		} catch (InterruptedException e) {
 			stop();
 			throw new InterruptedException();
 		}
@@ -5347,8 +5189,7 @@ class Eval2D extends AbstractEval {
 			try {
 				x = Float.parseFloat(list.get(0)) * 10;
 				y = (int) Float.parseFloat(list.get(1));
-			}
-			catch (NumberFormatException e) {
+			} catch (NumberFormatException e) {
 				out(ScriptEvent.FAILED, "Unable to parse number: " + str);
 				return false;
 			}
@@ -5357,8 +5198,7 @@ class Eval2D extends AbstractEval {
 			try {
 				x = Float.parseFloat(list.get(1)) * 10;
 				y = (int) Float.parseFloat(list.get(2));
-			}
-			catch (NumberFormatException e) {
+			} catch (NumberFormatException e) {
 				out(ScriptEvent.FAILED, "Unable to parse number: " + str);
 				return false;
 			}
@@ -5376,8 +5216,7 @@ class Eval2D extends AbstractEval {
 					view.repaint();
 					try {
 						Thread.sleep(50);
-					}
-					catch (InterruptedException e) {
+					} catch (InterruptedException e) {
 						stop();
 						throw new InterruptedException();
 					}
@@ -5414,8 +5253,7 @@ class Eval2D extends AbstractEval {
 		String t = str.substring(i).trim();
 		try {
 			i = Integer.parseInt(s);
-		}
-		catch (NumberFormatException e) {
+		} catch (NumberFormatException e) {
 			out(ScriptEvent.FAILED, "Expected integer: " + s);
 			return false;
 		}
@@ -5433,33 +5271,27 @@ class Eval2D extends AbstractEval {
 		Particle[] p = null;
 		if (model instanceof MesoModel)
 			p = ((MesoModel) model).getParticles();
-		else p = ((AtomicModel) model).getAtoms();
+		else
+			p = ((AtomicModel) model).getAtoms();
 		double value = 0;
 		if ("rx".equalsIgnoreCase(s)) {
 			value = Statistics.getMeanRx(0, n, p, true) * R_CONVERTER;
-		}
-		else if ("ry".equalsIgnoreCase(s)) {
+		} else if ("ry".equalsIgnoreCase(s)) {
 			value = Statistics.getMeanRy(0, n, p, true) * R_CONVERTER;
-		}
-		else if ("vx".equalsIgnoreCase(s)) {
+		} else if ("vx".equalsIgnoreCase(s)) {
 			value = Statistics.getMeanVx(0, n, p, true) * V_CONVERTER;
-		}
-		else if ("vy".equalsIgnoreCase(s)) {
+		} else if ("vy".equalsIgnoreCase(s)) {
 			value = Statistics.getMeanVy(0, n, p, true) * V_CONVERTER;
-		}
-		else if ("rxsq".equalsIgnoreCase(s)) {
+		} else if ("rxsq".equalsIgnoreCase(s)) {
 			value = Statistics.getMeanRx(0, n, p, true) * R_CONVERTER;
 			value *= value;
-		}
-		else if ("rysq".equalsIgnoreCase(s)) {
+		} else if ("rysq".equalsIgnoreCase(s)) {
 			value = Statistics.getMeanRy(0, n, p, true) * R_CONVERTER;
 			value *= value;
-		}
-		else if ("vxsq".equalsIgnoreCase(s)) {
+		} else if ("vxsq".equalsIgnoreCase(s)) {
 			value = Statistics.getMeanVx(0, n, p, true) * V_CONVERTER;
 			value *= value;
-		}
-		else if ("vysq".equalsIgnoreCase(s)) {
+		} else if ("vysq".equalsIgnoreCase(s)) {
 			value = Statistics.getMeanVy(0, n, p, true) * V_CONVERTER;
 			value *= value;
 		}
@@ -5475,8 +5307,7 @@ class Eval2D extends AbstractEval {
 		if (str.toLowerCase().startsWith("-ra")) {
 			str = str.substring(3).trim();
 			averageFlag = 1;
-		}
-		else if (str.toLowerCase().startsWith("-ca")) {
+		} else if (str.toLowerCase().startsWith("-ca")) {
 			str = str.substring(3).trim();
 			averageFlag = 2;
 		}
@@ -5544,12 +5375,10 @@ class Eval2D extends AbstractEval {
 			if (averageFlag == 1) {
 				sum = k == 0 ? result : 0.05f * result + 0.95f * sum;
 				q.update(sum);
-			}
-			else if (averageFlag == 2) {
+			} else if (averageFlag == 2) {
 				sum += result;
 				q.update(sum / (k + 1));
-			}
-			else {
+			} else {
 				q.update(result);
 			}
 		}
@@ -5623,17 +5452,15 @@ class Eval2D extends AbstractEval {
 		else if (s == "restraint") {
 			if (m.gb[i].restraint == null)
 				m.gb[i].restraint = new PointRestraint(x * 0.01, m.gb[i].rx, m.gb[i].ry);
-			else m.gb[i].restraint.k = x * 0.01;
-		}
-		else if (s == "restraint.x") {
+			else
+				m.gb[i].restraint.k = x * 0.01;
+		} else if (s == "restraint.x") {
 			if (m.gb[i].restraint != null)
 				m.gb[i].restraint.x0 = x * IR_CONVERTER;
-		}
-		else if (s == "restraint.y") {
+		} else if (s == "restraint.y") {
 			if (m.gb[i].restraint != null)
 				m.gb[i].restraint.y0 = x * IR_CONVERTER;
-		}
-		else {
+		} else {
 			out(ScriptEvent.FAILED, "Cannot set property: " + str2);
 			b = false;
 		}
@@ -5682,28 +5509,23 @@ class Eval2D extends AbstractEval {
 		else if (s == "charge") {
 			m.atom[i].charge = x;
 			m.checkCharges();
-		}
-		else if (s == "friction")
+		} else if (s == "friction")
 			m.atom[i].friction = (float) x;
 		else if (s == "damp_type")
 			m.atom[i].dampType = (byte) x;
 		else if (s == "restraint") {
 			if (m.atom[i].restraint == null) {
 				m.atom[i].restraint = new PointRestraint(x * 0.01, m.atom[i].rx, m.atom[i].ry);
-			}
-			else {
+			} else {
 				m.atom[i].restraint.k = x * 0.01;
 			}
-		}
-		else if (s == "restraint.x") {
+		} else if (s == "restraint.x") {
 			if (m.atom[i].restraint != null)
 				m.atom[i].restraint.x0 = x * IR_CONVERTER;
-		}
-		else if (s == "restraint.y") {
+		} else if (s == "restraint.y") {
 			if (m.atom[i].restraint != null)
 				m.atom[i].restraint.y0 = x * IR_CONVERTER;
-		}
-		else {
+		} else {
 			out(ScriptEvent.FAILED, "Cannot set property: " + str2);
 			b = false;
 		}
@@ -5762,12 +5584,10 @@ class Eval2D extends AbstractEval {
 			if (Math.abs(x) < ZERO) {
 				m.bonds.remove(m.bonds.get(i));
 				MoleculeCollection.sort(m);
-			}
-			else {
+			} else {
 				m.bonds.get(i).setBondStrength(x);
 			}
-		}
-		else if (s == "custom")
+		} else if (s == "custom")
 			m.bonds.get(i).custom = (float) x;
 		else if (s == "bondlength")
 			m.bonds.get(i).setBondLength(x * IR_CONVERTER);
@@ -5780,12 +5600,10 @@ class Eval2D extends AbstractEval {
 		else if (s == "torque") {
 			if (Math.abs(x) < ZERO) {
 				m.bonds.get(i).setTorque(0);
-			}
-			else {
+			} else {
 				m.bonds.get(i).setTorque((float) x);
 			}
-		}
-		else {
+		} else {
 			out(ScriptEvent.FAILED, "Cannot set property: " + str2);
 			b = false;
 		}
@@ -5812,38 +5630,31 @@ class Eval2D extends AbstractEval {
 		if (s == "visible") {
 			m.bonds.get(i).setVisible("on".equalsIgnoreCase(x) || "true".equalsIgnoreCase(x));
 			m.notifyBondChangeListeners();
-		}
-		else if (s == "style") {
+		} else if (s == "style") {
 			for (Field f : RadialBond.class.getFields()) {
 				if (f.getName().equalsIgnoreCase(x)) {
 					try {
 						m.bonds.get(i).setBondStyle(f.getByte(null));
-					}
-					catch (IllegalArgumentException e) {
+					} catch (IllegalArgumentException e) {
 						e.printStackTrace();
-					}
-					catch (IllegalAccessException e) {
+					} catch (IllegalAccessException e) {
 						e.printStackTrace();
 					}
 				}
 			}
-		}
-		else if (s == "torquetype") {
+		} else if (s == "torquetype") {
 			for (Field f : RadialBond.class.getFields()) {
 				if (f.getName().equalsIgnoreCase(x)) {
 					try {
 						m.bonds.get(i).setTorqueType(f.getByte(null));
-					}
-					catch (IllegalArgumentException e) {
+					} catch (IllegalArgumentException e) {
 						e.printStackTrace();
-					}
-					catch (IllegalAccessException e) {
+					} catch (IllegalAccessException e) {
 						e.printStackTrace();
 					}
 				}
 			}
-		}
-		else {
+		} else {
 			out(ScriptEvent.FAILED, "Cannot set property: " + str2);
 			b = false;
 		}
@@ -5872,8 +5683,7 @@ class Eval2D extends AbstractEval {
 		if (s == "strength")
 			if (Math.abs(x) < ZERO) {
 				m.bends.remove(m.bends.get(i));
-			}
-			else {
+			} else {
 				m.bends.get(i).setBondStrength(x);
 			}
 		else if (s == "bondangle")
@@ -5967,8 +5777,7 @@ class Eval2D extends AbstractEval {
 			else if (x < 0)
 				x = 0;
 			obs.setElasticity((float) x);
-		}
-		else {
+		} else {
 			out(ScriptEvent.FAILED, "Cannot set property: " + str2);
 			b = false;
 		}
@@ -5997,11 +5806,9 @@ class Eval2D extends AbstractEval {
 		boolean b = true;
 		if (s == "visible") {
 			obs.setVisible(x);
-		}
-		else if (s == "draggable") {
+		} else if (s == "draggable") {
 			obs.setDraggable(x);
-		}
-		else {
+		} else {
 			out(ScriptEvent.FAILED, "Cannot set property: " + str2);
 			b = false;
 		}
@@ -6031,47 +5838,37 @@ class Eval2D extends AbstractEval {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
 				ic[i].custom = (float) x;
-		}
-		else if (s == "x") {
+		} else if (s == "x") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
 				ic[i].translateTo(x * IR_CONVERTER, ic[i].getRy());
-		}
-		else if (s == "y") {
+		} else if (s == "y") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
 				ic[i].translateTo(ic[i].getRx(), x * IR_CONVERTER);
-		}
-		else if (s == "angle") {
+		} else if (s == "angle") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
 				ic[i].setAngle((float) Math.toRadians(x));
-		}
-		else if (s == "frame") {
+		} else if (s == "frame") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
 				ic[i].setCurrentFrame((int) Math.round(x));
-		}
-		else if (s == "loop") {
+		} else if (s == "loop") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
 				ic[i].setLoopCount((int) Math.round(x));
-		}
-		else if (s == "layer") {
+		} else if (s == "layer") {
 			if ("in_front_of_particles".equalsIgnoreCase(str3)) {
 				ic[i].setLayer(Layered.IN_FRONT_OF_PARTICLES);
-			}
-			else if ("behind_particles".equalsIgnoreCase(str3)) {
+			} else if ("behind_particles".equalsIgnoreCase(str3)) {
 				ic[i].setLayer(Layered.BEHIND_PARTICLES);
-			}
-			else if ("back".equalsIgnoreCase(str3)) {
+			} else if ("back".equalsIgnoreCase(str3)) {
 				view.sendLayerToBack(ic[i]);
-			}
-			else if ("front".equalsIgnoreCase(str3)) {
+			} else if ("front".equalsIgnoreCase(str3)) {
 				view.bringLayerToFront(ic[i]);
 			}
-		}
-		else {
+		} else {
 			out(ScriptEvent.FAILED, "Cannot set property: " + str2);
 			b = false;
 		}
@@ -6099,66 +5896,52 @@ class Eval2D extends AbstractEval {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
 				c[i].setLineWeight((byte) x);
-		}
-		else if (s == "x1") {
+		} else if (s == "x1") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
 				c[i].setEndPoint1((float) (x * IR_CONVERTER), c[i].getY1());
-		}
-		else if (s == "y1") {
+		} else if (s == "y1") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
 				c[i].setEndPoint1(c[i].getX1(), (float) (x * IR_CONVERTER));
-		}
-		else if (s == "x2") {
+		} else if (s == "x2") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
 				c[i].setEndPoint2((float) (x * IR_CONVERTER), c[i].getY2());
-		}
-		else if (s == "y2") {
+		} else if (s == "y2") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
 				c[i].setEndPoint2(c[i].getX2(), (float) (x * IR_CONVERTER));
-		}
-		else if (s == "coordinates") {
+		} else if (s == "coordinates") {
 			float[] x = parseArray(4, str3);
 			if (x != null && x.length == 4) {
 				c[i].setEndPoint1(x[0] * IR_CONVERTER, x[1] * IR_CONVERTER);
 				c[i].setEndPoint2(x[2] * IR_CONVERTER, x[3] * IR_CONVERTER);
 			}
-		}
-		else if (s == "stroke") {
+		} else if (s == "stroke") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
 				if (x >= 0 && x < LineStyle.STROKES.length)
 					c[i].setLineStyle((byte) x);
-		}
-		else if (s == "color") {
+		} else if (s == "color") {
 			Color color = parseRGBColor(str3);
 			if (color != null)
 				c[i].setColor(color);
-		}
-		else if (s == "visible") {
+		} else if (s == "visible") {
 			c[i].setVisible("on".equalsIgnoreCase(str3));
-		}
-		else if (s == "draggable") {
+		} else if (s == "draggable") {
 			c[i].setDraggable("on".equalsIgnoreCase(str3));
-		}
-		else if (s == "layer") {
+		} else if (s == "layer") {
 			if ("in_front_of_particles".equalsIgnoreCase(str3)) {
 				c[i].setLayer(Layered.IN_FRONT_OF_PARTICLES);
-			}
-			else if ("behind_particles".equalsIgnoreCase(str3)) {
+			} else if ("behind_particles".equalsIgnoreCase(str3)) {
 				c[i].setLayer(Layered.BEHIND_PARTICLES);
-			}
-			else if ("back".equalsIgnoreCase(str3)) {
+			} else if ("back".equalsIgnoreCase(str3)) {
 				view.sendLayerToBack(c[i]);
-			}
-			else if ("front".equalsIgnoreCase(str3)) {
+			} else if ("front".equalsIgnoreCase(str3)) {
 				view.bringLayerToFront(c[i]);
 			}
-		}
-		else {
+		} else {
 			out(ScriptEvent.FAILED, "Cannot set property: " + str2);
 			b = false;
 		}
@@ -6186,101 +5969,81 @@ class Eval2D extends AbstractEval {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
 				c[i].setAlpha((short) x);
-		}
-		else if (s == "x") {
+		} else if (s == "x") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
 				c[i].setX((float) (x * IR_CONVERTER));
-		}
-		else if (s == "y") {
+		} else if (s == "y") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
 				c[i].setY((float) (x * IR_CONVERTER));
-		}
-		else if (s == "width") {
+		} else if (s == "width") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
 				c[i].setWidth((float) (x * IR_CONVERTER));
-		}
-		else if (s == "height") {
+		} else if (s == "height") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
 				c[i].setHeight((float) (x * IR_CONVERTER));
-		}
-		else if (s == "size") {
+		} else if (s == "size") {
 			float[] x = parseArray(4, str3);
 			if (x != null && x.length == 4)
 				c[i].setRect(x[0] * IR_CONVERTER, x[1] * IR_CONVERTER, x[2] * IR_CONVERTER, x[3] * IR_CONVERTER);
-		}
-		else if (s == "efield") {
+		} else if (s == "efield") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x)) {
 				VectorField vf = c[i].getVectorField();
 				if (vf instanceof ElectricField) {
 					vf.setIntensity(x);
-				}
-				else {
+				} else {
 					out(ScriptEvent.FAILED, "Please turn on the efield for rectangle " + i + " and set its direction.");
 					return;
 				}
 			}
-		}
-		else if (s == "bfield") {
+		} else if (s == "bfield") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x)) {
 				VectorField vf = c[i].getVectorField();
 				if (vf instanceof MagneticField) {
 					vf.setIntensity(x);
-				}
-				else {
+				} else {
 					out(ScriptEvent.FAILED, "Please turn on the bfield for rectangle " + i + " and set its direction.");
 					return;
 				}
 			}
-		}
-		else if (s == "viscosity") {
+		} else if (s == "viscosity") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
 				c[i].setViscosity((float) x);
-		}
-		else if (s == "angle") {
+		} else if (s == "angle") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
 				c[i].setAngle((float) x);
-		}
-		else if (s == "stroke") {
+		} else if (s == "stroke") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x)) {
 				if (x >= 0 && x < LineStyle.STROKES.length)
 					c[i].setLineStyle((byte) x);
 			}
-		}
-		else if (s == "color") {
+		} else if (s == "color") {
 			Color color = parseRGBColor(str3);
 			if (color != null)
 				c[i].setFillMode(new FillMode.ColorFill(color));
-		}
-		else if (s == "visible") {
+		} else if (s == "visible") {
 			c[i].setVisible("on".equalsIgnoreCase(str3));
-		}
-		else if (s == "draggable") {
+		} else if (s == "draggable") {
 			c[i].setDraggable("on".equalsIgnoreCase(str3));
-		}
-		else if (s == "layer") {
+		} else if (s == "layer") {
 			if ("in_front_of_particles".equalsIgnoreCase(str3)) {
 				c[i].setLayer(Layered.IN_FRONT_OF_PARTICLES);
-			}
-			else if ("behind_particles".equalsIgnoreCase(str3)) {
+			} else if ("behind_particles".equalsIgnoreCase(str3)) {
 				c[i].setLayer(Layered.BEHIND_PARTICLES);
-			}
-			else if ("back".equalsIgnoreCase(str3)) {
+			} else if ("back".equalsIgnoreCase(str3)) {
 				view.sendLayerToBack(c[i]);
-			}
-			else if ("front".equalsIgnoreCase(str3)) {
+			} else if ("front".equalsIgnoreCase(str3)) {
 				view.bringLayerToFront(c[i]);
 			}
-		}
-		else {
+		} else {
 			out(ScriptEvent.FAILED, "Cannot set property: " + str2);
 			b = false;
 		}
@@ -6308,101 +6071,81 @@ class Eval2D extends AbstractEval {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
 				c[i].setAlpha((short) x);
-		}
-		else if (s == "x1") {
+		} else if (s == "x1") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
 				c[i].getVertex(0).x = (float) (x * IR_CONVERTER);
-		}
-		else if (s == "y1") {
+		} else if (s == "y1") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
 				c[i].getVertex(0).y = (float) (x * IR_CONVERTER);
-		}
-		else if (s == "x2") {
+		} else if (s == "x2") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
 				c[i].getVertex(1).x = (float) (x * IR_CONVERTER);
-		}
-		else if (s == "y2") {
+		} else if (s == "y2") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
 				c[i].getVertex(1).y = (float) (x * IR_CONVERTER);
-		}
-		else if (s == "x3") {
+		} else if (s == "x3") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
 				c[i].getVertex(2).x = (float) (x * IR_CONVERTER);
-		}
-		else if (s == "y3") {
+		} else if (s == "y3") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
 				c[i].getVertex(2).y = (float) (x * IR_CONVERTER);
-		}
-		else if (s == "efield") {
+		} else if (s == "efield") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x)) {
 				VectorField vf = c[i].getVectorField();
 				if (vf instanceof ElectricField) {
 					vf.setIntensity(x);
-				}
-				else {
+				} else {
 					out(ScriptEvent.FAILED, "Please turn on the efield for triangle " + i + " and set its direction.");
 					return;
 				}
 			}
-		}
-		else if (s == "bfield") {
+		} else if (s == "bfield") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x)) {
 				VectorField vf = c[i].getVectorField();
 				if (vf instanceof MagneticField) {
 					vf.setIntensity(x);
-				}
-				else {
+				} else {
 					out(ScriptEvent.FAILED, "Please turn on the bfield for triangle " + i + " and set its direction.");
 					return;
 				}
 			}
-		}
-		else if (s == "viscosity") {
+		} else if (s == "viscosity") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
 				c[i].setViscosity((float) x);
-		}
-		else if (s == "stroke") {
+		} else if (s == "stroke") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x)) {
 				if (x >= 0 && x < LineStyle.STROKES.length)
 					c[i].setLineStyle((byte) x);
 			}
-		}
-		else if (s == "color") {
+		} else if (s == "color") {
 			Color color = parseRGBColor(str3);
 			if (color != null)
 				c[i].setFillMode(new FillMode.ColorFill(color));
-		}
-		else if (s == "visible") {
+		} else if (s == "visible") {
 			c[i].setVisible("on".equalsIgnoreCase(str3));
-		}
-		else if (s == "draggable") {
+		} else if (s == "draggable") {
 			c[i].setDraggable("on".equalsIgnoreCase(str3));
-		}
-		else if (s == "layer") {
+		} else if (s == "layer") {
 			if ("in_front_of_particles".equalsIgnoreCase(str3)) {
 				c[i].setLayer(Layered.IN_FRONT_OF_PARTICLES);
-			}
-			else if ("behind_particles".equalsIgnoreCase(str3)) {
+			} else if ("behind_particles".equalsIgnoreCase(str3)) {
 				c[i].setLayer(Layered.BEHIND_PARTICLES);
-			}
-			else if ("back".equalsIgnoreCase(str3)) {
+			} else if ("back".equalsIgnoreCase(str3)) {
 				view.sendLayerToBack(c[i]);
-			}
-			else if ("front".equalsIgnoreCase(str3)) {
+			} else if ("front".equalsIgnoreCase(str3)) {
 				view.bringLayerToFront(c[i]);
 			}
-		}
-		else {
+		} else {
 			out(ScriptEvent.FAILED, "Cannot set property: " + str2);
 			b = false;
 		}
@@ -6431,116 +6174,93 @@ class Eval2D extends AbstractEval {
 			if (!Double.isNaN(x)) {
 				if (c[i].getFillMode() instanceof GradientFill) {
 					c[i].setAlphaAtCenter((short) x);
-				}
-				else {
+				} else {
 					c[i].setAlpha((short) x);
 				}
 			}
-		}
-		else if (s == "x") {
+		} else if (s == "x") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
 				c[i].setX((float) (x * IR_CONVERTER));
-		}
-		else if (s == "y") {
+		} else if (s == "y") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
 				c[i].setY((float) (x * IR_CONVERTER));
-		}
-		else if (s == "width") {
+		} else if (s == "width") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
 				c[i].setWidth((float) (x * IR_CONVERTER));
-		}
-		else if (s == "height") {
+		} else if (s == "height") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
 				c[i].setHeight((float) (x * IR_CONVERTER));
-		}
-		else if (s == "size") {
+		} else if (s == "size") {
 			float[] x = parseArray(4, str3);
 			if (x != null && x.length == 4)
 				c[i].setOval(x[0] * IR_CONVERTER, x[1] * IR_CONVERTER, x[2] * IR_CONVERTER, x[3] * IR_CONVERTER);
-		}
-		else if (s == "efield") {
+		} else if (s == "efield") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x)) {
 				VectorField vf = c[i].getVectorField();
 				if (vf instanceof ElectricField) {
 					vf.setIntensity(x);
-				}
-				else {
+				} else {
 					out(ScriptEvent.FAILED, "Please turn on the efield for ellipse " + i + " and set its direction.");
 					return;
 				}
 			}
-		}
-		else if (s == "bfield") {
+		} else if (s == "bfield") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x)) {
 				VectorField vf = c[i].getVectorField();
 				if (vf instanceof MagneticField) {
 					vf.setIntensity(x);
-				}
-				else {
+				} else {
 					out(ScriptEvent.FAILED, "Please turn on the bfield for ellipse " + i + " and set its direction.");
 					return;
 				}
 			}
-		}
-		else if (s == "phi0") {
+		} else if (s == "phi0") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
 				c[i].setPotentialAtCenter((float) x);
-		}
-		else if (s == "gamma") {
+		} else if (s == "gamma") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
 				c[i].setPotentialDecayFactor((float) x);
-		}
-		else if (s == "viscosity") {
+		} else if (s == "viscosity") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
 				c[i].setViscosity((float) x);
-		}
-		else if (s == "angle") {
+		} else if (s == "angle") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
 				c[i].setAngle((float) x);
-		}
-		else if (s == "stroke") {
+		} else if (s == "stroke") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x)) {
 				if (x >= 0 && x < LineStyle.STROKES.length)
 					c[i].setLineStyle((byte) x);
 			}
-		}
-		else if (s == "color") {
+		} else if (s == "color") {
 			Color color = parseRGBColor(str3);
 			if (color != null)
 				c[i].setFillMode(new FillMode.ColorFill(color));
-		}
-		else if (s == "visible") {
+		} else if (s == "visible") {
 			c[i].setVisible("on".equalsIgnoreCase(str3));
-		}
-		else if (s == "draggable") {
+		} else if (s == "draggable") {
 			c[i].setDraggable("on".equalsIgnoreCase(str3));
-		}
-		else if (s == "layer") {
+		} else if (s == "layer") {
 			if ("in_front_of_particles".equalsIgnoreCase(str3)) {
 				c[i].setLayer(Layered.IN_FRONT_OF_PARTICLES);
-			}
-			else if ("behind_particles".equalsIgnoreCase(str3)) {
+			} else if ("behind_particles".equalsIgnoreCase(str3)) {
 				c[i].setLayer(Layered.BEHIND_PARTICLES);
-			}
-			else if ("back".equalsIgnoreCase(str3)) {
+			} else if ("back".equalsIgnoreCase(str3)) {
 				view.sendLayerToBack(c[i]);
-			}
-			else if ("front".equalsIgnoreCase(str3)) {
+			} else if ("front".equalsIgnoreCase(str3)) {
 				view.bringLayerToFront(c[i]);
 			}
-		}
-		else {
+		} else {
 			out(ScriptEvent.FAILED, "Cannot set property: " + str2);
 			b = false;
 		}
@@ -6553,8 +6273,7 @@ class Eval2D extends AbstractEval {
 	private void setTextBoxField(String str1, String str2, String str3) {
 		if ((str3.startsWith("<t>") || str3.startsWith("<T>")) && (str3.endsWith("</t>") || str3.endsWith("<T>"))) {
 			str3 = str3.substring(3, str3.length() - 4);
-		}
-		else {
+		} else {
 			Matcher matcher = TEXT_EXTENSION.matcher(str3);
 			if (matcher.find()) {
 				String address = str3.substring(0, matcher.end()).trim();
@@ -6570,8 +6289,7 @@ class Eval2D extends AbstractEval {
 				}
 				try {
 					str3 = readText(address, view);
-				}
-				catch (InterruptedException e) {
+				} catch (InterruptedException e) {
 					str3 = "Error in reading " + address;
 				}
 			}
@@ -6591,100 +6309,77 @@ class Eval2D extends AbstractEval {
 		boolean b = true;
 		if (s == "text") {
 			t[i].setText(format(str3));
-		}
-		else if (s == "callout") {
+		} else if (s == "callout") {
 			t[i].setCallOut("true".equalsIgnoreCase(str3));
-		}
-		else if (s == "color") {
+		} else if (s == "color") {
 			Color c = parseRGBColor(str3);
 			if (c != null)
 				t[i].setForegroundColor(c);
-		}
-		else if (s == "transparent") {
+		} else if (s == "transparent") {
 			if ("true".equalsIgnoreCase(str3)) {
 				t[i].setFillMode(FillMode.getNoFillMode());
 			}
-		}
-		else if (s == "background") {
+		} else if (s == "background") {
 			Color c = parseRGBColor(str3);
 			if (c != null)
 				t[i].setFillMode(new FillMode.ColorFill(c));
-		}
-		else if (s == "visible") {
+		} else if (s == "visible") {
 			t[i].setVisible("on".equalsIgnoreCase(str3));
-		}
-		else if (s == "draggable") {
+		} else if (s == "draggable") {
 			t[i].setDraggable("on".equalsIgnoreCase(str3));
-		}
-		else if (s == "font") {
+		} else if (s == "font") {
 			t[i].setFontFamily(str3);
-		}
-		else if (s == "size") {
+		} else if (s == "size") {
 			int n = t[i].getFont().getSize();
 			try {
 				t[i].setFontSize(parseInt(str3));
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				t[i].setFontSize(n);
 			}
-		}
-		else if (s == "style") {
+		} else if (s == "style") {
 			int n = t[i].getFont().getStyle();
 			try {
 				t[i].setFontStyle(parseInt(str3));
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				t[i].setFontStyle(n);
 			}
-		}
-		else if (s == "x") {
+		} else if (s == "x") {
 			double x = parseMathExpression(str3);
 			if (!Double.isNaN(x))
 				t[i].setRx(x * IR_CONVERTER);
-		}
-		else if (s == "y") {
+		} else if (s == "y") {
 			double y = parseMathExpression(str3);
 			if (!Double.isNaN(y))
 				t[i].setRy(y * IR_CONVERTER);
-		}
-		else if (s == "angle") {
+		} else if (s == "angle") {
 			double a = parseMathExpression(str3);
 			if (!Double.isNaN(a))
 				t[i].setAngle((float) a);
-		}
-		else if (s == "border") {
+		} else if (s == "border") {
 			byte n = t[i].getBorderType();
 			try {
 				t[i].setBorderType((byte) parseInt(str3));
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				t[i].setBorderType(n);
 			}
-		}
-		else if (s == "shadow") {
+		} else if (s == "shadow") {
 			byte n = t[i].getShadowType();
 			try {
 				t[i].setShadowType((byte) parseInt(str3));
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				t[i].setShadowType(n);
 			}
-		}
-		else if (s == "layer") {
+		} else if (s == "layer") {
 			if ("in_front_of_particles".equalsIgnoreCase(str3)) {
 				t[i].setLayer(Layered.IN_FRONT_OF_PARTICLES);
-			}
-			else if ("behind_particles".equalsIgnoreCase(str3)) {
+			} else if ("behind_particles".equalsIgnoreCase(str3)) {
 				t[i].setLayer(Layered.BEHIND_PARTICLES);
-			}
-			else if ("back".equalsIgnoreCase(str3)) {
+			} else if ("back".equalsIgnoreCase(str3)) {
 				view.sendLayerToBack(t[i]);
-			}
-			else if ("front".equalsIgnoreCase(str3)) {
+			} else if ("front".equalsIgnoreCase(str3)) {
 				view.bringLayerToFront(t[i]);
 			}
-		}
-		else {
+		} else {
 			out(ScriptEvent.FAILED, "Cannot set property: " + str2);
 			b = false;
 		}
@@ -6746,8 +6441,7 @@ class Eval2D extends AbstractEval {
 				y = Float.valueOf(s[1].trim()).floatValue() * IR_CONVERTER;
 				w = Float.valueOf(s[2].trim()).floatValue() * IR_CONVERTER;
 				h = Float.valueOf(s[3].trim()).floatValue() * IR_CONVERTER;
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				out(ScriptEvent.FAILED, "Script error at: " + str + "\n" + e);
 				return null;
 			}
@@ -6793,8 +6487,7 @@ class Eval2D extends AbstractEval {
 							}
 						}
 					}
-				}
-				else {
+				} else {
 					int lp = str.indexOf("(");
 					int rp = str.indexOf(")");
 					s = str.substring(lp + 1, rp).trim();
@@ -6806,8 +6499,7 @@ class Eval2D extends AbstractEval {
 						for (int k = 0; k < nop; k++) {
 							if (k == center) {
 								bs.set(k);
-							}
-							else {
+							} else {
 								if (model.getParticle(k).distanceSquare(c) < r)
 									bs.set(k);
 							}
@@ -6839,8 +6531,7 @@ class Eval2D extends AbstractEval {
 				int rp = str.indexOf(")");
 				if (lp != -1 && rp != -1) {
 					str = str.substring(lp + 1, rp).trim();
-				}
-				else {
+				} else {
 					if (lp != -1 || rp != -1) {
 						out(ScriptEvent.FAILED, "Unbalanced parenthesis: " + str);
 						return null;
@@ -6851,8 +6542,7 @@ class Eval2D extends AbstractEval {
 					int x = -1;
 					try {
 						x = Math.round(Float.valueOf(k.trim()).floatValue());
-					}
-					catch (NumberFormatException e) {
+					} catch (NumberFormatException e) {
 						out(ScriptEvent.FAILED, k + " cannot be parsed as an integer.");
 						return null;
 					}
@@ -6869,8 +6559,7 @@ class Eval2D extends AbstractEval {
 				int x = -1;
 				try {
 					x = Math.round(Float.valueOf(str.trim()).floatValue());
-				}
-				catch (NumberFormatException e) {
+				} catch (NumberFormatException e) {
 					out(ScriptEvent.FAILED, str + " cannot be parsed as an integer.");
 					return null;
 				}
@@ -6881,8 +6570,7 @@ class Eval2D extends AbstractEval {
 
 		if (found) {
 			model.setParticleSelectionSet(bs);
-		}
-		else {
+		} else {
 			out(ScriptEvent.FAILED, "Unrecognized expression: " + str);
 		}
 
@@ -6941,8 +6629,7 @@ class Eval2D extends AbstractEval {
 				found = true;
 				try {
 					index = Integer.valueOf(str.trim()).intValue();
-				}
-				catch (NumberFormatException nfe) {
+				} catch (NumberFormatException nfe) {
 					nfe.printStackTrace();
 					out(ScriptEvent.FAILED, "Element index cannot be parsed as an integer: " + str);
 					found = false;
@@ -6982,8 +6669,7 @@ class Eval2D extends AbstractEval {
 						y = Float.valueOf(s[1].trim()).floatValue() * IR_CONVERTER;
 						w = Float.valueOf(s[2].trim()).floatValue() * IR_CONVERTER;
 						h = Float.valueOf(s[3].trim()).floatValue() * IR_CONVERTER;
-					}
-					catch (Exception e) {
+					} catch (Exception e) {
 						out(ScriptEvent.FAILED, "Script error at: " + str + "\n" + e);
 						return null;
 					}
@@ -7006,8 +6692,7 @@ class Eval2D extends AbstractEval {
 					int id = 0;
 					try {
 						id = Integer.valueOf(str.substring(0, matcher.end()).trim()).intValue();
-					}
-					catch (NumberFormatException e) {
+					} catch (NumberFormatException e) {
 						out(ScriptEvent.FAILED, "Element type must be an integer: " + str);
 						return null;
 					}
@@ -7026,8 +6711,7 @@ class Eval2D extends AbstractEval {
 						y = Float.valueOf(s[1].trim()).floatValue() * IR_CONVERTER;
 						w = Float.valueOf(s[2].trim()).floatValue() * IR_CONVERTER;
 						h = Float.valueOf(s[3].trim()).floatValue() * IR_CONVERTER;
-					}
-					catch (Exception e) {
+					} catch (Exception e) {
 						out(ScriptEvent.FAILED, "Script error at: " + str + "\n" + e);
 						return null;
 					}
@@ -7072,8 +6756,7 @@ class Eval2D extends AbstractEval {
 							}
 						}
 					}
-				}
-				else {
+				} else {
 					int lp = str.indexOf("(");
 					int rp = str.indexOf(")");
 					s = str.substring(lp + 1, rp).trim();
@@ -7082,8 +6765,7 @@ class Eval2D extends AbstractEval {
 					int center = 0;
 					try {
 						center = Integer.valueOf(s.substring(s.indexOf(",") + 1).trim()).intValue();
-					}
-					catch (NumberFormatException nfe) {
+					} catch (NumberFormatException nfe) {
 						out(ScriptEvent.FAILED, str + " is not an integer number.");
 						return null;
 					}
@@ -7107,8 +6789,7 @@ class Eval2D extends AbstractEval {
 
 		if (found) {
 			model.setParticleSelectionSet(bs);
-		}
-		else {
+		} else {
 			out(ScriptEvent.FAILED, "Unrecognized expression: " + str);
 		}
 
@@ -7536,8 +7217,7 @@ class Eval2D extends AbstractEval {
 
 		if (str.toLowerCase().indexOf("within") != -1) {
 			translateInfixToPostfix(translateWithinClauses(str));
-		}
-		else {
+		} else {
 			translateInfixToPostfix(str);
 		}
 
@@ -7552,14 +7232,12 @@ class Eval2D extends AbstractEval {
 				BitSet bs = (BitSet) logicalStack.pop();
 				bs.flip(0, getNumberOfObjects(type));
 				logicalStack.push(bs);
-			}
-			else if (s.equalsIgnoreCase("or") || s.equalsIgnoreCase("and")) {
+			} else if (s.equalsIgnoreCase("or") || s.equalsIgnoreCase("and")) {
 				BitSet bs1 = null, bs2 = null;
 				try {
 					bs2 = (BitSet) logicalStack.pop();
 					bs1 = (BitSet) logicalStack.pop();
-				}
-				catch (EmptyStackException e) {
+				} catch (EmptyStackException e) {
 					e.printStackTrace();
 					continue;
 				}
@@ -7567,14 +7245,12 @@ class Eval2D extends AbstractEval {
 				if (s.equalsIgnoreCase("or")) {
 					bs.or(bs2);
 					bs.or(bs1);
-				}
-				else if (s.equalsIgnoreCase("and")) {
+				} else if (s.equalsIgnoreCase("and")) {
 					bs.or(bs2);
 					bs.and(bs1);
 				}
 				logicalStack.push(bs);
-			}
-			else {
+			} else {
 				BitSet bs = null;
 				if (s.toLowerCase().indexOf("within") != -1) {
 					boolean startsWithNot = false;
@@ -7631,8 +7307,7 @@ class Eval2D extends AbstractEval {
 				}
 				if (bs != null) {
 					logicalStack.push(bs);
-				}
-				else {
+				} else {
 					System.err.println("null bitset");
 				}
 			}
@@ -7753,8 +7428,7 @@ class Eval2D extends AbstractEval {
 				MoleculeCollection.sort(mm);
 			}
 			// mm.view.removeSelectedComponent();
-		}
-		else if (model instanceof MesoModel) {
+		} else if (model instanceof MesoModel) {
 			((MesoView) view).removeMarkedParticles(list);
 		}
 		if (!model.obstacles.isEmpty()) {
@@ -7785,8 +7459,7 @@ class Eval2D extends AbstractEval {
 				for (Field f : UserAction.class.getFields()) {
 					actionIDMap.put(f.getName(), f.getShort(null));
 				}
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
