@@ -444,7 +444,7 @@ public abstract class TextContainer implements DrawingElement {
 
 		if (isVisible()) {
 
-			g.setColor(Color.gray);
+			g.setColor(Color.darkGray);
 			if (fillMode == FillMode.getNoFillMode()) {
 				switch (borderType) {
 				case 0:
