@@ -617,6 +617,11 @@ public abstract class AtomicModel extends MDModel {
 			atomSource.setFlowAtomsMarked(b);
 	}
 
+	public void setFlowRange(float start, float length) {
+		if (atomSource != null)
+			atomSource.setFlowRange(start, length);
+	}
+
 	public QuantumRule getQuantumRule() {
 		return quantumRule;
 	}

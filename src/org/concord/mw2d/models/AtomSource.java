@@ -42,7 +42,7 @@ class AtomSource extends AbstractLoadable {
 		flowAtomsMarked = b;
 	}
 
-	void setRange(float start, float length) {
+	void setFlowRange(float start, float length) {
 		rangeStart = start;
 		rangeLength = length;
 	}
