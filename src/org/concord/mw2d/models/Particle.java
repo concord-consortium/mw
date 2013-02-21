@@ -51,8 +51,7 @@ import org.concord.mw2d.ViewAttribute;
 import static org.concord.mw2d.models.Trigonometry.*;
 
 /**
- * This is the abstract class from which you should derive a Newtonian particle in two dimension, such as an
- * <tt>Atom</tt> or a <tt>UnitedAtom</tt>.
+ * This is the abstract class from which you should derive a Newtonian particle in two dimension, such as an <tt>Atom</tt> or a <tt>UnitedAtom</tt>.
  * 
  * @author Charles Xie
  */
@@ -70,6 +69,8 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	/* the background color of this particle */
 	volatile Color color;
 
+	static Color edgeColor;
+
 	/* color for the charge sign */
 	Color chargeColor = Color.black;
 
@@ -83,8 +84,7 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	volatile double charge;
 
 	/*
-	 * the hydrophobicity of this particle. Negative means hydrophilic. This property is used when the particle is used
-	 * to model a molecule in solution. For simplicity, this parameter is set to be an integer.
+	 * the hydrophobicity of this particle. Negative means hydrophilic. This property is used when the particle is used to model a molecule in solution. For simplicity, this parameter is set to be an integer.
 	 */
 	volatile int hydrophobic;
 
@@ -154,8 +154,7 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	transient boolean selected;
 
 	/*
-	 * true if this particle is marked. Note: Being marked is different from being selected in that an action will have
-	 * no effect on a marked particle.
+	 * true if this particle is marked. Note: Being marked is different from being selected in that an action will have no effect on a marked particle.
 	 */
 	boolean marked;
 
@@ -203,8 +202,7 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 					pd.setValue("transient", Boolean.TRUE);
 				}
 			}
-		}
-		catch (Throwable e) {
+		} catch (Throwable e) {
 		}
 	}
 
@@ -228,9 +226,7 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	abstract boolean outOfView();
 
 	/**
-	 * get a shallow copy of this particle except its restraint properties. This method differs from the following copy
-	 * methods in that a new instance is created to hold the particle, whereas the other methods do not involve any
-	 * instantiation but just transferring the properties data between particles.
+	 * get a shallow copy of this particle except its restraint properties. This method differs from the following copy methods in that a new instance is created to hold the particle, whereas the other methods do not involve any instantiation but just transferring the properties data between particles.
 	 * 
 	 * @return a clone of this particle
 	 */
@@ -238,8 +234,7 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 		Particle clone = null;
 		try {
 			clone = (Particle) super.clone();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace(System.err);
 			return null;
 		}
@@ -258,14 +253,22 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 		}
 	}
 
-	/** get the background color of this particle. */
+	/** get the filling color of this particle. */
 	public Color getColor() {
 		return color;
 	}
 
-	/** set the background color of this particle. */
+	/** set the filling color of this particle. */
 	public void setColor(Color c) {
 		color = c;
+	}
+
+	public static Color getEdgeColor() {
+		return edgeColor;
+	}
+
+	public static void setEdgeColor(Color c) {
+		edgeColor = c;
 	}
 
 	public abstract Rectangle getBounds(int skin);
@@ -297,18 +300,14 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	/*
 	 * predict this particle's new state using the second-order Taylor expansion:
 	 * 
-	 * <pre> &lt;b&gt;x&lt;/b&gt;(t+dt)=&lt;b&gt;x&lt;/b&gt;(t)+&lt;b&gt;v&lt;/b&gt;(t)dt+0.5&lt;b&gt;a&lt;/b&gt;(t)dtdt
-	 * </pre>
+	 * <pre> &lt;b&gt;x&lt;/b&gt;(t+dt)=&lt;b&gt;x&lt;/b&gt;(t)+&lt;b&gt;v&lt;/b&gt;(t)dt+0.5&lt;b&gt;a&lt;/b&gt;(t)dtdt </pre>
 	 * 
-	 * @param dt the time increment @param dt2 half of the square of the time increment, i.e. 0.5dt^2. This parameter
-	 * should be precomputed in order to avoid unnecessary recalculations.
+	 * @param dt the time increment @param dt2 half of the square of the time increment, i.e. 0.5dt^2. This parameter should be precomputed in order to avoid unnecessary recalculations.
 	 */
 	abstract void predict(double dt, double dt2);
 
 	/**
-	 * assign to this particle its index in the collection (e.g. an array or a List). The index of a particle is
-	 * referenced in serializable delegates of objects connecting a set of particles, such as a <code>RadialBond</code>
-	 * or an <code>AngularBond</code>.
+	 * assign to this particle its index in the collection (e.g. an array or a List). The index of a particle is referenced in serializable delegates of objects connecting a set of particles, such as a <code>RadialBond</code> or an <code>AngularBond</code>.
 	 */
 	public void setIndex(int i) {
 		index = i;
@@ -519,8 +518,7 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 		double t = 0;
 		if (getHostModel().heatBathActivated()) {
 			t = getHostModel().getHeatBath().getExpectedTemperature();
-		}
-		else {
+		} else {
 			t = getHostModel().getTemperature();
 		}
 		setRandomVelocity(Math.sqrt(2 * t / getMass()) * MDModel.VT_CONVERSION_CONSTANT * 25);
@@ -609,7 +607,8 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	public void setRestraint(PointRestraint pr) {
 		if (pr != null && pr.getK() < ZERO)
 			restraint = null;
-		else restraint = pr;
+		else
+			restraint = pr;
 	}
 
 	public UserField getUserField() {
@@ -705,8 +704,7 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	}
 
 	/**
-	 * erase the properties that have been set for this particle. These properties includes: charge, restraint, dipole
-	 * moment, user field, movie queues, and so on.
+	 * erase the properties that have been set for this particle. These properties includes: charge, restraint, dipole moment, user field, movie queues, and so on.
 	 */
 	public void erase() {
 		eraseProperties();
@@ -742,14 +740,12 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	}
 
 	/**
-	 * set all the proporties of the specified particle to this one. This method is used to copy the state of a particle
-	 * for non-GUI operations.
+	 * set all the proporties of the specified particle to this one. This method is used to copy the state of a particle for non-GUI operations.
 	 */
 	public abstract void set(Particle p);
 
 	/**
-	 * duplicate all the properties the specified particle except for the location-specific ones (such as restraints).
-	 * This method is used in GUI operations.
+	 * duplicate all the properties the specified particle except for the location-specific ones (such as restraints). This method is used in GUI operations.
 	 */
 	public void duplicate(Particle p, boolean copyLayers) {
 		if (p == null)
@@ -822,12 +818,10 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 		if (r != null) {
 			if (restraint != null) {
 				restraint.copy(r);
-			}
-			else {
+			} else {
 				restraint = new PointRestraint(r);
 			}
-		}
-		else {
+		} else {
 			restraint = null;
 		}
 	}
@@ -854,14 +848,12 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 			rQ.setPointer(0);
 			rQ.setCoordinateQueue(getHostModel().getModelTimeQueue());
 			getHostModel().getMovieQueueGroup().add(rQ);
-		}
-		else {
+		} else {
 			rQ.setLength(n);
 			if (n < 1) {
 				getHostModel().getMovieQueueGroup().remove(rQ);
 				rQ = null;
-			}
-			else {
+			} else {
 				rQ.setPointer(0);
 			}
 		}
@@ -879,14 +871,12 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 			vQ.setPointer(0);
 			vQ.setCoordinateQueue(getHostModel().getModelTimeQueue());
 			getHostModel().getMovieQueueGroup().add(vQ);
-		}
-		else {
+		} else {
 			vQ.setLength(n);
 			if (n < 1) {
 				getHostModel().getMovieQueueGroup().remove(vQ);
 				vQ = null;
-			}
-			else {
+			} else {
 				vQ.setPointer(0);
 			}
 		}
@@ -904,14 +894,12 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 			aQ.setPointer(0);
 			aQ.setCoordinateQueue(getHostModel().getModelTimeQueue());
 			getHostModel().getMovieQueueGroup().add(aQ);
-		}
-		else {
+		} else {
 			aQ.setLength(n);
 			if (n < 1) {
 				getHostModel().getMovieQueueGroup().remove(aQ);
 				aQ = null;
-			}
-			else {
+			} else {
 				aQ.setPointer(0);
 			}
 		}
@@ -939,9 +927,7 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	}
 
 	/**
-	 * When an array is initialized and its elements subsequently filled, it occurs that until the array is full, some
-	 * of the elements are empty, the pointer points to the begin index of unfilled segment. The pointer will stop at
-	 * the last index of the array once the whole array is filled up.
+	 * When an array is initialized and its elements subsequently filled, it occurs that until the array is full, some of the elements are empty, the pointer points to the begin index of unfilled segment. The pointer will stop at the last index of the array once the whole array is filled up.
 	 */
 	public synchronized int getRPointer() {
 		if (rQ == null || rQ.isEmpty())
@@ -1016,15 +1002,15 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 		Color oldColor = g.getColor();
 		if (marked) {
 			g.setColor(getView().getMarkColor());
-		}
-		else {
+		} else {
 			g.setColor(trajectoryColor != null ? trajectoryColor : getView().contrastBackground());
 		}
 		switch (getView().getTrajectoryStyle()) {
 		case StyleConstant.TRAJECTORY_LINE_STYLE:
 			if (lineUp == null)
 				lineUp = new GeneralPath();
-			else lineUp.reset();
+			else
+				lineUp.reset();
 			g.setStroke(ViewAttribute.THIN_DASHED);
 			break;
 		case StyleConstant.TRAJECTORY_DOTTEDLINE_STYLE:
@@ -1166,9 +1152,7 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 	}
 
 	/**
-	 * render this particle's acceleration vector on the passed graphics. Draw the accelerator vectors 10 times shorter
-	 * than the force ones if the flavor length is the same (we can't use the mass as the reducing factor, because the
-	 * mass can easily be large enough to make the vectors too short).
+	 * render this particle's acceleration vector on the passed graphics. Draw the accelerator vectors 10 times shorter than the force ones if the flavor length is the same (we can't use the mass as the reducing factor, because the mass can easily be large enough to make the vectors too short).
 	 */
 	public void drawAccelerationVector(Graphics2D g) {
 		drawVector(g, ax * 12, ay * 12, getView().getAccelerationFlavor());
@@ -1217,8 +1201,7 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 			g.setColor(getContrastColor(background));
 			g.setStroke(ViewAttribute.THIN_DASHED);
 			g.drawLine((int) rx, (int) ry, vHotSpot.x, vHotSpot.y);
-		}
-		else {
+		} else {
 			putVHotSpotAtVelocityTip();
 			drawVelocityVector(g);
 		}
@@ -1263,8 +1246,7 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 				if (blinkIndex < 8) {
 					blinkIndex++;
 					blinkColor = blinkIndex % 2 == 0 ? ((MDView) getHostModel().getView()).contrastBackground() : getHostModel().getView().getBackground();
-				}
-				else {
+				} else {
 					timer.stop();
 					blinkIndex = 0;
 					setBlinking(false);

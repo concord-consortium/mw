@@ -39,6 +39,7 @@ import javax.swing.SwingUtilities;
 import org.concord.modeler.util.BooleanQueue;
 import org.concord.modeler.util.ByteQueue;
 import org.concord.molbio.engine.Aminoacid;
+import org.concord.mw2d.MDView;
 import org.concord.mw2d.UserAction;
 import org.concord.mw2d.ViewAttribute;
 import org.concord.mw2d.ui.GrowthModeDialog;
@@ -85,8 +86,7 @@ public class Atom extends Particle {
 					pd.setValue("transient", Boolean.TRUE);
 				}
 			}
-		}
-		catch (Throwable e) {
+		} catch (Throwable e) {
 		}
 	}
 
@@ -302,8 +302,7 @@ public class Atom extends Particle {
 	}
 
 	/**
-	 * <b>Warning</b>: Do NOT call this method to set the type of atom. Call <tt>setElement</tt> instead. The existence
-	 * of this method is for serialization.
+	 * <b>Warning</b>: Do NOT call this method to set the type of atom. Call <tt>setElement</tt> instead. The existence of this method is for serialization.
 	 * 
 	 * @see org.concord.mw2d.models.Atom#setElement
 	 */
@@ -386,8 +385,7 @@ public class Atom extends Particle {
 	}
 
 	/**
-	 * <b>Warning</b>: You should always use <code>setElement</code> to set the type of atom. This method should be used
-	 * to set ONLY the codon, because an amino acid maps to multiple codons.
+	 * <b>Warning</b>: You should always use <code>setElement</code> to set the type of atom. This method should be used to set ONLY the codon, because an amino acid maps to multiple codons.
 	 */
 	public void setCodon(String s) {
 		codon = s;
@@ -413,14 +411,12 @@ public class Atom extends Particle {
 				setCharge(aa.getCharge());
 				setHydrophobicity((int) aa.getHydrophobicity());
 			}
-		}
-		else if (isNucleotide() && id != ID_SP) {
+		} else if (isNucleotide() && id != ID_SP) {
 			setName(e.getName());
 			codon = null;
 			charge = 0;
 			hydrophobic = 0;
-		}
-		else {
+		} else {
 			codon = null;
 			name = null;
 			// charge=0;
@@ -434,15 +430,13 @@ public class Atom extends Particle {
 				el.setModel(model);
 				el.setEnergyLevel(e.getElectronicStructure().getEnergyLevel(0));
 				electrons.add(el);
-			}
-			else {
+			} else {
 				synchronized (electrons) {
 					for (Electron el : electrons)
 						el.setEnergyLevel(e.getElectronicStructure().getEnergyLevel(0));
 				}
 			}
-		}
-		else {
+		} else {
 			electrons.clear();
 		}
 	}
@@ -491,13 +485,11 @@ public class Atom extends Particle {
 			radicalQ.setInterval(getMovieInterval());
 			radicalQ.setPointer(0);
 			radicalQ.setCoordinateQueue(model.getModelTimeQueue());
-		}
-		else {
+		} else {
 			radicalQ.setLength(n);
 			if (n < 1) {
 				radicalQ = null;
-			}
-			else {
+			} else {
 				radicalQ.setPointer(0);
 			}
 		}
@@ -535,13 +527,11 @@ public class Atom extends Particle {
 			excitationQ.setInterval(getMovieInterval());
 			excitationQ.setPointer(0);
 			excitationQ.setCoordinateQueue(model.getModelTimeQueue());
-		}
-		else {
+		} else {
 			excitationQ.setLength(n);
 			if (n < 1) {
 				excitationQ = null;
-			}
-			else {
+			} else {
 				excitationQ.setPointer(0);
 			}
 		}
@@ -593,11 +583,7 @@ public class Atom extends Particle {
 	}
 
 	/*
-	 * correct the position predicted by the <tt>predict</tt> method. <b>Important</b>: <tt>fx, fy</tt> were used in the
-	 * force calculation routine to store the new acceleration data. <tt>ax, ay</tt> were used to hold the old
-	 * acceleration data before calling this method. After calling this method, new acceleration data will be assigned
-	 * to <tt>ax, ay</tt>, whereas the forces and torques to <tt>fx, fy</tt>. <b>Be aware</b>: the acceleration and
-	 * force properties of a particle are correct ONLY after this correction method has been called.
+	 * correct the position predicted by the <tt>predict</tt> method. <b>Important</b>: <tt>fx, fy</tt> were used in the force calculation routine to store the new acceleration data. <tt>ax, ay</tt> were used to hold the old acceleration data before calling this method. After calling this method, new acceleration data will be assigned to <tt>ax, ay</tt>, whereas the forces and torques to <tt>fx, fy</tt>. <b>Be aware</b>: the acceleration and force properties of a particle are correct ONLY after this correction method has been called.
 	 * 
 	 * @param half half of the time increment
 	 */
@@ -635,8 +621,7 @@ public class Atom extends Particle {
 			circle = new Ellipse2D.Double();
 		if (model.view.getVdwPercentage() == 100) {
 			circle.setFrame(rx - 0.5 * sigma, ry - 0.5 * sigma, sigma, sigma);
-		}
-		else {
+		} else {
 			double x = model.view.getVdwPercentage() * 0.01;
 			circle.setFrame(rx - 0.5 * x * sigma, ry - 0.5 * x * sigma, x * sigma, x * sigma);
 		}
@@ -675,8 +660,7 @@ public class Atom extends Particle {
 	}
 
 	/**
-	 * get the background color of this atom. If the <code>setColor()</code> method has not been called, return the
-	 * default background color for this type of element.
+	 * get the background color of this atom. If the <code>setColor()</code> method has not been called, return the default background color for this type of element.
 	 */
 	public Color getColor() {
 		return color != null ? color : new Color(model.view.getColor(this));
@@ -708,18 +692,13 @@ public class Atom extends Particle {
 		Element e = model.getElement(id);
 		double d = RadialBond.PEPTIDE_BOND_LENGTH_PARAMETER * (getSigma() + e.getSigma());
 		if (GrowthModeDialog.getMode() == GrowthModeDialog.ZIGZAG) {
-			if (model.view.insertAnAtom(rx + d * COS120, ry + d * SIN120, id, true)
-					|| model.view.insertAnAtom(rx + d * COS240, ry + d * SIN240, id, true)) {
+			if (model.view.insertAnAtom(rx + d * COS120, ry + d * SIN120, id, true) || model.view.insertAnAtom(rx + d * COS240, ry + d * SIN240, id, true)) {
 				model.bonds.add(new RadialBond.Builder(this, model.atom[model.getNumberOfAtoms() - 1]).bondLength(d).build());
 				MoleculeCollection.sort(model);
 				return true;
 			}
-		}
-		else if (GrowthModeDialog.getMode() == GrowthModeDialog.SPIRAL) {
-			if (model.view.insertAnAtom(rx - d, ry, id, true) || model.view.insertAnAtom(rx + d * COS120, ry + d * SIN120, id, true)
-					|| model.view.insertAnAtom(rx + d * COS60, ry + d * SIN60, id, true)
-					|| model.view.insertAnAtom(rx + d * COS240, ry + d * SIN240, id, true)
-					|| model.view.insertAnAtom(rx + d * COS300, ry + d * SIN300, id, true)) {
+		} else if (GrowthModeDialog.getMode() == GrowthModeDialog.SPIRAL) {
+			if (model.view.insertAnAtom(rx - d, ry, id, true) || model.view.insertAnAtom(rx + d * COS120, ry + d * SIN120, id, true) || model.view.insertAnAtom(rx + d * COS60, ry + d * SIN60, id, true) || model.view.insertAnAtom(rx + d * COS240, ry + d * SIN240, id, true) || model.view.insertAnAtom(rx + d * COS300, ry + d * SIN300, id, true)) {
 				model.bonds.add(new RadialBond.Builder(this, model.atom[model.getNumberOfAtoms() - 1]).bondLength(d).build());
 				MoleculeCollection.sort(model);
 				return true;
@@ -765,7 +744,7 @@ public class Atom extends Particle {
 
 		if (selected && model.view.getShowSelectionHalo()) {
 			g.setStroke(ViewAttribute.THIN_DASHED);
-			g.setColor(model.view.contrastBackground());
+			g.setColor(Particle.edgeColor == null ? model.view.contrastBackground() : Particle.edgeColor);
 			circle.setFrame(rx - 0.5 * sigma - 2, ry - 0.5 * sigma - 2, sigma + 4, sigma + 4);
 			g.draw(circle);
 		}
@@ -776,20 +755,32 @@ public class Atom extends Particle {
 				if (circle == null)
 					circle = new Ellipse2D.Double();
 				circle.setFrame(rx - 0.5 * sigma, ry - 0.5 * sigma, sigma, sigma);
-				if (marked) {
+				if (marked && model.view.getMarkStyle() == MDView.MARK_INSIDE) {
 					g.setColor(model.view.getMarkColor());
+					g.fill(circle);
+				} else {
+					if (marked && model.view.getMarkStyle() == MDView.MARK_OUTSIDE) {
+						g.setColor(model.view.getMarkColor());
+						circle.x -= 2;
+						circle.y -= 2;
+						circle.width += 4;
+						circle.height += 4;
+						g.fill(circle);
+						circle.x += 2;
+						circle.y += 2;
+						circle.width -= 4;
+						circle.height -= 4;
+					}
+					if (model.view.shadingShown()) {
+						g.setColor(model.view.getKeShadingColor((vx * vx + vy * vy) * mass));
+					} else if (model.view.chargeShadingShown()) {
+						g.setColor(model.view.getChargeShadingColor(charge));
+					} else {
+						g.setColor(color != null ? color : getColor());
+					}
+					g.fill(circle);
 				}
-				else if (model.view.shadingShown()) {
-					g.setColor(model.view.getKeShadingColor((vx * vx + vy * vy) * mass));
-				}
-				else if (model.view.chargeShadingShown()) {
-					g.setColor(model.view.getChargeShadingColor(charge));
-				}
-				else {
-					g.setColor(color != null ? color : getColor());
-				}
-				g.fill(circle);
-				g.setColor(model.view.contrastBackground());
+				g.setColor(Particle.edgeColor == null ? model.view.contrastBackground() : Particle.edgeColor);
 				g.setStroke(index < model.numberOfAtoms ? ViewAttribute.THIN : ViewAttribute.THIN_DOTTED);
 				g.draw(circle);
 			}
@@ -810,8 +801,7 @@ public class Atom extends Particle {
 				if (charge > ZERO) {
 					g.drawLine((int) rx, (int) (ry - 4.0), (int) rx, (int) (ry + 4.0));
 					g.drawLine((int) (rx - 4.0), (int) ry, (int) (rx + 4.0), (int) ry);
-				}
-				else if (charge < -ZERO) {
+				} else if (charge < -ZERO) {
 					g.drawLine((int) (rx - 4.0), (int) ry, (int) (rx + 4.0), (int) ry);
 				}
 			}
@@ -846,8 +836,7 @@ public class Atom extends Particle {
 		if (isBlinking()) {
 			g.setColor(blinkColor);
 			g.setStroke(ViewAttribute.DASHED);
-			g.drawOval((int) Math.round(rx - 0.7 * sigma), (int) Math.round(ry - 0.7 * sigma), (int) Math.round(1.4 * sigma),
-					(int) Math.round(1.4 * sigma));
+			g.drawOval((int) Math.round(rx - 0.7 * sigma), (int) Math.round(ry - 0.7 * sigma), (int) Math.round(1.4 * sigma), (int) Math.round(1.4 * sigma));
 		}
 
 	}
