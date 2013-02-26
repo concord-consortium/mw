@@ -54,10 +54,6 @@ public class CoilSpring {
 	private int resolution = 20;
 	private boolean drawAxis = true;
 
-	public CoilSpring(float rotation) {
-		this.rotation = rotation;
-	}
-
 	public CoilSpring(float x, float y, float length) {
 		setShape(x, y, length);
 	}

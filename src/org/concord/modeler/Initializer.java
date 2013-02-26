@@ -374,7 +374,7 @@ public class Initializer {
 				icon.paintIcon(this, g, 0, 0);
 				g.setFont(font);
 				g.setColor(Color.white);
-				g.drawString("Version " + Modeler.VERSION + " Copyright 2004-2012.", 10, icon.getIconHeight() - 25);
+				g.drawString("Version " + Modeler.VERSION + " Copyright 2004-2013.", 10, icon.getIconHeight() - 25);
 				g.drawString("Supported by the National Science Foundation.", 10, icon.getIconHeight() - 10);
 			}
 		}, BorderLayout.CENTER);
