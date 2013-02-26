@@ -37,31 +37,39 @@ import java.awt.geom.Line2D;
 
 public class CoilSpring {
 
+	private float x = 200; // center x
+	private float y = 50; // center y
+	private float length = 200; // length
+	private float lead = 20;
+	private float pitch = 10;
+	private float diameter = 20;
+	private int turnCount = 10;
+	private float rotation;
+
+	private GeneralPath path;
+	private Line2D.Float line;
 	private Color color = Color.BLACK;
 	private BasicStroke stroke = new BasicStroke(2);
 	private BasicStroke axisStroke = new BasicStroke(0.5f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1.0f, new float[] { 1.5f }, 0.0f);
-	private float x1 = 50, y1 = 50, x2 = 250, y2 = 50;
-	private float pitch = 10;
-	private float diameter = 20;
-	private float offset = diameter;
-	private int turnCount = 10;
 	private int resolution = 20;
 	private boolean drawAxis = true;
-	private GeneralPath path;
-	private Line2D.Float line;
 
-	public CoilSpring() {
+	public CoilSpring(float rotation) {
+		this.rotation = rotation;
 	}
 
-	public CoilSpring(float x1, float y1, float x2, float y2) {
-		setEndPoints(x1, y1, x2, y2);
+	public CoilSpring(float x, float y, float length) {
+		setShape(x, y, length);
 	}
 
-	public void setEndPoints(float x1, float y1, float x2, float y2) {
-		this.x1 = x1;
-		this.y1 = y1;
-		this.x2 = x2;
-		this.y2 = y2;
+	public void setShape(float x, float y, float length) {
+		this.x = x;
+		this.y = y;
+		this.length = length;
+	}
+
+	public void setRotation(float rotation) {
+		this.rotation = rotation;
 	}
 
 	public void setDrawAxis(boolean drawAxis) {
@@ -84,8 +92,8 @@ public class CoilSpring {
 		this.diameter = diameter;
 	}
 
-	public void setOffset(float offset) {
-		this.offset = offset;
+	public void setLead(float lead) {
+		this.lead = lead;
 	}
 
 	public void setColor(Color color) {
@@ -103,19 +111,19 @@ public class CoilSpring {
 		Color oldColor = g2.getColor();
 		Stroke oldStroke = g2.getStroke();
 
+		if (rotation != 0) {
+			g2.rotate(rotation, x, y);
+		}
+
 		g2.setColor(color);
 
-		float dx = x2 - x1;
-		float dy = y2 - y1;
-		double length = Math.hypot(dx, dy);
-		dx /= length;
-		dy /= length;
-
+		float x1 = x - length * 0.5f;
+		float x2 = x + length * 0.5f;
 		if (line == null)
 			line = new Line2D.Float();
 		if (drawAxis) {
 			g2.setStroke(axisStroke);
-			line.setLine(x1, y1, x2, y2);
+			line.setLine(x1, y, x2, y);
 			g2.draw(line);
 		}
 
@@ -124,33 +132,35 @@ public class CoilSpring {
 			path = new GeneralPath();
 		else
 			path.reset();
-		double x, y;
+		double rx, ry;
 		int n = resolution * turnCount;
-		double delta = (length - offset * 2) / (n + 1);
+		double delta = (length - lead * 2) / (n + 1);
 		double theta = 2 * Math.PI / resolution;
-		double angle, cos, sin;
+		double angle;
 		for (int i = 0; i < n + 1; i++) {
 			angle = Math.PI - theta * i;
-			cos = Math.cos(angle);
-			sin = Math.sin(angle);
-			x = x1 + (offset + i * delta) * dx + pitch * cos + pitch;
-			y = y1 + (offset + i * delta) * dy + diameter * sin;
+			rx = x1 + lead + i * delta + pitch * Math.cos(angle) + pitch;
+			ry = y + diameter * Math.sin(angle);
 			if (i == 0)
-				path.moveTo(x, y);
+				path.moveTo(rx, ry);
 			else
-				path.lineTo(x, y);
+				path.lineTo(rx, ry);
 		}
 		g2.draw(path);
 
-		if (offset > 0) {
-			line.setLine(x1, y1, x1 + offset * dx, y1 + offset * dy);
+		if (lead > 0) {
+			line.setLine(x1, y, x1 + lead, y);
 			g2.draw(line);
-			line.setLine(x2, y2, x2 - offset * dx, y2 - offset * dy);
+			line.setLine(x2, y, x2 - lead, y);
 			g2.draw(line);
 		}
 
 		g2.setColor(oldColor);
 		g2.setStroke(oldStroke);
+
+		if (rotation != 0) {
+			g2.rotate(-rotation, x, y);
+		}
 
 	}
 
