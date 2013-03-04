@@ -174,6 +174,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 	private float relativeVolume = 50;
 	private int hitTraceInterval = 500;
 	private boolean showCumulativeHits = true;
+	private boolean showCollisionEvents = true;
 
 	public RectangularObstacle() {
 		super();
@@ -319,6 +320,14 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 
 	public boolean getShowCumulativeHits() {
 		return showCumulativeHits;
+	}
+
+	public void setShowCollisionEvents(boolean showCollisionEvents) {
+		this.showCollisionEvents = showCollisionEvents;
+	}
+
+	public boolean getShowCollisionEvents() {
+		return showCollisionEvents;
 	}
 
 	public static int getDefaultRoundCornerRadius() {
@@ -1434,7 +1443,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 			g.drawString("" + model.getObstacles().indexOf(this), (int) (x + width * 0.5), (int) (y + height * 0.5));
 		}
 
-		if (cumulativeFaceCollisions != null && !cumulativeFaceCollisions.isEmpty()) {
+		if (showCollisionEvents && cumulativeFaceCollisions != null && !cumulativeFaceCollisions.isEmpty()) {
 			for (FaceCollision fc : cumulativeFaceCollisions) {
 				boolean fresh = model.job.getIndexOfStep() - fc.getIndexOfStep() < hitTraceInterval / 10;
 				double mass = 1000 * model.getParticle(fc.getParticleIndex()).getMass();
