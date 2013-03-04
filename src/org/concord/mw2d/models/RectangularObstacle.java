@@ -1445,6 +1445,8 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 
 		if (showCollisionEvents && cumulativeFaceCollisions != null && !cumulativeFaceCollisions.isEmpty()) {
 			for (FaceCollision fc : cumulativeFaceCollisions) {
+				if (!model.getParticle(fc.getParticleIndex()).isMovable())
+					continue;
 				boolean fresh = model.job.getIndexOfStep() - fc.getIndexOfStep() < hitTraceInterval / 10;
 				double mass = 1000 * model.getParticle(fc.getParticleIndex()).getMass();
 				g.setColor(model.getParticle(fc.getParticleIndex()).getColor());

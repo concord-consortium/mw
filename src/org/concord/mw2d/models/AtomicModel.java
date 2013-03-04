@@ -1829,6 +1829,8 @@ public abstract class AtomicModel extends MDModel {
 	 */
 
 	public synchronized void setTemperature(double temperature) {
+		if (numberOfAtoms == 0)
+			return;
 		if (temperature < ZERO)
 			temperature = 0.0;
 		boolean electricFieldOn = false;
@@ -2115,6 +2117,8 @@ public abstract class AtomicModel extends MDModel {
 
 	/** assign velocities to atoms according to the Boltzman-Maxwell distribution */
 	public void assignTemperature(double temperature) {
+		if (numberOfAtoms == 0)
+			return;
 		if (temperature < ZERO)
 			temperature = 0.0;
 		double rtemp = Math.sqrt(temperature) * VT_CONVERSION_CONSTANT;
