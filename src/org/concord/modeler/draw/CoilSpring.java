@@ -22,7 +22,6 @@ package org.concord.modeler.draw;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
 import java.awt.geom.GeneralPath;
@@ -35,7 +34,7 @@ import java.awt.geom.Line2D;
  * 
  */
 
-public class CoilSpring {
+public class CoilSpring implements Paintable {
 
 	private float x = 200; // center x
 	private float y = 50; // center y
@@ -100,30 +99,28 @@ public class CoilSpring {
 		this.stroke = stroke;
 	}
 
-	public void paint(Graphics g) {
+	public void paint(Graphics2D g) {
 
-		Graphics2D g2 = (Graphics2D) g;
-
-		Color oldColor = g2.getColor();
-		Stroke oldStroke = g2.getStroke();
+		Color oldColor = g.getColor();
+		Stroke oldStroke = g.getStroke();
 
 		if (rotation != 0) {
-			g2.rotate(rotation, x, y);
+			g.rotate(rotation, x, y);
 		}
 
-		g2.setColor(color);
+		g.setColor(color);
 
 		float x1 = x - length * 0.5f;
 		float x2 = x + length * 0.5f;
 		if (line == null)
 			line = new Line2D.Float();
 		if (drawAxis) {
-			g2.setStroke(axisStroke);
+			g.setStroke(axisStroke);
 			line.setLine(x1, y, x2, y);
-			g2.draw(line);
+			g.draw(line);
 		}
 
-		g2.setStroke(stroke);
+		g.setStroke(stroke);
 		if (path == null)
 			path = new GeneralPath();
 		else
@@ -142,20 +139,20 @@ public class CoilSpring {
 			else
 				path.lineTo(rx, ry);
 		}
-		g2.draw(path);
+		g.draw(path);
 
 		if (lead > 0) {
 			line.setLine(x1, y, x1 + lead, y);
-			g2.draw(line);
+			g.draw(line);
 			line.setLine(x2, y, x2 - lead, y);
-			g2.draw(line);
+			g.draw(line);
 		}
 
-		g2.setColor(oldColor);
-		g2.setStroke(oldStroke);
+		g.setColor(oldColor);
+		g.setStroke(oldStroke);
 
 		if (rotation != 0) {
-			g2.rotate(-rotation, x, y);
+			g.rotate(-rotation, x, y);
 		}
 
 	}

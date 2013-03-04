@@ -85,6 +85,7 @@ import org.concord.modeler.draw.Draw;
 import org.concord.modeler.draw.FillMode;
 import org.concord.modeler.draw.GradientFactory;
 import org.concord.modeler.draw.LineStyle;
+import org.concord.modeler.draw.Paintable;
 import org.concord.modeler.draw.StrokeFactory;
 import org.concord.modeler.event.ImageEvent;
 import org.concord.modeler.event.ImageImporter;
@@ -226,6 +227,7 @@ public abstract class MDView extends PrintableComponent {
 	private boolean actionTipEnabled;
 	private boolean propertyDialogEnabled = true;
 	private final Object updateLock = new Object();
+	private List<Paintable> paintables;
 
 	public MDView() {
 
@@ -2278,6 +2280,18 @@ public abstract class MDView extends PrintableComponent {
 
 		paintLayeredComponents(g, Layered.BEHIND_PARTICLES);
 
+		if (paintables != null && !paintables.isEmpty()) {
+			for (Paintable p : paintables)
+				p.paint(g2);
+		}
+
+	}
+
+	public void addPaintable(Paintable p) {
+		if (paintables == null)
+			paintables = new ArrayList<Paintable>();
+		if (!paintables.contains(p))
+			paintables.add(p);
 	}
 
 	void paintShapeDrawing(Graphics g) {
