@@ -73,6 +73,7 @@ class AtomSource extends AbstractLoadable {
 				}
 			};
 		}
+		// has to put this in the Event Queue because the code may involve GUI
 		EventQueue.invokeLater(runnable);
 	}
 
@@ -127,8 +128,12 @@ class AtomSource extends AbstractLoadable {
 			}
 			break;
 		}
-		if (flowAtomsMarked && a != null)
-			a.setMarked(true);
+		if (flowAtomsMarked) {
+			if (a != null) {
+				a.setMarked(true);
+				a.setCustom(model.modelTime);
+			}
+		}
 	}
 
 	public String getName() {

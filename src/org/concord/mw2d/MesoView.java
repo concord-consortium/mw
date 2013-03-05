@@ -161,8 +161,7 @@ public class MesoView extends MDView {
 		Rectangle2D r2d = new Rectangle2D.Double();
 		for (int i = 0; i < nParticle; i++) {
 			at.setToRotation(gb[i].getTheta(), gb[i].getRx(), gb[i].getRy());
-			r2d.setRect(gb[i].getRx() - gb[i].getLength() * 0.5 - 3.0, gb[i].getRy() - gb[i].getBreadth() * 0.5 - 3.0,
-					gb[i].getLength() + 6.0, gb[i].getBreadth() + 6.0);
+			r2d.setRect(gb[i].getRx() - gb[i].getLength() * 0.5 - 3.0, gb[i].getRy() - gb[i].getBreadth() * 0.5 - 3.0, gb[i].getLength() + 6.0, gb[i].getBreadth() + 6.0);
 			if (at.createTransformedShape(r2d).contains(x, y))
 				return gb[i];
 		}
@@ -202,9 +201,7 @@ public class MesoView extends MDView {
 							i2[j] = lay.get(j);
 					}
 				}
-				model.getUndoManager().undoableEditHappened(
-						new UndoableEditEvent(model, new UndoableDeletion(UndoAction.BLOCK_REMOVE, list != null ? list
-								.size() : 0, i2)));
+				model.getUndoManager().undoableEditHappened(new UndoableEditEvent(model, new UndoableDeletion(UndoAction.BLOCK_REMOVE, list != null ? list.size() : 0, i2)));
 				updateUndoUIComponents();
 			}
 		}
@@ -250,8 +247,7 @@ public class MesoView extends MDView {
 				// map the old indices of the surviving particles to the new ones
 				// liveParticleMap.put(i, new Integer(temp));
 				temp++;
-			}
-			else {
+			} else {
 				if (!layerBasket.isEmpty()) {
 					List<Layered> l = getLayeredComponentHostedBy(gb[i]);
 					if (l != null) {
@@ -319,8 +315,7 @@ public class MesoView extends MDView {
 	 * @param y
 	 *            y coordinate of the position
 	 * @param p
-	 *            the type of particle to be inserted. If null, then use the parameters specified by
-	 *            <code>GayBerneConfigure</code>
+	 *            the type of particle to be inserted. If null, then use the parameters specified by <code>GayBerneConfigure</code>
 	 * @return 'true' if the action is done, 'false' if not
 	 */
 	public boolean insertAnGB(int x, int y, GayBerneParticle p) {
@@ -331,14 +326,12 @@ public class MesoView extends MDView {
 				gb[nParticle].setLength(GayBerneConfigure.length);
 				gb[nParticle].setBreadth(GayBerneConfigure.breadth);
 				gb[nParticle].setTheta(GayBerneConfigure.theta);
-			}
-			else {
+			} else {
 				gb[nParticle].setLength(GayBerneConfigure.breadth);
 				gb[nParticle].setBreadth(GayBerneConfigure.length);
 				gb[nParticle].setTheta(Math.PI * 0.5 + GayBerneConfigure.theta);
 			}
-		}
-		else {
+		} else {
 			gb[nParticle].setLength(p.getLength());
 			gb[nParticle].setBreadth(p.getBreadth());
 			gb[nParticle].setTheta(p.getTheta());
@@ -359,16 +352,16 @@ public class MesoView extends MDView {
 				gb[nParticle].setColor(GayBerneConfigure.color);
 				gb[nParticle].setEpsilon0(GayBerneConfigure.epsilon0);
 				gb[nParticle].setEeVsEs(GayBerneConfigure.eeVsEs);
-				gb[nParticle].setCharge(0.0);
+				gb[nParticle].setCharge(0);
+				gb[nParticle].setCustom(0);
 				gb[nParticle].setDipoleMoment(0.0);
-				gb[nParticle].setInertia(0.5 * gb[nParticle].getMass() * gb[nParticle].getLength()
-						* gb[nParticle].getBreadth());
-			}
-			else {
+				gb[nParticle].setInertia(0.5 * gb[nParticle].getMass() * gb[nParticle].getLength() * gb[nParticle].getBreadth());
+			} else {
 				gb[nParticle].setColor(p.getColor());
 				gb[nParticle].setEpsilon0(p.getEpsilon0());
 				gb[nParticle].setEeVsEs(p.getEeVsEs());
 				gb[nParticle].setCharge(p.getCharge());
+				gb[nParticle].setCustom(p.getCustom());
 				gb[nParticle].setDipoleMoment(p.getDipoleMoment());
 				gb[nParticle].setInertia(p.getInertia());
 			}
@@ -377,8 +370,7 @@ public class MesoView extends MDView {
 			model.setNumberOfParticles(nParticle);
 			if (!doNotFireUndoEvent) {
 				gb[nParticle - 1].setSelected(true);
-				model.getUndoManager().undoableEditHappened(
-						new UndoableEditEvent(model, new UndoableInsertion(UndoAction.INSERT_A_PARTICLE, x, y)));
+				model.getUndoManager().undoableEditHappened(new UndoableEditEvent(model, new UndoableInsertion(UndoAction.INSERT_A_PARTICLE, x, y)));
 				updateUndoUIComponents();
 			}
 			repaint();
@@ -394,8 +386,7 @@ public class MesoView extends MDView {
 			if (selectedComponent instanceof GayBerneParticle) {
 				((GayBerneParticle) selectedComponent).setSelectedToRotate(true);
 			}
-		}
-		else {
+		} else {
 			if (selectedComponent instanceof GayBerneParticle) {
 				((GayBerneParticle) selectedComponent).setSelectedToRotate(false);
 			}
@@ -404,8 +395,7 @@ public class MesoView extends MDView {
 			if (selectedComponent instanceof GayBerneParticle) {
 				((GayBerneParticle) selectedComponent).setSelectedToResize(true);
 			}
-		}
-		else {
+		} else {
 			if (selectedComponent instanceof GayBerneParticle) {
 				((GayBerneParticle) selectedComponent).setSelectedToResize(false);
 			}
@@ -502,8 +492,7 @@ public class MesoView extends MDView {
 			removeMarkedParticles(list);
 			model.notifyChange();
 			if (!doNotFireUndoEvent) {
-				model.getUndoManager().undoableEditHappened(
-						new UndoableEditEvent(model, new UndoableDeletion(UndoAction.BLOCK_REMOVE, 1)));
+				model.getUndoManager().undoableEditHappened(new UndoableEditEvent(model, new UndoableDeletion(UndoAction.BLOCK_REMOVE, 1)));
 				updateUndoUIComponents();
 			}
 		}
@@ -607,8 +596,7 @@ public class MesoView extends MDView {
 		for (int i = 0; i < nParticle; i++) {
 			if (gb[i] != p) {
 				at.setToRotation(gb[i].getTheta(), gb[i].getRx(), gb[i].getRy());
-				r2d.setRect(gb[i].getRx() - gb[i].getLength() * 0.5 - 3.0, gb[i].getRy() - gb[i].getBreadth() * 0.5
-						- 3.0, gb[i].getLength() + 6.0, gb[i].getBreadth() + 6.0);
+				r2d.setRect(gb[i].getRx() - gb[i].getLength() * 0.5 - 3.0, gb[i].getRy() - gb[i].getBreadth() * 0.5 - 3.0, gb[i].getLength() + 6.0, gb[i].getBreadth() + 6.0);
 				if (at.createTransformedShape(r2d).contains(x, y))
 					return gb[i];
 			}
@@ -762,8 +750,7 @@ public class MesoView extends MDView {
 			for (int i = k + 1; i < nParticle; i++)
 				renderParticle(gb[i], g2);
 			renderParticle(gb[k], g2);
-		}
-		else {
+		} else {
 			for (int i = 0; i < nParticle; i++)
 				renderParticle(gb[i], g2);
 		}
@@ -819,8 +806,7 @@ public class MesoView extends MDView {
 				g2.setColor(Color.black);
 				g2.drawString(str, (int) p.getRx() + 4, (int) p.getRy() - sh / 2 + 4);
 			}
-		}
-		else if (actionID == IPOL_ID || actionID == DPOL_ID) {
+		} else if (actionID == IPOL_ID || actionID == DPOL_ID) {
 			if (selectedComponent instanceof GayBerneParticle) {
 				GayBerneParticle p = (GayBerneParticle) selectedComponent;
 				String str = p.getDipoleMoment() + "";
@@ -834,8 +820,7 @@ public class MesoView extends MDView {
 				g.setColor(Color.black);
 				g.drawString(str, (int) p.getRx() + 4, (int) p.getRy() - sh / 2 + 4);
 			}
-		}
-		else if (actionID == IRES_ID || actionID == DRES_ID) {
+		} else if (actionID == IRES_ID || actionID == DRES_ID) {
 			if (selectedComponent instanceof GayBerneParticle) {
 				GayBerneParticle p = (GayBerneParticle) selectedComponent;
 				if (p.getRestraint() != null) {
@@ -843,34 +828,27 @@ public class MesoView extends MDView {
 					g.drawString(p.getRestraint().toString(), (int) p.getRx(), (int) p.getRy());
 				}
 			}
-		}
-		else if (actionID == IDMP_ID || actionID == DDMP_ID) {
+		} else if (actionID == IDMP_ID || actionID == DDMP_ID) {
 			if (selectedComponent instanceof GayBerneParticle) {
 				GayBerneParticle p = (GayBerneParticle) selectedComponent;
 				g.setColor(contrastBackground());
 				g.drawString(p.getFriction() + "", (int) p.getRx(), (int) p.getRy());
 			}
-		}
-		else if (actionID == ADGB_ID) {
-			if (addGBIndicator.x >= 0 && addGBIndicator.y >= 0
-					&& addGBIndicator.x + addGBIndicator.width <= boundary.getWidth()
-					&& addGBIndicator.y + addGBIndicator.height <= boundary.getHeight()) {
+		} else if (actionID == ADGB_ID) {
+			if (addGBIndicator.x >= 0 && addGBIndicator.y >= 0 && addGBIndicator.x + addGBIndicator.width <= boundary.getWidth() && addGBIndicator.y + addGBIndicator.height <= boundary.getHeight()) {
 				AffineTransform savedAT = g2.getTransform();
 				AffineTransform at = new AffineTransform();
-				at.setToRotation(GayBerneConfigure.theta, addGBIndicator.x + 0.5f * addGBIndicator.width,
-						addGBIndicator.y + 0.5f * addGBIndicator.height);
+				at.setToRotation(GayBerneConfigure.theta, addGBIndicator.x + 0.5f * addGBIndicator.width, addGBIndicator.y + 0.5f * addGBIndicator.height);
 				g2.transform(at);
 				g2.setStroke(ViewAttribute.THIN_DASHED);
 				g2.setColor(contrastBackground());
 				g2.draw(addGBIndicator);
 				g2.setTransform(savedAT);
 			}
-		}
-		else if (actionID == HEAT_ID) {
+		} else if (actionID == HEAT_ID) {
 			g2.setStroke(ViewAttribute.THIN);
 			pointHeater.paint(g2, true);
-		}
-		else if (actionID == COOL_ID) {
+		} else if (actionID == COOL_ID) {
 			g2.setStroke(ViewAttribute.THIN);
 			pointHeater.paint(g2, false);
 		}
@@ -904,9 +882,7 @@ public class MesoView extends MDView {
 
 		int clickCount = e.getClickCount();
 		if (clickCount >= 2) {
-			if (actionID != HEAT_ID && actionID != COOL_ID && actionID != IRES_ID && actionID != DRES_ID
-					&& actionID != IDMP_ID && actionID != DDMP_ID && actionID != IPOL_ID && actionID != DPOL_ID
-					&& actionID != CPOS_ID && actionID != CNEG_ID) {
+			if (actionID != HEAT_ID && actionID != COOL_ID && actionID != IRES_ID && actionID != DRES_ID && actionID != IDMP_ID && actionID != DDMP_ID && actionID != IPOL_ID && actionID != DPOL_ID && actionID != CPOS_ID && actionID != CNEG_ID) {
 				resetUndoManager();
 				setAction(SELE_ID);
 			}
@@ -928,33 +904,23 @@ public class MesoView extends MDView {
 				((GayBerneParticle) mc).setSelectedToResize(false);
 				((GayBerneParticle) mc).setSelectedToRotate(false);
 				str = mc.toString();
-			}
-			else if (mc instanceof ImageComponent) {
-				str = "Image #" + getLayeredComponentIndex((ImageComponent) mc) + ":"
-						+ FileUtilities.getFileName(mc.toString());
-			}
-			else if (mc instanceof TextBoxComponent) {
+			} else if (mc instanceof ImageComponent) {
+				str = "Image #" + getLayeredComponentIndex((ImageComponent) mc) + ":" + FileUtilities.getFileName(mc.toString());
+			} else if (mc instanceof TextBoxComponent) {
 				str = "Text box #" + getLayeredComponentIndex((TextBoxComponent) mc);
-			}
-			else if (mc instanceof LineComponent) {
+			} else if (mc instanceof LineComponent) {
 				str = "Line #" + getLayeredComponentIndex((LineComponent) mc);
-			}
-			else if (mc instanceof RectangleComponent) {
+			} else if (mc instanceof RectangleComponent) {
 				str = "Rectangle #" + getLayeredComponentIndex((RectangleComponent) mc);
-			}
-			else if (mc instanceof TriangleComponent) {
+			} else if (mc instanceof TriangleComponent) {
 				str = "Triangle #" + getLayeredComponentIndex((TriangleComponent) mc);
-			}
-			else if (mc instanceof EllipseComponent) {
+			} else if (mc instanceof EllipseComponent) {
 				str = "Ellipse #" + getLayeredComponentIndex((EllipseComponent) mc);
 			}
 			if (str != null) {
-				str += " @ (" + ViewAttribute.ANGSTROM_FORMAT.format(x * 0.1) + ", "
-						+ ViewAttribute.ANGSTROM_FORMAT.format(y * 0.1) + ")";
-			}
-			else {
-				str = "(" + ViewAttribute.ANGSTROM_FORMAT.format(x * 0.1) + ", "
-						+ ViewAttribute.ANGSTROM_FORMAT.format(y * 0.1) + ")";
+				str += " @ (" + ViewAttribute.ANGSTROM_FORMAT.format(x * 0.1) + ", " + ViewAttribute.ANGSTROM_FORMAT.format(y * 0.1) + ")";
+			} else {
+				str = "(" + ViewAttribute.ANGSTROM_FORMAT.format(x * 0.1) + ", " + ViewAttribute.ANGSTROM_FORMAT.format(y * 0.1) + ")";
 			}
 			showTip(str, x + 10, y + 10, -1);
 			break;
@@ -990,8 +956,7 @@ public class MesoView extends MDView {
 					p.setSelectedToResize(true);
 					p.storeCurrentState();
 				}
-			}
-			else {
+			} else {
 				if (selectedComponent instanceof GayBerneParticle) {
 					((GayBerneParticle) selectedComponent).storeCurrentState();
 				}
@@ -1009,8 +974,7 @@ public class MesoView extends MDView {
 					p.setSelectedToRotate(true);
 					p.storeCurrentState();
 				}
-			}
-			else {
+			} else {
 				if (selectedComponent instanceof GayBerneParticle) {
 					((GayBerneParticle) selectedComponent).storeCurrentState();
 				}
@@ -1122,8 +1086,7 @@ public class MesoView extends MDView {
 				p.setSelected(true);
 				if (p.getRestraint() == null) {
 					p.setRestraint(new PointRestraint(10, p.getRx(), p.getRy()));
-				}
-				else {
+				} else {
 					p.getRestraint().changeK(10);
 				}
 				repaint();
@@ -1185,9 +1148,7 @@ public class MesoView extends MDView {
 				if (mc instanceof GayBerneParticle) {
 					p = (GayBerneParticle) mc;
 					if (!readyToAdjustOmegaVector) {
-						showActionTip(
-								"<html>Drag the red rectangle to change the magnitude,<br>click the center to reverse the direction</html>",
-								x + 10, y + 10);
+						showActionTip("<html>Drag the red rectangle to change the magnitude,<br>click the center to reverse the direction</html>", x + 10, y + 10);
 						selectOmega(p);
 					}
 					if (p.getFHotSpot().contains(x, y)) {
@@ -1206,21 +1167,13 @@ public class MesoView extends MDView {
 						p = (GayBerneParticle) o;
 						p.setSelected(true);
 						if (e.isShiftDown()) {
-							p.addMeasurement(new Point(2 * p.getRx() < getWidth() ? (int) (p.getRx() + 20) : (int) (p
-									.getRx() - 20), (int) p.getRy()));
-						}
-						else {
-							showActionTip(
-									p.getNumberOfMeasurements() <= 0 ? "Hold down SHIFT and click to add a measurement."
-											: "<html>Drag the green hotspot at the tip to measure, or<br>hold down SHIFT and click to add one more measurement.</html>",
-									x + 10, y + 10);
+							p.addMeasurement(new Point(2 * p.getRx() < getWidth() ? (int) (p.getRx() + 20) : (int) (p.getRx() - 20), (int) p.getRy()));
+						} else {
+							showActionTip(p.getNumberOfMeasurements() <= 0 ? "Hold down SHIFT and click to add a measurement." : "<html>Drag the green hotspot at the tip to measure, or<br>hold down SHIFT and click to add one more measurement.</html>", x + 10, y + 10);
 						}
 					}
-				}
-				else {
-					showActionTip(
-							"<html>To remove this measurement, drag the<br>green hotspot out of this window.</html>",
-							x + 10, y + 10);
+				} else {
+					showActionTip("<html>To remove this measurement, drag the<br>green hotspot out of this window.</html>", x + 10, y + 10);
 				}
 			}
 			break;
@@ -1233,8 +1186,7 @@ public class MesoView extends MDView {
 				p.setShowRTraj(!p.getShowRTraj());
 				if (p.getShowRTraj()) {
 					showActionTip("Click the particle to hide its trajectory", x + 20, y + 20);
-				}
-				else {
+				} else {
 					showActionTip("Click the particle to show its trajectory", x + 20, y + 20);
 				}
 				repaint();
@@ -1249,8 +1201,7 @@ public class MesoView extends MDView {
 				p.setShowRMean(!p.getShowRMean());
 				if (p.getShowRMean()) {
 					showActionTip("Click the particle to hide its current average position", x + 20, y + 20);
-				}
-				else {
+				} else {
 					showActionTip("Click the particle to show its current average position", x + 20, y + 20);
 				}
 				repaint();
@@ -1266,14 +1217,12 @@ public class MesoView extends MDView {
 					gb[nParticle].setSelected(true);
 					nParticle++;
 				}
-			}
-			else if (mc instanceof ImageComponent) {
+			} else if (mc instanceof ImageComponent) {
 				showActionTip("Drag the selected image to duplicate one", x + 10, y + 10);
 				ImageComponent ic = null;
 				try {
 					ic = new ImageComponent((ImageComponent) mc);
-				}
-				catch (IOException ioe) {
+				} catch (IOException ioe) {
 					ioe.printStackTrace();
 				}
 				if (ic != null) {
@@ -1281,36 +1230,31 @@ public class MesoView extends MDView {
 					ic.setLocation(x - 10, y - 10);
 					addLayeredComponent(ic);
 				}
-			}
-			else if (mc instanceof TextBoxComponent) {
+			} else if (mc instanceof TextBoxComponent) {
 				showActionTip("Drag the selected text box to duplicate one", x + 10, y + 10);
 				TextBoxComponent tb = new TextBoxComponent((TextBoxComponent) mc);
 				tb.setSelected(true);
 				tb.setLocation(x - 10, y - 10);
 				addLayeredComponent(tb);
-			}
-			else if (mc instanceof LineComponent) {
+			} else if (mc instanceof LineComponent) {
 				showActionTip("Drag the selected line to duplicate one", x + 10, y + 10);
 				LineComponent lc = new LineComponent((LineComponent) mc);
 				lc.setSelected(true);
 				lc.setLocation(x - 10 - clickPoint.x, y - 10 - clickPoint.y);
 				addLayeredComponent(lc);
-			}
-			else if (mc instanceof RectangleComponent) {
+			} else if (mc instanceof RectangleComponent) {
 				showActionTip("Drag the selected rectangle to duplicate one", x + 10, y + 10);
 				RectangleComponent rc = new RectangleComponent((RectangleComponent) mc);
 				rc.setSelected(true);
 				rc.setLocation(x - 10 - clickPoint.x, y - 10 - clickPoint.y);
 				addLayeredComponent(rc);
-			}
-			else if (mc instanceof TriangleComponent) {
+			} else if (mc instanceof TriangleComponent) {
 				showActionTip("Drag the selected triangle to duplicate one", x + 10, y + 10);
 				TriangleComponent tc = new TriangleComponent((TriangleComponent) mc);
 				tc.setSelected(true);
 				tc.setLocation(x - 10 - clickPoint.x, y - 10 - clickPoint.y);
 				addLayeredComponent(tc);
-			}
-			else if (mc instanceof EllipseComponent) {
+			} else if (mc instanceof EllipseComponent) {
 				showActionTip("Drag the selected ellipse to duplicate one", x + 10, y + 10);
 				EllipseComponent ec = new EllipseComponent((EllipseComponent) mc);
 				ec.setSelected(true);
@@ -1363,8 +1307,7 @@ public class MesoView extends MDView {
 		case ROTA_ID:
 			if (selectedComponent instanceof GayBerneParticle) {
 				if (((GayBerneParticle) selectedComponent).isSelectedToRotate()) {
-					setCursor(((GayBerneParticle) selectedComponent).getRotationHandle(x, y) != -1 ? rotateCursor1
-							: previousCursor);
+					setCursor(((GayBerneParticle) selectedComponent).getRotationHandle(x, y) != -1 ? rotateCursor1 : previousCursor);
 				}
 			}
 			break;
@@ -1392,8 +1335,7 @@ public class MesoView extends MDView {
 					if (((GayBerneParticle) selectedComponent).isVelocityHandleSelected(x, y)) {
 						setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
 						readyToAdjustVelocityVector = true;
-					}
-					else {
+					} else {
 						setCursor(previousCursor);
 						readyToAdjustVelocityVector = false;
 					}
@@ -1407,8 +1349,7 @@ public class MesoView extends MDView {
 					if (((GayBerneParticle) selectedComponent).getOHotSpot().contains(x, y)) {
 						setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
 						readyToAdjustOmegaVector = true;
-					}
-					else {
+					} else {
 						setCursor(previousCursor);
 						readyToAdjustOmegaVector = false;
 					}
@@ -1423,8 +1364,7 @@ public class MesoView extends MDView {
 				if (indexOfSelectedMeasurement >= 0) {
 					setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
 					readyToAdjustDistanceVector = true;
-				}
-				else {
+				} else {
 					setCursor(previousCursor);
 					readyToAdjustDistanceVector = false;
 				}
@@ -1492,60 +1432,50 @@ public class MesoView extends MDView {
 			if (selectedComponent != null) {
 				if (!isEditable() && !selectedComponent.isDraggable()) {
 					showTip("<html><font color=red>The selected object is not draggable!</font></html>", x, y, 500);
-				}
-				else {
+				} else {
 					dragSelected = false;
 					if (selectedComponent instanceof GayBerneParticle) {
 						GayBerneParticle p = (GayBerneParticle) selectedComponent;
 						if (p.getRestraint() != null) {
 							int amp = (int) (400.0 / p.getRestraint().getK());
-							Vector2D loc = moveSpring(x, y, (int) p.getRestraint().getX0(), (int) p.getRestraint()
-									.getY0(), 0, amp);
+							Vector2D loc = moveSpring(x, y, (int) p.getRestraint().getX0(), (int) p.getRestraint().getY0(), 0, amp);
 							if (loc == null)
 								return;
 							p.setRx(loc.getX());
 							p.setRy(loc.getY());
-						}
-						else {
+						} else {
 							p.setRx(x - clickPoint.x);
 							p.setRy(y - clickPoint.y);
 						}
 						boundary.setRBC(p, RectangularBoundary.TRANSLATION);
 						dragSelected = true;
-					}
-					else if (selectedComponent instanceof ImageComponent) {
+					} else if (selectedComponent instanceof ImageComponent) {
 						ImageComponent ic = (ImageComponent) selectedComponent;
 						ic.translateTo(x - clickPoint.x, y - clickPoint.y);
 						dragSelected = true;
 						moveHostTo(ic.getHost(), ic.getRx() + ic.getWidth() * 0.5, ic.getRy() + ic.getHeight() * 0.5);
-					}
-					else if (selectedComponent instanceof TextBoxComponent) {
+					} else if (selectedComponent instanceof TextBoxComponent) {
 						TextBoxComponent tb = (TextBoxComponent) selectedComponent;
 						tb.translateTo(x - clickPoint.x, y - clickPoint.y);
 						dragSelected = true;
 						if (tb.getAttachmentPosition() == TextBoxComponent.BOX_CENTER)
-							moveHostTo(tb.getHost(), tb.getRx() + 0.5 * tb.getWidth(), tb.getRy() + 0.5
-									* tb.getHeight());
-					}
-					else if (selectedComponent instanceof LineComponent) {
+							moveHostTo(tb.getHost(), tb.getRx() + 0.5 * tb.getWidth(), tb.getRy() + 0.5 * tb.getHeight());
+					} else if (selectedComponent instanceof LineComponent) {
 						LineComponent lc = (LineComponent) selectedComponent;
 						lc.translateTo(x - clickPoint.x, y - clickPoint.y);
 						dragSelected = true;
 						moveHostTo(lc.getHost(), lc.getRx(), lc.getRy());
-					}
-					else if (selectedComponent instanceof RectangleComponent) {
+					} else if (selectedComponent instanceof RectangleComponent) {
 						RectangleComponent rc = (RectangleComponent) selectedComponent;
 						rc.translateTo(x - clickPoint.x, y - clickPoint.y);
 						dragSelected = true;
 						moveHostTo(rc.getHost(), rc.getRx(), rc.getRy());
-					}
-					else if (selectedComponent instanceof TriangleComponent) {
+					} else if (selectedComponent instanceof TriangleComponent) {
 						TriangleComponent tc = (TriangleComponent) selectedComponent;
 						tc.translateTo(x - clickPoint.x, y - clickPoint.y);
 						dragSelected = true;
 						moveHostTo(tc.getHost(), tc.getRx(), tc.getRy());
-					}
-					else if (selectedComponent instanceof EllipseComponent) {
+					} else if (selectedComponent instanceof EllipseComponent) {
 						EllipseComponent ec = (EllipseComponent) selectedComponent;
 						ec.translateTo(x - clickPoint.x, y - clickPoint.y);
 						dragSelected = true;
@@ -1593,8 +1523,7 @@ public class MesoView extends MDView {
 					GayBerneParticle p1 = whichParticleOtherThan(x, y, p);
 					if (p1 != null) {
 						p.setMeasurement(indexOfSelectedMeasurement, new Integer(p1.getIndex()));
-					}
-					else {
+					} else {
 						p.setMeasurement(indexOfSelectedMeasurement, new Point(x, y));
 					}
 					repaint();
@@ -1606,8 +1535,7 @@ public class MesoView extends MDView {
 			if (selectedComponent instanceof GayBerneParticle) {
 				((GayBerneParticle) selectedComponent).translateTo(x, y);
 				boundary.setRBC((GayBerneParticle) selectedComponent, RectangularBoundary.TRANSLATION);
-			}
-			else if (selectedComponent instanceof Layered) {
+			} else if (selectedComponent instanceof Layered) {
 				Layered l = (Layered) selectedComponent;
 				l.setLocation(x - l.getWidth() * 0.5, y - l.getHeight() * 0.5);
 			}
@@ -1698,8 +1626,7 @@ public class MesoView extends MDView {
 						model.notifyChange();
 					}
 					if (!doNotFireUndoEvent) {
-						model.getUndoManager().undoableEditHappened(
-								new UndoableEditEvent(model, new UndoableResizing(selectedComponent)));
+						model.getUndoManager().undoableEditHappened(new UndoableEditEvent(model, new UndoableResizing(selectedComponent)));
 						updateUndoUIComponents();
 					}
 				}
@@ -1713,8 +1640,7 @@ public class MesoView extends MDView {
 					finalizeOrientation((GayBerneParticle) selectedComponent);
 					model.notifyChange();
 					if (selectedComponent != null && !doNotFireUndoEvent) {
-						model.getUndoManager().undoableEditHappened(
-								new UndoableEditEvent(model, new UndoableMoving(selectedComponent)));
+						model.getUndoManager().undoableEditHappened(new UndoableEditEvent(model, new UndoableMoving(selectedComponent)));
 						updateUndoUIComponents();
 					}
 				}
@@ -1733,9 +1659,7 @@ public class MesoView extends MDView {
 			}
 			if (n != 0) {
 				String s = MDView.getInternationalText("CountingResult");
-				JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(this),
-						"The selected area contains the center of mass of " + n + " particles.", s != null ? s
-								: "Counting result", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(this), "The selected area contains the center of mass of " + n + " particles.", s != null ? s : "Counting result", JOptionPane.INFORMATION_MESSAGE);
 			}
 			selectedArea.setSize(0, 0);
 			repaint();
@@ -1754,12 +1678,10 @@ public class MesoView extends MDView {
 				if (selectedComponent instanceof GayBerneParticle) {
 					if (finalizeLocation((GayBerneParticle) selectedComponent)) {
 						b = true;
-					}
-					else {
+					} else {
 						errorReminder.show(ErrorReminder.OBJECT_OVERLAP);
 					}
-				}
-				else if (selectedComponent instanceof Layered) {
+				} else if (selectedComponent instanceof Layered) {
 					b = true;
 					ModelComponent host = ((Layered) selectedComponent).getHost();
 					if (host instanceof GayBerneParticle) {
@@ -1773,8 +1695,7 @@ public class MesoView extends MDView {
 					setCursor(UserAction.getCursor(actionID));
 					if (selectedComponent != null) {
 						if (!doNotFireUndoEvent) {
-							model.getUndoManager().undoableEditHappened(
-									new UndoableEditEvent(model, new UndoableMoving(selectedComponent)));
+							model.getUndoManager().undoableEditHappened(new UndoableEditEvent(model, new UndoableMoving(selectedComponent)));
 							updateUndoUIComponents();
 						}
 					}
@@ -1794,8 +1715,7 @@ public class MesoView extends MDView {
 					repaint();
 					model.notifyChange();
 					if (!doNotFireUndoEvent) {
-						model.getUndoManager().undoableEditHappened(
-								new UndoableEditEvent(model, new UndoableResizing(selectedComponent)));
+						model.getUndoManager().undoableEditHappened(new UndoableEditEvent(model, new UndoableResizing(selectedComponent)));
 						updateUndoUIComponents();
 					}
 				}
@@ -1813,24 +1733,20 @@ public class MesoView extends MDView {
 						if (y > p.getRy()) {
 							angle = 2.0 * Math.PI - angle;
 						}
-					}
-					else {
+					} else {
 						if (y > p.getRy()) {
 							angle = -angle;
-						}
-						else {
+						} else {
 							angle -= 2.0 * Math.PI;
 						}
 					}
 					angle *= 180.0 / Math.PI;
-					p.setOmega((p.getOmega() < 0.0 ? -1.0 : 1.0)
-							* Math.sqrt(Math.abs(angle) / (p.getInertia() * 20000)));
+					p.setOmega((p.getOmega() < 0.0 ? -1.0 : 1.0) * Math.sqrt(Math.abs(angle) / (p.getInertia() * 20000)));
 					readyToAdjustOmegaVector = false;
 					setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 					model.notifyChange();
 					if (!doNotFireUndoEvent) {
-						model.getUndoManager().undoableEditHappened(
-								new UndoableEditEvent(model, new UndoableResizing(selectedComponent)));
+						model.getUndoManager().undoableEditHappened(new UndoableEditEvent(model, new UndoableResizing(selectedComponent)));
 						updateUndoUIComponents();
 					}
 				}
@@ -1857,20 +1773,14 @@ public class MesoView extends MDView {
 					model.setNumberOfParticles(nParticle);
 					model.notifyChange();
 					if (!doNotFireUndoEvent) {
-						model.getUndoManager()
-								.undoableEditHappened(
-										new UndoableEditEvent(model, new UndoableInsertion(
-												UndoAction.INSERT_A_PARTICLE, x, y)));
+						model.getUndoManager().undoableEditHappened(new UndoableEditEvent(model, new UndoableInsertion(UndoAction.INSERT_A_PARTICLE, x, y)));
 						updateUndoUIComponents();
 					}
 				}
-			}
-			else if (selectedComponent instanceof Layered) {
+			} else if (selectedComponent instanceof Layered) {
 				model.notifyChange();
 				if (!doNotFireUndoEvent) {
-					model.getUndoManager().undoableEditHappened(
-							new UndoableEditEvent(model, new UndoableLayeredComponentOperation(
-									UndoAction.INSERT_LAYERED_COMPONENT, (Layered) selectedComponent)));
+					model.getUndoManager().undoableEditHappened(new UndoableEditEvent(model, new UndoableLayeredComponentOperation(UndoAction.INSERT_LAYERED_COMPONENT, (Layered) selectedComponent)));
 					updateUndoUIComponents();
 				}
 			}
@@ -1888,8 +1798,7 @@ public class MesoView extends MDView {
 			return;
 		if (actionID == ADGB_ID) {
 			addGBIndicator.x = addGBIndicator.y = -1;
-		}
-		else if (actionID == HEAT_ID || actionID == COOL_ID) {
+		} else if (actionID == HEAT_ID || actionID == COOL_ID) {
 			pointHeater.setLocation(-1, -1);
 		}
 		repaint();
@@ -1905,8 +1814,7 @@ public class MesoView extends MDView {
 		if (selectedComponent != null) {
 			if (!isEditable() && !selectedComponent.isDraggable()) {
 				showActionTip("<html><font color=red>The selected object is not nudgable!</font></html>", 10, 10);
-			}
-			else {
+			} else {
 				int dx = 0, dy = 0;
 				switch (keyID) {
 				case KeyEvent.VK_UP:
@@ -1939,15 +1847,13 @@ public class MesoView extends MDView {
 					p.translateBy(dx, dy);
 					boundary.setRBC(p, RectangularBoundary.TRANSLATION);
 					finalizeLocation(p);
-				}
-				else if (selectedComponent instanceof Layered) {
+				} else if (selectedComponent instanceof Layered) {
 					selectedComponent.storeCurrentState();
 					((Layered) selectedComponent).translateBy(dx, dy);
 				}
 			}
 
-		}
-		else {
+		} else {
 			boolean keyIsRight = false;
 			UserField uf = null;
 			for (int i = 0; i < nParticle; i++) {
@@ -2012,8 +1918,7 @@ public class MesoView extends MDView {
 			p.translateTo(x, y);
 			boundary.setRBC(p, Boundary.TRANSLATION);
 			refreshForces();
-		}
-		else if (host instanceof RectangularObstacle) {
+		} else if (host instanceof RectangularObstacle) {
 			RectangularObstacle obs = (RectangularObstacle) host;
 			obs.translateCenterTo(x, y);
 		}
@@ -2228,12 +2133,10 @@ public class MesoView extends MDView {
 			if (presentationName.equals("Translation")) {
 				if (mc instanceof GayBerneParticle) {
 					((GayBerneParticle) mc).translateTo(x, y);
-				}
-				else if (mc instanceof Layered) {
+				} else if (mc instanceof Layered) {
 					((Layered) mc).setLocation(x, y);
 				}
-			}
-			else if (presentationName.equals("Rotation")) {
+			} else if (presentationName.equals("Rotation")) {
 				if (mc instanceof GayBerneParticle) {
 					((GayBerneParticle) mc).setTheta(theta);
 					((GayBerneParticle) mc).setSelectedToRotate(true);
@@ -2294,12 +2197,10 @@ public class MesoView extends MDView {
 				if (presentationName.equals("Resizing Particle")) {
 					((GayBerneParticle) mc).setBreadth(x);
 					((GayBerneParticle) mc).setLength(y);
-				}
-				else if (presentationName.equals("Changing Velocity")) {
+				} else if (presentationName.equals("Changing Velocity")) {
 					((GayBerneParticle) mc).setVx(x);
 					((GayBerneParticle) mc).setVy(y);
-				}
-				else if (presentationName.equals("Changing Angular Velocity")) {
+				} else if (presentationName.equals("Changing Angular Velocity")) {
 					((GayBerneParticle) mc).setOmega(x);
 				}
 			}

@@ -1455,11 +1455,13 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 					int rx = (int) x;
 					int ry = (int) fc.getRy();
 					if (fresh) {
+						g.setStroke(ViewAttribute.THIN);
 						g.drawLine(rx - 8, ry, rx - 1, ry);
 						g.drawLine(rx - 6, ry - 8, rx, ry - 3);
 						g.drawLine(rx - 6, ry + 8, rx, ry + 3);
 					} else {
 						if (showCumulativeHits) {
+							g.setStroke(ViewAttribute.MODERATE);
 							g.drawLine((int) (rx - 8 - Math.abs(mass * fc.getVx())), ry, rx, ry);
 							g.drawLine(rx - 3, ry - 3, rx, ry);
 							g.drawLine(rx - 3, ry + 3, rx, ry);
@@ -1470,11 +1472,13 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 					rx = (int) (x + width);
 					ry = (int) fc.getRy();
 					if (fresh) {
+						g.setStroke(ViewAttribute.THIN);
 						g.drawLine(rx + 4, ry, rx, ry);
 						g.drawLine(rx + 2, ry - 4, rx, ry);
 						g.drawLine(rx + 2, ry + 4, rx, ry);
 					} else {
 						if (showCumulativeHits) {
+							g.setStroke(ViewAttribute.MODERATE);
 							g.drawLine(rx, ry, (int) (rx + 8 + Math.abs(mass * fc.getVx())), ry);
 							g.drawLine(rx, ry - 3, rx + 3, ry);
 							g.drawLine(rx, ry + 3, rx + 3, ry);
@@ -1485,11 +1489,13 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 					ry = (int) y;
 					rx = (int) fc.getRx();
 					if (fresh) {
+						g.setStroke(ViewAttribute.THIN);
 						g.drawLine(rx, ry - 4, rx, ry);
 						g.drawLine(rx - 4, ry - 2, rx, ry);
 						g.drawLine(rx + 4, ry - 2, rx, ry);
 					} else {
 						if (showCumulativeHits) {
+							g.setStroke(ViewAttribute.MODERATE);
 							g.drawLine(rx, (int) (ry - 8 - Math.abs(mass * fc.getVx())), rx, ry);
 							g.drawLine(rx - 3, ry - 3, rx, ry);
 							g.drawLine(rx + 3, ry - 3, rx, ry);
@@ -1500,11 +1506,13 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 					ry = (int) (y + height);
 					rx = (int) fc.getRx();
 					if (fresh) {
+						g.setStroke(ViewAttribute.THIN);
 						g.drawLine(rx, ry + 4, rx, ry);
 						g.drawLine(rx - 4, ry + 2, rx, ry);
 						g.drawLine(rx + 4, ry + 2, rx, ry);
 					} else {
 						if (showCumulativeHits) {
+							g.setStroke(ViewAttribute.MODERATE);
 							g.drawLine(rx, (int) (ry + 8 + Math.abs(mass * fc.getVx())), rx, ry);
 							g.drawLine(rx - 3, ry + 3, rx, ry);
 							g.drawLine(rx + 3, ry + 3, rx, ry);

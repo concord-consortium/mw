@@ -501,6 +501,7 @@ public abstract class AtomicModel extends MDModel {
 					}
 					atom[k].setElement(e);
 					atom[k].setCharge(0);
+					atom[k].setCustom(0);
 					atom[k].setRestraint(null);
 					atom[k].setFriction(0);
 					atom[k].setRadical(true);
@@ -3477,7 +3478,7 @@ public abstract class AtomicModel extends MDModel {
 			a.setMovable(true);
 			a.setVisible(true);
 			a.setDraggable(true);
-			a.setCharge(0.0);
+			a.setCharge(0);
 			a.setRestraint(null);
 			a.setUserField(null);
 			a.setVx(0);

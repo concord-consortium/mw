@@ -44,7 +44,8 @@ public final class Benzene extends Molecule {
 
 		for (int i = noa; i < noa + getNumberOfAtoms(); i++) {
 			model.atom[i].setRestraint(null);
-			model.atom[i].setCharge(0.0);
+			model.atom[i].setCharge(0);
+			model.atom[i].setCustom(0);
 			model.atom[i].setUserField(null);
 			model.atom[i].setShowRTraj(false);
 			model.atom[i].setFriction(0);
@@ -85,30 +86,18 @@ public final class Benzene extends Molecule {
 
 		int num = model.numberOfAtoms - getNumberOfAtoms();
 
-		bonds.add(new RadialBond.Builder(model.atom[1 + num], model.atom[num]).bondLength(bondLengthCH).bondStrength(
-				bondStrength).build());
-		bonds.add(new RadialBond.Builder(model.atom[1 + num], model.atom[3 + num]).bondLength(bondLengthCC)
-				.bondStrength(bondStrength * 2).build());
-		bonds.add(new RadialBond.Builder(model.atom[3 + num], model.atom[2 + num]).bondLength(bondLengthCH)
-				.bondStrength(bondStrength).build());
-		bonds.add(new RadialBond.Builder(model.atom[3 + num], model.atom[5 + num]).bondLength(bondLengthCC)
-				.bondStrength(bondStrength * 2).build());
-		bonds.add(new RadialBond.Builder(model.atom[5 + num], model.atom[4 + num]).bondLength(bondLengthCH)
-				.bondStrength(bondStrength).build());
-		bonds.add(new RadialBond.Builder(model.atom[5 + num], model.atom[7 + num]).bondLength(bondLengthCC)
-				.bondStrength(bondStrength * 2).build());
-		bonds.add(new RadialBond.Builder(model.atom[7 + num], model.atom[6 + num]).bondLength(bondLengthCH)
-				.bondStrength(bondStrength).build());
-		bonds.add(new RadialBond.Builder(model.atom[7 + num], model.atom[9 + num]).bondLength(bondLengthCC)
-				.bondStrength(bondStrength * 2).build());
-		bonds.add(new RadialBond.Builder(model.atom[9 + num], model.atom[8 + num]).bondLength(bondLengthCH)
-				.bondStrength(bondStrength).build());
-		bonds.add(new RadialBond.Builder(model.atom[9 + num], model.atom[11 + num]).bondLength(bondLengthCC)
-				.bondStrength(bondStrength * 2).build());
-		bonds.add(new RadialBond.Builder(model.atom[11 + num], model.atom[10 + num]).bondLength(bondLengthCH)
-				.bondStrength(bondStrength).build());
-		bonds.add(new RadialBond.Builder(model.atom[11 + num], model.atom[1 + num]).bondLength(bondLengthCC)
-				.bondStrength(bondStrength * 2).build());
+		bonds.add(new RadialBond.Builder(model.atom[1 + num], model.atom[num]).bondLength(bondLengthCH).bondStrength(bondStrength).build());
+		bonds.add(new RadialBond.Builder(model.atom[1 + num], model.atom[3 + num]).bondLength(bondLengthCC).bondStrength(bondStrength * 2).build());
+		bonds.add(new RadialBond.Builder(model.atom[3 + num], model.atom[2 + num]).bondLength(bondLengthCH).bondStrength(bondStrength).build());
+		bonds.add(new RadialBond.Builder(model.atom[3 + num], model.atom[5 + num]).bondLength(bondLengthCC).bondStrength(bondStrength * 2).build());
+		bonds.add(new RadialBond.Builder(model.atom[5 + num], model.atom[4 + num]).bondLength(bondLengthCH).bondStrength(bondStrength).build());
+		bonds.add(new RadialBond.Builder(model.atom[5 + num], model.atom[7 + num]).bondLength(bondLengthCC).bondStrength(bondStrength * 2).build());
+		bonds.add(new RadialBond.Builder(model.atom[7 + num], model.atom[6 + num]).bondLength(bondLengthCH).bondStrength(bondStrength).build());
+		bonds.add(new RadialBond.Builder(model.atom[7 + num], model.atom[9 + num]).bondLength(bondLengthCC).bondStrength(bondStrength * 2).build());
+		bonds.add(new RadialBond.Builder(model.atom[9 + num], model.atom[8 + num]).bondLength(bondLengthCH).bondStrength(bondStrength).build());
+		bonds.add(new RadialBond.Builder(model.atom[9 + num], model.atom[11 + num]).bondLength(bondLengthCC).bondStrength(bondStrength * 2).build());
+		bonds.add(new RadialBond.Builder(model.atom[11 + num], model.atom[10 + num]).bondLength(bondLengthCH).bondStrength(bondStrength).build());
+		bonds.add(new RadialBond.Builder(model.atom[11 + num], model.atom[1 + num]).bondLength(bondLengthCC).bondStrength(bondStrength * 2).build());
 
 		return bonds;
 
@@ -120,29 +109,18 @@ public final class Benzene extends Molecule {
 
 		int num = model.numberOfAtoms - getNumberOfAtoms();
 
-		bends.add(new AngularBond(model.atom[11 + num], model.atom[3 + num], model.atom[1 + num], bendAngle,
-				bendStrength));
-		bends.add(new AngularBond(model.atom[1 + num], model.atom[5 + num], model.atom[3 + num], bendAngle,
-				bendStrength));
-		bends.add(new AngularBond(model.atom[3 + num], model.atom[7 + num], model.atom[5 + num], bendAngle,
-				bendStrength));
-		bends.add(new AngularBond(model.atom[5 + num], model.atom[9 + num], model.atom[7 + num], bendAngle,
-				bendStrength));
-		bends.add(new AngularBond(model.atom[7 + num], model.atom[11 + num], model.atom[9 + num], bendAngle,
-				bendStrength));
-		bends.add(new AngularBond(model.atom[9 + num], model.atom[1 + num], model.atom[11 + num], bendAngle,
-				bendStrength));
+		bends.add(new AngularBond(model.atom[11 + num], model.atom[3 + num], model.atom[1 + num], bendAngle, bendStrength));
+		bends.add(new AngularBond(model.atom[1 + num], model.atom[5 + num], model.atom[3 + num], bendAngle, bendStrength));
+		bends.add(new AngularBond(model.atom[3 + num], model.atom[7 + num], model.atom[5 + num], bendAngle, bendStrength));
+		bends.add(new AngularBond(model.atom[5 + num], model.atom[9 + num], model.atom[7 + num], bendAngle, bendStrength));
+		bends.add(new AngularBond(model.atom[7 + num], model.atom[11 + num], model.atom[9 + num], bendAngle, bendStrength));
+		bends.add(new AngularBond(model.atom[9 + num], model.atom[1 + num], model.atom[11 + num], bendAngle, bendStrength));
 		bends.add(new AngularBond(model.atom[num], model.atom[3 + num], model.atom[1 + num], bendAngle, bendStrength));
-		bends.add(new AngularBond(model.atom[2 + num], model.atom[5 + num], model.atom[3 + num], bendAngle,
-				bendStrength));
-		bends.add(new AngularBond(model.atom[4 + num], model.atom[7 + num], model.atom[5 + num], bendAngle,
-				bendStrength));
-		bends.add(new AngularBond(model.atom[6 + num], model.atom[9 + num], model.atom[7 + num], bendAngle,
-				bendStrength));
-		bends.add(new AngularBond(model.atom[8 + num], model.atom[11 + num], model.atom[9 + num], bendAngle,
-				bendStrength));
-		bends.add(new AngularBond(model.atom[10 + num], model.atom[1 + num], model.atom[11 + num], bendAngle,
-				bendStrength));
+		bends.add(new AngularBond(model.atom[2 + num], model.atom[5 + num], model.atom[3 + num], bendAngle, bendStrength));
+		bends.add(new AngularBond(model.atom[4 + num], model.atom[7 + num], model.atom[5 + num], bendAngle, bendStrength));
+		bends.add(new AngularBond(model.atom[6 + num], model.atom[9 + num], model.atom[7 + num], bendAngle, bendStrength));
+		bends.add(new AngularBond(model.atom[8 + num], model.atom[11 + num], model.atom[9 + num], bendAngle, bendStrength));
+		bends.add(new AngularBond(model.atom[10 + num], model.atom[1 + num], model.atom[11 + num], bendAngle, bendStrength));
 
 		return bends;
 
