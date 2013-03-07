@@ -1181,14 +1181,23 @@ public abstract class Particle implements Comparable, Cloneable, Serializable, M
 		g.setStroke(flavor.getStroke());
 		lengthx = flavor.getLength() * x;
 		lengthy = flavor.getLength() * y;
-		g.drawLine((int) rx, (int) ry, (int) (rx + lengthx), (int) (ry + lengthy));
+		double sx = rx;
+		double sy = ry;
+		if (this instanceof Atom) {
+			Atom a = (Atom) this;
+			sx += 0.45 * a.sigma * arrowx;
+			sy += 0.45 * a.sigma * arrowy;
+		}
+		int tx = (int) Math.round(sx + lengthx);
+		int ty = (int) Math.round(sy + lengthy);
+		g.drawLine((int) Math.round(sx), (int) Math.round(sy), tx, ty);
 		float arrowLength = Math.max(5, 3 * flavor.getWidth());
 		wingx = arrowLength * (arrowx * COS45 + arrowy * SIN45);
 		wingy = arrowLength * (arrowy * COS45 - arrowx * SIN45);
-		g.drawLine((int) (rx + lengthx), (int) (ry + lengthy), (int) (rx + lengthx - wingx), (int) (ry + lengthy - wingy));
+		g.drawLine(tx, ty, (int) Math.round(tx - wingx), (int) Math.round(ty - wingy));
 		wingx = arrowLength * (arrowx * COS45 - arrowy * SIN45);
 		wingy = arrowLength * (arrowy * COS45 + arrowx * SIN45);
-		g.drawLine((int) (rx + lengthx), (int) (ry + lengthy), (int) (rx + lengthx - wingx), (int) (ry + lengthy - wingy));
+		g.drawLine(tx, ty, (int) Math.round(tx - wingx), (int) Math.round(ty - wingy));
 	}
 
 	/**
