@@ -20,6 +20,7 @@
 
 package org.concord.modeler;
 
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -28,6 +29,7 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.Toolkit;
 import java.beans.XMLDecoder;
@@ -48,7 +50,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.prefs.Preferences;
 
-import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -335,7 +336,6 @@ public class Initializer {
 	void showSplashScreen() {
 		final Font font = new Font("Verdana", Font.PLAIN, 10);
 		progressBar = new JProgressBar();
-		progressBar.setBorder(BorderFactory.createEmptyBorder(2, 5, 5, 5));
 		progressBar.setBackground(new Color(225, 106, 62));
 		progressBar.setForeground(Color.WHITE);
 		progressBar.setIndeterminate(false);
@@ -346,11 +346,11 @@ public class Initializer {
 		progressBar.setFont(font);
 		progressBar.setUI(new BasicProgressBarUI() {
 			protected Color getSelectionBackground() {
-				return Color.white;
+				return Color.WHITE;
 			}
 
 			protected Color getSelectionForeground() {
-				return Color.white;
+				return Color.WHITE;
 			}
 		});
 		ImageIcon icon = new ImageIcon(getClass().getResource("images/splashpane.png"));
@@ -365,8 +365,8 @@ public class Initializer {
 				icon.paintIcon(this, g, 0, 0);
 				g.setFont(font);
 				g.setColor(Color.GRAY);
-				g.drawString("Version " + Modeler.VERSION + " Copyright 2004-2013.", 10, icon.getIconHeight() - 35);
-				g.drawString("Supported by the National Science Foundation.", 10, icon.getIconHeight() - 20);
+				g.drawString("Version " + Modeler.VERSION + " Copyright 2004-2013.", 10, icon.getIconHeight() - 32);
+				g.drawString("Supported by the National Science Foundation.", 10, icon.getIconHeight() - 17);
 			}
 		}, BorderLayout.CENTER);
 
@@ -381,11 +381,10 @@ public class Initializer {
 
 			public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
 				g.setColor(new Color(0x8dafba));
+				((Graphics2D) g).setStroke(new BasicStroke(4));
 				g.drawLine(1, height - 1, width - 1, height - 1);
-				g.drawLine(1, height - 2, width - 1, height - 2);
-				g.drawLine(0, 0, 0, height);
+				g.drawLine(1, 0, 1, height);
 				g.drawLine(width - 1, 0, width - 1, height);
-				g.drawLine(width, 0, width, height);
 			}
 		});
 		c.add(progressBar, BorderLayout.SOUTH);
