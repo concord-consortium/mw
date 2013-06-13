@@ -172,7 +172,7 @@ public class FileUtilities {
 	public static String getCodeBase(String path) {
 		if (path == null)
 			return null;
-		if (path.toLowerCase().indexOf("http://") != -1) {
+		if (path.toLowerCase().indexOf("http://") != -1 || path.toLowerCase().indexOf("https://") != -1) {
 			int i = path.lastIndexOf('/');
 			if (i == -1)
 				return null;
@@ -271,8 +271,8 @@ public class FileUtilities {
 	}
 
 	/**
-	 * copy a file. This method should be used for renaming a file instead of <code>File.renameTo()</code>. The
-	 * latter involves native methods which cannot be predicted within a Java application.
+	 * copy a file. This method should be used for renaming a file instead of <code>File.renameTo()</code>. The latter
+	 * involves native methods which cannot be predicted within a Java application.
 	 * 
 	 * @param s
 	 *            the source
@@ -315,6 +315,14 @@ public class FileUtilities {
 		}
 		catch (IOException e) {
 			e.printStackTrace();
+			if (is != null) {
+				try {
+					is.close();
+				}
+				catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
 			return FILE_ACCESS_ERROR;
 		}
 		byte b[] = new byte[1024];

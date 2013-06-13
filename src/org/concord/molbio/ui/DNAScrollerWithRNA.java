@@ -533,8 +533,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 	}
 
 	Shape getDefaultClipForStrands() {
-		Rectangle r = new Rectangle(getInsets().left + getLeftOffset(), 0, getSize().width - 2 * getLeftOffset() - getInsets().left
-				- getInsets().right, getSize().height);
+		Rectangle r = new Rectangle(getInsets().left + getLeftOffset(), 0, getSize().width - 2 * getLeftOffset() - getInsets().left - getInsets().right, getSize().height);
 		return r;
 	}
 
@@ -647,11 +646,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 						switch (scrollerState) {
 						case SCROLLER_TRANSCRIPTION_READY_STATE:
 							if (isInEffect()) {
-								dy = -rRNA[i].y
-										+ UPP_OFFSET
-										+ charh
-										- (int) Math.round((double) currentEffect.getCurrentStep() * (double) (charh)
-												/ currentEffect.getMaximumStep());
+								dy = -rRNA[i].y + UPP_OFFSET + charh - (int) Math.round((double) currentEffect.getCurrentStep() * (double) (charh) / currentEffect.getMaximumStep());
 							}
 							else {
 								dy = -rRNA[i].y + scroller.getSize().height - DOWN_OFFSET - 2 * charh;
@@ -742,8 +737,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 			return;
 		}
 
-		float xop = getLeftOffset() + (model.getCurrIndex() - model.getStartWindowIndex()) * getCodonWidth() / 3 + charw / 2 + getCodonDistance()
-				+ RNA_POLYMERASE_SIZE / 2;
+		float xop = getLeftOffset() + (model.getCurrIndex() - model.getStartWindowIndex()) * getCodonWidth() / 3 + charw / 2 + getCodonDistance() + RNA_POLYMERASE_SIZE / 2;
 		int reminder = currentBase % 3;
 		xop += reminder * getCodonWidth() / 3;
 		op.setX(xop);
@@ -869,10 +863,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 		switch (scrollerState) {
 		case SCROLLER_TRANSCRIPTION_READY_STATE:
 			if (isInEffect()) {
-				dy = -r.y
-						+ UPP_OFFSET
-						+ (int) Math.round((double) currentEffect.getCurrentStep()
-								* (double) (scroller.getSize().height - DOWN_OFFSET - 2 * charh - UPP_OFFSET) / currentEffect.getMaximumStep());
+				dy = -r.y + UPP_OFFSET + (int) Math.round((double) currentEffect.getCurrentStep() * (double) (scroller.getSize().height - DOWN_OFFSET - 2 * charh - UPP_OFFSET) / currentEffect.getMaximumStep());
 			}
 			else {
 				dy = -r.y + UPP_OFFSET;
@@ -885,8 +876,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 		case SCROLLER_NORMAL_STATE:
 			dy = -r.y + scroller.getSize().height - DOWN_OFFSET - 2 * charh;
 			if (isInEffect()) {
-				dy -= (int) Math.round((double) currentEffect.getCurrentStep()
-						* (double) (scroller.getSize().height - DOWN_OFFSET - 2 * charh - UPP_OFFSET) / currentEffect.getMaximumStep());
+				dy -= (int) Math.round((double) currentEffect.getCurrentStep() * (double) (scroller.getSize().height - DOWN_OFFSET - 2 * charh - UPP_OFFSET) / currentEffect.getMaximumStep());
 			}
 			break;
 		}
@@ -1035,10 +1025,7 @@ public class DNAScrollerWithRNA extends DNAScroller {
 		switch (scrollerState) {
 		case SCROLLER_TRANSCRIPTION_READY_STATE:
 			if (isInEffect()) {
-				ret = UPP_OFFSET
-						+ charh
-						+ (int) Math.round((double) currentEffect.getCurrentStep()
-								* (double) (bim.getHeight() - DOWN_OFFSET - 2 * charh - UPP_OFFSET) / currentEffect.getMaximumStep());
+				ret = UPP_OFFSET + charh + (int) Math.round((double) currentEffect.getCurrentStep() * (double) (bim.getHeight() - DOWN_OFFSET - 2 * charh - UPP_OFFSET) / currentEffect.getMaximumStep());
 			}
 			else {
 				ret = bim.getHeight() - DOWN_OFFSET - charh;
@@ -1505,11 +1492,9 @@ public class DNAScrollerWithRNA extends DNAScroller {
 				int xop = insets.left + (int) op.getX() - getCodonWidth() / 2;
 				int yop = insets.top + rRNA[0].y;
 				Point pt = SwingUtilities.convertPoint(this, xop, yop, getParent());
-				Rectangle ribosomeRect = new Rectangle(insets.left + (int) op.getX() - Math.round(op.getR() - 2), yop - Math.round(op.getH()),
-						Math.round(2 * (op.getR() - 2)), Math.round(2 * op.getH()));
+				Rectangle ribosomeRect = new Rectangle(insets.left + (int) op.getX() - Math.round(op.getR() - 2), yop - Math.round(op.getH()), Math.round(2 * (op.getR() - 2)), Math.round(2 * op.getH()));
 				ribosomeRect = SwingUtilities.convertRectangle(this, ribosomeRect, getParent());
-				notifyTranslationListeners(aminoacids[currentCodon], model.get53Codon(3 * currentCodon), pt, ribosomeRect,
-						RNATranslationListener.MODE_TRANSLATION_NEW_AMINO);
+				notifyTranslationListeners(aminoacids[currentCodon], model.get53Codon(3 * currentCodon), pt, ribosomeRect, RNATranslationListener.MODE_TRANSLATION_NEW_AMINO);
 			}
 		}
 		else {

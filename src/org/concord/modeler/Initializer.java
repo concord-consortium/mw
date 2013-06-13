@@ -20,6 +20,7 @@
 
 package org.concord.modeler;
 
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -28,6 +29,7 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.Toolkit;
 import java.beans.XMLDecoder;
@@ -48,13 +50,13 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.prefs.Preferences;
 
-import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 import javax.swing.JWindow;
 import javax.swing.border.Border;
+import javax.swing.plaf.basic.BasicProgressBarUI;
 
 import org.concord.modeler.util.FileUtilities;
 
@@ -97,8 +99,7 @@ public class Initializer {
 	public static void init() {
 		try {
 			sharedInstance.read();
-		}
-		catch (Throwable e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
 		}
 		if (Modeler.isMac())
@@ -121,8 +122,7 @@ public class Initializer {
 			PrintWriter writer = null;
 			try {
 				writer = new PrintWriter(file);
-			}
-			catch (FileNotFoundException e) {
+			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
 			if (writer != null) {
@@ -135,8 +135,7 @@ public class Initializer {
 				String s = null;
 				try {
 					s = pluginDirectory.toURI().toURL().toString();
-				}
-				catch (MalformedURLException e) {
+				} catch (MalformedURLException e) {
 					e.printStackTrace();
 				}
 				if (s != null) {
@@ -168,19 +167,15 @@ public class Initializer {
 			try {
 				in = new FileInputStream(f);
 				prop.load(in);
-			}
-			catch (IOException e) {
+			} catch (IOException e) {
 				e.printStackTrace();
-			}
-			catch (AccessControlException e) {
+			} catch (AccessControlException e) {
 				e.printStackTrace();
-			}
-			finally {
+			} finally {
 				if (in != null)
 					try {
 						in.close();
-					}
-					catch (IOException e) {
+					} catch (IOException e) {
 					}
 			}
 		}
@@ -227,28 +222,23 @@ public class Initializer {
 				int kApplicationSupportFolder = 0x61737570;// asup
 				short kUserDomain = -32763;
 				root = new File(FileManager.findFolder(kUserDomain, kApplicationSupportFolder));
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 				root = new File(System.getProperty("user.home"), "Application Data");
 			}
-		}
-		else if (System.getProperty("os.name").startsWith("Windows Vista")
-				|| System.getProperty("os.name").startsWith("Windows 7")) {
+		} else if (System.getProperty("os.name").startsWith("Windows Vista") || System.getProperty("os.name").startsWith("Windows 7")) {
 			// workaround for the Java bug on Vista (http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6519127)
 			String userName = System.getProperty("user.name");
 			String userHome = System.getProperty("user.home");
 			int index = userHome.indexOf("\\" + userName);
 			if (index != -1 && index + userName.length() + 1 == userHome.length()) {
 				// user name agrees with user home
-			}
-			else {
+			} else {
 				String tmpDir = System.getProperty("java.io.tmpdir");
 				String un2;
 				if (userName.length() > 8) {
 					un2 = "\\" + userName.substring(0, 6).toUpperCase() + "~1";
-				}
-				else {
+				} else {
 					un2 = "\\" + userName;
 				}
 				index = tmpDir.indexOf(un2);
@@ -256,8 +246,7 @@ public class Initializer {
 					userHome = tmpDir.substring(0, index) + "\\" + userName;
 			}
 			root = new File(userHome, "AppData");
-		}
-		else {
+		} else {
 			root = new File(System.getProperty("user.home"), "Application Data");
 		}
 		if (!root.exists())
@@ -300,19 +289,16 @@ public class Initializer {
 		XMLDecoder in = null;
 		try {
 			in = new XMLDecoder(new BufferedInputStream(new FileInputStream(f)));
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		if (in == null)
 			return;
 		try {
 			systemProperties = (HashMap) in.readObject();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		finally {
+		} finally {
 			in.close();
 		}
 	}
@@ -321,16 +307,14 @@ public class Initializer {
 		XMLEncoder out = null;
 		try {
 			out = new XMLEncoder(new BufferedOutputStream(new FileOutputStream(new File(propDirectory, "system.xml"))));
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		if (out == null)
 			return;
 		try {
 			out.writeObject(systemProperties);
-		}
-		finally {
+		} finally {
 			out.close();
 		}
 	}
@@ -340,8 +324,7 @@ public class Initializer {
 			return;
 		if (EventQueue.isDispatchThread()) {
 			progressBar.setString(s);
-		}
-		else {
+		} else {
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					progressBar.setString(s);
@@ -353,16 +336,24 @@ public class Initializer {
 	void showSplashScreen() {
 		final Font font = new Font("Verdana", Font.PLAIN, 10);
 		progressBar = new JProgressBar();
-		progressBar.setBorder(BorderFactory.createEmptyBorder(2, 5, 5, 5));
-		progressBar.setBackground(Color.white);
-		progressBar.setForeground(Color.gray);
+		progressBar.setBackground(new Color(225, 106, 62));
+		progressBar.setForeground(Color.WHITE);
 		progressBar.setIndeterminate(false);
 		progressBar.setMaximum(10);
 		progressBar.setMinimum(0);
 		progressBar.setStringPainted(true);
 		progressBar.setString("Launching......");
 		progressBar.setFont(font);
-		ImageIcon icon = new ImageIcon(getClass().getResource("images/splashpane.jpg"));
+		progressBar.setUI(new BasicProgressBarUI() {
+			protected Color getSelectionBackground() {
+				return Color.WHITE;
+			}
+
+			protected Color getSelectionForeground() {
+				return Color.WHITE;
+			}
+		});
+		ImageIcon icon = new ImageIcon(getClass().getResource("images/splashpane.png"));
 		int iconWidth = icon.getIconWidth();
 		int iconHeight = icon.getIconHeight();
 		progressBar.setPreferredSize(new Dimension(iconWidth, 22));
@@ -373,15 +364,15 @@ public class Initializer {
 				Icon icon = getIcon();
 				icon.paintIcon(this, g, 0, 0);
 				g.setFont(font);
-				g.setColor(Color.white);
-				g.drawString("Version " + Modeler.VERSION + " Copyright 2004-2012.", 10, icon.getIconHeight() - 25);
-				g.drawString("Supported by the National Science Foundation.", 10, icon.getIconHeight() - 10);
+				g.setColor(Color.GRAY);
+				g.drawString("Version " + Modeler.VERSION + " Copyright 2004-2013.", 10, icon.getIconHeight() - 32);
+				g.drawString("Supported by the National Science Foundation.", 10, icon.getIconHeight() - 17);
 			}
 		}, BorderLayout.CENTER);
 
 		progressBar.setBorder(new Border() {
 			public Insets getBorderInsets(Component c) {
-				return new Insets(2, 2, 2, 2);
+				return new Insets(1, 1, 1, 1);
 			}
 
 			public boolean isBorderOpaque() {
@@ -389,12 +380,11 @@ public class Initializer {
 			}
 
 			public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
-				g.setColor(Color.black);
+				g.setColor(new Color(0x8dafba));
+				((Graphics2D) g).setStroke(new BasicStroke(4));
 				g.drawLine(1, height - 1, width - 1, height - 1);
-				g.drawLine(1, height - 2, width - 1, height - 2);
-				g.drawLine(0, 0, 0, height);
+				g.drawLine(1, 0, 1, height);
 				g.drawLine(width - 1, 0, width - 1, height);
-				g.drawLine(width, 0, width, height);
 			}
 		});
 		c.add(progressBar, BorderLayout.SOUTH);

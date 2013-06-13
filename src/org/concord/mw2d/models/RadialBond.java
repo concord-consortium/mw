@@ -35,6 +35,7 @@ import java.util.List;
 
 import javax.swing.Timer;
 
+import org.concord.modeler.draw.CoilSpring;
 import org.concord.modeler.util.HashCodeUtil;
 import org.concord.mw2d.ViewAttribute;
 
@@ -50,6 +51,7 @@ public class RadialBond implements ModelComponent {
 	public final static byte SHORT_SPRING_STYLE = 0x6a;
 	public final static byte DOUBLE_BOND_STYLE = 0x6b;
 	public final static byte TRIPLE_BOND_STYLE = 0x6c;
+	public final static byte COIL_STYLE = 0x6d;
 
 	public final static float PEPTIDE_BOND_LENGTH_PARAMETER = 0.55f;
 
@@ -60,10 +62,8 @@ public class RadialBond implements ModelComponent {
 	private static float stickWidth = 2;
 
 	private final static Stroke STICK = new BasicStroke(2 * stickWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
-	private final static Stroke DOUBLE_STICK = new BasicStroke(8 * stickWidth, BasicStroke.CAP_BUTT,
-			BasicStroke.JOIN_MITER);
-	private final static Stroke TRIPLE_STICK = new BasicStroke(14 * stickWidth, BasicStroke.CAP_BUTT,
-			BasicStroke.JOIN_MITER);
+	private final static Stroke DOUBLE_STICK = new BasicStroke(8 * stickWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
+	private final static Stroke TRIPLE_STICK = new BasicStroke(14 * stickWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
 	private final static double ZERO = 0.000000001;
 	private final static double DISTANCE_AWAY_FROM_AXIS = 10;
 
@@ -77,9 +77,7 @@ public class RadialBond implements ModelComponent {
 	float custom;
 
 	/*
-	 * Chemical energy stored in this bond. This energy is always set positive, though in the total energy calculation
-	 * it should be counted as negative. Note: The chemical energy is NOT the vibrational potential energy, though the
-	 * criterion used to break the bond is: Chemical energy + vibrational potential enery > 0.
+	 * Chemical energy stored in this bond. This energy is always set positive, though in the total energy calculation it should be counted as negative. Note: The chemical energy is NOT the vibrational potential energy, though the criterion used to break the bond is: Chemical energy + vibrational potential enery > 0.
 	 */
 	double chemicalEnergy;
 
@@ -167,8 +165,7 @@ public class RadialBond implements ModelComponent {
 	}
 
 	RadialBond getCopy(Atom atom1, Atom atom2) {
-		RadialBond b = new Builder(atom1, atom2).bondLength(bondLength).bondStrength(bondStrength).smart(smart).solid(
-				solid).closed(closed).chemicalEnergy(chemicalEnergy).build();
+		RadialBond b = new Builder(atom1, atom2).bondLength(bondLength).bondStrength(bondStrength).smart(smart).solid(solid).closed(closed).chemicalEnergy(chemicalEnergy).build();
 		b.setBondColor(bondColor);
 		b.setVisible(visible);
 		b.setBondStyle(bondStyle);
@@ -217,8 +214,7 @@ public class RadialBond implements ModelComponent {
 				if (blinkIndex < 8) {
 					blinkIndex++;
 					blinkColor = blinkIndex % 2 == 0 ? model.view.contrastBackground() : model.view.getBackground();
-				}
-				else {
+				} else {
 					blinkTimer.stop();
 					blinkIndex = 0;
 					setBlinking(false);
@@ -265,8 +261,7 @@ public class RadialBond implements ModelComponent {
 	public boolean equals(Object o) {
 		if (!(o instanceof RadialBond))
 			return false;
-		return (atom1 == ((RadialBond) o).atom1 && atom2 == ((RadialBond) o).atom2)
-				|| (atom2 == ((RadialBond) o).atom1 && atom1 == ((RadialBond) o).atom2);
+		return (atom1 == ((RadialBond) o).atom1 && atom2 == ((RadialBond) o).atom2) || (atom2 == ((RadialBond) o).atom1 && atom1 == ((RadialBond) o).atom2);
 	}
 
 	public int hashCode() {
@@ -303,18 +298,14 @@ public class RadialBond implements ModelComponent {
 	}
 
 	/**
-	 * @deprecated A covalent bond cannot be cloned, because it is a secondary structure depicting the relationship
-	 *             between atoms. You can clone entities such as a particle or a molecule, but not the relationships
-	 *             between entities.
+	 * @deprecated A covalent bond cannot be cloned, because it is a secondary structure depicting the relationship between atoms. You can clone entities such as a particle or a molecule, but not the relationships between entities.
 	 */
 	public Object clone() {
 		throw new RuntimeException("Do not call this method");
 	}
 
 	/**
-	 * return true if the coordinate is inside the hot spot of this bond. Note: This is different from the base class
-	 * <tt>Line2D</tt>'s <tt>contains</tt> method's "always-return-false" behavior. Be aware of that this method can
-	 * return true.
+	 * return true if the coordinate is inside the hot spot of this bond. Note: This is different from the base class <tt>Line2D</tt>'s <tt>contains</tt> method's "always-return-false" behavior. Be aware of that this method can return true.
 	 */
 	public boolean contains(double x, double y) {
 		setAxis();
@@ -322,9 +313,7 @@ public class RadialBond implements ModelComponent {
 	}
 
 	/**
-	 * return true if the rectangular area is inside the hot spot of this bond. Note: This is different from the base
-	 * class <tt>Line2D</tt>'s <tt>contains</tt> method's "always-return-false" behavior. Be aware of that this method
-	 * can return true.
+	 * return true if the rectangular area is inside the hot spot of this bond. Note: This is different from the base class <tt>Line2D</tt>'s <tt>contains</tt> method's "always-return-false" behavior. Be aware of that this method can return true.
 	 */
 	public boolean contains(double x, double y, double w, double h) {
 		setAxis();
@@ -332,9 +321,7 @@ public class RadialBond implements ModelComponent {
 	}
 
 	/**
-	 * return true if the point is inside the hot spot of this bond. Note: This is different from the base class
-	 * <tt>Line2D</tt>'s <tt>contains</tt> method's "always-return-false" behavior. Be aware of that this method can
-	 * return true.
+	 * return true if the point is inside the hot spot of this bond. Note: This is different from the base class <tt>Line2D</tt>'s <tt>contains</tt> method's "always-return-false" behavior. Be aware of that this method can return true.
 	 */
 	public boolean contains(Point2D p) {
 		setAxis();
@@ -342,9 +329,7 @@ public class RadialBond implements ModelComponent {
 	}
 
 	/**
-	 * return true if the rectangle is inside the hot spot of this bond. Note: This is different from the base class
-	 * <tt>Line2D</tt>'s <tt>contains</tt> method's "always-return-false" behavior. Be aware of that this method can
-	 * return true.
+	 * return true if the rectangle is inside the hot spot of this bond. Note: This is different from the base class <tt>Line2D</tt>'s <tt>contains</tt> method's "always-return-false" behavior. Be aware of that this method can return true.
 	 */
 	public boolean contains(Rectangle2D r) {
 		setAxis();
@@ -376,8 +361,7 @@ public class RadialBond implements ModelComponent {
 	 * this method can be used to detect wether two covalent bonds intersect.
 	 * </p>
 	 * <p>
-	 * The intersection of two bonds is chemically false, but occurs frequently in a model where bonds are not allowed
-	 * to break and form but the bond lengths are much greater than the van der Waals radii of the atoms.
+	 * The intersection of two bonds is chemically false, but occurs frequently in a model where bonds are not allowed to break and form but the bond lengths are much greater than the van der Waals radii of the atoms.
 	 * </p>
 	 */
 	public boolean intersects(RadialBond rb) {
@@ -708,6 +692,20 @@ public class RadialBond implements ModelComponent {
 		return bondStyle;
 	}
 
+	private void drawCoil(Graphics2D g) {
+		double x = atom2.rx - atom1.rx;
+		double y = atom2.ry - atom1.ry;
+		double length = Math.hypot(x, y);
+		x = 0.5 * (atom2.rx + atom1.rx);
+		y = 0.5 * (atom2.ry + atom1.ry);
+		CoilSpring coil = new CoilSpring((float) x, (float) y, (float) length);
+		coil.setTurnCount((int) (bondLength * 0.05f));
+		coil.setRotation((float) getAngle());
+		coil.setDiameter((float) (atom2.getSigma() + atom1.getSigma()) * 0.2f);
+		coil.setColor(bondColor == null ? model.view.contrastBackground() : bondColor);
+		coil.paint(g);
+	}
+
 	private void drawSpring(Graphics2D g, int n, int m) {
 		g.setStroke(ViewAttribute.THIN);
 		g.setColor(bondColor == null ? model.view.contrastBackground() : bondColor);
@@ -719,14 +717,14 @@ public class RadialBond implements ModelComponent {
 		double delta = length / n;
 		if (path == null)
 			path = new GeneralPath();
-		else path.reset();
+		else
+			path.reset();
 		path.moveTo((float) atom1.rx, (float) atom1.ry);
 		for (int i = 0; i < n; i++) {
 			if (i % 2 == 0) {
 				x = atom1.rx + (i + 0.5) * costheta * delta - 0.5 * sintheta * m;
 				y = atom1.ry + (i + 0.5) * sintheta * delta + 0.5 * costheta * m;
-			}
-			else {
+			} else {
 				x = atom1.rx + (i + 0.5) * costheta * delta + 0.5 * sintheta * m;
 				y = atom1.ry + (i + 0.5) * sintheta * delta - 0.5 * costheta * m;
 			}
@@ -758,8 +756,7 @@ public class RadialBond implements ModelComponent {
 				g.setColor(atom2.getColor());
 				line.setLine(axis.x2, axis.y2, x, y);
 				g.draw(line);
-			}
-			else if (type == UNICOLOR_STICK_STYLE) {
+			} else if (type == UNICOLOR_STICK_STYLE) {
 				g.setColor(bondColor == null ? model.view.contrastBackground() : bondColor);
 				g.draw(axis);
 			}
@@ -920,6 +917,9 @@ public class RadialBond implements ModelComponent {
 			if (line == null)
 				line = new Line2D.Double();
 			switch (bondStyle) {
+			case COIL_STYLE:
+				drawCoil(g);
+				break;
 			case LONG_SPRING_STYLE:
 				drawSpring(g, 20, 20);
 				break;
@@ -976,8 +976,7 @@ public class RadialBond implements ModelComponent {
 				if (torque < 0) {
 					line.setLine(axis.x2, axis.y2, axis.x2 + sint * length, axis.y2 - cost * length);
 					drawArrow(g, cost, sint);
-				}
-				else {
+				} else {
 					line.setLine(axis.x2, axis.y2, axis.x2 - sint * length, axis.y2 + cost * length);
 					drawArrow(g, -cost, -sint);
 				}
@@ -993,8 +992,7 @@ public class RadialBond implements ModelComponent {
 				if (torque < 0) {
 					line.setLine(axis.x1, axis.y1, axis.x1 + sint * length, axis.y1 - cost * length);
 					drawArrow(g, cost, sint);
-				}
-				else {
+				} else {
 					line.setLine(axis.x1, axis.y1, axis.x1 - sint * length, axis.y1 + cost * length);
 					drawArrow(g, -cost, -sint);
 				}
@@ -1010,8 +1008,7 @@ public class RadialBond implements ModelComponent {
 				if (torque < 0) {
 					line.setLine(axis.x1, axis.y1, axis.x1 + sint * length, axis.y1 - cost * length);
 					drawArrow(g, cost, sint);
-				}
-				else {
+				} else {
 					line.setLine(axis.x1, axis.y1, axis.x1 - sint * length, axis.y1 + cost * length);
 					drawArrow(g, -cost, -sint);
 				}
@@ -1024,8 +1021,7 @@ public class RadialBond implements ModelComponent {
 				if (torque < 0) {
 					line.setLine(axis.x2, axis.y2, axis.x2 + sint * length, axis.y2 - cost * length);
 					drawArrow(g, cost, sint);
-				}
-				else {
+				} else {
 					line.setLine(axis.x2, axis.y2, axis.x2 - sint * length, axis.y2 + cost * length);
 					drawArrow(g, -cost, -sint);
 				}
@@ -1040,8 +1036,7 @@ public class RadialBond implements ModelComponent {
 			return;
 		double cost = atom2.rx - atom1.rx;
 		double sint = atom2.ry - atom1.ry;
-		double k = MDModel.GF_CONVERSION_CONSTANT * amplitude * Math.cos(Math.PI * 2 * time / period + phase)
-				/ Math.hypot(cost, sint);
+		double k = MDModel.GF_CONVERSION_CONSTANT * amplitude * Math.cos(Math.PI * 2 * time / period + phase) / Math.hypot(cost, sint);
 		cost *= k;
 		sint *= k;
 		atom1.fx += cost / atom1.mass;
@@ -1133,8 +1128,7 @@ public class RadialBond implements ModelComponent {
 			custom = rb.custom;
 		}
 
-		public Delegate(int atom1, int atom2, double bondLength, double bondStrength, boolean smart, boolean solid,
-				boolean closed) {
+		public Delegate(int atom1, int atom2, double bondLength, double bondStrength, boolean smart, boolean solid, boolean closed) {
 			if (atom1 == atom2)
 				throw new IllegalArgumentException("The two participants of a radial bond must not be identical!");
 			this.atom1 = atom1;
@@ -1288,10 +1282,7 @@ public class RadialBond implements ModelComponent {
 			if (!(obj instanceof RadialBond.Delegate))
 				return false;
 			RadialBond.Delegate rbd = (RadialBond.Delegate) obj;
-			return atom1 == rbd.getAtom1() && atom2 == rbd.getAtom2()
-					&& Math.abs(bondLength - rbd.getBondLength()) < ZERO
-					&& Math.abs(bondStrength - rbd.getBondStrength()) < ZERO
-					&& Math.abs(chemicalEnergy - rbd.getChemicalEnergy()) < ZERO;
+			return atom1 == rbd.getAtom1() && atom2 == rbd.getAtom2() && Math.abs(bondLength - rbd.getBondLength()) < ZERO && Math.abs(bondStrength - rbd.getBondStrength()) < ZERO && Math.abs(chemicalEnergy - rbd.getChemicalEnergy()) < ZERO;
 		}
 
 		public int hashCode() {

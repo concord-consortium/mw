@@ -64,8 +64,7 @@ public class PeriodicTable extends JPanel implements ItemSelectable {
 	private final static Color METALLOID_COLOR = new Color(0xc7fdcb);
 	private final static Color NON_METAL_COLOR = new Color(0x7effff);
 	private final static Color TRANSITION_METAL_COLOR = new Color(0xffff7a);
-	private static final String[] labels = { "IA", "IIA", "IIIA", "IVA", "VA", "VIA", "VIIA", "---------VIII---------",
-			"IB", "IIB", "IIIB", "IVB", "VB", "VIB", "VIIB", "VIIIB" };
+	private static final String[] labels = { "IA", "IIA", "IIIA", "IVA", "VA", "VIA", "VIIA", "---------VIII---------", "IB", "IIB", "IIIB", "IVB", "VB", "VIB", "VIIB", "VIIIB" };
 	private static NumberFormat format;
 	private static ResourceBundle bundle;
 	private static boolean isUSLocale;
@@ -87,8 +86,7 @@ public class PeriodicTable extends JPanel implements ItemSelectable {
 		if (bundle == null) {
 			isUSLocale = Locale.getDefault().equals(Locale.US);
 			try {
-				bundle = ResourceBundle.getBundle("org.concord.modeler.chemistry.resources.PeriodicTable", Locale
-						.getDefault());
+				bundle = ResourceBundle.getBundle("org.concord.modeler.chemistry.resources.PeriodicTable", Locale.getDefault());
 			}
 			catch (MissingResourceException e) {
 			}
@@ -115,12 +113,10 @@ public class PeriodicTable extends JPanel implements ItemSelectable {
 		for (int n = 0; n < getMaxElementIndex(); n++) {
 			s = getInternationalText(ElementData.elements[n]);
 			if (s != null) {
-				button[n] = new JButton("<html><center>" + (n + 1) + "<br><font size=\"3\">" + s + "</font> "
-						+ ElementData.elements[n] + "</center></html>");
+				button[n] = new JButton("<html><center>" + (n + 1) + "<br><font size=\"3\">" + s + "</font> " + ElementData.elements[n] + "</center></html>");
 			}
 			else {
-				button[n] = new JButton("<html><center>" + (n + 1) + "<br>" + ElementData.elements[n]
-						+ "</center></html>");
+				button[n] = new JButton("<html><center>" + (n + 1) + "<br>" + ElementData.elements[n] + "</center></html>");
 			}
 			s = getInternationalText(ElementData.fullNames[n]);
 			button[n].setToolTipText(s != null ? s : ElementData.fullNames[n]);
@@ -455,13 +451,11 @@ public class PeriodicTable extends JPanel implements ItemSelectable {
 		int n = i + 1;
 		if (n == 2 || n == 10 || n == 18 || n == 36 || n == 54 || n == 86)
 			return RARE_GAS_COLOR;
-		if (n == 3 || n == 4 || n == 11 || n == 12 || n == 13 || n == 19 || n == 20 || n == 31 || n == 37 || n == 38
-				|| n == 49 || n == 55 || n == 56 || n == 81 || n == 82 || n == 87 || n == 88)
+		if (n == 3 || n == 4 || n == 11 || n == 12 || n == 13 || n == 19 || n == 20 || n == 31 || n == 37 || n == 38 || n == 49 || n == 55 || n == 56 || n == 81 || n == 82 || n == 87 || n == 88)
 			return METAL_COLOR;
 		if (n == 1 || n == 7 || n == 8 || n == 9 || n == 16 || n == 17 || n == 35 || n == 53)
 			return NON_METAL_COLOR;
-		if (n == 5 || n == 6 || n == 14 || n == 15 || n == 32 || n == 33 || n == 34 || n == 50 || n == 51 || n == 52
-				|| n == 83 || n == 84 || n == 85)
+		if (n == 5 || n == 6 || n == 14 || n == 15 || n == 32 || n == 33 || n == 34 || n == 50 || n == 51 || n == 52 || n == 83 || n == 84 || n == 85)
 			return METALLOID_COLOR;
 		if (n <= 30 && n >= 21)
 			return TRANSITION_METAL_COLOR;

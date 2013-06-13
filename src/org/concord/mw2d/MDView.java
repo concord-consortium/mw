@@ -85,6 +85,7 @@ import org.concord.modeler.draw.Draw;
 import org.concord.modeler.draw.FillMode;
 import org.concord.modeler.draw.GradientFactory;
 import org.concord.modeler.draw.LineStyle;
+import org.concord.modeler.draw.Paintable;
 import org.concord.modeler.draw.StrokeFactory;
 import org.concord.modeler.event.ImageEvent;
 import org.concord.modeler.event.ImageImporter;
@@ -122,6 +123,9 @@ import static org.concord.mw2d.UserAction.*;
 
 public abstract class MDView extends PrintableComponent {
 
+	public static final byte MARK_INSIDE = 0;
+	public static final byte MARK_OUTSIDE = 1;
+
 	final static int UP_PRESSED = 1;
 	final static int DOWN_PRESSED = 2;
 	final static int LEFT_PRESSED = 4;
@@ -146,11 +150,13 @@ public abstract class MDView extends PrintableComponent {
 	private static Icon clockIcon;
 	private static Icon waitIcon;
 	private Color markColor = new Color(204, 204, 255);
+	private byte markStyle = MARK_INSIDE;
 	private Point mousePressedPoint; // unlike clickPoint, this point is not necessarily contained by a component.
 	private Point dragPoint = new Point();
 	Point anchorPoint = new Point();
 	private boolean dragging;
 	boolean doNotFireUndoEvent;
+	private int energizerX = -1;
 
 	Object pasteBuffer;
 	SelectedArea selectedArea = new SelectedArea();
@@ -165,9 +171,7 @@ public abstract class MDView extends PrintableComponent {
 	VectorFlavor velocityFlavor, momentumFlavor, accelerationFlavor, forceFlavor;
 
 	/*
-	 * if this flag is set true, calling the <tt>repaint()</tt> method of this view will not paint anything of the
-	 * view's content. This mechanism is set to prevent clash of the painting thread with any other thread on accessing
-	 * collections such as bonds.
+	 * if this flag is set true, calling the <tt>repaint()</tt> method of this view will not paint anything of the view's content. This mechanism is set to prevent clash of the painting thread with any other thread on accessing collections such as bonds.
 	 */
 	boolean dragSelected;
 
@@ -201,10 +205,7 @@ public abstract class MDView extends PrintableComponent {
 	private List<ActionStateListener> actionStateListeners;
 
 	/*
-	 * The ancestor component accomodating this view. When the size of the view changes, the ancestor component should
-	 * resize accordingly. The ancestor is not necessarily the immediate parent of the view, nor is it the root in the
-	 * UI hierarchy. Use your own discretion to determine which level of ancestor should respond to the change of view
-	 * scope.
+	 * The ancestor component accomodating this view. When the size of the view changes, the ancestor component should resize accordingly. The ancestor is not necessarily the immediate parent of the view, nor is it the root in the UI hierarchy. Use your own discretion to determine which level of ancestor should respond to the change of view scope.
 	 */
 	Component ancestor;
 
@@ -226,6 +227,7 @@ public abstract class MDView extends PrintableComponent {
 	private boolean actionTipEnabled;
 	private boolean propertyDialogEnabled = true;
 	private final Object updateLock = new Object();
+	private List<Paintable> paintables;
 
 	public MDView() {
 
@@ -233,8 +235,7 @@ public abstract class MDView extends PrintableComponent {
 			// for some reason, trying to load resource bundle from the default locale causes the applet to fail
 			try {
 				bundle = ResourceBundle.getBundle("org.concord.mw2d.images.ViewBundle", Locale.getDefault());
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 			}
 		}
 
@@ -393,8 +394,7 @@ public abstract class MDView extends PrintableComponent {
 				if (getModel().getUndoManager().canUndo()) {
 					try {
 						getModel().getUndoManager().undo();
-					}
-					catch (CannotUndoException ex) {
+					} catch (CannotUndoException ex) {
 						ex.printStackTrace();
 					}
 				}
@@ -420,8 +420,7 @@ public abstract class MDView extends PrintableComponent {
 				if (getModel().getUndoManager().canRedo()) {
 					try {
 						getModel().getUndoManager().redo();
-					}
-					catch (CannotRedoException ex) {
+					} catch (CannotRedoException ex) {
 						ex.printStackTrace();
 					}
 				}
@@ -447,8 +446,7 @@ public abstract class MDView extends PrintableComponent {
 			public void actionPerformed(ActionEvent e) {
 				if (energizerOn) {
 					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(MDView.this), "The thermal energizer is already on.");
-				}
-				else {
+				} else {
 					setEnergizer(true);
 					repaint();
 				}
@@ -493,8 +491,7 @@ public abstract class MDView extends PrintableComponent {
 				if (modelProp == null) {
 					if (getModel() instanceof MesoModel) {
 						modelProp = new MesoModelProperties(JOptionPane.getFrameForComponent(MDView.this));
-					}
-					else {
+					} else {
 						modelProp = new MolecularModelProperties(JOptionPane.getFrameForComponent(MDView.this));
 					}
 				}
@@ -546,8 +543,7 @@ public abstract class MDView extends PrintableComponent {
 		String s = null;
 		try {
 			s = bundle.getString(name);
-		}
-		catch (MissingResourceException e) {
+		} catch (MissingResourceException e) {
 			s = null;
 		}
 		return s;
@@ -679,8 +675,7 @@ public abstract class MDView extends PrintableComponent {
 		Job job = getModel().getJob();
 		if (job != null) {
 			job.show(this);
-		}
-		else {
+		} else {
 			JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(this), "There is no task yet. Please run the model.", "No task assigned", JOptionPane.WARNING_MESSAGE);
 		}
 	}
@@ -718,8 +713,7 @@ public abstract class MDView extends PrintableComponent {
 					});
 					return newSize;
 				}
-			}
-			else {
+			} else {
 				if (boundary.getType() == RectangularBoundary.DBC_ID) {
 					if (xmax > newSize.width + 1 || ymax > newSize.height + 1) {
 						Dimension d = getSize();
@@ -751,8 +745,7 @@ public abstract class MDView extends PrintableComponent {
 		ancestor.validate();
 		if (!getSize().equals(getPreferredSize())) {
 			getModel().notifyModelListeners(new ModelEvent(getModel(), "Resize error", getSize(), getPreferredSize()));
-		}
-		else {
+		} else {
 			if (!isLoading) {
 				getModel().notifyPageComponentListeners(new PageComponentEvent(getModel(), PageComponentEvent.COMPONENT_RESIZED));
 				if (fireUndoEvent) {
@@ -796,8 +789,7 @@ public abstract class MDView extends PrintableComponent {
 	public void removeAllObjects() {
 		if (selectedArea == null) {
 			selectedArea = new SelectedArea(0, 0, getWidth(), getHeight());
-		}
-		else {
+		} else {
 			selectedArea.setRect(0, 0, getWidth(), getHeight());
 		}
 		removeSelectedArea();
@@ -824,21 +816,16 @@ public abstract class MDView extends PrintableComponent {
 					continue;
 				if (c instanceof LineComponent) {
 					intersected = ((LineComponent) c).intersects(selectedArea);
-				}
-				else if (c instanceof RectangleComponent) {
+				} else if (c instanceof RectangleComponent) {
 					intersected = ((RectangleComponent) c).intersects(selectedArea);
-				}
-				else if (c instanceof TriangleComponent) {
+				} else if (c instanceof TriangleComponent) {
 					intersected = ((TriangleComponent) c).intersects(selectedArea);
-				}
-				else if (c instanceof EllipseComponent) {
+				} else if (c instanceof EllipseComponent) {
 					intersected = ((EllipseComponent) c).intersects(selectedArea);
-				}
-				else if (c instanceof ImageComponent) {
+				} else if (c instanceof ImageComponent) {
 					ImageComponent ic = (ImageComponent) c;
 					intersected = selectedArea.intersects(ic.getRx(), ic.getRy(), ic.getLogicalScreenWidth(), ic.getLogicalScreenHeight());
-				}
-				else if (c instanceof TextBoxComponent) {
+				} else if (c instanceof TextBoxComponent) {
 					TextBoxComponent tc = (TextBoxComponent) c;
 					intersected = selectedArea.intersects(tc.getRx(), tc.getRy(), c.getWidth(), c.getHeight());
 				}
@@ -857,16 +844,14 @@ public abstract class MDView extends PrintableComponent {
 		if (x > selectedArea.getX0()) {
 			selectedArea.width = x - selectedArea.getX0();
 			selectedArea.x = selectedArea.getX0();
-		}
-		else {
+		} else {
 			selectedArea.width = selectedArea.getX0() - x;
 			selectedArea.x = selectedArea.getX0() - selectedArea.width;
 		}
 		if (y > selectedArea.getY0()) {
 			selectedArea.height = y - selectedArea.getY0();
 			selectedArea.y = selectedArea.getY0();
-		}
-		else {
+		} else {
 			selectedArea.height = selectedArea.getY0() - y;
 			selectedArea.y = selectedArea.getY0() - selectedArea.height;
 		}
@@ -1056,6 +1041,14 @@ public abstract class MDView extends PrintableComponent {
 		return markColor;
 	}
 
+	public void setMarkStyle(byte b) {
+		markStyle = b;
+	}
+
+	public byte getMarkStyle() {
+		return markStyle;
+	}
+
 	public void setColorCoding(String s) {
 		colorCoding = s;
 	}
@@ -1136,8 +1129,7 @@ public abstract class MDView extends PrintableComponent {
 	}
 
 	/**
-	 * translate all the components of the model by the specified displacements. This is an undoable wrapper of the
-	 * method with the same signature of <code>org.concord.mw2d.models.MDModel</code>.
+	 * translate all the components of the model by the specified displacements. This is an undoable wrapper of the method with the same signature of <code>org.concord.mw2d.models.MDModel</code>.
 	 * 
 	 * @see org.concord.mw2d.models.MDModel#translateWholeModel
 	 */
@@ -1162,8 +1154,7 @@ public abstract class MDView extends PrintableComponent {
 	}
 
 	/**
-	 * rotate all the particles of the model by the specified angles. This is an undoable wrapper of the method with the
-	 * same signature of <code>org.concord.mw2d.models.MDModel</code>.
+	 * rotate all the particles of the model by the specified angles. This is an undoable wrapper of the method with the same signature of <code>org.concord.mw2d.models.MDModel</code>.
 	 * 
 	 * @see org.concord.mw2d.models.MDModel#rotateWholeModel
 	 */
@@ -1179,8 +1170,7 @@ public abstract class MDView extends PrintableComponent {
 	}
 
 	/**
-	 * return the first instance of an image component represented by the URL. Note that there may be multiple instances
-	 * of image with the same URL.
+	 * return the first instance of an image component represented by the URL. Note that there may be multiple instances of image with the same URL.
 	 */
 	public ImageComponent getImage(URL url) {
 		if (layerBasket.isEmpty())
@@ -1202,8 +1192,7 @@ public abstract class MDView extends PrintableComponent {
 		ImageComponent ic = null;
 		try {
 			ic = new ImageComponent(url.toString());
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return;
 		}
@@ -1222,8 +1211,7 @@ public abstract class MDView extends PrintableComponent {
 		ImageComponent ic = null;
 		try {
 			ic = new ImageComponent(filename);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return;
 		}
@@ -1336,8 +1324,7 @@ public abstract class MDView extends PrintableComponent {
 					}
 				}
 			}
-		}
-		else if (c instanceof TextBoxComponent) {
+		} else if (c instanceof TextBoxComponent) {
 			if (((TextBoxComponent) c).isCallOut()) {
 				Point p = ((TextBoxComponent) c).getCallOutPoint();
 				for (int i = 0; i < n; i++) {
@@ -1347,8 +1334,7 @@ public abstract class MDView extends PrintableComponent {
 						break;
 					}
 				}
-			}
-			else {
+			} else {
 				Point p = c.getCenter();
 				for (int i = 0; i < n; i++) {
 					a = getModel().getParticle(i);
@@ -1398,8 +1384,7 @@ public abstract class MDView extends PrintableComponent {
 	}
 
 	/**
-	 * remove the first instance of image with the specified URL. Note that there may be multiple instances of image
-	 * with the same URL.
+	 * remove the first instance of image with the specified URL. Note that there may be multiple instances of image with the same URL.
 	 */
 	public void removeImage(URL url) {
 		ImageComponent c = null;
@@ -1454,24 +1439,18 @@ public abstract class MDView extends PrintableComponent {
 				if (x instanceof ImageComponent) {
 					try {
 						y = new ImageComponent((ImageComponent) x);
-					}
-					catch (IOException e) {
+					} catch (IOException e) {
 						e.printStackTrace();
 					}
-				}
-				else if (x instanceof RectangleComponent) {
+				} else if (x instanceof RectangleComponent) {
 					y = new RectangleComponent((RectangleComponent) x);
-				}
-				else if (x instanceof TriangleComponent) {
+				} else if (x instanceof TriangleComponent) {
 					y = new TriangleComponent((TriangleComponent) x);
-				}
-				else if (x instanceof EllipseComponent) {
+				} else if (x instanceof EllipseComponent) {
 					y = new EllipseComponent((EllipseComponent) x);
-				}
-				else if (x instanceof LineComponent) {
+				} else if (x instanceof LineComponent) {
 					y = new LineComponent((LineComponent) x);
-				}
-				else if (x instanceof TextBoxComponent) {
+				} else if (x instanceof TextBoxComponent) {
 					y = new TextBoxComponent((TextBoxComponent) x);
 				}
 				if (y != null) {
@@ -1888,8 +1867,7 @@ public abstract class MDView extends PrintableComponent {
 					if (!b) {
 						try {
 							((AbstractButton) toolBar.getClientProperty("Select button")).doClick();
-						}
-						catch (Exception e) {
+						} catch (Exception e) {
 							System.err.println("No selection button was found.");
 						}
 					}
@@ -1947,13 +1925,7 @@ public abstract class MDView extends PrintableComponent {
 	abstract JPopupMenu[] getPopupMenus();
 
 	/*
-	 * return the popup menu associated with this view with the given label, if the popup menu has been initialized;
-	 * return null if no popup menu with the given label is not found, or the popup menu with the given name has not
-	 * been initialized yet. Each popup menu controls a specific object in the view. You may want to customize these
-	 * menus. <p> For an <code>AtomisticView</code>, the labels for the popup menus are "Default", "Atom", "Radial
-	 * Bond", "Angular Bond", "Molecule", "Molecular Surface", "Obstacle", "Image", and "Amino Acid", respectively. </p>
-	 * <p> For a <code>MesoView</code>, the labels for the popup menus are "Default", "Gay-Berne" and "Image",
-	 * respectively. </p>
+	 * return the popup menu associated with this view with the given label, if the popup menu has been initialized; return null if no popup menu with the given label is not found, or the popup menu with the given name has not been initialized yet. Each popup menu controls a specific object in the view. You may want to customize these menus. <p> For an <code>AtomisticView</code>, the labels for the popup menus are "Default", "Atom", "Radial Bond", "Angular Bond", "Molecule", "Molecular Surface", "Obstacle", "Image", and "Amino Acid", respectively. </p> <p> For a <code>MesoView</code>, the labels for the popup menus are "Default", "Gay-Berne" and "Image", respectively. </p>
 	 */
 	JPopupMenu getPopupMenu(String label) {
 		JPopupMenu[] pm = getPopupMenus();
@@ -1988,8 +1960,7 @@ public abstract class MDView extends PrintableComponent {
 					return;
 				try {
 					((AbstractButton) toolBar.getClientProperty("Select button")).doClick();
-				}
-				catch (Exception e) {
+				} catch (Exception e) {
 					System.err.println("No selection button was found.");
 				}
 			}
@@ -2001,12 +1972,10 @@ public abstract class MDView extends PrintableComponent {
 		if (fillMode == null || fillMode == FillMode.getNoFillMode()) {
 			setBackground(Color.white);
 			setBackgroundImage(null);
-		}
-		else if (fillMode instanceof FillMode.ColorFill) {
+		} else if (fillMode instanceof FillMode.ColorFill) {
 			setBackground(((FillMode.ColorFill) fillMode).getColor());
 			setBackgroundImage(null);
-		}
-		else if (fillMode instanceof FillMode.ImageFill) {
+		} else if (fillMode instanceof FillMode.ImageFill) {
 			String codeBase = FileUtilities.getCodeBase((String) getModel().getProperty("url"));
 			if (codeBase != null) {
 				String fileName = FileUtilities.getFileName(((FillMode.ImageFill) fillMode).getURL());
@@ -2016,14 +1985,12 @@ public abstract class MDView extends PrintableComponent {
 					if (MDContainer.isApplet() || FileUtilities.isRemote(s)) {
 						try {
 							icon = ConnectionManager.sharedInstance().loadImage(new URL(FileUtilities.httpEncode(s)));
-						}
-						catch (MalformedURLException e) {
+						} catch (MalformedURLException e) {
 							e.printStackTrace();
 							setBackgroundImage(null);
 							return;
 						}
-					}
-					else {
+					} else {
 						File f1 = new File(s);
 						if (!f1.exists()) {
 							/*
@@ -2035,24 +2002,16 @@ public abstract class MDView extends PrintableComponent {
 							}
 						}
 						/*
-						 * For using ImageIcon, we are not supposed to change the source dynamically. When we do need to
-						 * do so, MUST use the Toolkit method to create a new image and pass it to the ImageIcon. That
-						 * is the only way to refresh an ImageIcon's content. This is presumably due to the fact that
-						 * the MediaTracker used to load image in the ImageIcon class is static (shared by all live
-						 * ImageIcon instances). MediaTracker might look for what it holds in memory first instead of
-						 * loading from the HD or Web. In the latter case, this may not be a problem because the source
-						 * is usually stable. So we normally do not recreate an ImageIcon from the Web.
+						 * For using ImageIcon, we are not supposed to change the source dynamically. When we do need to do so, MUST use the Toolkit method to create a new image and pass it to the ImageIcon. That is the only way to refresh an ImageIcon's content. This is presumably due to the fact that the MediaTracker used to load image in the ImageIcon class is static (shared by all live ImageIcon instances). MediaTracker might look for what it holds in memory first instead of loading from the HD or Web. In the latter case, this may not be a problem because the source is usually stable. So we normally do not recreate an ImageIcon from the Web.
 						 */
 						icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(s));
 					}
 					icon.setDescription(fileName);
 					setBackgroundImage(icon);
-				}
-				else {
+				} else {
 					setBackgroundImage(null);
 				}
-			}
-			else {
+			} else {
 				setBackgroundImage(null);
 			}
 		}
@@ -2088,12 +2047,10 @@ public abstract class MDView extends PrintableComponent {
 			try {
 				if (map.containsKey(s)) {
 					ic = new ImageComponent(map.get(s));
-				}
-				else {
+				} else {
 					ic = new ImageComponent(s);
 				}
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 				break;
 			}
@@ -2195,8 +2152,7 @@ public abstract class MDView extends PrintableComponent {
 			l.setFont(ViewAttribute.SMALL_FONT);
 			l.setBorder(BorderFactory.createEmptyBorder(2, 4, 2, 4));
 			tipPopupMenu.add(l);
-		}
-		else {
+		} else {
 			((JLabel) tipPopupMenu.getComponent(0)).setText(msg);
 		}
 		tipPopupMenu.show(this, x, y);
@@ -2232,8 +2188,7 @@ public abstract class MDView extends PrintableComponent {
 					steeringForceController = new SteeringForceController();
 				steeringForceController.setCurrentReading(x);
 				steeringForceController.paint(g);
-			}
-			else {
+			} else {
 				if (steeringForceController != null)
 					steeringForceController.setCurrentReading(0);
 			}
@@ -2294,14 +2249,12 @@ public abstract class MDView extends PrintableComponent {
 		Graphics2D g2 = (Graphics2D) g;
 		if ((renderingMethod & SPEED_RENDERING) == SPEED_RENDERING) {
 			g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
-		}
-		else {
+		} else {
 			g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		}
 		if ((renderingMethod & ANTIALIASING_OFF) == ANTIALIASING_OFF) {
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-		}
-		else {
+		} else {
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		}
 
@@ -2320,14 +2273,25 @@ public abstract class MDView extends PrintableComponent {
 		if (fillMode instanceof FillMode.GradientFill) {
 			FillMode.GradientFill gfm = (FillMode.GradientFill) fillMode;
 			GradientFactory.paintRect(g2, gfm.getStyle(), gfm.getVariant(), gfm.getColor1(), gfm.getColor2(), 0, 0, getWidth(), getHeight());
-		}
-		else if (fillMode instanceof FillMode.PatternFill) {
+		} else if (fillMode instanceof FillMode.PatternFill) {
 			g2.setPaint(((FillMode.PatternFill) fillMode).getPaint());
 			g2.fillRect(0, 0, getWidth(), getHeight());
 		}
 
 		paintLayeredComponents(g, Layered.BEHIND_PARTICLES);
 
+		if (paintables != null && !paintables.isEmpty()) {
+			for (Paintable p : paintables)
+				p.paint(g2);
+		}
+
+	}
+
+	public void addPaintable(Paintable p) {
+		if (paintables == null)
+			paintables = new ArrayList<Paintable>();
+		if (!paintables.contains(p))
+			paintables.add(p);
 	}
 
 	void paintShapeDrawing(Graphics g) {
@@ -2536,8 +2500,7 @@ public abstract class MDView extends PrintableComponent {
 		if (b) {
 			if (energizer == null)
 				energizer = new Energizer(getWidth() - 18, 20, 100);
-		}
-		else {
+		} else {
 			energizerButtonPressed = false;
 		}
 		repaint();
@@ -2545,6 +2508,10 @@ public abstract class MDView extends PrintableComponent {
 
 	public boolean getEnergizer() {
 		return energizerOn;
+	}
+
+	public void setEnergizerX(int x) {
+		energizerX = x;
 	}
 
 	void processMousePressed(MouseEvent e) {
@@ -2555,16 +2522,14 @@ public abstract class MDView extends PrintableComponent {
 		mousePressedTime = System.currentTimeMillis();
 		if (mousePressedPoint == null) {
 			mousePressedPoint = new Point(mouseHeldX, mouseHeldY);
-		}
-		else {
+		} else {
 			mousePressedPoint.x = mouseHeldX;
 			mousePressedPoint.y = mouseHeldY;
 		}
 		if (steeringForceController != null && steeringForceController.currentReading != 0) {
 			if (steeringForceController.incrButton.contains(mouseHeldX, mouseHeldY)) {
 				steeringForceController.increase();
-			}
-			else if (steeringForceController.decrButton.contains(mouseHeldX, mouseHeldY)) {
+			} else if (steeringForceController.decrButton.contains(mouseHeldX, mouseHeldY)) {
 				steeringForceController.decrease();
 			}
 		}
@@ -2582,8 +2547,7 @@ public abstract class MDView extends PrintableComponent {
 							repaint();
 							try {
 								Thread.sleep(50);
-							}
-							catch (InterruptedException e) {
+							} catch (InterruptedException e) {
 								energizerButtonPressed = false;
 								return;
 							}
@@ -2594,8 +2558,7 @@ public abstract class MDView extends PrintableComponent {
 				t.setName("Quick Heater");
 				t.setPriority(Thread.NORM_PRIORITY);
 				t.start();
-			}
-			else if (energizer.coolButton.contains(mouseHeldX, mouseHeldY)) {
+			} else if (energizer.coolButton.contains(mouseHeldX, mouseHeldY)) {
 				if (selectedComponent != null) {
 					selectedComponent.setSelected(false);
 					selectedComponent = null;
@@ -2608,8 +2571,7 @@ public abstract class MDView extends PrintableComponent {
 							repaint();
 							try {
 								Thread.sleep(50);
-							}
-							catch (InterruptedException e) {
+							} catch (InterruptedException e) {
 								energizerButtonPressed = false;
 								return;
 							}
@@ -2620,8 +2582,7 @@ public abstract class MDView extends PrintableComponent {
 				t.setName("Quick Cooler");
 				t.setPriority(Thread.NORM_PRIORITY);
 				t.start();
-			}
-			else if (energizer.exitButton.contains(mouseHeldX, mouseHeldY)) {
+			} else if (energizer.exitButton.contains(mouseHeldX, mouseHeldY)) {
 				energizer.exit();
 				energizerButtonPressed = false;
 			}
@@ -2673,8 +2634,7 @@ public abstract class MDView extends PrintableComponent {
 			lc.setSelectedEndPoint(i);
 			lc.storeCurrentState();
 			return i > 0;
-		}
-		else if (selectedComponent instanceof RectangleComponent) {
+		} else if (selectedComponent instanceof RectangleComponent) {
 			RectangleComponent rc = (RectangleComponent) selectedComponent;
 			byte i = rc.nearHandle(x, y);
 			rc.setSelectedHandle(i);
@@ -2682,8 +2642,7 @@ public abstract class MDView extends PrintableComponent {
 			if (i >= 0)
 				rc.storeCurrentState();
 			return i >= 0;
-		}
-		else if (selectedComponent instanceof EllipseComponent) {
+		} else if (selectedComponent instanceof EllipseComponent) {
 			EllipseComponent ec = (EllipseComponent) selectedComponent;
 			byte i = ec.nearHandle(x, y);
 			ec.setSelectedHandle(i);
@@ -2691,8 +2650,7 @@ public abstract class MDView extends PrintableComponent {
 			if (i >= 0)
 				ec.storeCurrentState();
 			return i >= 0;
-		}
-		else if (selectedComponent instanceof TriangleComponent) {
+		} else if (selectedComponent instanceof TriangleComponent) {
 			TriangleComponent tc = (TriangleComponent) selectedComponent;
 			byte i = tc.nearHandle(x, y);
 			tc.setSelectedHandle(i);
@@ -2736,8 +2694,7 @@ public abstract class MDView extends PrintableComponent {
 			if (energizer != null) {
 				if (x >= energizer.x) {
 					energizer.mouseEntered(x, y);
-				}
-				else {
+				} else {
 					energizer.mouseExited();
 				}
 				energizer.paint((Graphics2D) getGraphics());
@@ -2746,7 +2703,8 @@ public abstract class MDView extends PrintableComponent {
 		if (steeringForceController != null && steeringForceController.currentReading != 0) {
 			if (y >= steeringForceController.incrButton.y)
 				steeringForceController.mouseEntered(x, y);
-			else steeringForceController.mouseExited();
+			else
+				steeringForceController.mouseExited();
 			steeringForceController.paint((Graphics2D) getGraphics());
 		}
 	}
@@ -2768,16 +2726,13 @@ public abstract class MDView extends PrintableComponent {
 				setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 				return true;
 			}
-		}
-		else if (selectedComponent instanceof RectangleComponent) {
+		} else if (selectedComponent instanceof RectangleComponent) {
 			if (Draw.selectHandleCursorForRectangularShape(this, ((RectangleComponent) selectedComponent).nearHandle(x, y)))
 				return true;
-		}
-		else if (selectedComponent instanceof EllipseComponent) {
+		} else if (selectedComponent instanceof EllipseComponent) {
 			if (Draw.selectHandleCursorForRectangularShape(this, ((EllipseComponent) selectedComponent).nearHandle(x, y)))
 				return true;
-		}
-		else if (selectedComponent instanceof TriangleComponent) {
+		} else if (selectedComponent instanceof TriangleComponent) {
 			if (((TriangleComponent) selectedComponent).nearHandle(x, y) != -1) {
 				setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 				return true;
@@ -2825,8 +2780,7 @@ public abstract class MDView extends PrintableComponent {
 				}
 				return true;
 			}
-		}
-		else if (selectedComponent instanceof RectangleComponent) {
+		} else if (selectedComponent instanceof RectangleComponent) {
 			RectangleComponent rc = (RectangleComponent) selectedComponent;
 			if (rc.getSelectedHandle() >= 0) {
 				switch (rc.getSelectedHandle()) {
@@ -2850,7 +2804,8 @@ public abstract class MDView extends PrintableComponent {
 					float arc = x - rc.getX();
 					if (arc < 0)
 						arc = 0;
-					else arc = Math.min(arc, 0.5f * Math.min(rc.getWidth(), rc.getHeight()));
+					else
+						arc = Math.min(arc, 0.5f * Math.min(rc.getWidth(), rc.getHeight()));
 					rc.setArcWidth(2 * arc);
 					rc.setArcHeight(2 * arc);
 					break;
@@ -2863,8 +2818,7 @@ public abstract class MDView extends PrintableComponent {
 				}
 				return true;
 			}
-		}
-		else if (selectedComponent instanceof EllipseComponent) {
+		} else if (selectedComponent instanceof EllipseComponent) {
 			EllipseComponent ec = (EllipseComponent) selectedComponent;
 			if (ec.getSelectedHandle() >= 0) {
 				switch (ec.getSelectedHandle()) {
@@ -2893,8 +2847,7 @@ public abstract class MDView extends PrintableComponent {
 				}
 				return true;
 			}
-		}
-		else if (selectedComponent instanceof TriangleComponent) {
+		} else if (selectedComponent instanceof TriangleComponent) {
 			TriangleComponent tc = (TriangleComponent) selectedComponent;
 			byte i = tc.getSelectedHandle();
 			if (i != -1) {
@@ -2993,8 +2946,7 @@ public abstract class MDView extends PrintableComponent {
 		case KeyEvent.VK_R:
 			if (getModel().isRunning()) {
 				getModel().stop();
-			}
-			else {
+			} else {
 				getModel().run();
 			}
 			break;
@@ -3048,7 +3000,8 @@ public abstract class MDView extends PrintableComponent {
 			if (uf != null) {
 				if (increase)
 					uf.increaseGear(1);
-				else uf.decreaseGear(1);
+				else
+					uf.decreaseGear(1);
 				if (Math.abs(uf.getIntensity()) > ZERO) { // currently steering
 					uf.setIntensity(UserField.INCREMENT * uf.getGear());
 				}
@@ -3062,7 +3015,8 @@ public abstract class MDView extends PrintableComponent {
 					if (uf != null) {
 						if (increase)
 							uf.increaseGear(1);
-						else uf.decreaseGear(1);
+						else
+							uf.decreaseGear(1);
 						if (Math.abs(uf.getIntensity()) > ZERO) {// currently steering
 							uf.setIntensity(UserField.INCREMENT * uf.getGear());
 						}
@@ -3159,24 +3113,18 @@ public abstract class MDView extends PrintableComponent {
 		if (selectedComponent instanceof ImageComponent) {
 			try {
 				pasteBuffer = new ImageComponent(((ImageComponent) selectedComponent).toString());
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				// ignore
 			}
-		}
-		else if (selectedComponent instanceof TextBoxComponent) {
+		} else if (selectedComponent instanceof TextBoxComponent) {
 			pasteBuffer = new TextBoxComponent((TextBoxComponent) selectedComponent);
-		}
-		else if (selectedComponent instanceof LineComponent) {
+		} else if (selectedComponent instanceof LineComponent) {
 			pasteBuffer = new LineComponent((LineComponent) selectedComponent);
-		}
-		else if (selectedComponent instanceof RectangleComponent) {
+		} else if (selectedComponent instanceof RectangleComponent) {
 			pasteBuffer = new RectangleComponent((RectangleComponent) selectedComponent);
-		}
-		else if (selectedComponent instanceof EllipseComponent) {
+		} else if (selectedComponent instanceof EllipseComponent) {
 			pasteBuffer = new EllipseComponent((EllipseComponent) selectedComponent);
-		}
-		else if (selectedComponent instanceof TriangleComponent) {
+		} else if (selectedComponent instanceof TriangleComponent) {
 			pasteBuffer = new TriangleComponent((TriangleComponent) selectedComponent);
 		}
 	}
@@ -3186,37 +3134,31 @@ public abstract class MDView extends PrintableComponent {
 			ImageComponent ic = null;
 			try {
 				ic = new ImageComponent(((ImageComponent) pasteBuffer).toString());
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 				return;
 			}
 			ic.setLocation(x, y);
 			addLayeredComponent(ic);
-		}
-		else if (pasteBuffer instanceof TextBoxComponent) {
+		} else if (pasteBuffer instanceof TextBoxComponent) {
 			TextBoxComponent t = new TextBoxComponent((TextBoxComponent) pasteBuffer);
 			t.setLocation(x, y);
 			if (t.isCallOut())
 				t.setCallOutLocation(x - 10, y - 10);
 			addLayeredComponent(t);
-		}
-		else if (pasteBuffer instanceof LineComponent) {
+		} else if (pasteBuffer instanceof LineComponent) {
 			LineComponent l = new LineComponent((LineComponent) pasteBuffer);
 			l.setLocation(x, y);
 			addLayeredComponent(l);
-		}
-		else if (pasteBuffer instanceof RectangleComponent) {
+		} else if (pasteBuffer instanceof RectangleComponent) {
 			RectangleComponent r = new RectangleComponent((RectangleComponent) pasteBuffer);
 			r.setLocation(x, y);
 			addLayeredComponent(r);
-		}
-		else if (pasteBuffer instanceof EllipseComponent) {
+		} else if (pasteBuffer instanceof EllipseComponent) {
 			EllipseComponent e = new EllipseComponent((EllipseComponent) pasteBuffer);
 			e.setLocation(x, y);
 			addLayeredComponent(e);
-		}
-		else if (pasteBuffer instanceof TriangleComponent) {
+		} else if (pasteBuffer instanceof TriangleComponent) {
 			TriangleComponent t = new TriangleComponent((TriangleComponent) pasteBuffer);
 			t.setLocation(x, y);
 			addLayeredComponent(t);
@@ -3301,9 +3243,7 @@ public abstract class MDView extends PrintableComponent {
 	}
 
 	/*
-	 * pull a spring-restrained object. Springs cannot be pulled to arbitrary long distance, because they are harmonical
-	 * forces. Instead of disallowing springs to be stretched or compressed, we would like to allow the user to play
-	 * with restrained objects a little bit.
+	 * pull a spring-restrained object. Springs cannot be pulled to arbitrary long distance, because they are harmonical forces. Instead of disallowing springs to be stretched or compressed, we would like to allow the user to play with restrained objects a little bit.
 	 * 
 	 * @param x the x-coordinate of the mouse cursor location @param y the y-coordinate of the mouse cursor location
 	 * 
@@ -3317,13 +3257,11 @@ public abstract class MDView extends PrintableComponent {
 			double x1 = (r0 + d) * (x - xc) / r + xc;
 			double y1 = (r0 + d) * (y - yc) / r + yc;
 			return new Vector2D(x1, y1);
-		}
-		else if (r < r0 - d) {
+		} else if (r < r0 - d) {
 			double x1 = (r0 - d) * (x - xc) / r + xc;
 			double y1 = (r0 - d) * (y - yc) / r + yc;
 			return new Vector2D(x1, y1);
-		}
-		else {
+		} else {
 			return new Vector2D(x, y);
 		}
 	}
@@ -3366,16 +3304,13 @@ public abstract class MDView extends PrintableComponent {
 			if (exitButton.contains(ex, ey)) {
 				exitButtonColor = Color.gray;
 				coolButtonColor = heatButtonColor = Color.lightGray;
-			}
-			else if (heatButton.contains(ex, ey)) {
+			} else if (heatButton.contains(ex, ey)) {
 				heatButtonColor = Color.gray;
 				coolButtonColor = exitButtonColor = Color.lightGray;
-			}
-			else if (coolButton.contains(ex, ey)) {
+			} else if (coolButton.contains(ex, ey)) {
 				coolButtonColor = Color.gray;
 				heatButtonColor = exitButtonColor = Color.lightGray;
-			}
-			else {
+			} else {
 				mouseExited();
 			}
 		}
@@ -3385,7 +3320,7 @@ public abstract class MDView extends PrintableComponent {
 		}
 
 		void paint(Graphics2D g) {
-			setX(getWidth() - 18);
+			setX(energizerX < 0 ? getWidth() - 18 : energizerX);
 			int sk = (int) (100.0 * Math.log(1.0 + getModel().getKE()));
 			g.setStroke(ViewAttribute.THIN);
 			g.setColor(exitButtonColor);
@@ -3460,12 +3395,10 @@ public abstract class MDView extends PrintableComponent {
 			if (incrButton.contains(x, y)) {
 				incrButtonColor = Color.gray;
 				decrButtonColor = Color.lightGray;
-			}
-			else if (decrButton.contains(x, y)) {
+			} else if (decrButton.contains(x, y)) {
 				decrButtonColor = Color.gray;
 				incrButtonColor = Color.lightGray;
-			}
-			else {
+			} else {
 				incrButtonColor = decrButtonColor = Color.lightGray;
 			}
 		}
@@ -3518,9 +3451,7 @@ public abstract class MDView extends PrintableComponent {
 	}
 
 	/**
-	 * This class defines the state of a view. An instance of this class can be serialized to save the state of the
-	 * user's current work with a view. A persistent object of this class can be deserialized to retrieve the user's
-	 * last state of work on a view.
+	 * This class defines the state of a view. An instance of this class can be serialized to save the state of the user's current work with a view. A persistent object of this class can be deserialized to retrieve the user's last state of work on a view.
 	 */
 	public static abstract class State extends MDState {
 

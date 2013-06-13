@@ -110,8 +110,7 @@ public abstract class AbstractEval {
 	protected LinkedList<String> scriptQueue;
 
 	// used in translateInfixToPostfix, parentheses are parsed along with the logical operators
-	private final static Pattern LOGICAL_EXPRESSION = compile("(" + REGEX_NOT + ")|(" + REGEX_OR + ")|(" + REGEX_AND
-			+ ")|\\(|\\)");
+	private final static Pattern LOGICAL_EXPRESSION = compile("(" + REGEX_NOT + ")|(" + REGEX_OR + ")|(" + REGEX_AND + ")|\\(|\\)");
 
 	private final static int MAX_NESTED_DEPTH = 10;
 	private int ifLevel;
@@ -748,8 +747,7 @@ public abstract class AbstractEval {
 			return false;
 		if (!eq && !ge && !gt && !le && !lt)
 			return x != 0;
-		return (eq && Math.abs(x) < ZERO) || (ne && Math.abs(x) > ZERO) || (ge && x >= 0) || (gt && x > 0)
-				|| (le && x <= 0) || (lt && x < 0);
+		return (eq && Math.abs(x) < ZERO) || (ne && Math.abs(x) > ZERO) || (ge && x >= 0) || (gt && x > 0) || (le && x <= 0) || (lt && x < 0);
 	}
 
 	protected abstract String useTaskScripts(String script);
@@ -1129,8 +1127,7 @@ public abstract class AbstractEval {
 			storeDefinition(isStatic, variable, b ? "1" : "0");
 			return;
 		}
-		else if (value.indexOf("==") != -1 || value.indexOf("!=") != -1 || value.indexOf("<=") != -1
-				|| value.indexOf(">=") != -1 || value.indexOf("<") != -1 || value.indexOf(">") != -1) {
+		else if (value.indexOf("==") != -1 || value.indexOf("!=") != -1 || value.indexOf("<=") != -1 || value.indexOf(">=") != -1 || value.indexOf("<") != -1 || value.indexOf(">") != -1) {
 			boolean b = evaluateEquality(value);
 			storeDefinition(isStatic, variable, b ? "1" : "0");
 			return;
@@ -1510,8 +1507,7 @@ public abstract class AbstractEval {
 		h.setEditable(false);
 		if (basePath != null) {
 			try {
-				h.setBase(Page.isApplet() || FileUtilities.isRemote(basePath) ? new URL(basePath) : new File(basePath)
-						.toURI().toURL());
+				h.setBase(Page.isApplet() || FileUtilities.isRemote(basePath) ? new URL(basePath) : new File(basePath).toURI().toURL());
 			}
 			catch (MalformedURLException e) {
 				e.printStackTrace();
@@ -1579,8 +1575,7 @@ public abstract class AbstractEval {
 			final String errorAddress = address;
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(parent), "File " + errorAddress
-							+ " was not found.", "File not found", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(parent), "File " + errorAddress + " was not found.", "File not found", JOptionPane.ERROR_MESSAGE);
 				}
 			});
 			return null;

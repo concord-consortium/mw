@@ -85,8 +85,7 @@ public class MolecularModel {
 	private final static byte GENERIC_PARTICLE_TYPES = 4;
 
 	/*
-	 * convert mvv into eV: ( E-3 / 6E23 ) [kg] x ( E-10 / E-15 )^2 [m^2/s^2] / 1.6E-19 [J] divided by 2 (save the
-	 * multiplier prefactor 0.5 for computing kinetic energy)
+	 * convert mvv into eV: ( E-3 / 6E23 ) [kg] x ( E-10 / E-15 )^2 [m^2/s^2] / 1.6E-19 [J] divided by 2 (save the multiplier prefactor 0.5 for computing kinetic energy)
 	 */
 	private final static float EV_CONVERTER = 100.0f / (1.6f * 1.2f);
 
@@ -184,8 +183,7 @@ public class MolecularModel {
 			if (systemTimeElapsed < minimumJobCycleTime) {
 				try {
 					Thread.sleep(minimumJobCycleTime - systemTimeElapsed);
-				}
-				catch (InterruptedException e) {
+				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 				// System.out.println(systemTimeElapsed+","+minimumJobCycleTime);
@@ -244,8 +242,7 @@ public class MolecularModel {
 	private MolecularModel() {
 		try {
 			new ParameterReader().read(MolecularModel.class.getResource("resources/elements.dat"), paramMap);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		properties = new HashMap<Object, Object>();
@@ -444,8 +441,7 @@ public class MolecularModel {
 		evalTask.appendScript(script);
 		try {
 			evalTask.evaluate2();
-		}
-		catch (InterruptedException e) {
+		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		view.repaint();
@@ -465,8 +461,7 @@ public class MolecularModel {
 		evalJs.appendScript(script);
 		try {
 			evalJs.evaluate2();
-		}
-		catch (InterruptedException e) {
+		} catch (InterruptedException e) {
 			e.printStackTrace();
 			return e.getMessage();
 		}
@@ -478,6 +473,10 @@ public class MolecularModel {
 		if (evalAction == null)
 			return false;
 		return !evalAction.isStopped();
+	}
+
+	public String getScriptDefinition(String var) {
+		return evalAction.getDefinition().get(var);
 	}
 
 	public void addScriptExecutionListener(ScriptExecutionListener l) {
@@ -551,8 +550,7 @@ public class MolecularModel {
 				public void run() {
 					try {
 						evalAction.evaluate();
-					}
-					catch (InterruptedException e) {
+					} catch (InterruptedException e) {
 					}
 				}
 			};
@@ -565,13 +563,11 @@ public class MolecularModel {
 				}
 			}, null, getView()));
 			evalThread.start();
-		}
-		else {
+		} else {
 			// just in case there is a missed notification problem
 			try {
 				Thread.sleep(100);
-			}
-			catch (InterruptedException e) {
+			} catch (InterruptedException e) {
 			}
 			synchronized (evalAction) {
 				evalAction.notifyAll();
@@ -667,8 +663,7 @@ public class MolecularModel {
 		}
 		if (bondedAtomList == null) {
 			bondedAtomList = new ArrayList<Atom>();
-		}
-		else {
+		} else {
 			bondedAtomList.clear();
 		}
 		for (int i = 0; i < iAtom; i++) {
@@ -889,8 +884,7 @@ public class MolecularModel {
 		for (int i = 0; i < iAtom; i++) {
 			if (atom[i].rx > 0) {
 				val = Math.abs(atom[i].rx + atom[i].sigma);
-			}
-			else {
+			} else {
 				val = Math.abs(atom[i].rx - atom[i].sigma);
 			}
 			if (max < val)
@@ -907,8 +901,7 @@ public class MolecularModel {
 		for (int i = 0; i < iAtom; i++) {
 			if (atom[i].ry > 0) {
 				val = Math.abs(atom[i].ry + atom[i].sigma);
-			}
-			else {
+			} else {
 				val = Math.abs(atom[i].ry - atom[i].sigma);
 			}
 			if (max < val)
@@ -925,8 +918,7 @@ public class MolecularModel {
 		for (int i = 0; i < iAtom; i++) {
 			if (atom[i].rz > 0) {
 				val = Math.abs(atom[i].rz + atom[i].sigma);
-			}
-			else {
+			} else {
 				val = Math.abs(atom[i].rz - atom[i].sigma);
 			}
 			if (max < val)
@@ -1033,8 +1025,7 @@ public class MolecularModel {
 			atom[k].rz += p.z - center.z;
 			tempAtomBitSet.set(k);
 		}
-		if (outOfSimulationBox(tempAtomBitSet) || overlapWithObstacles(tempAtomBitSet)
-				|| getMinimumDistance(tempAtomBitSet) < 0) {
+		if (outOfSimulationBox(tempAtomBitSet) || overlapWithObstacles(tempAtomBitSet) || getMinimumDistance(tempAtomBitSet) < 0) {
 			removeAtoms(tempAtomBitSet);
 			return false;
 		}
@@ -1142,8 +1133,7 @@ public class MolecularModel {
 	}
 
 	/**
-	 * pass the current rotational transformation matrix from the viewer so that the translation can coordinate with the
-	 * user's operations.
+	 * pass the current rotational transformation matrix from the viewer so that the translation can coordinate with the user's operations.
 	 */
 	public void translateSelectedAtomsXYBy(Matrix3f transform, BitSet bs, float dx, float dy) {
 		if (translationMatrix == null)
@@ -1182,8 +1172,7 @@ public class MolecularModel {
 	}
 
 	/**
-	 * pass the current rotational transformation matrix from the viewer so that the rotation can coordinate with the
-	 * user's operations.
+	 * pass the current rotational transformation matrix from the viewer so that the rotation can coordinate with the user's operations.
 	 */
 	public void rotateSelectedAtomsXYBy(Matrix3f transform, BitSet bs, float dx, float dy) {
 		if (rotationMatrix == null)
@@ -1258,13 +1247,11 @@ public class MolecularModel {
 			if (job.isStopped()) {
 				if (!job.contains(heatBath))
 					job.add(heatBath);
-			}
-			else {
+			} else {
 				if (!job.toBeAdded(heatBath) && !job.contains(heatBath))
 					job.add(heatBath);
 			}
-		}
-		else {
+		} else {
 			if (heatBath != null && job != null) {
 				job.remove(heatBath);
 				heatBath.setCompleted(true);
@@ -1442,8 +1429,7 @@ public class MolecularModel {
 		synchronized (tBonds) {
 			for (Iterator i = tBonds.iterator(); i.hasNext();) {
 				tb = (TBond) i.next();
-				if (getRBond(tb.atom1, tb.atom2) == null || getRBond(tb.atom2, tb.atom3) == null
-						|| getRBond(tb.atom3, tb.atom4) == null) {
+				if (getRBond(tb.atom1, tb.atom2) == null || getRBond(tb.atom2, tb.atom3) == null || getRBond(tb.atom3, tb.atom4) == null) {
 					i.remove();
 				}
 			}
@@ -1520,8 +1506,7 @@ public class MolecularModel {
 	}
 
 	/**
-	 * Adding an atom of the specified type, velocity and charge to the specified position. Note: This method does not
-	 * check if the added atom overlaps with others.
+	 * Adding an atom of the specified type, velocity and charge to the specified position. Note: This method does not check if the added atom overlaps with others.
 	 */
 	public boolean addAtom(String element, float rx, float ry, float rz, float vx, float vy, float vz, float charge) {
 		if (iAtom == atom.length)
@@ -1529,8 +1514,7 @@ public class MolecularModel {
 		if (atom[iAtom] == null) {
 			atom[iAtom] = new Atom(element, this);
 			atom[iAtom].setModel(this);
-		}
-		else {
+		} else {
 			atom[iAtom].setSymbol(element);
 		}
 		atom[iAtom].index = iAtom;
@@ -1557,15 +1541,16 @@ public class MolecularModel {
 		int m = iAtom - bs.cardinality();
 		if (removedAtomList == null)
 			removedAtomList = new ArrayList<Atom>(bs.cardinality());
-		else removedAtomList.clear();
+		else
+			removedAtomList.clear();
 		if (keptAtomList == null)
 			keptAtomList = new ArrayList<Atom>(m);
-		else keptAtomList.clear();
+		else
+			keptAtomList.clear();
 		for (int i = 0; i < iAtom; i++) {
 			if (bs.get(i)) {
 				removedAtomList.add(atom[i]);
-			}
-			else {
+			} else {
 				keptAtomList.add(atom[i]);
 			}
 		}
@@ -1707,8 +1692,7 @@ public class MolecularModel {
 
 	void record() {
 		if (modelTimeQueue.getPointer() > 0) {
-			view.getMolecularContainer().notifyModelListeners(
-					new ModelEvent(view.getMolecularContainer(), ModelEvent.MODEL_CHANGED));
+			view.getMolecularContainer().notifyModelListeners(new ModelEvent(view.getMolecularContainer(), ModelEvent.MODEL_CHANGED));
 		}
 		modelTimeQueue.update(getModelTime());
 		kin = getKin();
@@ -1733,22 +1717,19 @@ public class MolecularModel {
 				continue;
 			try {
 				atom[i].updateRQ();
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				atom[i].initRQ(c);
 				atom[i].updateRQ();
 			}
 			try {
 				atom[i].updateVQ();
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				atom[i].initVQ(c);
 				atom[i].updateVQ();
 			}
 			try {
 				atom[i].updateAQ();
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				atom[i].initAQ(c);
 				atom[i].updateAQ();
 			}
@@ -1756,8 +1737,7 @@ public class MolecularModel {
 	}
 
 	/**
-	 * this method is used to "get rid of" a tape when a user action that results in frame inconsistency has occurred,
-	 * and "insert a new tape".
+	 * this method is used to "get rid of" a tape when a user action that results in frame inconsistency has occurred, and "insert a new tape".
 	 */
 	public int resetTape() {
 		if (recorderDisabled)
@@ -1827,8 +1807,7 @@ public class MolecularModel {
 						synchronized (this) {
 							try {
 								wait();
-							}
-							catch (InterruptedException e) {
+							} catch (InterruptedException e) {
 								// e.printStackTrace();
 								break;
 							}
@@ -1923,8 +1902,7 @@ public class MolecularModel {
 				if (delay > 0) {
 					try {
 						Thread.sleep(delay);
-					}
-					catch (InterruptedException e) {
+					} catch (InterruptedException e) {
 					}
 				}
 			}
@@ -1946,8 +1924,7 @@ public class MolecularModel {
 				if (delay > 0) {
 					try {
 						Thread.sleep(delay);
-					}
-					catch (InterruptedException e) {
+					} catch (InterruptedException e) {
 					}
 				}
 			}
@@ -1967,8 +1944,7 @@ public class MolecularModel {
 				}
 			};
 			new Thread(r, "Energy Minimizer Before Running").start();
-		}
-		else {
+		} else {
 			run2();
 		}
 	}
@@ -1999,18 +1975,15 @@ public class MolecularModel {
 	}
 
 	/**
-	 * stop running this model. NOTE: When the recording mode is invoked, calling this method does not stop the model
-	 * immediately; it will stop at the next recording step. If not in the recording mode, it will stop immediately.
+	 * stop running this model. NOTE: When the recording mode is invoked, calling this method does not stop the model immediately; it will stop at the next recording step. If not in the recording mode, it will stop immediately.
 	 */
 	public void stop() {
 		if (getRecorderDisabled()) {
 			stopImmediately();
-		}
-		else {
+		} else {
 			if (movie.getCurrentFrameIndex() > 0) {
 				stopAtNextRecordingStep = true;
-			}
-			else {
+			} else {
 				stopImmediately();
 			}
 		}
@@ -2104,8 +2077,7 @@ public class MolecularModel {
 				if (i == 0 || atom[i].isMovable())
 					atom[i].initMovieQ(n);
 			}
-		}
-		else {
+		} else {
 			if (job != null && job.contains(movieUpdater))
 				job.remove(movieUpdater);
 			setQueueLength(-1);
@@ -2182,8 +2154,7 @@ public class MolecularModel {
 			for (int i = 0; i < iAtom; i++) {
 				if (!atom[i].isMovable())
 					continue;
-				k0 = EV_CONVERTER * atom[i].mass
-						* (atom[i].vx * atom[i].vx + atom[i].vy * atom[i].vy + atom[i].vz * atom[i].vz);
+				k0 = EV_CONVERTER * atom[i].mass * (atom[i].vx * atom[i].vx + atom[i].vy * atom[i].vy + atom[i].vz * atom[i].vz);
 				if (k0 <= ZERO)
 					k0 = ZERO;
 				k0 = (k0 + amount) / k0;
@@ -2310,8 +2281,7 @@ public class MolecularModel {
 		}
 		if (coulombicIsOn) {
 			minimumJobCycleTime = 2 * DEFAULT_MINIMUM_JOB_CYCLE_TIME;
-		}
-		else {
+		} else {
 			minimumJobCycleTime = DEFAULT_MINIMUM_JOB_CYCLE_TIME;
 		}
 		if (System.getProperty("os.name").startsWith("Mac"))
@@ -2359,8 +2329,7 @@ public class MolecularModel {
 			if (temp1 < ZERO)
 				assignTemperature(100);
 			rescaleVelocities((float) Math.sqrt(percent + 1));
-		}
-		else {
+		} else {
 			heatBath.changeExpectedTemperature(percent);
 			setTemperature(heatBath.getExpectedTemperature());
 		}
@@ -2444,8 +2413,7 @@ public class MolecularModel {
 			bField.setIntensity(intensity);
 			if (direction != null)
 				bField.setDirection(direction.x, direction.y, direction.z);
-		}
-		else {
+		} else {
 			bField = null;
 		}
 	}
@@ -2461,8 +2429,7 @@ public class MolecularModel {
 			eField.setIntensity(intensity);
 			if (direction != null)
 				eField.setDirection(direction.x, direction.y, direction.z);
-		}
-		else {
+		} else {
 			eField = null;
 		}
 	}
@@ -2479,12 +2446,10 @@ public class MolecularModel {
 			if (direction != null) {
 				gField.setDirection(direction.x, direction.y, direction.z);
 				gField.setAlwaysDown(false);
-			}
-			else {
+			} else {
 				gField.setAlwaysDown(true);
 			}
-		}
-		else {
+		} else {
 			gField = null;
 		}
 	}

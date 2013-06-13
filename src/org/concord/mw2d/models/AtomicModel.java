@@ -62,14 +62,11 @@ import static org.concord.mw2d.models.Element.*;
 
 /**
  * <p>
- * This is the base class to derive an atomic-scale model. <b>Warning</b>: This class being non-abstract is a side
- * effect of backward compatibility with Pedagogica scripts. Please do NOT use this class directly. Use
- * <code>MolecularModel</code> instead.
+ * This is the base class to derive an atomic-scale model. <b>Warning</b>: This class being non-abstract is a side effect of backward compatibility with Pedagogica scripts. Please do NOT use this class directly. Use <code>MolecularModel</code> instead.
  * </p>
  * 
  * <p>
- * This class contains an NVE/NVT/NPT molecular dynamics (MD) engine. It performs the standard steps needed to unfold a
- * model:
+ * This class contains an NVE/NVT/NPT molecular dynamics (MD) engine. It performs the standard steps needed to unfold a model:
  * </p>
  * <ol>
  * <li>Initialize the force fields;
@@ -84,14 +81,12 @@ import static org.concord.mw2d.models.Element.*;
  * <ol>
  * <li>Lennard-Jones potential: All atoms are created with it;
  * <li>Electrostatic potential: Only charged atoms have it;
- * <li>Axilrod-Teller potential: Optional three-body interactomic potential, seldom needed but reserved for academic
- * interest, if turned on it greatly slows down the engine;
+ * <li>Axilrod-Teller potential: Optional three-body interactomic potential, seldom needed but reserved for academic interest, if turned on it greatly slows down the engine;
  * <li>Pointwise harmonic restraint: Used to pinpoint an atom around a position;
  * </ol>
  * 
  * <p>
- * The MD uses Verlet's neighbor list procedure to accelerate computation. A smoothing function can be applied to reduce
- * the numerical errors due to potential truncation.
+ * The MD uses Verlet's neighbor list procedure to accelerate computation. A smoothing function can be applied to reduce the numerical errors due to potential truncation.
  * </p>
  * 
  * @author Charles Xie
@@ -100,7 +95,7 @@ import static org.concord.mw2d.models.Element.*;
 public abstract class AtomicModel extends MDModel {
 
 	/** maximum number of atoms allowed */
-	private static short NMAX = 500;
+	private static short NMAX = 1000;
 	final static float alpha = 0.0001f;
 
 	/* the atom array */
@@ -196,8 +191,7 @@ public abstract class AtomicModel extends MDModel {
 	};
 
 	/*
-	 * the subtask for simulating the electronic dynamics, which is viewed as the random walk of electrons in the energy
-	 * level space and described by the master equation.
+	 * the subtask for simulating the electronic dynamics, which is viewed as the random walk of electrons in the energy level space and described by the master equation.
 	 */
 	Loadable electronicDynamics = new AbstractLoadable(20) {
 		public void execute() {
@@ -277,8 +271,7 @@ public abstract class AtomicModel extends MDModel {
 					short i = Short.parseShort(s);
 					if (i > NMAX)
 						NMAX = i;
-				}
-				catch (Exception e) {
+				} catch (Exception e) {
 					// ignore
 				}
 			}
@@ -476,8 +469,7 @@ public abstract class AtomicModel extends MDModel {
 	}
 
 	/**
-	 * align atoms in a two-dimensional lattice. You may choose any number for the inputs, but only those that fall
-	 * within the current boundary will be added.
+	 * align atoms in a two-dimensional lattice. You may choose any number for the inputs, but only those that fall within the current boundary will be added.
 	 */
 	public void alignParticles(int id, int m, int n, double xoffset, double yoffset, double xspacing, double yspacing, boolean randomize) {
 		Element e = getElement(id);
@@ -509,6 +501,7 @@ public abstract class AtomicModel extends MDModel {
 					}
 					atom[k].setElement(e);
 					atom[k].setCharge(0);
+					atom[k].setCustom(0);
 					atom[k].setRestraint(null);
 					atom[k].setFriction(0);
 					atom[k].setRadical(true);
@@ -562,8 +555,7 @@ public abstract class AtomicModel extends MDModel {
 			if (atomFlowEnabled) {
 				if (!job.contains(atomSource))
 					job.add(atomSource);
-			}
-			else {
+			} else {
 				job.remove(atomSource);
 			}
 		}
@@ -621,6 +613,16 @@ public abstract class AtomicModel extends MDModel {
 		return atomSource.getInterval();
 	}
 
+	public void setFlowAtomsMarked(boolean b) {
+		if (atomSource != null)
+			atomSource.setFlowAtomsMarked(b);
+	}
+
+	public void setFlowRange(float start, float length) {
+		if (atomSource != null)
+			atomSource.setFlowRange(start, length);
+	}
+
 	public QuantumRule getQuantumRule() {
 		return quantumRule;
 	}
@@ -631,8 +633,7 @@ public abstract class AtomicModel extends MDModel {
 			if (subatomicEnabled) {
 				if (!job.contains(electronicDynamics))
 					job.add(electronicDynamics);
-			}
-			else {
+			} else {
 				job.remove(electronicDynamics);
 			}
 		}
@@ -659,8 +660,7 @@ public abstract class AtomicModel extends MDModel {
 			if (!job.contains(photonGun) && !job.toBeAdded(photonGun))
 				job.add(photonGun);
 			setSubatomicEnabled(true);
-		}
-		else {
+		} else {
 			job.remove(photonGun);
 		}
 		lightSource.setOn(b);
@@ -751,8 +751,7 @@ public abstract class AtomicModel extends MDModel {
 			if (direction == 0) {
 				d = atom[i].rx - c;
 				atom[i].rx -= 2 * d;
-			}
-			else {
+			} else {
 				d = atom[i].ry - c;
 				atom[i].ry -= 2 * d;
 			}
@@ -771,8 +770,7 @@ public abstract class AtomicModel extends MDModel {
 					if (direction == 0) {
 						d = pr.getX0() - c;
 						pr.setX0(pr.getX0() - 2 * d);
-					}
-					else {
+					} else {
 						d = pr.getY0() - c;
 						pr.setY0(pr.getY0() - 2 * d);
 					}
@@ -811,8 +809,7 @@ public abstract class AtomicModel extends MDModel {
 					pr.setY0(pr.getY0() + dy);
 				}
 			}
-		}
-		else {
+		} else {
 			for (int i = 0; i <= n; i++)
 				atom[i].translateBy(-dx, -dy);
 			return false;
@@ -900,16 +897,14 @@ public abstract class AtomicModel extends MDModel {
 				if (a.getMaxX() > range_xmax) {
 					range_xmax = (float) (a.getMaxX());
 					id_xmax = i;
-				}
-				else if (a.getMinX() < range_xmin) {
+				} else if (a.getMinX() < range_xmin) {
 					range_xmin = (float) (a.getMinX());
 					id_xmin = i;
 				}
 				if (a.getMaxY() > range_ymax) {
 					range_ymax = (float) (a.getMaxY());
 					id_ymax = i;
-				}
-				else if (a.getMinY() < range_ymin) {
+				} else if (a.getMinY() < range_ymin) {
 					range_ymin = (float) (a.getMinY());
 					id_ymin = i;
 				}
@@ -921,16 +916,14 @@ public abstract class AtomicModel extends MDModel {
 				if (a.getMaxX() > range_xmax) {
 					range_xmax = (float) (a.getRx());
 					id_xmax = i;
-				}
-				else if (a.getMinX() < range_xmin) {
+				} else if (a.getMinX() < range_xmin) {
 					range_xmin = (float) (a.getRx());
 					id_xmin = i;
 				}
 				if (a.getMaxY() > range_ymax) {
 					range_ymax = (float) (a.getRy());
 					id_ymax = i;
-				}
-				else if (a.getMinY() < range_ymin) {
+				} else if (a.getMinY() < range_ymin) {
 					range_ymin = (float) (a.getRy());
 					id_ymin = i;
 				}
@@ -942,16 +935,14 @@ public abstract class AtomicModel extends MDModel {
 				if (a.getMaxX() > range_xmax) {
 					range_xmax = (float) (a.getRx());
 					id_xmax = i;
-				}
-				else if (a.getMinX() < range_xmin) {
+				} else if (a.getMinX() < range_xmin) {
 					range_xmin = (float) (a.getRx());
 					id_xmin = i;
 				}
 				if (a.getMaxY() > range_ymax) {
 					range_ymax = (float) (a.getMaxY());
 					id_ymax = i;
-				}
-				else if (a.getMinY() < range_ymin) {
+				} else if (a.getMinY() < range_ymin) {
 					range_ymin = (float) (a.getMinY());
 					id_ymin = i;
 				}
@@ -963,16 +954,14 @@ public abstract class AtomicModel extends MDModel {
 				if (a.getMaxX() > range_xmax) {
 					range_xmax = (float) (a.getMaxX());
 					id_xmax = i;
-				}
-				else if (a.getMinX() < range_xmin) {
+				} else if (a.getMinX() < range_xmin) {
 					range_xmin = (float) (a.getMinX());
 					id_xmin = i;
 				}
 				if (a.getMaxY() > range_ymax) {
 					range_ymax = (float) (a.getRy());
 					id_ymax = i;
-				}
-				else if (a.getMinY() < range_ymin) {
+				} else if (a.getMinY() < range_ymin) {
 					range_ymin = (float) (a.getRy());
 					id_ymin = i;
 				}
@@ -1026,8 +1015,7 @@ public abstract class AtomicModel extends MDModel {
 					continue;
 				try {
 					atom[i].updateExcitationQ();
-				}
-				catch (Exception e) {
+				} catch (Exception e) {
 					atom[i].initializeExcitationQ(c);
 					atom[i].updateExcitationQ();
 				}
@@ -1041,8 +1029,7 @@ public abstract class AtomicModel extends MDModel {
 				list.add(new Photon.Delegate(p));
 			}
 			photonQueue.update(list);
-		}
-		else {
+		} else {
 			photonQueue.update(null);
 		}
 	}
@@ -1057,8 +1044,7 @@ public abstract class AtomicModel extends MDModel {
 				obs = obstacles.get(i);
 				try {
 					obs.updatePQ();
-				}
-				catch (Exception e) {
+				} catch (Exception e) {
 					obs.initializePEQ(c);
 					obs.initializePWQ(c);
 					obs.initializePSQ(c);
@@ -1186,8 +1172,7 @@ public abstract class AtomicModel extends MDModel {
 	}
 
 	/**
-	 * set the strength of a single hydrogen bond between base pairs in the DNA model. The A-T/A-U pair has two hydrogen
-	 * bonds, whereas the C-G pair has three hydrogen bonds.
+	 * set the strength of a single hydrogen bond between base pairs in the DNA model. The A-T/A-U pair has two hydrogen bonds, whereas the C-G pair has three hydrogen bonds.
 	 */
 	public void setHydrogenBondStrength(float s) {
 		hbStrength = s;
@@ -1209,18 +1194,15 @@ public abstract class AtomicModel extends MDModel {
 		}
 		if (obstacles.isEmpty()) {
 			stateHolder = new StateHolder(getModelTime(), heatBathActivated() ? heatBath.getExpectedTemperature() : 0, getNumberOfParticles(), data);
-		}
-		else {
+		} else {
 			int nmov = 0;
 			for (int i = 0; i < obstacles.size(); i++) {
 				if (obstacles.get(i).isMovable())
 					nmov++;
 			}
 			if (nmov == 0) {
-				stateHolder = new StateHolder(getModelTime(), heatBathActivated() ? heatBath.getExpectedTemperature() : 0, getNumberOfParticles(),
-						data);
-			}
-			else {
+				stateHolder = new StateHolder(getModelTime(), heatBathActivated() ? heatBath.getExpectedTemperature() : 0, getNumberOfParticles(), data);
+			} else {
 				double[] data2 = new double[nmov * 4];
 				int k = 0;
 				RectangularObstacle obs = null;
@@ -1234,8 +1216,7 @@ public abstract class AtomicModel extends MDModel {
 						k++;
 					}
 				}
-				stateHolder = new StateHolder(getModelTime(), heatBathActivated() ? heatBath.getExpectedTemperature() : 0, getNumberOfParticles(),
-						data, nmov, data2);
+				stateHolder = new StateHolder(getModelTime(), heatBathActivated() ? heatBath.getExpectedTemperature() : 0, getNumberOfParticles(), data, nmov, data2);
 			}
 		}
 		super.run();
@@ -1296,12 +1277,7 @@ public abstract class AtomicModel extends MDModel {
 
 	/**
 	 * <p>
-	 * update the Lennard-Jones force parameter array, this is to believe that looking up this table when calculating
-	 * interatomic forces is faster than recomputing the Lennard-Jones parameters at each time step. Whenever the model
-	 * has a change related to the parameter array, e.g. an atom inserted, removed, muated, or van der Waals parameters
-	 * and affinities are changed, this parameter array must be refreshed. The update is done by calling this method and
-	 * passing <tt>true</tt> to it. The force calculation routine will check this flag first. If it is true, then
-	 * immediately update the parameter array and set <tt>false</tt> to it before computing any forces.
+	 * update the Lennard-Jones force parameter array, this is to believe that looking up this table when calculating interatomic forces is faster than recomputing the Lennard-Jones parameters at each time step. Whenever the model has a change related to the parameter array, e.g. an atom inserted, removed, muated, or van der Waals parameters and affinities are changed, this parameter array must be refreshed. The update is done by calling this method and passing <tt>true</tt> to it. The force calculation routine will check this flag first. If it is true, then immediately update the parameter array and set <tt>false</tt> to it before computing any forces.
 	 * </p>
 	 * <p>
 	 * The disadvantage is that it needs larger memory.
@@ -1380,8 +1356,7 @@ public abstract class AtomicModel extends MDModel {
 						((RectangularObstacle) it.next()).initializeMovieQ(n);
 				}
 			}
-		}
-		else {
+		} else {
 			if (job != null && job.contains(movieUpdater))
 				job.remove(movieUpdater);
 			setQueueLength(-1);
@@ -1420,8 +1395,7 @@ public abstract class AtomicModel extends MDModel {
 		for (int i = 0; i < numberOfAtoms; i++) {
 			try {
 				atom[i].updateRQ();
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				atom[i].initializeRQ(c);
 				atom[i].updateRQ();
 			}
@@ -1434,8 +1408,7 @@ public abstract class AtomicModel extends MDModel {
 					if (obs.isMovable()) {
 						try {
 							obs.updateRQ();
-						}
-						catch (Exception e) {
+						} catch (Exception e) {
 							obs.initializeRQ(c);
 							obs.updateRQ();
 						}
@@ -1450,8 +1423,7 @@ public abstract class AtomicModel extends MDModel {
 		for (int i = 0; i < numberOfAtoms; i++) {
 			try {
 				atom[i].updateVQ();
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				atom[i].initializeVQ(c);
 				atom[i].updateVQ();
 			}
@@ -1464,8 +1436,7 @@ public abstract class AtomicModel extends MDModel {
 					if (obs.isMovable()) {
 						try {
 							obs.updateVQ();
-						}
-						catch (Exception e) {
+						} catch (Exception e) {
 							obs.initializeVQ(c);
 							obs.updateVQ();
 						}
@@ -1480,8 +1451,7 @@ public abstract class AtomicModel extends MDModel {
 		for (int i = 0; i < numberOfAtoms; i++) {
 			try {
 				atom[i].updateAQ();
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				atom[i].initializeAQ(c);
 				atom[i].updateAQ();
 			}
@@ -1494,8 +1464,7 @@ public abstract class AtomicModel extends MDModel {
 					if (obs.isMovable()) {
 						try {
 							obs.updateAQ();
-						}
-						catch (Exception e) {
+						} catch (Exception e) {
 							obs.initializeAQ(c);
 							obs.updateAQ();
 						}
@@ -1554,8 +1523,7 @@ public abstract class AtomicModel extends MDModel {
 		if (nx > 0 && ny > 0) {
 			if (boundary.getType() != RectangularBoundary.DBC_ID) {
 				grid = new Grid(boundary, new int[] { nx, ny });
-			}
-			else {
+			} else {
 				grid = new Grid((Rectangle2D.Double) boundary.getView(), new int[] { nx, ny });
 			}
 			view.setGrid(grid);
@@ -1563,8 +1531,7 @@ public abstract class AtomicModel extends MDModel {
 				initializeJob();
 			if (!job.contains(updateGrid))
 				job.add(updateGrid);
-		}
-		else {
+		} else {
 			grid = null;
 			view.setGrid(null);
 			view.setGridMode((byte) -1);
@@ -1578,8 +1545,7 @@ public abstract class AtomicModel extends MDModel {
 			return;
 		if (boundary.getType() != RectangularBoundary.DBC_ID) {
 			grid = new Grid(boundary);
-		}
-		else {
+		} else {
 			grid = new Grid((Rectangle2D.Double) boundary.getView());
 		}
 		view.setGrid(grid);
@@ -1624,8 +1590,7 @@ public abstract class AtomicModel extends MDModel {
 	}
 
 	private static boolean isComplementary(int i, int j) {
-		return ((i == ID_A && j == ID_T) || (i == ID_T && j == ID_A)) || ((i == ID_C && j == ID_G) || (i == ID_G && j == ID_C))
-				|| ((i == ID_A && j == ID_U) || (i == ID_U && j == ID_A));
+		return ((i == ID_A && j == ID_T) || (i == ID_T && j == ID_A)) || ((i == ID_C && j == ID_G) || (i == ID_G && j == ID_C)) || ((i == ID_A && j == ID_U) || (i == ID_U && j == ID_A));
 	}
 
 	/** set the cut-off radius matrix for force truncation. */
@@ -1665,8 +1630,7 @@ public abstract class AtomicModel extends MDModel {
 	}
 
 	/**
-	 * set the shift potential matrix. Shifting potentials is for achieving better energy conservation. This method
-	 * should be called for the all-atom simulator that implements user-defined interspecies interactions.
+	 * set the shift potential matrix. Shifting potentials is for achieving better energy conservation. This method should be called for the all-atom simulator that implements user-defined interspecies interactions.
 	 */
 	public void setShiftMatrix(float cutoff) {
 
@@ -1726,13 +1690,11 @@ public abstract class AtomicModel extends MDModel {
 					poten_LJ[i][j] = 4.0 * epsij[i][j] * sr6 * crossRepulsionIntensity;
 					rtemp = 1.0 / (cutoff * sigij[i][j]);
 					slope_LJ[i][j] = -24.0 * epsij[i][j] * sr6 * rtemp * crossRepulsionIntensity * GF_CONVERSION_CONSTANT;
-				}
-				else if (!hate && !mix) {
+				} else if (!hate && !mix) {
 					poten_LJ[i][j] = 4.0 * epsij[i][j] * (sr12 - sr6);
 					rtemp = 1.0 / (cutoff * sigij[i][j]);
 					slope_LJ[i][j] = 4.0 * epsij[i][j] * (-12.0 * sr12 * rtemp + 6.0 * sr6 * rtemp) * GF_CONVERSION_CONSTANT;
-				}
-				else {
+				} else {
 					poten_LJ[i][j] = 2.0 * (eps[i] + eps[j]) * (sr12 - sr6);
 					rtemp = 1.0 / (cutoff * Math.sqrt(sig[i] * sig[j]));
 					slope_LJ[i][j] = 2.0 * (eps[i] + eps[j]) * (-12.0 * sr12 * rtemp + 6.0 * sr6 * rtemp) * GF_CONVERSION_CONSTANT;
@@ -1862,13 +1824,14 @@ public abstract class AtomicModel extends MDModel {
 	}
 
 	/**
-	 * rescale velocities such that the temperature will be equal to the input value, without setting the total momentum
-	 * to be zero.
+	 * rescale velocities such that the temperature will be equal to the input value, without setting the total momentum to be zero.
 	 * 
 	 * @GuardedBy("this")
 	 */
 
 	public synchronized void setTemperature(double temperature) {
+		if (numberOfAtoms == 0)
+			return;
 		if (temperature < ZERO)
 			temperature = 0.0;
 		boolean electricFieldOn = false;
@@ -1884,13 +1847,11 @@ public abstract class AtomicModel extends MDModel {
 			List[] list = splitParticlesByCharges();
 			for (List l : list)
 				setTemperature(l, temperature);
-		}
-		else if (isSteeringOn()) {
+		} else if (isSteeringOn()) {
 			List[] list = splitParticlesBySteering();
 			for (List l : list)
 				setTemperature(l, temperature);
-		}
-		else {
+		} else {
 			double temp1 = getKE() * UNIT_EV_OVER_KB;
 			if (temp1 < ZERO && temperature > ZERO) {
 				assignTemperature(temperature);
@@ -1933,8 +1894,7 @@ public abstract class AtomicModel extends MDModel {
 	public void setTemperature(byte elementID, double temperature) {
 		if (typeList == null) {
 			typeList = new ArrayList<Atom>();
-		}
-		else {
+		} else {
 			typeList.clear();
 		}
 		for (int i = 0; i < numberOfAtoms; i++)
@@ -1982,8 +1942,7 @@ public abstract class AtomicModel extends MDModel {
 			if (temp1 < ZERO)
 				assignTemperature(100.0);
 			rescaleVelocities(Math.sqrt(percent + 1.0));
-		}
-		else {
+		} else {
 			heatBath.changeExpectedTemperature(percent);
 			setTemperature(heatBath.getExpectedTemperature());
 		}
@@ -2004,8 +1963,7 @@ public abstract class AtomicModel extends MDModel {
 					result[0]++;
 					result[1] += (a.vx * a.vx + a.vy * a.vy) * a.mass;
 				}
-			}
-			else {
+			} else {
 				if (a.id == type) {
 					if (shape == null || a.isCenterOfMassContained(shape)) {
 						result[0]++;
@@ -2037,8 +1995,7 @@ public abstract class AtomicModel extends MDModel {
 				if (shape == null || atom[i].isCenterOfMassContained(shape)) {
 					n++;
 				}
-			}
-			else {
+			} else {
 				if (atom[i].id == type) {
 					if (shape == null || atom[i].isCenterOfMassContained(shape)) {
 						n++;
@@ -2063,8 +2020,7 @@ public abstract class AtomicModel extends MDModel {
 						v += atom[i].vy;
 					n++;
 				}
-			}
-			else if (atom[i].id == type) {
+			} else if (atom[i].id == type) {
 				if (shape == null || atom[i].isCenterOfMassContained(shape)) {
 					if (isVx)
 						v += atom[i].vx;
@@ -2100,8 +2056,7 @@ public abstract class AtomicModel extends MDModel {
 	private void transferHeatToType(byte elementID, double amount) {
 		if (typeList == null) {
 			typeList = new ArrayList<Atom>();
-		}
-		else {
+		} else {
 			typeList.clear();
 		}
 		for (int i = 0; i < numberOfAtoms; i++) {
@@ -2163,6 +2118,8 @@ public abstract class AtomicModel extends MDModel {
 
 	/** assign velocities to atoms according to the Boltzman-Maxwell distribution */
 	public void assignTemperature(double temperature) {
+		if (numberOfAtoms == 0)
+			return;
 		if (temperature < ZERO)
 			temperature = 0.0;
 		double rtemp = Math.sqrt(temperature) * VT_CONVERSION_CONSTANT;
@@ -2171,8 +2128,7 @@ public abstract class AtomicModel extends MDModel {
 		double sumMass = 0.0;
 		if (numberOfAtoms == 1) {
 			atom[0].setRandomVelocity(rtemp);
-		}
-		else {
+		} else {
 			for (int i = 0; i < numberOfAtoms; i++) {
 				Atom a = atom[i];
 				a.vx = rtemp * RANDOM.nextGaussian();
@@ -2293,8 +2249,7 @@ public abstract class AtomicModel extends MDModel {
 	}
 
 	/**
-	 * @return true if any atom is detected charged. If no charge is found, the procedure of computing the electrostatic
-	 *         forces can be skipped.
+	 * @return true if any atom is detected charged. If no charge is found, the procedure of computing the electrostatic forces can be skipped.
 	 */
 	public boolean checkCharges() {
 		hasCoulomb = false;
@@ -2324,8 +2279,7 @@ public abstract class AtomicModel extends MDModel {
 		predictor();
 		if (indexOfStep <= 1) {
 			setUpdateList(true);
-		}
-		else {
+		} else {
 			checkNeighborList();
 		}
 		pot = computeForce(indexOfStep);
@@ -2334,10 +2288,7 @@ public abstract class AtomicModel extends MDModel {
 	}
 
 	/*
-	 * Two things can happen when a photon hits an atom. The first is absorption: the atom absorbs photonic energy and
-	 * its electron is excited. The second is stimulated emission: the photon induces the emission of another photon and
-	 * causes the atom to de-excite. In both cases, the incident photon must have the energy identical to the energy
-	 * difference between the two states involved in the transition.
+	 * Two things can happen when a photon hits an atom. The first is absorption: the atom absorbs photonic energy and its electron is excited. The second is stimulated emission: the photon induces the emission of another photon and causes the atom to de-excite. In both cases, the incident photon must have the energy identical to the energy difference between the two states involved in the transition.
 	 */
 	private void photonHitAtom() {
 		if (photons == null || photons.isEmpty())
@@ -2363,15 +2314,13 @@ public abstract class AtomicModel extends MDModel {
 							p.setModel(null);
 							it.remove();
 							notifyModelListeners(new ModelEvent(this, "Photon absorbed", null, p));
-						}
-						else if (p2 != null) {
+						} else if (p2 != null) {
 							if (tmpList == null)
 								tmpList = new ArrayList<Photon>();
 							tmpList.add(p2);
 							// notifyModelListeners(new ModelEvent(this, "Photon emitted", null, p2));
 							// postone to be handled by RectangularBoundary when the photon exits
-						}
-						else {
+						} else {
 							// the photon wasn't absorbed. Should it shine through, or should it be scattered?
 							if (Math.random() < quantumRule.getScatterProbability())
 								p.setAngle((float) (p.getAngle() + Math.PI * (1 + 0.2 * (0.5 - Math.random()))));
@@ -2515,20 +2464,17 @@ public abstract class AtomicModel extends MDModel {
 				addPhotonAtAngle(x + dx * i, y, angle);
 			for (int i = 0; i <= n; i++)
 				addPhotonAtAngle(x, y + dy * i, angle);
-		}
-		else if (angle < 0 && angle > -0.5 * Math.PI) {
+		} else if (angle < 0 && angle > -0.5 * Math.PI) {
 			for (int i = 1; i <= m; i++)
 				addPhotonAtAngle(x + dx * i, y + h, angle);
 			for (int i = 0; i <= n; i++)
 				addPhotonAtAngle(x, y + h - dy * i, angle);
-		}
-		else if (angle < Math.PI && angle > 0.5 * Math.PI) {
+		} else if (angle < Math.PI && angle > 0.5 * Math.PI) {
 			for (int i = 0; i <= m; i++)
 				addPhotonAtAngle(x + w - dx * i, y, angle);
 			for (int i = 1; i <= n; i++)
 				addPhotonAtAngle(x + w, y + dy * i, angle);
-		}
-		else if (angle > -Math.PI && angle < -0.5 * Math.PI) {
+		} else if (angle > -Math.PI && angle < -0.5 * Math.PI) {
 			for (int i = 0; i <= m; i++)
 				addPhotonAtAngle(x + w - dx * i, y + h, angle);
 			for (int i = 1; i <= n; i++)
@@ -2597,8 +2543,7 @@ public abstract class AtomicModel extends MDModel {
 				shootAtAngle(m, n, dx, dy, angle);
 				break;
 			}
-		}
-		else {
+		} else {
 			// backward compatible
 			if (!lightSource.isSingleBeam()) {
 				float spacing = 40;
@@ -2733,8 +2678,7 @@ public abstract class AtomicModel extends MDModel {
 							// toAdd = new ArrayList<Electron>();
 							// toAdd.add(x);
 							// }
-						}
-						else { // if the atom is a positive ion, recombine
+						} else { // if the atom is a positive ion, recombine
 							if (threeBodyRecombination == null)
 								threeBodyRecombination = new ThreeBodyRecombination(this);
 							if (threeBodyRecombination.recombine(atom[i], e)) {
@@ -2824,8 +2768,7 @@ public abstract class AtomicModel extends MDModel {
 						ElectricField ef = (ElectricField) f;
 						ef.dyn(universe.getDielectricConstant(), e, time);
 						vsum += ef.getPotential(e, time);
-					}
-					else if (f instanceof MagneticField) {
+					} else if (f instanceof MagneticField) {
 						((MagneticField) f).dyn(e);
 					}
 				}
@@ -2882,22 +2825,19 @@ public abstract class AtomicModel extends MDModel {
 						}
 					}
 				}
-			}
-			else if (f instanceof ElectricField) {
+			} else if (f instanceof ElectricField) {
 				if (Math.abs(atom[0].charge) > 0) {
 					ElectricField ef = (ElectricField) f;
 					ef.dyn(universe.getDielectricConstant(), atom[0], time);
 					etemp = ef.getPotential(atom[0], time);
 					vsum += etemp;
 				}
-			}
-			else if (f instanceof MagneticField) {
+			} else if (f instanceof MagneticField) {
 				if (Math.abs(atom[0].charge) > 0) {
 					MagneticField mf = (MagneticField) f;
 					mf.dyn(atom[0]);
 				}
-			}
-			else if (f instanceof AccelerationalField) {
+			} else if (f instanceof AccelerationalField) {
 				AccelerationalField af = (AccelerationalField) f;
 				af.dyn(atom[0]);
 				etemp = af.getPotential(atom[0], time);
@@ -2963,8 +2903,7 @@ public abstract class AtomicModel extends MDModel {
 	}
 
 	/**
-	 * compute forces on the atoms from the potentials. This is the most expensive part of calculation. This method is
-	 * synchronized so that no intermediate data can be fetched before a round of computation is completed.
+	 * compute forces on the atoms from the potentials. This is the most expensive part of calculation. This method is synchronized so that no intermediate data can be fetched before a round of computation is completed.
 	 * 
 	 * @param time
 	 *            the current time, used in computing time-dependent forces
@@ -3059,8 +2998,7 @@ public abstract class AtomicModel extends MDModel {
 						if (isRepulsive(atom[i].id, atom[j].id)) {
 							vij = sr6 * epsab[i][j] * crossRepulsionIntensity;
 							wij = vij;
-						}
-						else {
+						} else {
 							vij = (sr12 - sr6) * epsab[i][j];
 							wij = vij + sr12 * epsab[i][j];
 						}
@@ -3104,8 +3042,7 @@ public abstract class AtomicModel extends MDModel {
 			if (numberOfAtoms > 0)
 				pointer[numberOfAtoms - 1] = nlist;
 
-		}
-		else {
+		} else {
 
 			for (int i = 0, imax1 = numberOfAtoms - 1; i < imax1; i++) {
 
@@ -3143,8 +3080,7 @@ public abstract class AtomicModel extends MDModel {
 							if (isRepulsive(atom[i].id, atom[j].id)) {
 								vij = sr6 * epsab[i][j] * crossRepulsionIntensity;
 								wij = vij;
-							}
-							else {
+							} else {
 								vij = (sr12 - sr6) * epsab[i][j];
 								wij = vij + sr12 * epsab[i][j];
 							}
@@ -3256,8 +3192,7 @@ public abstract class AtomicModel extends MDModel {
 						etemp = gf.getPotential(atom[i], time);
 						vsum += etemp;
 					}
-				}
-				else if (f instanceof ElectricField) {
+				} else if (f instanceof ElectricField) {
 					ElectricField ef = (ElectricField) f;
 					for (int i = 0; i < numberOfAtoms; i++) {
 						if (Math.abs(atom[i].charge) > ZERO) {
@@ -3266,15 +3201,13 @@ public abstract class AtomicModel extends MDModel {
 							vsum += etemp;
 						}
 					}
-				}
-				else if (f instanceof MagneticField) {
+				} else if (f instanceof MagneticField) {
 					MagneticField mf = (MagneticField) f;
 					for (int i = 0; i < numberOfAtoms; i++) {
 						if (Math.abs(atom[i].charge) > ZERO)
 							mf.dyn(atom[i]);
 					}
-				}
-				else if (f instanceof AccelerationalField) {
+				} else if (f instanceof AccelerationalField) {
 					AccelerationalField af = (AccelerationalField) f;
 					if (obstacles != null && !obstacles.isEmpty()) {
 						RectangularObstacle obs = null;
@@ -3336,9 +3269,7 @@ public abstract class AtomicModel extends MDModel {
 	}
 
 	/**
-	 * minimize the potential energy using the steepest descent method. If the maximum force computed is not big, either
-	 * exit or slowly descent. This is for use in conjunction with the molecular dynamics engine and structure editor.
-	 * For purely minimization purpose, use sd() or cp() instead.
+	 * minimize the potential energy using the steepest descent method. If the maximum force computed is not big, either exit or slowly descent. This is for use in conjunction with the molecular dynamics engine and structure editor. For purely minimization purpose, use sd() or cp() instead.
 	 * 
 	 * @GuardedBy("this")
 	 */
@@ -3376,8 +3307,7 @@ public abstract class AtomicModel extends MDModel {
 	}
 
 	/**
-	 * report the kinetic energy of all objects in the system, including atoms and obstacles, and average it to the atom
-	 * basis.
+	 * report the kinetic energy of all objects in the system, including atoms and obstacles, and average it to the atom basis.
 	 * 
 	 * @return average kinetic energy per atom
 	 * @GuardedBy("this")
@@ -3419,8 +3349,7 @@ public abstract class AtomicModel extends MDModel {
 	public double getKEOfType(byte element) {
 		if (typeList == null) {
 			typeList = new ArrayList<Atom>();
-		}
-		else {
+		} else {
 			typeList.clear();
 		}
 		for (int i = 0; i < numberOfAtoms; i++) {
@@ -3494,11 +3423,9 @@ public abstract class AtomicModel extends MDModel {
 			if (view.getUseJmol())
 				view.refreshJmol();
 			updateParArray = true;
-		}
-		else if (source instanceof Affinity) {
+		} else if (source instanceof Affinity) {
 			updateParArray = true;
-		}
-		else {
+		} else {
 
 			String name = e.getParameterName();
 			if (name.equals("Excited state removed")) {
@@ -3513,8 +3440,7 @@ public abstract class AtomicModel extends MDModel {
 				}
 				notifyChange();
 				view.repaint();
-			}
-			else if (name.equals("All excited states removed")) {
+			} else if (name.equals("All excited states removed")) {
 				Element elem = (Element) e.getNewValue();
 				for (int i = 0; i < numberOfAtoms; i++) {
 					if (atom[i].id == elem.getID())
@@ -3522,8 +3448,7 @@ public abstract class AtomicModel extends MDModel {
 				}
 				notifyChange();
 				view.repaint();
-			}
-			else if (name.equals("Excited state moved") || name.equals("Excited state inserted") || name.equals("Lifetime changed")) {
+			} else if (name.equals("Excited state moved") || name.equals("Excited state inserted") || name.equals("Lifetime changed")) {
 				notifyChange();
 			}
 
@@ -3553,7 +3478,7 @@ public abstract class AtomicModel extends MDModel {
 			a.setMovable(true);
 			a.setVisible(true);
 			a.setDraggable(true);
-			a.setCharge(0.0);
+			a.setCharge(0);
 			a.setRestraint(null);
 			a.setUserField(null);
 			a.setVx(0);
@@ -3590,10 +3515,7 @@ public abstract class AtomicModel extends MDModel {
 	}
 
 	/*
-	 * this method initializes the working arrays to the given capacity. These working arrays are: <p> <ul> <li>The atom
-	 * array; <li>The van der Waals parameter array; <li>The neighbor list array; <li>The neighbor list pointer array;
-	 * <li>The x,y coordinates at last step; <li>The x,y displacements since last step; <li>If the integration order is
-	 * higher, higher derivatives arrays. </ul> </p>
+	 * this method initializes the working arrays to the given capacity. These working arrays are: <p> <ul> <li>The atom array; <li>The van der Waals parameter array; <li>The neighbor list array; <li>The neighbor list pointer array; <li>The x,y coordinates at last step; <li>The x,y displacements since last step; <li>If the integration order is higher, higher derivatives arrays. </ul> </p>
 	 * 
 	 * @param n the capacity of the working arrays
 	 */
@@ -3617,19 +3539,14 @@ public abstract class AtomicModel extends MDModel {
 	}
 
 	/*
-	 * predict the system conformation at the next time step according to Taylor's expansion. We prefer Gear's
-	 * predictor-corrector method. The Verlet method is not used, because of the following reasons: <ol> <li> Velocities
-	 * do not enter the propogation, therefore, velocities cannot be changed by the user. <li> Reflecting boundary
-	 * conditions cannot be applied with the Verlet method. </ol> The improved version of the Verlet method, the
-	 * so-called velocity Verlet method is equivalent to the 3rd order Gear method.
+	 * predict the system conformation at the next time step according to Taylor's expansion. We prefer Gear's predictor-corrector method. The Verlet method is not used, because of the following reasons: <ol> <li> Velocities do not enter the propogation, therefore, velocities cannot be changed by the user. <li> Reflecting boundary conditions cannot be applied with the Verlet method. </ol> The improved version of the Verlet method, the so-called velocity Verlet method is equivalent to the 3rd order Gear method.
 	 * 
 	 * @GuardedBy("this")
 	 */
 	synchronized void predictor() {
 		if (numberOfAtoms == 1) {
 			atom[0].predict(timeStep, timeStep2);
-		}
-		else if (numberOfAtoms > 1) {
+		} else if (numberOfAtoms > 1) {
 			for (int i = 0; i < numberOfAtoms; i++) {
 				atom[i].predict(timeStep, timeStep2);
 			}
@@ -3655,8 +3572,7 @@ public abstract class AtomicModel extends MDModel {
 			atom[0].ay = atom[0].fy;
 			atom[0].fx *= atom[0].mass;
 			atom[0].fy *= atom[0].mass;
-		}
-		else {
+		} else {
 			for (int i = 0; i < numberOfAtoms; i++)
 				atom[i].correct(halfTimeStep);
 		}
@@ -3686,8 +3602,7 @@ public abstract class AtomicModel extends MDModel {
 	}
 
 	/*
-	 * determines whether or not the neighbor list table should be updated, based on the result of scanning wether or
-	 * not there have been atoms that have drifted out of the buffer zone (skin).
+	 * determines whether or not the neighbor list table should be updated, based on the result of scanning wether or not there have been atoms that have drifted out of the buffer zone (skin).
 	 */
 	void checkNeighborList() {
 		double dispmax = 0.0;
@@ -3724,8 +3639,7 @@ public abstract class AtomicModel extends MDModel {
 		for (byte i = ID_ALA; i <= ID_VAL; i++) {
 			if (aminoAcidElement[i - ID_ALA] == null) {
 				Aminoacid aa = AminoAcidAdapter.getAminoAcid(i);
-				aminoAcidElement[i - ID_ALA] = new Element(i, ((Float) aa.getProperty("mass")).floatValue(),
-						((Double) aa.getProperty("sigma")).doubleValue(), 0.1);
+				aminoAcidElement[i - ID_ALA] = new Element(i, ((Float) aa.getProperty("mass")).floatValue(), ((Double) aa.getProperty("sigma")).doubleValue(), 0.1);
 			}
 		}
 		for (int i = ID_A; i <= ID_U; i++) {
@@ -3856,8 +3770,7 @@ public abstract class AtomicModel extends MDModel {
 	private boolean isRepulsive(int idOfI, int idOfJ) {
 
 		/* special treatment of same nucleotides */
-		if ((idOfI == ID_A && idOfJ == ID_A) || (idOfI == ID_C && idOfJ == ID_C) || (idOfI == ID_G && idOfJ == ID_G)
-				|| (idOfI == ID_T && idOfJ == ID_T) || (idOfI == ID_U && idOfJ == ID_U) || (idOfI == ID_SP && idOfJ == ID_SP))
+		if ((idOfI == ID_A && idOfJ == ID_A) || (idOfI == ID_C && idOfJ == ID_C) || (idOfI == ID_G && idOfJ == ID_G) || (idOfI == ID_T && idOfJ == ID_T) || (idOfI == ID_U && idOfJ == ID_U) || (idOfI == ID_SP && idOfJ == ID_SP))
 			return true;
 
 		/* same element other than nucleotides */
@@ -4267,8 +4180,7 @@ public abstract class AtomicModel extends MDModel {
 			nas = atom.length;
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view), "The model contains more particles than default.", "Error",
-							JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view), "The model contains more particles than default.", "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			});
 		}
@@ -4484,8 +4396,7 @@ public abstract class AtomicModel extends MDModel {
 			for (int i = 0; i < numberOfAtoms; i++) {
 				if (atom[i].getElectrons().isEmpty())
 					continue;
-				atom[i].getElectron(0).setEnergyLevel(
-						getElement(atom[i].id).getElectronicStructure().getEnergyLevel(atom[i].excitationQ.getData(frame)));
+				atom[i].getElectron(0).setEnergyLevel(getElement(atom[i].id).getElectronicStructure().getEnergyLevel(atom[i].excitationQ.getData(frame)));
 			}
 			notifyUpdateListeners(new UpdateEvent(AtomicModel.this, UpdateEvent.VIEW_UPDATED));
 		}

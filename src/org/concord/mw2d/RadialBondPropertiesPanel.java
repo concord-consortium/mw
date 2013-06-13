@@ -78,8 +78,7 @@ class RadialBondPropertiesPanel extends PropertiesPanel {
 		super(new BorderLayout());
 
 		JPanel p = new JPanel(new SpringLayout());
-		p.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10), BorderFactory
-				.createTitledBorder("")));
+		p.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10), BorderFactory.createTitledBorder("")));
 		add(p, BorderLayout.NORTH);
 
 		String s = null;
@@ -105,8 +104,7 @@ class RadialBondPropertiesPanel extends PropertiesPanel {
 		// row 4
 		s = MDView.getInternationalText("BondStyle");
 		p.add(new JLabel(s != null ? s : "Style"));
-		styleComboBox = new JComboBox(new String[] { "Standard Stick", "Long Spring", "Solid Line", "Invisible",
-				"Unicolor Stick", "Short Spring", "Double Bond", "Triple Bond" });
+		styleComboBox = new JComboBox(new String[] { "Standard Stick", "Long Spring", "Solid Line", "Invisible", "Unicolor Stick", "Short Spring", "Double Bond", "Triple Bond", "Coil" });
 		setComboBox(styleComboBox, bond.getBondStyle() - RadialBond.STANDARD_STICK_STYLE);
 		styleComboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -170,8 +168,7 @@ class RadialBondPropertiesPanel extends PropertiesPanel {
 
 			makeCompactGrid(p, 9, 3, 5, 5, 10, 2);
 
-		}
-		else {
+		} else {
 
 			makeCompactGrid(p, 8, 3, 5, 5, 10, 2);
 
@@ -190,8 +187,7 @@ class RadialBondPropertiesPanel extends PropertiesPanel {
 
 			// row 1
 			torqueField = new FloatNumberTextField(bond.getTorque() * 10000, -50f, 50f);
-			p.add(new JLabel((s != null ? s : "Torque Force") + " [" + (int) torqueField.getMinValue() + ","
-					+ (int) torqueField.getMaxValue() + "]"));
+			p.add(new JLabel((s != null ? s : "Torque Force") + " [" + (int) torqueField.getMinValue() + "," + (int) torqueField.getMaxValue() + "]"));
 			torqueField.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					bond.setTorque(torqueField.getValue() * 0.0001f);
@@ -212,8 +208,7 @@ class RadialBondPropertiesPanel extends PropertiesPanel {
 			// row 2
 			s = MDView.getInternationalText("TorqueType");
 			p.add(new JLabel(s != null ? s : "Torque Type"));
-			torqueTypeComboBox = new JComboBox(new String[] { "Atom 2 around atom 1", "Atom 1 around atom 2",
-					"Both atoms around center" });
+			torqueTypeComboBox = new JComboBox(new String[] { "Atom 2 around atom 1", "Atom 1 around atom 2", "Both atoms around center" });
 			setComboBox(torqueTypeComboBox, bond.getTorqueType() - RadialBond.TORQUE_AROUND_ATOM1);
 			torqueTypeComboBox.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -236,8 +231,7 @@ class RadialBondPropertiesPanel extends PropertiesPanel {
 			// row 1
 			amplitudeField = new FloatNumberTextField(bond.getAmplitude() * 1000, 0f, 100f);
 			s = MDView.getInternationalText("Amplitude");
-			p.add(new JLabel((s != null ? s : "Amplitude") + " [" + (int) amplitudeField.getMinValue() + ","
-					+ (int) amplitudeField.getMaxValue() + "]"));
+			p.add(new JLabel((s != null ? s : "Amplitude") + " [" + (int) amplitudeField.getMinValue() + "," + (int) amplitudeField.getMaxValue() + "]"));
 			amplitudeField.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					bond.setAmplitude(amplitudeField.getValue() * 0.001f);
@@ -258,8 +252,7 @@ class RadialBondPropertiesPanel extends PropertiesPanel {
 			// row 2
 			periodField = new IntegerTextField(bond.getPeriod(), 1, 1000000);
 			s = MDView.getInternationalText("Period");
-			p.add(new JLabel((s != null ? s : "Period") + " [" + periodField.getMinValue() + ","
-					+ periodField.getMaxValue() + "]"));
+			p.add(new JLabel((s != null ? s : "Period") + " [" + periodField.getMinValue() + "," + periodField.getMaxValue() + "]"));
 			periodField.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					bond.setPeriod(periodField.getValue());
@@ -341,8 +334,7 @@ class RadialBondPropertiesPanel extends PropertiesPanel {
 		if (Modeler.isMac()) {
 			p.add(cancelButton);
 			p.add(okButton);
-		}
-		else {
+		} else {
 			p.add(okButton);
 			p.add(cancelButton);
 		}
@@ -371,18 +363,16 @@ class RadialBondPropertiesPanel extends PropertiesPanel {
 			final JComboBox cb = (JComboBox) e.getSource();
 			int id = ((Integer) cb.getSelectedItem()).intValue();
 			if (id == ColorComboBox.INDEX_COLOR_CHOOSER) {
-				JColorChooser.createDialog(bond.getHostModel().getView(), "More Colors", true,
-						ModelerUtilities.colorChooser, new ActionListener() {
-							public void actionPerformed(ActionEvent ae) {
-								color6 = ModelerUtilities.colorChooser.getColor();
-								bond.setBondColor(color6);
-								cb.setSelectedIndex(ColorComboBox.INDEX_MORE_COLOR);
-								ColorRectangle cr = (ColorRectangle) cb.getRenderer();
-								cr.setMoreColor(color6);
-							}
-						}, null).setVisible(true);
-			}
-			else if (id == ColorComboBox.INDEX_HEX_INPUTTER) {
+				JColorChooser.createDialog(bond.getHostModel().getView(), "More Colors", true, ModelerUtilities.colorChooser, new ActionListener() {
+					public void actionPerformed(ActionEvent ae) {
+						color6 = ModelerUtilities.colorChooser.getColor();
+						bond.setBondColor(color6);
+						cb.setSelectedIndex(ColorComboBox.INDEX_MORE_COLOR);
+						ColorRectangle cr = (ColorRectangle) cb.getRenderer();
+						cr.setMoreColor(color6);
+					}
+				}, null).setVisible(true);
+			} else if (id == ColorComboBox.INDEX_HEX_INPUTTER) {
 				if (cb instanceof ColorComboBox) {
 					final ColorComboBox colorComboBox = (ColorComboBox) cb;
 					colorComboBox.updateColor(new Runnable() {
@@ -391,11 +381,9 @@ class RadialBondPropertiesPanel extends PropertiesPanel {
 						}
 					});
 				}
-			}
-			else if (id == ColorComboBox.INDEX_MORE_COLOR) {
+			} else if (id == ColorComboBox.INDEX_MORE_COLOR) {
 				bond.setBondColor(color6);
-			}
-			else {
+			} else {
 				bond.setBondColor(ColorRectangle.COLORS[id]);
 			}
 			bond.getHostModel().getView().repaint();

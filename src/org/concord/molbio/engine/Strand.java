@@ -187,13 +187,11 @@ public class Strand {
 		if (bases == null || bases.size() < 1)
 			return null;
 		if (startIndex > endIndex)
-			throw new IllegalArgumentException(
-					"Strand.getFragmentAsString: startIndex couldn't be bigger than  endIndex");
+			throw new IllegalArgumentException("Strand.getFragmentAsString: startIndex couldn't be bigger than  endIndex");
 		if (startIndex < 0)
 			throw new IllegalArgumentException("Strand.getFragmentAsString: startIndex couldn't be negative");
 		if (endIndex > bases.size())
-			throw new IllegalArgumentException(
-					"Strand.getFragmentAsString: endIndex couldn't be bigger than bases size");
+			throw new IllegalArgumentException("Strand.getFragmentAsString: endIndex couldn't be bigger than bases size");
 		String str = "";
 		for (int i = startIndex; i < endIndex; i++) {
 			str += bases.elementAt(i).getName();

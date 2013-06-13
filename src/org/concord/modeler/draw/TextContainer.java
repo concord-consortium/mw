@@ -30,6 +30,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
@@ -42,8 +43,7 @@ import javax.swing.ImageIcon;
 import org.concord.modeler.util.FileUtilities;
 
 /**
- * This class partially defines a text box that can be drawn in the graphics context of a component. The implementation
- * of attachment to another object is left to a subclass.
+ * This class partially defines a text box that can be drawn in the graphics context of a component. The implementation of attachment to another object is left to a subclass.
  * 
  * @see org.concord.modeler.draw.TextContainer#attachToHost
  * @author Charles Xie
@@ -54,8 +54,7 @@ public abstract class TextContainer implements DrawingElement {
 	public final static byte BOX_CENTER = 11;
 	public final static byte ARROW_HEAD = 12;
 
-	private final static Stroke THIN_DASHED = new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1.0f,
-			new float[] { 2.0f }, 0.0f);
+	private final static Stroke THIN_DASHED = new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1.0f, new float[] { 2.0f }, 0.0f);
 
 	private float x = 20, y = 20;
 	private float angle;
@@ -136,8 +135,7 @@ public abstract class TextContainer implements DrawingElement {
 		this.text = text;
 		if (text != null) {
 			lines = text.split("\n");
-		}
-		else {
+		} else {
 			lines = null;
 		}
 	}
@@ -182,8 +180,7 @@ public abstract class TextContainer implements DrawingElement {
 		if (b) {
 			attachmentPosition = ARROW_HEAD;
 			setCallOutLocation((int) (x + getWidth() + 20), (int) (y + getHeight() + 20));
-		}
-		else {
+		} else {
 			attachmentPosition = BOX_CENTER;
 		}
 	}
@@ -203,8 +200,7 @@ public abstract class TextContainer implements DrawingElement {
 	public void setCallOutLocation(int x, int y) {
 		if (callOutPoint == null) {
 			callOutPoint = new Point(x, y);
-		}
-		else {
+		} else {
 			callOutPoint.setLocation(x, y);
 		}
 	}
@@ -274,18 +270,15 @@ public abstract class TextContainer implements DrawingElement {
 			if (FileUtilities.isRemote(s)) {
 				try {
 					bgImage = new ImageIcon(new URL(s));
-				}
-				catch (MalformedURLException e) {
+				} catch (MalformedURLException e) {
 					e.printStackTrace(System.err);
 				}
 				fullImage = bgImage.getImage();
-			}
-			else {
+			} else {
 				fullImage = Toolkit.getDefaultToolkit().createImage(s);
 				bgImage = new ImageIcon(fullImage);
 			}
-		}
-		else {
+		} else {
 			bgImage = null;
 			fullImage = null;
 		}
@@ -301,6 +294,10 @@ public abstract class TextContainer implements DrawingElement {
 
 	public Color getForegroundColor() {
 		return fgColor;
+	}
+
+	public Shape getBounds() {
+		return new Rectangle2D.Float(x, y, getWidth(), getHeight());
 	}
 
 	/** return the width of the text box. */
@@ -447,7 +444,7 @@ public abstract class TextContainer implements DrawingElement {
 
 		if (isVisible()) {
 
-			g.setColor(Color.gray);
+			g.setColor(Color.darkGray);
 			if (fillMode == FillMode.getNoFillMode()) {
 				switch (borderType) {
 				case 0:
@@ -484,8 +481,7 @@ public abstract class TextContainer implements DrawingElement {
 					}
 					break;
 				}
-			}
-			else {
+			} else {
 				switch (borderType) {
 				case 0:
 				case 1:
@@ -533,23 +529,18 @@ public abstract class TextContainer implements DrawingElement {
 					g.fillRoundRect(x1, y1, w1, h1, 10, 10);
 					break;
 				}
-			}
-			else if (fillMode instanceof FillMode.ImageFill) {
+			} else if (fillMode instanceof FillMode.ImageFill) {
 				if (bgImage != null) {
 					if (bgImage.getIconWidth() != w1 || bgImage.getIconHeight() != h1)
 						bgImage = new ImageIcon(fullImage.getScaledInstance(w1, h1, Image.SCALE_DEFAULT));
 					bgImage.paintIcon(component, g, x1, y1);
 				}
-			}
-			else if (fillMode instanceof FillMode.GradientFill) {
+			} else if (fillMode instanceof FillMode.GradientFill) {
 				FillMode.GradientFill gfm = (FillMode.GradientFill) fillMode;
-				GradientFactory.paintRect((Graphics2D) g, gfm.getStyle(), gfm.getVariant(), gfm.getColor1(), gfm
-						.getColor2(), x1, y1, w1, h1);
-			}
-			else if (fillMode instanceof FillMode.PatternFill) {
+				GradientFactory.paintRect((Graphics2D) g, gfm.getStyle(), gfm.getVariant(), gfm.getColor1(), gfm.getColor2(), x1, y1, w1, h1);
+			} else if (fillMode instanceof FillMode.PatternFill) {
 				FillMode.PatternFill tfm = (FillMode.PatternFill) fillMode;
-				((Graphics2D) g).setPaint(PatternFactory.createPattern(tfm.getStyle(), tfm.getCellWidth(), tfm
-						.getCellHeight(), new Color(tfm.getForeground()), new Color(tfm.getBackground())));
+				((Graphics2D) g).setPaint(PatternFactory.createPattern(tfm.getStyle(), tfm.getCellWidth(), tfm.getCellHeight(), new Color(tfm.getForeground()), new Color(tfm.getBackground())));
 				switch (borderType) {
 				case 0:
 				case 1:
@@ -581,49 +572,41 @@ public abstract class TextContainer implements DrawingElement {
 						yPoints[1] = (int) (rectangle.y + rectangle.height * 0.8);
 						xPoints[2] = (int) (rectangle.x + rectangle.width * 0.2);
 						yPoints[2] = rectangle.y + rectangle.height;
-					}
-					else if ((oc & Rectangle2D.OUT_RIGHT) == Rectangle2D.OUT_RIGHT) {
+					} else if ((oc & Rectangle2D.OUT_RIGHT) == Rectangle2D.OUT_RIGHT) {
 						xPoints[1] = rectangle.x + rectangle.width;
 						yPoints[1] = (int) (rectangle.y + rectangle.height * 0.8);
 						xPoints[2] = (int) (rectangle.x + rectangle.width * 0.8);
 						yPoints[2] = rectangle.y + rectangle.height;
-					}
-					else {
+					} else {
 						xPoints[1] = (int) (rectangle.x + rectangle.width * 0.4);
 						xPoints[2] = (int) (rectangle.x + rectangle.width * 0.6);
 						yPoints[2] = yPoints[1] = rectangle.y + rectangle.height;
 					}
-				}
-				else if ((oc & Rectangle2D.OUT_TOP) == Rectangle2D.OUT_TOP) {
+				} else if ((oc & Rectangle2D.OUT_TOP) == Rectangle2D.OUT_TOP) {
 					if ((oc & Rectangle2D.OUT_LEFT) == Rectangle2D.OUT_LEFT) {
 						xPoints[1] = rectangle.x;
 						yPoints[1] = (int) (rectangle.y + rectangle.height * 0.2);
 						xPoints[2] = (int) (rectangle.x + rectangle.width * 0.2);
 						yPoints[2] = rectangle.y;
-					}
-					else if ((oc & Rectangle2D.OUT_RIGHT) == Rectangle2D.OUT_RIGHT) {
+					} else if ((oc & Rectangle2D.OUT_RIGHT) == Rectangle2D.OUT_RIGHT) {
 						xPoints[1] = (int) (rectangle.x + rectangle.width * 0.8);
 						yPoints[1] = rectangle.y;
 						xPoints[2] = rectangle.x + rectangle.width;
 						yPoints[2] = (int) (rectangle.y + rectangle.height * 0.2);
-					}
-					else {
+					} else {
 						xPoints[1] = (int) (rectangle.x + rectangle.width * 0.4);
 						xPoints[2] = (int) (rectangle.x + rectangle.width * 0.6);
 						yPoints[2] = yPoints[1] = rectangle.y + 1;
 					}
-				}
-				else if ((oc & Rectangle2D.OUT_LEFT) == Rectangle2D.OUT_LEFT) {
+				} else if ((oc & Rectangle2D.OUT_LEFT) == Rectangle2D.OUT_LEFT) {
 					xPoints[2] = xPoints[1] = rectangle.x + 1;
 					yPoints[1] = (int) (rectangle.y + rectangle.height * 0.4);
 					yPoints[2] = (int) (rectangle.y + rectangle.height * 0.6);
-				}
-				else if ((oc & Rectangle2D.OUT_RIGHT) == Rectangle2D.OUT_RIGHT) {
+				} else if ((oc & Rectangle2D.OUT_RIGHT) == Rectangle2D.OUT_RIGHT) {
 					xPoints[2] = xPoints[1] = rectangle.x + rectangle.width;
 					yPoints[1] = (int) (rectangle.y + rectangle.height * 0.4);
 					yPoints[2] = (int) (rectangle.y + rectangle.height * 0.6);
-				}
-				else {
+				} else {
 					b = false;
 				}
 				if (b) {

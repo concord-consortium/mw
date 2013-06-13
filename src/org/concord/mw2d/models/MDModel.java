@@ -111,16 +111,10 @@ import org.concord.mw2d.ui.MDContainer;
  * <li>Unit of temperature = kelvin.
  * </ul>
  * <p>
- * <b>Note to the API users</b>: The reason that the unit of mass is taken as 120 g/mol is because of an old mistake in
- * unit conversion. This mistake cannot be corrected because a lot of models have been made with it. The negative effect
- * of this mistake is not as severe as it appears to be, though, as everything in the molecular models is relative. If
- * you are aware of this problem and you are to simulate a realistic system such as the helium gas, the only thing
- * related to this mistake that you have to do is to set the mass of the Lennard-Jones particle that is supposed to
- * represent He to be 4/120.
+ * <b>Note to the API users</b>: The reason that the unit of mass is taken as 120 g/mol is because of an old mistake in unit conversion. This mistake cannot be corrected because a lot of models have been made with it. The negative effect of this mistake is not as severe as it appears to be, though, as everything in the molecular models is relative. If you are aware of this problem and you are to simulate a realistic system such as the helium gas, the only thing related to this mistake that you have to do is to set the mass of the Lennard-Jones particle that is supposed to represent He to be 4/120.
  * </p>
  * <p>
- * A positive effect of this mistake is that, as we also use Lennard-Jones particles to represent big molecules, such as
- * amino acids and nucleotides, this can be regarded as a deliberate setting, instead of a mistake. :)
+ * A positive effect of this mistake is that, as we also use Lennard-Jones particles to represent big molecules, such as amino acids and nucleotides, this can be regarded as a deliberate setting, instead of a mistake. :)
  * </p>
  * 
  * @author Charles Xie
@@ -140,14 +134,12 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	public static final short DEFAULT_HEIGHT = 250;
 
 	/*
-	 * converts energy gradient unit into force unit: 1.6E-19 [J] / ( E-11 [m] x 120E-3 / 6E23 [kg] ) / ( E-11 / ( E-15
-	 * ) ^ 2 ) [m/s^2]
+	 * converts energy gradient unit into force unit: 1.6E-19 [J] / ( E-11 [m] x 120E-3 / 6E23 [kg] ) / ( E-11 / ( E-15 ) ^ 2 ) [m/s^2]
 	 */
 	final static float GF_CONVERSION_CONSTANT = 0.008f;
 
 	/*
-	 * convert mvv into eV: ( 120E-3 / 6E23 ) [kg] x ( E-11 / E-15 )^2 [m^2/s^2] / 1.6E-19 [J] divided by 2 (save the
-	 * multiplier prefactor 0.5 for computing kinetic energy)
+	 * convert mvv into eV: ( 120E-3 / 6E23 ) [kg] x ( E-11 / E-15 )^2 [m^2/s^2] / 1.6E-19 [J] divided by 2 (save the multiplier prefactor 0.5 for computing kinetic energy)
 	 */
 	final static float EV_CONVERTER = 100.0f / 1.6f;
 
@@ -167,8 +159,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	final static float DRY_FRICTION_CONVERTOR = 0.01f;
 
 	/*
-	 * In reality, Planck's constant = 6.626E-34 m^2kg/s. Here it is an adjustable parameter. The greater it is, the
-	 * more significant the quantum effect will be.
+	 * In reality, Planck's constant = 6.626E-34 m^2kg/s. Here it is an adjustable parameter. The greater it is, the more significant the quantum effect will be.
 	 */
 	static float PLANCK_CONSTANT = 0.2f;
 
@@ -302,39 +293,30 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			if (modelTime > Float.MAX_VALUE - 10000.0f) {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
-						JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), "This model has been run for " + modelTime
-								+ " fs.\nTo avoid overflow, it must be reset to zero.", "Time overflow", JOptionPane.WARNING_MESSAGE);
+						JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), "This model has been run for " + modelTime + " fs.\nTo avoid overflow, it must be reset to zero.", "Time overflow", JOptionPane.WARNING_MESSAGE);
 					}
 				});
 				setModelTime(0.0f);
 			}
 			/*
-			 * check divergence. If tot energy increases 10.0 eV over a watchdog's period, divergence is considered to
-			 * have occurred.
+			 * check divergence. If tot energy increases 10.0 eV over a watchdog's period, divergence is considered to have occurred.
 			 */
 			if (!((MDView) getView()).errorReminderSuppressed()) {
 				if (!heatBathActivated()) {
 					if (lastCheckedTot != 0 && tot - lastCheckedTot > 100.0) {
 						EventQueue.invokeLater(new Runnable() {
 							public void run() {
-								JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()),
-										"The total energy increases too fast. The\n" + "numerical simulation may have diverged.\n"
-												+ "Please check the model to see:\n\n" + "1. If the model is overheated.\n"
-												+ "2. If the time step is too big.", "Divergence warning", JOptionPane.WARNING_MESSAGE);
+								JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), "The total energy increases too fast. The\n" + "numerical simulation may have diverged.\n" + "Please check the model to see:\n\n" + "1. If the model is overheated.\n" + "2. If the time step is too big.", "Divergence warning", JOptionPane.WARNING_MESSAGE);
 							}
 						});
 						stopImmediately();
 					}
 					lastCheckedTot = tot;
-				}
-				else {
+				} else {
 					if (lastCheckedKin != 0 && kin - lastCheckedKin > 100.0) {
 						EventQueue.invokeLater(new Runnable() {
 							public void run() {
-								JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()),
-										"The kinetic energy increases too fast. The\n" + "numerical simulation may have diverged.\n"
-												+ "Please check the model to see:\n\n" + "1. If the model is overheated.\n"
-												+ "2. If the time step is too big.", "Divergence warning", JOptionPane.WARNING_MESSAGE);
+								JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), "The kinetic energy increases too fast. The\n" + "numerical simulation may have diverged.\n" + "Please check the model to see:\n\n" + "1. If the model is overheated.\n" + "2. If the time step is too big.", "Divergence warning", JOptionPane.WARNING_MESSAGE);
 							}
 						});
 						stopImmediately();
@@ -370,8 +352,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			if (systemTimeElapsed < minimumJobCycleTime) {
 				try {
 					Thread.sleep(minimumJobCycleTime - systemTimeElapsed);
-				}
-				catch (InterruptedException e) {
+				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 				// System.out.println(systemTimeElapsed-minimumJobCycleTime);
@@ -382,12 +363,10 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 				AtomisticView view = (AtomisticView) getView();
 				if (view.getUseJmol() && !view.isVoronoiStyle()) {
 					view.refreshJmol(); // this method calls repaint()
-				}
-				else {
+				} else {
 					view.repaint();
 				}
-			}
-			else {
+			} else {
 				getView().repaint();
 			}
 			if (movie.getMovieSlider().isShowing()) {
@@ -631,8 +610,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		inputJob = new InputJob();
 		if (!MDContainer.isApplet() && url.toString().toLowerCase().startsWith("file:/")) {
 			inputJob.read(ModelerUtilities.convertURLToFile(url.toString()));
-		}
-		else {
+		} else {
 			inputJob.read(url);
 		}
 	}
@@ -645,8 +623,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		URL url = null;
 		try {
 			url = new URL(baseURL, relativeURL);
-		}
-		catch (MalformedURLException e) {
+		} catch (MalformedURLException e) {
 			e.printStackTrace();
 			return;
 		}
@@ -662,19 +639,18 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			throw new IllegalArgumentException("null file");
 		if (monitor == null)
 			createProgressMonitor();
-		else monitor.resetProgressBar();
+		else
+			monitor.resetProgressBar();
 		monitor.setProgressMessage("Opening " + file.getName() + "...");
 		OutputStream os = null;
 		try {
 			os = new BufferedOutputStream(new FileOutputStream(file));
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 			final String name = file.toString();
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), "Error in writing to " + name, "Write Error",
-							JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), "Error in writing to " + name, "Write Error", JOptionPane.ERROR_MESSAGE);
 				}
 			});
 			return;
@@ -689,24 +665,20 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			notifyModelListeners(new ModelEvent(this, ModelEvent.MODEL_OUTPUT));
 			blockView(false);
 			setProgress(0, "Done");
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			setProgress(0, "Error");
 			final String name = file.toString();
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), "Encoding error: " + name, "Write Error",
-							JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), "Encoding error: " + name, "Write Error", JOptionPane.ERROR_MESSAGE);
 				}
 			});
-		}
-		finally {
+		} finally {
 			out.close();
 			try {
 				os.close();
-			}
-			catch (IOException iox) {
+			} catch (IOException iox) {
 			}
 		}
 		EventQueue.invokeLater(new Runnable() {
@@ -891,8 +863,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		evalTask.appendScript(script);
 		try {
 			evalTask.evaluate2();
-		}
-		catch (InterruptedException e) {
+		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		getView().repaint();
@@ -912,8 +883,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		evalJs.appendScript(script);
 		try {
 			evalJs.evaluate2();
-		}
-		catch (InterruptedException e) {
+		} catch (InterruptedException e) {
 			e.printStackTrace();
 			return e.getMessage();
 		}
@@ -957,6 +927,10 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		return runScript2(script);
 	}
 
+	public String getScriptDefinition(String var) {
+		return evalAction.getDefinition().get(var);
+	}
+
 	private void initEvalAction() {
 		if (evalAction == null) {
 			evalAction = new Eval2D(this, false);
@@ -973,8 +947,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 				public void run() {
 					try {
 						evalAction.evaluate();
-					}
-					catch (InterruptedException e) {
+					} catch (InterruptedException e) {
 						// System.out.println("script interrupted.");
 					}
 				}
@@ -988,13 +961,11 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 				}
 			}, null, getView()));
 			evalThread.start();
-		}
-		else {
+		} else {
 			// just in case there is a missed notification problem
 			try {
 				Thread.sleep(100);
-			}
-			catch (InterruptedException e) {
+			} catch (InterruptedException e) {
 			}
 			synchronized (evalAction) {
 				evalAction.notifyAll();
@@ -1019,8 +990,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	}
 
 	/**
-	 * set the minimum time of a molecular dynamics cycle (in milliseconds). If the calculation finishes earlier, then
-	 * the thread executing the MD task should sleep until this time is up.
+	 * set the minimum time of a molecular dynamics cycle (in milliseconds). If the calculation finishes earlier, then the thread executing the MD task should sleep until this time is up.
 	 */
 	public void setJobCycleInMillis(short i) {
 		minimumJobCycleTime = i;
@@ -1036,16 +1006,12 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	public abstract double getKE();
 
 	/**
-	 * ask if this model has an embedded movie, or has loaded one from external source. A model is said to have an
-	 * embedded movie if all of its particles have arrays to store their zero and first order variables of motion and
-	 * all these arrays have the same length. These conditions are the basic requirements that constitute a file with
-	 * multiple playable frames, which we call a movie. If any of these conditions is violated, return false.
+	 * ask if this model has an embedded movie, or has loaded one from external source. A model is said to have an embedded movie if all of its particles have arrays to store their zero and first order variables of motion and all these arrays have the same length. These conditions are the basic requirements that constitute a file with multiple playable frames, which we call a movie. If any of these conditions is violated, return false.
 	 */
 	public abstract boolean hasEmbeddedMovie();
 
 	/**
-	 * by default, a model comes with an embedded movie, but there are times that a movie is not needed, or not
-	 * applicable. In these circumstances, the movie mechanism can be deactivated.
+	 * by default, a model comes with an embedded movie, but there are times that a movie is not needed, or not applicable. In these circumstances, the movie mechanism can be deactivated.
 	 */
 	public abstract void activateEmbeddedMovie(boolean b);
 
@@ -1162,8 +1128,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	}
 
 	/**
-	 * @return the average speed of the particles of the specified type inside the specified shape in the specified
-	 *         direction.
+	 * @return the average speed of the particles of the specified type inside the specified shape in the specified direction.
 	 */
 	public abstract double getAverageSpeed(String direction, byte type, Shape shape);
 
@@ -1246,8 +1211,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	public void addUpdateListener(UpdateListener ul) {
 		if (updateListenerList == null) {
 			updateListenerList = Collections.synchronizedList(new ArrayList<UpdateListener>());
-		}
-		else {
+		} else {
 			if (updateListenerList.contains(ul))
 				return;
 		}
@@ -1283,8 +1247,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			throw new IllegalArgumentException("null input");
 		if (modelListenerList == null) {
 			modelListenerList = Collections.synchronizedList(new ArrayList<ModelListener>());
-		}
-		else {
+		} else {
 			if (modelListenerList.contains(ml))
 				return;
 		}
@@ -1317,8 +1280,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			throw new IllegalArgumentException("null input");
 		if (pageComponentListenerList == null) {
 			pageComponentListenerList = Collections.synchronizedList(new ArrayList<PageComponentListener>());
-		}
-		else {
+		} else {
 			if (pageComponentListenerList.contains(pcl))
 				return;
 		}
@@ -1359,8 +1321,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		monitor = new ProcessMonitor(JOptionPane.getFrameForComponent(getView()), b);
 		if (b) {
 			monitor.setLocationRelativeTo(getView());
-		}
-		else {
+		} else {
 			monitor.setProgressBar(ioProgressBar);
 		}
 	}
@@ -1407,8 +1368,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			if (!set.contains(eFieldDirection.toString())) {
 				choiceMap.put(eFieldDirection.toString(), eFieldDirection);
 			}
-		}
-		else {
+		} else {
 			if (set.contains(eFieldDirection.toString())) {
 				choiceMap.remove(eFieldDirection.toString());
 			}
@@ -1417,8 +1377,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			if (!set.contains(bFieldDirection.toString())) {
 				choiceMap.put(bFieldDirection.toString(), bFieldDirection);
 			}
-		}
-		else {
+		} else {
 			if (set.contains(bFieldDirection.toString())) {
 				choiceMap.remove(bFieldDirection.toString());
 			}
@@ -1453,22 +1412,18 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 					List<Object> a = new ArrayList<Object>();
 					a.add(value);
 					properties.put(key, a);
-				}
-				else {
+				} else {
 					try {
 						List a = (List) properties.get(key);
 						a.add(value);
-					}
-					catch (ClassCastException e) {
+					} catch (ClassCastException e) {
 						e.printStackTrace();
 					}
 				}
-			}
-			else {
+			} else {
 				properties.put(key, value);
 			}
-		}
-		else {
+		} else {
 			properties.put(key, value);
 		}
 	}
@@ -1511,8 +1466,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	}
 
 	/**
-	 * this method is used to "get rid of" a tape when a user action that results in frame inconsistency has occurred,
-	 * and "insert a new tape".
+	 * this method is used to "get rid of" a tape when a user action that results in frame inconsistency has occurred, and "insert a new tape".
 	 */
 	public int resetTape() {
 		if (recorderDeactivated)
@@ -1531,8 +1485,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	}
 
 	/*
-	 * If the recorder tape is full and the user has saved the movie to the hard drive, this method should be called to
-	 * "insert a new tape" to the recorder, so as to record the next period of simulation.
+	 * If the recorder tape is full and the user has saved the movie to the hard drive, this method should be called to "insert a new tape" to the recorder, so as to record the next period of simulation.
 	 */
 	void insertNewTape() {
 		lastCheckedTot = 0;
@@ -1558,8 +1511,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 						synchronized (this) {
 							try {
 								wait();
-							}
-							catch (InterruptedException e) {
+							} catch (InterruptedException e) {
 								// e.printStackTrace();
 								break;
 							}
@@ -1629,8 +1581,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		if (b) {
 			if (!job.contains(reminder))
 				job.add(reminder);
-		}
-		else {
+		} else {
 			job.remove(reminder);
 		}
 	}
@@ -1640,14 +1591,12 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	}
 
 	/**
-	 * Evenly add to or substract from all particles of the system the specified amount of energy. If the passed
-	 * argument is positive, the system is heated; otherwise, the system is cooled.
+	 * Evenly add to or substract from all particles of the system the specified amount of energy. If the passed argument is positive, the system is heated; otherwise, the system is cooled.
 	 */
 	public abstract void transferHeat(double amount);
 
 	/**
-	 * Evenly add to or substract from all particles of the specified list the specified amount of energy. If the passed
-	 * argument is positive, the selected particles in the list is heated; otherwise, the selected particles is cooled.
+	 * Evenly add to or substract from all particles of the specified list the specified amount of energy. If the passed argument is positive, the selected particles in the list is heated; otherwise, the selected particles is cooled.
 	 */
 	public abstract void transferHeatToParticles(List list, double amount);
 
@@ -1672,8 +1621,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	abstract void setTapePointer(int n);
 
 	/**
-	 * in the case an action cannot be passed thru a ModelAction filter, call this method to ask for the recorder's
-	 * permission to reset before a change takes place.
+	 * in the case an action cannot be passed thru a ModelAction filter, call this method to ask for the recorder's permission to reset before a change takes place.
 	 */
 	public boolean changeApprovedByRecorder() {
 		if (hasEmbeddedMovie()) {
@@ -1694,13 +1642,11 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			if (job.isStopped()) {
 				if (!job.contains(heatBath))
 					job.add(heatBath);
-			}
-			else {
+			} else {
 				if (!job.toBeAdded(heatBath) && !job.contains(heatBath))
 					job.add(heatBath);
 			}
-		}
-		else {
+		} else {
 			if (heatBath != null && job != null) {
 				job.remove(heatBath);
 				heatBath.setCompleted(true);
@@ -1732,8 +1678,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	}
 
 	/*
-	 * should energy be minimized before the model is run? This method is usually called inside <code>run()</code> to
-	 * remove bad contacts.
+	 * should energy be minimized before the model is run? This method is usually called inside <code>run()</code> to remove bad contacts.
 	 */
 	abstract boolean needMinimization();
 
@@ -1772,8 +1717,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 					URL u = null;
 					try {
 						u = new URL(url);
-					}
-					catch (MalformedURLException mue) {
+					} catch (MalformedURLException mue) {
 						mue.printStackTrace();
 						return null;
 					}
@@ -1781,8 +1725,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 					if (file == null) {
 						try {
 							file = ConnectionManager.sharedInstance().cache(u);
-						}
-						catch (FileNotFoundException e) {
+						} catch (FileNotFoundException e) {
 							e.printStackTrace();
 						}
 					}
@@ -1790,8 +1733,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 						input(u);
 						return url;
 					}
-				}
-				else {
+				} else {
 					file = new File(url);
 				}
 				input(file);
@@ -1812,8 +1754,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	}
 
 	/**
-	 * run this model, meanwhile disable the model editor. If you have not set up the job, a default job will be
-	 * assigned to this model. The default job paints the view, computes the energy, and updates the data cache.
+	 * run this model, meanwhile disable the model editor. If you have not set up the job, a default job will be assigned to this model. The default job paints the view, computes the energy, and updates the data cache.
 	 */
 	public void run() {
 		if (job != null)
@@ -1824,8 +1765,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 					return;
 				}
 			}
-		}
-		else {
+		} else {
 			if (isEmpty())
 				return;
 		}
@@ -1836,8 +1776,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		});
 		if (this instanceof MesoModel) {
 			run2();
-		}
-		else {
+		} else {
 			if (needMinimization()) {
 				new SwingWorker("Energy Minimizer") {
 					public Object construct() {
@@ -1856,8 +1795,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 						run2();
 					}
 				}.start();
-			}
-			else {
+			} else {
 				run2();
 			}
 		}
@@ -1872,8 +1810,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		}
 		if (job == null) {
 			initializeJob();
-		}
-		else {
+		} else {
 			if (!recorderDeactivated && !job.contains(movieUpdater))
 				job.add(movieUpdater);
 		}
@@ -1898,18 +1835,15 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	}
 
 	/**
-	 * stop running this model. NOTE: When the recording mode is invoked, calling this method does not stop the model
-	 * immediately; it will stop at the next recording step. If not in the recording mode, it will stop immediately.
+	 * stop running this model. NOTE: When the recording mode is invoked, calling this method does not stop the model immediately; it will stop at the next recording step. If not in the recording mode, it will stop immediately.
 	 */
 	public void stop() {
 		if (getRecorderDisabled()) {
 			stopImmediately();
-		}
-		else {
+		} else {
 			if (movie.getCurrentFrameIndex() > 0) {
 				stopAtNextRecordingStep = true;
-			}
-			else {
+			} else {
 				stopImmediately();
 			}
 		}
@@ -2039,7 +1973,8 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			// so we save a copy of the listeners to be used after reset() is called
 			if (updateListenerListCopy == null)
 				updateListenerListCopy = new ArrayList<UpdateListener>();
-			else updateListenerListCopy.clear();
+			else
+				updateListenerListCopy.clear();
 			updateListenerListCopy.addAll(updateListenerList);
 			updateListenerList.clear();
 		}
@@ -2140,9 +2075,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		RectangularObstacle.Delegate d;
 		for (Iterator it = delegates.iterator(); it.hasNext();) {
 			d = (RectangularObstacle.Delegate) it.next();
-			RectangularObstacle o = new RectangularObstacle(d.getX(), d.getY(), d.getWidth() == 0 ? 1 : d.getWidth(), d.getHeight() == 0 ? 1
-					: d.getHeight(), d.getVx(), d.getVy(), d.getExternalFx(), d.getExternalFy(), d.isWestProbe(), d.isNorthProbe(), d.isEastProbe(),
-					d.isSouthProbe(), d.isRoundCornered());
+			RectangularObstacle o = new RectangularObstacle(d.getX(), d.getY(), d.getWidth() == 0 ? 1 : d.getWidth(), d.getHeight() == 0 ? 1 : d.getHeight(), d.getVx(), d.getVy(), d.getExternalFx(), d.getExternalFy(), d.isWestProbe(), d.isNorthProbe(), d.isEastProbe(), d.isSouthProbe(), d.isRoundCornered());
 			o.setElasticity(d.getElasticity());
 			o.setFriction(d.getFriction());
 			o.setDensity(d.getDensity());
@@ -2161,8 +2094,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	}
 
 	/**
-	 * Only one of a certain type of non-local field is allowed to exist at a time, superposition of non-local fields
-	 * are not implemented.
+	 * Only one of a certain type of non-local field is allowed to exist at a time, superposition of non-local fields are not implemented.
 	 */
 	public void addNonLocalField(VectorField field) {
 		if (field.isLocal())
@@ -2198,8 +2130,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	}
 
 	/*
-	 * call this method to clear the vector to hold fields. It will also remove the change listener associated with the
-	 * fields.
+	 * call this method to clear the vector to hold fields. It will also remove the change listener associated with the fields.
 	 */
 	private void removeAllFields() {
 		synchronized (fields) {
@@ -2287,9 +2218,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			String s = url;
 			String base = FileUtilities.getCodeBase(url);
 			/*
-			 * if background image is set using the filechooser the URL field of the ImageFill will be set to be the
-			 * real HD address of the image. If background image transfers from another model because of downloading or
-			 * saving, the URL field of the ImageFill will be set to the file name of that image ONLY.
+			 * if background image is set using the filechooser the URL field of the ImageFill will be set to be the real HD address of the image. If background image transfers from another model because of downloading or saving, the URL field of the ImageFill will be set to the file name of that image ONLY.
 			 */
 			if (base == null) {
 				base = FileUtilities.getCodeBase((String) getProperty("old url"));
@@ -2297,12 +2226,10 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 					base = FileUtilities.getCodeBase((String) getProperty("url"));
 				s = base + url;
 				saveImage(s, parentFile);
-			}
-			else {
+			} else {
 				if (FileUtilities.isRemote(s)) {
 					saveImage(s, parentFile);
-				}
-				else {
+				} else {
 					copyFile(s, new File(parentFile, FileUtilities.getFileName(s)));
 				}
 			}
@@ -2319,8 +2246,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 						base = FileUtilities.getCodeBase((String) getProperty("url"));
 					s = base + url;
 					saveImage(s, parentFile);
-				}
-				else {
+				} else {
 					copyFile(s, new File(parentFile, FileUtilities.getFileName(s)));
 				}
 			}
@@ -2333,16 +2259,13 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			public void run() {
 				switch (i) {
 				case FileUtilities.SOURCE_NOT_FOUND:
-					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), "Source " + name + " is not found.", "File not found",
-							JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), "Source " + name + " is not found.", "File not found", JOptionPane.ERROR_MESSAGE);
 					break;
 				case FileUtilities.FILE_ACCESS_ERROR:
-					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), "Directory " + parent + " inaccessible.",
-							"File access error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), "Directory " + parent + " inaccessible.", "File access error", JOptionPane.ERROR_MESSAGE);
 					break;
 				case FileUtilities.WRITING_ERROR:
-					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), "Encountered error while writing to directory "
-							+ parent, "Writing error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), "Encountered error while writing to directory " + parent, "Writing error", JOptionPane.ERROR_MESSAGE);
 					break;
 				}
 			}
@@ -2355,16 +2278,13 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			public void run() {
 				switch (i) {
 				case FileUtilities.SOURCE_NOT_FOUND:
-					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), "Source " + s + " is not found.", "File not found",
-							JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), "Source " + s + " is not found.", "File not found", JOptionPane.ERROR_MESSAGE);
 					break;
 				case FileUtilities.FILE_ACCESS_ERROR:
-					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), "Destination " + d + " cannot be created.",
-							"File access error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), "Destination " + d + " cannot be created.", "File access error", JOptionPane.ERROR_MESSAGE);
 					break;
 				case FileUtilities.WRITING_ERROR:
-					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), "Encountered error while writing to " + d,
-							"Writing error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), "Encountered error while writing to " + d, "Writing error", JOptionPane.ERROR_MESSAGE);
 					break;
 				}
 			}
@@ -2438,8 +2358,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 	void setT(double d) {
 		if (!heatBathActivated()) {
 			setTemperature(d);
-		}
-		else {
+		} else {
 			assignTemperature(d);
 			heatBath.setExpectedTemperature(d);
 		}
@@ -2457,11 +2376,9 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 					return;
 				if (!b) {
 					monitor.hide();
-				}
-				else {
+				} else {
 					if (getView().isShowing())
-						monitor.show(getView().getLocationOnScreen().x + (getView().getWidth() - monitor.getSize().width) / 2, getView()
-								.getLocationOnScreen().y + (getView().getHeight() - monitor.getSize().height) / 2);
+						monitor.show(getView().getLocationOnScreen().x + (getView().getWidth() - monitor.getSize().width) / 2, getView().getLocationOnScreen().y + (getView().getHeight() - monitor.getSize().height) / 2);
 				}
 			}
 		});
@@ -2555,7 +2472,8 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 		blockView(true);
 		if (monitor == null)
 			createProgressMonitor();
-		else monitor.resetProgressBar();
+		else
+			monitor.resetProgressBar();
 		((MDView) getView()).enableEditor(false);
 		((MDView) getView()).destroyAllLayeredComponents();
 		if (movie != null)
@@ -2623,7 +2541,8 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 					URL u = ConnectionManager.sharedInstance().getRemoteLocation(file);
 					if (u == null)
 						putProperties(file);
-					else putProperties(u);
+					else
+						putProperties(u);
 					return;
 				}
 			}
@@ -2649,54 +2568,32 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 				monitor.setProgressMessage("Opening " + file.getName() + ", wait...");
 				try {
 					fis = new FileInputStream(file);
-				}
-				catch (IOException e) {
+				} catch (IOException e) {
 					handleFailure("Error in opening " + file);
 					e.printStackTrace();
 					EventQueue.invokeLater(new Runnable() {
 						public void run() {
-							JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), file + " was not found or has a problem.",
-									"File error", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), file + " was not found or has a problem.", "File error", JOptionPane.ERROR_MESSAGE);
 						}
 					});
 					return;
 				}
 				if (fis != null)
 					in = new XMLDecoder(new BufferedInputStream(fis));
-			}
-			else if (url != null) {
+			} else if (url != null) {
 				monitor.setProgressMessage("Opening " + url + ", wait...");
 				URLConnection connect = ConnectionManager.getConnection(url);
 				if (connect == null) {
 					handleFailure("Error in connecting to " + url);
 					return;
 				}
-				String encoding = connect.getContentEncoding();
-
-				if (encoding != null && encoding.equalsIgnoreCase("gzip")) {
-					try {
-						is = new GZIPInputStream(connect.getInputStream());
-					}
-					catch (IOException e1) {
-						try {
-							is = ConnectionManager.getConnection(url).getInputStream();
-						}
-						catch (IOException e2) {
-							// TODO Auto-generated catch block
-							e2.printStackTrace();
-						}
-					}
-				} else {
-					try {
-						is = connect.getInputStream();
-					}
-					catch (IOException e) {
-						handleFailure("Error in getting input stream from " + url);
-						e.printStackTrace();
-						return;
-					}
+				try {
+					is = connect.getInputStream();
+				} catch (IOException e) {
+					handleFailure("Error in getting input stream from " + url);
+					e.printStackTrace();
+					return;
 				}
-
 				// cache the model files if necessary
 				if (ConnectionManager.sharedInstance().isCachingAllowed()) {
 					String cachedFile = ConnectionManager.convertURLToFileName(url);
@@ -2704,8 +2601,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 					cache.getParentFile().mkdirs();
 					try {
 						fos = new FileOutputStream(cache);
-					}
-					catch (FileNotFoundException fnfe) {
+					} catch (FileNotFoundException fnfe) {
 						fnfe.printStackTrace();
 						handleFailure("Error in finding cached file for " + url);
 						return;
@@ -2723,25 +2619,21 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 								monitor.setProgressMessage((int) kbCount + " KB read");
 						}
 						monitor.setProgressMessage((int) kbCount + " KB read");
-					}
-					catch (IOException ioe) {
+					} catch (IOException ioe) {
 						handleFailure("Error in caching " + url);
 						ioe.printStackTrace();
 						shouldReturn = true;
-					}
-					finally {
+					} finally {
 						if (is != null) {
 							try {
 								is.close();
-							}
-							catch (IOException e) {
+							} catch (IOException e) {
 							}
 						}
 						if (fos != null) {
 							try {
 								fos.close();
-							}
-							catch (IOException e) {
+							} catch (IOException e) {
 							}
 						}
 					}
@@ -2749,8 +2641,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 					BufferedInputStream bis = null;
 					try {
 						bis = new BufferedInputStream(new FileInputStream(cache));
-					}
-					catch (FileNotFoundException e) {
+					} catch (FileNotFoundException e) {
 						e.printStackTrace();
 						handleFailure("Error in caching " + url);
 						shouldReturn = true;
@@ -2758,8 +2649,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 					if (shouldReturn)
 						return;
 					in = new XMLDecoder(bis);
-				}
-				else {
+				} else {
 					in = new XMLDecoder(new BufferedInputStream(is));
 				}
 			}
@@ -2767,19 +2657,16 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			if (in != null) {
 				try {
 					decode(in);
-				}
-				catch (Exception e) {
+				} catch (Exception e) {
 					EventQueue.invokeLater(new Runnable() {
 						public void run() {
 							stopJob();
 							// prepareToRead();
-							JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), "Error in XML-decoding", "Error",
-									JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(getView()), "Error in XML-decoding", "Error", JOptionPane.ERROR_MESSAGE);
 						}
 					});
 					e.printStackTrace();
-				}
-				finally {
+				} finally {
 					in.close();
 				}
 			}
@@ -2790,20 +2677,17 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			if (is != null)
 				try {
 					is.close();
-				}
-				catch (IOException e) {
+				} catch (IOException e) {
 				}
 			if (fos != null)
 				try {
 					fos.close();
-				}
-				catch (IOException e) {
+				} catch (IOException e) {
 				}
 			if (fis != null)
 				try {
 					fis.close();
-				}
-				catch (IOException e) {
+				} catch (IOException e) {
 				}
 			if (in != null)
 				in.close();
@@ -2940,8 +2824,7 @@ public abstract class MDModel implements Model, ParameterChangeListener {
 			RectangularObstacle o = null;
 			for (Iterator it = obs.iterator(); it.hasNext();) {
 				o = (RectangularObstacle) it.next();
-				RectangularObstacle.Delegate rod = new RectangularObstacle.Delegate(o.x, o.y, o.width, o.height, o.getVx(), o.getVy(), o.getHx(),
-						o.getHy(), o.isWestProbe(), o.isNorthProbe(), o.isEastProbe(), o.isSouthProbe());
+				RectangularObstacle.Delegate rod = new RectangularObstacle.Delegate(o.x, o.y, o.width, o.height, o.getVx(), o.getVy(), o.getHx(), o.getHy(), o.isWestProbe(), o.isNorthProbe(), o.isEastProbe(), o.isSouthProbe());
 				rod.setDensity(o.getDensity());
 				rod.setUserField(o.getUserField());
 				rod.setElasticity(o.getElasticity());

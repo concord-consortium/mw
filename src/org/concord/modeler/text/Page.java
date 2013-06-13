@@ -252,6 +252,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	private static String softwareVersion = "x";
 	private static boolean nativeLookAndFeelUsed;
 	private static String softwareName;
+	private static String homepage = "http://mw.concord.org/modeler/";
 
 	final static float INDENT_STEP = 20;
 	private static final Date DATE = new Date();
@@ -270,9 +271,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	private HyperlinkPopupMenu linkPopupMenu;
 
 	/*
-	 * <code>PrintPreview</code> acts like a mediator between <code>Page</code> and printer. Any printing job should
-	 * pass through the <code>PrintPreview</code> gateway to get to a printer, even if the user does not mean to preview
-	 * pages before printing.
+	 * <code>PrintPreview</code> acts like a mediator between <code>Page</code> and printer. Any printing job should pass through the <code>PrintPreview</code> gateway to get to a printer, even if the user does not mean to preview pages before printing.
 	 */
 	private PrintPreview printPreview;
 	private static PrintParameters printParam = new PrintParameters();
@@ -370,8 +369,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				Object script = button.getClientProperty("script");
 				if (script instanceof String) {
 					processHyperlink((String) script);
-				}
-				else { // backward compatible
+				} else { // backward compatible
 					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(Page.this), "No script has been set.");
 				}
 			}
@@ -515,8 +513,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_M, KeyEvent.META_MASK, true), "_m");
 				getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.META_MASK, true), "_z");
 				getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, KeyEvent.META_MASK, true), "_y");
-			}
-			else {
+			} else {
 				getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.CTRL_MASK, true), "_x");
 				getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_MASK, true), "_c");
 				getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_MASK, true), "_v");
@@ -576,8 +573,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	}
 
 	/*
-	 * This runs the scripts for this page. Note that it processes only the scripts for the page, but not those for the
-	 * embedded components such as text boxes.
+	 * This runs the scripts for this page. Note that it processes only the scripts for the page, but not those for the embedded components such as text boxes.
 	 */
 	private void runScript(String script) {
 		if (scripter == null)
@@ -608,8 +604,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	public void removeAllDocumentListeners() {
 		try {
 			getDocument().remove(0, getDocument().getLength());
-		}
-		catch (BadLocationException e) {
+		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
 		if (getDocument() instanceof AbstractDocument) {
@@ -622,8 +617,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	}
 
 	/**
-	 * destroy this page to allow it to be garbage-collected. Do NOT call this method unless you dispose the window that
-	 * contains this page.
+	 * destroy this page to allow it to be garbage-collected. Do NOT call this method unless you dispose the window that contains this page.
 	 */
 	public void destroy() {
 
@@ -813,6 +807,14 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		return softwareName;
 	}
 
+	public static void setHomepage(String s) {
+		homepage = s;
+	}
+
+	static String getHomepage() {
+		return homepage;
+	}
+
 	public Clipboard getClipboard() {
 		return clipboard;
 	}
@@ -835,19 +837,16 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 							ptb.showBoundary(b);
 							ptb.setToolTipText(b ? ptb.getBoundaryText() : null);
 						}
-					}
-					else if (e instanceof IconWrapper) {
+					} else if (e instanceof IconWrapper) {
 						IconWrapper iw = (IconWrapper) e;
 						iw.setIndex(j++);
 						if (EventQueue.isDispatchThread()) {
 							iw.showBoundary(b);
 							iw.setToolTipText(b ? iw.getBoundaryText() : null);
 						}
-					}
-					else if (e instanceof ModelCanvas) {
+					} else if (e instanceof ModelCanvas) {
 						((ModelCanvas) e).getMdContainer().getView().setEditable(b);
-					}
-					else if (e instanceof PagePlugin) {
+					} else if (e instanceof PagePlugin) {
 						((PagePlugin) e).setEditable(b);
 					}
 				}
@@ -861,8 +860,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		if (pageListenerList == null) {
 			pageListenerList = Collections.synchronizedList(new ArrayList<PageListener>());
 			pageListenerList.add(pl);
-		}
-		else {
+		} else {
 			if (!pageListenerList.contains(pl))
 				pageListenerList.add(pl);
 		}
@@ -889,8 +887,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		};
 		if (EventQueue.isDispatchThread()) {
 			r.run();
-		}
-		else {
+		} else {
 			EventQueue.invokeLater(r);
 		}
 	}
@@ -1097,22 +1094,18 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		if (str == null) {
 			if (getBackgroundImage() != null)
 				setBackgroundImage(null);
-		}
-		else {
+		} else {
 			if (str.equals("null") || str.trim().length() == 0) {
 				if (getBackgroundImage() != null)
 					setBackgroundImage(null);
-			}
-			else {
+			} else {
 				ImageIcon icon = null;
 				if (!FileUtilities.isRemote(str)) {
 					icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(str));
-				}
-				else {
+				} else {
 					try {
 						icon = new ImageIcon(new URL(str));
-					}
-					catch (MalformedURLException mfe) {
+					} catch (MalformedURLException mfe) {
 						mfe.printStackTrace();
 					}
 				}
@@ -1125,8 +1118,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	}
 
 	/**
-	 * Used ONLY when background image is changed because of loading a new page. The editor is not notified content
-	 * change when this method is applied.
+	 * Used ONLY when background image is changed because of loading a new page. The editor is not notified content change when this method is applied.
 	 */
 	public void setBackgroundImage(ImageIcon icon) {
 		if (icon == null) {
@@ -1197,8 +1189,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			insertComponent(mc);
 			if (reorder)
 				nameModels();
-		}
-		else {
+		} else {
 			showContainerUsedUpMessage();
 		}
 		return mc;
@@ -1234,8 +1225,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 					insertComponent(mc);
 				}
 			});
-		}
-		else {
+		} else {
 			showContainerUsedUpMessage();
 		}
 		return mc;
@@ -1254,45 +1244,37 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			ActivityButton ab = ActivityButton.create(this);
 			if (ab != null)
 				insertComponent(ab);
-		}
-		else if (type.equalsIgnoreCase("Audio Player")) {
+		} else if (type.equalsIgnoreCase("Audio Player")) {
 			AudioPlayer ap = AudioPlayer.create(this);
 			if (ap != null)
 				insertComponent(ap);
-		}
-		else if (type.equalsIgnoreCase("Applet")) {
+		} else if (type.equalsIgnoreCase("Applet")) {
 			PageApplet applet = PageApplet.create(this);
 			if (applet != null) {
 				insertComponent(applet);
 				// applet.setIndex(applet.getIndex() + 1); //Why did I add this silly code?
 			}
-		}
-		else if (type.equalsIgnoreCase("Plugin")) {
+		} else if (type.equalsIgnoreCase("Plugin")) {
 			PageJContainer plugin = PageJContainer.create(this);
 			if (plugin != null)
 				insertComponent(plugin);
-		}
-		else if (type.equalsIgnoreCase("Feedback Area")) {
+		} else if (type.equalsIgnoreCase("Feedback Area")) {
 			PageFeedbackArea fa = PageFeedbackArea.create(this);
 			if (fa != null)
 				insertComponent(fa);
-		}
-		else if (type.equalsIgnoreCase("Button")) {
+		} else if (type.equalsIgnoreCase("Button")) {
 			PageButton pb = PageButton.create(this);
 			if (pb != null)
 				insertComponent(pb);
-		}
-		else if (type.equalsIgnoreCase("Spinner")) {
+		} else if (type.equalsIgnoreCase("Spinner")) {
 			PageSpinner s = PageSpinner.create(this);
 			if (s != null)
 				insertComponent(s);
-		}
-		else if (type.equalsIgnoreCase("Check Box")) {
+		} else if (type.equalsIgnoreCase("Check Box")) {
 			PageCheckBox cb = PageCheckBox.create(this);
 			if (cb != null)
 				insertComponent(cb);
-		}
-		else if (type.equalsIgnoreCase("A Group of Radio Buttons")) {
+		} else if (type.equalsIgnoreCase("A Group of Radio Buttons")) {
 			deselect();
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
@@ -1312,127 +1294,103 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 					}
 				}
 			});
-		}
-		else if (type.equalsIgnoreCase("Slider")) {
+		} else if (type.equalsIgnoreCase("Slider")) {
 			PageSlider s = PageSlider.create(this);
 			if (s != null)
 				insertComponent(s);
-		}
-		else if (type.equalsIgnoreCase("Combo Box")) {
+		} else if (type.equalsIgnoreCase("Combo Box")) {
 			PageComboBox cb = PageComboBox.create(this);
 			if (cb != null)
 				insertComponent(cb);
-		}
-		else if (type.equalsIgnoreCase("User Input Text Field")) {
+		} else if (type.equalsIgnoreCase("User Input Text Field")) {
 			PageTextField tf = PageTextField.create(this);
 			if (tf != null)
 				insertComponent(tf);
-		}
-		else if (type.equalsIgnoreCase("User Input Text Area")) {
+		} else if (type.equalsIgnoreCase("User Input Text Area")) {
 			PageTextArea ta = PageTextArea.create(this);
 			if (ta != null)
 				insertComponent(ta);
-		}
-		else if (type.equalsIgnoreCase("Database Search Text Field")) {
+		} else if (type.equalsIgnoreCase("Database Search Text Field")) {
 			SearchTextField stf = SearchTextField.create(this);
 			if (stf != null)
 				insertComponent(stf);
-		}
-		else if (type.equalsIgnoreCase("Table")) {
+		} else if (type.equalsIgnoreCase("Table")) {
 			PageTable table = PageTable.create(this);
 			if (table != null)
 				insertComponent(table);
-		}
-		else if (type.equalsIgnoreCase("Text Box")) {
+		} else if (type.equalsIgnoreCase("Text Box")) {
 			PageTextBox tb = PageTextBox.create(this);
 			if (tb != null)
 				insertComponent(tb);
-		}
-		else if (type.equalsIgnoreCase("Multiple Choice")) {
+		} else if (type.equalsIgnoreCase("Multiple Choice")) {
 			PageMultipleChoice choice = PageMultipleChoice.create(this);
 			if (choice != null)
 				insertComponent(choice);
-		}
-		else if (type.equalsIgnoreCase("Image Question")) {
+		} else if (type.equalsIgnoreCase("Image Question")) {
 			ImageQuestion iq = ImageQuestion.create(this);
 			if (iq != null)
 				insertComponent(iq);
-		}
-		else if (type.equalsIgnoreCase("Numeric Box")) {
+		} else if (type.equalsIgnoreCase("Numeric Box")) {
 			PageNumericBox box = PageNumericBox.create(this);
 			if (box != null)
 				insertComponent(box);
-		}
-		else if (type.equalsIgnoreCase("Bar Graph")) {
+		} else if (type.equalsIgnoreCase("Bar Graph")) {
 			PageBarGraph bar = PageBarGraph.create(this);
 			if (bar != null)
 				insertComponent(bar);
-		}
-		else if (type.equalsIgnoreCase("Gauge")) {
+		} else if (type.equalsIgnoreCase("Gauge")) {
 			PageGauge gauge = PageGauge.create(this);
 			if (gauge != null)
 				insertComponent(gauge);
-		}
-		else if (type.equalsIgnoreCase("X-Y Graph")) {
+		} else if (type.equalsIgnoreCase("X-Y Graph")) {
 			PageXYGraph curve = PageXYGraph.create(this);
 			if (curve != null)
 				insertComponent(curve);
-		}
-		else if (type.equalsIgnoreCase("Bond-Breaking Barrier")) {
+		} else if (type.equalsIgnoreCase("Bond-Breaking Barrier")) {
 			PagePotentialWell well = PagePotentialWell.create(this);
 			if (well != null)
 				insertComponent(well);
-		}
-		else if (type.equalsIgnoreCase("Activation Barrier")) {
+		} else if (type.equalsIgnoreCase("Activation Barrier")) {
 			PagePotentialHill hill = PagePotentialHill.create(this);
 			if (hill != null)
 				insertComponent(hill);
-		}
-		else if (type.equalsIgnoreCase("DNA Scroller")) {
+		} else if (type.equalsIgnoreCase("DNA Scroller")) {
 			PageDNAScroller scroller = PageDNAScroller.create(this);
 			if (scroller != null)
 				insertComponent(scroller);
-		}
-		else if (type.equalsIgnoreCase("Electronic Structure")) {
+		} else if (type.equalsIgnoreCase("Electronic Structure")) {
 			PageElectronicStructureViewer es = PageElectronicStructureViewer.create(this);
 			if (es != null)
 				insertComponent(es);
-		}
-		else if (type.equalsIgnoreCase("Diffraction Device")) {
+		} else if (type.equalsIgnoreCase("Diffraction Device")) {
 			PageDiffractionInstrument di = PageDiffractionInstrument.create(this);
 			if (di != null)
 				insertComponent(di);
-		}
-		else if (type.equalsIgnoreCase("Emission and Absorption Spectrometer")) {
+		} else if (type.equalsIgnoreCase("Emission and Absorption Spectrometer")) {
 			PagePhotonSpectrometer ps = PagePhotonSpectrometer.create(this);
 			if (ps != null)
 				insertComponent(ps);
-		}
-		else if (type.equalsIgnoreCase(INSERT_JMOL)) {
+		} else if (type.equalsIgnoreCase(INSERT_JMOL)) {
 			PageMolecularViewer mv = PageMolecularViewer.create(this);
 			if (mv != null) {
 				insertComponent(mv);
 				mv.setIndex(mv.getIndex() + 1);
 			}
-		}
-		else if (type.equalsIgnoreCase("Script Console")) {
+		} else if (type.equalsIgnoreCase("Script Console")) {
 			PageScriptConsole sc = PageScriptConsole.create(this);
 			if (sc != null)
 				insertComponent(sc);
-		}
-		else if (type.equalsIgnoreCase(INSERT_MW3D)) {
+		} else if (type.equalsIgnoreCase(INSERT_MW3D)) {
 			PageMd3d md = PageMd3d.create(this);
 			if (md != null) {
 				insertComponent(md);
 				md.setIndex(md.getIndex() + 1);
 			}
-		}
-		else if (type.equalsIgnoreCase("Periodic Table")) {
+		} else if (type.equalsIgnoreCase("Periodic Table")) {
 			PagePeriodicTable pt = PagePeriodicTable.create(this);
 			if (pt != null)
 				insertComponent(pt);
-		}
-		else if (type.equalsIgnoreCase("Function Graph")) {
+		} else if (type.equalsIgnoreCase("Function Graph")) {
 			PageFunctionGraph g = PageFunctionGraph.create(this);
 			if (g != null)
 				insertComponent(g);
@@ -1450,8 +1408,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			if (asApplet && pageAddress.startsWith("file:"))
 				return new URL(pageAddress);
 			return new File(pageAddress).toURI().toURL();
-		}
-		catch (MalformedURLException e) {
+		} catch (MalformedURLException e) {
 			e.printStackTrace();
 			return null;
 		}
@@ -1474,12 +1431,10 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		if (isRemote()) {
 			try {
 				pageURI = new URI(FileUtilities.httpEncode(s));
-			}
-			catch (URISyntaxException e) {
+			} catch (URISyntaxException e) {
 				e.printStackTrace();
 			}
-		}
-		else {
+		} else {
 			pageURI = null;
 		}
 	}
@@ -1540,9 +1495,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	}
 
 	/**
-	 * return the components of the specified group. If type == "Question", PageTextField, PageTextArea,
-	 * PageMultipleChoice and ImageQuestion will be returned. If type == "Model Container", all the instances of Engine
-	 * will be returned.
+	 * return the components of the specified group. If type == "Question", PageTextField, PageTextArea, PageMultipleChoice and ImageQuestion will be returned. If type == "Model Container", all the instances of Engine will be returned.
 	 */
 	public List<Object> getComponentsOfGroup(String type) {
 		List<Object> list = new ArrayList<Object>();
@@ -1564,14 +1517,12 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 					if (type.equals("Question")) {
 						if (attr instanceof PageTextField || attr instanceof PageTextArea || attr instanceof PageMultipleChoice || attr instanceof ImageQuestion) {
 							list.add(attr);
-						}
-						else if (attr instanceof PageTextBox) {
+						} else if (attr instanceof PageTextBox) {
 							List x = ((PageTextBox) attr).getEmbeddedComponents(JTextComponent.class);
 							if (x != null)
 								list.addAll(x);
 						}
-					}
-					else if (type.equals("Model Container")) {
+					} else if (type.equals("Model Container")) {
 						if (attr instanceof Engine)
 							list.add(attr);
 					}
@@ -1617,8 +1568,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	}
 
 	/**
-	 * override this method to provide cut/copy/paste with more <code>DataFlavor</code>. The original implemention of
-	 * this method with <code>JTextComponent</code> deals only with <code>DataFlavor.stringFlavor</code>.
+	 * override this method to provide cut/copy/paste with more <code>DataFlavor</code>. The original implemention of this method with <code>JTextComponent</code> deals only with <code>DataFlavor.stringFlavor</code>.
 	 */
 	public void cut() {
 		if (!isEditable())
@@ -1640,8 +1590,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				try {
 					str = d.getText(i, j - i);
 					contents.insertString(i - start, str, e.getAttributes());
-				}
-				catch (BadLocationException ble) {
+				} catch (BadLocationException ble) {
 					ble.printStackTrace();
 				}
 			}
@@ -1652,8 +1601,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	}
 
 	/**
-	 * override this method to provide cut/copy/paste with more <code>DataFlavor</code>. The original implemention of
-	 * this method with <code>JTextComponent</code> deals only with <code>DataFlavor.stringFlavor</code>.
+	 * override this method to provide cut/copy/paste with more <code>DataFlavor</code>. The original implemention of this method with <code>JTextComponent</code> deals only with <code>DataFlavor.stringFlavor</code>.
 	 */
 	public void copy() {
 		if (getSelectedText() == null)
@@ -1673,8 +1621,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				try {
 					str = d.getText(i, j - i);
 					contents.insertString(i - start, str, e.getAttributes());
-				}
-				catch (BadLocationException ble) {
+				} catch (BadLocationException ble) {
 					ble.printStackTrace();
 				}
 			}
@@ -1691,19 +1638,14 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				String text = (String) t.getTransferData(DataFlavor.stringFlavor);
 				return text;
 			}
-		}
-		catch (UnsupportedFlavorException e) {
-		}
-		catch (IOException e) {
+		} catch (UnsupportedFlavorException e) {
+		} catch (IOException e) {
 		}
 		return null;
 	}
 
 	/**
-	 * override this method to provide cut/copy/paste with more <code>DataFlavor</code>. The original implemention of
-	 * this method with <code>JTextComponent</code> deals only with <code>DataFlavor.stringFlavor</code>. FIXME: Pasting
-	 * a component to a different page will fail, because the content of the component is destroyed when leaving a page
-	 * (in order to prevent memory leak). As a result, the content cannot be copied.
+	 * override this method to provide cut/copy/paste with more <code>DataFlavor</code>. The original implemention of this method with <code>JTextComponent</code> deals only with <code>DataFlavor.stringFlavor</code>. FIXME: Pasting a component to a different page will fail, because the content of the component is destroyed when leaving a page (in order to prevent memory leak). As a result, the content cannot be copied.
 	 */
 	public void paste() {
 		if (!isEditable())
@@ -1719,11 +1661,9 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			StyledDocument s = null;
 			try {
 				s = (StyledDocument) contents.getTransferData(StyledTextSelection.styledTextFlavor);
-			}
-			catch (UnsupportedFlavorException e) {
+			} catch (UnsupportedFlavorException e) {
 				e.printStackTrace();
-			}
-			catch (IOException e) {
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			if (s != null) {
@@ -1745,8 +1685,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 							attr = a.getAttribute(name);
 							if (attr instanceof Icon) {
 								icon = (Icon) attr;
-							}
-							else if (attr instanceof Component) {
+							} else if (attr instanceof Component) {
 								comp = (Component) attr;
 							}
 						}
@@ -1756,13 +1695,11 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 							setCaretPosition(pos + s.getLength());
 							// set the character attributes in case this image is hyperlinked
 							getStyledDocument().setCharacterAttributes(pos + m, n - m, a, true);
-						}
-						else if (comp != null) {
+						} else if (comp != null) {
 							select(pos + m, pos + m + 1);
 							pasteComponent(comp);
 							setCaretPosition(pos + s.getLength());
-						}
-						else {
+						} else {
 							getStyledDocument().setCharacterAttributes(pos + m, n - m, a, true);
 						}
 					}
@@ -1782,16 +1719,14 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 					if (!((ModelCanvas) c).isUsed()) {
 						insertComponent(c);
 					}
-				}
-				else {
+				} else {
 					EventQueue.invokeLater(new Runnable() {
 						public void run() {
 							JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(Page.this), "Sorry, currently a model container cannot be transfered to a new window.", "Model Container", JOptionPane.INFORMATION_MESSAGE);
 						}
 					});
 				}
-			}
-			else {
+			} else {
 				if (c instanceof PageMolecularViewer) {
 					new SwingWorker("Page:pasteComponent():copy molecular viewer") {
 						public Object construct() {
@@ -1812,8 +1747,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 					}.start();
 				}
 			}
-		}
-		else {
+		} else {
 			if (c instanceof AudioPlayer) {
 				insertComponent(new AudioPlayer((AudioPlayer) c, this));
 			}
@@ -1822,92 +1756,63 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			}
 			if (c instanceof PageJContainer) {
 				insertComponent(new PageJContainer((PageJContainer) c, this));
-			}
-			else if (c instanceof PageButton) {
+			} else if (c instanceof PageButton) {
 				insertComponent(new PageButton((PageButton) c, this));
-			}
-			else if (c instanceof PageCheckBox) {
+			} else if (c instanceof PageCheckBox) {
 				insertComponent(new PageCheckBox((PageCheckBox) c, this));
-			}
-			else if (c instanceof PageRadioButton) {
+			} else if (c instanceof PageRadioButton) {
 				insertComponent(new PageRadioButton((PageRadioButton) c, this));
-			}
-			else if (c instanceof PageComboBox) {
+			} else if (c instanceof PageComboBox) {
 				insertComponent(new PageComboBox((PageComboBox) c, this));
-			}
-			else if (c instanceof PageSpinner) {
+			} else if (c instanceof PageSpinner) {
 				insertComponent(new PageSpinner((PageSpinner) c, this));
-			}
-			else if (c instanceof PageSlider) {
+			} else if (c instanceof PageSlider) {
 				insertComponent(new PageSlider((PageSlider) c, this));
-			}
-			else if (c instanceof PageDNAScroller) {
+			} else if (c instanceof PageDNAScroller) {
 				insertComponent(new PageDNAScroller((PageDNAScroller) c, this));
-			}
-			else if (c instanceof PagePotentialWell) {
+			} else if (c instanceof PagePotentialWell) {
 				insertComponent(new PagePotentialWell((PagePotentialWell) c, this));
-			}
-			else if (c instanceof PagePotentialHill) {
+			} else if (c instanceof PagePotentialHill) {
 				insertComponent(new PagePotentialHill((PagePotentialHill) c, this));
-			}
-			else if (c instanceof PageNumericBox) {
+			} else if (c instanceof PageNumericBox) {
 				insertComponent(new PageNumericBox((PageNumericBox) c, this));
-			}
-			else if (c instanceof PageBarGraph) {
+			} else if (c instanceof PageBarGraph) {
 				insertComponent(new PageBarGraph((PageBarGraph) c, this));
-			}
-			else if (c instanceof PageGauge) {
+			} else if (c instanceof PageGauge) {
 				insertComponent(new PageGauge((PageGauge) c, this));
-			}
-			else if (c instanceof PageXYGraph) {
+			} else if (c instanceof PageXYGraph) {
 				insertComponent(new PageXYGraph((PageXYGraph) c, this));
-			}
-			else if (c instanceof PageElectronicStructureViewer) {
+			} else if (c instanceof PageElectronicStructureViewer) {
 				insertComponent(new PageElectronicStructureViewer((PageElectronicStructureViewer) c, this));
-			}
-			else if (c instanceof PageDiffractionInstrument) {
+			} else if (c instanceof PageDiffractionInstrument) {
 				insertComponent(new PageDiffractionInstrument((PageDiffractionInstrument) c, this));
-			}
-			else if (c instanceof PagePhotonSpectrometer) {
+			} else if (c instanceof PagePhotonSpectrometer) {
 				insertComponent(new PagePhotonSpectrometer((PagePhotonSpectrometer) c, this));
-			}
-			else if (c instanceof PageTable) {
+			} else if (c instanceof PageTable) {
 				insertComponent(new PageTable((PageTable) c, this));
-			}
-			else if (c instanceof PageTextField) {
+			} else if (c instanceof PageTextField) {
 				insertComponent(new PageTextField((PageTextField) c, this));
-			}
-			else if (c instanceof PageTextArea) {
+			} else if (c instanceof PageTextArea) {
 				insertComponent(new PageTextArea((PageTextArea) c, this));
-			}
-			else if (c instanceof PageTextBox) {
+			} else if (c instanceof PageTextBox) {
 				insertComponent(new PageTextBox((PageTextBox) c, this));
-			}
-			else if (c instanceof PageMultipleChoice) {
+			} else if (c instanceof PageMultipleChoice) {
 				insertComponent(new PageMultipleChoice((PageMultipleChoice) c, this));
-			}
-			else if (c instanceof ImageQuestion) {
+			} else if (c instanceof ImageQuestion) {
 				insertComponent(new ImageQuestion((ImageQuestion) c, this));
-			}
-			else if (c instanceof SearchTextField) {
+			} else if (c instanceof SearchTextField) {
 				insertComponent(new SearchTextField((SearchTextField) c, this));
-			}
-			else if (c instanceof ActivityButton) {
+			} else if (c instanceof ActivityButton) {
 				insertComponent(new ActivityButton((ActivityButton) c, this));
-			}
-			else if (c instanceof PageFeedbackArea) {
+			} else if (c instanceof PageFeedbackArea) {
 				insertComponent(new PageFeedbackArea((PageFeedbackArea) c, this));
-			}
-			else if (c instanceof PageScriptConsole) {
+			} else if (c instanceof PageScriptConsole) {
 				insertComponent(new PageScriptConsole((PageScriptConsole) c, this));
-			}
-			else if (c instanceof PagePeriodicTable) {
+			} else if (c instanceof PagePeriodicTable) {
 				insertComponent(new PagePeriodicTable((PagePeriodicTable) c, this));
-			}
-			else if (c instanceof PageFunctionGraph) {
+			} else if (c instanceof PageFunctionGraph) {
 				insertComponent(new PageFunctionGraph((PageFunctionGraph) c, this));
-			}
-			else if (c instanceof IconWrapper) {
+			} else if (c instanceof IconWrapper) {
 				insertComponent(IconWrapper.newInstance(((IconWrapper) c).getIcon(), this));
 			}
 		}
@@ -1921,14 +1826,11 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			ImageIcon i2 = new ImageIcon(((ImageIcon) icon).getImage());
 			i2.setDescription(((ImageIcon) icon).getDescription());
 			insertIcon(i2);
-		}
-		else if (icon instanceof LineIcon) {
+		} else if (icon instanceof LineIcon) {
 			insertIcon(new LineIcon((LineIcon) icon));
-		}
-		else {
+		} else {
 			/*
-			 * CAUTION!! This code works but it won't get saved because of the lack of information. If reaching this,
-			 * there must be an unsupported type of icon
+			 * CAUTION!! This code works but it won't get saved because of the lack of information. If reaching this, there must be an unsupported type of icon
 			 */
 			insertIcon(new Icon() {
 				public int getIconWidth() {
@@ -2015,8 +1917,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	public void insertLineBreak() {
 		try {
 			getDocument().insertString(getCaretPosition(), "\n", null);
-		}
-		catch (BadLocationException e) {
+		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
 	}
@@ -2028,8 +1929,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	public void insertString(String str, Style style) {
 		try {
 			getDocument().insertString(getCaretPosition(), str, style);
-		}
-		catch (BadLocationException e) {
+		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
 	}
@@ -2053,8 +1953,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		StyleConstants.setFontFamily(style, font.getFamily());
 		try {
 			getDocument().insertString(getCaretPosition(), str, style);
-		}
-		catch (BadLocationException e) {
+		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
 	}
@@ -2154,8 +2053,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	}
 
 	/**
-	 * store the embedded components, which is of the specified class, in a <code>TreeMap</code>, with the start offset
-	 * (<code>Integer</code>) as the key
+	 * store the embedded components, which is of the specified class, in a <code>TreeMap</code>, with the start offset (<code>Integer</code>) as the key
 	 */
 	public Map<Integer, Object> getEmbeddedComponent(Class c) {
 		if (c == null)
@@ -2277,8 +2175,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	private void createActionTable() {
 		if (actions == null) {
 			actions = new HashMap<String, Action>();
-		}
-		else {
+		} else {
 			actions.clear();
 		}
 		for (Action a : augmentActions())
@@ -2309,8 +2206,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		if (moveUp) {
 			setCaretPosition(end);
 			moveCaretPosition(begin);
-		}
-		else {
+		} else {
 			select(begin, end);
 		}
 		highlight(getSelectionStart(), getSelectionEnd());
@@ -2323,8 +2219,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			URL u = null;
 			try {
 				u = new URL(FileUtilities.getCodeBase(pageAddress) + clipName);
-			}
-			catch (MalformedURLException e) {
+			} catch (MalformedURLException e) {
 				e.printStackTrace();
 				return;
 			}
@@ -2332,13 +2227,11 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				f = ConnectionManager.sharedInstance().shouldUpdate(u);
 				if (f == null)
 					f = ConnectionManager.sharedInstance().cache(u);
-			}
-			catch (IOException e) {
+			} catch (IOException e) {
 				e.printStackTrace();
 				return;
 			}
-		}
-		else {
+		} else {
 			f = new File(FileUtilities.getCodeBase(pageAddress), clipName);
 		}
 		try {
@@ -2347,15 +2240,13 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 					midiPlayer = new MidiPlayer();
 				midiPlayer.setLoopCount(loopBackgroundSound ? -1 : 0);
 				midiPlayer.play(f);
-			}
-			else {
+			} else {
 				if (sampledAudioPlayer == null)
 					sampledAudioPlayer = new SampledAudioPlayer();
 				sampledAudioPlayer.setLoopCount(loopBackgroundSound ? Clip.LOOP_CONTINUOUSLY : 0);
 				sampledAudioPlayer.play(f);
 			}
-		}
-		catch (Throwable t) { // in case the players have unexpected errors
+		} catch (Throwable t) { // in case the players have unexpected errors
 			t.printStackTrace();
 		}
 	}
@@ -2366,15 +2257,13 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				midiPlayer.stop();
 			if (sampledAudioPlayer != null)
 				sampledAudioPlayer.stop();
-		}
-		catch (Throwable t) { // in case the players have unexpected errors
+		} catch (Throwable t) { // in case the players have unexpected errors
 			t.printStackTrace();
 		}
 	}
 
 	/*
-	 * Hack to stop embedded animated GIFs. Note that animated GIFs embedded in a TextBox are automatically stopped when
-	 * the text box is destroyed. So there is no need to call this method from within it.
+	 * Hack to stop embedded animated GIFs. Note that animated GIFs embedded in a TextBox are automatically stopped when the text box is destroyed. So there is no need to call this method from within it.
 	 */
 	private void stopImageAnimators() {
 		synchronized (lock) {
@@ -2400,8 +2289,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	}
 
 	/**
-	 * this method clears the current content. It also removes listeners and release dependencies of embedded components
-	 * on live objects to prevent memory leak.
+	 * this method clears the current content. It also removes listeners and release dependencies of embedded components on live objects to prevent memory leak.
 	 */
 	protected void clearAllContent() {
 		if (getDocument().getLength() <= 0)
@@ -2419,8 +2307,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			for (Embeddable embed : list) {
 				if (embed instanceof Engine) {
 					InstancePool.sharedInstance().setStatus(embed, false);
-				}
-				else {
+				} else {
 					embed.destroy();
 				}
 			}
@@ -2429,8 +2316,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		getDocument().removeDocumentListener(editResponder);
 		try {
 			getDocument().remove(0, getDocument().getLength());
-		}
-		catch (BadLocationException e) {
+		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
 		getDocument().addDocumentListener(editResponder);
@@ -2472,8 +2358,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				hilite.addHighlight(pos, pos + pattern.length(), myHighlightPainter);
 				pos += pattern.length();
 			}
-		}
-		catch (BadLocationException e) {
+		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
 	}
@@ -2483,8 +2368,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		removeHighlights();
 		try {
 			getHighlighter().addHighlight(start, end, myHighlightPainter);
-		}
-		catch (BadLocationException e) {
+		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
 	}
@@ -2501,9 +2385,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	}
 
 	/**
-	 * This method is used to re-layout components on this page. It should be called if the user imports a model that
-	 * has a different size than that of the current container. In this case, calling this method will result in an
-	 * automatical expansion or collapsing of the model components in the textual environment.
+	 * This method is used to re-layout components on this page. It should be called if the user imports a model that has a different size than that of the current container. In this case, calling this method will result in an automatical expansion or collapsing of the model components in the textual environment.
 	 */
 	public void settleComponentSize() {
 		// notifyPageListeners(new PageEvent(this, PageEvent.STORE_VIEW_POSITION));
@@ -2520,8 +2402,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	}
 
 	/**
-	 * <code>clearAllContent()</code> MUST be called in prior to this method to empty the document tree first. It cannot
-	 * be put into the same thread, for it may cause deadlock.
+	 * <code>clearAllContent()</code> MUST be called in prior to this method to empty the document tree first. It cannot be put into the same thread, for it may cause deadlock.
 	 */
 	private void readPage(final String uri) {
 		synchronized (lock) {
@@ -2530,13 +2411,11 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				if (runOnCD) {
 					if (saveReminder != null)
 						saveReminder.setEnabled(false);
-				}
-				else {
+				} else {
 					if (saveReminder != null)
 						saveReminder.setEnabled(uri.indexOf(TMPZIP) == -1);
 				}
-			}
-			else {
+			} else {
 				if (runOnCD) {
 					EventQueue.invokeLater(new Runnable() {
 						public void run() {
@@ -2558,16 +2437,14 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			});
 			try {
 				loadPage(uri);
-			}
-			catch (final Exception e) {
+			} catch (final Exception e) {
 				e.printStackTrace();
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						showErrorMessage(e);
 					}
 				});
-			}
-			finally {
+			} finally {
 				if (saveReminder != null)
 					saveReminder.setChanged(false);
 			}
@@ -2582,16 +2459,14 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			for (int i = 0, n = m.getStrings().length; i < n; i++) {
 				try {
 					doc.insertString(doc.getLength(), m.getStrings()[i], m.getStyles()[i]);
-				}
-				catch (BadLocationException ble) {
+				} catch (BadLocationException ble) {
 					ble.printStackTrace();
 				}
 				SimpleAttributeSet sas = new SimpleAttributeSet();
 				sas.addAttribute(StyleConstants.Alignment, new Integer(StyleConstants.ALIGN_LEFT));
 				doc.setParagraphAttributes(doc.getLength() - 1, 1, sas, false);
 			}
-		}
-		else {
+		} else {
 			StackTraceElement[] ste = e.getStackTrace();
 			StringBuffer sb = new StringBuffer("Error message:\n\n");
 			for (int i = 0; i < ste.length; i++)
@@ -2650,8 +2525,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 						renderHTMLContent(uri.replaceAll(";", "&"), false);
 					}
 				});
-			}
-			else {
+			} else {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						renderHTMLContent(uri, true);
@@ -2675,8 +2549,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			boolean loadSuccess = false;
 			if (FileUtilities.isRemote(uri) && uriLC.endsWith(".cml")) {
 				loadSuccess = decoder.read(FileUtilities.httpEncode(uri));
-			}
-			else {
+			} else {
 				loadSuccess = decoder.read(uri);
 			}
 			if (loadSuccess) {
@@ -2709,8 +2582,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 						notifyPageListeners(new PageEvent(Page.this, PageEvent.PAGE_READ_END));
 					}
 				});
-			}
-			else {
+			} else {
 				System.err.println("XML decoder failed......");
 			}
 		}
@@ -2721,8 +2593,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				public void run() {
 					try {
 						readPlainTextFile(uri);
-					}
-					catch (IOException e) {
+					} catch (IOException e) {
 						e.printStackTrace();
 					}
 				}
@@ -2809,13 +2680,11 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				mc.getMdContainer().setLoading(true);
 				if (!FileUtilities.isRemote(uri)) {
 					model.input(new File(uri));
-				}
-				else {
+				} else {
 					URL u = null;
 					try {
 						u = new URL(FileUtilities.httpEncode(uri));
-					}
-					catch (MalformedURLException mue) {
+					} catch (MalformedURLException mue) {
 						mue.printStackTrace();
 					}
 					if (u != null)
@@ -2888,14 +2757,12 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			URL u = null;
 			try {
 				u = new URL(FileUtilities.httpEncode(uri));
-			}
-			catch (MalformedURLException ex) {
+			} catch (MalformedURLException ex) {
 				ex.printStackTrace();
 				return false;
 			}
 			insertIcon(new ImageIcon(u));
-		}
-		else {
+		} else {
 			insertIcon(new ImageIcon(uri));
 		}
 		EventQueue.invokeLater(new Runnable() {
@@ -2917,8 +2784,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			URL u = null;
 			try {
 				u = new URL(FileUtilities.httpEncode(uri));
-			}
-			catch (MalformedURLException ex) {
+			} catch (MalformedURLException ex) {
 				ex.printStackTrace();
 				return false;
 			}
@@ -2927,16 +2793,13 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				return false;
 			try {
 				reader = new InputStreamReader(conn.getInputStream());
-			}
-			catch (IOException e) {
+			} catch (IOException e) {
 				throw new IOException(e.getMessage());
 			}
-		}
-		else {
+		} else {
 			try {
 				reader = new FileReader(new File(uri));
-			}
-			catch (IOException e) {
+			} catch (IOException e) {
 				throw new IOException(e.getMessage());
 			}
 		}
@@ -2953,16 +2816,13 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				getDocument().insertString(cpos, new String(c, 0, n), null);
 				cpos += n;
 			}
-		}
-		catch (BadLocationException e) {
+		} catch (BadLocationException e) {
 			e.printStackTrace();
 			success = false;
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			success = false;
 			throw new IOException(e.getMessage()); // rethrow
-		}
-		finally {
+		} finally {
 			reader.close();
 		}
 		EventQueue.invokeLater(new Runnable() {
@@ -2978,9 +2838,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	}
 
 	/*
-	 * reset the attributes of the paragraph specified by the position to the default values. Removing all the character
-	 * elements does not automatically reset the paragraph's attributes. This method should be called to attend to that
-	 * effect whenever a new page is loaded.
+	 * reset the attributes of the paragraph specified by the position to the default values. Removing all the character elements does not automatically reset the paragraph's attributes. This method should be called to attend to that effect whenever a new page is loaded.
 	 */
 	private void resetToDefaultParagraphAttributes(int position) {
 		StyledDocument doc = getStyledDocument();
@@ -3023,19 +2881,16 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				if (FileFilterFactory.getFilter("html").accept(file)) {
 					JOptionPane.showMessageDialog(frame, "Some HTML content may not be converted.", "Import HTML File", JOptionPane.INFORMATION_MESSAGE);
 					HTMLConverter.insertHTMLFile(getStyledDocument(), getCaretPosition(), file);
-				}
-				else if (FileFilterFactory.getFilter("txt").accept(file)) {
+				} else if (FileFilterFactory.getFilter("txt").accept(file)) {
 					try {
 						readPlainTextFile(file.getAbsolutePath());
-					}
-					catch (IOException e) {
+					} catch (IOException e) {
 						e.printStackTrace();
 					}
 				}
 				fileChooser.rememberPath(dir.toString());
 				success = true;
-			}
-			else {
+			} else {
 				JOptionPane.showMessageDialog(frame, file + " does not exist.", "File does not exist", JOptionPane.ERROR_MESSAGE);
 				fileChooser.resetChoosableFileFilters();
 				return false;
@@ -3072,15 +2927,13 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			if (file.exists()) {
 				if (navigator != null) {
 					navigator.visitLocation(file.getAbsolutePath());
-				}
-				else {
+				} else {
 					visit(file.getAbsolutePath());
 				}
 				fileChooser.rememberPath(fileChooser.getCurrentDirectory().toString());
 				fileChooser.rememberFile(file.getAbsolutePath(), recentFilesMenu);
 				success = true;
-			}
-			else {
+			} else {
 				JOptionPane.showMessageDialog(frame, file + " does not exist.\n" + "If you meant to create a new file, please use the <New> menu or button, then save it.", "File does not exist", JOptionPane.ERROR_MESSAGE);
 				fileChooser.resetChoosableFileFilters();
 				return false;
@@ -3110,8 +2963,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 						m.putProperty("url", FileUtilities.changeExtension(file.toString(), ext, incr_mml));
 						m.putProperty("filename", FileUtilities.changeExtension(FileUtilities.getFileName(file.toString()), ext, incr_mml));
 						incr_mml++;
-					}
-					else if (m instanceof MesoModel) {
+					} else if (m instanceof MesoModel) {
 						m.putProperty("old url", m.getProperty("url"));
 						ext = "gbl";
 						m.putProperty("url", FileUtilities.changeExtension(file.toString(), ext, incr_gbl));
@@ -3148,9 +3000,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	}
 
 	/*
-	 * this method MUST be called by a <code>SwingWorker</code>'s <code>construct()</code> method. Depending on the
-	 * situation, call <code>SwingWorker.finished()</code> method to decide on what to do immediately following the save
-	 * action. This method should NOT be directly used by another class other than a subclass of this class.
+	 * this method MUST be called by a <code>SwingWorker</code>'s <code>construct()</code> method. Depending on the situation, call <code>SwingWorker.finished()</code> method to decide on what to do immediately following the save action. This method should NOT be directly used by another class other than a subclass of this class.
 	 */
 	private void saveTo(File file) {
 		if (file == null)
@@ -3164,21 +3014,18 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				encoder.write(file);
 				setAddress(file.toString());
 				setTitle(getTitle());
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(Page.this), "The content on this page contains errors that\n" + "cannot be saved. Please correct them, and try\n" + "again.", "Output data error", JOptionPane.ERROR_MESSAGE);
 					}
 				});
 				e.printStackTrace();
-			}
-			finally {
+			} finally {
 				isWriting = false;
 				((AbstractDocument) getDocument()).readUnlock();
 			}
-		}
-		else if (s.endsWith(".mml") || s.endsWith(".gbl")) {
+		} else if (s.endsWith(".mml") || s.endsWith(".gbl")) {
 			Object o = getEmbeddedComponent(ModelCanvas.class, 0);
 			if (o instanceof ModelCanvas) {
 				ModelCanvas mc = (ModelCanvas) o;
@@ -3186,15 +3033,13 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				model.output(file);
 				properties.put(mc, mc.getURL());
 			}
-		}
-		else if (s.endsWith(".txt") || s.endsWith(".mws")) {
+		} else if (s.endsWith(".txt") || s.endsWith(".mws")) {
 			if (plainTextWriter == null) {
 				plainTextWriter = new PlainTextWriter(this);
 				plainTextWriter.setProgressBar(encoder.getProgressBar());
 			}
 			plainTextWriter.write(file);
-		}
-		else if (s.endsWith(".gif") || s.endsWith(".jpg") || s.endsWith(".png") || s.endsWith(".jpeg") || s.endsWith(".pdb") || s.endsWith(".xyz")) {
+		} else if (s.endsWith(".gif") || s.endsWith(".jpg") || s.endsWith(".png") || s.endsWith(".jpeg") || s.endsWith(".pdb") || s.endsWith(".xyz")) {
 			if (!pageAddress.equalsIgnoreCase(s))
 				ModelerUtilities.copyResource(pageAddress, file);
 		}
@@ -3235,8 +3080,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	}
 
 	/**
-	 * save the current page and signify that the specified window should be closed shortly. This method should be
-	 * called when shutting down or closing window.
+	 * save the current page and signify that the specified window should be closed shortly. This method should be called when shutting down or closing window.
 	 */
 	public void saveAndClose(final Window win) {
 		final File file = new File(pageAddress);
@@ -3260,8 +3104,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 					}
 				}.start();
 			}
-		}
-		else {
+		} else {
 			fileChooser.setAcceptAllFileFilterUsed(false);
 			fileChooser.addChoosableFileFilter(FileFilterFactory.getFilter("cml"));
 			fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
@@ -3349,8 +3192,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 							}
 						}.start();
 					}
-				}
-				else {
+				} else {
 					System.out.println("busy writing " + pageAddress);
 				}
 				return true;
@@ -3362,8 +3204,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		if (filter != null) {
 			fileChooser.setAcceptAllFileFilterUsed(false);
 			fileChooser.addChoosableFileFilter(filter);
-		}
-		else {
+		} else {
 			fileChooser.setAcceptAllFileFilterUsed(true);
 		}
 		fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
@@ -3377,23 +3218,19 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		if (isRemote()) {
 			try {
 				fileChooser.setSelectedFile(new File(fileChooser.getCurrentDirectory(), FileUtilities.getFileName(pageAddress)));
-			}
-			catch (NullPointerException npe) {
+			} catch (NullPointerException npe) {
 				npe.printStackTrace();
 				fileChooser.resetTextField();
 			}
-		}
-		else {
+		} else {
 			try {
 				File f2 = new File(fileChooser.getCurrentDirectory(), FileUtilities.getFileName(pageAddress));
 				if (f2.exists()) {
 					fileChooser.setSelectedFile(new File(fileChooser.getCurrentDirectory(), "Copy of " + FileUtilities.getFileName(pageAddress)));
-				}
-				else {
+				} else {
 					fileChooser.setSelectedFile(f2);
 				}
-			}
-			catch (NullPointerException npe) {
+			} catch (NullPointerException npe) {
 				npe.printStackTrace();
 				fileChooser.resetTextField();
 			}
@@ -3514,24 +3351,20 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				zipOut.flush();
 			}
 			zipOut.finish(); // necessary?
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 			b = false;
-		}
-		finally {
+		} finally {
 			if (in != null) { // just in case the last input stream is not closed
 				try {
 					in.close();
-				}
-				catch (IOException e) {
+				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
 			try {
 				zipOut.close();
-			}
-			catch (IOException e) {
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			FileUtilities.deleteAllFiles(zipDir);
@@ -3559,8 +3392,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		fileChooser.setAccessory(null);
 		try {
 			fileChooser.setSelectedFile(new File(fileChooser.getCurrentDirectory(), FileUtilities.changeExtension(FileUtilities.getFileName(pageAddress), "zip")));
-		}
-		catch (NullPointerException e) {
+		} catch (NullPointerException e) {
 			e.printStackTrace();
 			fileChooser.resetTextField();
 		}
@@ -3587,13 +3419,10 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			ZipOutputStream zipOut = null;
 			try {
 				/*
-				 * NOTE!!! "append" does not seem to work: while the new zip entries can be successfully added, the old
-				 * ones become invisible and unrestorable by ZIP, though they still count for the zip file's size. This
-				 * is believed to caused by the fact that Java's zip implementation is not random-access.
+				 * NOTE!!! "append" does not seem to work: while the new zip entries can be successfully added, the old ones become invisible and unrestorable by ZIP, though they still count for the zip file's size. This is believed to caused by the fact that Java's zip implementation is not random-access.
 				 */
 				zipOut = new ZipOutputStream(new FileOutputStream(file, false));
-			}
-			catch (IOException e) {
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 
@@ -3638,19 +3467,16 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			String address = FileUtilities.httpEncode(FileUtilities.getCodeBase(getAddress()));
 			try {
 				url = new URL(new URL(address), fileName);
-			}
-			catch (MalformedURLException e) {
+			} catch (MalformedURLException e) {
 				e.printStackTrace();
 				if (asApplet) {
 					try {
 						url = new File(address, fileName).toURI().toURL();
-					}
-					catch (MalformedURLException e1) {
+					} catch (MalformedURLException e1) {
 						e1.printStackTrace();
 						urlIsCorrect = false;
 					}
-				}
-				else {
+				} else {
 					urlIsCorrect = false;
 				}
 			}
@@ -3658,18 +3484,15 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				icon = ConnectionManager.sharedInstance().loadImage(url);
 				if (icon == null) {
 					icon = BulletIcon.ImageNotFoundIcon.sharedInstance();
-				}
-				else {
+				} else {
 					if (icon.getIconWidth() <= 0 || icon.getIconHeight() <= 0) {
 						icon = BulletIcon.ImageNotFoundIcon.sharedInstance();
 					}
 				}
-			}
-			else {
+			} else {
 				icon = BulletIcon.ImageNotFoundIcon.sharedInstance();
 			}
-		}
-		else {
+		} else {
 			String fileName = FileUtilities.getFileName(path);
 			icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(FileUtilities.getCodeBase(getAddress()) + fileName));
 			((ImageIcon) icon).setDescription(fileName);
@@ -3685,19 +3508,16 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		if (fillMode == FillMode.getNoFillMode()) {
 			setBackground(Color.white);
 			setBackgroundImage(null);
-		}
-		else if (fillMode instanceof FillMode.ColorFill) {
+		} else if (fillMode instanceof FillMode.ColorFill) {
 			setBackground(((FillMode.ColorFill) fillMode).getColor());
 			setBackgroundImage(null);
-		}
-		else if (fillMode instanceof FillMode.ImageFill) {
+		} else if (fillMode instanceof FillMode.ImageFill) {
 			String s = ((FillMode.ImageFill) fillMode).getURL();
 			if (FileUtilities.isRemote(s)) {
 				URL url = null;
 				try {
 					url = new URL(s);
-				}
-				catch (MalformedURLException e) {
+				} catch (MalformedURLException e) {
 					setBackgroundImage(null);
 					repaint();
 					return;
@@ -3705,16 +3525,13 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				ImageIcon icon = ConnectionManager.sharedInstance().loadImage(url);
 				if (icon != null && icon.getIconWidth() > 0 && icon.getIconHeight() > 0) {
 					setBackgroundImage(icon);
-				}
-				else {
+				} else {
 					setBackgroundImage(null);
 				}
-			}
-			else {
+			} else {
 				setBackgroundImage(new ImageIcon(Toolkit.getDefaultToolkit().createImage(s), s));
 			}
-		}
-		else {
+		} else {
 			setBackgroundImage(null);
 		}
 		repaint();
@@ -3748,8 +3565,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		if (fillMode instanceof FillMode.GradientFill) {
 			FillMode.GradientFill gfm = (FillMode.GradientFill) fillMode;
 			GradientFactory.paintRect((Graphics2D) g, gfm.getStyle(), gfm.getVariant(), gfm.getColor1(), gfm.getColor2(), 0, 0, getWidth(), getHeight());
-		}
-		else if (fillMode instanceof FillMode.PatternFill) {
+		} else if (fillMode instanceof FillMode.PatternFill) {
 			Graphics2D g2 = (Graphics2D) g;
 			g2.setPaint(((FillMode.PatternFill) fillMode).getPaint());
 			g2.fillRect(0, 0, getWidth(), getHeight());
@@ -3762,7 +3578,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			int y = getHeight() - 30;
 			g.setColor(new Color(0x227722));
 			g.drawString(s, x, y);
-			s = "http://mw.concord.org";
+			s = getHomepage();
 			x = getWidth() - g.getFontMetrics().stringWidth(s) - 10;
 			y = getHeight() - 15;
 			g.setColor(new Color(0x227722));
@@ -3805,8 +3621,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 					setReading(false);
 					if (!rememberViewPosition) {
 						rememberViewPosition = true;
-					}
-					else {
+					} else {
 						notifyPageListeners(new PageEvent(Page.this, PageEvent.RESTORE_VIEW_POSITION));
 					}
 					if (loadCallbacks != null) {
@@ -3824,8 +3639,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 						synchronized (lock) {
 							try {
 								lock.wait();
-							}
-							catch (InterruptedException e) {
+							} catch (InterruptedException e) {
 								// e.printStackTrace();
 								break;
 							}
@@ -3888,8 +3702,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	}
 
 	/**
-	 * This is used to open a hyperlink, instead of calling <code>visit()</code>. Calling this method will push the
-	 * current URL addresss into the stacks of the <code>Navigator</code> registered with this <code>Page</code>.
+	 * This is used to open a hyperlink, instead of calling <code>visit()</code>. Calling this method will push the current URL addresss into the stacks of the <code>Navigator</code> registered with this <code>Page</code>.
 	 */
 	public void openHyperlink(URL url) {
 		if (url == null)
@@ -3905,8 +3718,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		rememberViewPosition = false;
 		if (asApplet && href.startsWith("file:")) {
 			processHyperlink(href);
-		}
-		else {
+		} else {
 			processHyperlink(resolvePath(href));
 		}
 	}
@@ -3948,62 +3760,47 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		href = fixLink(href.trim());
 		if (SCRIPT_PATTERN.matcher(href).find()) {
 			executeScripts(href);
-		}
-		else {
+		} else {
 			boolean valid = true;
 			final String s = href.toLowerCase();
 			boolean mwClient = s.indexOf("client=mw") != -1 || (s.startsWith(Modeler.getContextRoot()) && s.endsWith(".jsp"));
 			if (mwClient || s.endsWith(".cml") || s.endsWith(".mml") || s.endsWith(".gbl") || s.endsWith(".gif") || s.endsWith(".png") || s.endsWith(".jpg") || s.endsWith(".jpeg") || s.endsWith(".txt") || s.endsWith(".pdb") || s.endsWith(".xyz") || s.endsWith(".mws") || s.indexOf("/cgi-bin/htsearch?") != -1) {
 				if (targetIsBlank) {
 					notifyPageListeners(new PageEvent(this, PageEvent.OPEN_NEW_WINDOW, href, linkParam));
-				}
-				else {
+				} else {
 					if (navigator != null) { // if there is a navigator, the address will be pushed into a stack
 						navigator.visitLocation(href);
-					}
-					else {
+					} else {
 						visit(href);
 					}
 				}
-			}
-			else if (s.endsWith(".zip")) {
+			} else if (s.endsWith(".zip")) {
 				// navigator.visitLocation(href);
 				// FIXME: can we not put the address into the navigator's stack?
 				visit(href);
-			}
-			else if (s.endsWith(".htm") || s.endsWith(".html")) {
+			} else if (s.endsWith(".htm") || s.endsWith(".html")) {
 				ExternalClient.open(ExternalClient.HTML_CLIENT, href, Page.this);
-			}
-			else if (s.endsWith(".pdf")) {
+			} else if (s.endsWith(".pdf")) {
 				ExternalClient.open(ExternalClient.PDF_CLIENT, href, Page.this);
-			}
-			else if (s.endsWith(".swf")) {
+			} else if (s.endsWith(".swf")) {
 				ExternalClient.open(ExternalClient.FLASH_CLIENT, href, Page.this);
-			}
-			else if (s.endsWith(".rm") || s.endsWith(".ram") || s.endsWith(".avi")) {
+			} else if (s.endsWith(".rm") || s.endsWith(".ram") || s.endsWith(".avi")) {
 				ExternalClient.open(ExternalClient.REALPLAYER_CLIENT, href, Page.this);
-			}
-			else if (s.endsWith(".qt") || s.endsWith(".mov")) {
+			} else if (s.endsWith(".qt") || s.endsWith(".mov")) {
 				ExternalClient.open(ExternalClient.QUICKTIME_CLIENT, href, Page.this);
-			}
-			else if (s.endsWith(".mpg") || s.endsWith(".mpeg") || s.endsWith(".mp3")) {
+			} else if (s.endsWith(".mpg") || s.endsWith(".mpeg") || s.endsWith(".mp3")) {
 				if (OS.startsWith("Mac")) {
 					ExternalClient.open(ExternalClient.QUICKTIME_CLIENT, href, Page.this);
-				}
-				else {
+				} else {
 					ExternalClient.open(ExternalClient.REALPLAYER_CLIENT, href, Page.this);
 				}
-			}
-			else if (s.endsWith(".jnlp")) {
+			} else if (s.endsWith(".jnlp")) {
 				ExternalClient.open(ExternalClient.JNLP_CLIENT, href, Page.this);
-			}
-			else if (FileUtilities.isRemote(href)) {
+			} else if (FileUtilities.isRemote(href)) {
 				ExternalClient.open(ExternalClient.HTML_CLIENT, href, Page.this);
-			}
-			else if (s.startsWith("mailto:") && href.indexOf("@") != -1) {
+			} else if (s.startsWith("mailto:") && href.indexOf("@") != -1) {
 				ExternalClient.open(ExternalClient.EMAIL_CLIENT, href.substring(href.indexOf(":") + 1, href.length()), Page.this);
-			}
-			else {
+			} else {
 				valid = false;
 				final String s0 = href;
 				EventQueue.invokeLater(new Runnable() {
@@ -4026,14 +3823,12 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				int n = -1;
 				try {
 					n = Integer.valueOf(token[1].trim()).intValue();
-				}
-				catch (NumberFormatException e) {
+				} catch (NumberFormatException e) {
 				}
 				Object o = null;
 				if (n > 0) { // use index
 					o = getEmbeddedComponent(klass, n - 1);
-				}
-				else { // try UID
+				} else { // try UID
 					o = getEmbeddedComponent(token[1].trim());
 				}
 				if (o instanceof Scriptable)
@@ -4049,14 +3844,12 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		int n = -1;
 		try {
 			n = Integer.valueOf(token[1].trim()).intValue();
-		}
-		catch (NumberFormatException e) {
+		} catch (NumberFormatException e) {
 		}
 		Object o = null;
 		if (n > 0) { // use index
 			o = getEmbeddedComponent(klass, n - 1);
-		}
-		else { // try UID
+		} else { // try UID
 			o = getEmbeddedComponent(token[1].trim());
 		}
 		if (o instanceof NativelyScriptable) {
@@ -4090,8 +3883,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	private void executeScripts(String type, String script) {
 		if (type.startsWith("script")) {
 			executeMwScripts(script);
-		}
-		else if (type.startsWith("nativescript")) {
+		} else if (type.startsWith("nativescript")) {
 			executeNativeScripts(script);
 		}
 	}
@@ -4138,8 +3930,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 					int n = 0;
 					try {
 						n = Integer.valueOf(token[1].trim());
-					}
-					catch (NumberFormatException nfe) {
+					} catch (NumberFormatException nfe) {
 						nfe.printStackTrace();
 						n = 0;
 						System.out.println(n);
@@ -4195,8 +3986,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			if (navigator != null) {
 				if (pageAddress.equals("Untitled.cml")) {
 					navigator.storeLocation(UNKNOWN_LOCATION);
-				}
-				else {
+				} else {
 					navigator.storeLocation(pageAddress);
 				}
 			}
@@ -4225,8 +4015,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 					saveCheck(address);
 				}
 			});
-		}
-		else {
+		} else {
 			System.err.println("Attempt to read before last input completes");
 		}
 	}
@@ -4241,9 +4030,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	}
 
 	/**
-	 * Warning: This method works only when an image containing a map of hyperlinks is clicked. In all other cases,
-	 * <code>HyperlinkEvent</code>s are processed in <code>hotlinkUpdate</code>. This is a workaround for solving the
-	 * image map problem.
+	 * Warning: This method works only when an image containing a map of hyperlinks is clicked. In all other cases, <code>HyperlinkEvent</code>s are processed in <code>hotlinkUpdate</code>. This is a workaround for solving the image map problem.
 	 * 
 	 * @see org.concord.modeler.event.HotlinkListener
 	 */
@@ -4262,13 +4049,11 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				linkParam.reset();
 			String url = e.getURL() != null ? e.getURL().toString() : desc;
 			openHyperlink(ensureLocation(url));
-		}
-		else if (eventType == HyperlinkEvent.EventType.ENTERED) {
+		} else if (eventType == HyperlinkEvent.EventType.ENTERED) {
 			reassureDocumentBase(e.getSource());
 			if (urlDisplay != null)
 				urlDisplay.setText(e.getURL() == null ? desc : e.getURL().toString());
-		}
-		else if (eventType == HyperlinkEvent.EventType.EXITED) {
+		} else if (eventType == HyperlinkEvent.EventType.EXITED) {
 			if (urlDisplay != null)
 				urlDisplay.setText(null);
 		}
@@ -4306,18 +4091,15 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				if (desc != null && desc.startsWith("?client=mw"))
 					desc = Modeler.getContextRoot() + desc;
 				url = desc;
-			}
-			else {
+			} else {
 				url = e.getURL().toString();
 			}
 			openHyperlink(ensureLocation(url));
-		}
-		else if (eventType == HyperlinkEvent.EventType.ENTERED) {
+		} else if (eventType == HyperlinkEvent.EventType.ENTERED) {
 			reassureDocumentBase(e.getSource());
 			if (urlDisplay != null)
 				urlDisplay.setText(e.getURL() == null ? desc : e.getURL().toString());
-		}
-		else if (eventType == HyperlinkEvent.EventType.EXITED) {
+		} else if (eventType == HyperlinkEvent.EventType.EXITED) {
 			if (urlDisplay != null)
 				urlDisplay.setText(null);
 		}
@@ -4350,8 +4132,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	public void imageImported(ImageEvent e) {
 		if (isEditable()) {
 			insertWrappedIcon(new ImageIcon(e.getImage(), e.getPath()));
-		}
-		else {
+		} else {
 			JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(Page.this), "This document is not editable. Make it editable first.", "Document not editable", JOptionPane.ERROR_MESSAGE);
 		}
 	}
@@ -4359,8 +4140,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	private void insertWrappedIcon(Icon icon) {
 		if (wrapIconWithComponent(icon)) {
 			insertComponent(new IconWrapper(icon, this));
-		}
-		else {
+		} else {
 			insertIcon(icon);
 		}
 	}
@@ -4415,8 +4195,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				setCaretPosition(viewToModel(p));
 				linkPopupMenu.setName(link);
 				linkPopupMenu.show(this, p.x, p.y);
-			}
-			else {
+			} else {
 				Icon image = isIcon(p);
 				if (image instanceof ImageIcon) {
 					imagePopupMenu.setImage((ImageIcon) image);
@@ -4424,12 +4203,10 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 					imagePopupMenu.putClientProperty("image", null);
 					imagePopupMenu.setImage((ImageIcon) image);
 					imagePopupMenu.show(this, p.x, p.y);
-				}
-				else if (image instanceof LineIcon) {
+				} else if (image instanceof LineIcon) {
 					colorBarPopupMenu.setColorBar((LineIcon) image);
 					colorBarPopupMenu.show(this, p.x, p.y);
-				}
-				else {
+				} else {
 					if (!containedInEmbeddedComponent(p)) {
 						popupMenu.show(this, p.x, p.y);
 					}
@@ -4475,8 +4252,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		};
 		if (EventQueue.isDispatchThread()) {
 			r.run();
-		}
-		else {
+		} else {
 			EventQueue.invokeLater(r);
 		}
 	}
@@ -4527,8 +4303,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		if (OS.startsWith("Windows")) {
 			if (s.charAt(1) == ':')
 				return s;
-		}
-		else {
+		} else {
 			if (s.charAt(0) == '/')
 				return s;
 		}
@@ -4611,8 +4386,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	}
 
 	/**
-	 * Detect whether the specified point is on an embedded icon. NOTE: The default Java implementation for this does
-	 * not divide properly the space between an icon and character.
+	 * Detect whether the specified point is on an embedded icon. NOTE: The default Java implementation for this does not divide properly the space between an icon and character.
 	 */
 	protected Icon isIcon(Point p) {
 		Icon image = null;
@@ -4629,8 +4403,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 						Rectangle rect = null;
 						try {
 							rect = modelToView(pos - 1);
-						}
-						catch (BadLocationException e) {
+						} catch (BadLocationException e) {
 							e.printStackTrace();
 						}
 						if (rect != null) {
@@ -4641,16 +4414,14 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 						}
 					}
 				}
-			}
-			else {
+			} else {
 				// detect if the previous element is also an icon
 				Icon icon = getIcon(pos - 1);
 				if (icon != null) {
 					Rectangle rect = null;
 					try {
 						rect = modelToView(pos - 1);
-					}
-					catch (BadLocationException e) {
+					} catch (BadLocationException e) {
 						e.printStackTrace();
 					}
 					// detect if the click point falls in the previous icon. If so, return the previous icon.
@@ -4670,127 +4441,104 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 
 		if (linkParam == null)
 			linkParam = new HyperlinkParameter();
-		else linkParam.reset();
+		else
+			linkParam.reset();
 		if (a == null)
 			return;
 
 		Object o = a.getAttribute(HyperlinkParameter.ATTRIBUTE_RESIZABLE);
 		if (o instanceof Boolean) {
 			linkParam.setResizable(((Boolean) o).booleanValue());
-		}
-		else if (o instanceof String) {
+		} else if (o instanceof String) {
 			try {
 				linkParam.setResizable(Boolean.valueOf((String) o));
+			} catch (Exception e) {
 			}
-			catch (Exception e) {
-			}
-		}
-		else {
+		} else {
 			linkParam.setResizable(true);
 		}
 
 		o = a.getAttribute(HyperlinkParameter.ATTRIBUTE_TOOLBAR);
 		if (o instanceof Boolean) {
 			linkParam.setToolbar(((Boolean) o).booleanValue());
-		}
-		else if (o instanceof String) {
+		} else if (o instanceof String) {
 			try {
 				linkParam.setToolbar(Boolean.valueOf((String) o));
+			} catch (Exception e) {
 			}
-			catch (Exception e) {
-			}
-		}
-		else {
+		} else {
 			linkParam.setToolbar(true);
 		}
 
 		o = a.getAttribute(HyperlinkParameter.ATTRIBUTE_MENUBAR);
 		if (o instanceof Boolean) {
 			linkParam.setMenubar(((Boolean) o).booleanValue());
-		}
-		else if (o instanceof String) {
+		} else if (o instanceof String) {
 			try {
 				linkParam.setMenubar(Boolean.valueOf((String) o));
+			} catch (Exception e) {
 			}
-			catch (Exception e) {
-			}
-		}
-		else {
+		} else {
 			linkParam.setMenubar(true);
 		}
 
 		o = a.getAttribute(HyperlinkParameter.ATTRIBUTE_STATUSBAR);
 		if (o instanceof Boolean) {
 			linkParam.setStatusbar(((Boolean) o).booleanValue());
-		}
-		else if (o instanceof String) {
+		} else if (o instanceof String) {
 			try {
 				linkParam.setStatusbar(Boolean.valueOf((String) o));
+			} catch (Exception e) {
 			}
-			catch (Exception e) {
-			}
-		}
-		else {
+		} else {
 			linkParam.setStatusbar(true);
 		}
 
 		o = a.getAttribute(HyperlinkParameter.ATTRIBUTE_LEFT);
 		if (o instanceof Integer) {
 			linkParam.setLeft(((Integer) o).intValue());
-		}
-		else if (o instanceof String) {
+		} else if (o instanceof String) {
 			try {
 				linkParam.setLeft(Integer.valueOf((String) o));
+			} catch (Exception e) {
 			}
-			catch (Exception e) {
-			}
-		}
-		else {
+		} else {
 			linkParam.setLeft(0);
 		}
 
 		o = a.getAttribute(HyperlinkParameter.ATTRIBUTE_TOP);
 		if (o instanceof Integer) {
 			linkParam.setTop(((Integer) o).intValue());
-		}
-		else if (o instanceof String) {
+		} else if (o instanceof String) {
 			try {
 				linkParam.setTop(Integer.valueOf((String) o));
+			} catch (Exception e) {
 			}
-			catch (Exception e) {
-			}
-		}
-		else {
+		} else {
 			linkParam.setTop(0);
 		}
 
 		o = a.getAttribute(HyperlinkParameter.ATTRIBUTE_WIDTH);
 		if (o instanceof Integer) {
 			linkParam.setWidth(((Integer) o).intValue());
-		}
-		else if (o instanceof String) {
+		} else if (o instanceof String) {
 			try {
 				linkParam.setWidth(Integer.valueOf((String) o));
+			} catch (Exception e) {
 			}
-			catch (Exception e) {
-			}
-		}
-		else {
+		} else {
 			linkParam.setWidth(0);
 		}
 
 		o = a.getAttribute(HyperlinkParameter.ATTRIBUTE_HEIGHT);
 		if (o instanceof Integer) {
 			linkParam.setHeight(((Integer) o).intValue());
-		}
-		else if (o instanceof String) {
+		} else if (o instanceof String) {
 			try {
 				linkParam.setHeight(Integer.valueOf((String) o));
+			} catch (Exception e) {
 			}
-			catch (Exception e) {
-			}
-		}
-		else {
+		} else {
 			linkParam.setHeight(0);
 		}
 
@@ -4812,9 +4560,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	}
 
 	/**
-	 * Detect if there is a hyperlink associated with the specified point. NOTE: The default Java implementation for
-	 * this does not divide properly the space between an image and character, and the space between two adjacent
-	 * images. We have corrected this problem for hyperlinked images to work.
+	 * Detect if there is a hyperlink associated with the specified point. NOTE: The default Java implementation for this does not divide properly the space between an image and character, and the space between two adjacent images. We have corrected this problem for hyperlinked images to work.
 	 */
 	protected String isHyperlinked(Point p) {
 		String href = null;
@@ -4822,10 +4568,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 		if (pos >= 0) {
 			Rectangle rect = null;
 			/*
-			 * FIXME: viewToModel() returns the NEAREST representative location in the model. If the element is indented
-			 * or non-left-aligned, there will be a problem. try { rect=modelToView(pos); } catch(BadLocationException
-			 * e){ e.printStackTrace(); } if(rect!=null){ if(!getElementName(pos).equals("icon")){ if(p.x<rect.x-2)
-			 * return null; } }
+			 * FIXME: viewToModel() returns the NEAREST representative location in the model. If the element is indented or non-left-aligned, there will be a problem. try { rect=modelToView(pos); } catch(BadLocationException e){ e.printStackTrace(); } if(rect!=null){ if(!getElementName(pos).equals("icon")){ if(p.x<rect.x-2) return null; } }
 			 */
 			href = getHyperlink(pos);
 			if (pos == 0)
@@ -4837,8 +4580,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 					if (name.equals("icon") || name.equals("component")) {
 						try {
 							rect = modelToView(pos - 1);
-						}
-						catch (BadLocationException e) {
+						} catch (BadLocationException e) {
 							e.printStackTrace();
 						}
 						if (rect != null) {
@@ -4850,20 +4592,17 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 									href = null;
 							}
 						}
-					}
-					else {
+					} else {
 						href = null;
 					}
 				}
-			}
-			else {
+			} else {
 				// detect if the previous element is an icon
 				Icon icon2 = getIcon(pos - 1);
 				if (icon2 != null) {
 					try {
 						rect = modelToView(pos - 1);
-					}
-					catch (BadLocationException e) {
+					} catch (BadLocationException e) {
 						e.printStackTrace();
 					}
 					// detect if the click point falls in the previous icon. If so, return the previous hyperlink on it
@@ -4892,8 +4631,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 					bg.fillRect(0, 0, imageIcon.getIconWidth(), imageIcon.getIconHeight());
 					imageIcon.paintIcon(null, bg, 0, 0);
 					imageIcon.setImage(ImageOp.INVERT.filter(bi, null));
-				}
-				else if (icon instanceof LineIcon) {
+				} else if (icon instanceof LineIcon) {
 					((LineIcon) icon).invert();
 				}
 			}
@@ -4962,8 +4700,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	}
 
 	/**
-	 * return the paragraph elements included in the current selection. A paragraph is considered included if a part of
-	 * it is selected.
+	 * return the paragraph elements included in the current selection. A paragraph is considered included if a part of it is selected.
 	 */
 	protected Element[] getSelectedParagraphs() {
 		StyledDocument doc = getStyledDocument();
@@ -4988,23 +4725,19 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 							elem = doc.getParagraphElement(start + 1);
 							list.add(elem);
 						}
-					}
-					catch (BadLocationException ble) {
+					} catch (BadLocationException ble) {
 						ble.printStackTrace();
 					}
-				}
-				else if (n == t.length() - 1) {
+				} else if (n == t.length() - 1) {
 					try {
 						if (doc.getText(end + 1 > length - 1 ? length - 1 : end + 1, 1).charAt(0) != '\n') {
 							elem = doc.getParagraphElement(end);
 							list.add(elem);
 						}
-					}
-					catch (BadLocationException ble) {
+					} catch (BadLocationException ble) {
 						ble.printStackTrace();
 					}
-				}
-				else {
+				} else {
 					if (t.charAt(n + 1) != '\n') {
 						offset = start + n + 1;
 						if (offset < doc.getLength()) {
@@ -5056,8 +4789,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				invertSelectedImages();
 				selectedImagesInverted = true;
 			}
-		}
-		else {
+		} else {
 			selectedImagesInverted = false;
 		}
 		findSelectedComponents();
@@ -5066,8 +4798,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				setComponentSelection(true);
 				componentSelected = true;
 			}
-		}
-		else {
+		} else {
 			componentSelected = false;
 		}
 	}
@@ -5111,8 +4842,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	}
 
 	/**
-	 * get the last-modified time and content length of this page. The LMT is the number of milliseconds since January
-	 * 1, 1970 GMT.
+	 * get the last-modified time and content length of this page. The LMT is the number of milliseconds since January 1, 1970 GMT.
 	 */
 	private long[] getLastModifiedAndContentLength() {
 		long[] t = new long[2];
@@ -5124,8 +4854,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				URL url = null;
 				try {
 					url = new URL(pageAddress);
-				}
-				catch (MalformedURLException e) {
+				} catch (MalformedURLException e) {
 					e.printStackTrace();
 					showErrorMessage(e);
 				}
@@ -5138,13 +4867,11 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 						t[1] = conn.getContentLength();
 					}
 				}
-			}
-			else {
+			} else {
 				t[0] = file.lastModified();
 				t[1] = file.length();
 			}
-		}
-		else {
+		} else {
 			t[0] = new File(pageAddress).lastModified();
 			t[1] = new File(pageAddress).length();
 		}
@@ -5152,8 +4879,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 	}
 
 	/**
-	 * return the bullet type of the current selected paragraphs. If there are more than one paragraph selected and
-	 * their icon types are different, or there is no paragraph selected, return -1.
+	 * return the bullet type of the current selected paragraphs. If there are more than one paragraph selected and their icon types are different, or there is no paragraph selected, return -1.
 	 * 
 	 * @see org.concord.modeler.text.BulletIcon
 	 */
@@ -5208,13 +4934,11 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 					try {
 						doc.insertString(e.getStartOffset(), "  ", null);
 						doc.insertString(e.getStartOffset(), " ", as);
-					}
-					catch (BadLocationException ble) {
+					} catch (BadLocationException ble) {
 						ble.printStackTrace();
 					}
 				}
-			}
-			else {
+			} else {
 				Icon bi = BulletIcon.get(type);
 				if (bi == null) {
 					SimpleAttributeSet sas = new SimpleAttributeSet(as);
@@ -5222,19 +4946,16 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 					doc.setParagraphAttributes(e.getStartOffset(), e.getEndOffset() - e.getStartOffset(), sas, false);
 					try {
 						doc.remove(e.getStartOffset(), 3);
-					}
-					catch (BadLocationException ble) {
+					} catch (BadLocationException ble) {
 						ble.printStackTrace();
 					}
-				}
-				else {
+				} else {
 					as = new SimpleAttributeSet();
 					StyleConstants.setIcon((MutableAttributeSet) as, bi);
 					try {
 						doc.remove(e.getStartOffset(), 1);
 						doc.insertString(e.getStartOffset(), " ", as);
-					}
-					catch (BadLocationException ble) {
+					} catch (BadLocationException ble) {
 						ble.printStackTrace();
 					}
 				}
@@ -5272,8 +4993,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 								b = true;
 							}
 						}
-					}
-					else if (e instanceof AutoResizable) {
+					} else if (e instanceof AutoResizable) {
 						t = (AutoResizable) e;
 						if (!(t instanceof JComponent))
 							continue;
@@ -5283,16 +5003,14 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 							w = (int) (t.getWidthRatio() * getWidth());
 							b = true;
 							b2 = true;
-						}
-						else {
+						} else {
 							w = c.getWidth() == 0 ? c.getPreferredSize().width : c.getWidth();
 						}
 						if (t.isHeightRelative()) {
 							h = (int) (t.getHeightRatio() * getHeight());
 							b = true;
 							b2 = true;
-						}
-						else {
+						} else {
 							h = c.getHeight() == 0 ? c.getPreferredSize().height : c.getHeight();
 						}
 						if (b2) {
@@ -5338,8 +5056,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 				return true;
 			}
 			createNewPage();
-		}
-		else {
+		} else {
 			createNewPage();
 		}
 		return false;
@@ -5700,8 +5417,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			if (undoManager.canUndo()) {
 				try {
 					undoManager.undo();
-				}
-				catch (CannotUndoException ex) {
+				} catch (CannotUndoException ex) {
 					ex.printStackTrace();
 				}
 			}
@@ -5713,8 +5429,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			if (undoManager.canUndo()) {
 				setEnabled(true);
 				putValue(SHORT_DESCRIPTION, undoManager.getUndoPresentationName());
-			}
-			else {
+			} else {
 				setEnabled(false);
 				putValue(SHORT_DESCRIPTION, "Undo");
 			}
@@ -5732,8 +5447,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			if (undoManager.canRedo()) {
 				try {
 					undoManager.redo();
-				}
-				catch (CannotRedoException ex) {
+				} catch (CannotRedoException ex) {
 					ex.printStackTrace();
 				}
 			}
@@ -5745,8 +5459,7 @@ public class Page extends JTextPane implements Navigable, HotlinkListener, Hyper
 			if (undoManager.canRedo()) {
 				setEnabled(true);
 				putValue(SHORT_DESCRIPTION, undoManager.getRedoPresentationName());
-			}
-			else {
+			} else {
 				setEnabled(false);
 				putValue(SHORT_DESCRIPTION, "Redo");
 			}

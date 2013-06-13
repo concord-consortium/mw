@@ -29,4 +29,5 @@ public interface RNATranscriptionListener {
 	public static final byte MODE_TRANSCRIPTION_END = 4;
 
 	void baseTranscripted(RNATranscriptionEvent evt);
+
 }

@@ -30,10 +30,21 @@ class AtomSource extends AbstractLoadable {
 	private byte wall = Wall.WEST;
 	private byte[] type = new byte[] { Element.ID_NT };
 	private Runnable runnable;
+	private boolean flowAtomsMarked;
+	private float rangeStart = 0, rangeLength = 1;
 
 	AtomSource(AtomicModel model) {
 		this.model = model;
 		setInterval(500);
+	}
+
+	void setFlowAtomsMarked(boolean b) {
+		flowAtomsMarked = b;
+	}
+
+	void setFlowRange(float start, float length) {
+		rangeStart = start;
+		rangeLength = length;
 	}
 
 	void setWall(byte wall) {
@@ -62,43 +73,66 @@ class AtomSource extends AbstractLoadable {
 				}
 			};
 		}
+		// has to put this in the Event Queue because the code may involve GUI
 		EventQueue.invokeLater(runnable);
 	}
 
 	private void work() {
-		double rtemp = Math.sqrt(model.heatBathActivated() ? model.getHeatBath().getExpectedTemperature() : model
-				.getTemperature())
-				* MDModel.VT_CONVERSION_CONSTANT * 10;
+		double rtemp = Math.sqrt(model.heatBathActivated() ? model.getHeatBath().getExpectedTemperature() : model.getTemperature()) * MDModel.VT_CONVERSION_CONSTANT * 100;
 		if (rtemp < Particle.ZERO)
 			rtemp = Particle.ZERO;
 		double v = type.length * Math.random();
-		// if(v>type.length-1) v=type.length-1;
+		if (v > type.length - 1)
+			v = type.length - 1;
 		int id = type[(int) v];
 		Element elem = model.getElement(id);
 		if (elem == null)
 			return;
-		double sigma = elem.getSigma();
+		double d = elem.getSigma();
+		int w = model.view.getWidth();
+		int h = model.view.getHeight();
+		float random = MDModel.RANDOM.nextFloat();
+		Atom a = null;
+		double start = 0, length = 0;
 		switch (wall) {
 		case Wall.WEST:
-			if (model.view.insertAnAtom(sigma * 0.5 + 2, sigma * 0.5 + MDModel.RANDOM.nextFloat()
-					* (model.view.getHeight() - sigma), id, true))
-				model.atom[model.numberOfAtoms - 1].setVx(rtemp);
+			start = rangeStart * h + 0.5 * d;
+			length = rangeLength * h - d;
+			if (model.view.insertAnAtom(d * 0.5 + 2, start + random * length, id, true)) {
+				a = model.atom[model.numberOfAtoms - 1];
+				a.setVx(rtemp);
+			}
 			break;
 		case Wall.EAST:
-			if (model.view.insertAnAtom(model.view.getWidth() - sigma * 0.5 - 2, sigma * 0.5
-					+ MDModel.RANDOM.nextFloat() * (model.view.getHeight() - sigma), id, true))
-				model.atom[model.numberOfAtoms - 1].setVx(-rtemp);
+			start = rangeStart * h + 0.5 * d;
+			length = rangeLength * h - d;
+			if (model.view.insertAnAtom(w - d * 0.5 - 2, start + random * length, id, true)) {
+				a = model.atom[model.numberOfAtoms - 1];
+				a.setVx(-rtemp);
+			}
 			break;
 		case Wall.SOUTH:
-			if (model.view.insertAnAtom(sigma * 0.5 + MDModel.RANDOM.nextFloat() * (model.view.getWidth() - sigma),
-					model.view.getHeight() - sigma * 0.5 - 2, id, true))
-				model.atom[model.numberOfAtoms - 1].setVy(-rtemp);
+			start = rangeStart * w + 0.5 * d;
+			length = rangeLength * w - d;
+			if (model.view.insertAnAtom(start + random * length, h - d * 0.5 - 2, id, true)) {
+				a = model.atom[model.numberOfAtoms - 1];
+				a.setVy(-rtemp);
+			}
 			break;
 		case Wall.NORTH:
-			if (model.view.insertAnAtom(sigma * 0.5 + MDModel.RANDOM.nextFloat() * (model.view.getWidth() - sigma),
-					sigma * 0.5 + 2, id, true))
-				model.atom[model.numberOfAtoms - 1].setVy(rtemp);
+			start = rangeStart * w + 0.5 * d;
+			length = rangeLength * w - d;
+			if (model.view.insertAnAtom(start + random * length, d * 0.5 + 2, id, true)) {
+				a = model.atom[model.numberOfAtoms - 1];
+				a.setVy(rtemp);
+			}
 			break;
+		}
+		if (flowAtomsMarked) {
+			if (a != null) {
+				a.setMarked(true);
+				a.setCustom(model.modelTime);
+			}
 		}
 	}
 

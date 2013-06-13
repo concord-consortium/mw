@@ -46,7 +46,8 @@ public final class DiatomicMolecule extends Molecule {
 
 		for (int i = noa; i < noa + getNumberOfAtoms(); i++) {
 			model.atom[i].setRestraint(null);
-			model.atom[i].setCharge(0.0);
+			model.atom[i].setCharge(0);
+			model.atom[i].setCustom(0);
 			model.atom[i].setUserField(null);
 			model.atom[i].setShowRTraj(false);
 			model.atom[i].setFriction(0);
@@ -75,8 +76,7 @@ public final class DiatomicMolecule extends Molecule {
 
 	public List<RadialBond> buildBonds(MolecularModel model) {
 		List<RadialBond> bonds = new ArrayList<RadialBond>();
-		bonds.add(new RadialBond.Builder(model.atom[model.numberOfAtoms - 2], model.atom[model.numberOfAtoms - 1])
-				.bondLength(bondLength).bondStrength(bondStrength).build());
+		bonds.add(new RadialBond.Builder(model.atom[model.numberOfAtoms - 2], model.atom[model.numberOfAtoms - 1]).bondLength(bondLength).bondStrength(bondStrength).build());
 		return bonds;
 	}
 

@@ -264,8 +264,8 @@ public class DNAScrollerModel implements MutationListener {
 		for (int i = 0; i < dna.getLength(); i += 3) {
 			if (i > dna.getLength() - 2 || i > dna.getLength() - 3)
 				continue;
-			codons53[i / 3] = Codon.getCodon(s53.charAt(i), s53.charAt(i + 1), s53.charAt(i + 2))/* .getTranscripted() */;
-			codons35[i / 3] = Codon.getCodon(s35.charAt(i + 2), s35.charAt(i + 1), s35.charAt(i))/* .getTranscripted() */;
+			codons53[i / 3] = Codon.getCodon(s53.charAt(i), s53.charAt(i + 1), s53.charAt(i + 2));
+			codons35[i / 3] = Codon.getCodon(s35.charAt(i + 2), s35.charAt(i + 1), s35.charAt(i));
 		}
 		unfinishedCodon = (dna.getLength() % 3) != 0;
 	}
@@ -344,7 +344,7 @@ public class DNAScrollerModel implements MutationListener {
 		Strand s35 = dna.getComplimentaryStrand(DNA.DNA_STRAND_BASE);
 		dnaString53 = s53.toString().substring(startWindowIndex);
 		dnaString35 = s35.toString().substring(startWindowIndex);
-		rnaString = (rna != null && (startWindowIndex < rna.getLength())) ? rna.toString().substring(startWindowIndex) : "";
+		rnaString = (rna != null && startWindowIndex < rna.getLength()) ? rna.toString().substring(startWindowIndex) : "";
 	}
 
 	public String getDNA53String() {
@@ -513,7 +513,6 @@ public class DNAScrollerModel implements MutationListener {
 		}
 		Gene g = new Gene(needDNA, strandType);
 		RNA rna = g.transcript();
-
 		return rna.translate();
 	}
 

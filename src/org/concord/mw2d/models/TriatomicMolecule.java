@@ -33,8 +33,7 @@ public final class TriatomicMolecule extends Molecule {
 	private boolean charged = false;
 	private double charge = 2;
 
-	public TriatomicMolecule(int typeOfA, int typeOfB, int typeOfC, double d12, double s12, double d23, double s23,
-			double angle, double bendStrength) {
+	public TriatomicMolecule(int typeOfA, int typeOfB, int typeOfC, double d12, double s12, double d23, double s23, double angle, double bendStrength) {
 		bendAngle = Math.toRadians(angle == 180 ? 179.9 : angle);
 		this.typeOfA = typeOfA;
 		this.typeOfB = typeOfB;
@@ -56,7 +55,8 @@ public final class TriatomicMolecule extends Molecule {
 
 		for (int i = noa; i < noa + getNumberOfAtoms(); i++) {
 			model.atom[i].setRestraint(null);
-			model.atom[i].setCharge(0.0);
+			model.atom[i].setCharge(0);
+			model.atom[i].setCustom(0);
 			model.atom[i].setUserField(null);
 			model.atom[i].setShowRTraj(false);
 			model.atom[i].setFriction(0);
@@ -99,17 +99,14 @@ public final class TriatomicMolecule extends Molecule {
 
 	public List<RadialBond> buildBonds(MolecularModel model) {
 		List<RadialBond> x = new ArrayList<RadialBond>();
-		x.add(new RadialBond.Builder(model.atom[model.numberOfAtoms - 3], model.atom[model.numberOfAtoms - 2])
-				.bondLength(d12).bondStrength(s12).build());
-		x.add(new RadialBond.Builder(model.atom[model.numberOfAtoms - 1], model.atom[model.numberOfAtoms - 2])
-				.bondLength(d23).bondStrength(s23).build());
+		x.add(new RadialBond.Builder(model.atom[model.numberOfAtoms - 3], model.atom[model.numberOfAtoms - 2]).bondLength(d12).bondStrength(s12).build());
+		x.add(new RadialBond.Builder(model.atom[model.numberOfAtoms - 1], model.atom[model.numberOfAtoms - 2]).bondLength(d23).bondStrength(s23).build());
 		return x;
 	}
 
 	public List<AngularBond> buildBends(MolecularModel model) {
 		List<AngularBond> x = new ArrayList<AngularBond>();
-		x.add(new AngularBond(model.atom[model.numberOfAtoms - 3], model.atom[model.numberOfAtoms - 1],
-				model.atom[model.numberOfAtoms - 2], bendAngle, bendStrength));
+		x.add(new AngularBond(model.atom[model.numberOfAtoms - 3], model.atom[model.numberOfAtoms - 1], model.atom[model.numberOfAtoms - 2], bendAngle, bendStrength));
 		return x;
 	}
 

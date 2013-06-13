@@ -44,6 +44,7 @@ import java.util.Vector;
 import javax.swing.ImageIcon;
 import javax.swing.Timer;
 
+import org.concord.modeler.ModelerUtilities;
 import org.concord.modeler.draw.FillMode;
 import org.concord.modeler.draw.GradientFactory;
 import org.concord.modeler.util.FileUtilities;
@@ -54,16 +55,10 @@ import org.concord.mw2d.UserAction;
 import org.concord.mw2d.ViewAttribute;
 
 /**
- * How we set 2D pressure unit from impulse: 2mv/dt? Imagine it were 3D, first we convert the internal units to the
- * standard unit: 10^-11 m/10^-15 s * (10^-3 kg/(6*10^23)) / (10^-22 m^2 * 10^-15 s). This factor evaluates to
- * 1.667*10^14 kg*m/s^2/m^2 = 1.667*10^14 Pa, which is too big. But the following two factors must be taken into
- * account: (1) To convert 2D measurement into 3D one, imagine an extrusion of a slab that is approximately 10 angstrom
- * thick, but not 0.1 angstrom thick as is in the above conversion. Molecules collide with the obstacle in such a thin
- * slab as frequently as in the 2D case. This will reduce the factor 100 times to 1.667*10^12 Pa, which is 1.667*10^7
- * bar. (2) We assume that the collision between a molecule and the obstacle is perfectly rigid, which means that the
- * impact energy is 100% elastic. In reality, the surface of the obstacle is composed of atoms that also interact with
- * the incoming molecule. Assume the inelasticity makes the pressure conversion rate to be as low as 10% (what a fake!).
- * Then we arrive at 1.667*10^6 bar. This is the factor used to convert the computed pressure to the common unit: bar.
+ * How we set 2D pressure unit from impulse: 2mv/dt? Imagine it were 3D, first we convert the internal units to the standard unit: 10^-11 m/10^-15 s * (10^-3 kg/(6*10^23)) / (10^-22 m^2 * 10^-15 s). This factor evaluates to 1.667*10^14 kg*m/s^2/m^2 = 1.667*10^14 Pa, which is too big. But the following two factors must be taken into account: (1) To convert 2D measurement into 3D one, imagine an extrusion of a slab that is approximately 10 angstrom thick, but not 0.1 angstrom thick as is in the above conversion. Molecules collide with the obstacle in such a thin slab as frequently as in the 2D case. This will reduce the factor 100 times to 1.667*10^12 Pa, which is 1.667*10^7 bar. (2) We assume that the collision between a molecule and the obstacle is perfectly rigid, which means that the impact energy is 100% elastic. In reality, the surface of the obstacle is composed of atoms that also interact with the incoming molecule. Assume the inelasticity makes the pressure conversion rate to be
+ * as low as 10% (what a fake!). Then we arrive at 1.667*10^6 bar. This is the factor used to convert the computed pressure to the common unit: bar.
+ * 
+ * @author Charles Xie
  */
 
 public class RectangularObstacle extends Rectangle2D.Double implements Obstacle {
@@ -80,9 +75,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 
 	private final static short HEAVY = 500;
 
-	private static Rectangle2D rectN = new Rectangle2D.Float(), rectS = new Rectangle2D.Float(),
-			rectE = new Rectangle2D.Float(), rectW = new Rectangle2D.Float(), rectNE = new Rectangle2D.Float(),
-			rectNW = new Rectangle2D.Float(), rectSE = new Rectangle2D.Float(), rectSW = new Rectangle2D.Float();
+	private static Rectangle2D rectN = new Rectangle2D.Float(), rectS = new Rectangle2D.Float(), rectE = new Rectangle2D.Float(), rectW = new Rectangle2D.Float(), rectNE = new Rectangle2D.Float(), rectNW = new Rectangle2D.Float(), rectSE = new Rectangle2D.Float(), rectSW = new Rectangle2D.Float();
 
 	private static Rectangle2D.Double ballRect, intersectRect;
 	private static int defaultRoundCornerRadius = 10;
@@ -168,9 +161,20 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 	private static double va1, vo1;
 	private List<Integer> colList;
 	private List<FaceCollision> faceColList;
+	private List<FaceCollision> cumulativeFaceCollisions;
 	private double delta = 10.0;
 	private static Line2D tempLine;
 	static Color blinkColor;
+
+	private boolean soundEffect = true;
+	private int noteNumber = 100;
+	private int noteVelocity = 50;
+	private int soundInterval = 50;
+	private int soundCollisionCount = 0;
+	private float relativeVolume = 50;
+	private int hitTraceInterval = 500;
+	private boolean showCumulativeHits = true;
+	private boolean showCollisionEvents = true;
 
 	public RectangularObstacle() {
 		super();
@@ -188,8 +192,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 		setRect(x, y, w, h);
 	}
 
-	public RectangularObstacle(double x, double y, double w, double h, double vx, double vy, float hx, float hy,
-			boolean westProbe, boolean northProbe, boolean eastProbe, boolean southProbe, boolean roundCornered) {
+	public RectangularObstacle(double x, double y, double w, double h, double vx, double vy, float hx, float hy, boolean westProbe, boolean northProbe, boolean eastProbe, boolean southProbe, boolean roundCornered) {
 		this(x, y, w, h);
 		this.vx = vx;
 		this.vy = vy;
@@ -273,21 +276,58 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 				if (blinkIndex < 6) {
 					blinkIndex++;
 					if (model.getView() != null)
-						blinkColor = blinkIndex % 2 == 0 ? ((MDView) model.getView()).contrastBackground() : model
-								.getView().getBackground();
-				}
-				else {
+						blinkColor = blinkIndex % 2 == 0 ? ((MDView) model.getView()).contrastBackground() : model.getView().getBackground();
+				} else {
 					timer.stop();
 					blinkIndex = 0;
 					setBlinking(false);
 				}
 				if (model.getView() != null)
-					model.getView().paintImmediately((int) (x - 20), (int) (y - 20), (int) (width + 40),
-							(int) (height + 40));
+					model.getView().paintImmediately((int) (x - 20), (int) (y - 20), (int) (width + 40), (int) (height + 40));
 			}
 
 		});
 
+	}
+
+	public void setSoundEffect(boolean on) {
+		soundEffect = on;
+	}
+
+	public void setRelativeVolume(float relativeVolume) {
+		this.relativeVolume = relativeVolume;
+	}
+
+	public void setSoundNoteNumber(int noteNumber) {
+		this.noteNumber = noteNumber;
+	}
+
+	public void setSoundNoteVelocity(int noteVelocity) {
+		this.noteVelocity = noteVelocity;
+	}
+
+	public void setSoundInterval(int soundInterval) {
+		this.soundInterval = soundInterval;
+	}
+
+	public void setHitTraceInterval(int hitTraceInterval) {
+		this.hitTraceInterval = hitTraceInterval;
+	}
+
+	public void setShowCumulativeHits(boolean showCumulativeHits) {
+		this.showCumulativeHits = showCumulativeHits;
+	}
+
+	public boolean getShowCumulativeHits() {
+		return showCumulativeHits;
+	}
+
+	public void setShowCollisionEvents(boolean showCollisionEvents) {
+		this.showCollisionEvents = showCollisionEvents;
+	}
+
+	public boolean getShowCollisionEvents() {
+		return showCollisionEvents;
 	}
 
 	public static int getDefaultRoundCornerRadius() {
@@ -539,8 +579,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 		double y0 = getMinY();
 		double x1 = getMaxX();
 		double y1 = getMaxY();
-		if (e.rx - Electron.radius < x1 && e.rx + Electron.radius > x0 && e.ry - Electron.radius < y1
-				&& e.ry + Electron.radius > y0) {
+		if (e.rx - Electron.radius < x1 && e.rx + Electron.radius > x0 && e.ry - Electron.radius < y1 && e.ry + Electron.radius > y0) {
 			byte xing = borderCross(this, Electron.radius, e.rx, e.ry, e.dx, e.dy, x0, y0, x1, y1);
 			switch (xing) {
 			case NORTH:
@@ -574,24 +613,19 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 		if (p.x < x1 && p.x > x0 && p.y < y1 && p.y > y0) {
 			if (Math.abs(p.getAngle()) < 0.001) {
 				p.setAngle((float) Math.PI);
-			}
-			else if (Math.abs(p.getAngle() + Math.PI) < 0.001) {
+			} else if (Math.abs(p.getAngle() + Math.PI) < 0.001) {
 				p.setAngle(0);
-			}
-			else if (Math.abs(p.getAngle() - Math.PI * 0.5) < 0.001) {
+			} else if (Math.abs(p.getAngle() - Math.PI * 0.5) < 0.001) {
 				p.setAngle(-(float) (Math.PI * 0.5));
-			}
-			else if (Math.abs(p.getAngle() + Math.PI * 0.5) < 0.001) {
+			} else if (Math.abs(p.getAngle() + Math.PI * 0.5) < 0.001) {
 				p.setAngle((float) (Math.PI * 0.5));
-			}
-			else {
+			} else {
 				float ninty = (float) (0.5 * Math.PI);
 				double cos = Math.cos(p.getAngle()) * Photon.getC() * model.getTimeStep();
 				if (p.x - cos < x0) {
 					p.x = (float) x0;
 					p.setAngle(p.getAngle() > 0 ? p.getAngle() + ninty : p.getAngle() - ninty);
-				}
-				else if (p.x - cos > x1) {
+				} else if (p.x - cos > x1) {
 					p.x = (float) x1;
 					p.setAngle(p.getAngle() > 0 ? p.getAngle() - ninty : p.getAngle() + ninty);
 				}
@@ -599,8 +633,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 				if (p.y - sin < y0) {
 					p.y = (float) y0;
 					p.setAngle(-p.getAngle());
-				}
-				else if (p.y - sin > y1) {
+				} else if (p.y - sin > y1) {
 					p.y = (float) y1;
 					p.setAngle(-p.getAngle());
 				}
@@ -627,14 +660,14 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 		if (fireCollisionEvents) {
 			if (faceColList == null) {
 				faceColList = new ArrayList<FaceCollision>();
-			}
-			else {
+			} else {
 				faceColList.clear();
 			}
 		}
 		if (colList == null)
 			colList = Collections.synchronizedList(new ArrayList<Integer>());
-		else colList.clear();
+		else
+			colList.clear();
 
 		double x0 = getMinX();
 		double y0 = getMinY();
@@ -672,27 +705,24 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 					colList.add((int) i);
 				xing = borderCross(this, radius, a.rx, a.ry, a.dx, a.dy, x0, y0, x1, y1);
 				if (fireCollisionEvents)
-					faceColList.add(new FaceCollision(xing, i, a.rx, a.ry, a.vx, a.vy));
+					faceColList.add(new FaceCollision(xing, i, a.rx, a.ry, a.vx, a.vy, model.job.getIndexOfStep()));
 				switch (xing) {
 				case NORTH:
 					if (isFixed) {
 						if (northProbe) {
 							if (id < 4) {
 								pNorth[id] += 2 * a.mass * a.vy;
-							}
-							else {
+							} else {
 								pNorth[4] += 2 * a.mass * a.vy;
 							}
 						}
 						if (elasticity > Particle.ZERO) {
 							a.vy = -elasticity * Math.abs(a.vy);
-						}
-						else {
+						} else {
 							a.vx = 0;
 							a.vy = 0;
 						}
-					}
-					else {
+					} else {
 						if (a.isMovable()) {
 							if (northProbe)
 								oldVelocity = a.vy;
@@ -701,14 +731,12 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 							if (northProbe) {
 								if (id < 4) {
 									pNorth[id] -= a.mass * (a.vy - oldVelocity);
-								}
-								else {
+								} else {
 									pNorth[4] -= a.mass * (a.vy - oldVelocity);
 								}
 							}
 							setVy(vo1 * elasticity);
-						}
-						else {
+						} else {
 							vy = Math.abs(vy);
 						}
 					}
@@ -718,20 +746,17 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 						if (westProbe) {
 							if (id < 4) {
 								pWest[id] += 2 * a.mass * a.vx;
-							}
-							else {
+							} else {
 								pWest[4] += 2 * a.mass * a.vx;
 							}
 						}
 						if (elasticity > Particle.ZERO) {
 							a.vx = -elasticity * Math.abs(a.vx);
-						}
-						else {
+						} else {
 							a.vx = 0;
 							a.vy = 0;
 						}
-					}
-					else {
+					} else {
 						if (a.isMovable()) {
 							if (westProbe)
 								oldVelocity = a.vx;
@@ -740,14 +765,12 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 							if (westProbe) {
 								if (id < 4) {
 									pWest[id] -= a.mass * (a.vx - oldVelocity);
-								}
-								else {
+								} else {
 									pWest[4] -= a.mass * (a.vx - oldVelocity);
 								}
 							}
 							setVx(vo1 * elasticity);
-						}
-						else {
+						} else {
 							vx = Math.abs(vx);
 						}
 					}
@@ -757,20 +780,17 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 						if (southProbe) {
 							if (id < 4) {
 								pSouth[id] -= 2 * a.mass * a.vy;
-							}
-							else {
+							} else {
 								pSouth[4] -= 2 * a.mass * a.vy;
 							}
 						}
 						if (elasticity > Particle.ZERO) {
 							a.vy = elasticity * Math.abs(a.vy);
-						}
-						else {
+						} else {
 							a.vx = 0;
 							a.vy = 0;
 						}
-					}
-					else {
+					} else {
 						if (a.isMovable()) {
 							if (southProbe)
 								oldVelocity = a.vy;
@@ -779,14 +799,12 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 							if (southProbe) {
 								if (id < 4) {
 									pSouth[id] += a.mass * (a.vy - oldVelocity);
-								}
-								else {
+								} else {
 									pSouth[4] += a.mass * (a.vy - oldVelocity);
 								}
 							}
 							setVy(vo1 * elasticity);
-						}
-						else {
+						} else {
 							vy = -Math.abs(vy);
 						}
 					}
@@ -796,20 +814,17 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 						if (eastProbe) {
 							if (id < 4) {
 								pEast[id] -= 2 * a.mass * a.vx;
-							}
-							else {
+							} else {
 								pEast[4] -= 2 * a.mass * a.vx;
 							}
 						}
 						if (elasticity > Particle.ZERO) {
 							a.vx = elasticity * Math.abs(a.vx);
-						}
-						else {
+						} else {
 							a.vx = 0;
 							a.vy = 0;
 						}
-					}
-					else {
+					} else {
 						if (a.isMovable()) {
 							if (eastProbe)
 								oldVelocity = a.vx;
@@ -818,14 +833,12 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 							if (eastProbe) {
 								if (id < 4) {
 									pEast[id] += a.mass * (a.vx - oldVelocity);
-								}
-								else {
+								} else {
 									pEast[4] += a.mass * (a.vx - oldVelocity);
 								}
 							}
 							setVx(vo1 * elasticity);
-						}
-						else {
+						} else {
 							vx = -Math.abs(vx);
 						}
 					}
@@ -835,14 +848,40 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 					if (elasticity > Particle.ZERO) {
 						a.vx *= -elasticity;
 						a.vy *= -elasticity;
-					}
-					else {
+					} else {
 						a.vx = 0;
 						a.vy = 0;
 					}
 					break;
 				}
 			}
+		}
+
+		if (soundEffect) {
+			soundCollisionCount += colList.size();
+			if (model.getJob().getIndexOfStep() % soundInterval == 0) {
+				if (soundCollisionCount > 0) {
+					double temp = model.getTemperature();
+					int volume = (int) (Math.log10(temp) * soundCollisionCount * relativeVolume);
+					volume = Math.min(volume, 127);
+					ModelerUtilities.beep(noteNumber, noteVelocity, 7, volume);
+					soundCollisionCount = 0;
+				}
+			}
+		}
+
+		if (fireCollisionEvents) {
+			if (cumulativeFaceCollisions == null) {
+				cumulativeFaceCollisions = new ArrayList<FaceCollision>();
+			} else {
+				FaceCollision fc;
+				for (Iterator<FaceCollision> it = cumulativeFaceCollisions.iterator(); it.hasNext();) {
+					fc = it.next();
+					if (model.job.getIndexOfStep() - fc.getIndexOfStep() > hitTraceInterval)
+						it.remove();
+				}
+			}
+			cumulativeFaceCollisions.addAll(faceColList);
 		}
 
 		return faceColList;
@@ -875,13 +914,11 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 		}
 	}
 
-	static byte borderCross(Rectangle2D rect, double rd, double rx, double ry, double dx, double dy, double x0,
-			double y0, double x1, double y1) {
+	static byte borderCross(Rectangle2D rect, double rd, double rx, double ry, double dx, double dy, double x0, double y0, double x1, double y1) {
 
 		if (ballRect == null) {
 			ballRect = new Rectangle2D.Double(rx - rd, ry - rd, rd * 2, rd * 2);
-		}
-		else {
+		} else {
 			ballRect.setFrame(rx - rd, ry - rd, rd * 2, rd * 2);
 		}
 		if (intersectRect == null)
@@ -940,18 +977,15 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 			if (FileUtilities.isRemote(s)) {
 				try {
 					bgImage = new ImageIcon(new URL(s));
-				}
-				catch (MalformedURLException e) {
+				} catch (MalformedURLException e) {
 					e.printStackTrace(System.err);
 				}
 				fullImage = bgImage.getImage();
-			}
-			else {
+			} else {
 				fullImage = Toolkit.getDefaultToolkit().createImage(s);
 				bgImage = new ImageIcon(fullImage);
 			}
-		}
-		else {
+		} else {
 			bgImage = null;
 			fullImage = null;
 		}
@@ -1027,8 +1061,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 	}
 
 	/**
-	 * create a new rectangular obstacle with the same properties. Override <tt>RectangularShape.clone()</tt> because it
-	 * will not draw the stripes, an action requiring "deep copy" operations.
+	 * create a new rectangular obstacle with the same properties. Override <tt>RectangularShape.clone()</tt> because it will not draw the stripes, an action requiring "deep copy" operations.
 	 */
 	public Object clone() {
 		RectangularObstacle r = new RectangularObstacle(x, y, width, height);
@@ -1048,8 +1081,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 			return;
 		if (group == null || group.isEmpty()) {
 			setStripe();
-		}
-		else {
+		} else {
 			if (transform == null)
 				transform = new AffineTransform();
 			transform.setToTranslation(dx, dy);
@@ -1141,8 +1173,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 					yp[2] = yf + k1;
 					xp[3] = xf;
 					yp[3] = yf + k;
-				}
-				else if (k1 <= wf && k1 > hf) {
+				} else if (k1 <= wf && k1 > hf) {
 					xp = new float[5];
 					yp = new float[5];
 					xp[0] = xf + k;
@@ -1155,8 +1186,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 					yp[3] = yf + hf;
 					xp[4] = xf;
 					yp[4] = yf + k;
-				}
-				else if (k1 > wf && k1 <= hf) {
+				} else if (k1 > wf && k1 <= hf) {
 					xp = new float[5];
 					yp = new float[5];
 					xp[0] = xf + k;
@@ -1169,8 +1199,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 					yp[3] = yf + k1;
 					xp[4] = xf;
 					yp[4] = yf + k;
-				}
-				else {
+				} else {
 					xp = new float[6];
 					yp = new float[6];
 					xp[0] = xf + k;
@@ -1186,8 +1215,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 					xp[5] = xf;
 					yp[5] = xf + yf + k - xp[5];
 				}
-			}
-			else if (k <= wf && k > hf) {
+			} else if (k <= wf && k > hf) {
 				/* lower left part */
 				if (k1 <= wf) {
 					xp[0] = xf + k;
@@ -1198,8 +1226,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 					xp[2] = xf + yf + k1 - yp[2];
 					yp[3] = yp[2];
 					xp[3] = xf + yf + k - yp[3];
-				}
-				else {
+				} else {
 					xp = new float[5];
 					yp = new float[5];
 					xp[0] = xf + k;
@@ -1213,8 +1240,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 					yp[4] = yp[3];
 					xp[4] = xf + yf + k - yp[4];
 				}
-			}
-			else if (k <= hf && k > wf) {
+			} else if (k <= hf && k > wf) {
 				/* upper right part */
 				if (k1 <= hf) {
 					xp[0] = xf + wf;
@@ -1225,8 +1251,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 					yp[2] = yf + k1;
 					xp[3] = xf;
 					yp[3] = yf + k;
-				}
-				else {
+				} else {
 					xp = new float[5];
 					yp = new float[5];
 					xp[0] = xf + wf;
@@ -1240,8 +1265,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 					xp[4] = xf;
 					yp[4] = xf + yf + k - xp[4];
 				}
-			}
-			else if (k > wf && k > hf) {
+			} else if (k > wf && k > hf) {
 				/* lower right part */
 				if (k1 <= wf + hf + xf + yf) {
 					xp[0] = xf + wf;
@@ -1280,42 +1304,33 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 				g.setColor(((FillMode.ColorFill) fillMode).getColor());
 				if (cornerArcRadius > 0) {
 					g.fillRoundRect((int) x, (int) y, (int) width, (int) height, cornerArcRadius, cornerArcRadius);
-				}
-				else {
+				} else {
 					g.fill(this);
 				}
-			}
-			else if (fillMode instanceof FillMode.GradientFill) {
+			} else if (fillMode instanceof FillMode.GradientFill) {
 				FillMode.GradientFill gfm = (FillMode.GradientFill) fillMode;
-				GradientFactory.paintRect(g, gfm.getStyle(), gfm.getVariant(), gfm.getColor1(), gfm.getColor2(),
-						(float) x, (float) y, (float) width, (float) height);
-			}
-			else if (fillMode instanceof FillMode.PatternFill) {
+				GradientFactory.paintRect(g, gfm.getStyle(), gfm.getVariant(), gfm.getColor1(), gfm.getColor2(), (float) x, (float) y, (float) width, (float) height);
+			} else if (fillMode instanceof FillMode.PatternFill) {
 				FillMode.PatternFill tfm = (FillMode.PatternFill) fillMode;
 				if (tfm.getPaint() != null)
 					g.setPaint(tfm.getPaint());
 				if (cornerArcRadius > 0) {
 					g.fillRoundRect((int) x, (int) y, (int) width, (int) height, cornerArcRadius, cornerArcRadius);
-				}
-				else {
+				} else {
 					g.fill(this);
 				}
-			}
-			else if (fillMode instanceof FillMode.ImageFill) {
+			} else if (fillMode instanceof FillMode.ImageFill) {
 				if (bgImage != null) {
 					if (bgImage.getIconWidth() != (int) width || bgImage.getIconHeight() != (int) height) {
-						bgImage = new ImageIcon(fullImage.getScaledInstance((int) width, (int) height,
-								Image.SCALE_DEFAULT));
+						bgImage = new ImageIcon(fullImage.getScaledInstance((int) width, (int) height, Image.SCALE_DEFAULT));
 					}
 					bgImage.paintIcon(model.getView(), g, (int) x, (int) y);
 				}
-			}
-			else { // default drawing
+			} else { // default drawing
 				g.setColor(Color.yellow);
 				if (cornerArcRadius > 0) {
 					g.fillRoundRect((int) x, (int) y, (int) width, (int) height, cornerArcRadius, cornerArcRadius);
-				}
-				else {
+				} else {
 					g.fill(this);
 				}
 				g.setColor(Color.black);
@@ -1328,8 +1343,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 			g.setStroke(ViewAttribute.THIN);
 			if (cornerArcRadius > 0) {
 				g.drawRoundRect((int) x, (int) y, (int) width, (int) height, cornerArcRadius, cornerArcRadius);
-			}
-			else {
+			} else {
 				g.draw(this);
 			}
 
@@ -1410,8 +1424,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 				g.draw(rectNE);
 				g.draw(rectSW);
 				g.draw(rectSE);
-			}
-			else {
+			} else {
 				g.setColor(cbg);
 				g.setStroke(ViewAttribute.THIN_DASHED);
 				g.drawRect((int) (x - 2), (int) (y - 2), (int) (width + 4), (int) (height + 4));
@@ -1428,6 +1441,87 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 			g.setColor(cbg);
 			g.setFont(Particle.FONT_ON_TOP);
 			g.drawString("" + model.getObstacles().indexOf(this), (int) (x + width * 0.5), (int) (y + height * 0.5));
+		}
+
+		if (showCollisionEvents && cumulativeFaceCollisions != null && !cumulativeFaceCollisions.isEmpty()) {
+			for (FaceCollision fc : cumulativeFaceCollisions) {
+				if (!model.getParticle(fc.getParticleIndex()).isMovable())
+					continue;
+				boolean fresh = model.job.getIndexOfStep() - fc.getIndexOfStep() < hitTraceInterval / 10;
+				double mass = 1000 * model.getParticle(fc.getParticleIndex()).getMass();
+				g.setColor(model.getParticle(fc.getParticleIndex()).getColor());
+				switch (fc.getFace()) {
+				case WEST:
+					int rx = (int) x;
+					int ry = (int) fc.getRy();
+					if (fresh) {
+						g.setStroke(ViewAttribute.THIN);
+						g.drawLine(rx - 8, ry, rx - 1, ry);
+						g.drawLine(rx - 6, ry - 8, rx, ry - 3);
+						g.drawLine(rx - 6, ry + 8, rx, ry + 3);
+					} else {
+						if (showCumulativeHits) {
+							g.setStroke(ViewAttribute.MODERATE);
+							g.drawLine((int) (rx - 8 - Math.abs(mass * fc.getVx())), ry, rx, ry);
+							g.drawLine(rx - 3, ry - 3, rx, ry);
+							g.drawLine(rx - 3, ry + 3, rx, ry);
+						}
+					}
+					break;
+				case EAST:
+					rx = (int) (x + width);
+					ry = (int) fc.getRy();
+					if (fresh) {
+						g.setStroke(ViewAttribute.THIN);
+						g.drawLine(rx + 4, ry, rx, ry);
+						g.drawLine(rx + 2, ry - 4, rx, ry);
+						g.drawLine(rx + 2, ry + 4, rx, ry);
+					} else {
+						if (showCumulativeHits) {
+							g.setStroke(ViewAttribute.MODERATE);
+							g.drawLine(rx, ry, (int) (rx + 8 + Math.abs(mass * fc.getVx())), ry);
+							g.drawLine(rx, ry - 3, rx + 3, ry);
+							g.drawLine(rx, ry + 3, rx + 3, ry);
+						}
+					}
+					break;
+				case NORTH:
+					ry = (int) y;
+					rx = (int) fc.getRx();
+					if (fresh) {
+						g.setStroke(ViewAttribute.THIN);
+						g.drawLine(rx, ry - 4, rx, ry);
+						g.drawLine(rx - 4, ry - 2, rx, ry);
+						g.drawLine(rx + 4, ry - 2, rx, ry);
+					} else {
+						if (showCumulativeHits) {
+							g.setStroke(ViewAttribute.MODERATE);
+							g.drawLine(rx, (int) (ry - 8 - Math.abs(mass * fc.getVx())), rx, ry);
+							g.drawLine(rx - 3, ry - 3, rx, ry);
+							g.drawLine(rx + 3, ry - 3, rx, ry);
+						}
+					}
+					break;
+				case SOUTH:
+					ry = (int) (y + height);
+					rx = (int) fc.getRx();
+					if (fresh) {
+						g.setStroke(ViewAttribute.THIN);
+						g.drawLine(rx, ry + 4, rx, ry);
+						g.drawLine(rx - 4, ry + 2, rx, ry);
+						g.drawLine(rx + 4, ry + 2, rx, ry);
+					} else {
+						if (showCumulativeHits) {
+							g.setStroke(ViewAttribute.MODERATE);
+							g.drawLine(rx, (int) (ry + 8 + Math.abs(mass * fc.getVx())), rx, ry);
+							g.drawLine(rx - 3, ry + 3, rx, ry);
+							g.drawLine(rx + 3, ry + 3, rx, ry);
+						}
+					}
+					break;
+				}
+			}
+
 		}
 
 	}
@@ -1460,8 +1554,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 				tempLine.setLine(place1 + 4, y + half, place1 + 6, y + half - 2);
 				g.draw(tempLine);
 			}
-		}
-		else if (hx > Particle.ZERO) {
+		} else if (hx > Particle.ZERO) {
 			for (i = 0; i < ny; i++) {
 				half = (i + 0.5) * delta;
 				/* draw arrows on the left side */
@@ -1484,8 +1577,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 				tempLine.setLine(x + half, place3 + 4, x + half - 2, place3 + 6);
 				g.draw(tempLine);
 			}
-		}
-		else if (hy > Particle.ZERO) {
+		} else if (hy > Particle.ZERO) {
 			for (i = 0; i < nx; i++) {
 				half = (i + 0.5) * delta;
 				/* draw arrows on the northern side */
@@ -1593,14 +1685,12 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 				q.setCoordinateQueue(model.getModelTimeQueue());
 				model.getMovieQueueGroup().add(q);
 			}
-		}
-		else {
+		} else {
 			q.setLength(n);
 			if (n < 1) {
 				model.getMovieQueueGroup().remove(q);
 				q = null;
-			}
-			else {
+			} else {
 				q.setPointer(0);
 			}
 		}
@@ -1651,14 +1741,12 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 			rxryQ.setPointer(0);
 			rxryQ.setCoordinateQueue(model.getModelTimeQueue());
 			model.getMovieQueueGroup().add(rxryQ);
-		}
-		else {
+		} else {
 			rxryQ.setLength(n);
 			if (n < 1) {
 				model.getMovieQueueGroup().remove(rxryQ);
 				rxryQ = null;
-			}
-			else {
+			} else {
 				rxryQ.setPointer(0);
 			}
 		}
@@ -1676,14 +1764,12 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 			vxvyQ.setPointer(0);
 			vxvyQ.setCoordinateQueue(model.getModelTimeQueue());
 			model.getMovieQueueGroup().add(vxvyQ);
-		}
-		else {
+		} else {
 			vxvyQ.setLength(n);
 			if (n < 1) {
 				model.getMovieQueueGroup().remove(vxvyQ);
 				vxvyQ = null;
-			}
-			else {
+			} else {
 				vxvyQ.setPointer(0);
 			}
 		}
@@ -1700,13 +1786,11 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 			axayQ.setInterval(getMovieInterval());
 			axayQ.setPointer(0);
 			axayQ.setCoordinateQueue(model.getModelTimeQueue());
-		}
-		else {
+		} else {
 			axayQ.setLength(n);
 			if (n < 1) {
 				axayQ = null;
-			}
-			else {
+			} else {
 				axayQ.setPointer(0);
 			}
 		}
@@ -1729,8 +1813,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 			sum += x;
 			if (k < 4) {
 				peQ[k].update(constant * x);
-			}
-			else {
+			} else {
 				peQ[k].update(constant * sum);
 			}
 		}
@@ -1752,8 +1835,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 			sum += x;
 			if (k < 4) {
 				pwQ[k].update(constant * x);
-			}
-			else {
+			} else {
 				pwQ[k].update(constant * sum);
 			}
 		}
@@ -1775,8 +1857,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 			sum += x;
 			if (k < 4) {
 				psQ[k].update(constant * x);
-			}
-			else {
+			} else {
 				psQ[k].update(constant * sum);
 			}
 		}
@@ -1798,8 +1879,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 			sum += x;
 			if (k < 4) {
 				pnQ[k].update(constant * x);
-			}
-			else {
+			} else {
 				pnQ[k].update(constant * sum);
 			}
 		}
@@ -1952,8 +2032,7 @@ public class RectangularObstacle extends Rectangle2D.Double implements Obstacle 
 			Arrays.fill(permeableArray, false);
 		}
 
-		public Delegate(double x, double y, double width, double height, double vx, double vy, float hx, float hy,
-				boolean westProbe, boolean northProbe, boolean eastProbe, boolean southProbe) {
+		public Delegate(double x, double y, double width, double height, double vx, double vy, float hx, float hy, boolean westProbe, boolean northProbe, boolean eastProbe, boolean southProbe) {
 			this.x = x;
 			this.y = y;
 			this.width = width;
